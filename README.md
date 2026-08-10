@@ -22,23 +22,29 @@ Independent, evidence-backed contractor verification for homeowners and commerci
 
 ```
 contractor-trust-hub/
-├── README.md
+├── app/                     # Next.js product shell (Vercel)
 ├── docs/
 │   ├── DATA_SOURCES.md      # FL DBPR CSVs, Sunbiz, NJ DCA, permits
-│   ├── PHASE_0.md           # Scope, milestones, success criteria
-│   └── SCHEMA.md            # Logical model notes
+│   ├── PHASE_0.md
+│   └── SCHEMA.md
 ├── schema/
-│   └── initial_schema.sql   # Postgres schema
-├── ingest/
-│   ├── README.md            # Adapter plan
-│   └── adapters/
-│       └── fl_dbpr.py       # Florida DBPR construction licensee adapter
-├── data/
-│   ├── samples/             # Small inspected samples + field profiles (committed)
-│   └── raw/                 # Full downloads (gitignored)
-└── scripts/
-    └── download_fl_dbpr.py  # Fetch official extracts
+│   └── initial_schema.sql
+├── ingest/                  # Python offline adapters (not a Vercel Python app)
+│   ├── requirements.txt
+│   └── adapters/fl_dbpr.py
+├── data/samples/
+└── scripts/download_fl_dbpr.py
 ```
+
+## Quick start (web)
+
+```bash
+npm install
+npm run dev    # http://localhost:3000
+npm run build  # production build (what Vercel runs)
+```
+
+Vercel must use the **Next.js** framework (see `vercel.json`). Python under `ingest/` is offline tooling only — there is no root `requirements.txt` so the Python runtime is not selected.
 
 ## Quick start (ingest)
 

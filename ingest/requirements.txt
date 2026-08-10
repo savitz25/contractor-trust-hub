@@ -1,0 +1,3 @@
+# Phase 0 ingest uses Python stdlib only (csv, json, urllib).
+# Optional later for DB loads:
+# psycopg[binary]>=3.1
