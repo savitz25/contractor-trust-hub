@@ -34,6 +34,10 @@ Stand up Contractor Trust Hub’s data backbone before product UI:
 3. Adapter produces normalized staging CSVs with stable keys
 4. Schema can load staged licenses + discipline without inventing columns
 
+## Bridge to Phase 1
+
+Postgres load path: [LOAD_PATH.md](LOAD_PATH.md) and `scripts/load_fl_dbpr_to_postgres.py`.
+
 ## Wave-1 markets
 
 1. **Florida** — DBPR CILB construction licensees + discipline (primary)

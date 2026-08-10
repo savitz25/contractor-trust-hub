@@ -40,6 +40,10 @@ python -m ingest.adapters.fl_dbpr \
 python -m ingest.adapters.fl_dbpr discipline \
   --input data/raw/fl_dbpr/contractor_disc_lic_2425.csv \
   --out-dir data/staging/fl_dbpr
+
+# Load into Postgres (requires DATABASE_URL) — see docs/LOAD_PATH.md
+python scripts/load_fl_dbpr_to_postgres.py --init-schema --staging-dir data/staging/fl_dbpr
+python scripts/verify_fl_dbpr_load.py
 ```
 
 ## Staging files produced

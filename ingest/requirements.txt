@@ -1,3 +1,6 @@
-# Phase 0 ingest uses Python stdlib only (csv, json, urllib).
-# Optional later for DB loads:
-# psycopg[binary]>=3.1
+# Phase 1 ingest + Postgres load
+psycopg[binary]>=3.1
+
+# Phase 0 adapter still uses stdlib only (csv, json, urllib).
+# Optional later:
+# pandas>=2.0

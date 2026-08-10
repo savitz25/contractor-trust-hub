@@ -49,6 +49,8 @@ Vercel must use the **Next.js** framework (see `vercel.json`). Python under `ing
 ## Quick start (ingest)
 
 ```bash
+pip install -r ingest/requirements.txt
+
 # Optional: fetch the full official construction licensee extract (~47 MB)
 python scripts/download_fl_dbpr.py
 
@@ -56,6 +58,14 @@ python scripts/download_fl_dbpr.py
 python -m ingest.adapters.fl_dbpr --input data/samples/fl_dbpr_construction_licensees_sample.csv --has-header
 # Full extract (no header row):
 python -m ingest.adapters.fl_dbpr --input data/raw/fl_dbpr/CONSTRUCTIONLICENSE_1.csv
+```
+
+## Quick start (Postgres load)
+
+```bash
+# Requires DATABASE_URL or PG* env vars — see docs/LOAD_PATH.md
+python scripts/load_fl_dbpr_to_postgres.py --init-schema --staging-dir data/staging/fl_dbpr
+python scripts/verify_fl_dbpr_load.py
 ```
 
 ## Phase 0 goals
