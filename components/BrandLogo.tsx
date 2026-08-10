@@ -16,11 +16,12 @@ type BrandLogoProps = {
 const transparent: CSSProperties = {
   background: "transparent",
   backgroundColor: "transparent",
+  display: "block",
 };
 
 /**
- * Brand wordmark / mark with true SVG transparency.
- * Never use the legacy RGB PNG in UI — it had a baked white plate.
+ * Official wordmark from the design mockup, white-plate keyed to true alpha.
+ * Prefer PNG for visual fidelity; SVG mark for square/favicon use.
  */
 export function BrandLogo({
   className = "",
@@ -48,13 +49,15 @@ export function BrandLogo({
     );
   }
 
+  // True-alpha PNGs processed from:
+  // moch up design/contractor trust hub logo design.png
+  // Aspect ~1416×361 ≈ 3.92:1
   const src =
     surface === "onLight"
-      ? "/brand/contractor-trust-hub-logo.svg"
-      : "/brand/contractor-trust-hub-logo-on-dark.svg";
+      ? "/brand/contractor-trust-hub-logo.png"
+      : "/brand/contractor-trust-hub-logo-on-dark.png";
 
-  // viewBox 900×220 → aspect ≈ 4.09:1
-  const width = Math.round(height * (900 / 220));
+  const width = Math.round(height * (1416 / 361));
 
   return (
     <img
