@@ -1,0 +1,309 @@
+{
+  "source_file": "data\\raw\\fl_dbpr\\CONSTRUCTIONLICENSE_1.csv",
+  "source_url": "https://www2.myfloridalicense.com/sto/file_download/extracts//CONSTRUCTIONLICENSE_1.csv",
+  "row_count": 270560,
+  "has_header_row": false,
+  "columns": [
+    "board_number",
+    "occupation_code",
+    "licensee_name",
+    "dba_name",
+    "class_code",
+    "address_line_1",
+    "address_line_2",
+    "address_line_3",
+    "city",
+    "state",
+    "zip",
+    "county_code",
+    "license_number",
+    "primary_status",
+    "secondary_status",
+    "original_licensure_date",
+    "effective_date",
+    "expiration_date",
+    "blank",
+    "renewal_period",
+    "alternate_license_number"
+  ],
+  "fill_rates": {
+    "board_number": 1.0,
+    "occupation_code": 1.0,
+    "licensee_name": 1.0,
+    "dba_name": 0.496034,
+    "class_code": 0.079572,
+    "address_line_1": 0.990109,
+    "address_line_2": 0.067305,
+    "address_line_3": 0.005951,
+    "city": 0.990017,
+    "state": 0.990039,
+    "zip": 0.989973,
+    "county_code": 0.972668,
+    "license_number": 0.530958,
+    "primary_status": 1.0,
+    "secondary_status": 0.476719,
+    "original_licensure_date": 0.996197,
+    "effective_date": 0.99993,
+    "expiration_date": 0.460378,
+    "blank": 0.0,
+    "renewal_period": 0.0,
+    "alternate_license_number": 0.530958
+  },
+  "max_lengths": {
+    "board_number": 2,
+    "occupation_code": 4,
+    "licensee_name": 64,
+    "dba_name": 64,
+    "class_code": 4,
+    "address_line_1": 43,
+    "address_line_2": 40,
+    "address_line_3": 35,
+    "city": 20,
+    "state": 2,
+    "zip": 10,
+    "county_code": 3,
+    "license_number": 9,
+    "primary_status": 1,
+    "secondary_status": 1,
+    "original_licensure_date": 10,
+    "effective_date": 10,
+    "expiration_date": 10,
+    "blank": 0,
+    "renewal_period": 0,
+    "alternate_license_number": 12
+  },
+  "occupation_code_top": [
+    [
+      "QB",
+      126904
+    ],
+    [
+      "CGC",
+      38923
+    ],
+    [
+      "CBC",
+      19722
+    ],
+    [
+      "FRO",
+      19087
+    ],
+    [
+      "CAC",
+      12378
+    ],
+    [
+      "CCC",
+      11275
+    ],
+    [
+      "CFC",
+      9310
+    ],
+    [
+      "CRC",
+      8556
+    ],
+    [
+      "CRS1",
+      5035
+    ],
+    [
+      "CPC",
+      4621
+    ],
+    [
+      "SCC",
+      3845
+    ],
+    [
+      "CUC",
+      3004
+    ],
+    [
+      "CMC",
+      2776
+    ],
+    [
+      "RR",
+      672
+    ],
+    [
+      "RF",
+      589
+    ],
+    [
+      "RC",
+      519
+    ],
+    [
+      "CVC",
+      513
+    ],
+    [
+      "RP",
+      479
+    ],
+    [
+      "RB",
+      427
+    ],
+    [
+      "RG",
+      423
+    ],
+    [
+      "PCC",
+      376
+    ],
+    [
+      "RA",
+      325
+    ],
+    [
+      "PVDR",
+      303
+    ],
+    [
+      "RX",
+      216
+    ],
+    [
+      "CSC",
+      97
+    ],
+    [
+      "RM",
+      83
+    ],
+    [
+      "RU",
+      65
+    ],
+    [
+      "RQ",
+      28
+    ],
+    [
+      "RS",
+      9
+    ]
+  ],
+  "primary_status": [
+    [
+      "C",
+      270059
+    ],
+    [
+      "S",
+      283
+    ],
+    [
+      "P",
+      218
+    ]
+  ],
+  "secondary_status": [
+    [
+      "",
+      141579
+    ],
+    [
+      "A",
+      114195
+    ],
+    [
+      "I",
+      14786
+    ]
+  ],
+  "county_code_top": [
+    [
+      "23",
+      27189
+    ],
+    [
+      "16",
+      21903
+    ],
+    [
+      "60",
+      18053
+    ],
+    [
+      "39",
+      15714
+    ],
+    [
+      "46",
+      14781
+    ],
+    [
+      "62",
+      12102
+    ],
+    [
+      "58",
+      11863
+    ],
+    [
+      "26",
+      8947
+    ],
+    [
+      "68",
+      8045
+    ],
+    [
+      "21",
+      7591
+    ],
+    [
+      "",
+      7395
+    ],
+    [
+      "15",
+      6373
+    ],
+    [
+      "74",
+      5934
+    ],
+    [
+      "61",
+      5833
+    ],
+    [
+      "69",
+      5195
+    ],
+    [
+      "63",
+      4862
+    ],
+    [
+      "51",
+      4620
+    ],
+    [
+      "45",
+      4075
+    ],
+    [
+      "66",
+      3880
+    ],
+    [
+      "710",
+      3516
+    ]
+  ],
+  "notes": [
+    "Official DBPR construction licensee extract; no header row in file.",
+    "Layout from Construction Industry Public Records page File Layout Information.",
+    "Alternate license number often includes full license id (e.g. CBC006231).",
+    "NULL & VOID, delinquent, and involuntarily inactive are excluded per DBPR download notes."
+  ]
+}

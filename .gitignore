@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node (future app shell)
+node_modules/
+.next/
+out/
+dist/
+.env*.local
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Full raw extracts (too large; use samples/ for git)
+data/raw/**
+!data/raw/**/
+!data/raw/**/.gitkeep
+
+# Staging / local DB dumps
+data/staging/**
+!data/staging/**/
+!data/staging/**/.gitkeep
+*.sql.gz
+*.dump
+
+# Secrets
+*.pem
+credentials.json
+service-account*.json

@@ -1,0 +1,53 @@
+# Ingest layer
+
+**Language decision (Phase 0):** Python 3.11+ for speed of CSV profiling, bulk transforms, and future pandas/SQL loads. The product UI may later be TypeScript; adapters stay Python unless there is a strong reason to dual-write.
+
+## Adapter plan
+
+| Priority | Adapter | Source | Output |
+|----------|---------|--------|--------|
+| 1 | `adapters/fl_dbpr.py` | FL DBPR construction licensees + discipline | `data/staging/fl_dbpr/` |
+| 2 | `adapters/fl_sunbiz.py` | Sunbiz entities | Phase 1 |
+| 3 | `adapters/nj_dca.py` | NJ DCA registration | Phase 1+ |
+| 4 | Permits | County open data | Phase 1+ |
+
+## Conventions
+
+1. **Read-only** against official downloads; never mutate source files
+2. Every run writes a batch manifest (`batch_manifest.json`) with URL, file, SHA-256, row counts
+3. Normalized outputs use stable snake_case columns aligned with `schema/initial_schema.sql`
+4. Prefer **precision**: skip rows that cannot form a stable external key rather than inventing IDs
+5. Keep full raw extracts under `data/raw/` (gitignored); commit samples only
+
+## FL DBPR quick commands
+
+```bash
+# Download full licensee extract
+python scripts/download_fl_dbpr.py
+
+# Normalize sample (has header we added)
+python -m ingest.adapters.fl_dbpr \
+  --input data/samples/fl_dbpr_construction_licensees_sample.csv \
+  --has-header \
+  --out-dir data/staging/fl_dbpr
+
+# Normalize full extract (no header)
+python -m ingest.adapters.fl_dbpr \
+  --input data/raw/fl_dbpr/CONSTRUCTIONLICENSE_1.csv \
+  --out-dir data/staging/fl_dbpr
+
+# Discipline FY file (headered)
+python -m ingest.adapters.fl_dbpr discipline \
+  --input data/raw/fl_dbpr/contractor_disc_lic_2425.csv \
+  --out-dir data/staging/fl_dbpr
+```
+
+## Staging files produced
+
+| File | Maps to |
+|------|---------|
+| `licenses_normalized.csv` | `licenses` (real board credentials only) |
+| `contractors_seed.csv` | `contractors` (1:1 seed from licensed rows) |
+| `qualifying_businesses_normalized.csv` | future `entities` / linkage (QB rows; no license #) |
+| `discipline_normalized.csv` | `discipline_actions` |
+| `batch_manifest.json` | `ingest_batches` |
