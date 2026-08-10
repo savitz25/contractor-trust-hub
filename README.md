@@ -68,6 +68,17 @@ python scripts/load_fl_dbpr_to_postgres.py --init-schema --staging-dir data/stag
 python scripts/verify_fl_dbpr_load.py
 ```
 
+## Quick start (Sunbiz entities)
+
+```bash
+# Official public SFTP — see docs/SUNBIZ.md
+python scripts/download_sunbiz.py --daily-latest
+python -m ingest.adapters.fl_sunbiz \
+  --input data/raw/sunbiz/daily \
+  --glob '*c.txt' \
+  --out-dir data/staging/fl_sunbiz
+```
+
 ## Phase 0 goals
 
 1. Document exact public data sources and field layouts

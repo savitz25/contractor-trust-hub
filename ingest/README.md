@@ -7,7 +7,7 @@
 | Priority | Adapter | Source | Output |
 |----------|---------|--------|--------|
 | 1 | `adapters/fl_dbpr.py` | FL DBPR construction licensees + discipline | `data/staging/fl_dbpr/` |
-| 2 | `adapters/fl_sunbiz.py` | Sunbiz entities | Phase 1 |
+| 2 | `adapters/fl_sunbiz.py` | Sunbiz corporate fixed-width (SFTP) | `data/staging/fl_sunbiz/` |
 | 3 | `adapters/nj_dca.py` | NJ DCA registration | Phase 1+ |
 | 4 | Permits | County open data | Phase 1+ |
 
@@ -44,6 +44,13 @@ python -m ingest.adapters.fl_dbpr discipline \
 # Load into Postgres (requires DATABASE_URL) — see docs/LOAD_PATH.md
 python scripts/load_fl_dbpr_to_postgres.py --init-schema --staging-dir data/staging/fl_dbpr
 python scripts/verify_fl_dbpr_load.py
+
+# Sunbiz (official SFTP) — see docs/SUNBIZ.md
+python scripts/download_sunbiz.py --daily-latest
+python -m ingest.adapters.fl_sunbiz \
+  --input data/raw/sunbiz/daily \
+  --glob '*c.txt' \
+  --out-dir data/staging/fl_sunbiz
 ```
 
 ## Staging files produced

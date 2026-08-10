@@ -65,12 +65,18 @@ Discipline Date - Description, Violation Code
 
 ## Florida — Sunbiz (Division of Corporations)
 
-| Resource | Notes |
-|----------|--------|
-| https://dos.fl.gov/sunbiz/ | Entity search / bulk options |
-| Use | Link DBA / corporate name → FEI/EIN, officers, status |
+| Resource | URL / path | Notes |
+|----------|------------|--------|
+| Data downloads hub | https://dos.fl.gov/sunbiz/other-services/data-downloads/ | Daily + quarterly |
+| Corporate definitions | https://dos.sunbiz.org/data-definitions/cor.html | Fixed-width 1440-char rows |
+| SFTP host | `sftp.floridados.gov` | User `Public` / password published by DOS |
+| Quarterly corporate | `doc/Quarterly/Cor/cordata.zip` | Full active snapshot (~1.8 GB) |
+| Daily corporate | `doc/cor/YYYYMMDDc.txt` | Workday filings |
 
-Phase 0: document only; entity adapter is Phase 1.
+**Ingest:** `scripts/download_sunbiz.py` + `ingest/adapters/fl_sunbiz.py`  
+**Guide:** [SUNBIZ.md](SUNBIZ.md)
+
+Use: link legal entity status, officers, FEI, and registered agent to DBPR contractors via high-confidence name/address rules (linker is a follow-up).
 
 ## New Jersey — DCA
 
