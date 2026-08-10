@@ -1,3 +1,5 @@
+import { BrandLogo } from "@/components/BrandLogo";
+
 const stats = [
   { label: "FL construction rows profiled", value: "270,560" },
   { label: "Licensed credentials staged", value: "143,516" },
@@ -24,19 +26,11 @@ export default function HomePage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-5xl flex-col px-6 py-10 sm:px-8">
       <header className="flex items-center justify-between gap-4 border-b border-[var(--border)] pb-6">
-        <div className="flex items-center gap-3">
-          <div
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--accent)] bg-[var(--accent-soft)] text-sm font-bold tracking-tight text-[var(--accent)]"
-            aria-hidden
-          >
-            CTH
-          </div>
-          <div>
-            <p className="text-sm font-semibold tracking-wide text-[var(--text)]">
-              Contractor Trust Hub
-            </p>
-            <p className="text-xs text-[var(--muted)]">Phase 0 · Evidence foundation</p>
-          </div>
+        <div className="flex flex-col gap-1">
+          <BrandLogo height={52} priority />
+          <p className="pl-1 text-xs text-[var(--muted)]">
+            Before you hire, verify. · Phase 0 evidence foundation
+          </p>
         </div>
         <p className="hidden text-sm text-[var(--muted)] sm:block">
           Research tooling · Not a substitute for the board

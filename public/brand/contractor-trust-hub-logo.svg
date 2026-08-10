@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 220" role="img" aria-label="Contractor Trust Hub">
+  <title>Contractor Trust Hub</title>
+  <!-- Official horizontal wordmark. Transparent background. Colors: #F5C518 / #0A2540 -->
+  <g transform="translate(8, 10)">
+    <!-- Left bracket [ -->
+    <path
+      fill="#F5C518"
+      d="M70 20
+         C40 20 24 40 24 70
+         V150
+         C24 180 40 200 70 200
+         H96
+         V172
+         H78
+         C62 172 56 160 56 148
+         V72
+         C56 60 62 48 78 48
+         H96
+         V20
+         Z"
+    />
+    <!-- Right bracket ] -->
+    <path
+      fill="#F5C518"
+      d="M170 20
+         H144
+         V48
+         H162
+         C178 48 184 60 184 72
+         V148
+         C184 160 178 172 162 172
+         H144
+         V200
+         H170
+         C200 200 216 180 216 150
+         V70
+         C216 40 200 20 170 20
+         Z"
+    />
+    <g transform="translate(120 110)">
+      <line x1="0" y1="-46" x2="0" y2="46" stroke="#0A2540" stroke-width="4.5" stroke-linecap="round"/>
+      <line x1="-46" y1="0" x2="46" y2="0" stroke="#0A2540" stroke-width="4.5" stroke-linecap="round"/>
+      <circle cx="0" cy="-50" r="12" fill="#F28C28"/>
+      <circle cx="-50" cy="0" r="12" fill="#2F80ED"/>
+      <circle cx="50" cy="0" r="12" fill="#2BBBAD"/>
+      <circle cx="0" cy="50" r="12" fill="#8B5CF6"/>
+      <circle cx="0" cy="0" r="16" fill="#0A2540"/>
+    </g>
+  </g>
+
+  <g
+    font-family="Inter, system-ui, -apple-system, Segoe UI, Helvetica Neue, Arial, sans-serif"
+    font-weight="800"
+    letter-spacing="-0.03em"
+  >
+    <text x="248" y="98" fill="#F5C518" font-size="56">CONTRACTOR</text>
+    <text x="248" y="168" fill="#0A2540" font-size="56">TRUST HUB</text>
+  </g>
+</svg>
