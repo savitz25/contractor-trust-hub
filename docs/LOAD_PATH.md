@@ -25,6 +25,10 @@ pip install -r ingest/requirements.txt
 | `PGUSER` | Alt | Default `postgres` |
 | `PGPASSWORD` | Alt | Password |
 
+Load order: process env → `.env.local` → `.env` (see `ingest/env.py`).
+
+**Supabase:** use the **URI** from Project Settings → Database. Prefer **direct** or **session** pooler (not transaction `:6543`). Details: [SUPABASE.md](SUPABASE.md).
+
 The loader uses **psycopg v3** (`psycopg[binary]`).
 
 ## Stage data first (if needed)

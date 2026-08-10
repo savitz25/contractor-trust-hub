@@ -39,6 +39,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from ingest.env import load_dotenv_files, normalize_database_url  # noqa: E402
+
 SOURCE_SYSTEM = "fl_dbpr"
 SOURCE_URL_LICENSEES = (
     "https://www2.myfloridalicense.com/sto/file_download/extracts//CONSTRUCTIONLICENSE_1.csv"
@@ -62,15 +64,11 @@ def _require_psycopg():
 
 
 def connect_dsn() -> str:
-    timeout = os.environ.get("PGCONNECT_TIMEOUT", "10")
+    load_dotenv_files(ROOT / ".env.local", ROOT / ".env")
+    timeout = os.environ.get("PGCONNECT_TIMEOUT", "15")
     url = os.environ.get("DATABASE_URL") or os.environ.get("POSTGRES_URL")
     if url:
-        # Ensure a connect timeout so missing local Postgres fails fast
-        if "connect_timeout=" not in url and "connect_timeout%3D" not in url.lower():
-            sep = "&" if "?" in url else "?"
-            if url.startswith("postgres"):
-                return f"{url}{sep}connect_timeout={timeout}"
-        return url
+        return normalize_database_url(url, connect_timeout=timeout)
     host = os.environ.get("PGHOST", "localhost")
     port = os.environ.get("PGPORT", "5432")
     db = os.environ.get("PGDATABASE", "contractor_trust_hub")
@@ -86,6 +84,8 @@ def connect_dsn() -> str:
     ]
     if password:
         parts.append(f"password={password}")
+    if host.endswith("supabase.co") or "supabase.com" in host:
+        parts.append("sslmode=require")
     return " ".join(parts)
 
 

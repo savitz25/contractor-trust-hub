@@ -8,6 +8,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from ingest.env import load_dotenv_files, normalize_database_url  # noqa: E402
 
 
 def main() -> int:
@@ -17,6 +21,7 @@ def main() -> int:
         print("pip install 'psycopg[binary]>=3.1'", file=sys.stderr)
         return 2
 
+    load_dotenv_files(ROOT / ".env.local", ROOT / ".env")
     url = os.environ.get("DATABASE_URL") or os.environ.get("POSTGRES_URL")
     if not url:
         host = os.environ.get("PGHOST", "localhost")
@@ -26,14 +31,14 @@ def main() -> int:
         password = os.environ.get("PGPASSWORD", "")
         url = (
             f"host={host} port={port} dbname={db} user={user} "
-            f"connect_timeout={os.environ.get('PGCONNECT_TIMEOUT', '10')}"
+            f"connect_timeout={os.environ.get('PGCONNECT_TIMEOUT', '15')}"
         )
         if password:
             url += f" password={password}"
-    elif "connect_timeout" not in url:
-        sep = "&" if "?" in url else "?"
-        if url.startswith("postgres"):
-            url = f"{url}{sep}connect_timeout=10"
+        if host.endswith("supabase.co"):
+            url += " sslmode=require"
+    else:
+        url = normalize_database_url(url)
 
     queries = [
         (
