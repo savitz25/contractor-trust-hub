@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "Contractor Trust Hub",
     description: "Before you hire, verify.",
     type: "website",
-    images: [{ url: "/brand/contractor-trust-hub-logo.png" }],
+    images: [{ url: "/brand/contractor-trust-hub-logo-on-dark.svg" }],
   },
 };
 

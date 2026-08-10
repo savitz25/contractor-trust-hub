@@ -1,9 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 220" fill="none" role="img" aria-label="Contractor Trust Hub">
   <title>Contractor Trust Hub</title>
   <!--
-    Horizontal wordmark — true transparent background (no plate).
-    Default colors match brand for light surfaces.
-    Use contractor-trust-hub-logo-on-dark.svg on dark headers.
+    Horizontal wordmark for dark surfaces — true transparent background.
+    Yellow + node colors unchanged. Navy hub/text lifted to light so they read on dark headers.
   -->
   <g transform="translate(8, 10)">
     <path
@@ -15,13 +14,13 @@
       d="M170 20H144V48H162C178 48 184 60 184 72V148C184 160 178 172 162 172H144V200H170C200 200 216 180 216 150V70C216 40 200 20 170 20Z"
     />
     <g transform="translate(120 110)">
-      <line x1="0" y1="-46" x2="0" y2="46" stroke="#0A2540" stroke-width="4.5" stroke-linecap="round"/>
-      <line x1="-46" y1="0" x2="46" y2="0" stroke="#0A2540" stroke-width="4.5" stroke-linecap="round"/>
+      <line x1="0" y1="-46" x2="0" y2="46" stroke="#E8EEF9" stroke-width="4.5" stroke-linecap="round"/>
+      <line x1="-46" y1="0" x2="46" y2="0" stroke="#E8EEF9" stroke-width="4.5" stroke-linecap="round"/>
       <circle cx="0" cy="-50" r="12" fill="#F28C28"/>
       <circle cx="-50" cy="0" r="12" fill="#2F80ED"/>
       <circle cx="50" cy="0" r="12" fill="#2BBBAD"/>
       <circle cx="0" cy="50" r="12" fill="#8B5CF6"/>
-      <circle cx="0" cy="0" r="16" fill="#0A2540"/>
+      <circle cx="0" cy="0" r="16" fill="#E8EEF9"/>
     </g>
   </g>
   <g
@@ -30,6 +29,6 @@
     letter-spacing="-0.03em"
   >
     <text x="248" y="98" fill="#F5C518" font-size="56">CONTRACTOR</text>
-    <text x="248" y="168" fill="#0A2540" font-size="56">TRUST HUB</text>
+    <text x="248" y="168" fill="#E8EEF9" font-size="56">TRUST HUB</text>
   </g>
 </svg>

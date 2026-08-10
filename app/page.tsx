@@ -25,9 +25,9 @@ const sources = [
 export default function HomePage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-5xl flex-col px-6 py-10 sm:px-8">
-      <header className="flex items-center justify-between gap-4 border-b border-[var(--border)] pb-6">
-        <div className="flex flex-col gap-1">
-          <BrandLogo height={52} priority />
+      <header className="flex items-center justify-between gap-4 border-b border-[var(--border)] bg-transparent pb-6">
+        <div className="flex flex-col gap-1 bg-transparent">
+          <BrandLogo height={52} priority surface="onDark" className="bg-transparent" />
           <p className="pl-1 text-xs text-[var(--muted)]">
             Before you hire, verify. · Phase 0 evidence foundation
           </p>
