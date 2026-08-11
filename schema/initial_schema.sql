@@ -107,14 +107,18 @@ CREATE TABLE IF NOT EXISTS entities (
   source_system     TEXT NOT NULL,          -- fl_dbpr | fl_sunbiz | ...
   external_key      TEXT NOT NULL,
   legal_name        TEXT NOT NULL,
-  entity_type       TEXT,                   -- qualifying_business | corporation | ...
+  name_normalized   TEXT,                   -- upper/collapsed for high-confidence joins
+  entity_type       TEXT,                   -- qualifying_business | FLAL | DOMP | ...
   status            TEXT,
   formation_date    DATE,
+  fei_number        TEXT,                   -- FEI/EIN digits when present
   principal_address TEXT,
   city              TEXT,
   state             CHAR(2),
   postal_code       TEXT,
   county_name       TEXT,
+  registered_agent_name TEXT,
+  officers          JSONB,                  -- array of officer objects (Sunbiz)
   raw_payload       JSONB,
   ingest_batch_id   UUID REFERENCES ingest_batches (id),
   last_verified_at  TIMESTAMPTZ,
@@ -126,16 +130,28 @@ CREATE TABLE IF NOT EXISTS entities (
 CREATE INDEX IF NOT EXISTS entities_type_idx ON entities (entity_type);
 CREATE INDEX IF NOT EXISTS entities_state_idx ON entities (state);
 CREATE INDEX IF NOT EXISTS entities_legal_name_idx ON entities (legal_name);
+CREATE INDEX IF NOT EXISTS entities_name_normalized_idx ON entities (name_normalized);
+CREATE INDEX IF NOT EXISTS entities_fei_idx ON entities (fei_number);
+CREATE INDEX IF NOT EXISTS entities_postal_idx ON entities (postal_code);
+CREATE INDEX IF NOT EXISTS entities_source_name_idx
+  ON entities (source_system, name_normalized);
 
 CREATE TABLE IF NOT EXISTS contractor_entities (
   contractor_id   UUID NOT NULL REFERENCES contractors (id) ON DELETE CASCADE,
   entity_id       UUID NOT NULL REFERENCES entities (id) ON DELETE CASCADE,
-  role            TEXT NOT NULL DEFAULT 'linked',  -- qualifier | officer | dba | qualifying_business | linked
+  role            TEXT NOT NULL DEFAULT 'linked',  -- qualifier | officer | dba | qualifying_business | sunbiz_entity | linked
   confidence      NUMERIC(4,3) CHECK (confidence >= 0 AND confidence <= 1),
+  match_method    TEXT,                     -- exact_name_zip5 | exact_name_city | exact_name_address | fei | officer_name_zip
   evidence        JSONB,
+  linked_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
   PRIMARY KEY (contractor_id, entity_id, role)
 );
+
+CREATE INDEX IF NOT EXISTS contractor_entities_method_idx
+  ON contractor_entities (match_method);
+CREATE INDEX IF NOT EXISTS contractor_entities_entity_idx
+  ON contractor_entities (entity_id);
 
 -- ---------------------------------------------------------------------------
 -- Discipline (board actions)

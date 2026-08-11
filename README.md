@@ -68,7 +68,7 @@ python scripts/load_fl_dbpr_to_postgres.py --init-schema --staging-dir data/stag
 python scripts/verify_fl_dbpr_load.py
 ```
 
-## Quick start (Sunbiz entities)
+## Quick start (Sunbiz entities + linker)
 
 ```bash
 # Official public SFTP — see docs/SUNBIZ.md
@@ -77,6 +77,11 @@ python -m ingest.adapters.fl_sunbiz \
   --input data/raw/sunbiz/daily \
   --glob '*c.txt' \
   --out-dir data/staging/fl_sunbiz
+
+# Load + high-confidence DBPR links (requires DATABASE_URL)
+python scripts/load_sunbiz_to_postgres.py --init-schema --staging-dir data/staging/fl_sunbiz
+python scripts/link_dbpr_to_sunbiz.py
+python scripts/verify_sunbiz_link.py
 ```
 
 ## Phase 0 goals

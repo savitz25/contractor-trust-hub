@@ -111,32 +111,45 @@ principal_address / city / state / postal_code
 raw_payload     = full field set + officers[]
 ```
 
-## Matching strategy (DBPR ↔ Sunbiz) — design only
+## Postgres load + high-confidence linker
 
-**Do not fuzzy-merge in the parser.** A future `scripts/link_dbpr_sunbiz.py` should apply **high-confidence** rules only:
+```bash
+python -m ingest.adapters.fl_sunbiz \
+  --input data/raw/sunbiz/daily --glob '*c.txt' \
+  --out-dir data/staging/fl_sunbiz
 
-| Priority | Signal | Confidence | Notes |
+python scripts/load_sunbiz_to_postgres.py --init-schema \
+  --staging-dir data/staging/fl_sunbiz
+
+python scripts/link_dbpr_to_sunbiz.py
+python scripts/verify_sunbiz_link.py
+```
+
+### Matching rules (implemented — high-confidence only)
+
+| Priority | Method | Confidence | Signal |
 |----------|--------|------------|--------|
-| 1 | Exact `name_normalized` + same city + FL | High | Primary path for DBA / corporate names on licenses |
-| 2 | Exact `name_normalized` + ZIP5 | High | When city text differs (HOLLYWOOD vs Hollywood) |
-| 3 | FEI match when both present | High | Rare on DBPR side today |
-| 4 | Exact officer/licensee person name + shared address line | High | Corroboration required |
-| 5 | Token-sort / fuzzy name alone | **Reject for now** | Too many LLC collisions |
+| 1 | `exact_name_address` | 0.98 | `name_normalized` + address line + ZIP5 |
+| 2 | `exact_name_zip5` | 0.95 | `name_normalized` + ZIP5 |
+| 3 | `exact_name_city` | 0.92 | `name_normalized` + city |
+| 4 | `officer_name_zip` | 0.90 | person + ZIP + city + address (opt-in via `--allow-officer-links`; off by default) |
 
-Write matches into `contractor_entities` with:
+**Ambiguity rule:** if two different Sunbiz document numbers tie at the best confidence for a contractor, **no link** is written.
 
-- `role` = `sunbiz_entity` (or `dba` / `qualifier` when evidence supports it)
-- `confidence` numeric
-- `evidence` JSONB listing the signals used
+Writes to `contractor_entities`:
+- `role` = `sunbiz_entity`
+- `match_method`, `confidence`, `evidence` (JSONB), `linked_at`
 
-Never invent document numbers. Never overwrite DBPR QB `QB-ENTITY:*` keys — Sunbiz uses `source_system = fl_sunbiz` and separate `external_key`.
+Never invent document numbers. Never overwrite DBPR QB `QB-ENTITY:*` keys — Sunbiz uses `source_system = fl_sunbiz`.
+
+**Coverage note:** Daily filings only cover new/changed records for those days. For full-population matching, download quarterly `cordata.zip` and re-stage/load.
 
 ## Relation to DBPR load
 
 1. Load DBPR licenses / QB shells (`scripts/load_fl_dbpr_to_postgres.py`)
 2. Download + parse Sunbiz → staging
-3. Load Sunbiz entities into `entities` (follow-up loader or extend existing load script)
-4. Run high-confidence linker → `contractor_entities`
+3. Load Sunbiz entities (`scripts/load_sunbiz_to_postgres.py`)
+4. Run high-confidence linker (`scripts/link_dbpr_to_sunbiz.py`)
 
 ## Notes from FL DOS
 
