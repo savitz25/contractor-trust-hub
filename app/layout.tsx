@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CompareBar } from "@/components/compare/CompareBar";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { SaveWorkPrompt } from "@/components/account/SaveWorkPrompt";
 import { PropertyContextChip } from "@/components/property/PropertyContextChip";
 import { SitewideJsonLd } from "@/components/seo/JsonLd";
 import { getSiteUrl } from "@/lib/site";
@@ -72,6 +73,7 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col antialiased">
         <SitewideJsonLd />
         <SiteHeader />
+        <SaveWorkPrompt />
         <PropertyContextChip />
         <div className="flex-1 pb-24 sm:pb-20">{children}</div>
         <SiteFooter />

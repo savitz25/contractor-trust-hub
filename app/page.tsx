@@ -71,13 +71,27 @@ export default function HomePage() {
               className="rounded-2xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--accent)] sm:px-5 sm:py-4"
             >
               <p className="text-sm font-semibold text-[var(--text)]">
-                Protect an active project
+                Continue project
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
-                Contracts, payments, milestones, and contractor watches — on this device.
+                Active protection: contracts, payments, milestones, watches.
               </p>
               <p className="mt-2.5 text-xs font-medium text-[var(--navy)] sm:mt-3">
-                Continue project →
+                Open projects →
+              </p>
+            </Link>
+            <Link
+              href="/passport"
+              className="rounded-2xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--accent)] sm:px-5 sm:py-4"
+            >
+              <p className="text-sm font-semibold text-[var(--text)]">
+                Home Passport
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                Long-term property history, warranties, and documents.
+              </p>
+              <p className="mt-2.5 text-xs font-medium text-[var(--navy)] sm:mt-3">
+                Open passport →
               </p>
             </Link>
             <Link

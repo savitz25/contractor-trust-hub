@@ -51,6 +51,16 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/passport" className="text-[var(--text)] no-underline hover:underline">
+                Home Passport
+              </Link>
+            </li>
+            <li>
+              <Link href="/account" className="text-[var(--text)] no-underline hover:underline">
+                Account &amp; alerts
+              </Link>
+            </li>
+            <li>
               <Link
                 href="/tools/contract-analyzer"
                 className="text-[var(--text)] no-underline hover:underline"

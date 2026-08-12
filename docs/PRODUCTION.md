@@ -7,6 +7,9 @@
 | `DATABASE_URL` | **Yes** | Supabase **Session pooler** URI (`*.pooler.supabase.com:5432`, user `postgres.<ref>`) |
 | `NEXT_PUBLIC_SITE_URL` | **Required in production** | Must be `https://www.contractortrusthub.com` — see [SEO.md](./SEO.md) |
 | `NEXT_PUBLIC_CORRECTIONS_EMAIL` | Recommended | Mailto target for `/corrections` (default `corrections@contractortrusthub.com`) |
+| Stage 5 migration `005_stage5_accounts_passport.sql` | For durable accounts | Magic link, workspace, alerts |
+| `RESEND_API_KEY` | Optional | Magic-link + watch alert email |
+| `AUTH_FROM_EMAIL` | Optional | Resend from address |
 
 Framework: Next.js (`vercel.json`). Python under `ingest/` is offline only.
 

@@ -5,10 +5,10 @@ import { SwitchHubMenu } from "@/components/network/SwitchHubMenu";
 
 const secondaryNav = [
   { href: "/studios", label: "Studios", shortLabel: "Studios" },
+  { href: "/passport", label: "Passport", shortLabel: "Home" },
   { href: "/projects", label: "Projects", shortLabel: "Jobs" },
-  { href: "/property", label: "Address", shortLabel: "Addr" },
   { href: "/tools", label: "Tools", shortLabel: "Tools" },
-  { href: "/plan", label: "Plan", shortLabel: "Plan" },
+  { href: "/account", label: "Account", shortLabel: "Acct" },
 ];
 
 export function SiteHeader() {

@@ -3,6 +3,11 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { CompleteProjectModal } from "@/components/passport/CompleteProjectModal";
+import {
+  projectPacketHtml,
+  printHtmlDocument,
+} from "@/lib/passport/export";
 import { PaymentsPanel } from "./PaymentsPanel";
 import { WatchButton } from "./WatchButton";
 import { PROTECTION_DISCLAIMER } from "@/lib/projects/disclaimers";
@@ -52,6 +57,8 @@ export function ProjectDashboardClient({ projectId }: { projectId: string }) {
   const [docKind, setDocKind] = useState<ProjectDocumentKind>("contract");
   const [docLabel, setDocLabel] = useState("");
   const [alerts, setAlerts] = useState<WatchAlert[]>([]);
+  const [completeOpen, setCompleteOpen] = useState(false);
+  const [doneFlash, setDoneFlash] = useState<string | null>(null);
 
   const refresh = useCallback(() => {
     setProject(getProject(projectId));
@@ -146,7 +153,38 @@ export function ProjectDashboardClient({ projectId }: { projectId: string }) {
           <span className="text-xs text-[var(--muted)]">
             Milestones {done}/{project.milestones.length}
           </span>
+          {project.status !== "complete" ? (
+            <button
+              type="button"
+              onClick={() => setCompleteOpen(true)}
+              className="rounded-lg bg-[var(--navy)] px-3 py-1.5 text-xs font-semibold text-white"
+            >
+              Mark project complete
+            </button>
+          ) : (
+            <Link
+              href="/passport"
+              className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-xs font-semibold no-underline"
+            >
+              View Home Passport
+            </Link>
+          )}
+          <button
+            type="button"
+            onClick={() =>
+              printHtmlDocument(
+                `Project packet — ${project.title}`,
+                projectPacketHtml(project, analysis)
+              )
+            }
+            className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-xs font-semibold"
+          >
+            Export project packet
+          </button>
         </div>
+        {doneFlash ? (
+          <p className="mt-2 text-xs font-medium text-emerald-800">{doneFlash}</p>
+        ) : null}
 
         <div className="mt-3 h-2 overflow-hidden rounded-full bg-[var(--border)]">
           <div
@@ -434,6 +472,22 @@ export function ProjectDashboardClient({ projectId }: { projectId: string }) {
       </div>
 
       <p className="text-[11px] leading-relaxed text-[var(--muted)]">{PROTECTION_DISCLAIMER}</p>
+
+      {completeOpen ? (
+        <CompleteProjectModal
+          project={project}
+          onClose={() => setCompleteOpen(false)}
+          onDone={(next, passportId) => {
+            setProject(next);
+            setCompleteOpen(false);
+            setDoneFlash(
+              passportId
+                ? "Project completed and saved to Home Passport."
+                : "Project marked complete."
+            );
+          }}
+        />
+      ) : null}
     </div>
   );
 }

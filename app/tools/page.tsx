@@ -18,6 +18,18 @@ const tools = [
     step: "4",
   },
   {
+    href: "/passport",
+    title: "Home Passport",
+    body: "Permanent property timeline, warranties, and document vault after completion.",
+    step: "5",
+  },
+  {
+    href: "/account",
+    title: "Save & alerts",
+    body: "Optional account, import device data, watch alerts, preferences.",
+    step: "5",
+  },
+  {
     href: "/tools/contract-analyzer",
     title: "Contract Analyzer",
     body: "Spot missing or unclear protection items before you sign — educational only.",

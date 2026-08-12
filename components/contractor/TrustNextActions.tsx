@@ -97,6 +97,18 @@ export function TrustNextActions({
             Protect an active project
           </Link>
           <Link
+            href={`/passport`}
+            className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)]"
+          >
+            Save contractor work to Home Passport
+          </Link>
+          <Link
+            href="/account"
+            className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)]"
+          >
+            Watch / alert preferences
+          </Link>
+          <Link
             href={`/tools/pre-hire-checklist?${toolsQs}`}
             className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)]"
           >
