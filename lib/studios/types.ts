@@ -86,7 +86,8 @@ export type StudioAnswers = {
   projectType: ProjectTypeId;
   /** fieldId → single option id or multi option ids */
   values: Record<string, string | string[]>;
-  budgetBand?: BudgetBand | null;
+  /** Plan BudgetBand id or studio-specific budget id (e.g. under_10k). */
+  budgetBand?: BudgetBand | string | null;
   zip?: string;
   city?: string;
   state?: string;
@@ -102,7 +103,7 @@ export type StudioContext = {
   answerSummary: string[];
   scale: ScaleBand;
   scaleLabel: string;
-  budgetBand?: BudgetBand | null;
+  budgetBand?: BudgetBand | string | null;
   location: {
     state: string;
     zip?: string;
