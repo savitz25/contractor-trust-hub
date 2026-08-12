@@ -5,13 +5,30 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { BUDGET_BANDS } from "@/lib/plan/project-types";
 import { encodeStudioQuery, storageKey } from "@/lib/studios/context";
-import type { StudioDefinition } from "@/lib/studios/types";
+import { getStudioBySlug } from "@/lib/studios/registry";
 import type { BudgetBand } from "@/lib/plan/types";
 
-type Props = { studio: StudioDefinition };
+type Props = { slug: string };
 
-export function StudioFlow({ studio }: Props) {
+/**
+ * Loads studio config by slug on the client so functions (resolveScale, etc.)
+ * never cross the Server→Client serialization boundary.
+ */
+export function StudioFlow({ slug }: Props) {
+  const studio = getStudioBySlug(slug);
   const router = useRouter();
+
+  if (!studio) {
+    return (
+      <p className="text-sm text-[var(--muted)]">
+        Studio not found.{" "}
+        <Link href="/studios" className="font-medium text-[var(--navy)]">
+          Back to studios
+        </Link>
+      </p>
+    );
+  }
+
   // steps + location + budget
   const totalSteps = studio.steps.length + 1;
   const [step, setStep] = useState(0);
