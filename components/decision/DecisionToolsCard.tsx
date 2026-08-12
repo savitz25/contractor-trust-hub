@@ -29,7 +29,22 @@ export function DecisionToolsLinks({
   if (contractorName) q.set("name", contractorName);
   const qs = q.toString() ? `?${q.toString()}` : "";
 
+  const propertyQs = new URLSearchParams();
+  if (zip) propertyQs.set("zip", zip);
+  if (city) propertyQs.set("city", city);
+  const pqs = propertyQs.toString() ? `?${propertyQs.toString()}` : "";
+
   const links = [
+    {
+      href: `/property${pqs}`,
+      label: "Add property context",
+      hint: "Check address / permit signals",
+    },
+    {
+      href: `/tools/permit-planner${qs}`,
+      label: "Permit planner",
+      hint: "Likely permits & inspections",
+    },
     {
       href: `/tools/scope-builder${qs}`,
       label: "Build scope",
@@ -74,7 +89,7 @@ export function DecisionToolsLinks({
         Decision tools
       </p>
       <h2 className="mt-1 text-lg font-semibold text-[var(--text)]">
-        Plan scope → analyze quote → compare → verify → checklist
+        Property → permits → scope → quotes → verify → checklist
       </h2>
       <p className="mt-1 text-sm text-[var(--muted)]">
         Educational tools to prepare before you hire — not rankings or marketplace bids.

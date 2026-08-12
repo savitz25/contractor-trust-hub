@@ -77,6 +77,8 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/plan", priority: 0.9, changefreq: "weekly" },
     { path: "/studios", priority: 0.9, changefreq: "weekly" },
     { path: "/tools", priority: 0.92, changefreq: "weekly" },
+    { path: "/property", priority: 0.92, changefreq: "weekly" },
+    { path: "/tools/permit-planner", priority: 0.88, changefreq: "weekly" },
     { path: "/tools/scope-builder", priority: 0.85, changefreq: "weekly" },
     { path: "/tools/quote-analyzer", priority: 0.85, changefreq: "weekly" },
     { path: "/tools/compare-bids", priority: 0.85, changefreq: "weekly" },

@@ -1,0 +1,75 @@
+{
+  "_meta": {
+    "description": "Educational pilot permit samples for Stage 3 UI. Not a complete public extract. Real addresses outside these keys return empty lists with honest coverage notes.",
+    "updated": "2026-03-20"
+  },
+  "byAddressKey": {
+    "100 OCEAN DR|33139": [
+      {
+        "id": "md-demo-1",
+        "permitNumber": "BLD-2024-11842",
+        "description": "Interior kitchen remodel — non-structural",
+        "category": "Building",
+        "status": "finaled",
+        "filedDate": "2024-03-12",
+        "issuedDate": "2024-03-28",
+        "finalDate": "2024-07-19",
+        "declaredValue": 68500,
+        "contractorName": "Sample GC Services LLC",
+        "contractorLicenseKey": null,
+        "sourceJurisdiction": "Miami-Dade County",
+        "sourceLabel": "CTH pilot sample extract",
+        "notes": "Sample row for product demonstration — not a live AHJ feed."
+      },
+      {
+        "id": "md-demo-2",
+        "permitNumber": "ELE-2024-5521",
+        "description": "Electrical alterations for kitchen circuit upgrades",
+        "category": "Electrical",
+        "status": "closed",
+        "filedDate": "2024-03-14",
+        "issuedDate": "2024-03-29",
+        "finalDate": "2024-07-15",
+        "declaredValue": 4200,
+        "contractorName": null,
+        "contractorLicenseKey": null,
+        "sourceJurisdiction": "Miami-Dade County",
+        "sourceLabel": "CTH pilot sample extract"
+      },
+      {
+        "id": "md-demo-3",
+        "permitNumber": "BLD-2025-00912",
+        "description": "Window replacement — impact openings",
+        "category": "Building",
+        "status": "open",
+        "filedDate": "2025-11-02",
+        "issuedDate": "2025-11-20",
+        "finalDate": null,
+        "declaredValue": 18500,
+        "contractorName": "Sample Fenestration Co",
+        "contractorLicenseKey": null,
+        "sourceJurisdiction": "Miami-Dade County",
+        "sourceLabel": "CTH pilot sample extract",
+        "notes": "Appears open in available sample records. Finalization not shown."
+      }
+    ],
+    "500 E LAS OLAS BLVD|33301": [
+      {
+        "id": "br-demo-1",
+        "permitNumber": "BR-RRF-2023-441",
+        "description": "Re-roof asphalt shingles",
+        "category": "Roofing",
+        "status": "finaled",
+        "filedDate": "2023-08-01",
+        "issuedDate": "2023-08-10",
+        "finalDate": "2023-09-02",
+        "declaredValue": 22000,
+        "contractorName": null,
+        "contractorLicenseKey": null,
+        "sourceJurisdiction": "Broward / municipal",
+        "sourceLabel": "CTH pilot sample extract"
+      }
+    ]
+  },
+  "contractorActivityByLicense": {}
+}

@@ -12,6 +12,18 @@ export const metadata: Metadata = {
 
 const tools = [
   {
+    href: "/property",
+    title: "Check My Address",
+    body: "Property research — permit history signals with progressive coverage honesty.",
+    step: "P",
+  },
+  {
+    href: "/tools/permit-planner",
+    title: "Permit & Inspection Planner",
+    body: "Likely permit categories, contractor questions, and AHJ next steps by project type.",
+    step: "P",
+  },
+  {
     href: "/tools/scope-builder",
     title: "Scope Builder",
     body: "Turn plan or studio answers into a contractor-ready scope so bids can be compared fairly.",
@@ -47,8 +59,8 @@ export default function ToolsHubPage() {
         Plan clearly before you hire
       </h1>
       <p className="mt-3 max-w-2xl text-base leading-relaxed text-[var(--muted)]">
-        Scope → analyze quote → compare bids → verify contractor → checklist. Evidence-first
-        research tools — not rankings, star scores, or a marketplace.
+        Check address → plan permits → scope → analyze quote → compare → verify → checklist.
+        Evidence-first research tools — not rankings, star scores, or a marketplace.
       </p>
 
       <div className="mt-6">
