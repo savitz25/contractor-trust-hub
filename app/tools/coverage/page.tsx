@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { coverageAnalyticsSnapshot } from "@/lib/property/coverage";
+import { waveAOpsSnapshot } from "@/lib/property/ops-health";
 import { extractStats } from "@/lib/property/permits";
 import { pageMetadata } from "@/lib/seo/page-meta";
 
@@ -14,11 +15,12 @@ export const metadata: Metadata = pageMetadata({
 export default function CoveragePage() {
   const snap = coverageAnalyticsSnapshot();
   const stats = extractStats();
+  const ops = waveAOpsSnapshot();
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
-        Stage 6 data expansion
+        Stage 6.1 — Wave A production focus
       </p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--text)]">
         Permit coverage matrix
@@ -28,7 +30,7 @@ export default function CoveragePage() {
         permit history. High-confidence license joins only — never name-only auto-links.
       </p>
 
-      <div className="mt-8 grid gap-3 sm:grid-cols-3">
+      <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3">
           <p className="text-xs text-[var(--muted)]">Jurisdictions enabled</p>
           <p className="text-2xl font-semibold text-[var(--navy)]">
@@ -40,12 +42,56 @@ export default function CoveragePage() {
           <p className="text-2xl font-semibold text-[var(--navy)]">{stats.permitRows}</p>
         </div>
         <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3">
-          <p className="text-xs text-[var(--muted)]">Activity license keys</p>
+          <p className="text-xs text-[var(--muted)]">License-bearing rows</p>
+          <p className="text-2xl font-semibold text-[var(--navy)]">{stats.withLicenseKey}</p>
+        </div>
+        <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3">
+          <p className="text-xs text-[var(--muted)]">Join rate proxy</p>
           <p className="text-2xl font-semibold text-[var(--navy)]">
-            {stats.activityLicenseKeys}
+            {stats.joinRateProxy}%
+          </p>
+          <p className="text-[10px] text-[var(--muted)]">
+            activity keys ∩ permit keys / permit keys
           </p>
         </div>
       </div>
+
+      <section className="mt-8 rounded-3xl border border-[var(--accent)]/30 bg-[var(--accent-soft)] p-5 sm:p-6">
+        <h2 className="text-lg font-semibold text-[var(--text)]">Wave A ops snapshot</h2>
+        <p className="mt-1 text-xs text-[var(--muted)]">
+          Production focus counties · freshness {ops.extract.freshness || "—"}
+        </p>
+        <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+          {Object.entries(ops.waveA.recordsByCounty).map(([county, n]) => (
+            <li
+              key={county}
+              className="rounded-xl border border-[var(--border)] bg-white px-3 py-2"
+            >
+              <span className="font-medium text-[var(--text)]">{county}</span>
+              <span className="text-[var(--muted)]"> · {n} sample/extract row(s)</span>
+            </li>
+          ))}
+        </ul>
+        <dl className="mt-4 grid gap-2 text-xs text-[var(--muted)] sm:grid-cols-2">
+          <div>
+            Unmatched license-bearing keys (no activity row):{" "}
+            <strong className="text-[var(--text)]">
+              {ops.extract.unmatchedLicenseBearing}
+            </strong>
+          </div>
+          <div>
+            Activity keys also on permits:{" "}
+            <strong className="text-[var(--text)]">
+              {ops.extract.activityKeysAlsoOnPermits}
+            </strong>
+          </div>
+        </dl>
+        <ul className="mt-3 space-y-1 text-xs text-[var(--muted)]">
+          {ops.knownLimits.map((l) => (
+            <li key={l}>· {l}</li>
+          ))}
+        </ul>
+      </section>
 
       <section className="mt-8 rounded-3xl border border-[var(--border)] bg-white p-5 sm:p-6">
         <h2 className="text-lg font-semibold text-[var(--text)]">Waves</h2>

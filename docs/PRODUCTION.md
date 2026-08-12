@@ -8,6 +8,7 @@
 | `NEXT_PUBLIC_SITE_URL` | **Required in production** | Must be `https://www.contractortrusthub.com` — see [SEO.md](./SEO.md) |
 | `NEXT_PUBLIC_CORRECTIONS_EMAIL` | Recommended | Mailto target for `/corrections` (default `corrections@contractortrusthub.com`) |
 | Stage 5 migration `005_stage5_accounts_passport.sql` | For durable accounts | Magic link, workspace, alerts |
+| Stage 6 migration `006_stage6_permits_activity.sql` | For DB permit/activity | `npm run verify:stage6` then `npm run load:wave-a` |
 | `RESEND_API_KEY` | Optional | Magic-link + watch alert email |
 | `AUTH_FROM_EMAIL` | Optional | Resend from address |
 
@@ -23,6 +24,8 @@ Framework: Next.js (`vercel.json`). Python under `ingest/` is offline only.
 6. `/independence`, `/corrections`, `/disclaimer`, `/methodology` → 200  
 7. `/robots.txt` → Sitemap URL  
 8. `/sitemap/0.xml` → static + discovery + contractors  
+9. `/tools/coverage` → Wave A ops snapshot + join rate proxy  
+10. `/property` demo Wave A address → partial coverage + freshness (see [STAGE_6_1_VERIFICATION.md](./STAGE_6_1_VERIFICATION.md))
 
 ## Performance notes
 

@@ -6,11 +6,13 @@ import {
 import { coverageForCounty, coverageLabel } from "./coverage";
 import { buildAddressKey, normalizeStreetKey } from "./matcher";
 import { loadPermitsForAddress } from "./permits";
+import { isAttentionOpen, needsFinalization } from "./status";
 import type {
   PropertyAddressInput,
   PropertyPermitRecord,
   PropertyResearchResult,
 } from "./types";
+import { isWaveACounty, WAVE_A_COVERAGE_NOTE } from "./wave-a";
 
 /** Stable property id from normalized address (no PII server store required). */
 export function propertyIdFromAddress(input: {
@@ -206,13 +208,10 @@ export function researchProperty(
   }
 
   const openCount = permits.filter((p) => p.status === "open").length;
-  const issuedOpenCount = permits.filter(
-    (p) => p.status === "open" || p.status === "issued"
-  ).length;
+  const issuedOpenCount = permits.filter((p) => isAttentionOpen(p.status)).length;
   const expiredUnresolvedCount = permits.filter((p) => p.status === "expired").length;
-  const finalizationMissingCount = permits.filter(
-    (p) =>
-      (p.status === "open" || p.status === "issued") && !p.finalDate
+  const finalizationMissingCount = permits.filter((p) =>
+    needsFinalization(p.status, p.finalDate)
   ).length;
 
   let resolveStatus: PropertyResearchResult["resolveStatus"] = "resolved";
@@ -230,6 +229,12 @@ export function researchProperty(
   const freshness =
     permits.map((p) => p.retrievedAt).find(Boolean) || cov?.freshness || null;
 
+  const countyOut = cov?.county || countyName;
+  let coverageNote = `${coverageLabel(level)}. ${cov?.note || ""}`.trim();
+  if (isWaveACounty(countyOut) && (level === "partial" || level === "full")) {
+    coverageNote = `${coverageNote} ${WAVE_A_COVERAGE_NOTE}`.trim();
+  }
+
   return {
     propertyId,
     normalizedAddress,
@@ -238,7 +243,7 @@ export function researchProperty(
     city: city || null,
     zip,
     state,
-    county: cov?.county || countyName,
+    county: countyOut,
     countySlug: cov?.countySlug || countyDef?.slug || null,
     coverage: level,
     openCount,
@@ -249,7 +254,7 @@ export function researchProperty(
     resolveStatus,
     resolveMessage,
     resolutionNotes,
-    coverageNote: `${coverageLabel(level)}. ${cov?.note || ""}`.trim(),
+    coverageNote,
     checked,
     notChecked,
     permits,

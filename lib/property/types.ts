@@ -24,12 +24,25 @@ export type PropertyAddressInput = {
   state?: string;
 };
 
+/** Audit trail for high-confidence joins (license-only). */
+export type PermitJoinAudit = {
+  licenseKeyNorm: string | null;
+  method: string;
+  confidence: "high" | "none";
+  label: string;
+  candidateSlug: string | null;
+  auditedAt: string;
+};
+
 export type PropertyPermitRecord = {
   id: string;
   permitNumber: string | null;
   description: string;
   category: string;
   status: PermitStatus;
+  /** Original AHJ status string before normalization */
+  statusRaw?: string | null;
+  statusNote?: string | null;
   filedDate: string | null;
   issuedDate: string | null;
   finalDate: string | null;
@@ -43,6 +56,7 @@ export type PropertyPermitRecord = {
   matchMethod?: string;
   /** Human-readable match status */
   matchLabel?: string;
+  joinAudit?: PermitJoinAudit | null;
   sourceJurisdiction: string;
   sourceLabel: string;
   retrievedAt?: string | null;

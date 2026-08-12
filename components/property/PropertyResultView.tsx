@@ -11,6 +11,7 @@ import {
   savePropertyContext,
 } from "@/lib/property/session";
 import type { PropertyResearchResult } from "@/lib/property/types";
+import { isWaveACounty, WAVE_A_COVERAGE_NOTE } from "@/lib/property/wave-a";
 import { formatUsd } from "@/lib/plan/cost-model";
 
 const STATUS_STYLE: Record<string, string> = {
@@ -85,14 +86,47 @@ export function PropertyResultView({ result }: { result: PropertyResearchResult 
               {result.county} County
             </span>
           ) : null}
-          {result.dataFreshness ? (
-            <span className="rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--muted)]">
-              Extract freshness: {result.dataFreshness}
+          {isWaveACounty(result.county) ? (
+            <span className="rounded-full border border-[var(--accent)]/40 bg-[var(--accent-soft)] px-3 py-1 text-xs font-semibold text-[var(--navy)]">
+              Wave A (production focus)
             </span>
           ) : null}
+          {result.dataFreshness ? (
+            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-900">
+              Freshness: {result.dataFreshness}
+            </span>
+          ) : (
+            <span className="rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--muted)]">
+              Freshness: not shown
+            </span>
+          )}
         </div>
 
         <p className="mt-4 text-sm leading-relaxed text-[var(--muted)]">{result.coverageNote}</p>
+
+        {result.coverage === "partial" ? (
+          <div className="mt-3 rounded-xl border border-amber-200/80 bg-amber-50/70 px-4 py-3 text-sm text-amber-950">
+            <p className="font-semibold">Partial coverage — what this means</p>
+            <ul className="mt-2 space-y-1 text-xs leading-relaxed text-amber-950/90">
+              <li>
+                · We only show permits present in current extracts for this jurisdiction.
+              </li>
+              <li>
+                · Empty history is common and does <strong>not</strong> prove a clean permit record.
+              </li>
+              <li>
+                · Open/issued flags are extract-only; confirm live status with the local AHJ.
+              </li>
+              <li>
+                · Contractor profile links require an <strong>exact license number</strong> match —
+                names alone never auto-link.
+              </li>
+              {isWaveACounty(result.county) ? (
+                <li>· {WAVE_A_COVERAGE_NOTE}</li>
+              ) : null}
+            </ul>
+          </div>
+        ) : null}
 
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div className="rounded-xl border border-emerald-200/80 bg-emerald-50/50 px-4 py-3">
@@ -299,9 +333,22 @@ export function PropertyResultView({ result }: { result: PropertyResearchResult 
                     ) : null}
                   </div>
                 ) : null}
-                {p.retrievedAt ? (
-                  <p className="mt-2 text-[11px] text-[var(--muted)]">
-                    Source freshness: {p.retrievedAt} · {p.sourceLabel}
+                <p className="mt-2 text-[11px] text-[var(--muted)]">
+                  Source: {p.sourceLabel}
+                  {p.retrievedAt ? ` · Freshness: ${p.retrievedAt}` : " · Freshness: not shown"}
+                  {p.statusRaw && p.statusRaw !== p.status
+                    ? ` · Status raw: “${p.statusRaw}” → ${p.status}`
+                    : ` · Status: ${p.status}`}
+                </p>
+                {p.joinAudit ? (
+                  <p className="mt-1 font-mono text-[10px] text-[var(--muted)]">
+                    Join audit: {p.joinAudit.method} / {p.joinAudit.confidence}
+                    {p.joinAudit.licenseKeyNorm
+                      ? ` / key ${p.joinAudit.licenseKeyNorm}`
+                      : ""}
+                    {p.joinAudit.candidateSlug
+                      ? ` / slug ${p.joinAudit.candidateSlug}`
+                      : " / no slug"}
                   </p>
                 ) : null}
                 {p.notes ? (

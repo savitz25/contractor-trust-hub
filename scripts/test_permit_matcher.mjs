@@ -86,4 +86,24 @@ function resolvePermitContractorJoin(input) {
 assert.equal(normalizeLicenseKey("cbc 015082"), "CBC015082");
 assert.equal(normalizePersonOrBizName("Acme Construction, LLC"), "ACME CONSTRUCTION");
 
+// Status normalization (inline mirror of lib/property/status.ts core rules)
+function normalizePermitStatus(raw) {
+  const h = String(raw || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+  if (["open", "closed", "expired", "issued", "finaled", "unknown"].includes(h)) return h;
+  if (/expir|void|cancel|withdraw|revok|deni|reject/.test(h)) return "expired";
+  if (/final|completed|complete|co final|occupancy/.test(h)) return "finaled";
+  if (/issued|issue|approved issued/.test(h)) return "issued";
+  if (/closed|archived|done/.test(h)) return "closed";
+  if (/open|progress|pending|applied|active|submitted/.test(h)) return "open";
+  return "unknown";
+}
+assert.equal(normalizePermitStatus("Final Inspection"), "finaled");
+assert.equal(normalizePermitStatus("In Progress"), "open");
+assert.equal(normalizePermitStatus("Permit Issued"), "issued");
+assert.equal(normalizePermitStatus("VOID"), "expired");
+assert.equal(normalizePermitStatus("something weird"), "unknown");
+
 console.log("test_permit_matcher: all passed");

@@ -15,7 +15,9 @@ Evidence-first expansion. High-confidence matches only. Explicit coverage limits
 
 Source of truth: `lib/property/coverage.ts`  
 Extract samples: `data/property/sample-permits.json`  
-DB (batch): `schema/migrations/006_stage6_permits_activity.sql`
+DB (batch): `schema/migrations/006_stage6_permits_activity.sql`  
+
+**Stage 6.1 (Wave A production hardening):** see [STAGE_6_1_VERIFICATION.md](./STAGE_6_1_VERIFICATION.md) — migration verify, batch load, status normalization, join audit, ops snapshot.
 
 ## Coverage levels
 

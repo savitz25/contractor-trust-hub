@@ -7,7 +7,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:matcher": "node scripts/test_permit_matcher.mjs",
+    "verify:stage6": "node scripts/verify_stage6_migration.mjs",
+    "load:wave-a": "node scripts/load_wave_a_permits.mjs",
+    "audit:joins": "node scripts/audit_permit_joins.mjs"
   },
   "dependencies": {
     "next": "^15.5.23",

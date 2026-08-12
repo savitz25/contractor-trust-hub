@@ -9,24 +9,41 @@ export async function ActivitySection({
 }) {
   const signals = await getActivitySignalsAsync(contractor);
 
+  const qaBadge =
+    signals.status === "available"
+      ? { label: "Live", className: "border-emerald-200 bg-emerald-50 text-emerald-900" }
+      : signals.status === "partial"
+        ? { label: "Partial", className: "border-amber-200 bg-amber-50 text-amber-950" }
+        : { label: "Not linked", className: "border-[var(--border)] bg-[var(--bg)] text-[var(--muted)]" };
+
   return (
     <section
       id="activity"
       className="scroll-mt-28 rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-4 sm:p-6"
     >
-      <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
-        Activity / permit signals
-      </h2>
-      <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-        Associated in available datasets only — never a quality rating.{" "}
-        <Link href="/tools/coverage" className="font-medium text-[var(--navy)]">
-          Coverage matrix
-        </Link>
-        {" · "}
-        <Link href="/property" className="font-medium text-[var(--navy)]">
-          Property research
-        </Link>
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
+            Activity / permit signals
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+            Associated in available datasets only — never a quality rating. Exact license joins
+            only.{" "}
+            <Link href="/tools/coverage" className="font-medium text-[var(--navy)]">
+              Coverage matrix
+            </Link>
+            {" · "}
+            <Link href="/property" className="font-medium text-[var(--navy)]">
+              Property research
+            </Link>
+          </p>
+        </div>
+        <span
+          className={`rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${qaBadge.className}`}
+        >
+          {qaBadge.label}
+        </span>
+      </div>
 
       {signals.status === "unavailable" ? (
         <div className="mt-4 rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg)]/50 px-4 py-4">
@@ -34,6 +51,10 @@ export async function ActivitySection({
             Permit/activity history not yet linked for this record
           </p>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{signals.message}</p>
+          <p className="mt-2 text-[11px] text-[var(--muted)]">
+            QA: {signals.qa === "no_license_keys" ? "no license keys on profile" : "no extract match"}
+            . We do not invent volume or recency.
+          </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Link
               href="/property"
@@ -52,7 +73,9 @@ export async function ActivitySection({
       ) : (
         <>
           {signals.status === "partial" ? (
-            <p className="mt-3 text-xs text-amber-900">{signals.message}</p>
+            <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50/80 px-3 py-2 text-xs text-amber-950">
+              {signals.message}
+            </p>
           ) : null}
           <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
             <div>
@@ -91,35 +114,34 @@ export async function ActivitySection({
                 </dd>
               </div>
             ) : null}
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-2 space-y-1">
               <p className="text-xs text-[var(--muted)]">{signals.note}</p>
               {"matchMethod" in signals && signals.matchMethod ? (
-                <p className="mt-1 text-xs text-[var(--muted)]">
-                  Match method: <strong className="text-[var(--text)]">{signals.matchMethod}</strong>
+                <p className="text-xs text-[var(--muted)]">
+                  Match method:{" "}
+                  <strong className="text-[var(--text)]">{signals.matchMethod}</strong>
+                  {" (exact license only)"}
                   {"sourceLabel" in signals && signals.sourceLabel
                     ? ` · Source: ${signals.sourceLabel}`
                     : ""}
-                  {"retrievedAt" in signals && signals.retrievedAt
-                    ? ` · Freshness: ${signals.retrievedAt}`
-                    : ""}
+                </p>
+              ) : null}
+              {"retrievedAt" in signals && signals.retrievedAt ? (
+                <p className="text-xs font-medium text-[var(--text)]">
+                  Extract freshness: {signals.retrievedAt}
+                </p>
+              ) : (
+                <p className="text-xs text-[var(--muted)]">
+                  Freshness: not shown in current extracts
+                </p>
+              )}
+              {"matchedLicenseKeys" in signals && signals.matchedLicenseKeys?.length ? (
+                <p className="font-mono text-[10px] text-[var(--muted)]">
+                  Joined keys: {signals.matchedLicenseKeys.join(", ")}
                 </p>
               ) : null}
             </div>
           </dl>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Link
-              href="/property"
-              className="text-xs font-semibold text-[var(--navy)] no-underline hover:underline"
-            >
-              Property research →
-            </Link>
-            <Link
-              href="/tools/permit-planner"
-              className="text-xs font-semibold text-[var(--navy)] no-underline hover:underline"
-            >
-              Permit Planner →
-            </Link>
-          </div>
         </>
       )}
     </section>
