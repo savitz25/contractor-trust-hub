@@ -139,6 +139,63 @@ def create_batch(conn, *, source_file: str, row_count: int | None, checksum: str
     return batch_id
 
 
+def _transform_row(row: dict[str, str], *, active_only: bool) -> tuple | None:
+    """Return upsert tuple or None to skip. (skip_reason, tuple) via exceptions not used."""
+    external_key = row.get("external_key", "").strip().upper()
+    legal_name = row.get("legal_name", "").strip()
+    if not external_key or not legal_name:
+        return None
+
+    status = (row.get("status") or "").strip().lower()
+    if active_only and status and status != "active":
+        return ("active_only", None)
+
+    officers = parse_json(row.get("officers_json"))
+    if not isinstance(officers, list):
+        officers = []
+
+    # Slim payload for bulk quarterly loads (officers live in officers column)
+    name_norm = row.get("name_normalized") or normalize_entity_name(legal_name)
+    city = row.get("city") or row.get("mail_city") or ""
+    state = (row.get("state") or row.get("mail_state") or "FL")[:2].upper() or "FL"
+    postal = row.get("postal_code") or row.get("mail_postal_code") or ""
+    addr = row.get("principal_address") or ""
+    if row.get("principal_address_2"):
+        addr = f"{addr} {row['principal_address_2']}".strip()
+    fei = fei_digits(row.get("fei_number"))
+
+    payload = {
+        "document_number": external_key,
+        "entity_type_label": row.get("entity_type_label"),
+        "name_normalized": name_norm,
+        "mail_city": row.get("mail_city"),
+        "mail_postal_code": row.get("mail_postal_code"),
+        "last_transaction_date": row.get("last_transaction_date"),
+        "status_raw": row.get("status_raw"),
+    }
+
+    return (
+        "ok",
+        (
+            row.get("source_system") or SOURCE_SYSTEM,
+            external_key,
+            legal_name,
+            name_norm,
+            row.get("entity_type") or None,
+            status or None,
+            parse_date(row.get("formation_date")),
+            fei or None,
+            addr or None,
+            city or None,
+            state,
+            postal or None,
+            row.get("registered_agent_name") or None,
+            json.dumps(officers, ensure_ascii=False),
+            json.dumps(payload, ensure_ascii=False),
+        ),
+    )
+
+
 def load_entities(
     conn,
     path: Path,
@@ -148,22 +205,27 @@ def load_entities(
     batch_size: int,
     Jsonb,
     active_only: bool,
+    resume: bool = True,
 ) -> dict[str, int]:
+    """
+    Bulk load via COPY into a temp table, then INSERT … ON CONFLICT.
+    Required for quarterly (~12M rows); row-by-row is not viable over pooler.
+    """
     now = datetime.now(timezone.utc)
-    stats = {"rows_read": 0, "upserted": 0, "skipped": 0, "active_only_skipped": 0}
+    stats = {
+        "rows_read": 0,
+        "upserted": 0,
+        "skipped": 0,
+        "active_only_skipped": 0,
+    }
 
-    sql = """
-        INSERT INTO entities (
-          source_system, external_key, legal_name, name_normalized, entity_type,
-          status, formation_date, fei_number, principal_address, city, state,
-          postal_code, registered_agent_name, officers, raw_payload,
-          ingest_batch_id, last_verified_at, updated_at
-        ) VALUES (
-          %s, %s, %s, %s, %s,
-          %s, %s, %s, %s, %s, %s,
-          %s, %s, %s, %s,
-          %s, %s, %s
-        )
+    # Smaller chunks avoid Supabase statement_timeout on INSERT ON CONFLICT
+    copy_chunk = max(min(batch_size, 2000), 500)
+    # resume=True → DO NOTHING on conflict (skip already-loaded keys)
+    conflict_sql = (
+        "ON CONFLICT (source_system, external_key) DO NOTHING"
+        if resume
+        else """
         ON CONFLICT (source_system, external_key) DO UPDATE SET
           legal_name = EXCLUDED.legal_name,
           name_normalized = EXCLUDED.name_normalized,
@@ -181,84 +243,101 @@ def load_entities(
           ingest_batch_id = EXCLUDED.ingest_batch_id,
           last_verified_at = EXCLUDED.last_verified_at,
           updated_at = EXCLUDED.updated_at
-    """
+        """
+    )
+    log.info("Load mode: %s chunk=%s", "resume/skip-existing" if resume else "upsert-all", copy_chunk)
 
     with conn.cursor() as cur:
+        cur.execute("SET statement_timeout = 0")
+        cur.execute("SET idle_in_transaction_session_timeout = 0")
+        conn.commit()
+
+        cur.execute(
+            """
+            CREATE TEMP TABLE sunbiz_stage (
+              source_system TEXT,
+              external_key TEXT,
+              legal_name TEXT,
+              name_normalized TEXT,
+              entity_type TEXT,
+              status TEXT,
+              formation_date DATE,
+              fei_number TEXT,
+              principal_address TEXT,
+              city TEXT,
+              state TEXT,
+              postal_code TEXT,
+              registered_agent_name TEXT,
+              officers JSONB,
+              raw_payload JSONB
+            ) ON COMMIT PRESERVE ROWS
+            """
+        )
+        conn.commit()
+
+        buffer: list[tuple] = []
+
+        def flush() -> None:
+            nonlocal buffer
+            if not buffer:
+                return
+            n = len(buffer)
+            with conn.cursor() as c2:
+                c2.execute("SET statement_timeout = 0")
+                c2.execute("TRUNCATE sunbiz_stage")
+                with c2.copy(
+                    """
+                    COPY sunbiz_stage (
+                      source_system, external_key, legal_name, name_normalized,
+                      entity_type, status, formation_date, fei_number,
+                      principal_address, city, state, postal_code,
+                      registered_agent_name, officers, raw_payload
+                    ) FROM STDIN
+                    """
+                ) as copy:
+                    for t in buffer:
+                        copy.write_row(t)
+                c2.execute(
+                    f"""
+                    INSERT INTO entities (
+                      source_system, external_key, legal_name, name_normalized, entity_type,
+                      status, formation_date, fei_number, principal_address, city, state,
+                      postal_code, registered_agent_name, officers, raw_payload,
+                      ingest_batch_id, last_verified_at, updated_at
+                    )
+                    SELECT
+                      source_system, external_key, legal_name, name_normalized, entity_type,
+                      status, formation_date, fei_number, principal_address, city, state,
+                      postal_code, registered_agent_name, officers, raw_payload,
+                      %s, %s, %s
+                    FROM sunbiz_stage
+                    {conflict_sql}
+                    """,
+                    (batch_id, now, now),
+                )
+            conn.commit()
+            stats["upserted"] += n
+            log.info("  sunbiz entities progress: %s", stats["upserted"])
+            buffer = []
+
         for row in iter_csv(path):
             stats["rows_read"] += 1
-            if limit is not None and stats["upserted"] >= limit:
+            if limit is not None and stats["upserted"] + len(buffer) >= limit:
                 break
-
-            external_key = row.get("external_key", "").strip().upper()
-            legal_name = row.get("legal_name", "").strip()
-            if not external_key or not legal_name:
+            result = _transform_row(row, active_only=active_only)
+            if result is None:
                 stats["skipped"] += 1
                 continue
-
-            status = (row.get("status") or "").strip().lower()
-            if active_only and status and status != "active":
+            kind, tup = result
+            if kind == "active_only":
                 stats["active_only_skipped"] += 1
                 continue
+            buffer.append(tup)
+            if len(buffer) >= copy_chunk:
+                flush()
 
-            officers = parse_json(row.get("officers_json"))
-            if not isinstance(officers, list):
-                officers = []
+        flush()
 
-            payload = parse_json(row.get("raw_payload_json"))
-            if not isinstance(payload, dict):
-                payload = {"_raw": row.get("raw_payload_json")}
-
-            # Enrich payload with staging fields useful for linker evidence
-            payload = {
-                **payload,
-                "entity_type_label": row.get("entity_type_label"),
-                "name_normalized": row.get("name_normalized")
-                or normalize_entity_name(legal_name),
-                "registered_agent_name": row.get("registered_agent_name"),
-                "mail_city": row.get("mail_city"),
-                "mail_postal_code": row.get("mail_postal_code"),
-            }
-
-            name_norm = row.get("name_normalized") or normalize_entity_name(legal_name)
-            # Prefer principal city/state; fall back to mail
-            city = row.get("city") or row.get("mail_city") or ""
-            state = (row.get("state") or row.get("mail_state") or "FL")[:2].upper() or "FL"
-            postal = row.get("postal_code") or row.get("mail_postal_code") or ""
-            addr = row.get("principal_address") or ""
-            if row.get("principal_address_2"):
-                addr = f"{addr} {row['principal_address_2']}".strip()
-
-            fei = fei_digits(row.get("fei_number"))
-
-            cur.execute(
-                sql,
-                (
-                    row.get("source_system") or SOURCE_SYSTEM,
-                    external_key,
-                    legal_name,
-                    name_norm,
-                    row.get("entity_type") or None,
-                    status or None,
-                    parse_date(row.get("formation_date")),
-                    fei or None,
-                    addr or None,
-                    city or None,
-                    state,
-                    postal or None,
-                    row.get("registered_agent_name") or None,
-                    Jsonb(officers),
-                    Jsonb(payload),
-                    batch_id,
-                    now,
-                    now,
-                ),
-            )
-            stats["upserted"] += 1
-            if stats["upserted"] % batch_size == 0:
-                conn.commit()
-                log.info("  sunbiz entities progress: %s", stats["upserted"])
-
-    conn.commit()
     return stats
 
 
@@ -273,6 +352,11 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--batch-size", type=int, default=500)
     p.add_argument("--active-only", action="store_true")
+    p.add_argument(
+        "--no-resume",
+        action="store_true",
+        help="Re-upsert all rows even if external_key already exists",
+    )
     p.add_argument("-v", "--verbose", action="store_true")
     args = p.parse_args(argv)
 
@@ -313,6 +397,7 @@ def main(argv: list[str] | None = None) -> int:
             batch_size=args.batch_size,
             Jsonb=Jsonb,
             active_only=args.active_only,
+            resume=not args.no_resume,
         )
         summary["entities"] = stats
         log.info("Entities load: %s", stats)

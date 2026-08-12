@@ -516,6 +516,10 @@ def main(argv: list[str] | None = None) -> int:
     dsn = connect_dsn()
     log.info("Connecting…")
     with psycopg.connect(dsn) as conn:
+        with conn.cursor() as cur:
+            cur.execute("SET statement_timeout = 0")
+            cur.execute("SET idle_in_transaction_session_timeout = 0")
+        conn.commit()
         ensure_columns(conn)
         indexes = load_sunbiz_index(conn)
         if sum(len(x) for x in indexes) == 0:

@@ -117,39 +117,90 @@ def download_file(
     local_path: Path,
     *,
     retries: int = 3,
+    reconnect=None,
+    chunk_size: int = 256 * 1024,
 ) -> dict[str, Any]:
+    """
+    Download with resume (.part file) and optional reconnect for large files.
+    Avoids full-file prefetch (triggers "insufficient resources" on FL DOS SFTP).
+    reconnect() -> (sftp, transport) when the socket drops mid-transfer.
+    """
     local_path.parent.mkdir(parents=True, exist_ok=True)
     tmp = local_path.with_suffix(local_path.suffix + ".part")
     last_err: Exception | None = None
+    started = time.time()
+
+    # Already complete?
+    if local_path.exists():
+        try:
+            remote_size = int(sftp.stat(remote_path).st_size)
+            if local_path.stat().st_size == remote_size:
+                digest = sha256_file(local_path)
+                log.info("Already have complete %s (%s bytes)", local_path.name, remote_size)
+                return {
+                    "remote_path": remote_path,
+                    "local_path": str(local_path).replace("\\", "/"),
+                    "bytes": remote_size,
+                    "sha256": digest,
+                    "downloaded_at": datetime.now(timezone.utc).isoformat(),
+                    "elapsed_seconds": 0,
+                    "resumed": False,
+                    "skipped_existing": True,
+                }
+        except Exception:  # noqa: BLE001
+            pass
 
     for attempt in range(1, retries + 1):
         try:
             st = sftp.stat(remote_path)
             remote_size = int(st.st_size)
+            offset = tmp.stat().st_size if tmp.exists() else 0
+            if offset > remote_size:
+                log.warning("Part file larger than remote — restarting")
+                tmp.unlink()
+                offset = 0
+
             log.info(
-                "Downloading %s → %s (%s bytes, attempt %s/%s)",
+                "Downloading %s → %s (%s bytes, have %s, attempt %s/%s)",
                 remote_path,
                 local_path,
                 remote_size,
+                offset,
                 attempt,
                 retries,
             )
-            started = time.time()
-            # Resume-friendly: rewrite part each attempt
-            if tmp.exists():
-                tmp.unlink()
 
-            def _cb(transferred: int, total: int) -> None:
-                if total and transferred % max(total // 20, 1) < 1024 * 1024:
-                    pct = 100.0 * transferred / total
-                    if transferred == total or transferred % (50 * 1024 * 1024) < 1024 * 1024:
-                        log.info("  progress %.1f%% (%s / %s)", pct, transferred, total)
+            # Stream without full-file prefetch (server resource limits)
+            with sftp.open(remote_path, "rb") as rf:
+                if offset:
+                    rf.seek(offset)
+                mode = "ab" if offset else "wb"
+                with tmp.open(mode) as lf:
+                    transferred = offset
+                    last_log = transferred
+                    while transferred < remote_size:
+                        data = rf.read(chunk_size)
+                        if not data:
+                            break
+                        lf.write(data)
+                        transferred += len(data)
+                        if (
+                            transferred - last_log >= 25 * 1024 * 1024
+                            or transferred >= remote_size
+                        ):
+                            pct = 100.0 * transferred / remote_size
+                            log.info(
+                                "  progress %.1f%% (%s / %s)",
+                                pct,
+                                transferred,
+                                remote_size,
+                            )
+                            last_log = transferred
 
-            sftp.get(remote_path, str(tmp), callback=_cb)
-            if tmp.stat().st_size != remote_size:
-                raise IOError(
-                    f"Size mismatch: local {tmp.stat().st_size} != remote {remote_size}"
-                )
+            final_size = tmp.stat().st_size
+            if final_size != remote_size:
+                raise IOError(f"Size mismatch: local {final_size} != remote {remote_size}")
+
             if local_path.exists():
                 local_path.unlink()
             tmp.rename(local_path)
@@ -162,13 +213,27 @@ def download_file(
                 "sha256": digest,
                 "downloaded_at": datetime.now(timezone.utc).isoformat(),
                 "elapsed_seconds": round(elapsed, 2),
+                "resumed": offset > 0,
             }
             log.info("OK %s sha256=%s…", local_path.name, digest[:16])
             return meta
         except Exception as exc:  # noqa: BLE001
             last_err = exc
+            msg = str(exc)
             log.warning("Download failed: %s", exc)
-            time.sleep(min(2 ** attempt, 20))
+            # Server resource errors: wait longer before resume
+            if "insufficient resources" in msg.lower():
+                wait = min(60 + attempt * 15, 180)
+            else:
+                wait = min(5 * attempt, 45)
+            log.info("Waiting %ss before resume…", wait)
+            time.sleep(wait)
+            if reconnect is not None:
+                try:
+                    sftp, _transport = reconnect()
+                    log.info("Reconnected SFTP for resume")
+                except Exception as rexc:  # noqa: BLE001
+                    log.warning("Reconnect failed: %s", rexc)
 
     raise RuntimeError(f"Failed to download {remote_path}: {last_err}")
 
@@ -214,8 +279,13 @@ def main(argv: list[str] | None = None) -> int:
         default=os.environ.get("SUNBIZ_SFTP_PASSWORD", DEFAULT_PASSWORD),
         help="Public password is published by FL DOS; prefer env SUNBIZ_SFTP_PASSWORD",
     )
-    p.add_argument("--timeout", type=float, default=120.0)
-    p.add_argument("--retries", type=int, default=3)
+    p.add_argument("--timeout", type=float, default=300.0)
+    p.add_argument(
+        "--retries",
+        type=int,
+        default=12,
+        help="Resume attempts for large files (default 12 for quarterly)",
+    )
     p.add_argument("--list", action="store_true", help="List remote quarterly/daily dirs and exit")
     p.add_argument("--daily-latest", action="store_true", help="Download newest daily corporate file")
     p.add_argument("--daily", metavar="YYYYMMDD", help="Download daily corporate file for date")
@@ -239,13 +309,29 @@ def main(argv: list[str] | None = None) -> int:
         args.daily_latest = True
         log.info("No mode selected — defaulting to --daily-latest")
 
-    sftp, transport = connect_sftp(
-        args.host,
-        args.user,
-        args.password,
-        timeout=args.timeout,
-        retries=args.retries,
-    )
+    sftp_holder: dict[str, Any] = {"sftp": None, "transport": None}
+
+    def _reconnect():
+        try:
+            if sftp_holder.get("sftp"):
+                sftp_holder["sftp"].close()
+        except Exception:  # noqa: BLE001
+            pass
+        try:
+            if sftp_holder.get("transport"):
+                sftp_holder["transport"].close()
+        except Exception:  # noqa: BLE001
+            pass
+        sftp_holder["sftp"], sftp_holder["transport"] = connect_sftp(
+            args.host,
+            args.user,
+            args.password,
+            timeout=args.timeout,
+            retries=3,
+        )
+        return sftp_holder["sftp"], sftp_holder["transport"]
+
+    sftp, transport = _reconnect()
     entries: list[dict[str, Any]] = []
     try:
         if args.list:
@@ -276,16 +362,20 @@ def main(argv: list[str] | None = None) -> int:
                 sftp,
                 REMOTE["quarterly_cor_data"],
                 qdir / "cordata.zip",
-                retries=args.retries,
+                retries=max(args.retries, 12),
+                reconnect=_reconnect,
             )
+            sftp = sftp_holder["sftp"]
             entries.append(meta)
             if args.events:
                 meta = download_file(
                     sftp,
                     REMOTE["quarterly_cor_events"],
                     qdir / "corevent.zip",
-                    retries=args.retries,
+                    retries=max(args.retries, 12),
+                    reconnect=_reconnect,
                 )
+                sftp = sftp_holder["sftp"]
                 entries.append(meta)
 
         daily_dates: list[str] = []
