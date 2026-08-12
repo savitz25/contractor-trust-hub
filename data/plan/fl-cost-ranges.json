@@ -1,0 +1,399 @@
+{
+  "state": "FL",
+  "currency": "USD",
+  "version": "2026-03-phase2",
+  "updatedAt": "2026-03-30",
+  "disclaimer": "Conceptual planning ranges only — not a formal bid or guarantee. Actual costs depend on site conditions, materials, labor, and scope.",
+  "ranges": [
+    {
+      "projectType": "kitchen_remodel",
+      "scale": "small",
+      "low": 18000,
+      "mid": 32000,
+      "high": 48000,
+      "drivers": [
+        "Cabinet refacing vs full replacement",
+        "Appliance package tier",
+        "Countertop material (laminate vs quartz vs stone)"
+      ],
+      "unitNote": "Typical galley or compact kitchen refresh"
+    },
+    {
+      "projectType": "kitchen_remodel",
+      "scale": "medium",
+      "low": 45000,
+      "mid": 75000,
+      "high": 110000,
+      "drivers": [
+        "Full cabinetry and layout changes",
+        "Electrical and plumbing moves",
+        "Mid-to-high finish level"
+      ],
+      "unitNote": "Standard full remodel, ~150–250 sq ft kitchen"
+    },
+    {
+      "projectType": "kitchen_remodel",
+      "scale": "large",
+      "low": 95000,
+      "mid": 145000,
+      "high": 220000,
+      "drivers": [
+        "Structural openings or island reconfiguration",
+        "Premium millwork and appliances",
+        "High-end surfaces and lighting packages"
+      ],
+      "unitNote": "Large or premium custom kitchen"
+    },
+    {
+      "projectType": "bathroom_remodel",
+      "scale": "small",
+      "low": 9000,
+      "mid": 16000,
+      "high": 25000,
+      "drivers": [
+        "Fixture and vanity swap",
+        "Tile vs paint",
+        "Shower enclosure type"
+      ],
+      "unitNote": "Guest bath refresh"
+    },
+    {
+      "projectType": "bathroom_remodel",
+      "scale": "medium",
+      "low": 22000,
+      "mid": 38000,
+      "high": 55000,
+      "drivers": [
+        "Full gut of one bathroom",
+        "Waterproofing and tile labor",
+        "Plumbing fixture package"
+      ],
+      "unitNote": "Primary or full bath remodel"
+    },
+    {
+      "projectType": "bathroom_remodel",
+      "scale": "large",
+      "low": 50000,
+      "mid": 80000,
+      "high": 130000,
+      "drivers": [
+        "Layout changes or dual vanity",
+        "Custom tile and glass",
+        "Heated floors, premium fixtures"
+      ],
+      "unitNote": "Luxury primary suite bath"
+    },
+    {
+      "projectType": "full_home_renovation",
+      "scale": "small",
+      "low": 80000,
+      "mid": 140000,
+      "high": 220000,
+      "drivers": [
+        "Selective rooms only",
+        "Cosmetic vs systems upgrades",
+        "Age and condition of home"
+      ],
+      "unitNote": "Targeted multi-room renovation"
+    },
+    {
+      "projectType": "full_home_renovation",
+      "scale": "medium",
+      "low": 200000,
+      "mid": 350000,
+      "high": 520000,
+      "drivers": [
+        "Kitchen + baths + finishes throughout",
+        "Electrical / HVAC updates",
+        "Florida code and wind requirements"
+      ],
+      "unitNote": "Whole-home remodel, moderate scope"
+    },
+    {
+      "projectType": "full_home_renovation",
+      "scale": "large",
+      "low": 450000,
+      "mid": 750000,
+      "high": 1200000,
+      "drivers": [
+        "Structural reconfiguration",
+        "Premium finishes throughout",
+        "Complex permitting and phased work"
+      ],
+      "unitNote": "Extensive renovation or near-rebuild scope"
+    },
+    {
+      "projectType": "addition",
+      "scale": "small",
+      "low": 75000,
+      "mid": 120000,
+      "high": 180000,
+      "drivers": [
+        "Simple room addition footprint",
+        "Foundation and roof tie-in",
+        "Interior finish level"
+      ],
+      "unitNote": "~200–400 sq ft addition"
+    },
+    {
+      "projectType": "addition",
+      "scale": "medium",
+      "low": 160000,
+      "mid": 260000,
+      "high": 380000,
+      "drivers": [
+        "Multi-room addition",
+        "HVAC and electrical expansion",
+        "Matching exterior materials"
+      ],
+      "unitNote": "~400–800 sq ft addition"
+    },
+    {
+      "projectType": "addition",
+      "scale": "large",
+      "low": 350000,
+      "mid": 550000,
+      "high": 900000,
+      "drivers": [
+        "Second story or major wing",
+        "Structural engineering",
+        "Site work and drainage"
+      ],
+      "unitNote": "Large addition or second-story expansion"
+    },
+    {
+      "projectType": "basement_finish",
+      "scale": "small",
+      "low": 25000,
+      "mid": 42000,
+      "high": 65000,
+      "drivers": [
+        "Florida basements are uncommon — often lower-level / walkout",
+        "Moisture mitigation",
+        "Basic finishes and lighting"
+      ],
+      "unitNote": "Partial lower-level finish (where applicable)"
+    },
+    {
+      "projectType": "basement_finish",
+      "scale": "medium",
+      "low": 55000,
+      "mid": 90000,
+      "high": 140000,
+      "drivers": [
+        "Full lower-level living area",
+        "Bath or wet bar rough-in",
+        "Egress and code compliance"
+      ],
+      "unitNote": "Full lower-level finish"
+    },
+    {
+      "projectType": "basement_finish",
+      "scale": "large",
+      "low": 120000,
+      "mid": 200000,
+      "high": 320000,
+      "drivers": [
+        "Home theater / suite quality finishes",
+        "Multiple wet areas",
+        "Sound, HVAC zoning, and insulation"
+      ],
+      "unitNote": "Premium entertainment lower level"
+    },
+    {
+      "projectType": "roofing",
+      "scale": "small",
+      "low": 8000,
+      "mid": 14000,
+      "high": 22000,
+      "drivers": [
+        "Simple roof geometry",
+        "Shingle product tier",
+        "Tear-off layers"
+      ],
+      "unitNote": "Small home or partial reroof"
+    },
+    {
+      "projectType": "roofing",
+      "scale": "medium",
+      "low": 16000,
+      "mid": 28000,
+      "high": 45000,
+      "drivers": [
+        "Full tear-off and redeck as needed",
+        "Florida wind-mitigation requirements",
+        "Shingle vs metal vs tile base"
+      ],
+      "unitNote": "Typical single-family reroof"
+    },
+    {
+      "projectType": "roofing",
+      "scale": "large",
+      "low": 40000,
+      "mid": 70000,
+      "high": 120000,
+      "drivers": [
+        "Complex geometry or multi-story",
+        "Tile or premium metal systems",
+        "Extensive underlayment / secondary water barrier"
+      ],
+      "unitNote": "Large or premium roof system"
+    },
+    {
+      "projectType": "siding_exterior",
+      "scale": "small",
+      "low": 12000,
+      "mid": 22000,
+      "high": 35000,
+      "drivers": [
+        "Partial elevation or repair",
+        "Paint vs re-clad",
+        "Substrate condition"
+      ],
+      "unitNote": "Partial exterior refresh"
+    },
+    {
+      "projectType": "siding_exterior",
+      "scale": "medium",
+      "low": 30000,
+      "mid": 55000,
+      "high": 85000,
+      "drivers": [
+        "Full re-siding or stucco system",
+        "Moisture barrier and flashings",
+        "Window/door trim packages"
+      ],
+      "unitNote": "Full exterior cladding update"
+    },
+    {
+      "projectType": "siding_exterior",
+      "scale": "large",
+      "low": 80000,
+      "mid": 140000,
+      "high": 220000,
+      "drivers": [
+        "Premium materials (stone, engineered systems)",
+        "Multi-story access",
+        "Combined with window package"
+      ],
+      "unitNote": "Premium whole-house exterior"
+    },
+    {
+      "projectType": "deck_outdoor",
+      "scale": "small",
+      "low": 8000,
+      "mid": 15000,
+      "high": 25000,
+      "drivers": [
+        "Simple deck footprint",
+        "Wood vs composite",
+        "Railing system"
+      ],
+      "unitNote": "Small deck or patio cover"
+    },
+    {
+      "projectType": "deck_outdoor",
+      "scale": "medium",
+      "low": 22000,
+      "mid": 40000,
+      "high": 65000,
+      "drivers": [
+        "Larger outdoor living area",
+        "Covered structure",
+        "Electrical for lighting/fans"
+      ],
+      "unitNote": "Mid-size outdoor living"
+    },
+    {
+      "projectType": "deck_outdoor",
+      "scale": "large",
+      "low": 55000,
+      "mid": 95000,
+      "high": 160000,
+      "drivers": [
+        "Kitchen / outdoor cooking package",
+        "Structural roof and screening",
+        "Premium finishes and lighting"
+      ],
+      "unitNote": "Full outdoor living pavilion"
+    },
+    {
+      "projectType": "custom_home_rebuild",
+      "scale": "small",
+      "low": 450000,
+      "mid": 700000,
+      "high": 950000,
+      "drivers": [
+        "Compact custom home",
+        "Site demo and foundation",
+        "Florida wind / energy code"
+      ],
+      "unitNote": "Smaller custom home / modest knockdown"
+    },
+    {
+      "projectType": "custom_home_rebuild",
+      "scale": "medium",
+      "low": 850000,
+      "mid": 1300000,
+      "high": 1900000,
+      "drivers": [
+        "Typical 3,000–4,500 sq ft custom",
+        "Site work and impact windows",
+        "Mid-to-high finish level"
+      ],
+      "unitNote": "Mid-size custom or knockdown rebuild"
+    },
+    {
+      "projectType": "custom_home_rebuild",
+      "scale": "large",
+      "low": 1800000,
+      "mid": 2800000,
+      "high": 4500000,
+      "drivers": [
+        "Estate-scale home",
+        "Complex architecture and site",
+        "Premium materials and systems"
+      ],
+      "unitNote": "Large custom / estate rebuild"
+    },
+    {
+      "projectType": "general_contracting",
+      "scale": "small",
+      "low": 5000,
+      "mid": 15000,
+      "high": 35000,
+      "drivers": [
+        "Scope varies widely",
+        "Labor-only vs materials",
+        "Permit requirements"
+      ],
+      "unitNote": "Small general contracting job"
+    },
+    {
+      "projectType": "general_contracting",
+      "scale": "medium",
+      "low": 35000,
+      "mid": 75000,
+      "high": 150000,
+      "drivers": [
+        "Multi-trade coordination",
+        "Material selections",
+        "Access and phasing"
+      ],
+      "unitNote": "Mid-size general project"
+    },
+    {
+      "projectType": "general_contracting",
+      "scale": "large",
+      "low": 150000,
+      "mid": 300000,
+      "high": 600000,
+      "drivers": [
+        "Complex multi-phase work",
+        "Unknown conditions",
+        "Finish level"
+      ],
+      "unitNote": "Large or multi-phase GC project"
+    }
+  ]
+}

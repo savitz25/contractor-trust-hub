@@ -70,6 +70,7 @@ export default async function sitemap(props: {
   if (id === 0) {
     const staticPaths = [
       "/",
+      "/plan",
       "/verify",
       "/about",
       "/methodology",
@@ -81,8 +82,9 @@ export default async function sitemap(props: {
     for (const path of staticPaths) {
       entries.push({
         url: absoluteUrl(path),
-        changeFrequency: path === "/verify" ? "daily" : "weekly",
-        priority: path === "/" ? 1 : 0.8,
+        changeFrequency:
+          path === "/verify" || path === "/plan" ? "daily" : "weekly",
+        priority: path === "/" ? 1 : path === "/plan" ? 0.9 : 0.8,
       });
     }
     entries.push(...discoverySitemapEntries());

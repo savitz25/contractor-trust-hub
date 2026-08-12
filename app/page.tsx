@@ -46,18 +46,32 @@ export default function HomePage() {
             Before you hire, verify
           </p>
           <h1 className="mt-3 max-w-3xl text-3xl font-semibold leading-tight tracking-tight text-[var(--text)] sm:text-5xl sm:leading-[1.1]">
-            Check a Florida contractor against official public records.
+            Plan clearly. Verify thoroughly. Hire with confidence.
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-[var(--muted)] sm:text-lg">
-            Independent research tool — not a marketplace. Look up license status, linked
-            business entities, and discipline from Florida DBPR and Sunbiz.
+            Independent Florida contractor research — not a marketplace. Get project cost context,
+            then check license status, linked business entities, and discipline from DBPR and Sunbiz.
           </p>
 
-          {/* Two clear paths — large tap targets on mobile */}
-          <div className="mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-2 sm:gap-4">
+          {/* Three clear paths — plan, verify, research */}
+          <div className="mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-3 sm:gap-4">
+            <Link
+              href="/plan"
+              className="rounded-2xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--accent)] sm:px-5 sm:py-4"
+            >
+              <p className="text-sm font-semibold text-[var(--text)]">
+                Plan a project first
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                Cost ranges + verified contractors for your project type.
+              </p>
+              <p className="mt-2.5 text-xs font-medium text-[var(--navy)] sm:mt-3">
+                Start planning →
+              </p>
+            </Link>
             <a
               href="#search"
-              className="rounded-2xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--accent)] sm:px-5 sm:py-4"
+              className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/25 sm:px-5 sm:py-4"
             >
               <p className="text-sm font-semibold text-[var(--text)]">
                 I already have a contractor
@@ -74,10 +88,10 @@ export default function HomePage() {
               className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/25 sm:px-5 sm:py-4"
             >
               <p className="text-sm font-semibold text-[var(--text)]">
-                I need to research contractors
+                Browse by county & trade
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
-                Browse by county and trade — roofing, GC, A/C, plumbing…
+                Roofing, GC, A/C, plumbing — research listings.
               </p>
               <p className="mt-2.5 text-xs font-medium text-[var(--accent)] sm:mt-3">
                 Choose location & trade →

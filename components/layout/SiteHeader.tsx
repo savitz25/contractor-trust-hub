@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 
 const secondaryNav = [
+  { href: "/plan", label: "Plan project", shortLabel: "Plan" },
   { href: "/florida", label: "Florida", shortLabel: "FL" },
   { href: "/about", label: "How it works", shortLabel: "About" },
   { href: "/methodology", label: "Methodology", shortLabel: "Method" },

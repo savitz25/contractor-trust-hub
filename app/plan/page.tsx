@@ -1,0 +1,49 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { PlanFlow } from "@/components/plan/PlanFlow";
+
+export const metadata: Metadata = {
+  title: "Plan your project — cost ranges & verified contractors",
+  description:
+    "Describe a home project, see conceptual Florida cost ranges, and discover verified licensed contractors. Plan clearly. Verify thoroughly. Hire with confidence.",
+  alternates: { canonical: "/plan" },
+  openGraph: {
+    title: "Plan your project | Contractor Trust Hub",
+    description:
+      "Project context, realistic planning cost ranges, and verified Florida contractors — before you hire.",
+    url: "/plan",
+    type: "website",
+  },
+};
+
+export default function PlanPage() {
+  return (
+    <main>
+      <section className="border-b border-[var(--border)]">
+        <div className="mx-auto max-w-6xl px-4 pb-10 pt-10 sm:px-6 sm:pb-12 sm:pt-14">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
+            Plan → verify → hire
+          </p>
+          <h1 className="mt-3 max-w-2xl text-3xl font-semibold leading-tight tracking-tight text-[var(--text)] sm:text-4xl">
+            Plan your project. See realistic ranges. Find verified contractors.
+          </h1>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-[var(--muted)]">
+            A short intake — not a full design studio. Get conceptual cost context for Florida
+            project types, then match active licensed contractors from official public records.
+          </p>
+          <p className="mt-3 text-sm text-[var(--muted)]">
+            Already have a name?{" "}
+            <Link href="/verify" className="font-medium text-[var(--navy)] underline-offset-2 hover:underline">
+              Verify a contractor
+            </Link>{" "}
+            instead.
+          </p>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+        <PlanFlow />
+      </section>
+    </main>
+  );
+}
