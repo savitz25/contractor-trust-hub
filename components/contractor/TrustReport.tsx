@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import {
   formatDate,
@@ -430,33 +431,59 @@ export function SourcesFooter({
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
   return (
-    <aside className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-elevated)]/50 px-5 py-5 text-sm leading-relaxed text-[var(--muted)]">
-      <h2 className="text-sm font-semibold text-[var(--text)]">Sources & verification</h2>
-      <ul className="mt-3 space-y-2">
+    <aside className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-elevated)]/50 px-4 py-5 text-sm leading-relaxed text-[var(--muted)] sm:px-5">
+      <h2 className="text-sm font-semibold text-[var(--text)]">Sources &amp; last verified</h2>
+      <p className="mt-2 text-xs text-[var(--muted)]">
+        “Last verified” means present in our successful ingest of the public extract — not a live
+        check at page load. Official boards remain authoritative.
+      </p>
+      <ul className="mt-4 space-y-3">
         <li>
-          License evidence:{" "}
+          <span className="font-medium text-[var(--text)]">License (DBPR)</span>
+          <br />
           <a href={state.boardUrl} target="_blank" rel="noreferrer">
             {state.boardLabel}
           </a>
-          {lic?.lastVerifiedAt ? ` · last verified in our data ${formatDateTime(lic.lastVerifiedAt)}` : ""}
+          <br />
+          <span className="text-xs">
+            Source system: {lic?.sourceSystem || state.licenseSource || "fl_dbpr"}
+            {lic?.lastVerifiedAt
+              ? ` · in our data ${formatDateTime(lic.lastVerifiedAt)}`
+              : " · timestamp not on file"}
+          </span>
         </li>
         <li>
-          Business entity:{" "}
+          <span className="font-medium text-[var(--text)]">Business entity (Sunbiz)</span>
+          <br />
           <a href={state.entityRegistryUrl} target="_blank" rel="noreferrer">
             {state.entityRegistryLabel}
           </a>
-          {ent?.lastVerifiedAt
-            ? ` · last verified in our data ${formatDateTime(ent.lastVerifiedAt)}`
-            : " · no high-confidence link on this profile"}
+          <br />
+          <span className="text-xs">
+            {ent
+              ? `Linked at high confidence · in our data ${formatDateTime(ent.lastVerifiedAt)}`
+              : "No high-confidence link on this profile (exact name/geo required)"}
+          </span>
         </li>
         <li>
-          Discipline: Florida board discipline extracts linked to this contractor when available.
+          <span className="font-medium text-[var(--text)]">Discipline</span>
+          <br />
+          Florida board discipline extracts when linked in our load
+          {contractor.discipline[0]?.lastVerifiedAt
+            ? ` · latest row in our data ${formatDateTime(contractor.discipline[0].lastVerifiedAt)}`
+            : ""}
         </li>
       </ul>
       <p className="mt-4">
         Always confirm current status on the official board and corporate registry before hiring.
-        Contractor Trust Hub is independent research tooling, not a licensing authority, and does
-        not sell leads or rank contractors for payment.
+        Educational research only — not a consumer reporting agency, not paid rankings.{" "}
+        <Link href="/methodology" className="text-[var(--accent)]">
+          Methodology
+        </Link>
+        {" · "}
+        <Link href="/disclaimer" className="text-[var(--accent)]">
+          Disclaimer
+        </Link>
       </p>
     </aside>
   );

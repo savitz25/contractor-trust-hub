@@ -195,6 +195,12 @@ export default function HomePage() {
             >
               Read methodology
             </Link>
+            <Link
+              href="/independence"
+              className="rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+            >
+              Independence
+            </Link>
           </div>
         </div>
       </section>

@@ -68,7 +68,15 @@ export default async function sitemap(props: {
   const entries: MetadataRoute.Sitemap = [];
 
   if (id === 0) {
-    const staticPaths = ["/", "/verify", "/about", "/methodology"] as const;
+    const staticPaths = [
+      "/",
+      "/verify",
+      "/about",
+      "/methodology",
+      "/independence",
+      "/corrections",
+      "/disclaimer",
+    ] as const;
     for (const path of staticPaths) {
       entries.push({
         url: absoluteUrl(path),

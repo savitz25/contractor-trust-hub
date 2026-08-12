@@ -10,6 +10,7 @@ import {
   LicensesSection,
   SourcesFooter,
 } from "@/components/contractor/TrustReport";
+import { LegalNotice } from "@/components/trust/LegalNotice";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { statusLabel } from "@/lib/contractors/format";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
@@ -257,6 +258,24 @@ export default async function ContractorPage({ params }: Props) {
         </div>
 
         <SourcesFooter contractor={contractor} state={state} />
+
+        <div className="flex flex-col gap-3 rounded-2xl border border-[var(--border)] bg-[var(--panel)] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+          <p className="text-sm text-[var(--muted)]">
+            See something wrong on this report?
+          </p>
+          <Link
+            href={`/corrections?slug=${encodeURIComponent(contractor.slug)}${
+              primary?.externalKey
+                ? `&license=${encodeURIComponent(primary.externalKey)}`
+                : ""
+            }`}
+            className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:border-[var(--accent)]/40"
+          >
+            Request a correction
+          </Link>
+        </div>
+
+        <LegalNotice />
       </div>
     </main>
   );

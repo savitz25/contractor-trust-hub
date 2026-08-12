@@ -3,6 +3,7 @@ import Link from "next/link";
 import { EmptyResults } from "@/components/search/EmptyResults";
 import { ResultCard } from "@/components/search/ResultCard";
 import { SearchForm } from "@/components/search/SearchForm";
+import { LegalNotice } from "@/components/trust/LegalNotice";
 import { searchContractors } from "@/lib/contractors/queries";
 
 export const metadata: Metadata = {
@@ -174,6 +175,10 @@ export default async function VerifyPage({ searchParams }: Props) {
           </div>
         </section>
       )}
+
+      <div className="mt-12">
+        <LegalNotice />
+      </div>
     </main>
   );
 }

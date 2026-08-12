@@ -15,6 +15,9 @@ Consumer-facing “Verify a Florida contractor” experience.
 | `/florida/[county]/[trade]` | Combined browse (e.g. `/florida/miami-dade/roofers`) |
 | `/about` | How it works |
 | `/methodology` | Transparent matching & sources |
+| `/independence` | Independence & how we make money |
+| `/corrections` | Request a data correction |
+| `/disclaimer` | Legal / educational disclaimer |
 | `/sitemap.xml` | Sitemap index (static + discovery + contractor profiles) |
 | `/robots.txt` | Crawler rules + sitemap pointer |
 
