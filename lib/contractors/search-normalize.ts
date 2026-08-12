@@ -54,12 +54,23 @@ export function prepareNameSearch(raw: string): PreparedNameSearch {
   };
 }
 
-/** True when input looks like a FL license id (CBC015082) or long numeric core. */
+/**
+ * True when input looks like a board license id:
+ * - Florida style CBC015082
+ * - Numeric core (TX TDLR numbers, FL cores)
+ * - Explicit TX-TDLR:… product keys
+ */
 export function looksLikeLicenseKey(q: string): boolean {
-  const compact = q.replace(/[\s\-_.]/g, "");
-  return /^[A-Za-z]{2,5}\d{4,}$/.test(compact) || /^\d{5,}$/.test(compact);
+  const trimmed = q.trim();
+  if (/^TX-TDLR:/i.test(trimmed)) return true;
+  const compact = trimmed.replace(/[\s\-_.]/g, "");
+  return /^[A-Za-z]{2,5}\d{4,}$/.test(compact) || /^\d{4,}$/.test(compact);
 }
 
 export function normalizeLicenseKey(q: string): string {
-  return q.replace(/[\s\-_.]/g, "").toUpperCase();
+  const trimmed = q.trim();
+  if (/^TX-TDLR:/i.test(trimmed)) {
+    return trimmed.toUpperCase().replace(/\s+/g, "");
+  }
+  return trimmed.replace(/[\s\-_.]/g, "").toUpperCase();
 }

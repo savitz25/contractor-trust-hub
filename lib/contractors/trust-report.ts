@@ -1,3 +1,4 @@
+import { occupationLabel } from "@/lib/states/config";
 import { formatDate, matchMethodLabel, statusLabel } from "./format";
 import { getOccupationInfo } from "./occupations";
 import type { ContractorDetail, EntityDetail, LicenseDetail } from "./types";
@@ -58,6 +59,7 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
   const hasDiscipline = contractor.discipline.length > 0;
+  const isTx = (contractor.homeState || "").toUpperCase() === "TX";
 
   const licenseTone: EvidenceTone = !lic
     ? "neutral"
@@ -75,19 +77,48 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
         ? "bad"
         : "warn";
 
-  return [
+  const occLabel = lic
+    ? occupationLabel(lic.occupationCode) || getOccupationInfo(lic.occupationCode).label
+    : null;
+
+  const pillars: EvidencePillar[] = [
     {
       id: "license",
-      label: "License",
-      statusLine: lic
-        ? statusLabel(lic.statusNormalized)
-        : "Not on profile",
+      label: isTx ? "TDLR license" : "License",
+      statusLine: lic ? statusLabel(lic.statusNormalized) : "Not on profile",
       detail: lic
-        ? `${lic.externalKey} · ${getOccupationInfo(lic.occupationCode).label}`
-        : "No Florida DBPR construction license linked here.",
+        ? `${lic.externalKey} · ${occLabel}`
+        : isTx
+          ? "No TDLR specialty license linked here."
+          : "No Florida DBPR construction license linked here.",
       tone: licenseTone,
       lastVerifiedAt: lic?.lastVerifiedAt ?? null,
     },
+  ];
+
+  if (isTx) {
+    pillars.push({
+      id: "entity",
+      label: "Coverage",
+      statusLine: "Specialty only",
+      detail:
+        "Texas has no statewide GC license. This profile is a TDLR specialty trade only — not plumbing (TSBPE) or local GC registration.",
+      tone: "warn",
+      lastVerifiedAt: lic?.lastVerifiedAt ?? null,
+    });
+    pillars.push({
+      id: "discipline",
+      label: "Discipline",
+      statusLine: "Not in v1 extract",
+      detail:
+        "Board discipline is not loaded for Texas TDLR in this version. Confirm on the official TDLR license search when it matters.",
+      tone: "neutral",
+      lastVerifiedAt: lic?.lastVerifiedAt ?? null,
+    });
+    return pillars;
+  }
+
+  pillars.push(
     {
       id: "entity",
       label: "Entity",
@@ -110,8 +141,10 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
       tone: hasDiscipline ? "warn" : "good",
       lastVerifiedAt:
         contractor.discipline[0]?.lastVerifiedAt ?? lic?.lastVerifiedAt ?? null,
-    },
-  ];
+    }
+  );
+
+  return pillars;
 }
 
 export function matchConfidenceLine(entity: EntityDetail | undefined): string | null {

@@ -57,11 +57,15 @@ python -m ingest.adapters.fl_sunbiz \
   --out-dir data/staging/fl_sunbiz
 
 # Texas TDLR specialty contractors (Open Data SODA) — see docs/DATA_SOURCES_TX.md
+# and docs/TEXAS_VERIFY_V1.md
 python scripts/download_tx_tdlr.py
 python scripts/download_tx_tdlr.py --limit 2000   # sample / CI-friendly
 python -m ingest.adapters.tx_tdlr \
   --input data/raw/tx_tdlr/tdlr_licenses_specialty.csv \
   --out-dir data/staging/tx_tdlr
+
+# Load into Postgres (idempotent upserts + ingest_batches)
+python scripts/load_tx_tdlr_to_postgres.py --staging-dir data/staging/tx_tdlr
 ```
 
 ## Staging files produced

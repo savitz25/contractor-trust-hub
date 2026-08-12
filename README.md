@@ -6,9 +6,10 @@ Independent, evidence-backed contractor verification for homeowners and commerci
 
 | | |
 |---|---|
-| **Status** | Florida Verify live — search + detail on main |
+| **Status** | Florida Verify live; Texas Verify v1 (TDLR specialty trades only) |
 | **Repo** | https://github.com/savitz25/contractor-trust-hub |
 | **Primary market (wave 1)** | Florida (DBPR Construction Industry Licensing Board) |
+| **Texas** | TDLR specialty trades only — no statewide GC license (see [docs/TEXAS_VERIFY_V1.md](docs/TEXAS_VERIFY_V1.md)) |
 | **Tagline** | Before you hire, verify. |
 
 ## Product positioning
@@ -48,8 +49,9 @@ npm run build  # production build (what Vercel runs)
 | Route | Purpose |
 |-------|---------|
 | `/` | Homepage + search CTA |
-| `/verify` | Search by license or name |
-| `/contractors/[slug]` | Contractor detail |
+| `/verify` | Florida search by license or name |
+| `/verify?state=tx` | Texas TDLR specialty trades (honest coverage banner) |
+| `/contractors/[slug]` | Trust Report (FL or TX by `home_state`) |
 | `/about` · `/methodology` | Trust / transparency |
 
 See [docs/VERIFY_PRODUCT.md](docs/VERIFY_PRODUCT.md).
@@ -83,6 +85,19 @@ python -m ingest.adapters.fl_dbpr --input data/raw/fl_dbpr/CONSTRUCTIONLICENSE_1
 python scripts/load_fl_dbpr_to_postgres.py --init-schema --staging-dir data/staging/fl_dbpr
 python scripts/verify_fl_dbpr_load.py
 ```
+
+## Quick start (Texas TDLR specialty — Verify v1)
+
+```bash
+# Open data SODA 7358-krk7 — specialty contractor types only
+python scripts/download_tx_tdlr.py
+python -m ingest.adapters.tx_tdlr \
+  --input data/raw/tx_tdlr/tdlr_licenses_specialty.csv \
+  --out-dir data/staging/tx_tdlr
+python scripts/load_tx_tdlr_to_postgres.py --staging-dir data/staging/tx_tdlr
+```
+
+Product: `/verify?state=tx`. Coverage rules: [docs/TEXAS_VERIFY_V1.md](docs/TEXAS_VERIFY_V1.md).
 
 ## Quick start (Sunbiz entities + linker)
 

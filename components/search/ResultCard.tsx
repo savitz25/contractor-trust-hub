@@ -31,10 +31,18 @@ const toneBar: Record<string, string> = {
   neutral: "bg-slate-400",
 };
 
-export function ResultCard({ result }: { result: SearchResult }) {
+export function ResultCard({
+  result,
+  hideEntityWhenMissing = false,
+}: {
+  result: SearchResult;
+  /** Texas / specialty states without entity linking */
+  hideEntityWhenMissing?: boolean;
+}) {
   const location = [result.city, result.county, result.state].filter(Boolean).join(" · ");
   const licTone = signalTone("license", result);
   const entTone = signalTone("entity", result);
+  const showEntity = Boolean(result.entityStatus) || !hideEntityWhenMissing;
 
   return (
     <article className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/20 hover:shadow-[var(--shadow-md)]">
@@ -43,12 +51,14 @@ export function ResultCard({ result }: { result: SearchResult }) {
           <span className={`h-1.5 w-1.5 rounded-full ${toneBar[licTone]}`} aria-hidden />
           License {statusLabel(result.licenseStatus)}
         </span>
-        <span className="inline-flex items-center gap-1.5 text-xs text-[var(--muted)]">
-          <span className={`h-1.5 w-1.5 rounded-full ${toneBar[entTone]}`} aria-hidden />
-          {result.entityStatus
-            ? `Entity ${statusLabel(result.entityStatus)}`
-            : "No Sunbiz link"}
-        </span>
+        {showEntity ? (
+          <span className="inline-flex items-center gap-1.5 text-xs text-[var(--muted)]">
+            <span className={`h-1.5 w-1.5 rounded-full ${toneBar[entTone]}`} aria-hidden />
+            {result.entityStatus
+              ? `Entity ${statusLabel(result.entityStatus)}`
+              : "No Sunbiz link"}
+          </span>
+        ) : null}
         {location && (
           <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-xs text-[var(--muted)] sm:max-w-[45%]">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]/70" aria-hidden />
@@ -95,9 +105,9 @@ export function ResultCard({ result }: { result: SearchResult }) {
                 status={result.entityStatus}
                 label={`Entity: ${statusLabel(result.entityStatus)}`}
               />
-            ) : (
-              <StatusBadge status="unknown" label="No Sunbiz link" />
-            )}
+            ) : showEntity ? (
+              <StatusBadge status="unknown" label="No entity link" />
+            ) : null}
           </div>
         </div>
         <p className="mt-2.5 text-sm leading-relaxed text-[var(--muted)] sm:mt-3">
@@ -105,7 +115,13 @@ export function ResultCard({ result }: { result: SearchResult }) {
           {result.entityName ? (
             <>
               {" · "}
-              <span className="text-[var(--text)]/80">Sunbiz: {result.entityName}</span>
+              <span className="text-[var(--text)]/80">Entity: {result.entityName}</span>
+            </>
+          ) : null}
+          {location ? (
+            <>
+              {" · "}
+              <span>{location}</span>
             </>
           ) : null}
         </p>

@@ -84,8 +84,8 @@ Plumbing is **not** TDLR. Separate board.
 | Responsible Master Plumber list | Linked from free-licensee-list (`RMP` download) | Contractors offering plumbing to the public |
 | Public license search | Via TSBPE / HPC online systems | Interactive |
 
-**Phase 0:** Document only — adapter `tx_tsbpe` is a follow-on (same staging shape as TDLR).  
-**Phase 1 Verify:** Optional second source after TDLR electrical + A/C is solid.
+**Phase 0–1:** Document only — adapter `tx_tsbpe` is a follow-on (same staging shape as TDLR).  
+**After TDLR Verify v1:** Optional second source once specialty electrical + A/C load is solid.
 
 ## Local / municipal (out of scope for TX Verify v1)
 

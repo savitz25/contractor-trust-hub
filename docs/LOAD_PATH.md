@@ -139,7 +139,81 @@ Re-running the same staging directory:
 
 Keep entity rows keyed by `(source_system, external_key)`. Future `fl_sunbiz` loads should insert into `entities` with `source_system = 'fl_sunbiz'` and link via `contractor_entities` with an explicit `confidence` and `evidence` JSON — never overwrite DBPR QB keys.
 
+---
+
+# Texas TDLR specialty → Postgres load path
+
+Texas Verify v1 loads **TDLR specialty contractor** licenses only. There is **no** statewide general contractor license in Texas — do not treat this load as a full TX contractor directory.
+
+See [TEXAS_VERIFY_V1.md](./TEXAS_VERIFY_V1.md) and [DATA_SOURCES_TX.md](./DATA_SOURCES_TX.md).
+
+## Stage data first
+
+```bash
+python scripts/download_tx_tdlr.py
+python -m ingest.adapters.tx_tdlr \
+  --input data/raw/tx_tdlr/tdlr_licenses_specialty.csv \
+  --out-dir data/staging/tx_tdlr
+```
+
+Sample (committed):
+
+```bash
+python -m ingest.adapters.tx_tdlr \
+  --input data/samples/tx_tdlr_specialty_sample.csv \
+  --out-dir data/staging/tx_tdlr_sample
+```
+
+Expected staging files:
+
+| File | Maps to |
+|------|---------|
+| `licenses_normalized.csv` | `licenses` + `contractors` (`source_system = tx_tdlr`) |
+| `contractors_seed.csv` | reference seed (loader uses licenses CSV) |
+| `batch_manifest.json` | provenance metadata |
+
+## Load
+
+```bash
+# Idempotent upserts (safe to re-run)
+python scripts/load_tx_tdlr_to_postgres.py \
+  --staging-dir data/staging/tx_tdlr
+
+# First-time / empty local DB
+python scripts/load_tx_tdlr_to_postgres.py --init-schema \
+  --staging-dir data/staging/tx_tdlr
+
+# Smoke test
+python scripts/load_tx_tdlr_to_postgres.py \
+  --staging-dir data/staging/tx_tdlr --limit 500
+```
+
+**Rules:**
+
+- Upsert licenses on `(source_system, external_key)` — e.g. `TX-TDLR:A-C-CONTRACTOR:10001:BE`
+- One contractor shell per license slug (`external_key` + display name)
+- `home_state` / license `state` = `TX`
+- Every load creates an `ingest_batches` row (`source_system = tx_tdlr`)
+- No QB / Sunbiz / discipline in this path
+
+Useful flags: `--limit N`, `--batch-size N`, `--init-schema`, `-v` (same spirit as FL loader).
+
+## Product surface after load
+
+- `/verify?state=tx` — specialty search  
+- Florida remains `/verify` default  
+
 ## Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| Missing staging CSV | Run download + `tx_tdlr` adapter |
+| Empty Texas search | Confirm load finished; check `SELECT COUNT(*) FROM licenses WHERE source_system = 'tx_tdlr'` |
+| Cosmetology / wrong trades | Re-download without `--all-types`; use default specialty filter |
+
+---
+
+## Troubleshooting (Florida / shared)
 
 | Symptom | Fix |
 |---------|-----|

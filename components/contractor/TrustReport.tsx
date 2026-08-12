@@ -15,7 +15,7 @@ import {
   type EvidenceTone,
 } from "@/lib/contractors/trust-report";
 import type { ContractorDetail } from "@/lib/contractors/types";
-import type { EvidenceState } from "@/lib/states/config";
+import { occupationLabel, type EvidenceState } from "@/lib/states/config";
 
 const toneRing: Record<EvidenceTone, string> = {
   good: "border-emerald-200 bg-emerald-50/80",
@@ -228,7 +228,10 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
       </h2>
       <div className="mt-4 space-y-4">
         {licenses.map((lic) => {
+          const isTx =
+            (lic.sourceSystem || "").toLowerCase() === "tx_tdlr" || lic.state === "TX";
           const occ = getOccupationInfo(lic.occupationCode);
+          const label = isTx ? occupationLabel(lic.occupationCode) : occ.label;
           return (
             <article
               key={lic.id}
@@ -243,17 +246,33 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   label={`License: ${statusLabel(lic.statusNormalized)}`}
                 />
               </div>
-              <p className="mt-2 text-sm font-medium text-[var(--text)]">{occ.label}</p>
-              <div className="mt-3 rounded-lg border border-[var(--border)]/80 bg-[var(--bg)]/50 px-3 py-3">
-                <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-                  What this class typically covers
-                </p>
-                <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">{occ.allows}</p>
-                <p className="mt-2 border-t border-[var(--border)]/60 pt-2 text-sm leading-relaxed text-[var(--muted)]">
-                  <span className="font-medium text-[var(--text)]/90">Good to know: </span>
-                  {occ.notes}
-                </p>
-              </div>
+              <p className="mt-2 text-sm font-medium text-[var(--text)]">{label}</p>
+              {!isTx ? (
+                <div className="mt-3 rounded-lg border border-[var(--border)]/80 bg-[var(--bg)]/50 px-3 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                    What this class typically covers
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">{occ.allows}</p>
+                  <p className="mt-2 border-t border-[var(--border)]/60 pt-2 text-sm leading-relaxed text-[var(--muted)]">
+                    <span className="font-medium text-[var(--text)]/90">Good to know: </span>
+                    {occ.notes}
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-3 rounded-lg border border-[var(--border)]/80 bg-[var(--bg)]/50 px-3 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                    Texas TDLR specialty
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">
+                    This is a TDLR specialty trade license, not a statewide general contractor
+                    credential. Scope is limited to the licensed trade class.
+                  </p>
+                  <p className="mt-2 border-t border-[var(--border)]/60 pt-2 text-sm leading-relaxed text-[var(--muted)]">
+                    <span className="font-medium text-[var(--text)]/90">Good to know: </span>
+                    Confirm current status on the official TDLR license search before hiring.
+                  </p>
+                </div>
+              )}
               <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
                 <div>
                   <dt className="text-[var(--muted)]">Original licensure</dt>
@@ -269,7 +288,9 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                 </div>
                 <div>
                   <dt className="text-[var(--muted)]">Board</dt>
-                  <dd className="text-[var(--text)]">{lic.boardNumber || "CILB / DBPR"}</dd>
+                  <dd className="text-[var(--text)]">
+                    {lic.boardNumber || (isTx ? "TDLR" : "CILB / DBPR")}
+                  </dd>
                 </div>
                 <div className="sm:col-span-2">
                   <dt className="text-[var(--muted)]">Address on file</dt>
@@ -282,7 +303,8 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                 <div className="sm:col-span-2">
                   <dt className="text-[var(--muted)]">Source / last verified</dt>
                   <dd className="text-[var(--text)]">
-                    Florida DBPR ({lic.sourceSystem}) · {formatDateTime(lic.lastVerifiedAt)}
+                    {isTx ? "Texas TDLR" : "Florida DBPR"} ({lic.sourceSystem}) ·{" "}
+                    {formatDateTime(lic.lastVerifiedAt)}
                   </dd>
                 </div>
               </dl>
@@ -541,6 +563,8 @@ export function SourcesFooter({
 }) {
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
+  const isTx = state.slug === "tx" || (contractor.homeState || "").toUpperCase() === "TX";
+
   return (
     <aside className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-elevated)]/50 px-4 py-5 text-sm leading-relaxed text-[var(--muted)] sm:px-5">
       <h2 className="text-sm font-semibold text-[var(--text)]">Sources &amp; last verified</h2>
@@ -550,43 +574,59 @@ export function SourcesFooter({
       </p>
       <ul className="mt-4 space-y-3">
         <li>
-          <span className="font-medium text-[var(--text)]">License (DBPR)</span>
+          <span className="font-medium text-[var(--text)]">
+            {isTx ? "License (TDLR)" : "License (DBPR)"}
+          </span>
           <br />
           <a href={state.boardUrl} target="_blank" rel="noreferrer">
             {state.boardLabel}
           </a>
           <br />
           <span className="text-xs">
-            Source system: {lic?.sourceSystem || state.licenseSource || "fl_dbpr"}
+            Source system: {lic?.sourceSystem || state.licenseSource || (isTx ? "tx_tdlr" : "fl_dbpr")}
             {lic?.lastVerifiedAt
               ? ` · in our data ${formatDateTime(lic.lastVerifiedAt)}`
               : " · timestamp not on file"}
           </span>
         </li>
-        <li>
-          <span className="font-medium text-[var(--text)]">Business entity (Sunbiz)</span>
-          <br />
-          <a href={state.entityRegistryUrl} target="_blank" rel="noreferrer">
-            {state.entityRegistryLabel}
-          </a>
-          <br />
-          <span className="text-xs">
-            {ent
-              ? `Linked at high confidence · in our data ${formatDateTime(ent.lastVerifiedAt)}`
-              : "No high-confidence link on this profile (exact name/geo required)"}
-          </span>
-        </li>
-        <li>
-          <span className="font-medium text-[var(--text)]">Discipline</span>
-          <br />
-          Florida board discipline extracts when linked in our load
-          {contractor.discipline[0]?.lastVerifiedAt
-            ? ` · latest row in our data ${formatDateTime(contractor.discipline[0].lastVerifiedAt)}`
-            : ""}
-        </li>
+        {isTx ? (
+          <li>
+            <span className="font-medium text-[var(--text)]">Coverage note</span>
+            <br />
+            Texas has no statewide general contractor license. This profile reflects selected TDLR
+            specialty trades only. Plumbing (TSBPE) and city/county GC registration are not fully
+            covered.
+          </li>
+        ) : (
+          <>
+            <li>
+              <span className="font-medium text-[var(--text)]">Business entity (Sunbiz)</span>
+              <br />
+              <a href={state.entityRegistryUrl} target="_blank" rel="noreferrer">
+                {state.entityRegistryLabel}
+              </a>
+              <br />
+              <span className="text-xs">
+                {ent
+                  ? `Linked at high confidence · in our data ${formatDateTime(ent.lastVerifiedAt)}`
+                  : "No high-confidence link on this profile (exact name/geo required)"}
+              </span>
+            </li>
+            <li>
+              <span className="font-medium text-[var(--text)]">Discipline</span>
+              <br />
+              Florida board discipline extracts when linked in our load
+              {contractor.discipline[0]?.lastVerifiedAt
+                ? ` · latest row in our data ${formatDateTime(contractor.discipline[0].lastVerifiedAt)}`
+                : ""}
+            </li>
+          </>
+        )}
       </ul>
       <p className="mt-4">
-        Always confirm current status on the official board and corporate registry before hiring.
+        {isTx
+          ? "Always confirm current status on the official TDLR license search before hiring."
+          : "Always confirm current status on the official board and corporate registry before hiring."}{" "}
         Educational research only — not a consumer reporting agency, not paid rankings.{" "}
         <Link href="/methodology" className="text-[var(--accent)]">
           Methodology

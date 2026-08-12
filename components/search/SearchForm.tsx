@@ -13,11 +13,19 @@ type SearchFormProps = {
   placeholder?: string;
   /** Extra query params (e.g. intent=have) */
   intent?: "have" | "research" | null;
+  /** Evidence state slug: fl | tx */
+  stateSlug?: string;
 };
 
 const PLACEHOLDERS = {
   hero: "License number (CBC015082) or company name…",
   default: "License (CBC015082) or company name",
+  compact: "License or company name",
+};
+
+const TX_PLACEHOLDERS = {
+  hero: "TDLR license number or business / owner name…",
+  default: "TDLR license # or company name",
   compact: "License or company name",
 };
 
@@ -28,6 +36,7 @@ export function SearchForm({
   label,
   placeholder,
   intent = null,
+  stateSlug = "fl",
 }: SearchFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -35,6 +44,10 @@ export function SearchForm({
 
   const isHero = size === "hero";
   const isCompact = size === "compact";
+  const isTx = stateSlug === "tx";
+  const ph =
+    placeholder ||
+    (isTx ? TX_PLACEHOLDERS[size] : PLACEHOLDERS[size]);
 
   const inputClass = isHero
     ? "min-h-12 w-full flex-1 rounded-2xl border border-[var(--border)] bg-white px-4 text-base text-[var(--text)] shadow-[var(--shadow-sm)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70 sm:min-h-[3.75rem] sm:px-5 sm:text-lg"
@@ -59,6 +72,7 @@ export function SearchForm({
         if (q.length < 2) return;
         const params = new URLSearchParams({ q });
         if (intent) params.set("intent", intent);
+        if (stateSlug && stateSlug !== "fl") params.set("state", stateSlug);
         startTransition(() => {
           router.push(`/verify?${params.toString()}`);
         });
@@ -66,6 +80,9 @@ export function SearchForm({
       className="w-full"
     >
       {intent && <input type="hidden" name="intent" value={intent} />}
+      {stateSlug && stateSlug !== "fl" ? (
+        <input type="hidden" name="state" value={stateSlug} />
+      ) : null}
       {label && (
         <label
           htmlFor={inputId}
@@ -99,7 +116,7 @@ export function SearchForm({
           autoComplete="off"
           enterKeyHint="search"
           disabled={pending}
-          placeholder={placeholder || PLACEHOLDERS[size]}
+          placeholder={ph}
           className={inputClass}
         />
         <button type="submit" disabled={pending} className={buttonClass}>

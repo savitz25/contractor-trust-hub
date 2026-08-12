@@ -1,6 +1,10 @@
 import { cache } from "react";
 import { query, queryOne } from "@/lib/db";
-import { getStateBySlug, type EvidenceState } from "@/lib/states/config";
+import {
+  DEFAULT_STATE_SLUG,
+  getStateBySlug,
+  type EvidenceState,
+} from "@/lib/states/config";
 import { asLicenseStatus } from "./format";
 import {
   looksLikeLicenseKey,
@@ -104,19 +108,31 @@ export async function searchContractors(
       ) e ON TRUE
       WHERE l.source_system = $2
         AND c.is_thin_profile = FALSE
+        AND (c.home_state = $6 OR l.state = $6 OR $6 = '')
         AND (
-          UPPER(l.external_key) = $1
+          UPPER(REPLACE(l.external_key, ' ', '')) = $1
           OR l.license_number = $1
-          OR UPPER(l.external_key) LIKE $1 || '%'
+          OR UPPER(REPLACE(l.external_key, ' ', '')) LIKE '%' || $1 || '%'
           OR l.license_number LIKE $1 || '%'
         )
       ORDER BY
-        CASE WHEN UPPER(l.external_key) = $1 THEN 0 ELSE 1 END,
+        CASE
+          WHEN UPPER(REPLACE(l.external_key, ' ', '')) = $1 THEN 0
+          WHEN l.license_number = $1 THEN 1
+          ELSE 2
+        END,
         CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
         c.display_name
       LIMIT $4
       `,
-      [key, state.licenseSource, state.entitySource, limit, MIN_SUNBIZ_CONFIDENCE]
+      [
+        key,
+        state.licenseSource,
+        state.entitySource,
+        limit,
+        MIN_SUNBIZ_CONFIDENCE,
+        state.code,
+      ]
     );
 
     return {
@@ -289,13 +305,25 @@ function mapSearchRow(r: {
   };
 }
 
+/** Map contractor home_state / license source to evidence state slug. */
+function evidenceSlugForContractor(
+  homeState: string | null | undefined,
+  preferredSlug?: string
+): string {
+  // Prefer the contractor's home state so TX profiles work even when callers pass "fl".
+  const hs = (homeState || "").toUpperCase();
+  if (hs === "TX") return "tx";
+  if (hs === "FL") return "fl";
+  if (preferredSlug && getStateBySlug(preferredSlug)?.live) {
+    return preferredSlug.toLowerCase();
+  }
+  return preferredSlug?.toLowerCase() || DEFAULT_STATE_SLUG;
+}
+
 async function getContractorBySlugUncached(
   slug: string,
   stateSlug = "fl"
 ): Promise<ContractorDetail | null> {
-  const state = getStateBySlug(stateSlug);
-  if (!state?.live) return null;
-
   const c = await queryOne<{
     id: string;
     slug: string;
@@ -318,6 +346,10 @@ async function getContractorBySlugUncached(
   );
 
   if (!c) return null;
+
+  const resolvedSlug = evidenceSlugForContractor(c.home_state, stateSlug);
+  const state = getStateBySlug(resolvedSlug);
+  if (!state?.live) return null;
 
   const licenses = await query<{
     id: string;

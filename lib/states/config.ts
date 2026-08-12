@@ -53,9 +53,9 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     entityRegistryLabel: "Texas SOS / Comptroller entity data (not yet linked)",
     entityRegistryUrl: "https://www.sos.state.tx.us/",
     licenseSource: "tx_tdlr",
+    // No high-confidence statewide entity linker yet (unlike FL Sunbiz)
     entitySource: "tx_sos",
-    // Flip to true only after TDLR load + Verify path are solid
-    live: false,
+    live: true,
     coverageNote:
       "Texas does not issue a statewide general contractor license. Coverage is TDLR specialty trades only (e.g. electrical, A/C). Plumbing is under TSBPE (separate). Many general builders are city/county only.",
   },
