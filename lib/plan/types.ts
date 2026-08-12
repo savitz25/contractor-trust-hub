@@ -70,11 +70,23 @@ export type CostRangeResult = {
   disclaimer: string;
 };
 
+/** Contractor card for plan results with honest match explanations. */
+export type PlanMatchedContractor = import("@/lib/contractors/types").SearchResult & {
+  matchReasons: string[];
+  locationTier: "zip" | "city" | "county" | "state";
+};
+
 export type PlanMatchResult = {
-  contractors: import("@/lib/contractors/types").SearchResult[];
+  contractors: PlanMatchedContractor[];
   matchNotes: string[];
   locationLabel: string;
   emptyReason?: string;
+  /** How tightly results were scoped. */
+  locationScope?: "local" | "regional" | "statewide" | "none";
+  /** Count with ZIP/city/county tier (not statewide fallback). */
+  localCount?: number;
+  /** True when local specialty coverage is thin or empty. */
+  thinResult?: boolean;
 };
 
 export type QuoteRequestPayload = {

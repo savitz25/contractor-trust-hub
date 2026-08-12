@@ -20,9 +20,12 @@
 
 ## Matching rules
 
-- Active/current license preferred
-- Occupation codes mapped from project type (e.g. roofing → CCC, RR, CGC)
-- Location: ZIP / city / county when available; broaden to statewide if empty
+See **[PLAN_MATCHING.md](./PLAN_MATCHING.md)** for the full quality rules.
+
+- Active/current license required
+- Primary specialty codes first (`data/plan/project-license-map.json`); secondary only when local primary is thin
+- Location tiers: ZIP → city → county → honest statewide fallback
+- Per-result “why this matched” reasons; thin/empty states do not invent volume
 - Trust signals from existing extract only (no invented ratings)
 
 ## Apply quote table

@@ -4,9 +4,13 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { ResultCard } from "@/components/search/ResultCard";
 import { formatUsd } from "@/lib/plan/cost-model";
-import type { CostRangeResult, PlanInput, PlanMatchResult } from "@/lib/plan/types";
+import type {
+  CostRangeResult,
+  PlanInput,
+  PlanMatchResult,
+  PlanMatchedContractor,
+} from "@/lib/plan/types";
 import { COST_DISCLAIMER } from "@/lib/plan/types";
-import type { SearchResult } from "@/lib/contractors/types";
 
 type ApiResponse = {
   plan: PlanInput;
@@ -149,7 +153,9 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
   }
 
   const { cost, match, summary } = data;
-  const contractors: SearchResult[] = match.contractors;
+  const contractors: PlanMatchedContractor[] = match.contractors;
+  const localCount = match.localCount ?? 0;
+  const thin = Boolean(match.thinResult);
 
   return (
     <div className="space-y-8">
@@ -252,18 +258,38 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
           </ul>
         ) : null}
 
+        {match.locationScope ? (
+          <p className="mt-3 text-xs font-medium text-[var(--navy)]">
+            Scope:{" "}
+            {match.locationScope === "local"
+              ? `Local matches prioritized (${localCount} near your location)`
+              : match.locationScope === "regional"
+                ? `Mixed local + statewide (${localCount} local)`
+                : match.locationScope === "statewide"
+                  ? "Statewide (same license classes only)"
+                  : "No matches"}
+          </p>
+        ) : null}
+
         {contractors.length === 0 ? (
           <div className="mt-6 rounded-2xl border border-dashed border-[var(--border-strong)] bg-[var(--bg)] px-4 py-6 text-center">
             <p className="font-medium text-[var(--text)]">
               {match.emptyReason || "No strong matches for this location and trade yet."}
             </p>
             <p className="mt-2 text-sm text-[var(--muted)]">
-              Browse by county and trade, or verify a contractor you already have in mind.
+              We do not invent or stretch matches to fill this page. Try a broader location, a
+              different project type, browse by county, or verify someone you already have in mind.
             </p>
             <div className="mt-4 flex flex-wrap justify-center gap-2">
               <Link
-                href="/florida"
+                href="/plan"
                 className="btn-primary inline-flex px-4 py-2 text-sm no-underline"
+              >
+                Change project / location
+              </Link>
+              <Link
+                href="/florida"
+                className="rounded-xl border border-[var(--border)] bg-white px-4 py-2 text-sm font-medium no-underline"
               >
                 Browse Florida
               </Link>
@@ -276,11 +302,33 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
             </div>
           </div>
         ) : (
-          <div className="mt-6 grid gap-4">
-            {contractors.map((c) => (
-              <ResultCard key={c.id} result={c} />
-            ))}
-          </div>
+          <>
+            {thin ? (
+              <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+                <strong className="font-semibold">Thin local coverage.</strong> We found limited
+                strong matches near this location for this license class. Statewide listings below
+                (if any) are labeled honestly — confirm address and class on each Trust Report.
+              </div>
+            ) : null}
+            <div className="mt-6 grid gap-4">
+              {contractors.map((c) => (
+                <div key={c.id} className="space-y-2">
+                  <ResultCard result={c} />
+                  {c.matchReasons?.length ? (
+                    <ul className="rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--muted)]">
+                      <li className="mb-1 font-semibold text-[var(--navy)]">
+                        Why this matched
+                        {c.locationTier === "state" ? " · statewide fallback" : ""}
+                      </li>
+                      {c.matchReasons.map((r) => (
+                        <li key={r}>· {r}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </section>
 

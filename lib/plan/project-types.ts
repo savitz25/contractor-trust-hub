@@ -1,12 +1,18 @@
+import { occupationCodesForProject } from "./license-map";
 import type { BudgetBand, ProjectTypeDef, ProjectTypeId } from "./types";
 
+/**
+ * UI project types. Occupation codes for matching live in
+ * data/plan/project-license-map.json (via license-map.ts) — keep these in sync
+ * for display only; matching uses primary/secondary tiers from the JSON map.
+ */
 export const PROJECT_TYPES: ProjectTypeDef[] = [
   {
     id: "kitchen_remodel",
     label: "Kitchen Remodel",
     shortLabel: "Kitchen",
     description: "Cabinets, counters, layout, and finishes for a kitchen renovation.",
-    occupationCodes: ["CGC", "CBC", "CRC"],
+    occupationCodes: occupationCodesForProject("kitchen_remodel").all,
     scaleMode: "rooms",
     scaleLabels: {
       small: "Compact / refresh",
@@ -24,7 +30,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     label: "Bathroom Remodel",
     shortLabel: "Bath",
     description: "Vanity, tile, shower, and plumbing fixture upgrades.",
-    occupationCodes: ["CGC", "CBC", "CRC", "CFC"],
+    occupationCodes: occupationCodesForProject("bathroom_remodel").all,
     scaleMode: "rooms",
     scaleLabels: {
       small: "Guest bath refresh",
@@ -42,7 +48,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     label: "Full Home Renovation",
     shortLabel: "Whole home",
     description: "Multi-room or whole-house renovation under a general contractor.",
-    occupationCodes: ["CGC", "CBC", "CRC"],
+    occupationCodes: occupationCodesForProject("full_home_renovation").all,
     scaleMode: "scope",
     scaleLabels: {
       small: "Selective rooms",
@@ -60,7 +66,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     label: "Addition / Extension",
     shortLabel: "Addition",
     description: "Room addition, second story, or expansion of living space.",
-    occupationCodes: ["CGC", "CBC", "CRC"],
+    occupationCodes: occupationCodesForProject("addition").all,
     scaleMode: "sqft",
     scaleLabels: {
       small: "~200–400 sq ft",
@@ -78,7 +84,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     label: "Basement / Lower-Level Finish",
     shortLabel: "Lower level",
     description: "Finish lower level or walkout living space (less common in FL).",
-    occupationCodes: ["CGC", "CBC", "CRC"],
+    occupationCodes: occupationCodesForProject("basement_finish").all,
     scaleMode: "sqft",
     scaleLabels: {
       small: "Partial finish",
@@ -96,7 +102,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     label: "Roofing",
     shortLabel: "Roof",
     description: "Reroof, repair, or new roof system — Florida wind considerations apply.",
-    occupationCodes: ["CCC", "RR", "CGC"],
+    occupationCodes: occupationCodesForProject("roofing").all,
     scaleMode: "scope",
     scaleLabels: {
       small: "Small / partial",
@@ -114,7 +120,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     label: "Siding / Exterior",
     shortLabel: "Exterior",
     description: "Siding, stucco, cladding, and exterior envelope work.",
-    occupationCodes: ["CGC", "CBC", "CRC", "SCC"],
+    occupationCodes: occupationCodesForProject("siding_exterior").all,
     scaleMode: "scope",
     scaleLabels: {
       small: "Partial elevation",
@@ -132,7 +138,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     label: "Deck / Outdoor Living",
     shortLabel: "Outdoor",
     description: "Decks, covered patios, outdoor kitchens, and outdoor structures.",
-    occupationCodes: ["CGC", "CBC", "CRC", "SCC"],
+    occupationCodes: occupationCodesForProject("deck_outdoor").all,
     scaleMode: "scope",
     scaleLabels: {
       small: "Small deck / patio",
@@ -150,7 +156,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     label: "New Custom Home / Knockdown Rebuild",
     shortLabel: "Custom / rebuild",
     description: "New construction or knockdown rebuild on an existing lot.",
-    occupationCodes: ["CGC", "CBC", "CRC"],
+    occupationCodes: occupationCodesForProject("custom_home_rebuild").all,
     scaleMode: "sqft",
     scaleLabels: {
       small: "Compact custom",
@@ -168,7 +174,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     label: "Other / General Contracting",
     shortLabel: "General",
     description: "General contracting or multi-trade work that doesn’t fit a single specialty.",
-    occupationCodes: ["CGC", "CBC", "CRC"],
+    occupationCodes: occupationCodesForProject("general_contracting").all,
     scaleMode: "scope",
     scaleLabels: {
       small: "Small job",
