@@ -347,6 +347,10 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           name={contractor.displayName}
           handoff={studioHandoff}
           projectType={projectType}
+          licenseKey={primary?.externalKey}
+          licenseStatus={primary?.statusNormalized}
+          entityStatus={entity?.status}
+          disciplineCount={contractor.discipline.length}
         />
 
         <SourcesFooter contractor={contractor} state={state} />

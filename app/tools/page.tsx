@@ -12,16 +12,28 @@ export const metadata: Metadata = {
 
 const tools = [
   {
+    href: "/projects",
+    title: "Protect an active project",
+    body: "Milestones, payments, documents, and contractor watches in one workspace.",
+    step: "4",
+  },
+  {
+    href: "/tools/contract-analyzer",
+    title: "Contract Analyzer",
+    body: "Spot missing or unclear protection items before you sign — educational only.",
+    step: "4",
+  },
+  {
     href: "/property",
     title: "Check My Address",
     body: "Property research — permit history signals with progressive coverage honesty.",
-    step: "P",
+    step: "3",
   },
   {
     href: "/tools/permit-planner",
     title: "Permit & Inspection Planner",
     body: "Likely permit categories, contractor questions, and AHJ next steps by project type.",
-    step: "P",
+    step: "3",
   },
   {
     href: "/tools/scope-builder",
@@ -33,19 +45,19 @@ const tools = [
     href: "/tools/quote-analyzer",
     title: "Quote Analyzer",
     body: "Review one estimate for scope gaps, caution patterns, price context, and questions to ask.",
-    step: "2",
+    step: "1",
   },
   {
     href: "/tools/compare-bids",
     title: "Compare My Bids",
     body: "Normalize 2–4 quotes side by side — included, excluded, allowances, and unclear items.",
-    step: "3",
+    step: "1",
   },
   {
     href: "/tools/pre-hire-checklist",
     title: "Pre-Hire Checklist",
     body: "A practical sequence before you sign: license, insurance, scope, payments, permits, red flags.",
-    step: "4",
+    step: "1",
   },
 ];
 
@@ -59,8 +71,8 @@ export default function ToolsHubPage() {
         Plan clearly before you hire
       </h1>
       <p className="mt-3 max-w-2xl text-base leading-relaxed text-[var(--muted)]">
-        Check address → plan permits → scope → analyze quote → compare → verify → checklist.
-        Evidence-first research tools — not rankings, star scores, or a marketplace.
+        Plan → property → quotes → verify → contract → protect project. Evidence-first tools —
+        not rankings, star scores, or a marketplace.
       </p>
 
       <div className="mt-6">

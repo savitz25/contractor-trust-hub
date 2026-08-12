@@ -46,6 +46,19 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/projects" className="text-[var(--text)] no-underline hover:underline">
+                Protect a project
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/tools/contract-analyzer"
+                className="text-[var(--text)] no-underline hover:underline"
+              >
+                Contract analyzer
+              </Link>
+            </li>
+            <li>
               <Link href="/property" className="text-[var(--text)] no-underline hover:underline">
                 Check my address
               </Link>

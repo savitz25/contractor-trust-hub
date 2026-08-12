@@ -67,8 +67,22 @@ export default function HomePage() {
               </p>
             </Link>
             <Link
-              href="/property"
+              href="/projects"
               className="rounded-2xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--accent)] sm:px-5 sm:py-4"
+            >
+              <p className="text-sm font-semibold text-[var(--text)]">
+                Protect an active project
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                Contracts, payments, milestones, and contractor watches — on this device.
+              </p>
+              <p className="mt-2.5 text-xs font-medium text-[var(--navy)] sm:mt-3">
+                Continue project →
+              </p>
+            </Link>
+            <Link
+              href="/property"
+              className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/25 sm:px-5 sm:py-4"
             >
               <p className="text-sm font-semibold text-[var(--text)]">
                 Check my address
@@ -78,6 +92,20 @@ export default function HomePage() {
               </p>
               <p className="mt-2.5 text-xs font-medium text-[var(--navy)] sm:mt-3">
                 Research property →
+              </p>
+            </Link>
+            <Link
+              href="/tools/contract-analyzer"
+              className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/25 sm:px-5 sm:py-4"
+            >
+              <p className="text-sm font-semibold text-[var(--text)]">
+                Analyze a contract
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                Spot missing protection items before signing — educational only.
+              </p>
+              <p className="mt-2.5 text-xs font-medium text-[var(--navy)] sm:mt-3">
+                Open analyzer →
               </p>
             </Link>
             <Link

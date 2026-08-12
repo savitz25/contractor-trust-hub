@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { CompareToggle } from "@/components/compare/CompareToggle";
+import { WatchButton } from "@/components/projects/WatchButton";
 import type { StudioHandoff } from "@/lib/studios/handoff";
 
 export function TrustNextActions({
@@ -9,11 +10,19 @@ export function TrustNextActions({
   name,
   handoff,
   projectType,
+  licenseKey,
+  licenseStatus,
+  entityStatus,
+  disciplineCount,
 }: {
   slug: string;
   name: string;
   handoff?: StudioHandoff | null;
   projectType?: string | null;
+  licenseKey?: string | null;
+  licenseStatus?: string | null;
+  entityStatus?: string | null;
+  disciplineCount?: number;
 }) {
   const q = new URLSearchParams();
   q.set("name", name);
@@ -61,10 +70,32 @@ export function TrustNextActions({
           >
             Analyze a quote from this contractor
           </Link>
+          <Link
+            href={`/tools/contract-analyzer?${toolsQs}`}
+            className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)]"
+          >
+            Analyze a contract
+          </Link>
           <div className="flex items-center gap-2 rounded-2xl border border-[var(--border)] bg-white px-4 py-3 shadow-[var(--shadow-sm)]">
             <CompareToggle slug={slug} />
             <span className="text-xs text-[var(--muted)]">Add to side-by-side compare</span>
           </div>
+          <div className="flex items-center gap-2 rounded-2xl border border-[var(--border)] bg-white px-4 py-3 shadow-[var(--shadow-sm)]">
+            <WatchButton
+              slug={slug}
+              name={name}
+              licenseKey={licenseKey}
+              licenseStatus={licenseStatus}
+              entityStatus={entityStatus}
+              disciplineCount={disciplineCount}
+            />
+          </div>
+          <Link
+            href={`/projects?${toolsQs}&watch=1`}
+            className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)]"
+          >
+            Protect an active project
+          </Link>
           <Link
             href={`/tools/pre-hire-checklist?${toolsQs}`}
             className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)]"
@@ -76,12 +107,6 @@ export function TrustNextActions({
             className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)]"
           >
             Build / adjust project scope
-          </Link>
-          <Link
-            href={`/tools/compare-bids?${toolsQs}`}
-            className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)]"
-          >
-            Compare bids (estimates)
           </Link>
           <Link
             href={introHref}

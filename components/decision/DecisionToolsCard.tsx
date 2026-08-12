@@ -36,6 +36,16 @@ export function DecisionToolsLinks({
 
   const links = [
     {
+      href: `/projects${qs}`,
+      label: "Protect project",
+      hint: "Dashboard, payments, watches",
+    },
+    {
+      href: `/tools/contract-analyzer${qs}`,
+      label: "Analyze contract",
+      hint: "Missing / unclear terms",
+    },
+    {
       href: `/property${pqs}`,
       label: "Add property context",
       hint: "Check address / permit signals",
