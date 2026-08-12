@@ -1,10 +1,11 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { BUDGET_BANDS, PROJECT_TYPES, isProjectTypeId } from "@/lib/plan/project-types";
 import { encodePlanQuery, parsePlanQuery } from "@/lib/plan/plan-url";
+import { getStudioByProjectType } from "@/lib/studios/registry";
 import type { BudgetBand, ProjectTypeId, ScaleBand } from "@/lib/plan/types";
 
 const STEPS = ["Project", "Location", "Scale"] as const;
@@ -63,6 +64,8 @@ export function PlanFlow() {
       /* ignore */
     }
   }, [searchParams]);
+
+  const linkedStudio = projectType ? getStudioByProjectType(projectType) : null;
 
   const selected = useMemo(
     () => PROJECT_TYPES.find((p) => p.id === projectType) ?? null,
@@ -142,7 +145,7 @@ export function PlanFlow() {
         </div>
       ) : null}
 
-      {/* Progress — horizontal scroll on tiny screens */}
+      {/* Progress ΓÇö horizontal scroll on tiny screens */}
       <nav aria-label="Plan steps" className="mb-6 sm:mb-8">
         <ol className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:flex-wrap sm:gap-2">
           {STEPS.map((label, i) => {
@@ -175,7 +178,7 @@ export function PlanFlow() {
           })}
         </ol>
         <p className="mt-2 text-xs text-[var(--muted)]">
-          About 60–90 seconds · planning ranges + verified license matches
+          About 60ΓÇô90 seconds ┬╖ planning ranges + verified license matches
         </p>
       </nav>
 
@@ -222,6 +225,23 @@ export function PlanFlow() {
                 className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-base text-[var(--text)] outline-none focus:border-[var(--navy)]/40 sm:text-sm"
               />
             </label>
+            {linkedStudio ? (
+              <div className="mt-5 rounded-2xl border border-[var(--accent)]/40 bg-[var(--accent-soft)] px-4 py-3">
+                <p className="text-sm font-semibold text-[var(--text)]">
+                  Want a deeper scope for {linkedStudio.shortName}?
+                </p>
+                <p className="mt-1 text-xs text-[var(--muted)]">
+                  The {linkedStudio.name} asks a few more questions so cost drivers and matches fit
+                  your project better.
+                </p>
+                <Link
+                  href={`/studios/${linkedStudio.slug}`}
+                  className="mt-2 inline-block text-sm font-semibold text-[var(--navy)] no-underline hover:underline"
+                >
+                  Open detailed studio →
+                </Link>
+              </div>
+            ) : null}
           </section>
         ) : null}
 
@@ -261,7 +281,7 @@ export function PlanFlow() {
               </label>
             </div>
             <p className="mt-3 text-xs text-[var(--muted)]">
-              State: <strong className="text-[var(--text)]">Florida</strong> · more states later
+              State: <strong className="text-[var(--text)]">Florida</strong> ┬╖ more states later
             </p>
           </section>
         ) : null}
@@ -272,7 +292,7 @@ export function PlanFlow() {
               Rough scale of the work
             </h2>
             <p className="mt-2 text-sm text-[var(--muted)]">
-              Keep it simple — this only shapes planning ranges, not a formal bid.
+              Keep it simple ΓÇö this only shapes planning ranges, not a formal bid.
             </p>
             <div className="mt-5 grid gap-2">
               {(["small", "medium", "large"] as ScaleBand[]).map((s) => {
@@ -341,7 +361,7 @@ export function PlanFlow() {
                 onClick={goBack}
                 className="rounded-xl px-3 py-2 text-sm font-medium text-[var(--muted)] hover:text-[var(--navy)]"
               >
-                ← Back
+                ΓåÉ Back
               </button>
             ) : (
               <Link
@@ -357,7 +377,7 @@ export function PlanFlow() {
             onClick={goNext}
             className="btn-primary inline-flex min-h-11 items-center px-5 py-2.5 text-sm"
           >
-            {step < 2 ? "Continue →" : "See cost ranges & contractors →"}
+            {step < 2 ? "Continue ΓåÆ" : "See cost ranges & contractors ΓåÆ"}
           </button>
         </div>
       </div>

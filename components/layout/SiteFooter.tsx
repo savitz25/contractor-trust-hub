@@ -30,6 +30,11 @@ export function SiteFooter() {
           </p>
           <ul className="mt-3 space-y-2 text-sm">
             <li>
+              <Link href="/studios" className="text-[var(--text)] no-underline hover:underline">
+                Project Studios
+              </Link>
+            </li>
+            <li>
               <Link href="/plan" className="text-[var(--text)] no-underline hover:underline">
                 Plan a project
               </Link>

@@ -56,17 +56,17 @@ export default function HomePage() {
           {/* Three clear paths — plan, verify, research */}
           <div className="mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-3 sm:gap-4">
             <Link
-              href="/plan"
+              href="/studios"
               className="rounded-2xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--accent)] sm:px-5 sm:py-4"
             >
               <p className="text-sm font-semibold text-[var(--text)]">
-                Plan a project first
+                Project Studios
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
-                Cost ranges + verified contractors for your project type.
+                Kitchen, bath, roofing — clearer scope, ranges, verified trades.
               </p>
               <p className="mt-2.5 text-xs font-medium text-[var(--navy)] sm:mt-3">
-                Start planning →
+                Open studios →
               </p>
             </Link>
             <a

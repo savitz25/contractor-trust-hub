@@ -24,6 +24,11 @@ type Body = {
   costMid?: number;
   costHigh?: number;
   contractorSlugs?: string[];
+  /** Richer studio scope (Phase 1 studios). */
+  studioSlug?: string;
+  studioName?: string;
+  answerSummary?: string[];
+  studioAnswers?: Record<string, string | string[]>;
 };
 
 function validEmail(e: string) {
@@ -78,6 +83,14 @@ export async function POST(request: Request) {
       high: body.costHigh ?? null,
     },
     contractorSlugs: body.contractorSlugs?.slice(0, 20) || [],
+    studio: body.studioSlug
+      ? {
+          slug: body.studioSlug,
+          name: body.studioName || null,
+          answerSummary: body.answerSummary?.slice(0, 30) || [],
+          answers: body.studioAnswers || {},
+        }
+      : null,
   };
 
   let id: string | null = null;

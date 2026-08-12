@@ -70,6 +70,10 @@ export default async function sitemap(props: {
   if (id === 0) {
     const staticPaths = [
       "/",
+      "/studios",
+      "/studios/kitchen",
+      "/studios/bathroom",
+      "/studios/roofing",
       "/plan",
       "/verify",
       "/about",
