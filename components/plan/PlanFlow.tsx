@@ -233,7 +233,9 @@ export function PlanFlow() {
                 <p className="mt-1 text-xs text-[var(--muted)]">
                   {linkedStudio.slug === "roofing"
                     ? "Open the Roofing Studio for full replacement scope — material, tear-off, access, and licensed CCC/RR matches."
-                    : `The ${linkedStudio.name} asks a few more questions so cost drivers and matches fit your project better.`}
+                    : linkedStudio.slug === "kitchen"
+                      ? "Open the Kitchen Studio for remodel depth — cabinets, layout, plumbing/electrical, and licensed GC matches."
+                      : `The ${linkedStudio.name} asks a few more questions so cost drivers and matches fit your project better.`}
                 </p>
                 <Link
                   href={`/studios/${linkedStudio.slug}`}
@@ -241,7 +243,9 @@ export function PlanFlow() {
                 >
                   {linkedStudio.slug === "roofing"
                     ? "Open Roofing Studio for replacement scope →"
-                    : "Open detailed studio →"}
+                    : linkedStudio.slug === "kitchen"
+                      ? "Open Kitchen Studio for remodel scope →"
+                      : "Open detailed studio →"}
                 </Link>
               </div>
             ) : null}

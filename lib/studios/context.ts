@@ -193,6 +193,46 @@ export function studioCostRange(
     mid = Math.round(mid * 1.04);
     high = Math.round(high * 1.06);
   }
+
+  // Kitchen studio — mid-range / full remodel first-class
+  const kitchenScale = answers.values.project_scale;
+  const layoutCx = answers.values.layout_complexity;
+  const kitchenConstraints = answers.values.kitchen_constraints;
+  if (kitchenScale === "full_gut") {
+    mid = Math.round(mid * 1.06);
+    high = Math.round(high * 1.1);
+  }
+  if (kitchenScale === "refresh") {
+    high = Math.round(high * 0.92);
+    mid = Math.round(mid * 0.9);
+  }
+  if (layoutCx === "major") {
+    mid = Math.round(mid * 1.07);
+    high = Math.round(high * 1.12);
+  } else if (layoutCx === "minor") {
+    mid = Math.round(mid * 1.03);
+    high = Math.round(high * 1.05);
+  }
+  if (Array.isArray(multi)) {
+    if (multi.includes("cabinets") && multi.includes("layout")) {
+      mid = Math.round(mid * 1.04);
+      high = Math.round(high * 1.06);
+    }
+    if (multi.includes("plumbing") || multi.includes("electrical")) {
+      mid = Math.round(mid * 1.04);
+      high = Math.round(high * 1.07);
+    }
+  }
+  if (Array.isArray(kitchenConstraints)) {
+    if (kitchenConstraints.includes("occupied")) {
+      mid = Math.round(mid * 1.04);
+      high = Math.round(high * 1.06);
+    }
+    if (kitchenConstraints.includes("structural") || kitchenConstraints.includes("permit_likely")) {
+      mid = Math.round(mid * 1.03);
+      high = Math.round(high * 1.06);
+    }
+  }
   if (Array.isArray(multi) && multi.includes("moisture")) {
     mid = Math.round(mid * 1.05);
     high = Math.round(high * 1.08);

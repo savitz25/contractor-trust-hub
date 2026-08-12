@@ -6,7 +6,14 @@
 
 | Slug | Name | Plan project type(s) |
 |------|------|----------------------|
-| `kitchen` | Kitchen Remodel | `kitchen_remodel` |
+| `kitchen` | Kitchen — mid-range/full remodel first-class | `kitchen_remodel` |
+
+### Kitchen Studio notes
+- Mid-range remodel + full gut-rehab featured (“Most common” style)
+- Work multi-select includes backsplash, plumbing relocation
+- Layout complexity + optional constraints (occupied, structural, permit)
+- Budget: Under $25k / $25–50k / $50–100k / $100k+ / Not sure
+- Thin states use kitchen CGC/CBC/CRC language
 | `bathroom` | Bathroom Remodel | `bathroom_remodel` |
 | `roofing` | Roofing — full replacement first-class (CCC/RR strict) | `roofing` |
 
