@@ -4,10 +4,11 @@ import {
   listSearchableContractorSlugs,
   SITEMAP_PAGE_SIZE,
 } from "@/lib/contractors/queries";
+import { discoveryPath, getLiveDiscoveryStates } from "@/lib/discovery/config";
 import { absoluteUrl } from "@/lib/site";
 
 /**
- * Multi-file sitemap for ~270k Florida contractor profiles.
+ * Multi-file sitemap for ~270k Florida contractor profiles + discovery URLs.
  * Next.js emits /sitemap.xml index → /sitemap/0.xml, /sitemap/1.xml, ...
  */
 export async function generateSitemaps() {
@@ -17,9 +18,47 @@ export async function generateSitemaps() {
   } catch {
     count = 0;
   }
-  // id 0 always exists (static routes + first contractor page)
+  // id 0 always exists (static + discovery + first contractor page)
   const contractorPages = Math.max(1, Math.ceil(count / SITEMAP_PAGE_SIZE) || 1);
   return Array.from({ length: contractorPages }, (_, id) => ({ id }));
+}
+
+function discoverySitemapEntries(): MetadataRoute.Sitemap {
+  const entries: MetadataRoute.Sitemap = [];
+  for (const state of getLiveDiscoveryStates()) {
+    entries.push({
+      url: absoluteUrl(discoveryPath(state)),
+      changeFrequency: "weekly",
+      priority: 0.85,
+    });
+    for (const county of state.counties) {
+      entries.push({
+        url: absoluteUrl(discoveryPath(state, { countySlug: county.slug })),
+        changeFrequency: "weekly",
+        priority: 0.75,
+      });
+    }
+    for (const trade of state.trades) {
+      entries.push({
+        url: absoluteUrl(discoveryPath(state, { tradeSlug: trade.slug })),
+        changeFrequency: "weekly",
+        priority: 0.75,
+      });
+    }
+    // Combined county × trade (high-value SEO pages)
+    for (const county of state.counties) {
+      for (const trade of state.trades) {
+        entries.push({
+          url: absoluteUrl(
+            discoveryPath(state, { countySlug: county.slug, tradeSlug: trade.slug })
+          ),
+          changeFrequency: "weekly",
+          priority: 0.7,
+        });
+      }
+    }
+  }
+  return entries;
 }
 
 export default async function sitemap(props: {
@@ -37,6 +76,7 @@ export default async function sitemap(props: {
         priority: path === "/" ? 1 : 0.8,
       });
     }
+    entries.push(...discoverySitemapEntries());
   }
 
   const offset = id * SITEMAP_PAGE_SIZE;

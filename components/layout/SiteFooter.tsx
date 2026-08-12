@@ -22,6 +22,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/florida" className="text-[var(--text)]">
+                Browse Florida by county & trade
+              </Link>
+            </li>
+            <li>
               <Link href="/about" className="text-[var(--text)]">
                 How it works
               </Link>

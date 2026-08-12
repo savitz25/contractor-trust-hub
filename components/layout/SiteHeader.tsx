@@ -3,6 +3,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 
 /** Single primary CTA + secondary links — no Verify/Search or Methodology/Method duplicates. */
 const secondaryNav = [
+  { href: "/florida", label: "Florida", shortLabel: "FL" },
   { href: "/about", label: "How it works", shortLabel: "About" },
   { href: "/methodology", label: "Methodology", shortLabel: "Method" },
 ];

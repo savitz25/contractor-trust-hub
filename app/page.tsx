@@ -165,6 +165,24 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-6 sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-8">
+          <div>
+            <h2 className="text-lg font-semibold text-[var(--text)]">Browse Florida by place or trade</h2>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[var(--muted)]">
+              Explore counties and license types, then open Trust Reports — same evidence signals as
+              search, structured for discovery.
+            </p>
+          </div>
+          <Link
+            href="/florida"
+            className="mt-4 inline-flex shrink-0 rounded-xl border border-[var(--border)] bg-[var(--panel)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:border-[var(--accent)]/40 sm:mt-0"
+          >
+            Open Florida discovery →
+          </Link>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-6 sm:p-8">
           <h2 className="text-xl font-semibold text-[var(--text)]">What a Trust Report shows</h2>

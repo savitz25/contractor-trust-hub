@@ -9,10 +9,16 @@ Consumer-facing “Verify a Florida contractor” experience.
 | `/` | Brand homepage + primary search CTA |
 | `/verify?q=` | Search by license number or name; results list |
 | `/contractors/[slug]` | **Contractor Trust Report** (evidence summary, license scope, Sunbiz, discipline, hiring notes) |
+| `/florida` | **Discovery** state landing (counties + trades) |
+| `/florida/[county]` | County browse (e.g. `/florida/miami-dade`) |
+| `/florida/[trade]` | Trade browse (e.g. `/florida/roofers`) |
+| `/florida/[county]/[trade]` | Combined browse (e.g. `/florida/miami-dade/roofers`) |
 | `/about` | How it works |
 | `/methodology` | Transparent matching & sources |
-| `/sitemap.xml` | Sitemap index (static pages + contractor profiles) |
+| `/sitemap.xml` | Sitemap index (static + discovery + contractor profiles) |
 | `/robots.txt` | Crawler rules + sitemap pointer |
+
+See [DISCOVERY.md](./DISCOVERY.md) for routing, config, and multi-state expansion.
 
 ### Contractor Trust Report
 
