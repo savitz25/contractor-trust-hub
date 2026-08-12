@@ -42,6 +42,12 @@ const tools = [
     step: "3",
   },
   {
+    href: "/tools/coverage",
+    title: "Permit coverage matrix",
+    body: "Which Florida counties are connected, wave status, and matching rules.",
+    step: "6",
+  },
+  {
     href: "/tools/permit-planner",
     title: "Permit & Inspection Planner",
     body: "Likely permit categories, contractor questions, and AHJ next steps by project type.",

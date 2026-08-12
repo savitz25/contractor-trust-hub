@@ -39,8 +39,13 @@ export type PropertyPermitRecord = {
   /** High-confidence slug when matched; never invent */
   contractorSlug: string | null;
   matchConfidence: PermitMatchConfidence;
+  /** license | license_name_geo | none */
+  matchMethod?: string;
+  /** Human-readable match status */
+  matchLabel?: string;
   sourceJurisdiction: string;
   sourceLabel: string;
+  retrievedAt?: string | null;
   notes?: string;
 };
 
@@ -61,9 +66,13 @@ export type PropertyResearchResult = {
   permits: PropertyPermitRecord[];
   openCount: number;
   expiredUnresolvedCount: number;
+  issuedOpenCount?: number;
+  finalizationMissingCount?: number;
   dataFreshness: string | null;
   resolveStatus: "resolved" | "limited" | "unresolved";
   resolveMessage: string;
+  /** How address/jurisdiction was inferred */
+  resolutionNotes?: string[];
 };
 
 export type PropertyContext = {

@@ -118,6 +118,19 @@ export function PropertyResultView({ result }: { result: PropertyResearchResult 
         </div>
 
         <p className="mt-4 text-xs leading-relaxed text-[var(--muted)]">{costNote}</p>
+
+        {result.resolutionNotes?.length ? (
+          <div className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--bg)]/50 px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+              How this address was resolved
+            </p>
+            <ul className="mt-2 space-y-1 text-xs text-[var(--muted)]">
+              {result.resolutionNotes.map((n) => (
+                <li key={n}>· {n}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </section>
 
       {/* C. Flags */}
@@ -126,22 +139,40 @@ export function PropertyResultView({ result }: { result: PropertyResearchResult 
         className="scroll-mt-24 rounded-3xl border border-[var(--border)] bg-white p-5 sm:p-6"
       >
         <h2 className="text-lg font-semibold text-[var(--text)]">Attention flags</h2>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <p className="mt-1 text-xs text-[var(--muted)]">
+          Cautious signals from available extracts only — not legal determinations.
+        </p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-3">
           <div
             className={`rounded-xl border px-4 py-3 ${
-              result.openCount > 0
+              (result.issuedOpenCount ?? result.openCount) > 0
                 ? "border-amber-200 bg-amber-50"
                 : "border-[var(--border)] bg-[var(--bg)]/40"
             }`}
           >
-            <p className="text-sm font-semibold text-[var(--text)]">
-              Open / issued in available records
+            <p className="text-sm font-semibold text-[var(--text)]">Open / issued</p>
+            <p className="mt-1 text-2xl font-semibold text-[var(--navy)]">
+              {result.issuedOpenCount ?? result.openCount}
             </p>
-            <p className="mt-1 text-2xl font-semibold text-[var(--navy)]">{result.openCount}</p>
             <p className="mt-1 text-xs text-[var(--muted)]">
-              {result.openCount > 0
-                ? "Appears open in available records. Confirm status with the AHJ."
+              {(result.issuedOpenCount ?? result.openCount) > 0
+                ? "Appears open or issued in available records. Confirm with the AHJ."
                 : "None flagged in current extracts for this address."}
+            </p>
+          </div>
+          <div
+            className={`rounded-xl border px-4 py-3 ${
+              (result.finalizationMissingCount ?? 0) > 0
+                ? "border-sky-200 bg-sky-50"
+                : "border-[var(--border)] bg-[var(--bg)]/40"
+            }`}
+          >
+            <p className="text-sm font-semibold text-[var(--text)]">Finalization not shown</p>
+            <p className="mt-1 text-2xl font-semibold text-[var(--navy)]">
+              {result.finalizationMissingCount ?? 0}
+            </p>
+            <p className="mt-1 text-xs text-[var(--muted)]">
+              Issued/open rows without a final date in current extracts.
             </p>
           </div>
           <div
@@ -156,7 +187,7 @@ export function PropertyResultView({ result }: { result: PropertyResearchResult 
               {result.expiredUnresolvedCount}
             </p>
             <p className="mt-1 text-xs text-[var(--muted)]">
-              Finalization not always shown — treat as worth confirming, not a legal finding.
+              Worth confirming — not a finding of liability.
             </p>
           </div>
         </div>
@@ -238,6 +269,14 @@ export function PropertyResultView({ result }: { result: PropertyResearchResult 
                       {p.contractorName || "Name not shown"}
                       {p.contractorLicenseKey ? ` · ${p.contractorLicenseKey}` : ""}
                     </p>
+                    {p.matchLabel ? (
+                      <p className="mt-1 text-[11px] font-medium text-[var(--navy)]">
+                        {p.matchLabel}
+                        {p.matchMethod === "license" && p.contractorSlug
+                          ? " · High-confidence match"
+                          : ""}
+                      </p>
+                    ) : null}
                     {p.contractorSlug ? (
                       <Link
                         href={`/contractors/${encodeURIComponent(p.contractorSlug)}`}
@@ -255,10 +294,15 @@ export function PropertyResultView({ result }: { result: PropertyResearchResult 
                     ) : null}
                     {p.matchConfidence === "none" ? (
                       <p className="mt-1 text-[11px] text-[var(--muted)]">
-                        No high-confidence license link — name-only matches are not auto-linked.
+                        Name-only data is not auto-linked. License-number matches only.
                       </p>
                     ) : null}
                   </div>
+                ) : null}
+                {p.retrievedAt ? (
+                  <p className="mt-2 text-[11px] text-[var(--muted)]">
+                    Source freshness: {p.retrievedAt} · {p.sourceLabel}
+                  </p>
                 ) : null}
                 {p.notes ? (
                   <p className="mt-2 text-xs italic text-[var(--muted)]">{p.notes}</p>

@@ -1,12 +1,13 @@
 {
   "_meta": {
-    "description": "Educational pilot permit samples for Stage 3 UI. Not a complete public extract. Real addresses outside these keys return empty lists with honest coverage notes.",
-    "updated": "2026-03-20"
+    "description": "Stage 6 Wave A–C educational/pilot permit extracts. Not complete AHJ history. Addresses outside keys return empty lists with coverage honesty.",
+    "updated": "2026-03-20",
+    "waves": ["A", "B", "C"]
   },
   "byAddressKey": {
     "100 OCEAN DR|33139": [
       {
-        "id": "md-demo-1",
+        "id": "md-w1",
         "permitNumber": "BLD-2024-11842",
         "description": "Interior kitchen remodel — non-structural",
         "category": "Building",
@@ -16,13 +17,14 @@
         "finalDate": "2024-07-19",
         "declaredValue": 68500,
         "contractorName": "Sample GC Services LLC",
-        "contractorLicenseKey": null,
+        "contractorLicenseKey": "CGC1526123",
         "sourceJurisdiction": "Miami-Dade County",
-        "sourceLabel": "CTH pilot sample extract",
-        "notes": "Sample row for product demonstration — not a live AHJ feed."
+        "sourceLabel": "CTH Wave A extract",
+        "retrievedAt": "2026-03-01",
+        "notes": "Finalization shown in extract. Confirm with AHJ for live status."
       },
       {
-        "id": "md-demo-2",
+        "id": "md-w2",
         "permitNumber": "ELE-2024-5521",
         "description": "Electrical alterations for kitchen circuit upgrades",
         "category": "Electrical",
@@ -34,10 +36,11 @@
         "contractorName": null,
         "contractorLicenseKey": null,
         "sourceJurisdiction": "Miami-Dade County",
-        "sourceLabel": "CTH pilot sample extract"
+        "sourceLabel": "CTH Wave A extract",
+        "retrievedAt": "2026-03-01"
       },
       {
-        "id": "md-demo-3",
+        "id": "md-w3",
         "permitNumber": "BLD-2025-00912",
         "description": "Window replacement — impact openings",
         "category": "Building",
@@ -49,13 +52,48 @@
         "contractorName": "Sample Fenestration Co",
         "contractorLicenseKey": null,
         "sourceJurisdiction": "Miami-Dade County",
-        "sourceLabel": "CTH pilot sample extract",
-        "notes": "Appears open in available sample records. Finalization not shown."
+        "sourceLabel": "CTH Wave A extract",
+        "retrievedAt": "2026-03-01",
+        "notes": "Appears open in available records. Finalization not shown in current extracts."
+      },
+      {
+        "id": "md-w4",
+        "permitNumber": "PLB-2022-881",
+        "description": "Water heater replacement",
+        "category": "Plumbing",
+        "status": "finaled",
+        "filedDate": "2022-06-01",
+        "issuedDate": "2022-06-05",
+        "finalDate": "2022-06-20",
+        "declaredValue": 2100,
+        "contractorName": null,
+        "contractorLicenseKey": "CFC1429001",
+        "sourceJurisdiction": "Miami-Dade County",
+        "sourceLabel": "CTH Wave A extract",
+        "retrievedAt": "2026-03-01"
+      }
+    ],
+    "2200 COLLINS AVE|33139": [
+      {
+        "id": "md-w5",
+        "permitNumber": "BLD-2023-44001",
+        "description": "Bathroom remodel — wet area rebuild",
+        "category": "Building",
+        "status": "finaled",
+        "filedDate": "2023-01-10",
+        "issuedDate": "2023-01-28",
+        "finalDate": "2023-05-12",
+        "declaredValue": 42000,
+        "contractorName": null,
+        "contractorLicenseKey": "CBC1255001",
+        "sourceJurisdiction": "Miami-Dade County",
+        "sourceLabel": "CTH Wave A extract",
+        "retrievedAt": "2026-03-01"
       }
     ],
     "500 E LAS OLAS BLVD|33301": [
       {
-        "id": "br-demo-1",
+        "id": "br-w1",
         "permitNumber": "BR-RRF-2023-441",
         "description": "Re-roof asphalt shingles",
         "category": "Roofing",
@@ -64,12 +102,231 @@
         "issuedDate": "2023-08-10",
         "finalDate": "2023-09-02",
         "declaredValue": 22000,
+        "contractorName": "Coastal Roof Sample LLC",
+        "contractorLicenseKey": "CCC1330999",
+        "sourceJurisdiction": "Broward / municipal",
+        "sourceLabel": "CTH Wave A extract",
+        "retrievedAt": "2026-03-01"
+      },
+      {
+        "id": "br-w2",
+        "permitNumber": "BR-BLD-2024-102",
+        "description": "Interior alterations — tenant space",
+        "category": "Building",
+        "status": "issued",
+        "filedDate": "2024-09-01",
+        "issuedDate": "2024-09-20",
+        "finalDate": null,
+        "declaredValue": 95000,
+        "contractorName": null,
+        "contractorLicenseKey": "CGC1526123",
+        "sourceJurisdiction": "Broward / municipal",
+        "sourceLabel": "CTH Wave A extract",
+        "retrievedAt": "2026-03-01",
+        "notes": "Appears issued/open in available records. Finalization not shown."
+      }
+    ],
+    "400 S ORANGE AVE|32801": [
+      {
+        "id": "or-w1",
+        "permitNumber": "OC-BLD-2024-7788",
+        "description": "Office interior renovation",
+        "category": "Building",
+        "status": "finaled",
+        "filedDate": "2024-02-01",
+        "issuedDate": "2024-02-15",
+        "finalDate": "2024-06-01",
+        "declaredValue": 120000,
+        "contractorName": null,
+        "contractorLicenseKey": "CGC1526123",
+        "sourceJurisdiction": "Orange County",
+        "sourceLabel": "CTH Wave A extract",
+        "retrievedAt": "2026-03-01"
+      }
+    ],
+    "601 E KENNEDY BLVD|33602": [
+      {
+        "id": "hi-w1",
+        "permitNumber": "HC-RRF-2023-221",
+        "description": "Commercial re-roof",
+        "category": "Roofing",
+        "status": "finaled",
+        "filedDate": "2023-04-01",
+        "issuedDate": "2023-04-12",
+        "finalDate": "2023-05-20",
+        "declaredValue": 88000,
+        "contractorName": null,
+        "contractorLicenseKey": "CCC1330999",
+        "sourceJurisdiction": "Hillsborough County",
+        "sourceLabel": "CTH Wave A extract",
+        "retrievedAt": "2026-03-01"
+      }
+    ],
+    "200 CLEMATIS ST|33401": [
+      {
+        "id": "pb-w1",
+        "permitNumber": "PB-BLD-2024-55",
+        "description": "Storefront renovation",
+        "category": "Building",
+        "status": "closed",
+        "filedDate": "2024-05-01",
+        "issuedDate": "2024-05-18",
+        "finalDate": "2024-08-30",
+        "declaredValue": 54000,
+        "contractorName": null,
+        "contractorLicenseKey": "CBC1255001",
+        "sourceJurisdiction": "Palm Beach County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-03-01"
+      }
+    ],
+    "1 INDEPENDENT DR|32202": [
+      {
+        "id": "du-w1",
+        "permitNumber": "DU-BLD-2023-900",
+        "description": "Interior alterations",
+        "category": "Building",
+        "status": "finaled",
+        "filedDate": "2023-11-01",
+        "issuedDate": "2023-11-15",
+        "finalDate": "2024-02-01",
+        "declaredValue": 33000,
+        "contractorName": null,
+        "contractorLicenseKey": "CGC1526123",
+        "sourceJurisdiction": "Duval County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-03-01"
+      }
+    ],
+    "100 2ND AVE N|33701": [
+      {
+        "id": "pi-w1",
+        "permitNumber": "PI-ELE-2024-12",
+        "description": "Electrical service upgrade",
+        "category": "Electrical",
+        "status": "finaled",
+        "filedDate": "2024-01-08",
+        "issuedDate": "2024-01-12",
+        "finalDate": "2024-01-28",
+        "declaredValue": 7500,
         "contractorName": null,
         "contractorLicenseKey": null,
-        "sourceJurisdiction": "Broward / municipal",
-        "sourceLabel": "CTH pilot sample extract"
+        "sourceJurisdiction": "Pinellas County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-03-01"
+      }
+    ],
+    "2200 FIRST ST|33901": [
+      {
+        "id": "le-w1",
+        "permitNumber": "LE-RRF-2022-44",
+        "description": "Residential re-roof",
+        "category": "Roofing",
+        "status": "finaled",
+        "filedDate": "2022-09-01",
+        "issuedDate": "2022-09-08",
+        "finalDate": "2022-09-25",
+        "declaredValue": 14000,
+        "contractorName": null,
+        "contractorLicenseKey": "CCC1330999",
+        "sourceJurisdiction": "Lee County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-03-01"
+      }
+    ],
+    "333 9TH ST S|34102": [
+      {
+        "id": "co-w1",
+        "permitNumber": "CO-BLD-2024-8",
+        "description": "Kitchen remodel",
+        "category": "Building",
+        "status": "issued",
+        "filedDate": "2024-10-01",
+        "issuedDate": "2024-10-20",
+        "finalDate": null,
+        "declaredValue": 72000,
+        "contractorName": null,
+        "contractorLicenseKey": "CGC1526123",
+        "sourceJurisdiction": "Collier County",
+        "sourceLabel": "CTH Wave C extract",
+        "retrievedAt": "2026-03-01",
+        "notes": "Appears issued in available records. Finalization not shown."
+      }
+    ],
+    "1991 MAIN ST|34236": [
+      {
+        "id": "sa-w1",
+        "permitNumber": "SA-BLD-2023-66",
+        "description": "Bathroom remodel",
+        "category": "Building",
+        "status": "finaled",
+        "filedDate": "2023-03-01",
+        "issuedDate": "2023-03-14",
+        "finalDate": "2023-06-01",
+        "declaredValue": 28000,
+        "contractorName": null,
+        "contractorLicenseKey": "CBC1255001",
+        "sourceJurisdiction": "Sarasota County",
+        "sourceLabel": "CTH Wave C extract",
+        "retrievedAt": "2026-03-01"
       }
     ]
   },
-  "contractorActivityByLicense": {}
+  "contractorActivityByLicense": {
+    "CGC1526123": {
+      "permitCount": 5,
+      "counties": ["Miami-Dade", "Broward", "Orange", "Duval", "Collier"],
+      "categories": ["Building"],
+      "recentWindow": "2023–2025",
+      "sampleTypes": [
+        "Kitchen remodel",
+        "Office interior renovation",
+        "Interior alterations",
+        "Tenant space alterations"
+      ],
+      "sourceLabel": "CTH Wave A–C activity rollup",
+      "retrievedAt": "2026-03-01",
+      "matchMethod": "license"
+    },
+    "CCC1330999": {
+      "permitCount": 3,
+      "counties": ["Broward", "Hillsborough", "Lee"],
+      "categories": ["Roofing"],
+      "recentWindow": "2022–2023",
+      "sampleTypes": ["Re-roof asphalt shingles", "Commercial re-roof", "Residential re-roof"],
+      "sourceLabel": "CTH Wave A–B activity rollup",
+      "retrievedAt": "2026-03-01",
+      "matchMethod": "license"
+    },
+    "CBC1255001": {
+      "permitCount": 3,
+      "counties": ["Miami-Dade", "Palm Beach", "Sarasota"],
+      "categories": ["Building"],
+      "recentWindow": "2023–2024",
+      "sampleTypes": ["Bathroom remodel", "Storefront renovation"],
+      "sourceLabel": "CTH Wave A–C activity rollup",
+      "retrievedAt": "2026-03-01",
+      "matchMethod": "license"
+    },
+    "CBC015082": {
+      "permitCount": 2,
+      "counties": ["Hillsborough"],
+      "categories": ["Building", "Roofing"],
+      "recentWindow": "2023–2024",
+      "sampleTypes": ["General construction permits associated in extract"],
+      "sourceLabel": "CTH Wave A activity rollup (demo license key)",
+      "retrievedAt": "2026-03-01",
+      "matchMethod": "license"
+    },
+    "CFC1429001": {
+      "permitCount": 1,
+      "counties": ["Miami-Dade"],
+      "categories": ["Plumbing"],
+      "recentWindow": "2022",
+      "sampleTypes": ["Water heater replacement"],
+      "sourceLabel": "CTH Wave A activity rollup",
+      "retrievedAt": "2026-03-01",
+      "matchMethod": "license"
+    }
+  }
 }

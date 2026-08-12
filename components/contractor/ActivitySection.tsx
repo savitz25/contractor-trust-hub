@@ -1,9 +1,13 @@
 import Link from "next/link";
-import { getActivitySignals } from "@/lib/contractors/activity-signals";
+import { getActivitySignalsAsync } from "@/lib/contractors/activity-signals";
 import type { ContractorDetail } from "@/lib/contractors/types";
 
-export function ActivitySection({ contractor }: { contractor: ContractorDetail }) {
-  const signals = getActivitySignals(contractor);
+export async function ActivitySection({
+  contractor,
+}: {
+  contractor: ContractorDetail;
+}) {
+  const signals = await getActivitySignalsAsync(contractor);
 
   return (
     <section
@@ -15,8 +19,12 @@ export function ActivitySection({ contractor }: { contractor: ContractorDetail }
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         Associated in available datasets only — never a quality rating.{" "}
+        <Link href="/tools/coverage" className="font-medium text-[var(--navy)]">
+          Coverage matrix
+        </Link>
+        {" · "}
         <Link href="/property" className="font-medium text-[var(--navy)]">
-          How property research works
+          Property research
         </Link>
       </p>
 
@@ -43,6 +51,9 @@ export function ActivitySection({ contractor }: { contractor: ContractorDetail }
         </div>
       ) : (
         <>
+          {signals.status === "partial" ? (
+            <p className="mt-3 text-xs text-amber-900">{signals.message}</p>
+          ) : null}
           <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
             <div>
               <dt className="text-[var(--muted)]">Permits associated</dt>
@@ -64,12 +75,35 @@ export function ActivitySection({ contractor }: { contractor: ContractorDetail }
             </div>
             {signals.categories?.length ? (
               <div className="sm:col-span-2">
-                <dt className="text-[var(--muted)]">Trade / category mix</dt>
+                <dt className="text-[var(--muted)]">Category / trade mix</dt>
                 <dd className="text-[var(--text)]">{signals.categories.join(", ")}</dd>
+              </div>
+            ) : null}
+            {"sampleTypes" in signals && signals.sampleTypes?.length ? (
+              <div className="sm:col-span-2">
+                <dt className="text-[var(--muted)]">Sample recent work types</dt>
+                <dd className="text-[var(--text)]">
+                  <ul className="mt-1 list-disc pl-4 text-xs">
+                    {signals.sampleTypes.map((t) => (
+                      <li key={t}>{t}</li>
+                    ))}
+                  </ul>
+                </dd>
               </div>
             ) : null}
             <div className="sm:col-span-2">
               <p className="text-xs text-[var(--muted)]">{signals.note}</p>
+              {"matchMethod" in signals && signals.matchMethod ? (
+                <p className="mt-1 text-xs text-[var(--muted)]">
+                  Match method: <strong className="text-[var(--text)]">{signals.matchMethod}</strong>
+                  {"sourceLabel" in signals && signals.sourceLabel
+                    ? ` · Source: ${signals.sourceLabel}`
+                    : ""}
+                  {"retrievedAt" in signals && signals.retrievedAt
+                    ? ` · Freshness: ${signals.retrievedAt}`
+                    : ""}
+                </p>
+              ) : null}
             </div>
           </dl>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -83,7 +117,7 @@ export function ActivitySection({ contractor }: { contractor: ContractorDetail }
               href="/tools/permit-planner"
               className="text-xs font-semibold text-[var(--navy)] no-underline hover:underline"
             >
-              Permit Planner for this project type →
+              Permit Planner →
             </Link>
           </div>
         </>

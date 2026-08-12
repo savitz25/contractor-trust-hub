@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PropertyResultView } from "@/components/property/PropertyResultView";
+import { enrichPermitsWithDbJoins } from "@/lib/property/join-db";
 import { decodePropertyId, researchProperty } from "@/lib/property/resolve";
 import { pageMetadata } from "@/lib/seo/page-meta";
 
@@ -49,6 +50,13 @@ export default async function PropertyByIdPage({ params, searchParams }: Props) 
     city: sp.city || undefined,
     state: "FL",
   });
+
+  // High-confidence license joins when DB is available
+  try {
+    result.permits = await enrichPermitsWithDbJoins(result.permits);
+  } catch {
+    /* keep extract-only rows */
+  }
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">

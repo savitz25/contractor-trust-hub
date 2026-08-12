@@ -4,6 +4,7 @@ import {
   normalizeZip,
 } from "@/lib/plan/location";
 import { coverageForCounty, coverageLabel } from "./coverage";
+import { buildAddressKey, normalizeStreetKey } from "./matcher";
 import { loadPermitsForAddress } from "./permits";
 import type {
   PropertyAddressInput,
@@ -11,22 +12,13 @@ import type {
   PropertyResearchResult,
 } from "./types";
 
-function slugifyPart(s: string): string {
-  return s
-    .toUpperCase()
-    .replace(/[^A-Z0-9]+/g, " ")
-    .trim()
-    .replace(/\s+/g, " ");
-}
-
 /** Stable property id from normalized address (no PII server store required). */
 export function propertyIdFromAddress(input: {
   street: string;
   unit?: string;
   zip: string;
 }): string {
-  const key = `${slugifyPart(input.street)}|${input.unit ? slugifyPart(input.unit) + "|" : ""}${input.zip}`;
-  // base64url of key for compact path segment
+  const key = buildAddressKey(input.street, input.zip, input.unit);
   if (typeof Buffer !== "undefined") {
     return Buffer.from(key, "utf8")
       .toString("base64url")
@@ -62,17 +54,11 @@ export function decodePropertyId(id: string): {
 }
 
 export function normalizeStreet(street: string): string {
-  return street
-    .trim()
-    .replace(/\s+/g, " ")
-    .replace(/\b(street|st\.)\b/gi, "ST")
-    .replace(/\b(avenue|ave\.)\b/gi, "AVE")
-    .replace(/\b(boulevard|blvd\.)\b/gi, "BLVD")
-    .replace(/\b(drive|dr\.)\b/gi, "DR")
-    .replace(/\b(road|rd\.)\b/gi, "RD")
-    .replace(/\b(lane|ln\.)\b/gi, "LN")
-    .replace(/\b(court|ct\.)\b/gi, "CT")
-    .toUpperCase();
+  return normalizeStreetKey(street);
+}
+
+function hasStreetNumber(street: string): boolean {
+  return /^\d/.test(street.trim()) || /\b\d+\b/.test(street);
 }
 
 export function formatNormalizedAddress(input: {
@@ -102,16 +88,26 @@ export function researchProperty(
   if (!street || street.length < 5) {
     return unresolved("Enter a full street address (number and street name).");
   }
+  if (!hasStreetNumber(street)) {
+    return unresolved(
+      "Address looks incomplete — include a street number when possible (e.g. 100 Ocean Drive)."
+    );
+  }
   if (!zip) {
     return unresolved("Enter a valid 5-digit Florida ZIP code.");
   }
-  // Florida ZIP range rough check
   const z = Number(zip);
   if (z < 32000 || z > 34999) {
     return unresolved(
-      "ZIP does not look like a Florida ZIP. Stage 3 is Florida-first — use a FL ZIP."
+      "ZIP does not look like a Florida ZIP. Florida-first — use a FL ZIP."
     );
   }
+
+  const streetNorm = normalizeStreet(street);
+  const unitNorm = unit ? normalizeStreet(unit) : undefined;
+  const resolutionNotes: string[] = [];
+  resolutionNotes.push(`Street normalized to “${streetNorm}” for extract matching.`);
+  if (unitNorm) resolutionNotes.push(`Unit normalized to “${unitNorm}”.`);
 
   const countyName = countyFromFloridaZip(zip);
   const countyDef = countyName
@@ -122,8 +118,29 @@ export function researchProperty(
       )
     : null;
 
+  if (countyName) {
+    resolutionNotes.push(
+      `Jurisdiction inferred from ZIP ${zip} → ${countyName} County (best-effort ZIP map; multi-county ZIPs may differ).`
+    );
+  } else {
+    resolutionNotes.push("County could not be inferred from ZIP alone.");
+  }
+  if (city) {
+    resolutionNotes.push(`City provided by user: ${city} (not independently verified).`);
+  }
+
   const cov = coverageForCounty(countyDef?.name || countyName);
-  const propertyId = propertyIdFromAddress({ street: normalizeStreet(street), unit, zip });
+  if (cov) {
+    resolutionNotes.push(
+      `Coverage status: ${coverageLabel(cov.level)} (${cov.sourceLabel}). Wave ${cov.wave}.`
+    );
+  }
+
+  const propertyId = propertyIdFromAddress({
+    street: streetNorm,
+    unit: unitNorm,
+    zip,
+  });
   const normalizedAddress = formatNormalizedAddress({
     street: street.trim(),
     unit,
@@ -134,15 +151,17 @@ export function researchProperty(
 
   const checked = [
     "Street address and ZIP provided",
+    "Street / unit normalization for address-key matching",
     "Florida ZIP → county best-effort resolution",
     "Jurisdiction coverage matrix lookup",
-    "Pilot permit extract match by address key (when connected)",
+    "Wave A–C permit extract match by address key (when connected)",
   ];
   const notChecked = [
     "Full Assessor / parcel ownership records",
     "Live AHJ portal scrape for this request",
     "Automatic open-permit legal liability determination",
     "Complete statewide permit history",
+    "Weak fuzzy-name contractor joins",
   ];
 
   if (!countyName && !city) {
@@ -175,19 +194,31 @@ export function researchProperty(
   let permits: PropertyPermitRecord[] = [];
   if (level === "partial" || level === "full") {
     permits = loadPermitsForAddress({
-      street: normalizeStreet(street),
+      street: streetNorm,
       zip,
+      unit: unitNorm,
     });
+    resolutionNotes.push(
+      permits.length
+        ? `Matched ${permits.length} permit row(s) on address key in current extracts.`
+        : "No permit rows matched this normalized address key in current extracts."
+    );
   }
 
-  const openCount = permits.filter((p) => p.status === "open" || p.status === "issued")
-    .length;
+  const openCount = permits.filter((p) => p.status === "open").length;
+  const issuedOpenCount = permits.filter(
+    (p) => p.status === "open" || p.status === "issued"
+  ).length;
   const expiredUnresolvedCount = permits.filter((p) => p.status === "expired").length;
+  const finalizationMissingCount = permits.filter(
+    (p) =>
+      (p.status === "open" || p.status === "issued") && !p.finalDate
+  ).length;
 
   let resolveStatus: PropertyResearchResult["resolveStatus"] = "resolved";
   let resolveMessage =
     permits.length > 0
-      ? "Property resolved with permit records in current pilot extracts."
+      ? "Property resolved with permit records in current Wave extracts."
       : level === "partial" || level === "full"
         ? "Property resolved. No permit records matched this address in current extracts — that does not prove a clean permit history."
         : "Property resolved to county. Permit extracts are not connected for this jurisdiction yet.";
@@ -195,6 +226,9 @@ export function researchProperty(
   if (level === "jurisdiction_unsupported") {
     resolveStatus = "limited";
   }
+
+  const freshness =
+    permits.map((p) => p.retrievedAt).find(Boolean) || cov?.freshness || null;
 
   return {
     propertyId,
@@ -207,15 +241,18 @@ export function researchProperty(
     county: cov?.county || countyName,
     countySlug: cov?.countySlug || countyDef?.slug || null,
     coverage: level,
+    openCount,
+    expiredUnresolvedCount,
+    issuedOpenCount,
+    finalizationMissingCount,
+    dataFreshness: freshness,
+    resolveStatus,
+    resolveMessage,
+    resolutionNotes,
     coverageNote: `${coverageLabel(level)}. ${cov?.note || ""}`.trim(),
     checked,
     notChecked,
     permits,
-    openCount,
-    expiredUnresolvedCount,
-    dataFreshness: permits.length ? "2026-03-01" : null,
-    resolveStatus,
-    resolveMessage,
   };
 }
 
