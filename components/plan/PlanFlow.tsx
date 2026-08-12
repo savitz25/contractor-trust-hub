@@ -1,20 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { BUDGET_BANDS, PROJECT_TYPES } from "@/lib/plan/project-types";
-import { encodePlanQuery } from "@/lib/plan/plan-url";
-import type {
-  BudgetBand,
-  ProjectTypeId,
-  ScaleBand,
-} from "@/lib/plan/types";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { BUDGET_BANDS, PROJECT_TYPES, isProjectTypeId } from "@/lib/plan/project-types";
+import { encodePlanQuery, parsePlanQuery } from "@/lib/plan/plan-url";
+import type { BudgetBand, ProjectTypeId, ScaleBand } from "@/lib/plan/types";
 
-const STEPS = ["Project", "Location", "Scale", "Results"] as const;
+const STEPS = ["Project", "Location", "Scale"] as const;
+const PLAN_STORAGE_KEY = "cth-plan-context";
 
 export function PlanFlow() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState(0);
   const [projectType, setProjectType] = useState<ProjectTypeId | null>(null);
   const [details, setDetails] = useState("");
@@ -23,6 +21,48 @@ export function PlanFlow() {
   const [scale, setScale] = useState<ScaleBand>("medium");
   const [budgetBand, setBudgetBand] = useState<BudgetBand | null>("not_sure");
   const [error, setError] = useState<string | null>(null);
+  const [resumePath, setResumePath] = useState<string | null>(null);
+
+  // Prefill from URL (edit answers) or saved context
+  useEffect(() => {
+    const fromUrl = parsePlanQuery(Object.fromEntries(searchParams.entries()));
+    if (fromUrl) {
+      setProjectType(fromUrl.projectType);
+      setDetails(fromUrl.details || "");
+      setZip(fromUrl.zip || "");
+      setCity(fromUrl.city || "");
+      setScale(fromUrl.scale);
+      setBudgetBand(fromUrl.budgetBand ?? "not_sure");
+      return;
+    }
+    try {
+      const raw = localStorage.getItem(PLAN_STORAGE_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as {
+        plan?: {
+          projectType?: string;
+          details?: string;
+          zip?: string;
+          city?: string;
+          scale?: ScaleBand;
+          budgetBand?: BudgetBand | null;
+        };
+        resultsPath?: string | null;
+      };
+      if (saved.resultsPath) setResumePath(saved.resultsPath);
+      const p = saved.plan;
+      if (p?.projectType && isProjectTypeId(p.projectType)) {
+        setProjectType(p.projectType);
+        setDetails(p.details || "");
+        setZip(p.zip || "");
+        setCity(p.city || "");
+        if (p.scale) setScale(p.scale);
+        if (p.budgetBand !== undefined) setBudgetBand(p.budgetBand);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [searchParams]);
 
   const selected = useMemo(
     () => PROJECT_TYPES.find((p) => p.id === projectType) ?? null,
@@ -45,9 +85,9 @@ export function PlanFlow() {
     }
     if (step < 2) {
       setStep(step + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    // Step 2 → results
     if (!projectType) return;
     const qs = encodePlanQuery({
       projectType,
@@ -63,21 +103,55 @@ export function PlanFlow() {
 
   const goBack = () => {
     setError(null);
-    if (step > 0) setStep(step - 1);
+    if (step > 0) {
+      setStep(step - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   return (
-    <div className="mx-auto max-w-2xl">
-      {/* Progress */}
-      <nav aria-label="Plan steps" className="mb-8">
-        <ol className="flex flex-wrap items-center gap-2">
+    <div className="mx-auto max-w-2xl pb-28 sm:pb-0">
+      {resumePath ? (
+        <div className="mb-5 rounded-2xl border border-[var(--border)] bg-white px-4 py-3 shadow-[var(--shadow-sm)]">
+          <p className="text-sm text-[var(--text)]">
+            <strong className="font-semibold">Saved plan on this device.</strong> Continue where you
+            left off or start fresh below.
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <Link
+              href={resumePath}
+              className="btn-primary inline-flex min-h-10 items-center px-3 text-sm no-underline"
+            >
+              Open last results
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  localStorage.removeItem(PLAN_STORAGE_KEY);
+                } catch {
+                  /* ignore */
+                }
+                setResumePath(null);
+              }}
+              className="rounded-xl border border-[var(--border)] px-3 py-2 text-sm font-medium text-[var(--muted)]"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Progress — horizontal scroll on tiny screens */}
+      <nav aria-label="Plan steps" className="mb-6 sm:mb-8">
+        <ol className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:flex-wrap sm:gap-2">
           {STEPS.map((label, i) => {
             const active = i === step;
             const done = i < step;
             return (
-              <li key={label} className="flex items-center gap-2">
+              <li key={label} className="flex shrink-0 items-center gap-1.5">
                 {i > 0 ? (
-                  <span className="hidden text-[var(--border-strong)] sm:inline" aria-hidden>
+                  <span className="text-[var(--border-strong)]" aria-hidden>
                     /
                   </span>
                 ) : null}
@@ -85,15 +159,15 @@ export function PlanFlow() {
                   type="button"
                   disabled={i > step}
                   onClick={() => i < step && setStep(i)}
-                  className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                  className={`rounded-full px-3 py-2 text-xs font-semibold transition sm:py-1.5 ${
                     active
                       ? "bg-[var(--navy)] text-white"
                       : done
                         ? "bg-[var(--accent-soft)] text-[var(--navy)] hover:brightness-95"
-                        : "bg-[var(--panel)] text-[var(--muted)] opacity-60"
+                        : "bg-white text-[var(--muted)] opacity-70 ring-1 ring-[var(--border)]"
                   } disabled:cursor-default`}
                 >
-                  <span className="mr-1 opacity-70">{i + 1}.</span>
+                  <span className="mr-1 opacity-70">{i + 1}</span>
                   {label}
                 </button>
               </li>
@@ -101,11 +175,11 @@ export function PlanFlow() {
           })}
         </ol>
         <p className="mt-2 text-xs text-[var(--muted)]">
-          About 60–90 seconds · conceptual costs + verified license matches
+          About 60–90 seconds · planning ranges + verified license matches
         </p>
       </nav>
 
-      <div className="rounded-3xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)] sm:p-8">
+      <div className="rounded-3xl border border-[var(--border)] bg-white p-4 shadow-[var(--shadow-md)] sm:p-8">
         {step === 0 ? (
           <section>
             <h2 className="text-xl font-semibold text-[var(--text)] sm:text-2xl">
@@ -122,10 +196,10 @@ export function PlanFlow() {
                     key={p.id}
                     type="button"
                     onClick={() => setProjectType(p.id)}
-                    className={`rounded-2xl border px-4 py-3.5 text-left transition ${
+                    className={`min-h-[4.5rem] rounded-2xl border px-4 py-3.5 text-left transition ${
                       on
                         ? "border-[var(--accent)] bg-[var(--accent-soft)] shadow-[var(--shadow-sm)]"
-                        : "border-[var(--border)] bg-[var(--panel)] hover:border-[var(--navy)]/25"
+                        : "border-[var(--border)] bg-white hover:border-[var(--navy)]/25"
                     }`}
                   >
                     <p className="text-sm font-semibold text-[var(--text)]">{p.label}</p>
@@ -145,7 +219,7 @@ export function PlanFlow() {
                 onChange={(e) => setDetails(e.target.value.slice(0, 500))}
                 rows={3}
                 placeholder="e.g. 1990s kitchen, keep layout, want quartz and new cabinets…"
-                className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] outline-none focus:border-[var(--navy)]/40"
+                className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-base text-[var(--text)] outline-none focus:border-[var(--navy)]/40 sm:text-sm"
               />
             </label>
           </section>
@@ -171,7 +245,7 @@ export function PlanFlow() {
                   value={zip}
                   onChange={(e) => setZip(e.target.value.replace(/\D/g, "").slice(0, 5))}
                   placeholder="33139"
-                  className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] outline-none focus:border-[var(--navy)]/40"
+                  className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-3 text-base text-[var(--text)] outline-none focus:border-[var(--navy)]/40 sm:py-2.5 sm:text-sm"
                 />
               </label>
               <label className="block">
@@ -182,7 +256,7 @@ export function PlanFlow() {
                   value={city}
                   onChange={(e) => setCity(e.target.value.slice(0, 80))}
                   placeholder="Miami"
-                  className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] outline-none focus:border-[var(--navy)]/40"
+                  className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-3 text-base text-[var(--text)] outline-none focus:border-[var(--navy)]/40 sm:py-2.5 sm:text-sm"
                 />
               </label>
             </div>
@@ -208,7 +282,7 @@ export function PlanFlow() {
                     key={s}
                     type="button"
                     onClick={() => setScale(s)}
-                    className={`rounded-2xl border px-4 py-3.5 text-left transition ${
+                    className={`min-h-[3.5rem] rounded-2xl border px-4 py-3.5 text-left transition ${
                       on
                         ? "border-[var(--accent)] bg-[var(--accent-soft)]"
                         : "border-[var(--border)] hover:border-[var(--navy)]/25"
@@ -217,9 +291,7 @@ export function PlanFlow() {
                     <p className="text-sm font-semibold text-[var(--text)]">
                       {selected.scaleLabels[s]}
                     </p>
-                    <p className="mt-0.5 text-xs text-[var(--muted)]">
-                      {selected.scaleHints[s]}
-                    </p>
+                    <p className="mt-0.5 text-xs text-[var(--muted)]">{selected.scaleHints[s]}</p>
                   </button>
                 );
               })}
@@ -236,7 +308,7 @@ export function PlanFlow() {
                       key={b.id}
                       type="button"
                       onClick={() => setBudgetBand(b.id)}
-                      className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+                      className={`min-h-10 rounded-full border px-3 py-2 text-xs font-medium transition ${
                         on
                           ? "border-[var(--navy)] bg-[var(--navy)] text-white"
                           : "border-[var(--border)] text-[var(--muted)] hover:border-[var(--navy)]/30"
@@ -252,12 +324,16 @@ export function PlanFlow() {
         ) : null}
 
         {error ? (
-          <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+          <p
+            className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900"
+            role="alert"
+          >
             {error}
           </p>
         ) : null}
 
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border)] pt-5">
+        {/* Desktop footer actions */}
+        <div className="mt-8 hidden items-center justify-between gap-3 border-t border-[var(--border)] pt-5 sm:flex">
           <div>
             {step > 0 ? (
               <button
@@ -279,9 +355,31 @@ export function PlanFlow() {
           <button
             type="button"
             onClick={goNext}
-            className="btn-primary inline-flex min-h-11 items-center px-5 py-2.5 text-sm no-underline"
+            className="btn-primary inline-flex min-h-11 items-center px-5 py-2.5 text-sm"
           >
             {step < 2 ? "Continue →" : "See cost ranges & contractors →"}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile sticky actions */}
+      <div className="fixed bottom-0 inset-x-0 z-40 border-t border-[var(--border)] bg-white/95 p-3 shadow-[0_-8px_24px_rgba(10,37,64,0.08)] backdrop-blur sm:hidden">
+        <div className="flex gap-2">
+          {step > 0 ? (
+            <button
+              type="button"
+              onClick={goBack}
+              className="min-h-12 shrink-0 rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--muted)]"
+            >
+              Back
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={goNext}
+            className="btn-primary min-h-12 flex-1 text-sm"
+          >
+            {step < 2 ? "Continue" : "See results"}
           </button>
         </div>
       </div>

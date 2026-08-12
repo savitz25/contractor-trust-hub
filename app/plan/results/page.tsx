@@ -24,8 +24,8 @@ export default async function PlanResultsPage({ searchParams }: Props) {
 
   return (
     <main>
-      <section className="border-b border-[var(--border)]">
-        <div className="mx-auto max-w-6xl px-4 pb-8 pt-10 sm:px-6 sm:pt-12">
+      <section className="border-b border-[var(--border)] bg-white/70">
+        <div className="mx-auto max-w-6xl px-4 pb-6 pt-8 sm:px-6 sm:pb-8 sm:pt-12">
           <nav className="text-xs font-medium text-[var(--muted)]">
             <Link href="/plan" className="no-underline hover:text-[var(--navy)]">
               Plan
@@ -33,17 +33,16 @@ export default async function PlanResultsPage({ searchParams }: Props) {
             <span className="mx-2 opacity-50">/</span>
             <span className="text-[var(--text)]">Results</span>
           </nav>
-          <h1 className="mt-3 text-2xl font-semibold tracking-tight text-[var(--text)] sm:text-3xl">
-            Your project context
+          <h1 className="mt-2 text-xl font-semibold tracking-tight text-[var(--text)] sm:mt-3 sm:text-3xl">
+            Your results
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-[var(--muted)] sm:text-base">
-            Cost ranges for planning only. Contractors from official license data — evidence over
-            invention.
+          <p className="mt-1.5 max-w-2xl text-sm text-[var(--muted)] sm:mt-2 sm:text-base">
+            Three clear sections: planning cost context, verified license matches, then next steps.
           </p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
+      <section className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
         <PlanResults plan={plan} />
       </section>
     </main>
