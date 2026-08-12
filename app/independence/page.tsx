@@ -84,10 +84,11 @@ export default function IndependencePage() {
       <section className="mt-10 space-y-4 text-sm leading-relaxed text-[var(--muted)]">
         <h2 className="text-lg font-semibold text-[var(--text)]">Network principles</h2>
         <p>
-          Contractor Trust Hub is built in the same spirit as the broader AskTrustHub network of
-          verification tools: evidence over opinion, transparency over black-box scores, and user
-          agency over capture. We would rather show less data than invent a false link or a paid
-          “top contractor” badge.
+          Contractor Trust Hub is part of the Ask Trust Hub network alongside Move, Lender, and
+          Insurance Trust Hub — independent research surfaces under common ownership, with
+          separated research and listing order and no paid placements. Network principles favor
+          evidence over opinion, transparency over black-box scores, and user agency over capture.
+          We would rather show less data than invent a false link or a paid “top contractor” badge.
         </p>
         <ul className="list-disc space-y-2 pl-5">
           <li>Prefer official public sources over user reviews or paid directories</li>

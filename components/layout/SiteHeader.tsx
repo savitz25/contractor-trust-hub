@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
+import { CONTRACTOR_NETWORK_LINKS } from "@/lib/network/network-links";
 
 const secondaryNav = [
   { href: "/studios", label: "Studios", shortLabel: "Studios" },
@@ -12,11 +13,11 @@ const secondaryNav = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg-elevated)]/95 shadow-[var(--shadow-sm)] backdrop-blur-md">
-      {/* Network strip — matches Move / Lender / Insurance hubs */}
+      {/* Network strip — sibling hubs + shared standard */}
       <div className="border-b border-[var(--navy)]/10 bg-[var(--navy)] text-[11px] text-white/90 sm:text-xs">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-3 py-1.5 sm:px-6">
-          <p>
-            Part of the{" "}
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-1.5 px-3 py-1.5 sm:px-6">
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="text-white/70">Part of the</span>
             <a
               href="https://www.asktrusthub.com"
               className="font-medium text-[var(--accent)] no-underline hover:underline"
@@ -24,8 +25,23 @@ export function SiteHeader() {
               rel="noreferrer"
             >
               Ask Trust Hub
-            </a>{" "}
-            network
+            </a>
+            <span className="hidden text-white/40 sm:inline" aria-hidden>
+              ·
+            </span>
+            <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+              {CONTRACTOR_NETWORK_LINKS.filter((h) => h.id !== "ask").map((hub) => (
+                <a
+                  key={hub.id}
+                  href={hub.href}
+                  className="text-white/80 no-underline hover:text-white hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {hub.shortLabel}
+                </a>
+              ))}
+            </span>
           </p>
           <a
             href="https://www.asktrusthub.com/methodology"

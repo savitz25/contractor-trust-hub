@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
+import { CONTRACTOR_NETWORK_LINKS } from "@/lib/network/network-links";
 
 export function SiteFooter() {
   return (
@@ -98,29 +99,21 @@ export function SiteFooter() {
         </div>
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-            Network &amp; sources
+            Our network
           </p>
           <ul className="mt-3 space-y-2 text-sm text-[var(--muted)]">
-            <li>
-              <a href="https://www.asktrusthub.com" target="_blank" rel="noreferrer">
-                Ask Trust Hub
-              </a>
-            </li>
-            <li>
-              <a href="https://www.movetrusthub.com" target="_blank" rel="noreferrer">
-                Move Trust Hub
-              </a>
-            </li>
-            <li>
-              <a href="https://www.lendertrusthub.com" target="_blank" rel="noreferrer">
-                Lender Trust Hub
-              </a>
-            </li>
-            <li>
-              <a href="https://www.insurancetrusthub.com" target="_blank" rel="noreferrer">
-                Insurance Trust Hub
-              </a>
-            </li>
+            {CONTRACTOR_NETWORK_LINKS.map((hub) => (
+              <li key={hub.id}>
+                <a
+                  href={hub.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[var(--text)] no-underline hover:underline"
+                >
+                  {hub.label}
+                </a>
+              </li>
+            ))}
             <li className="pt-1">
               <a
                 href="https://www2.myfloridalicense.com/construction-industry/"
