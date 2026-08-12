@@ -171,6 +171,7 @@ export function StudioFlow({ slug }: Props) {
                           ? values[field.id] === opt.id
                           : Array.isArray(values[field.id]) &&
                             (values[field.id] as string[]).includes(opt.id);
+                      const featured = Boolean(opt.featured);
                       return (
                         <button
                           key={opt.id}
@@ -182,11 +183,20 @@ export function StudioFlow({ slug }: Props) {
                           }
                           className={`rounded-2xl border px-4 py-3 text-left transition ${
                             selected
-                              ? "border-[var(--accent)] bg-[var(--accent-soft)]"
-                              : "border-[var(--border)] hover:border-[var(--navy)]/25"
+                              ? "border-[var(--accent)] bg-[var(--accent-soft)] shadow-[var(--shadow-sm)]"
+                              : featured
+                                ? "border-[var(--navy)]/30 bg-[var(--navy-soft)] hover:border-[var(--navy)]/45"
+                                : "border-[var(--border)] hover:border-[var(--navy)]/25"
                           }`}
                         >
-                          <p className="text-sm font-semibold text-[var(--text)]">{opt.label}</p>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="text-sm font-semibold text-[var(--text)]">{opt.label}</p>
+                            {featured ? (
+                              <span className="rounded-full border border-[var(--navy)]/20 bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--navy)]">
+                                Most common
+                              </span>
+                            ) : null}
+                          </div>
                           {opt.hint ? (
                             <p className="mt-0.5 text-xs text-[var(--muted)]">{opt.hint}</p>
                           ) : null}

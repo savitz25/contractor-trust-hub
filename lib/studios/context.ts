@@ -135,9 +135,39 @@ export function studioCostRange(
     mid = Math.round(mid * 1.05);
     high = Math.round(high * 1.08);
   }
-  if (answers.values.access === "complex" || answers.values.roof_type === "tile") {
+  // Roofing studio adjustments (full replacement first-class)
+  const roofAction = answers.values.roof_action;
+  const roofMat = answers.values.roof_type;
+  const roofFactors = answers.values.replace_factors;
+  if (roofAction === "full_replace") {
+    mid = Math.round(mid * 1.06);
+    high = Math.round(high * 1.1);
+  }
+  if (roofAction === "reroof") {
+    // Overlay can sit slightly under full replacement mid
+    low = Math.round(low * 0.95);
+  }
+  if (answers.values.access === "complex" || roofMat === "tile" || roofMat === "metal") {
     mid = Math.round(mid * 1.08);
     high = Math.round(high * 1.12);
+  }
+  if (roofMat === "flat") {
+    mid = Math.round(mid * 1.04);
+    high = Math.round(high * 1.08);
+  }
+  if (Array.isArray(roofFactors)) {
+    if (roofFactors.includes("decking_concern") || roofFactors.includes("multiple_layers")) {
+      mid = Math.round(mid * 1.05);
+      high = Math.round(high * 1.1);
+    }
+    if (roofFactors.includes("skylights")) {
+      mid = Math.round(mid * 1.03);
+      high = Math.round(high * 1.05);
+    }
+    if (roofFactors.includes("wind_mit")) {
+      mid = Math.round(mid * 1.03);
+      high = Math.round(high * 1.06);
+    }
   }
   if (answers.values.addition_type === "second_story") {
     mid = Math.round(mid * 1.12);

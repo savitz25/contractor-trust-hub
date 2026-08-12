@@ -8,7 +8,7 @@
 |------|------|----------------------|
 | `kitchen` | Kitchen Remodel | `kitchen_remodel` |
 | `bathroom` | Bathroom Remodel | `bathroom_remodel` |
-| `roofing` | Roofing | `roofing` |
+| `roofing` | Roofing (full replacement first-class) | `roofing` |
 | `addition` | Addition / Extension | `addition` |
 | `basement` | Basement Finish | `basement_finish` |
 | `exterior` | Exterior & Deck | `deck_outdoor`, `siding_exterior` |

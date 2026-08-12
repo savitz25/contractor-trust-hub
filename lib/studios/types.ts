@@ -6,6 +6,8 @@ export type StudioFieldOption = {
   id: string;
   label: string;
   hint?: string;
+  /** Visually emphasize primary homeowner path (e.g. full roof replacement). */
+  featured?: boolean;
 };
 
 export type StudioField =
