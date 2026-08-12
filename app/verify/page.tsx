@@ -8,6 +8,14 @@ export const metadata: Metadata = {
   title: "Verify a Florida contractor",
   description:
     "Search Florida contractor licenses by name or license number. Official DBPR and Sunbiz evidence.",
+  alternates: { canonical: "/verify" },
+  openGraph: {
+    title: "Verify a Florida contractor",
+    description:
+      "Search Florida contractor licenses by name or license number. Official DBPR and Sunbiz evidence.",
+    url: "/verify",
+    type: "website",
+  },
 };
 
 type Props = {

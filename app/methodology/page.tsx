@@ -5,6 +5,14 @@ export const metadata: Metadata = {
   title: "Methodology",
   description:
     "Transparent methodology for Florida contractor license and Sunbiz entity evidence.",
+  alternates: { canonical: "/methodology" },
+  openGraph: {
+    title: "Methodology — Contractor Trust Hub",
+    description:
+      "Transparent methodology for Florida contractor license and Sunbiz entity evidence.",
+    url: "/methodology",
+    type: "website",
+  },
 };
 
 export default function MethodologyPage() {

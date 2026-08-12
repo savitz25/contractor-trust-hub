@@ -5,6 +5,14 @@ export const metadata: Metadata = {
   title: "How it works",
   description:
     "How Contractor Trust Hub verifies Florida contractors using official public records.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "How Contractor Trust Hub works",
+    description:
+      "How Contractor Trust Hub verifies Florida contractors using official public records.",
+    url: "/about",
+    type: "website",
+  },
 };
 
 export default function AboutPage() {

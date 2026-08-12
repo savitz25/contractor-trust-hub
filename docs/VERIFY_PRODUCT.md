@@ -8,9 +8,33 @@ Consumer-facing “Verify a Florida contractor” experience.
 |-------|---------|
 | `/` | Brand homepage + primary search CTA |
 | `/verify?q=` | Search by license number or name; results list |
-| `/contractors/[slug]` | Contractor detail (licenses, Sunbiz entity, discipline) |
+| `/contractors/[slug]` | **Contractor Trust Report** (evidence summary, license scope, Sunbiz, discipline, hiring notes) |
 | `/about` | How it works |
 | `/methodology` | Transparent matching & sources |
+| `/sitemap.xml` | Sitemap index (static pages + contractor profiles) |
+| `/robots.txt` | Crawler rules + sitemap pointer |
+
+### Contractor Trust Report
+
+Each profile is an evidence-based report (not a score or marketplace listing):
+
+- **Evidence summary** — license status · entity status · discipline status
+- **Match confidence** — e.g. “Linked on exact name + address · 0.98” when Sunbiz is linked
+- **License class guidance** — plain-language “what this typically allows”
+- **DBPR vs Sunbiz differences** — name / ZIP / city / status mismatches surfaced when present
+- **What should I know before hiring?** — educational bullets, never hire/don’t-hire judgments
+- **Sources** — board + Sunbiz links and last-verified timestamps
+
+### SEO / metadata
+
+Profile pages emit:
+
+- `<title>` — `{Name} — Florida Contractor Trust Report`
+- Meta description with license key, statuses, and discipline note
+- Canonical URL `/contractors/{slug}`
+- Open Graph + Twitter cards
+- JSON-LD `ProfilePage` / `Organization`
+- Multi-file sitemap of searchable (non-thin) contractor slugs
 
 ## Data flow
 

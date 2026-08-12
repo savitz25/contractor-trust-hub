@@ -3,8 +3,13 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import "./globals.css";
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
+  "https://contractortrusthub.com";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://contractortrusthub.com"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Contractor Trust Hub — Before you hire, verify",
     template: "%s · Contractor Trust Hub",
@@ -17,6 +22,7 @@ export const metadata: Metadata = {
     "DBPR license lookup",
     "Sunbiz contractor",
     "before you hire verify",
+    "contractor trust report",
   ],
   icons: {
     icon: [
@@ -30,6 +36,8 @@ export const metadata: Metadata = {
     title: "Contractor Trust Hub",
     description: "Before you hire, verify. Florida contractor license evidence.",
     type: "website",
+    siteName: "Contractor Trust Hub",
+    locale: "en_US",
     images: [{ url: "/brand/contractor-trust-hub-logo-on-dark.svg" }],
   },
   twitter: {

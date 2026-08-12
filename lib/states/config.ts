@@ -3,6 +3,8 @@
  * Adding a state later: extend this map + ingest adapters; UI reads from here.
  */
 
+import { getOccupationInfo } from "@/lib/contractors/occupations";
+
 export type StateCode = "FL" | "NJ"; // NJ reserved for wave 2
 
 export type EvidenceState = {
@@ -82,5 +84,5 @@ export const FL_OCCUPATION_LABELS: Record<string, string> = {
 export function occupationLabel(code: string | null | undefined): string {
   if (!code) return "Construction license";
   const upper = code.toUpperCase();
-  return FL_OCCUPATION_LABELS[upper] ?? `${upper} license`;
+  return FL_OCCUPATION_LABELS[upper] ?? getOccupationInfo(upper).label;
 }

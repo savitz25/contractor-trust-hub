@@ -1,5 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SearchForm } from "@/components/search/SearchForm";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Contractor Trust Hub — Before you hire, verify",
+    description:
+      "Independent Florida contractor verification using official DBPR licenses, Sunbiz entities, and board discipline.",
+    url: "/",
+    type: "website",
+  },
+};
 
 const pillars = [
   {

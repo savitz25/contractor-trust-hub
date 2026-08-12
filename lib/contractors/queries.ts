@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { query, queryOne } from "@/lib/db";
 import { getStateBySlug, type EvidenceState } from "@/lib/states/config";
 import { asLicenseStatus } from "./format";
@@ -13,6 +14,9 @@ const DEFAULT_LIMIT = 25;
 
 /** Only surface Sunbiz links at or above this confidence (matches linker defaults). */
 const MIN_SUNBIZ_CONFIDENCE = 0.9;
+
+/** Sitemap page size (Google max is 50k URLs per file). */
+export const SITEMAP_PAGE_SIZE = 40_000;
 
 function normalizeSearchInput(q: string): string {
   return q.trim().replace(/\s+/g, " ");
@@ -249,7 +253,7 @@ function mapSearchRow(r: {
   };
 }
 
-export async function getContractorBySlug(
+async function getContractorBySlugUncached(
   slug: string,
   stateSlug = "fl"
 ): Promise<ContractorDetail | null> {
@@ -443,4 +447,72 @@ export async function getContractorBySlug(
     entities: entityDetails,
     discipline: disciplineDetails,
   };
+}
+
+/** Cached per-request so generateMetadata + page share one load. */
+export const getContractorBySlug = cache(getContractorBySlugUncached);
+
+export async function countSearchableContractorSlugs(
+  stateSlug = "fl"
+): Promise<number> {
+  const state = getStateBySlug(stateSlug);
+  if (!state?.live) return 0;
+  try {
+    const row = await queryOne<{ n: string }>(
+      `
+      SELECT COUNT(*)::text AS n
+      FROM contractors c
+      WHERE c.is_thin_profile = FALSE
+        AND c.slug IS NOT NULL
+        AND c.slug <> ''
+        AND (
+          c.home_state = $1
+          OR EXISTS (
+            SELECT 1 FROM licenses l
+            WHERE l.contractor_id = c.id AND l.source_system = $2
+          )
+        )
+      `,
+      [state.code, state.licenseSource]
+    );
+    return row ? Number(row.n) : 0;
+  } catch {
+    return 0;
+  }
+}
+
+export async function listSearchableContractorSlugs(options: {
+  stateSlug?: string;
+  limit: number;
+  offset: number;
+}): Promise<{ slug: string; updatedAt: string | null }[]> {
+  const state = getStateBySlug(options.stateSlug || "fl");
+  if (!state?.live) return [];
+  try {
+    const rows = await query<{ slug: string; updated_at: Date | null }>(
+      `
+      SELECT c.slug, c.updated_at
+      FROM contractors c
+      WHERE c.is_thin_profile = FALSE
+        AND c.slug IS NOT NULL
+        AND c.slug <> ''
+        AND (
+          c.home_state = $1
+          OR EXISTS (
+            SELECT 1 FROM licenses l
+            WHERE l.contractor_id = c.id AND l.source_system = $2
+          )
+        )
+      ORDER BY c.slug
+      LIMIT $3 OFFSET $4
+      `,
+      [state.code, state.licenseSource, options.limit, options.offset]
+    );
+    return rows.map((r) => ({
+      slug: r.slug,
+      updatedAt: r.updated_at ? r.updated_at.toISOString() : null,
+    }));
+  } catch {
+    return [];
+  }
 }
