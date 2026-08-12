@@ -12,6 +12,22 @@ export type StudioHandoff = {
   locationLabel?: string;
 };
 
+/** Query helpers for decision-tool deep links from a Trust Report. */
+export function toolsQueryFromHandoff(
+  contractor: { slug: string; name: string },
+  handoff?: StudioHandoff | null
+): string {
+  const p = new URLSearchParams();
+  p.set("name", contractor.name);
+  p.set("contractor", contractor.slug);
+  if (handoff?.projectType) p.set("type", handoff.projectType);
+  if (handoff?.locationLabel) {
+    const zip = handoff.locationLabel.match(/\b\d{5}\b/);
+    if (zip) p.set("zip", zip[0]);
+  }
+  return p.toString();
+}
+
 const STORAGE_KEY = "cth-studio-handoff";
 
 export function handoffStorageKey() {
@@ -27,6 +43,7 @@ export function encodeHandoffQuery(h: StudioHandoff): string {
   p.set("back", h.resultsPath.slice(0, 1500));
   if (h.scaleLabel) p.set("scale", h.scaleLabel.slice(0, 80));
   if (h.locationLabel) p.set("loc", h.locationLabel.slice(0, 120));
+  if (h.projectType) p.set("ptype", h.projectType.slice(0, 40));
   // Compact summary as pipe-separated (first 3 lines)
   const sum = h.answerSummary.slice(0, 3).join(" | ").slice(0, 280);
   if (sum) p.set("summary", sum);
@@ -53,6 +70,7 @@ export function parseHandoffQuery(
     resultsPath: get("back") || `/studios/${studioSlug}`,
     scaleLabel: get("scale") || undefined,
     locationLabel: get("loc") || undefined,
+    projectType: get("ptype") || undefined,
   };
 }
 

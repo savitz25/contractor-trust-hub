@@ -204,19 +204,27 @@ export function DiscrepanciesSection({ contractor }: { contractor: ContractorDet
 export function LicensesSection({ licenses }: { licenses: ContractorDetail["licenses"] }) {
   if (licenses.length === 0) {
     return (
-      <section className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5">
+      <section
+        id="licenses"
+        className="scroll-mt-28 rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5"
+      >
         <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
-          Licenses
+          License evidence
         </h2>
-        <p className="mt-3 text-sm text-[var(--muted)]">No licenses on file for this profile.</p>
+        <p className="mt-3 text-sm text-[var(--muted)]">
+          No licenses on file for this profile in current extracts.
+        </p>
       </section>
     );
   }
 
   return (
-    <section className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 sm:p-6">
+    <section
+      id="licenses"
+      className="scroll-mt-28 rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 sm:p-6"
+    >
       <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
-        License details
+        License evidence
       </h2>
       <div className="mt-4 space-y-4">
         {licenses.map((lic) => {
@@ -295,9 +303,12 @@ export function EntitySection({
 }) {
   if (entities.length === 0) {
     return (
-      <section className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 sm:p-6">
+      <section
+        id="entity"
+        className="scroll-mt-28 rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 sm:p-6"
+      >
         <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
-          Business entity ({state.entityRegistryLabel.split("(")[0].trim()})
+          Business / entity signals ({state.entityRegistryLabel.split("(")[0].trim()})
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
           No high-confidence Sunbiz link for this contractor yet. We only link exact name/geo
@@ -308,9 +319,12 @@ export function EntitySection({
   }
 
   return (
-    <section className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 sm:p-6">
+    <section
+      id="entity"
+      className="scroll-mt-28 rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 sm:p-6"
+    >
       <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
-        Linked business entity
+        Business / entity signals
       </h2>
       <div className="mt-4 space-y-4">
         {entities.map((ent) => (
@@ -404,8 +418,8 @@ export function DisciplineSection({
 
   return (
     <section
-      id="discipline"
-      className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-4 sm:p-6"
+      id="caution"
+      className="scroll-mt-28 rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-4 sm:p-6"
       aria-labelledby="discipline-heading"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -414,10 +428,11 @@ export function DisciplineSection({
             id="discipline-heading"
             className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]"
           >
-            Discipline &amp; board actions
+            Caution &amp; regulatory history
           </h2>
           <p className="mt-1 text-xs text-[var(--muted)]">
-            From Florida board discipline extracts linked to this contractor in our data.
+            Board discipline from Florida extracts linked to this contractor. Separate from
+            insurance, permits, or reviews — factual records only.
           </p>
         </div>
         <span
@@ -428,29 +443,33 @@ export function DisciplineSection({
           }
         >
           {hasActions
-            ? `${discipline.length} action${discipline.length === 1 ? "" : "s"} in our extract`
-            : "None linked in our extract"}
+            ? `Discipline records identified (${discipline.length})`
+            : "No discipline records identified in current extracts"}
         </span>
       </div>
 
       {!hasActions ? (
         <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50/70 px-4 py-4">
           <p className="text-sm font-medium text-emerald-900">
-            No disciplinary actions linked in our current board extracts
+            No discipline records identified in current extracts
           </p>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-            That means our Florida discipline files do not currently attach a board action to this
-            contractor profile. It is <strong className="font-medium text-[var(--text)]">not</strong>{" "}
-            a certificate of clean history: actions may exist outside these extracts, under a
-            different name, or after our last data load. Re-check the official DBPR board before
-            hiring.
+            Our Florida board discipline files do not currently attach an action to this profile.
+            That is <strong className="font-medium text-[var(--text)]">not</strong> a certificate of
+            clean history: records may exist outside these extracts, under another name, or after our
+            last load. Re-check the official DBPR board before hiring.
+          </p>
+          <p className="mt-2 text-xs text-[var(--muted)]">
+            What this means: absence in our extract ≠ cleared. Worth confirming on the official board
+            the day you hire.
           </p>
         </div>
       ) : (
         <>
           <p className="mt-4 text-sm leading-relaxed text-[var(--muted)]">
-            The following actions appear in our extracts. Read each row factually — we do not score
-            or rank severity. Confirm details on the official board if a decision depends on them.
+            The following records appear in board extracts. Each row includes date and source fields
+            when present. We describe records factually — we do not score severity or recommend
+            hire/avoid.
           </p>
           <ul className="mt-4 space-y-3">
             {discipline.map((d) => {

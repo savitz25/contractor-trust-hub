@@ -31,7 +31,7 @@ export function CompareBar() {
       <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <p className="text-sm font-medium text-[var(--text)]">
-            Compare list · {slugs.length}/{MAX_COMPARE}
+            Compare tray · {slugs.length}/{MAX_COMPARE}
           </p>
           <p className="mt-0.5 truncate text-xs text-[var(--muted)]">
             {slugs.join(" · ")}

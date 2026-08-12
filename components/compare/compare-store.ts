@@ -1,7 +1,9 @@
-/** Client-side compare set (localStorage). Max 3 contractor slugs. */
+/** Client-side compare set (localStorage). Max 4 contractor slugs. */
+
+import { MAX_COMPARE as MAX } from "@/lib/contractors/compare";
 
 export const COMPARE_STORAGE_KEY = "cth-compare-slugs";
-export const MAX_COMPARE = 3;
+export const MAX_COMPARE = MAX;
 
 export function readCompareSlugs(): string[] {
   if (typeof window === "undefined") return [];

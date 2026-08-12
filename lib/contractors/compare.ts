@@ -1,5 +1,6 @@
 import { formatDate, statusLabel } from "./format";
 import { getOccupationInfo } from "./occupations";
+import { hasRelatedEntitySignal } from "./entity-signals";
 import type { ContractorDetail } from "./types";
 
 export type CompareField = {
@@ -59,10 +60,16 @@ export function buildCompareFields(contractors: ContractorDetail[]): CompareFiel
     },
     {
       id: "license_class",
-      label: "License class",
+      label: "License class(es)",
       values: contractors.map((c) => {
-        const code = c.licenses[0]?.occupationCode;
-        return code ? getOccupationInfo(code).label : "—";
+        if (!c.licenses.length) return "—";
+        return c.licenses
+          .slice(0, 3)
+          .map((l) => {
+            const code = l.occupationCode;
+            return code ? `${code} · ${getOccupationInfo(code).label}` : l.externalKey;
+          })
+          .join("; ");
       }),
     },
     {
@@ -83,6 +90,17 @@ export function buildCompareFields(contractors: ContractorDetail[]): CompareFiel
       ),
     },
     {
+      id: "entity_link",
+      label: "Entity linkage",
+      values: contractors.map((c) => {
+        const e = c.entities[0];
+        if (!e) return "Not linked (strict match only)";
+        const conf =
+          e.matchConfidence != null ? ` · conf ${e.matchConfidence.toFixed(2)}` : "";
+        return `${e.matchMethod || "linked"}${conf}`;
+      }),
+    },
+    {
       id: "entity_name",
       label: "Linked entity name",
       values: contractors.map((c) => c.entities[0]?.legalName || "—"),
@@ -97,11 +115,23 @@ export function buildCompareFields(contractors: ContractorDetail[]): CompareFiel
       label: "Discipline in our extracts",
       values: contractors.map((c) =>
         c.discipline.length === 0
-          ? "None linked"
-          : `${c.discipline.length} action(s) linked`
+          ? "None identified in current extracts"
+          : `${c.discipline.length} record(s) identified`
       ),
       tones: contractors.map((c) =>
         c.discipline.length === 0 ? "good" : "warn"
+      ),
+    },
+    {
+      id: "related_entity",
+      label: "Related-entity signal",
+      values: contractors.map((c) =>
+        hasRelatedEntitySignal(c)
+          ? "Observation(s) present — see Trust Report"
+          : "None flagged on this profile"
+      ),
+      tones: contractors.map((c) =>
+        hasRelatedEntitySignal(c) ? "warn" : "neutral"
       ),
     },
     {
@@ -112,7 +142,23 @@ export function buildCompareFields(contractors: ContractorDetail[]): CompareFiel
         return parts.length ? parts.join(" · ") : "—";
       }),
     },
+    {
+      id: "insurance_guidance",
+      label: "Insurance / WC guidance",
+      values: contractors.map(
+        () => "Not verified here — request COI & confirm with carrier"
+      ),
+      tones: contractors.map(() => "neutral" as const),
+    },
+    {
+      id: "permits",
+      label: "Permit / activity history",
+      values: contractors.map(
+        () => "Not yet linked in current dataset"
+      ),
+    },
   ];
 }
 
-export const MAX_COMPARE = 3;
+/** Max contractors in compare tray / side-by-side view. */
+export const MAX_COMPARE = 4;
