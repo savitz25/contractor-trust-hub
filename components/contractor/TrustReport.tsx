@@ -44,46 +44,46 @@ export function EvidenceSummary({ contractor }: { contractor: ContractorDetail }
 
   return (
     <section aria-labelledby="evidence-summary-heading">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-3">
         <div>
           <h2
             id="evidence-summary-heading"
             className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]"
           >
-            Evidence summary
+            Evidence at a glance
           </h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            License status · Entity status · Discipline status
+            Three checks from official extracts — not a score or ranking.
           </p>
         </div>
         {conf && (
-          <p className="rounded-full border border-[var(--accent)]/25 bg-[var(--accent-soft)] px-3 py-1 text-xs font-medium text-[var(--accent)]">
+          <p className="w-fit max-w-full rounded-full border border-[var(--accent)]/25 bg-[var(--accent-soft)] px-3 py-1 text-xs font-medium leading-snug text-[var(--accent)]">
             {conf}
           </p>
         )}
       </div>
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+      <div className="mt-4 grid gap-2.5 sm:grid-cols-3 sm:gap-3">
         {pillars.map((p) => (
           <div
             key={p.id}
-            className={`rounded-2xl border px-4 py-4 ${toneRing[p.tone]}`}
+            className={`rounded-2xl border px-4 py-3.5 sm:py-4 ${toneRing[p.tone]}`}
           >
             <div className="flex items-center gap-2">
               <span
                 className={`h-2 w-2 shrink-0 rounded-full ${toneDot[p.tone]}`}
                 aria-hidden
               />
-              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)]">
                 {p.label}
               </p>
             </div>
-            <p className={`mt-2 text-sm font-semibold leading-snug ${toneText[p.tone]}`}>
+            <p className={`mt-1.5 text-base font-semibold leading-snug ${toneText[p.tone]}`}>
               {p.statusLine}
             </p>
-            <p className="mt-1.5 text-xs leading-relaxed text-[var(--muted)]">{p.detail}</p>
+            <p className="mt-1 text-xs leading-relaxed text-[var(--muted)]">{p.detail}</p>
             {p.lastVerifiedAt && (
               <p className="mt-2 text-[11px] text-[var(--muted)]">
-                Verified in our data {formatDateTime(p.lastVerifiedAt)}
+                In our data {formatDateTime(p.lastVerifiedAt)}
               </p>
             )}
           </div>
@@ -97,7 +97,7 @@ export function HiringGuidance({ contractor }: { contractor: ContractorDetail })
   const points = buildHiringGuidance(contractor);
   return (
     <section
-      className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5 sm:p-6"
+      className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 sm:p-6"
       aria-labelledby="hiring-guidance-heading"
     >
       <h2
@@ -107,17 +107,22 @@ export function HiringGuidance({ contractor }: { contractor: ContractorDetail })
         What should I know before hiring?
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-        Plain-language notes from the evidence on this page. Educational research only — not a
-        recommendation to hire or avoid anyone.
+        Plain-language notes from the evidence on this page. Educational only — not advice to hire
+        or avoid anyone.
       </p>
-      <ul className="mt-5 space-y-3">
+      <ul className="mt-4 space-y-3.5 sm:mt-5 sm:space-y-4">
         {points.map((p) => (
           <li key={p.id} className="flex gap-3 text-sm leading-relaxed">
             <span
               className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${toneDot[p.tone]}`}
               aria-hidden
             />
-            <span className="text-[var(--text)]">{p.text}</span>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                {p.label}
+              </p>
+              <p className="mt-0.5 text-[var(--text)]">{p.text}</p>
+            </div>
           </li>
         ))}
       </ul>
@@ -131,30 +136,38 @@ export function DiscrepanciesSection({ contractor }: { contractor: ContractorDet
 
   return (
     <section
-      className="rounded-2xl border border-amber-500/25 bg-amber-500/5 p-5 sm:p-6"
+      className="rounded-2xl border border-[var(--border)] bg-[var(--panel)]/60 p-4 sm:p-6"
       aria-labelledby="discrepancies-heading"
     >
       <h2
         id="discrepancies-heading"
-        className="text-sm font-semibold uppercase tracking-wider text-amber-100/90"
+        className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]"
       >
-        Differences between DBPR and Sunbiz
+        Notes comparing DBPR and Sunbiz
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-        These are not automatic red flags. Public records can differ for legitimate reasons. We
-        surface them so you can verify before you hire.
+        These differences are common in public records and are not automatic red flags. We show
+        them so you can double-check details before you hire.
       </p>
       <ul className="mt-4 space-y-3">
         {items.map((d) => (
           <li
             key={d.id}
-            className="rounded-xl border border-amber-500/20 bg-[var(--bg)]/40 px-4 py-3"
+            className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)]/80 px-4 py-3"
           >
-            <p className="text-sm font-medium text-[var(--text)]">{d.title}</p>
-            <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{d.detail}</p>
-            <p className="mt-1 text-[11px] uppercase tracking-wider text-amber-200/70">
-              {d.severity === "attention" ? "Worth confirming" : "Informational"}
-            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-sm font-medium text-[var(--text)]">{d.title}</p>
+              <span
+                className={
+                  d.severity === "attention"
+                    ? "rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-100/90"
+                    : "rounded-full bg-slate-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-300"
+                }
+              >
+                {d.severity === "attention" ? "Worth confirming" : "FYI"}
+              </span>
+            </div>
+            <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">{d.detail}</p>
           </li>
         ))}
       </ul>
@@ -199,10 +212,13 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
               <p className="mt-2 text-sm font-medium text-[var(--text)]">{occ.label}</p>
               <div className="mt-3 rounded-lg border border-[var(--border)]/80 bg-[var(--bg)]/50 px-3 py-3">
                 <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-                  What this license class typically allows
+                  What this class typically covers
                 </p>
                 <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">{occ.allows}</p>
-                <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{occ.notes}</p>
+                <p className="mt-2 border-t border-[var(--border)]/60 pt-2 text-sm leading-relaxed text-[var(--muted)]">
+                  <span className="font-medium text-[var(--text)]/90">Good to know: </span>
+                  {occ.notes}
+                </p>
               </div>
               <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
                 <div>

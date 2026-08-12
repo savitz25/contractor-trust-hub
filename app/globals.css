@@ -75,4 +75,17 @@ a:hover {
   body {
     -webkit-text-size-adjust: 100%;
   }
+
+  /* Prevent iOS zoom on form controls (16px floor) */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Wordmark should never overflow mobile header */
+header img {
+  max-width: 100%;
+  height: auto;
 }

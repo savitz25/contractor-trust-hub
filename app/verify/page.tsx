@@ -80,11 +80,17 @@ export default async function VerifyPage({ searchParams }: Props) {
           role="alert"
           className="mt-8 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-4 text-sm leading-relaxed text-rose-100"
         >
-          <p className="font-medium text-rose-50">Search unavailable</p>
-          <p className="mt-1 text-rose-100/90">{error}</p>
-          <p className="mt-2 text-xs text-rose-100/70">
-            Production needs <code className="rounded bg-black/20 px-1">DATABASE_URL</code> set to
-            the Supabase Session pooler URI in Vercel.
+          <p className="font-medium text-rose-50">Search is temporarily unavailable</p>
+          <p className="mt-1 text-rose-100/90">
+            We could not reach the license database right now. Please try again in a few minutes.
+          </p>
+          <p className="mt-3 text-xs text-rose-100/70">
+            You can still{" "}
+            <Link href="/#research" className="text-rose-50 underline">
+              browse by county and trade
+            </Link>{" "}
+            or return later.{" "}
+            <span className="opacity-70">(Technical: {error})</span>
           </p>
         </div>
       )}
@@ -152,13 +158,18 @@ export default async function VerifyPage({ searchParams }: Props) {
               <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{card.d}</p>
             </div>
           ))}
-          <div className="sm:col-span-3">
+          <div className="sm:col-span-3 space-y-1">
             <p className="text-xs text-[var(--muted)]">
-              Coming from the homepage?{" "}
-              <Link href="/#search" className="text-[var(--accent)]">
-                Back to the main search
+              Don&apos;t have a specific name?{" "}
+              <Link href="/#research" className="text-[var(--accent)]">
+                Browse by county and trade
               </Link>
               .
+            </p>
+            <p className="text-xs text-[var(--muted)]">
+              <Link href="/#search" className="text-[var(--accent)]">
+                Back to homepage search
+              </Link>
             </p>
           </div>
         </section>

@@ -53,31 +53,33 @@ export default function HomePage() {
             business entities, and discipline from Florida DBPR and Sunbiz.
           </p>
 
-          {/* Two clear paths */}
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 sm:gap-4">
+          {/* Two clear paths — large tap targets on mobile */}
+          <div className="mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-2 sm:gap-4">
             <a
               href="#search"
-              className="rounded-2xl border border-[var(--accent)]/35 bg-[var(--accent-soft)] px-5 py-4 no-underline transition hover:border-[var(--accent)]/60"
+              className="rounded-2xl border border-[var(--accent)]/35 bg-[var(--accent-soft)] px-4 py-3.5 no-underline transition hover:border-[var(--accent)]/60 sm:px-5 sm:py-4"
             >
               <p className="text-sm font-semibold text-[var(--text)]">
                 I already have a contractor
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
-                Search by license number or company name to open their Trust Report.
+                Search by license or company name → Trust Report.
               </p>
-              <p className="mt-3 text-xs font-medium text-[var(--accent)]">Jump to search →</p>
+              <p className="mt-2.5 text-xs font-medium text-[var(--accent)] sm:mt-3">
+                Jump to search →
+              </p>
             </a>
             <a
               href="#research"
-              className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] px-5 py-4 no-underline transition hover:border-[var(--accent)]/40"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] px-4 py-3.5 no-underline transition hover:border-[var(--accent)]/40 sm:px-5 sm:py-4"
             >
               <p className="text-sm font-semibold text-[var(--text)]">
                 I need to research contractors
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
-                Browse by Florida county and trade — roofing, GC, A/C, plumbing, and more.
+                Browse by county and trade — roofing, GC, A/C, plumbing…
               </p>
-              <p className="mt-3 text-xs font-medium text-[var(--accent)]">
+              <p className="mt-2.5 text-xs font-medium text-[var(--accent)] sm:mt-3">
                 Choose location & trade →
               </p>
             </a>

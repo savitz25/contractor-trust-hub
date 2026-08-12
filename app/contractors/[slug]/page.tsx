@@ -144,14 +144,28 @@ export default async function ContractorPage({ params }: Props) {
     contractor = await getContractorBySlug(slug, "fl");
   } catch (e) {
     return (
-      <main className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <h1 className="text-2xl font-semibold text-[var(--text)]">Unable to load trust report</h1>
-        <p className="mt-3 text-[var(--muted)]">
+      <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <h1 className="text-2xl font-semibold text-[var(--text)]">Unable to load Trust Report</h1>
+        <p className="mt-3 max-w-lg text-[var(--muted)]">
+          We could not load this contractor profile right now. Please try again in a few minutes.
+        </p>
+        <p className="mt-2 text-xs text-[var(--muted)]">
           {e instanceof Error ? e.message : "Database connection failed."}
         </p>
-        <Link href="/verify" className="mt-6 inline-block text-[var(--accent)]">
-          ← Back to search
-        </Link>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href="/verify"
+            className="inline-flex min-h-11 items-center rounded-xl bg-[var(--accent)] px-4 text-sm font-semibold text-[var(--navy)] no-underline"
+          >
+            Back to search
+          </Link>
+          <Link
+            href="/florida"
+            className="inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] px-4 text-sm text-[var(--text)] no-underline"
+          >
+            Browse Florida
+          </Link>
+        </div>
       </main>
     );
   }
@@ -170,18 +184,23 @@ export default async function ContractorPage({ params }: Props) {
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
       <JsonLd contractor={contractor} path={path} />
 
-      <Link
-        href="/verify"
-        className="text-sm text-[var(--muted)] no-underline hover:text-[var(--text)]"
-      >
-        ← Back to search
-      </Link>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+        <Link href="/verify" className="text-[var(--muted)] no-underline hover:text-[var(--text)]">
+          ← Search
+        </Link>
+        <span className="text-[var(--border)]" aria-hidden>
+          ·
+        </span>
+        <Link href="/florida" className="text-[var(--muted)] no-underline hover:text-[var(--text)]">
+          Florida browse
+        </Link>
+      </div>
 
       <header className="mt-4 border-b border-[var(--border)] pb-6 sm:pb-8">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
           Florida · Contractor Trust Report
         </p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-[var(--text)] sm:text-4xl">
+        <h1 className="mt-2 text-[1.65rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:text-4xl">
           {contractor.displayName}
         </h1>
         <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -204,10 +223,8 @@ export default async function ContractorPage({ params }: Props) {
           ) : (
             <StatusBadge status="unknown" label="No Sunbiz link" />
           )}
-          {contractor.discipline.length > 0 ? (
+          {contractor.discipline.length > 0 && (
             <StatusBadge status="warn" label="Discipline on file" />
-          ) : (
-            <StatusBadge status="active" label="No discipline linked" />
           )}
         </div>
         {location && <p className="mt-3 text-[15px] text-[var(--muted)]">{location}</p>}
@@ -219,7 +236,7 @@ export default async function ContractorPage({ params }: Props) {
           </p>
         )}
         {conf && (
-          <p className="mt-3 text-sm text-[var(--muted)]">
+          <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
             <span className="text-[var(--text)]">Sunbiz match: </span>
             {conf}
           </p>

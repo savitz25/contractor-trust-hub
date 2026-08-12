@@ -40,8 +40,8 @@ export function ResultCard({ result }: { result: SearchResult }) {
       href={`/contractors/${encodeURIComponent(result.slug)}`}
       className="group block rounded-2xl border border-[var(--border)] bg-[var(--panel)] no-underline transition hover:border-[var(--accent)]/40 hover:bg-[var(--bg-elevated)] active:scale-[0.995]"
     >
-      {/* Trust signal strip — license · entity · location at a glance */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-[var(--border)]/80 px-4 py-2.5 sm:px-5">
+      {/* Trust signal strip — primary scan path on all viewports */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-[var(--border)]/80 px-3.5 py-2.5 sm:gap-x-4 sm:px-5">
         <span className="inline-flex items-center gap-1.5 text-xs text-[var(--muted)]">
           <span className={`h-1.5 w-1.5 rounded-full ${toneBar[licTone]}`} aria-hidden />
           License {statusLabel(result.licenseStatus)}
@@ -53,23 +53,23 @@ export function ResultCard({ result }: { result: SearchResult }) {
             : "No Sunbiz link"}
         </span>
         {location && (
-          <span className="inline-flex min-w-0 items-center gap-1.5 truncate text-xs text-[var(--muted)]">
+          <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-xs text-[var(--muted)] sm:max-w-[50%]">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]/70" aria-hidden />
-            {location}
+            <span className="truncate">{location}</span>
           </span>
         )}
         {result.hasDiscipline && (
           <span className="inline-flex items-center gap-1.5 text-xs text-amber-200/90">
             <span className={`h-1.5 w-1.5 rounded-full ${toneBar.warn}`} aria-hidden />
-            Discipline on file
+            Discipline
           </span>
         )}
       </div>
 
-      <div className="p-4 sm:p-5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      <div className="p-3.5 sm:p-5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
           <div className="min-w-0">
-            <h2 className="text-base font-semibold leading-snug text-[var(--text)] group-hover:text-white sm:text-lg">
+            <h2 className="text-[15px] font-semibold leading-snug text-[var(--text)] group-hover:text-white sm:text-lg">
               {result.displayName}
             </h2>
             {result.primaryLicenseKey && (
@@ -78,7 +78,8 @@ export function ResultCard({ result }: { result: SearchResult }) {
               </p>
             )}
           </div>
-          <div className="flex flex-wrap gap-1.5 sm:max-w-[42%] sm:justify-end">
+          {/* Badges only on larger screens — strip already covers mobile */}
+          <div className="hidden flex-wrap gap-1.5 sm:flex sm:max-w-[42%] sm:justify-end">
             <StatusBadge
               status={result.licenseStatus}
               label={`License: ${statusLabel(result.licenseStatus)}`}
@@ -93,7 +94,7 @@ export function ResultCard({ result }: { result: SearchResult }) {
             )}
           </div>
         </div>
-        <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
+        <p className="mt-2.5 text-sm leading-relaxed text-[var(--muted)] sm:mt-3">
           {occupationLabel(result.occupationCode)}
           {result.entityName ? (
             <>
@@ -102,9 +103,7 @@ export function ResultCard({ result }: { result: SearchResult }) {
             </>
           ) : null}
         </p>
-        <p className="mt-2 text-xs font-medium text-[var(--accent)]/90 opacity-0 transition group-hover:opacity-100 sm:opacity-100 sm:text-[var(--muted)] sm:group-hover:text-[var(--accent)]">
-          Open Trust Report →
-        </p>
+        <p className="mt-2 text-xs font-medium text-[var(--accent)]">Open Trust Report →</p>
       </div>
     </Link>
   );

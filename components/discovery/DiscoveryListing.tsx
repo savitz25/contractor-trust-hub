@@ -23,17 +23,31 @@ export function DiscoveryListing({
 
   if (results.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-5 py-10 text-center">
+      <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-9 text-center sm:px-8 sm:py-10">
         <p className="text-base font-medium text-[var(--text)]">{emptyTitle}</p>
         <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-[var(--muted)]">
           {emptyBody}
         </p>
-        <Link
-          href="/verify"
-          className="mt-6 inline-flex rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
-        >
-          Search by name or license
-        </Link>
+        <div className="mt-6 flex flex-col items-stretch justify-center gap-2.5 sm:flex-row sm:items-center">
+          <Link
+            href="/verify"
+            className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--accent)] px-5 text-sm font-semibold text-[var(--navy)] no-underline"
+          >
+            Search by name or license
+          </Link>
+          <Link
+            href="/florida"
+            className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+          >
+            Back to Florida browse
+          </Link>
+          <Link
+            href="/#research"
+            className="inline-flex min-h-11 items-center justify-center rounded-xl px-5 text-sm text-[var(--accent)] no-underline"
+          >
+            Change county or trade
+          </Link>
+        </div>
       </div>
     );
   }
@@ -46,12 +60,19 @@ export function DiscoveryListing({
         </h2>
         <p className="text-sm text-[var(--muted)]">
           {total.toLocaleString()} in this view
-          {total > DISCOVERY_PAGE_SIZE
-            ? ` · page ${safePage} of ${totalPages}`
-            : null}
+          {total > DISCOVERY_PAGE_SIZE ? ` · page ${safePage} of ${totalPages}` : null}
         </p>
       </div>
-      <div className="space-y-3">
+      {total > 0 && total < 5 && (
+        <p className="mb-4 rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)]/60 px-3.5 py-2.5 text-sm text-[var(--muted)]">
+          Few matches in this view — try a nearby county, a broader trade, or{" "}
+          <Link href="/verify" className="text-[var(--accent)]">
+            search by name
+          </Link>
+          .
+        </p>
+      )}
+      <div className="space-y-2.5 sm:space-y-3">
         {results.map((r) => (
           <ResultCard key={r.id} result={r} />
         ))}
@@ -64,7 +85,7 @@ export function DiscoveryListing({
           {safePage > 1 && (
             <Link
               href={pageHref(basePath, safePage - 1)}
-              className="rounded-lg border border-[var(--border)] px-4 py-2 text-sm text-[var(--text)] no-underline hover:bg-[var(--panel)]"
+              className="inline-flex min-h-11 min-w-[5.5rem] items-center justify-center rounded-lg border border-[var(--border)] px-4 text-sm text-[var(--text)] no-underline hover:bg-[var(--panel)]"
             >
               Previous
             </Link>
@@ -75,7 +96,7 @@ export function DiscoveryListing({
           {safePage < totalPages && (
             <Link
               href={pageHref(basePath, safePage + 1)}
-              className="rounded-lg border border-[var(--border)] px-4 py-2 text-sm text-[var(--text)] no-underline hover:bg-[var(--panel)]"
+              className="inline-flex min-h-11 min-w-[5.5rem] items-center justify-center rounded-lg border border-[var(--border)] px-4 text-sm text-[var(--text)] no-underline hover:bg-[var(--panel)]"
             >
               Next
             </Link>

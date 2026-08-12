@@ -199,7 +199,7 @@ export function ResearchBrowse({ defaultExpanded = true }: Props) {
       )}
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
+        <div className="min-w-0 order-2 sm:order-1">
           <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
             You&apos;ll open
           </p>
@@ -210,7 +210,7 @@ export function ResearchBrowse({ defaultExpanded = true }: Props) {
           type="button"
           onClick={go}
           disabled={pending}
-          className="min-h-12 shrink-0 rounded-xl bg-[var(--accent)] px-6 text-sm font-semibold text-[var(--navy)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70"
+          className="order-1 min-h-12 w-full shrink-0 rounded-xl bg-[var(--accent)] px-6 text-sm font-semibold text-[var(--navy)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70 sm:order-2 sm:w-auto"
         >
           {pending ? "Opening…" : "Browse license records"}
         </button>

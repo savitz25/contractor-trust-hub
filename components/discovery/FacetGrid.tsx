@@ -25,7 +25,7 @@ export function FacetGrid({
             <li key={f.slug}>
               <Link
                 href={hrefFor(f.slug)}
-                className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-sm no-underline transition hover:border-[var(--accent)]/40 hover:bg-[var(--bg-elevated)]"
+                className="flex min-h-12 items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-sm no-underline transition hover:border-[var(--accent)]/40 hover:bg-[var(--bg-elevated)]"
               >
                 <span className="font-medium text-[var(--text)]">{f.label}</span>
                 <span className="tabular-nums text-[var(--muted)]">

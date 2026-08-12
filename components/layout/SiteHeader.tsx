@@ -11,16 +11,20 @@ const secondaryNav = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg)]/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4">
-        <Link href="/" className="min-w-0 shrink no-underline" aria-label="Contractor Trust Hub home">
-          <BrandLogo height={36} priority surface="onDark" />
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-4">
+        <Link
+          href="/"
+          className="min-w-0 max-w-[58%] shrink no-underline sm:max-w-none"
+          aria-label="Contractor Trust Hub home"
+        >
+          <BrandLogo height={32} priority surface="onDark" />
         </Link>
         <nav className="flex shrink-0 items-center gap-0.5 sm:gap-1.5" aria-label="Primary">
           {secondaryNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-lg px-2 py-1.5 text-sm text-[var(--muted)] no-underline transition hover:bg-[var(--panel)] hover:text-[var(--text)] sm:px-3"
+              className="rounded-lg px-2 py-2 text-xs text-[var(--muted)] no-underline transition hover:bg-[var(--panel)] hover:text-[var(--text)] sm:px-3 sm:text-sm"
             >
               <span className="sm:hidden">{item.shortLabel}</span>
               <span className="hidden sm:inline">{item.label}</span>
@@ -28,7 +32,7 @@ export function SiteHeader() {
           ))}
           <Link
             href="/verify"
-            className="ml-1 rounded-lg bg-[var(--accent)] px-3 py-1.5 text-sm font-semibold text-[var(--navy)] no-underline shadow-sm hover:brightness-105"
+            className="ml-0.5 rounded-lg bg-[var(--accent)] px-2.5 py-2 text-xs font-semibold text-[var(--navy)] no-underline shadow-sm hover:brightness-105 sm:ml-1 sm:px-3 sm:text-sm"
           >
             Verify
           </Link>
