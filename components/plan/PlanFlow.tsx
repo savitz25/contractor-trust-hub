@@ -235,7 +235,9 @@ export function PlanFlow() {
                     ? "Open the Roofing Studio for full replacement scope — material, tear-off, access, and licensed CCC/RR matches."
                     : linkedStudio.slug === "kitchen"
                       ? "Open the Kitchen Studio for remodel depth — cabinets, layout, plumbing/electrical, and licensed GC matches."
-                      : `The ${linkedStudio.name} asks a few more questions so cost drivers and matches fit your project better.`}
+                      : linkedStudio.slug === "bathroom"
+                        ? "Open the Bathroom Studio for remodel depth — wet-area work, waterproofing, plumbing, and licensed CFC/CRC/CBC matches."
+                        : `The ${linkedStudio.name} asks a few more questions so cost drivers and matches fit your project better.`}
                 </p>
                 <Link
                   href={`/studios/${linkedStudio.slug}`}
@@ -245,7 +247,9 @@ export function PlanFlow() {
                     ? "Open Roofing Studio for replacement scope →"
                     : linkedStudio.slug === "kitchen"
                       ? "Open Kitchen Studio for remodel scope →"
-                      : "Open detailed studio →"}
+                      : linkedStudio.slug === "bathroom"
+                        ? "Open Bathroom Studio for remodel scope →"
+                        : "Open detailed studio →"}
                 </Link>
               </div>
             ) : null}

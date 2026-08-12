@@ -237,6 +237,62 @@ export function studioCostRange(
     mid = Math.round(mid * 1.05);
     high = Math.round(high * 1.08);
   }
+
+  // Bathroom studio — standard remodel / full gut first-class
+  const bathScale = answers.values.bath_scale;
+  const bathType = answers.values.bath_type;
+  const wetCx = answers.values.wet_complexity;
+  const bathConstraints = answers.values.bath_constraints;
+  if (bathScale === "full_gut") {
+    mid = Math.round(mid * 1.06);
+    high = Math.round(high * 1.1);
+  }
+  if (bathScale === "cosmetic") {
+    high = Math.round(high * 0.92);
+    mid = Math.round(mid * 0.9);
+  }
+  if (bathType === "primary") {
+    mid = Math.round(mid * 1.04);
+    high = Math.round(high * 1.07);
+  } else if (bathType === "powder") {
+    high = Math.round(high * 0.94);
+    mid = Math.round(mid * 0.92);
+  }
+  if (wetCx === "major_waterproof") {
+    mid = Math.round(mid * 1.08);
+    high = Math.round(high * 1.12);
+  } else if (wetCx === "shower_rebuild") {
+    mid = Math.round(mid * 1.05);
+    high = Math.round(high * 1.09);
+  }
+  if (Array.isArray(multi)) {
+    if (multi.includes("shower") || multi.includes("tub")) {
+      mid = Math.round(mid * 1.04);
+      high = Math.round(high * 1.07);
+    }
+    if (multi.includes("plumbing")) {
+      mid = Math.round(mid * 1.04);
+      high = Math.round(high * 1.07);
+    }
+    if (multi.includes("tile") && (multi.includes("shower") || multi.includes("tub"))) {
+      mid = Math.round(mid * 1.03);
+      high = Math.round(high * 1.05);
+    }
+  }
+  if (Array.isArray(bathConstraints)) {
+    if (bathConstraints.includes("occupied")) {
+      mid = Math.round(mid * 1.04);
+      high = Math.round(high * 1.06);
+    }
+    if (bathConstraints.includes("permit_likely") || bathConstraints.includes("accessibility")) {
+      mid = Math.round(mid * 1.03);
+      high = Math.round(high * 1.06);
+    }
+    if (bathConstraints.includes("moisture_leak")) {
+      mid = Math.round(mid * 1.05);
+      high = Math.round(high * 1.08);
+    }
+  }
   return {
     ...base,
     projectType,

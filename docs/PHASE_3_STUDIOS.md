@@ -14,7 +14,14 @@
 - Layout complexity + optional constraints (occupied, structural, permit)
 - Budget: Under $25k / $25–50k / $50–100k / $100k+ / Not sure
 - Thin states use kitchen CGC/CBC/CRC language
-| `bathroom` | Bathroom Remodel | `bathroom_remodel` |
+| `bathroom` | Bathroom — standard/full remodel first-class | `bathroom_remodel` |
+
+### Bathroom Studio notes
+- Standard remodel + full gut-rehab featured (“Most common” style)
+- Work multi-select includes shower, tub/conversion, tile, ventilation, plumbing relocation
+- Wet-area complexity + optional constraints (occupied, moisture, accessibility, permit)
+- Budget: Under $10k / $10–25k / $25–50k / $50k+ / Not sure
+- Thin states use bathroom CFC/CRC/CBC language
 | `roofing` | Roofing — full replacement first-class (CCC/RR strict) | `roofing` |
 
 ### Roofing Studio notes
