@@ -53,7 +53,8 @@ export type PlanInput = {
   city?: string;
   county?: string | null;
   scale: ScaleBand;
-  budgetBand?: BudgetBand | null;
+  /** Plan BudgetBand or studio-specific budget id string. */
+  budgetBand?: BudgetBand | string | null;
 };
 
 export type CostBandHints = {
