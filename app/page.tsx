@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ResearchBrowse } from "@/components/discovery/ResearchBrowse";
 import { SearchForm } from "@/components/search/SearchForm";
 
 export const metadata: Metadata = {
@@ -12,23 +13,6 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
-
-const intents = [
-  {
-    id: "have" as const,
-    title: "I already have a contractor",
-    body: "Look up their license number or business name. Confirm status, linked Sunbiz entity, and any discipline in our extracts before you sign.",
-    anchor: "#search",
-    hint: "Best with a license id (CBC, CGC, CCC…) or the exact company name on the contract.",
-  },
-  {
-    id: "research" as const,
-    title: "I need to research contractors",
-    body: "Search by company name to open Trust Reports. Compare license class, location, and entity evidence — we don’t sell leads or rank paid listings.",
-    anchor: "#search",
-    hint: "Start with a distinctive name; use fewer words if you get no results.",
-  },
-];
 
 const pillars = [
   {
@@ -55,9 +39,9 @@ const stats = [
 export default function HomePage() {
   return (
     <main>
-      {/* Hero — search is the primary action */}
+      {/* Hero — verify someone you already know */}
       <section className="relative border-b border-[var(--border)]">
-        <div className="mx-auto max-w-6xl px-4 pb-14 pt-10 sm:px-6 sm:pb-16 sm:pt-14">
+        <div className="mx-auto max-w-6xl px-4 pb-12 pt-10 sm:px-6 sm:pb-14 sm:pt-14">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
             Before you hire, verify
           </p>
@@ -69,6 +53,36 @@ export default function HomePage() {
             business entities, and discipline from Florida DBPR and Sunbiz.
           </p>
 
+          {/* Two clear paths */}
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 sm:gap-4">
+            <a
+              href="#search"
+              className="rounded-2xl border border-[var(--accent)]/35 bg-[var(--accent-soft)] px-5 py-4 no-underline transition hover:border-[var(--accent)]/60"
+            >
+              <p className="text-sm font-semibold text-[var(--text)]">
+                I already have a contractor
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                Search by license number or company name to open their Trust Report.
+              </p>
+              <p className="mt-3 text-xs font-medium text-[var(--accent)]">Jump to search →</p>
+            </a>
+            <a
+              href="#research"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] px-5 py-4 no-underline transition hover:border-[var(--accent)]/40"
+            >
+              <p className="text-sm font-semibold text-[var(--text)]">
+                I need to research contractors
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                Browse by Florida county and trade — roofing, GC, A/C, plumbing, and more.
+              </p>
+              <p className="mt-3 text-xs font-medium text-[var(--accent)]">
+                Choose location & trade →
+              </p>
+            </a>
+          </div>
+
           <div
             id="search"
             className="mt-8 scroll-mt-28 rounded-3xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 shadow-[0_0_0_1px_rgba(245,197,24,0.06)] sm:mt-10 sm:p-6 md:p-8"
@@ -77,7 +91,8 @@ export default function HomePage() {
               Search by license number or company name
             </p>
             <p className="mt-1 text-sm text-[var(--muted)]">
-              Florida construction licenses only. Free to search — no account, no lead form.
+              Best when you already know who you&apos;re considering. Free — no account, no lead
+              form.
             </p>
             <div className="mt-4 sm:mt-5">
               <SearchForm size="hero" autoFocus />
@@ -109,38 +124,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Consumer intents — both route to search, not lead gen */}
-      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14" aria-labelledby="intents-heading">
-        <h2
-          id="intents-heading"
-          className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]"
-        >
-          How people use this
-        </h2>
-        <div className="mt-5 grid gap-4 md:grid-cols-2">
-          {intents.map((intent) => (
-            <div
-              key={intent.id}
-              className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 sm:p-6"
-            >
-              <h3 className="text-lg font-semibold text-[var(--text)]">{intent.title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-[var(--muted)]">
-                {intent.body}
-              </p>
-              <p className="mt-3 text-xs leading-relaxed text-[var(--muted)]">{intent.hint}</p>
-              <a
-                href={intent.anchor}
-                className="mt-5 inline-flex w-fit items-center rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:border-[var(--accent)]/40"
-              >
-                {intent.id === "have" ? "Search their license or name" : "Search by company name"}
-              </a>
-            </div>
-          ))}
+      {/* Research guided flow → discovery layer */}
+      <section className="border-b border-[var(--border)] bg-[var(--bg)]">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
+          <ResearchBrowse />
         </div>
       </section>
 
       {/* Stats */}
-      <section className="border-y border-[var(--border)] bg-[var(--bg-elevated)]/50">
+      <section className="border-b border-[var(--border)] bg-[var(--bg-elevated)]/50">
         <div className="mx-auto grid max-w-6xl gap-3 px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
           {stats.map((s) => (
             <div
@@ -162,24 +154,6 @@ export default function HomePage() {
               <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{p.body}</p>
             </div>
           ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-6 sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-8">
-          <div>
-            <h2 className="text-lg font-semibold text-[var(--text)]">Browse Florida by place or trade</h2>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[var(--muted)]">
-              Explore counties and license types, then open Trust Reports — same evidence signals as
-              search, structured for discovery.
-            </p>
-          </div>
-          <Link
-            href="/florida"
-            className="mt-4 inline-flex shrink-0 rounded-xl border border-[var(--border)] bg-[var(--panel)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:border-[var(--accent)]/40 sm:mt-0"
-          >
-            Open Florida discovery →
-          </Link>
         </div>
       </section>
 
@@ -205,7 +179,13 @@ export default function HomePage() {
               href="#search"
               className="rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline hover:brightness-105"
             >
-              Back to search
+              Search a name or license
+            </a>
+            <a
+              href="#research"
+              className="rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+            >
+              Browse by county & trade
             </a>
             <Link
               href="/methodology"

@@ -54,6 +54,19 @@ node -e "/* or psql */"
 psql "$DATABASE_URL" -f schema/migrations/003_discovery_indexes.sql
 ```
 
+## Homepage research entry
+
+The homepage splits two consumer intents:
+
+1. **I already have a contractor** → hero search (`#search`) → `/verify` → Trust Report  
+2. **I need to research contractors** → guided browse (`#research` / `ResearchBrowse`) → discovery URLs:
+   - County + trade → `/{state}/{county}/{trade}`
+   - Trade only → `/{state}/{trade}`
+   - County only → `/{state}/{county}`
+   - Neither → `/{state}` (full landing)
+
+Component: `components/discovery/ResearchBrowse.tsx` (client). Uses curated counties/trades from discovery config — no lead forms.
+
 ## Product tone
 
 - Verification / research only
