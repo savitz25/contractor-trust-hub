@@ -40,6 +40,19 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/studio/cost" className="text-[var(--text)] no-underline hover:underline">
+                Cost Studio
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/studio/roofing"
+                className="text-[var(--text)] no-underline hover:underline"
+              >
+                Roofing calculator
+              </Link>
+            </li>
+            <li>
               <Link href="/verify" className="text-[var(--text)] no-underline hover:underline">
                 Verify a contractor
               </Link>

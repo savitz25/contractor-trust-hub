@@ -79,7 +79,7 @@ State metadata lives in `lib/states/config.ts`. Florida is `live: true`. New Jer
 | Variable | Required | Notes |
 |----------|----------|--------|
 | `DATABASE_URL` | **Yes** | Supabase **Session pooler** URI (port `5432`). Set as **sensitive** in Vercel → Project → Settings → Environment Variables for Production (and Preview if you test previews). |
-| `NEXT_PUBLIC_SITE_URL` | Recommended | Canonical site origin for Open Graph / metadata (e.g. `https://your-app.vercel.app`). |
+| `NEXT_PUBLIC_SITE_URL` | Production required | `https://www.contractortrusthub.com` — see [SEO.md](./SEO.md). |
 
 Copy from [`.env.example`](../.env.example). See [SUPABASE.md](./SUPABASE.md) for pooler vs direct.
 

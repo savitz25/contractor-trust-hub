@@ -1,20 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalNotice } from "@/components/trust/LegalNotice";
+import { pageMetadata } from "@/lib/seo/page-meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "How it works",
   description:
-    "How Contractor Trust Hub verifies Florida contractors using official public records.",
-  alternates: { canonical: "/about" },
-  openGraph: {
-    title: "How Contractor Trust Hub works",
-    description:
-      "How Contractor Trust Hub verifies Florida contractors using official public records.",
-    url: "/about",
-    type: "website",
-  },
-};
+    "How Contractor Trust Hub verifies Florida contractors using official public records — DBPR licenses, high-confidence Sunbiz links, and board discipline.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

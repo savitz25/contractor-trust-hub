@@ -1,6 +1,6 @@
 # Plan matching (quality rules)
 
-How `/plan` → `/plan/results` selects contractors. **Accuracy over volume.**
+How `/plan` → `/plan/results` (and Cost Studio → results handoff) selects contractors. **Accuracy over volume.** Fewer strong matches beat a page of weak ones.
 
 ## Configuration
 
@@ -9,34 +9,54 @@ How `/plan` → `/plan/results` selects contractors. **Accuracy over volume.**
 | `data/plan/project-license-map.json` | Project type → primary/secondary DBPR codes + notes |
 | `lib/plan/license-map.ts` | Loads JSON; used by matching |
 | `lib/plan/location.ts` | ZIP5 / ZIP3 → county + discovery county codes |
-| `lib/plan/matching.ts` | Query tiers, notes, empty/thin handling |
+| `lib/plan/matching.ts` | ZIP cascade, primary-first, notes, empty/thin handling |
 
-## Project → license mapping
+## Focus trades (2026-08 quality review)
 
-- **Primary** codes are preferred (e.g. roofing → `CCC`, `RR`).
-- **Secondary** codes only expand when *local primary* results are thin (e.g. roofing may add `CGC` locally only if few CCC/RR).
-- Matching requires `status_normalized IN ('active','current')`.
-- Never mixes unrelated trades to fill the page.
+| Project type | Primary (order = preference) | Secondary | Intent |
+|--------------|------------------------------|-----------|--------|
+| **Roofing** | `CCC`, `RR` | *(none)* | Specialty only — never CGC as a roofing substitute |
+| **Kitchen** | `CRC`, `CBC`, `CGC` | `CFC` only if local primary empty | Residential/building first so commercial CGC noise drops |
+| **Bathroom** | `CRC`, `CFC`, `CBC` | `CGC` only if local primary empty | Remodel + plumbing preferred; CGC not default |
+| **General / whole-home / addition** | `CRC`, `CBC`, `CGC` | *(none)* | Residential-first ranking for homeowner plans |
 
 Edit the JSON map to maintain mappings; document tradeoffs in each entry’s `notes`.
 
-## Location tiers
+## Location cascade
 
-1. **ZIP** (board postal code)  
-2. **City** (exact match on license / contractor city)  
-3. **County** (exact name + known DBPR `county_code`s)  
-4. **Statewide** — only if local count &lt; 3; same occupation set only  
+When the homeowner provides location, we **do not** immediately OR ZIP + city + county (that used to flood county-wide CGCs over true ZIP matches).
 
-ZIP→county uses ZIP5 overrides where known, else ZIP3 (approximate; multi-county prefixes exist).
+1. **ZIP only** + primary codes (if ZIP present)  
+2. If fewer than **2** local matches → **city** + primary  
+3. If still fewer than **2** → **county** + primary  
+4. If still **0** local primary → optional **secondary** codes, same area only  
+5. If still fewer than **2** local → **statewide** preferred classes only (labeled)
+
+Thresholds in `matching.ts`: `MIN_LOCAL_STRONG = 2`, `MIN_PRIMARY_LOCAL = 1` (secondary only when primary local is empty).
 
 ## Honesty rules
 
-- Do not invent ratings or stretch occupation filters.
-- Statewide fallback is labeled in match notes and per-card “Why this matched”.
-- Empty state explains lack of strong matches and offers Plan edit / Florida browse / Verify.
+- Active/current licenses only; no invented matches to fill the page.
+- Secondary codes are rare and disclosed as “related class”.
+- Statewide fallback is labeled on the card and in match notes.
+- Result cards show chips: preferred/related class, location tier, status — plus expandable detail.
+
+## Plan + Cost Studio handoff
+
+Both send the same query shape to `/plan/results` / `POST /api/plan/match`:
+
+- `type` (project type id), `scale`, `state=FL`, optional `zip`, `city`, `county`
+
+Cost Studio does not change occupation mapping; it only carries project type + location into this matcher.
 
 ## Remaining limitations
 
-- ZIP3→county remains approximate for some prefixes.
-- Board rows with numeric-only county and no known code may not match county filters.
-- Secondary codes can still surface multi-trade GCs for specialty work when local specialty is thin — intentional and disclosed.
+- ZIP3→county remains approximate for some prefixes (ZIP5 overrides for common metros).
+- Board rows with empty county and non-matching ZIP may miss local county steps until statewide.
+- We do not filter by business name semantics (e.g. “dredging” under CGC) — only license class + location evidence.
+- High-volume GC classes will still include multi-trade firms that also hold CRC/CBC/CGC; verification is the homeowner’s next step on each Trust Report.
+- Rural ZIPs with sparse specialty licenses may correctly show thin local + statewide specialty (especially roofing CCC/RR).
+
+## Audit tooling
+
+`node scripts/audit-plan-matching.mjs` — density checks by ZIP/county for focus codes (requires `DATABASE_URL`).

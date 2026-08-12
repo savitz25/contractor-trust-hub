@@ -1,68 +1,69 @@
 {
   "_meta": {
-    "description": "Project type → Florida DBPR occupation codes for Plan matching. Prefer primary specialty codes; secondary only when local primary results are thin. Prefer active/current licenses in matching.ts.",
-    "updated": "2026-08-12"
+    "description": "Project type → Florida DBPR occupation codes for Plan + Cost Studio matching. primary order = preference (first is best fit). secondary expands only when local primary is empty. Prefer fewer strong specialty matches over broad GC fill.",
+    "updated": "2026-08-12",
+    "audit": "2026-08 matching quality review: residential remodels prefer CRC/CBC before CGC; roofing specialty-only (no CGC secondary); bathroom residential + plumbing before commercial CBC/CGC."
   },
   "mappings": {
     "kitchen_remodel": {
       "label": "Kitchen Remodel",
-      "primary": ["CGC", "CBC", "CRC"],
+      "primary": ["CRC", "CBC", "CGC"],
       "secondary": ["CFC"],
-      "notes": "General/residential building licenses coordinate multi-trade kitchens. Plumbing (CFC) is secondary for fixture-heavy scopes, not a full kitchen GC substitute."
+      "notes": "Home kitchens: prefer residential (CRC) and building (CBC) contractors who typically coordinate multi-trade remodels. CGC remains valid for larger scopes but ranks after residential/building so commercial-scale GCs do not dominate. Plumbing (CFC) only if no local GC-class matches."
     },
     "bathroom_remodel": {
       "label": "Bathroom Remodel",
-      "primary": ["CFC", "CRC", "CBC"],
+      "primary": ["CRC", "CFC", "CBC"],
       "secondary": ["CGC"],
-      "notes": "Plumbing specialty is primary for wet-area work. CRC/CBC for residential/building remodels; CGC secondary for complex structural baths."
+      "notes": "Full baths usually need residential remodel coordination (CRC) and/or plumbing specialty (CFC). CBC for building-level scopes. CGC only when local primary classes are empty — avoids flooding baths with unrelated general contractors."
     },
     "full_home_renovation": {
       "label": "Full Home Renovation",
-      "primary": ["CGC", "CBC", "CRC"],
+      "primary": ["CRC", "CBC", "CGC"],
       "secondary": [],
-      "notes": "Multi-room work needs general, building, or residential contractor authority. No specialty-only primary codes."
+      "notes": "Whole-home residential work: CRC first, then CBC, then CGC. No specialty-only fill."
     },
     "addition": {
       "label": "Addition / Extension",
-      "primary": ["CGC", "CBC", "CRC"],
+      "primary": ["CRC", "CBC", "CGC"],
       "secondary": [],
-      "notes": "Structural additions require general/building/residential license class."
+      "notes": "Structural additions: residential/building/general authority. CRC preferred for typical home additions."
     },
     "basement_finish": {
       "label": "Basement / Lower-Level Finish",
-      "primary": ["CGC", "CBC", "CRC"],
+      "primary": ["CRC", "CBC", "CGC"],
       "secondary": [],
-      "notes": "Uncommon in FL; same GC classes as interior renovations."
+      "notes": "Uncommon in FL; same residential-first GC classes as interior renovations."
     },
     "roofing": {
       "label": "Roofing",
       "primary": ["CCC", "RR"],
-      "secondary": ["CGC"],
-      "notes": "Prefer certified (CCC) or registered (RR) roofing licenses. CGC only as secondary when local roofing specialty is thin — a GC may contract roofing but is not a roofing specialty substitute by default."
+      "secondary": [],
+      "notes": "Roofing specialty only (certified CCC, registered RR). Do not fall back to CGC — a general contractor is not a substitute roofing match for homeowners. Thin areas expand statewide within CCC/RR only."
     },
     "siding_exterior": {
       "label": "Siding / Exterior",
       "primary": ["CBC", "CRC", "CGC"],
       "secondary": ["SCC"],
-      "notes": "Building/residential/general for envelope re-clad. Specialty structure (SCC) secondary for certain enclosures/aluminum systems — not default siding."
+      "notes": "Building/residential/general for envelope re-clad. Specialty structure (SCC) only when local primary is empty."
     },
     "deck_outdoor": {
       "label": "Deck / Outdoor Living",
       "primary": ["CBC", "CRC", "CGC"],
       "secondary": ["SCC"],
-      "notes": "Outdoor structures often under building/residential/GC. SCC secondary for specialty structures/screen enclosures common in Florida."
+      "notes": "Outdoor structures often under building/residential/GC. SCC only when local primary is empty (screen enclosures / specialty structures)."
     },
     "custom_home_rebuild": {
       "label": "New Custom Home / Knockdown Rebuild",
-      "primary": ["CGC", "CBC"],
-      "secondary": ["CRC"],
-      "notes": "New construction / major rebuild: CGC and CBC preferred. CRC secondary for residential-scale rebuilds only."
+      "primary": ["CGC", "CBC", "CRC"],
+      "secondary": [],
+      "notes": "New construction / major rebuild: CGC and CBC preferred; CRC included for residential-scale rebuilds. No secondary specialties."
     },
     "general_contracting": {
       "label": "Other / General Contracting",
-      "primary": ["CGC", "CBC", "CRC"],
+      "primary": ["CRC", "CBC", "CGC"],
       "secondary": [],
-      "notes": "Catch-all multi-trade GC work."
+      "notes": "Catch-all homeowner GC work: residential-first ranking so results feel home-project appropriate rather than commercial CGC-heavy."
     }
   }
 }

@@ -1,0 +1,174 @@
+{
+  "_meta": {
+    "description": "Florida roofing cost calculator inputs and multipliers. Planning only — not bids. Base dollar bands come from fl-cost-ranges.json (projectType roofing × size→scale).",
+    "updated": "2026-08-12",
+    "state": "FL"
+  },
+  "disclaimer": "Planning only — not a bid or contractor quote. These ranges are conceptual Florida planning bands for homeowner budgeting. They are not contractor-specific prices, guarantees, or formal estimates.",
+  "methodologyNote": "Start from statewide Florida roofing bands by approximate roof/home size, then apply relative multipliers for system type, stories/access, and pitch/complexity. Multipliers are relative planning factors, not market quotes. Location (ZIP/city) is for contractor matching only and does not invent local prices.",
+  "floridaNotes": [
+    "Wind-mitigation details, secondary water barriers, and product approvals often move Florida reroof costs as much as the visible surface material.",
+    "Coastal exposure, HOA rules, and impact or high-wind product choices can raise both material and labor time.",
+    "Insurance claims and policy renewal upgrades are separate from this planning tool — confirm coverage and requirements with your carrier.",
+    "Permitting and inspection cycles vary by jurisdiction; multi-story and complex roofs usually need more coordination time."
+  ],
+  "sizeOptions": [
+    {
+      "id": "small",
+      "scale": "small",
+      "label": "Smaller roof / compact home",
+      "description": "Roughly a smaller single-family footprint or simple partial reroof",
+      "proxyHint": "Often ~1,200–1,800 sq ft living area or a modest roof square count",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1
+    },
+    {
+      "id": "medium",
+      "scale": "medium",
+      "label": "Typical Florida home",
+      "description": "Common suburban single-family reroof",
+      "proxyHint": "Often ~1,800–2,800 sq ft living area · full tear-off common",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1
+    },
+    {
+      "id": "large",
+      "scale": "large",
+      "label": "Large or multi-wing home",
+      "description": "Bigger footprint, more squares, or larger multi-story shell",
+      "proxyHint": "Often ~2,800+ sq ft living area or a sprawling roof plan",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1
+    }
+  ],
+  "materialOptions": [
+    {
+      "id": "shingle",
+      "label": "Architectural asphalt shingles",
+      "description": "Most common Florida reroof baseline",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1,
+      "push": "neutral",
+      "explain": "Shingles are the baseline planning system for most Florida homes."
+    },
+    {
+      "id": "shingle_premium",
+      "label": "Premium / impact-rated shingles",
+      "description": "Higher warranty or impact-oriented products",
+      "lowMul": 1.06,
+      "midMul": 1.1,
+      "highMul": 1.14,
+      "push": "up",
+      "explain": "Premium or impact-oriented shingles usually sit above standard architectural products."
+    },
+    {
+      "id": "metal",
+      "label": "Metal (standing seam or quality panels)",
+      "description": "Higher material and detail labor than shingles",
+      "lowMul": 1.22,
+      "midMul": 1.35,
+      "highMul": 1.48,
+      "push": "up",
+      "explain": "Metal systems typically raise both material cost and install labor versus shingles."
+    },
+    {
+      "id": "tile",
+      "label": "Concrete or clay tile",
+      "description": "Heavy system — structure and underlayment matter",
+      "lowMul": 1.38,
+      "midMul": 1.55,
+      "highMul": 1.72,
+      "push": "up",
+      "explain": "Tile is often among the highest planning bands due to weight, labor, and underlayment detail."
+    },
+    {
+      "id": "flat_membrane",
+      "label": "Low-slope / membrane (TPO, modified, etc.)",
+      "description": "Common on Florida additions and low-slope sections",
+      "lowMul": 0.95,
+      "midMul": 1.05,
+      "highMul": 1.2,
+      "push": "mixed",
+      "explain": "Low-slope membrane work can be comparable to shingles mid-band but ranges widely with detailing."
+    }
+  ],
+  "storiesOptions": [
+    {
+      "id": "one",
+      "label": "One story · easy access",
+      "description": "Single story, driveway staging, typical lot",
+      "lowMul": 0.94,
+      "midMul": 0.95,
+      "highMul": 0.96,
+      "push": "down",
+      "explain": "Single-story access usually keeps labor and staging toward the lower side of the band."
+    },
+    {
+      "id": "two",
+      "label": "Two story · typical",
+      "description": "Common two-story home, normal access",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1,
+      "push": "neutral",
+      "explain": "Two-story height is treated as the neutral access assumption for planning."
+    },
+    {
+      "id": "hard",
+      "label": "Multi-story or difficult access",
+      "description": "Tall work, tight lot, limited parking, or HOA staging limits",
+      "lowMul": 1.1,
+      "midMul": 1.15,
+      "highMul": 1.22,
+      "push": "up",
+      "explain": "Height and tight access raise labor time, equipment needs, and disposal logistics."
+    }
+  ],
+  "pitchOptions": [
+    {
+      "id": "simple",
+      "label": "Simple geometry",
+      "description": "Straightforward gable/hip, few valleys",
+      "lowMul": 0.9,
+      "midMul": 0.92,
+      "highMul": 0.94,
+      "push": "down",
+      "explain": "Simple shapes cut labor hours and waste versus cut-up roofs."
+    },
+    {
+      "id": "moderate",
+      "label": "Moderate complexity",
+      "description": "Some hips/valleys, typical Florida plan",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1,
+      "push": "neutral",
+      "explain": "A typical Florida suburban roof shape is the mid planning assumption."
+    },
+    {
+      "id": "complex",
+      "label": "Complex / steep / many details",
+      "description": "Steep pitch, many valleys, dormers, or transitions",
+      "lowMul": 1.12,
+      "midMul": 1.2,
+      "highMul": 1.28,
+      "push": "up",
+      "explain": "Complex geometry and steeper pitches increase labor, waste, and safety/setup costs."
+    }
+  ],
+  "defaults": {
+    "size": "medium",
+    "material": "shingle",
+    "stories": "two",
+    "pitch": "moderate"
+  },
+  "education": [
+    "Roof size (squares) and system type are usually the two largest planning levers.",
+    "Tear-off layers, deck repairs, and underlayment package can move a job inside the band without changing the roof material.",
+    "This calculator does not price insurance claims, code upgrades after inspection, or structural repairs discovered mid-job."
+  ]
+}

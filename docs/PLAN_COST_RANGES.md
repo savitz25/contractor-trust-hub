@@ -1,15 +1,17 @@
 # Florida plan cost ranges
 
-Data-driven planning bands for `/plan` → `/plan/results`.
+Data-driven planning bands for `/plan` → `/plan/results` and as the base for **[Cost Studio](./COST_STUDIO.md)** (`/studio/cost`).
 
 ## Source of truth
 
 | File | Role |
 |------|------|
 | `data/plan/fl-cost-ranges.json` | All low/mid/high amounts, drivers, band hints |
+| `data/plan/cost-studio-factors.json` | Scope factors + multipliers for Cost Studio |
 | `lib/plan/cost-model.ts` | Lookup + formatting only |
+| `lib/plan/cost-studio.ts` | Factor multipliers on top of base bands |
 
-**Update ranges by editing the JSON** — no code deploy logic required beyond rebuild.
+**Update ranges by editing the JSON** — no code deploy logic required beyond rebuild. See `docs/COST_STUDIO.md` for interactive factor updates.
 
 ## Fields per row
 

@@ -1,19 +1,36 @@
 ﻿import { query } from "@/lib/db";
 import { asLicenseStatus } from "@/lib/contractors/format";
 import type { SearchResult } from "@/lib/contractors/types";
-import { getStateBySlug } from "@/lib/states/config";
+import { getStateBySlug, occupationLabel } from "@/lib/states/config";
 import { occupationCodesForProject, licenseMapNotes } from "./license-map";
 import { formatLocationLabel, resolvePlanLocation } from "./location";
 import { getProjectType } from "./project-types";
-import type { PlanInput, PlanMatchResult, PlanMatchedContractor } from "./types";
+import type {
+  PlanInput,
+  PlanMatchResult,
+  PlanMatchedContractor,
+  ProjectTypeId,
+} from "./types";
 
 const MIN_SUNBIZ_CONFIDENCE = 0.9;
 const DEFAULT_LIMIT = 12;
-/** Prefer local specialty results; only broaden when below this count. */
-const MIN_LOCAL_STRONG = 3;
-const MIN_PRIMARY_LOCAL = 2;
+/**
+ * Prefer quality local specialty results. Do not jump statewide while we already
+ * have a couple of strong local primary matches.
+ */
+const MIN_LOCAL_STRONG = 2;
+/** Expand secondary codes only when local primary is empty (not merely thin). */
+const MIN_PRIMARY_LOCAL = 1;
 
 type LocTier = "zip" | "city" | "county" | "state";
+type LocationMatchMode = "zip" | "city" | "county" | "any";
+
+type ResolvedLoc = {
+  zip: string | null;
+  city: string | null;
+  county: string | null;
+  countyCodes: string[];
+};
 
 function mapRow(
   r: {
@@ -63,31 +80,55 @@ function mapRow(
           ? "county"
           : "state";
 
+  const code = (r.occupation_code || "").toUpperCase();
+  const isPrimary = !!code && primaryCodes.includes(code);
+  const occPlain = occupationLabel(r.occupation_code);
+  const statusPlain = r.status_normalized
+    ? r.status_normalized.charAt(0).toUpperCase() + r.status_normalized.slice(1)
+    : null;
+
   const reasons: string[] = [];
-  if (r.occupation_code) {
-    const isPrimary = primaryCodes.includes(r.occupation_code.toUpperCase());
+  if (code) {
     reasons.push(
       isPrimary
-        ? `License class ${r.occupation_code} (primary for this project type)`
-        : `License class ${r.occupation_code} (related / secondary for this project type)`
+        ? `${occPlain} (${code}) — preferred class for this project type`
+        : `${occPlain} (${code}) — related class used only when preferred classes are scarce`
     );
   }
-  if (r.status_normalized) {
-    reasons.push(`Status ${r.status_normalized} in board extract`);
+  if (statusPlain) {
+    reasons.push(`License status: ${statusPlain} in Florida DBPR board extract`);
   }
-  if (tier === "zip") reasons.push("Location: ZIP matches board address");
-  else if (tier === "city") reasons.push("Location: city matches board address");
-  else if (tier === "county") reasons.push("Location: county matches board address");
-  else reasons.push("Location: statewide (no tighter local match required)");
+  if (tier === "zip") reasons.push("Location: board ZIP matches the project ZIP");
+  else if (tier === "city") reasons.push("Location: board city matches the project city");
+  else if (tier === "county")
+    reasons.push("Location: board county matches the project area (wider than ZIP)");
+  else reasons.push("Location: statewide listing — weaker than a local address match");
 
   if (r.entity_status) {
-    reasons.push(`Sunbiz entity ${r.entity_status} (high-confidence link)`);
+    reasons.push(`Sunbiz entity ${r.entity_status} (high-confidence link only)`);
   }
+
+  const locationChip =
+    tier === "zip"
+      ? "ZIP match"
+      : tier === "city"
+        ? "City match"
+        : tier === "county"
+          ? "County match"
+          : "Statewide";
+
+  const matchChips = [
+    code ? `${code}${isPrimary ? " · preferred" : " · related"}` : "License class",
+    locationChip,
+    statusPlain || "Status on file",
+  ];
 
   return {
     ...base,
     matchReasons: reasons,
     locationTier: tier,
+    matchChips,
+    matchFit: isPrimary ? "preferred" : "related",
   };
 }
 
@@ -99,9 +140,26 @@ export type MatchOptions = {
   matchWhy?: string;
 };
 
+function projectEmptyHint(projectType: ProjectTypeId): string {
+  switch (projectType) {
+    case "roofing":
+      return "We only show certified or registered roofing licenses (CCC / RR) — not general contractors as roofing substitutes.";
+    case "kitchen_remodel":
+      return "We look for residential and building contractor licenses that typically coordinate kitchen remodels.";
+    case "bathroom_remodel":
+      return "We look for residential remodel and plumbing licenses suited to bathroom work.";
+    case "general_contracting":
+    case "full_home_renovation":
+    case "addition":
+      return "We look for residential, building, and general contractor licenses for whole-home style work.";
+    default:
+      return "We only show active licenses in the classes mapped to this project type.";
+  }
+}
+
 /**
  * Match verified contractors for a project plan.
- * Accuracy over volume: tiered location, primary specialty first, honest statewide fallback.
+ * Accuracy over volume: ZIP-first location cascade, primary specialty first, honest statewide fallback.
  * Studios may override occupation codes via MatchOptions.
  */
 export async function matchContractorsForPlan(
@@ -159,20 +217,26 @@ export async function matchContractorsForPlan(
   });
 
   const matchNotes: string[] = [
-    `Preferring active/current ${codes.primary.join(" / ")} licenses for ${project.label}.`,
+    `Preferring active/current ${codes.primary.join(" / ")} licenses for ${project.label} (order = best fit first).`,
     options.matchWhy || licenseMapNotes(input.projectType),
-    "Ordered by location relevance and license class fit — not ratings, reviews, or paid placement.",
+    "Ordered by location tightness, then license-class fit — not ratings, reviews, or paid placement.",
   ];
 
   if (loc.countySource === "zip5") {
     matchNotes.push(`County inferred from ZIP ${loc.zip} (high-confidence ZIP map).`);
   } else if (loc.countySource === "zip3") {
     matchNotes.push(
-      `County inferred from ZIP prefix ${loc.zip?.slice(0, 3)} (approximate ΓÇö multi-county prefixes exist).`
+      `County inferred from ZIP prefix ${loc.zip?.slice(0, 3)} (approximate — multi-county prefixes exist).`
     );
   }
 
   const hasLocation = !!(loc.zip || loc.city || loc.county);
+  const resolved: ResolvedLoc = {
+    zip: loc.zip,
+    city: loc.city,
+    county: loc.county,
+    countyCodes: loc.countyCodes || [],
+  };
 
   try {
     let contractors: PlanMatchedContractor[] = [];
@@ -180,46 +244,120 @@ export async function matchContractorsForPlan(
 
     if (!hasLocation) {
       matchNotes.push(
-        "No ZIP or city provided ΓÇö results are statewide for the relevant license classes only."
+        "No ZIP or city provided — results are statewide for the preferred license classes only."
       );
       contractors = await queryContractors({
         licenseSource: state.licenseSource,
         entitySource: state.entitySource,
         stateCode: state.code,
         occupationCodes: codes.primary,
+        primaryCodes: codes.primary,
         location: null,
+        locationMatch: "any",
         requireLocation: false,
         limit: DEFAULT_LIMIT,
       });
       locationScope = "statewide";
     } else {
-      // 1) Local + primary specialty only
-      let localPrimary = await queryContractors({
-        licenseSource: state.licenseSource,
-        entitySource: state.entitySource,
-        stateCode: state.code,
-        occupationCodes: codes.primary,
-        location: loc,
-        requireLocation: true,
-        limit: DEFAULT_LIMIT,
-      });
+      // ZIP → city → county cascade for primary classes (do not OR everything immediately)
+      let localPrimary: PlanMatchedContractor[] = [];
+      const cascadeSteps: string[] = [];
 
-      // 2) If thin local primary, allow secondary codes still local
+      if (resolved.zip) {
+        localPrimary = await queryContractors({
+          licenseSource: state.licenseSource,
+          entitySource: state.entitySource,
+          stateCode: state.code,
+          occupationCodes: codes.primary,
+          primaryCodes: codes.primary,
+          location: resolved,
+          locationMatch: "zip",
+          requireLocation: true,
+          limit: DEFAULT_LIMIT,
+        });
+        if (localPrimary.length > 0) cascadeSteps.push(`ZIP ${resolved.zip}`);
+      }
+
+      if (localPrimary.length < MIN_LOCAL_STRONG && resolved.city) {
+        const cityHits = await queryContractors({
+          licenseSource: state.licenseSource,
+          entitySource: state.entitySource,
+          stateCode: state.code,
+          occupationCodes: codes.primary,
+          primaryCodes: codes.primary,
+          location: resolved,
+          locationMatch: "city",
+          requireLocation: true,
+          limit: DEFAULT_LIMIT,
+        });
+        const before = localPrimary.length;
+        localPrimary = mergeUnique(localPrimary, cityHits, DEFAULT_LIMIT);
+        if (localPrimary.length > before) cascadeSteps.push(`city ${resolved.city}`);
+      }
+
+      if (
+        localPrimary.length < MIN_LOCAL_STRONG &&
+        (resolved.county || resolved.countyCodes.length > 0)
+      ) {
+        const countyHits = await queryContractors({
+          licenseSource: state.licenseSource,
+          entitySource: state.entitySource,
+          stateCode: state.code,
+          occupationCodes: codes.primary,
+          primaryCodes: codes.primary,
+          location: resolved,
+          locationMatch: "county",
+          requireLocation: true,
+          limit: DEFAULT_LIMIT,
+        });
+        const before = localPrimary.length;
+        localPrimary = mergeUnique(localPrimary, countyHits, DEFAULT_LIMIT);
+        if (localPrimary.length > before) {
+          cascadeSteps.push(
+            resolved.county ? `county ${resolved.county}` : "county (code match)"
+          );
+        }
+      }
+
+      // Last local attempt: full local OR (zip/city/county) if cascade still empty
+      // (handles sparse ZIP fill with county on different field combinations)
+      if (localPrimary.length === 0) {
+        localPrimary = await queryContractors({
+          licenseSource: state.licenseSource,
+          entitySource: state.entitySource,
+          stateCode: state.code,
+          occupationCodes: codes.primary,
+          primaryCodes: codes.primary,
+          location: resolved,
+          locationMatch: "any",
+          requireLocation: true,
+          limit: DEFAULT_LIMIT,
+        });
+        if (localPrimary.length > 0) cascadeSteps.push("combined local fields");
+      }
+
+      if (cascadeSteps.length > 0) {
+        matchNotes.push(`Location cascade used: ${cascadeSteps.join(" → ")}.`);
+      }
+
       let localAll = localPrimary;
+      // Secondary: empty preferred local, or thin local unless strictMatching with some hits
       if (
         localPrimary.length < minPrimaryLocal &&
         codes.secondary.length > 0 &&
         !(options.strictMatching && localPrimary.length > 0)
       ) {
         matchNotes.push(
-          `Few local ${codes.primary.join("/")} licenses ΓÇö also including related classes ${codes.secondary.join(" / ")} in the same area.`
+          `No local ${codes.primary.join("/")} matches — including related classes ${codes.secondary.join(" / ")} in the same area only.`
         );
         const withSecondary = await queryContractors({
           licenseSource: state.licenseSource,
           entitySource: state.entitySource,
           stateCode: state.code,
           occupationCodes: codes.all,
-          location: loc,
+          primaryCodes: codes.primary,
+          location: resolved,
+          locationMatch: "any",
           requireLocation: true,
           limit: DEFAULT_LIMIT,
         });
@@ -230,21 +368,23 @@ export async function matchContractorsForPlan(
       contractors = localAll;
       locationScope = localCount > 0 ? "local" : "none";
 
-      // 3) Statewide only if local is thin ΓÇö never invent unrelated trades
+      // Statewide only if local is still thin — same preferred classes only
       if (localCount < MIN_LOCAL_STRONG) {
         const need = Math.max(DEFAULT_LIMIT - contractors.length, 0);
         if (need > 0 || localCount === 0) {
           matchNotes.push(
             localCount === 0
-              ? "No strong location matches for this trade ΓÇö showing statewide results with the same license classes only."
-              : `Only ${localCount} strong local match${localCount === 1 ? "" : "es"} ΓÇö adding statewide options for the same license classes (not unrelated trades).`
+              ? "No strong location matches for preferred license classes — showing statewide results with the same classes only."
+              : `Only ${localCount} strong local match${localCount === 1 ? "" : "es"} — adding statewide options for the same preferred classes (not unrelated trades).`
           );
           const statewide = await queryContractors({
             licenseSource: state.licenseSource,
             entitySource: state.entitySource,
             stateCode: state.code,
-            occupationCodes: codes.primary.length ? codes.primary : codes.all,
+            occupationCodes: codes.primary,
+            primaryCodes: codes.primary,
             location: null,
+            locationMatch: "any",
             requireLocation: false,
             limit: Math.max(need, DEFAULT_LIMIT),
           });
@@ -254,10 +394,16 @@ export async function matchContractorsForPlan(
             .map((c) => ({
               ...c,
               locationTier: "state" as const,
-              matchReasons: c.matchReasons.map((r) =>
-                r.startsWith("Location:")
+              matchFit: c.matchFit,
+              matchChips: (c.matchChips || []).map((chip) =>
+                chip === "ZIP match" || chip === "City match" || chip === "County match"
+                  ? "Statewide"
+                  : chip
+              ),
+              matchReasons: c.matchReasons.map((reason) =>
+                reason.startsWith("Location:")
                   ? "Location: statewide fallback (weaker than ZIP/city/county match)"
-                  : r
+                  : reason
               ),
             }));
           contractors = [...contractors, ...extra].slice(0, DEFAULT_LIMIT);
@@ -266,7 +412,6 @@ export async function matchContractorsForPlan(
       }
     }
 
-    // Re-sort: local tiers first, then primary occupation, name
     contractors = sortMatched(contractors, codes.primary).slice(0, DEFAULT_LIMIT);
 
     const thinResult =
@@ -282,7 +427,9 @@ export async function matchContractorsForPlan(
         emptyReason:
           "No active/current licenses in our extract for this project type" +
           (hasLocation ? " near that location" : "") +
-          ". Try a broader location, another project type, or Verify search by name.",
+          ". " +
+          projectEmptyHint(input.projectType) +
+          " Try a nearby ZIP, browse Florida by trade, or Verify search by name.",
         locationScope: "none",
         localCount: 0,
         thinResult: true,
@@ -291,8 +438,9 @@ export async function matchContractorsForPlan(
 
     if (thinResult && hasLocation) {
       matchNotes.push(
-        "Local coverage is thin for this combination ΓÇö treat statewide listings carefully and confirm address on each Trust Report."
+        "Local coverage is thin for this combination — treat statewide listings carefully and confirm address and license class on each Trust Report."
       );
+      matchNotes.push(projectEmptyHint(input.projectType));
     }
 
     return {
@@ -354,6 +502,15 @@ function sortMatched(
     const pa = a.occupationCode && primaryCodes.includes(a.occupationCode.toUpperCase()) ? 0 : 1;
     const pb = b.occupationCode && primaryCodes.includes(b.occupationCode.toUpperCase()) ? 0 : 1;
     if (pa !== pb) return pa - pb;
+    const oa = a.occupationCode
+      ? primaryCodes.indexOf(a.occupationCode.toUpperCase())
+      : 99;
+    const ob = b.occupationCode
+      ? primaryCodes.indexOf(b.occupationCode.toUpperCase())
+      : 99;
+    const ra = oa === -1 ? 50 : oa;
+    const rb = ob === -1 ? 50 : ob;
+    if (ra !== rb) return ra - rb;
     return (a.displayName || "").localeCompare(b.displayName || "");
   });
 }
@@ -363,12 +520,10 @@ async function queryContractors(opts: {
   entitySource: string;
   stateCode: string;
   occupationCodes: string[];
-  location: {
-    zip: string | null;
-    city: string | null;
-    county: string | null;
-    countyCodes: string[];
-  } | null;
+  /** True primary codes for labeling (may be subset of occupationCodes). */
+  primaryCodes: string[];
+  location: ResolvedLoc | null;
+  locationMatch: LocationMatchMode;
   requireLocation: boolean;
   limit: number;
 }): Promise<PlanMatchedContractor[]> {
@@ -390,7 +545,6 @@ async function queryContractors(opts: {
     AND l.status_normalized IN ('active', 'current')
   `;
 
-  // Location tier expression parts (0=zip, 1=city, 2=county, 3=state)
   const zipPreds: string[] = [];
   const cityPreds: string[] = [];
   const countyPreds: string[] = [];
@@ -411,7 +565,6 @@ async function queryContractors(opts: {
   if (opts.location?.county) {
     params.push(opts.location.county.toLowerCase());
     const i = params.length;
-    // Exact county name only (avoid Lee matching Leesburg)
     countyPreds.push(`LOWER(TRIM(COALESCE(l.county_name, ''))) = $${i}`);
     countyPreds.push(`LOWER(TRIM(COALESCE(c.primary_county, ''))) = $${i}`);
     countyPreds.push(
@@ -428,12 +581,22 @@ async function queryContractors(opts: {
     countyPreds.push(`TRIM(COALESCE(l.county_code, '')) = $${i}`);
   }
 
-  const anyLoc = [...zipPreds, ...cityPreds, ...countyPreds];
+  const mode = opts.locationMatch;
+  const activePreds =
+    mode === "zip"
+      ? zipPreds
+      : mode === "city"
+        ? cityPreds
+        : mode === "county"
+          ? countyPreds
+          : [...zipPreds, ...cityPreds, ...countyPreds];
+
   if (opts.requireLocation) {
-    if (anyLoc.length === 0) return [];
-    where += ` AND (${anyLoc.join(" OR ")})`;
+    if (activePreds.length === 0) return [];
+    where += ` AND (${activePreds.join(" OR ")})`;
   }
 
+  // Tier ranking always uses the most precise available signal among matched fields
   const locTierSql = `
     CASE
       WHEN ${zipPreds.length ? `(${zipPreds.join(" OR ")})` : "FALSE"} THEN 0
@@ -443,7 +606,6 @@ async function queryContractors(opts: {
     END
   `;
 
-  // Occupation preference among requested codes (array order)
   const occOrderCases = opts.occupationCodes
     .map((code, idx) => {
       params.push(code);
@@ -451,6 +613,23 @@ async function queryContractors(opts: {
       return `WHEN l.occupation_code = $${p} THEN ${idx}`;
     })
     .join(" ");
+
+  // Prefer true primary codes even when secondary is in the query set
+  const primaryRankSql =
+    opts.primaryCodes.length > 0
+      ? `CASE l.occupation_code ${opts.primaryCodes
+          .map((code, idx) => {
+            params.push(code);
+            const p = params.length;
+            return `WHEN l.occupation_code = $${p} THEN ${idx}`;
+          })
+          .join(" ")} ELSE 50 END`
+      : "50";
+
+  const occRankSql =
+    opts.occupationCodes.length > 0
+      ? `CASE l.occupation_code ${occOrderCases} ELSE 50 END`
+      : "50";
 
   params.push(opts.limit);
   const limitParam = params.length;
@@ -494,7 +673,8 @@ async function queryContractors(opts: {
           SELECT 1 FROM discipline_actions d WHERE d.contractor_id = c.id
         ) AS has_discipline,
         (${locTierSql})::int AS loc_tier,
-        CASE l.occupation_code ${occOrderCases} ELSE 50 END AS occ_rank
+        (${primaryRankSql})::int AS primary_rank,
+        (${occRankSql})::int AS occ_rank
       FROM licenses l
       JOIN contractors c ON c.id = l.contractor_id
       LEFT JOIN LATERAL (
@@ -513,17 +693,17 @@ async function queryContractors(opts: {
       ORDER BY
         c.id,
         (${locTierSql}) ASC,
-        CASE l.occupation_code ${occOrderCases} ELSE 50 END ASC,
+        (${primaryRankSql}) ASC,
+        (${occRankSql}) ASC,
         CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
         CASE WHEN e.status IS NOT NULL THEN 0 ELSE 1 END,
         c.display_name
     ) sub
-    ORDER BY loc_tier ASC, occ_rank ASC, display_name ASC
+    ORDER BY loc_tier ASC, primary_rank ASC, occ_rank ASC, display_name ASC
     LIMIT $${limitParam}
     `,
     params
   );
 
-  const primarySet = opts.occupationCodes.slice(0, 3);
-  return rows.map((r) => mapRow(r, primarySet));
+  return rows.map((r) => mapRow(r, opts.primaryCodes));
 }

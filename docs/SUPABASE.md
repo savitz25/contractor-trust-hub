@@ -59,7 +59,7 @@ The Next.js app **requires** `DATABASE_URL` at runtime (search + detail pages qu
 Also recommended:
 
 ```env
-NEXT_PUBLIC_SITE_URL=https://your-production-host.vercel.app
+NEXT_PUBLIC_SITE_URL=https://www.contractortrusthub.com
 ```
 
 **Do not** use the direct `db.<ref>.supabase.co` host on Vercel if your Supabase project is IPv6-only on the direct path — Session pooler is the supported path.

@@ -88,6 +88,10 @@ export type CostRangeResult = {
 export type PlanMatchedContractor = import("@/lib/contractors/types").SearchResult & {
   matchReasons: string[];
   locationTier: "zip" | "city" | "county" | "state";
+  /** Short chips for at-a-glance fit (license role, location tier, status). */
+  matchChips?: string[];
+  /** Preferred = primary occupation codes; related = secondary expansion. */
+  matchFit?: "preferred" | "related";
 };
 
 export type PlanMatchResult = {

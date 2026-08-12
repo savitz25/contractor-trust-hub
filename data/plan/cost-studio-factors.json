@@ -1,0 +1,243 @@
+{
+  "_meta": {
+    "description": "High-impact scope factors for Cost Studio. Multipliers adjust planning bands only — not contractor bids. Default option id should use 1.0 multipliers.",
+    "updated": "2026-08-12"
+  },
+  "floridaNotes": [
+    "Wind and energy code can raise envelope, roof, and window costs versus inland U.S. averages.",
+    "Insurance and wind-mitigation upgrades often appear after storms or at policy renewal — budget contingency helps.",
+    "Coastal access, HOAs, and impact product requirements can add time and soft costs.",
+    "Permitting and inspection cycles vary by jurisdiction; phased or occupied remodels cost more in labor coordination."
+  ],
+  "globalFactors": [
+    {
+      "id": "finish_level",
+      "label": "Finish & material level",
+      "help": "Biggest swing for most remodels.",
+      "options": [
+        {
+          "id": "basic",
+          "label": "Basic / value",
+          "description": "Stock products, simpler finishes",
+          "lowMul": 0.88,
+          "midMul": 0.85,
+          "highMul": 0.88
+        },
+        {
+          "id": "standard",
+          "label": "Standard",
+          "description": "Typical mid-market selections",
+          "lowMul": 1,
+          "midMul": 1,
+          "highMul": 1
+        },
+        {
+          "id": "premium",
+          "label": "Premium",
+          "description": "Higher-end materials and fixtures",
+          "lowMul": 1.12,
+          "midMul": 1.22,
+          "highMul": 1.32
+        }
+      ]
+    },
+    {
+      "id": "complexity",
+      "label": "Layout / structural complexity",
+      "help": "Moving walls, plumbing, or structure raises cost fast.",
+      "options": [
+        {
+          "id": "simple",
+          "label": "Keep layout",
+          "description": "Minimal moves of walls or plumbing",
+          "lowMul": 0.92,
+          "midMul": 0.9,
+          "highMul": 0.92
+        },
+        {
+          "id": "moderate",
+          "label": "Some changes",
+          "description": "Limited layout or systems moves",
+          "lowMul": 1,
+          "midMul": 1,
+          "highMul": 1
+        },
+        {
+          "id": "complex",
+          "label": "Major changes",
+          "description": "Openings, relocations, multi-trade complexity",
+          "lowMul": 1.15,
+          "midMul": 1.25,
+          "highMul": 1.35
+        }
+      ]
+    },
+    {
+      "id": "access",
+      "label": "Site access & occupancy",
+      "help": "Occupied homes and tight lots increase labor time.",
+      "options": [
+        {
+          "id": "easy",
+          "label": "Easy access",
+          "description": "Vacant or easy staging",
+          "lowMul": 0.95,
+          "midMul": 0.95,
+          "highMul": 0.96
+        },
+        {
+          "id": "typical",
+          "label": "Typical",
+          "description": "Occupied home, normal access",
+          "lowMul": 1,
+          "midMul": 1,
+          "highMul": 1
+        },
+        {
+          "id": "difficult",
+          "label": "Difficult",
+          "description": "Tight lot, multi-story, limited parking",
+          "lowMul": 1.08,
+          "midMul": 1.12,
+          "highMul": 1.18
+        }
+      ]
+    }
+  ],
+  "byProjectType": {
+    "roofing": {
+      "extraFactors": [
+        {
+          "id": "roof_system",
+          "label": "Roof system",
+          "help": "Tile and premium metal sit well above basic shingles.",
+          "options": [
+            {
+              "id": "shingle",
+              "label": "Architectural shingles",
+              "description": "Most common Florida reroof",
+              "lowMul": 1,
+              "midMul": 1,
+              "highMul": 1
+            },
+            {
+              "id": "metal",
+              "label": "Metal",
+              "description": "Standing seam or quality metal",
+              "lowMul": 1.25,
+              "midMul": 1.35,
+              "highMul": 1.45
+            },
+            {
+              "id": "tile",
+              "label": "Tile",
+              "description": "Concrete or clay tile systems",
+              "lowMul": 1.4,
+              "midMul": 1.55,
+              "highMul": 1.7
+            }
+          ]
+        }
+      ],
+      "education": [
+        "Florida wind-mitigation and secondary water barriers often matter as much as the visible roof surface.",
+        "Stories, pitch, and tear-off layers change labor and disposal costs quickly."
+      ]
+    },
+    "kitchen_remodel": {
+      "extraFactors": [],
+      "education": [
+        "Cabinets and layout moves usually dominate the budget.",
+        "Keeping plumbing in place is one of the largest ways to stay toward the low band."
+      ]
+    },
+    "bathroom_remodel": {
+      "extraFactors": [],
+      "education": [
+        "Waterproofing and tile labor often matter more than fixture sticker prices.",
+        "Converting a tub to a walk-in shower is a common mid-to-high cost step."
+      ]
+    },
+    "full_home_renovation": {
+      "extraFactors": [],
+      "education": [
+        "Systems (HVAC, electrical, plumbing) can rival finish costs in older Florida homes.",
+        "Occupied whole-home work is slower and usually costs more in labor coordination."
+      ]
+    },
+    "addition": {
+      "extraFactors": [],
+      "education": [
+        "Foundation, roof tie-in, and matching exterior materials drive large swings.",
+        "Impact glazing and wind design are common Florida cost adders on additions."
+      ]
+    },
+    "basement_finish": {
+      "extraFactors": [],
+      "education": [
+        "True basements are uncommon in much of Florida — lower-level or walkout spaces need strong moisture control.",
+        "Egress, ceiling height, and humidity management can constrain finishes."
+      ]
+    },
+    "siding_exterior": {
+      "extraFactors": [],
+      "education": [
+        "Moisture barrier and flashing quality protect the structure more than cosmetic cladding alone.",
+        "Multi-story access and substrate repairs are frequent mid-to-high drivers."
+      ]
+    },
+    "deck_outdoor": {
+      "extraFactors": [
+        {
+          "id": "outdoor_package",
+          "label": "Outdoor package",
+          "help": "Cooking and enclosure packages move outdoor projects into higher bands.",
+          "options": [
+            {
+              "id": "deck_only",
+              "label": "Deck / cover only",
+              "description": "Platform or simple cover",
+              "lowMul": 1,
+              "midMul": 1,
+              "highMul": 1
+            },
+            {
+              "id": "covered_living",
+              "label": "Covered living",
+              "description": "Roof, fans, lighting",
+              "lowMul": 1.1,
+              "midMul": 1.18,
+              "highMul": 1.22
+            },
+            {
+              "id": "kitchen_pavilion",
+              "label": "Kitchen / pavilion",
+              "description": "Cooking package or full pavilion",
+              "lowMul": 1.25,
+              "midMul": 1.4,
+              "highMul": 1.55
+            }
+          ]
+        }
+      ],
+      "education": [
+        "Screen enclosures and outdoor kitchens are common Florida upgrades with their own specialty trades.",
+        "Wind design for covers and roofs should be part of planning, not an afterthought."
+      ]
+    },
+    "custom_home_rebuild": {
+      "extraFactors": [],
+      "education": [
+        "Custom homes have the widest variance — site, architecture, and finishes dominate.",
+        "Impact products, elevation, and coastal requirements can reshape the budget early."
+      ]
+    },
+    "general_contracting": {
+      "extraFactors": [],
+      "education": [
+        "General contracting scopes vary widely — define trades and outcomes before comparing bids.",
+        "Unknown conditions once walls open are a common source of change orders."
+      ]
+    }
+  }
+}

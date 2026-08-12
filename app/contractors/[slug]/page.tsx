@@ -19,6 +19,8 @@ import { statusLabel } from "@/lib/contractors/format";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { getContractorBySlug } from "@/lib/contractors/queries";
 import { matchConfidenceLine } from "@/lib/contractors/trust-report";
+import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
+import { pageMetadata } from "@/lib/seo/page-meta";
 import { absoluteUrl } from "@/lib/site";
 import { getStateBySlug } from "@/lib/states/config";
 import { parseHandoffQuery } from "@/lib/studios/handoff";
@@ -61,32 +63,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       .filter(Boolean)
       .join(" ");
 
-    return {
+    return pageMetadata({
       title,
       description,
-      alternates: {
-        canonical: path,
-      },
-      openGraph: {
-        title,
-        description,
-        url: absoluteUrl(path),
-        type: "profile",
-        siteName: "Contractor Trust Hub",
-        locale: "en_US",
-        images: [{ url: "/brand/contractor-trust-hub-logo.svg" }],
-      },
-      twitter: {
-        card: "summary",
-        title,
-        description,
-        images: ["/brand/contractor-trust-hub-logo.svg"],
-      },
-      robots: {
-        index: true,
-        follow: true,
-      },
-    };
+      path,
+      ogType: "profile",
+    });
   } catch {
     return {
       title: "Contractor Trust Report",
@@ -97,7 +79,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-function JsonLd({
+function ContractorJsonLd({
   contractor,
   path,
 }: {
@@ -105,6 +87,7 @@ function JsonLd({
   path: string;
 }) {
   const lic = contractor.licenses[0];
+  // Honest ProfilePage + Organization — no ratings, reviews, or AggregateRating.
   const data = {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
@@ -114,17 +97,24 @@ function JsonLd({
       "@type": "Organization",
       name: contractor.displayName,
       legalName: contractor.legalName || undefined,
-      address: contractor.primaryCity
+      address:
+        contractor.primaryCity || contractor.primaryCounty
+          ? {
+              "@type": "PostalAddress",
+              addressLocality: contractor.primaryCity || undefined,
+              addressRegion: contractor.homeState || "FL",
+              addressCountry: "US",
+            }
+          : undefined,
+      identifier: lic?.externalKey
         ? {
-            "@type": "PostalAddress",
-            addressLocality: contractor.primaryCity,
-            addressRegion: contractor.homeState || "FL",
-            addressCountry: "US",
+            "@type": "PropertyValue",
+            name: "Florida DBPR license",
+            value: lic.externalKey,
           }
         : undefined,
-      identifier: lic?.externalKey,
     },
-    description: `Independent Florida contractor evidence report for ${contractor.displayName}.`,
+    description: `Independent Florida contractor evidence report for ${contractor.displayName}. License and entity data from public records — not a ranking or endorsement.`,
     isPartOf: {
       "@type": "WebSite",
       name: "Contractor Trust Hub",
@@ -132,12 +122,7 @@ function JsonLd({
     },
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
-  );
+  return <JsonLd data={data} />;
 }
 
 export default async function ContractorPage({ params, searchParams }: Props) {
@@ -190,7 +175,14 @@ export default async function ContractorPage({ params, searchParams }: Props) {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-      <JsonLd contractor={contractor} path={path} />
+      <ContractorJsonLd contractor={contractor} path={path} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Verify", path: "/verify" },
+          { name: contractor.displayName, path },
+        ]}
+      />
 
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
         <Link href="/verify" className="text-[var(--muted)] no-underline hover:text-[var(--text)]">

@@ -4,12 +4,15 @@ import { redirect } from "next/navigation";
 import { PlanResults } from "@/components/plan/PlanResults";
 import { parsePlanQuery } from "@/lib/plan/plan-url";
 
-export const metadata: Metadata = {
+import { pageMetadata } from "@/lib/seo/page-meta";
+
+export const metadata: Metadata = pageMetadata({
   title: "Project results — cost ranges & verified contractors",
   description:
     "Conceptual cost ranges and verified Florida contractors for your project context. Planning only — not a formal bid.",
-  robots: { index: false, follow: true },
-};
+  path: "/plan/results",
+  noIndex: true,
+});
 
 type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

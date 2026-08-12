@@ -2,20 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { PlanFlow } from "@/components/plan/PlanFlow";
+import { pageMetadata } from "@/lib/seo/page-meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Plan your project — cost ranges & verified contractors",
   description:
-    "Describe a home project, see conceptual Florida cost ranges, and discover verified licensed contractors. Plan clearly. Verify thoroughly. Hire with confidence.",
-  alternates: { canonical: "/plan" },
-  openGraph: {
-    title: "Plan your project | Contractor Trust Hub",
-    description:
-      "Project context, realistic planning cost ranges, and verified Florida contractors — before you hire.",
-    url: "/plan",
-    type: "website",
-  },
-};
+    "Describe a Florida home project, see conceptual planning cost ranges, and match verified licensed contractors. Planning only — not a bid. Plan clearly. Verify thoroughly.",
+  path: "/plan",
+});
 
 export default function PlanPage() {
   return (
@@ -33,14 +27,28 @@ export default function PlanPage() {
             types, then match active licensed contractors from official public records.
           </p>
           <p className="mt-3 text-sm text-[var(--muted)]">
-            Already have a name?{" "}
+            Want a deeper cost walkthrough?{" "}
+            <Link
+              href="/studio/cost"
+              className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+            >
+              Cost Studio
+            </Link>
+            {" · "}
+            <Link
+              href="/studio/roofing"
+              className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+            >
+              Roofing calculator
+            </Link>
+            . Already have a name?{" "}
             <Link
               href="/verify"
               className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
             >
               Verify a contractor
-            </Link>{" "}
-            instead.
+            </Link>
+            .
           </p>
         </div>
       </section>

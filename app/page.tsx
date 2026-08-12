@@ -2,17 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ResearchBrowse } from "@/components/discovery/ResearchBrowse";
 import { SearchForm } from "@/components/search/SearchForm";
+import { pageMetadata } from "@/lib/seo/page-meta";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/" },
-  openGraph: {
-    title: "Contractor Trust Hub — Before you hire, verify",
-    description:
-      "Independent Florida contractor verification using official DBPR licenses, Sunbiz entities, and board discipline.",
-    url: "/",
-    type: "website",
-  },
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Contractor Trust Hub — Before you hire, verify",
+  description:
+    "Independent Florida contractor verification using official DBPR licenses, Sunbiz entities, and board discipline. Plan project costs, then check license evidence — not a marketplace.",
+  path: "/",
+});
 
 const pillars = [
   {
@@ -53,8 +50,8 @@ export default function HomePage() {
             then check license status, linked business entities, and discipline from DBPR and Sunbiz.
           </p>
 
-          {/* Three clear paths — plan, verify, research */}
-          <div className="mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-3 sm:gap-4">
+          {/* Four clear paths — studios, verify, research */}
+          <div className="mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4">
             <Link
               href="/studios"
               className="rounded-2xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--accent)] sm:px-5 sm:py-4"
@@ -67,6 +64,34 @@ export default function HomePage() {
               </p>
               <p className="mt-2.5 text-xs font-medium text-[var(--navy)] sm:mt-3">
                 Open studios →
+              </p>
+            </Link>
+            <Link
+              href="/studio/cost"
+              className="rounded-2xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--accent)] sm:px-5 sm:py-4"
+            >
+              <p className="text-sm font-semibold text-[var(--text)]">
+                Cost Studio
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                Interactive planning bands, then verified license matches.
+              </p>
+              <p className="mt-2.5 text-xs font-medium text-[var(--navy)] sm:mt-3">
+                Open Cost Studio →
+              </p>
+            </Link>
+            <Link
+              href="/studio/roofing"
+              className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/25 sm:px-5 sm:py-4"
+            >
+              <p className="text-sm font-semibold text-[var(--text)]">
+                Roofing calculator
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                Florida reroof planning range — then verified CCC/RR roofers.
+              </p>
+              <p className="mt-2.5 text-xs font-medium text-[var(--navy)] sm:mt-3">
+                Open calculator →
               </p>
             </Link>
             <a
@@ -197,17 +222,35 @@ export default function HomePage() {
             >
               Search a name or license
             </a>
-            <a
-              href="#research"
+            <Link
+              href="/verify"
               className="rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
             >
-              Browse by county & trade
-            </a>
+              Open Verify
+            </Link>
+            <Link
+              href="/florida"
+              className="rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+            >
+              Browse Florida
+            </Link>
+            <Link
+              href="/florida/roofers"
+              className="rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+            >
+              Florida roofers
+            </Link>
+            <Link
+              href="/studio/roofing"
+              className="rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+            >
+              Roofing calculator
+            </Link>
             <Link
               href="/methodology"
               className="rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
             >
-              Read methodology
+              Methodology
             </Link>
             <Link
               href="/independence"

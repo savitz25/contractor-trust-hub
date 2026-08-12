@@ -6,13 +6,15 @@ import { getContractorBySlug } from "@/lib/contractors/queries";
 import { buildCompareFields, MAX_COMPARE } from "@/lib/contractors/compare";
 import type { ContractorDetail } from "@/lib/contractors/types";
 
-export const metadata: Metadata = {
+import { pageMetadata } from "@/lib/seo/page-meta";
+
+export const metadata: Metadata = pageMetadata({
   title: "Compare Florida contractors",
   description:
-    "Side-by-side evidence comparison: license status, Sunbiz entity, discipline, and location. Not rankings.",
-  alternates: { canonical: "/compare" },
-  robots: { index: false, follow: true },
-};
+    "Side-by-side evidence comparison: license status, Sunbiz entity, discipline, and location. Not rankings or paid placement.",
+  path: "/compare",
+  noIndex: true,
+});
 
 type Props = {
   searchParams: Promise<{ slugs?: string }>;

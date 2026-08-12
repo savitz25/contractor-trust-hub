@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo/page-meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Disclaimer",
   description:
-    "Legal and educational disclaimer for Contractor Trust Hub public-records research tools.",
-  alternates: { canonical: "/disclaimer" },
-  openGraph: {
-    title: "Disclaimer — Contractor Trust Hub",
-    description:
-      "Educational research tooling based on public records. Not a consumer reporting agency.",
-    url: "/disclaimer",
-    type: "website",
-  },
-};
+    "Legal and educational disclaimer for Contractor Trust Hub public-records research tools. Not a consumer reporting agency or licensing authority.",
+  path: "/disclaimer",
+});
 
 export default function DisclaimerPage() {
   return (

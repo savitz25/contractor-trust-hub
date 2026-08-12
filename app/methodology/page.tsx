@@ -1,20 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalNotice } from "@/components/trust/LegalNotice";
+import { pageMetadata } from "@/lib/seo/page-meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Methodology",
   description:
     "Transparent methodology for Florida contractor license and Sunbiz entity evidence, including high-confidence matching rules.",
-  alternates: { canonical: "/methodology" },
-  openGraph: {
-    title: "Methodology — Contractor Trust Hub",
-    description:
-      "Transparent methodology for Florida contractor license and Sunbiz entity evidence.",
-    url: "/methodology",
-    type: "website",
-  },
-};
+  path: "/methodology",
+});
 
 export default function MethodologyPage() {
   return (

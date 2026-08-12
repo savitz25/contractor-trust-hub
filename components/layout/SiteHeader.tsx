@@ -3,6 +3,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 
 const secondaryNav = [
   { href: "/studios", label: "Studios", shortLabel: "Studios" },
+  { href: "/studio/roofing", label: "Roofing calc", shortLabel: "Roof" },
   { href: "/plan", label: "Plan", shortLabel: "Plan" },
   { href: "/florida", label: "Florida", shortLabel: "FL" },
   { href: "/about", label: "How it works", shortLabel: "About" },

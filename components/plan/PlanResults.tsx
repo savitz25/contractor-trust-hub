@@ -500,19 +500,43 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
               {contractors.map((c) => (
                 <div key={c.id} className="space-y-2">
                   <ResultCard result={c} />
-                  {c.matchReasons?.length ? (
-                    <details className="rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--muted)]">
-                      <summary className="cursor-pointer font-semibold text-[var(--navy)]">
+                  <div className="rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[var(--muted)]">
                         Why this matched
-                        {c.locationTier === "state" ? " · statewide fallback" : ""}
-                      </summary>
-                      <ul className="mt-1.5 space-y-0.5">
-                        {c.matchReasons.map((r) => (
-                          <li key={r}>· {r}</li>
-                        ))}
-                      </ul>
-                    </details>
-                  ) : null}
+                      </span>
+                      {c.matchFit === "related" ? (
+                        <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-950">
+                          Related class
+                        </span>
+                      ) : (
+                        <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-900">
+                          Preferred class
+                        </span>
+                      )}
+                      {(c.matchChips || []).map((chip) => (
+                        <span
+                          key={chip}
+                          className="rounded-full border border-[var(--border)] bg-white px-2 py-0.5 text-[11px] font-medium text-[var(--navy)]"
+                        >
+                          {chip}
+                        </span>
+                      ))}
+                    </div>
+                    {c.matchReasons?.length ? (
+                      <details className="mt-2 text-xs text-[var(--muted)]">
+                        <summary className="cursor-pointer font-medium text-[var(--navy)]">
+                          Details
+                          {c.locationTier === "state" ? " · statewide fallback" : ""}
+                        </summary>
+                        <ul className="mt-1.5 space-y-0.5">
+                          {c.matchReasons.map((r) => (
+                            <li key={r}>· {r}</li>
+                          ))}
+                        </ul>
+                      </details>
+                    ) : null}
+                  </div>
                 </div>
               ))}
             </div>

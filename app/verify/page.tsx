@@ -5,20 +5,14 @@ import { ResultCard } from "@/components/search/ResultCard";
 import { SearchForm } from "@/components/search/SearchForm";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { searchContractors } from "@/lib/contractors/queries";
+import { pageMetadata } from "@/lib/seo/page-meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Verify a Florida contractor",
   description:
-    "Search Florida contractor licenses by name or license number. Official DBPR and Sunbiz evidence.",
-  alternates: { canonical: "/verify" },
-  openGraph: {
-    title: "Verify a Florida contractor",
-    description:
-      "Search Florida contractor licenses by name or license number. Official DBPR and Sunbiz evidence.",
-    url: "/verify",
-    type: "website",
-  },
-};
+    "Search Florida contractor licenses by name or license number. Official DBPR status, Sunbiz entity links, and board discipline — free Trust Reports, not a marketplace.",
+  path: "/verify",
+});
 
 type Props = {
   searchParams: Promise<{ q?: string; intent?: string }>;

@@ -5,7 +5,7 @@
 | Variable | Required | Notes |
 |----------|----------|--------|
 | `DATABASE_URL` | **Yes** | Supabase **Session pooler** URI (`*.pooler.supabase.com:5432`, user `postgres.<ref>`) |
-| `NEXT_PUBLIC_SITE_URL` | Recommended | Canonical origin for OG/sitemaps |
+| `NEXT_PUBLIC_SITE_URL` | **Required in production** | Must be `https://www.contractortrusthub.com` — see [SEO.md](./SEO.md) |
 | `NEXT_PUBLIC_CORRECTIONS_EMAIL` | Recommended | Mailto target for `/corrections` (default `corrections@contractortrusthub.com`) |
 
 Framework: Next.js (`vercel.json`). Python under `ingest/` is offline only.

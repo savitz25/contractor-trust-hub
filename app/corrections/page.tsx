@@ -2,20 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CorrectionForm } from "@/components/trust/CorrectionForm";
 import { LegalNotice } from "@/components/trust/LegalNotice";
+import { pageMetadata } from "@/lib/seo/page-meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Request a correction",
   description:
-    "How to report incorrect Florida contractor data on Contractor Trust Hub and what happens next.",
-  alternates: { canonical: "/corrections" },
-  openGraph: {
-    title: "Request a correction — Contractor Trust Hub",
-    description:
-      "Report incorrect license or entity data. We review requests against official public sources.",
-    url: "/corrections",
-    type: "website",
-  },
-};
+    "Report incorrect Florida contractor license or entity data on Contractor Trust Hub. We review requests against official public sources.",
+  path: "/corrections",
+});
 
 type Props = {
   searchParams: Promise<{ slug?: string; license?: string }>;

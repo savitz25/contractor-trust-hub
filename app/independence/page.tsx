@@ -1,20 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalNotice } from "@/components/trust/LegalNotice";
+import { pageMetadata } from "@/lib/seo/page-meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Independence & how we make money",
   description:
-    "Contractor Trust Hub does not sell leads or paid rankings. How we stay independent and transparent.",
-  alternates: { canonical: "/independence" },
-  openGraph: {
-    title: "Independence — Contractor Trust Hub",
-    description:
-      "We do not sell leads, accept paid rankings, or favor any contractor. Independent verification research.",
-    url: "/independence",
-    type: "website",
-  },
-};
+    "Contractor Trust Hub does not sell leads or paid rankings. How we stay independent and transparent about verification research.",
+  path: "/independence",
+});
 
 export default function IndependencePage() {
   return (
