@@ -49,15 +49,13 @@ export function BrandLogo({
     );
   }
 
-  // True-alpha PNGs processed from:
-  // moch up design/contractor trust hub logo design.png
-  // Aspect ~1416×361 ≈ 3.92:1
+  // Prefer SVG for true transparency on dark UI chrome.
   const src =
     surface === "onLight"
-      ? "/brand/contractor-trust-hub-logo.png"
-      : "/brand/contractor-trust-hub-logo-on-dark.png";
+      ? "/brand/contractor-trust-hub-logo.svg"
+      : "/brand/contractor-trust-hub-logo-on-dark.svg";
 
-  const width = Math.round(height * (1416 / 361));
+  const width = Math.round(height * (900 / 220));
 
   return (
     <img

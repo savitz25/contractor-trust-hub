@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   outputFileTracingExcludes: {
     "*": ["./data/**", "./ingest/**", "./schema/**", "./scripts/**"],
   },
+  serverExternalPackages: ["pg", "server-only"],
 };
 
 export default nextConfig;

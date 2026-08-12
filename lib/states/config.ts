@@ -1,0 +1,86 @@
+/**
+ * Multi-state product config. Florida is the only live evidence state for Phase 1.
+ * Adding a state later: extend this map + ingest adapters; UI reads from here.
+ */
+
+export type StateCode = "FL" | "NJ"; // NJ reserved for wave 2
+
+export type EvidenceState = {
+  code: StateCode;
+  slug: string;
+  name: string;
+  shortName: string;
+  /** Primary license board label */
+  boardLabel: string;
+  boardUrl: string;
+  entityRegistryLabel: string;
+  entityRegistryUrl: string;
+  /** License source_system in DB */
+  licenseSource: string;
+  /** Corporate entity source_system for high-confidence links */
+  entitySource: string;
+  live: boolean;
+};
+
+export const EVIDENCE_STATES: Record<string, EvidenceState> = {
+  fl: {
+    code: "FL",
+    slug: "fl",
+    name: "Florida",
+    shortName: "FL",
+    boardLabel: "Florida DBPR — Construction Industry Licensing Board",
+    boardUrl: "https://www2.myfloridalicense.com/construction-industry/",
+    entityRegistryLabel: "Florida Division of Corporations (Sunbiz)",
+    entityRegistryUrl: "https://dos.fl.gov/sunbiz/",
+    licenseSource: "fl_dbpr",
+    entitySource: "fl_sunbiz",
+    live: true,
+  },
+  nj: {
+    code: "NJ",
+    slug: "nj",
+    name: "New Jersey",
+    shortName: "NJ",
+    boardLabel: "New Jersey DCA (planned)",
+    boardUrl: "https://www.nj.gov/dca/",
+    entityRegistryLabel: "NJ Business Gateway (planned)",
+    entityRegistryUrl: "https://www.njportal.com/",
+    licenseSource: "nj_dca",
+    entitySource: "nj_sos",
+    live: false,
+  },
+};
+
+export const DEFAULT_STATE_SLUG = "fl";
+
+export function getStateBySlug(slug: string): EvidenceState | null {
+  return EVIDENCE_STATES[slug.toLowerCase()] ?? null;
+}
+
+export function getLiveStates(): EvidenceState[] {
+  return Object.values(EVIDENCE_STATES).filter((s) => s.live);
+}
+
+/** Occupation codes seen in FL DBPR construction extract (subset of common labels). */
+export const FL_OCCUPATION_LABELS: Record<string, string> = {
+  CBC: "Certified Building Contractor",
+  CGC: "Certified General Contractor",
+  CRC: "Certified Residential Contractor",
+  CCC: "Certified Roofing Contractor",
+  CFC: "Certified Plumbing Contractor",
+  CAC: "Certified Air Conditioning Contractor",
+  CMC: "Certified Mechanical Contractor",
+  CPC: "Certified Pool/Spa Contractor",
+  CUC: "Certified Underground Utility Contractor",
+  SCC: "Certified Specialty Structure Contractor",
+  FRO: "Financially Responsible Officer",
+  QB: "Qualifying Business",
+  RR: "Registered Roofing Contractor",
+  RF: "Registered Specialty",
+};
+
+export function occupationLabel(code: string | null | undefined): string {
+  if (!code) return "Construction license";
+  const upper = code.toUpperCase();
+  return FL_OCCUPATION_LABELS[upper] ?? `${upper} license`;
+}

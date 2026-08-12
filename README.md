@@ -36,15 +36,25 @@ contractor-trust-hub/
 └── scripts/download_fl_dbpr.py
 ```
 
-## Quick start (web)
+## Quick start (web — Verify product)
 
 ```bash
 npm install
+# .env.local must include DATABASE_URL (Supabase Session pooler) — see docs/SUPABASE.md
 npm run dev    # http://localhost:3000
 npm run build  # production build (what Vercel runs)
 ```
 
-Vercel must use the **Next.js** framework (see `vercel.json`). Python under `ingest/` is offline tooling only — there is no root `requirements.txt` so the Python runtime is not selected.
+| Route | Purpose |
+|-------|---------|
+| `/` | Homepage + search CTA |
+| `/verify` | Search by license or name |
+| `/contractors/[slug]` | Contractor detail |
+| `/about` · `/methodology` | Trust / transparency |
+
+See [docs/VERIFY_PRODUCT.md](docs/VERIFY_PRODUCT.md).
+
+Vercel: framework **Next.js** (`vercel.json`). Set `DATABASE_URL` as a sensitive env var. Python under `ingest/` is offline tooling only.
 
 ## Quick start (ingest)
 
