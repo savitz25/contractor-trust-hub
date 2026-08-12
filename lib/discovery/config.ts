@@ -18,8 +18,22 @@ export const DISCOVERY_STATES: Record<string, DiscoveryStateConfig> = {
     trades: FLORIDA_TRADES,
     live: true,
   },
-  // Wave 2 example (not live):
-  // "new-jersey": { publicSlug: "new-jersey", evidenceSlug: "nj", ... live: false }
+  /**
+   * Texas discovery browse is not live until TDLR specialty data is loaded and
+   * county/trade facets are defined honestly (no statewide GC browse).
+   * publicSlug reserved: /texas
+   */
+  // texas: {
+  //   publicSlug: "texas",
+  //   evidenceSlug: "tx",
+  //   name: "Texas",
+  //   shortName: "TX",
+  //   blurb:
+  //     "TDLR specialty trade licenses only — Texas has no statewide general contractor license.",
+  //   counties: [],
+  //   trades: [],
+  //   live: false,
+  // },
 };
 
 export function getDiscoveryState(publicSlug: string): DiscoveryStateConfig | null {

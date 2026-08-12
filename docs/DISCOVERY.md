@@ -33,7 +33,8 @@ Evidence DB keys still use short codes (`fl`) via `evidenceSlug` → `lib/states
 ### Adding a state later
 
 1. Ingest licenses into the shared schema with a new `source_system`.
-2. Add `EvidenceState` in `lib/states/config.ts` (`live: true`).
+2. Add `EvidenceState` in `lib/states/config.ts` (`live: true` only when Verify is ready).
+3. For Texas: specialty TDLR only — never imply statewide GC browse (see `docs/DATA_SOURCES_TX.md`).
 3. Add counties/trades modules + entry in `DISCOVERY_STATES` with `publicSlug` (e.g. `new-jersey`).
 4. Add `app/{publicSlug}/...` routes (copy Florida tree) **or** introduce a dynamic `app/[state]/...` router once a second state is ready.
 5. Extend sitemap via `getLiveDiscoveryStates()`.

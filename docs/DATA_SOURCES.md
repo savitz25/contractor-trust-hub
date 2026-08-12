@@ -78,12 +78,28 @@ Discipline Date - Description, Violation Code
 
 Use: link legal entity status, officers, FEI, and registered agent to DBPR contractors via high-confidence name/address rules (linker is a follow-up).
 
+## Texas — TDLR specialty trades (+ TSBPE plumbing)
+
+**Texas has no statewide general contractor license.** Statewide open data is specialty-only (TDLR) plus separate plumbing (TSBPE).
+
+Full documentation, columns, coverage limits, and ingest commands:
+
+→ **[DATA_SOURCES_TX.md](./DATA_SOURCES_TX.md)** · product slice: **[TEXAS_VERIFY_V1.md](./TEXAS_VERIFY_V1.md)**
+
+| Resource | URL | Notes |
+|----------|-----|--------|
+| TDLR All Licenses (Open Data) | https://data.texas.gov/dataset/TDLR-All-Licenses/7358-krk7 | Socrata `7358-krk7` |
+| TDLR home | https://www.tdlr.texas.gov/ | Specialty programs |
+| TSBPE free licensee CSVs | https://tsbpe.texas.gov/free-licensee-list/ | Plumbing (not TDLR) |
+
+**Ingest:** `scripts/download_tx_tdlr.py` + `ingest/adapters/tx_tdlr.py` → `data/staging/tx_tdlr/`
+
 ## New Jersey — DCA
 
 | Resource | Notes |
 |----------|--------|
 | NJ DCA contractor registration | Public contractor / home improvement registration lists |
-| Use | Wave-2 state after FL pipeline is solid |
+| Use | After FL remains solid and TX specialty Verify is proven |
 
 ## Permits (local)
 

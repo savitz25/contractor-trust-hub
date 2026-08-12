@@ -8,8 +8,12 @@
 |----------|---------|--------|--------|
 | 1 | `adapters/fl_dbpr.py` | FL DBPR construction licensees + discipline | `data/staging/fl_dbpr/` |
 | 2 | `adapters/fl_sunbiz.py` | Sunbiz corporate fixed-width (SFTP) | `data/staging/fl_sunbiz/` |
-| 3 | `adapters/nj_dca.py` | NJ DCA registration | Phase 1+ |
-| 4 | Permits | County open data | Phase 1+ |
+| 3 | `adapters/tx_tdlr.py` | TX TDLR specialty licenses (Open Data) | `data/staging/tx_tdlr/` |
+| 4 | `adapters/tx_tsbpe.py` | TX plumbing (TSBPE free CSV lists) | Phase 1 |
+| 5 | `adapters/nj_dca.py` | NJ DCA registration | Later |
+| 6 | Permits | County / city open data | Later |
+
+**Texas note:** No statewide GC license. TDLR adapter filters to specialty contractor types only — see `docs/DATA_SOURCES_TX.md`.
 
 ## Conventions
 
@@ -51,6 +55,13 @@ python -m ingest.adapters.fl_sunbiz \
   --input data/raw/sunbiz/daily \
   --glob '*c.txt' \
   --out-dir data/staging/fl_sunbiz
+
+# Texas TDLR specialty contractors (Open Data SODA) — see docs/DATA_SOURCES_TX.md
+python scripts/download_tx_tdlr.py
+python scripts/download_tx_tdlr.py --limit 2000   # sample / CI-friendly
+python -m ingest.adapters.tx_tdlr \
+  --input data/raw/tx_tdlr/tdlr_licenses_specialty.csv \
+  --out-dir data/staging/tx_tdlr
 ```
 
 ## Staging files produced
