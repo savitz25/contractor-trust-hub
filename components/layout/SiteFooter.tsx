@@ -41,6 +41,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/tools" className="text-[var(--text)] no-underline hover:underline">
+                Decision tools
+              </Link>
+            </li>
+            <li>
               <Link href="/studio/cost" className="text-[var(--text)] no-underline hover:underline">
                 Cost Studio
               </Link>

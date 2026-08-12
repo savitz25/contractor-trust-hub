@@ -127,6 +127,31 @@ export function HiringGuidance({ contractor }: { contractor: ContractorDetail })
           </li>
         ))}
       </ul>
+      <div className="mt-5 border-t border-[var(--border)] pt-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+          Decision tools
+        </p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <a
+            href={`/tools/quote-analyzer?name=${encodeURIComponent(contractor.displayName)}&contractor=${encodeURIComponent(contractor.slug)}`}
+            className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--navy)] no-underline"
+          >
+            Analyze a quote from this contractor
+          </a>
+          <a
+            href="/tools/pre-hire-checklist"
+            className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--navy)] no-underline"
+          >
+            Pre-hire checklist
+          </a>
+          <a
+            href="/tools/scope-builder"
+            className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--navy)] no-underline"
+          >
+            Build project scope
+          </a>
+        </div>
+      </div>
     </section>
   );
 }

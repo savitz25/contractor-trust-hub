@@ -67,8 +67,22 @@ export default function HomePage() {
               </p>
             </Link>
             <Link
-              href="/studio/cost"
+              href="/tools"
               className="rounded-2xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--accent)] sm:px-5 sm:py-4"
+            >
+              <p className="text-sm font-semibold text-[var(--text)]">
+                Decision tools
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                Scope, analyze quote, compare bids, checklist before signing.
+              </p>
+              <p className="mt-2.5 text-xs font-medium text-[var(--navy)] sm:mt-3">
+                Open tools →
+              </p>
+            </Link>
+            <Link
+              href="/studio/cost"
+              className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/25 sm:px-5 sm:py-4"
             >
               <p className="text-sm font-semibold text-[var(--text)]">
                 Cost Studio

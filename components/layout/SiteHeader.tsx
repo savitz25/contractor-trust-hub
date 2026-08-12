@@ -5,7 +5,7 @@ import { SwitchHubMenu } from "@/components/network/SwitchHubMenu";
 
 const secondaryNav = [
   { href: "/studios", label: "Studios", shortLabel: "Studios" },
-  { href: "/studio/roofing", label: "Roofing calc", shortLabel: "Roof" },
+  { href: "/tools", label: "Tools", shortLabel: "Tools" },
   { href: "/plan", label: "Plan", shortLabel: "Plan" },
   { href: "/florida", label: "Florida", shortLabel: "FL" },
   { href: "/about", label: "How it works", shortLabel: "About" },

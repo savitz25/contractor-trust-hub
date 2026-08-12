@@ -12,6 +12,7 @@ import type {
   PlanMatchedContractor,
 } from "@/lib/plan/types";
 import { COST_DISCLAIMER } from "@/lib/plan/types";
+import { DecisionToolsLinks } from "@/components/decision/DecisionToolsCard";
 
 const PLAN_STORAGE_KEY = "cth-plan-context";
 
@@ -600,6 +601,15 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
             </p>
             <p className="mt-1 text-xs text-[var(--muted)]">Browser only · reopen from Plan</p>
           </button>
+        </div>
+
+        <div className="mt-6">
+          <DecisionToolsLinks
+            projectType={data.plan.projectType}
+            scale={data.plan.scale}
+            zip={data.plan.zip}
+            city={data.plan.city}
+          />
         </div>
 
         <p className="mt-4 text-xs leading-relaxed text-[var(--muted)]">

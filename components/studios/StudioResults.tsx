@@ -14,6 +14,7 @@ import { storageKey } from "@/lib/studios/context";
 import { matchCoverageSummary } from "@/lib/studios/fit-notes";
 import type { StudioHandoff } from "@/lib/studios/handoff";
 import type { StudioAnswers, StudioContext } from "@/lib/studios/types";
+import { DecisionToolsLinks } from "@/components/decision/DecisionToolsCard";
 import { StudioMatchCard } from "./StudioMatchCard";
 import { StudioThinState } from "./StudioThinState";
 
@@ -464,6 +465,16 @@ export function StudioResults({
             <p className="text-sm font-semibold text-[var(--text)]">Save for later</p>
             <p className="mt-1 text-xs text-[var(--muted)]">Stored on this device only</p>
           </button>
+        </div>
+
+        <div className="mt-6">
+          <DecisionToolsLinks
+            projectType={context.projectType}
+            scale={context.scale}
+            zip={context.location.zip}
+            city={context.location.city}
+            studioSlug={studioSlug}
+          />
         </div>
       </section>
 
