@@ -2,6 +2,7 @@ import costData from "@/data/plan/fl-cost-ranges.json";
 import { getProjectType } from "./project-types";
 import {
   COST_DISCLAIMER,
+  type CostBandHints,
   type CostRangeResult,
   type ProjectTypeId,
   type ScaleBand,
@@ -9,6 +10,11 @@ import {
 
 type CostFile = {
   state: string;
+  currency?: string;
+  version?: string;
+  updatedAt?: string;
+  methodologyNote?: string;
+  disclaimer?: string;
   ranges: Array<{
     projectType: string;
     scale: string;
@@ -16,9 +22,9 @@ type CostFile = {
     mid: number;
     high: number;
     drivers: string[];
+    bandHints?: CostBandHints;
     unitNote?: string;
   }>;
-  disclaimer?: string;
 };
 
 const data = costData as CostFile;
@@ -38,9 +44,22 @@ export function formatUsd(n: number): string {
   }).format(n);
 }
 
+/** Span label e.g. "$48k–$125k" for scannable UI */
+export function formatUsdRange(low: number, high: number): string {
+  return `${formatUsd(low)}–${formatUsd(high)}`;
+}
+
+function defaultBandHints(scaleLabel: string): CostBandHints {
+  return {
+    low: `Simpler scope and finishes for a ${scaleLabel.toLowerCase()} project`,
+    mid: `Typical materials, labor, and complexity for this scale`,
+    high: `More complex work, higher finishes, or tougher site conditions`,
+  };
+}
+
 /**
  * Lookup conceptual cost range for project type + scale.
- * Florida-first; state parameter reserved for multi-state expansion.
+ * Data-driven: edit data/plan/fl-cost-ranges.json only.
  */
 export function getCostRange(
   projectType: ProjectTypeId,
@@ -49,9 +68,7 @@ export function getCostRange(
 ): CostRangeResult {
   const def = getProjectType(projectType);
   const row =
-    data.ranges.find(
-      (r) => r.projectType === projectType && r.scale === scale
-    ) ??
+    data.ranges.find((r) => r.projectType === projectType && r.scale === scale) ??
     data.ranges.find((r) => r.projectType === projectType && r.scale === "medium");
 
   if (!row) {
@@ -65,8 +82,10 @@ export function getCostRange(
       mid: 35000,
       high: 75000,
       drivers: ["Scope varies widely for this project type"],
+      bandHints: defaultBandHints(def.scaleLabels[scale]),
       unitNote: "General planning band",
       disclaimer: data.disclaimer || COST_DISCLAIMER,
+      methodologyNote: data.methodologyNote,
     };
   }
 
@@ -80,7 +99,21 @@ export function getCostRange(
     mid: row.mid,
     high: row.high,
     drivers: row.drivers,
+    bandHints: row.bandHints || defaultBandHints(def.scaleLabels[scale]),
     unitNote: row.unitNote || def.scaleHints[scale],
     disclaimer: data.disclaimer || COST_DISCLAIMER,
+    methodologyNote: data.methodologyNote,
+  };
+}
+
+export function getCostDataMeta(): {
+  version?: string;
+  updatedAt?: string;
+  methodologyNote?: string;
+} {
+  return {
+    version: data.version,
+    updatedAt: data.updatedAt,
+    methodologyNote: data.methodologyNote,
   };
 }

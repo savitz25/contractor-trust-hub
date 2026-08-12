@@ -326,64 +326,96 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
         </section>
       ) : null}
 
-      {/* 1. Cost — planning only */}
+      {/* 1. Cost — planning context only (secondary to contractor evidence) */}
       <section
         id="plan-cost"
-        className="scroll-mt-36 rounded-3xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)] sm:scroll-mt-8 sm:p-8"
+        className="scroll-mt-36 rounded-3xl border border-[var(--border)] bg-[var(--bg)]/80 p-4 shadow-[var(--shadow-sm)] sm:scroll-mt-8 sm:p-6"
       >
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
-              Step 1 · Planning range
+              Step 1 · Planning context
             </p>
-            <h2 className="mt-1.5 text-xl font-semibold tracking-tight text-[var(--text)] sm:text-2xl">
-              Conceptual cost range
+            <h2 className="mt-1 text-lg font-semibold tracking-tight text-[var(--text)] sm:text-xl">
+              Rough cost band for Florida
             </h2>
           </div>
           <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-900">
-            Not a bid
+            Planning only · not a bid
           </span>
         </div>
-        <p className="mt-2 text-sm text-[var(--muted)]">{cost.unitNote}</p>
+        <p className="mt-1.5 text-sm text-[var(--muted)]">
+          {cost.unitNote} · {cost.scaleLabel}
+        </p>
 
-        <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
-          {[
-            { label: "Low", value: cost.low, hint: "Simpler scope" },
-            { label: "Mid", value: cost.mid, hint: "Typical" },
-            { label: "High", value: cost.high, hint: "Premium / complex" },
-          ].map((b) => (
+        {/* Scannable overall span */}
+        <p className="mt-3 text-sm text-[var(--text)]">
+          Typical planning span:{" "}
+          <strong className="tabular-nums text-[var(--navy)]">
+            {formatUsd(cost.low)}–{formatUsd(cost.high)}
+          </strong>
+          <span className="text-[var(--muted)]"> (mid ~{formatUsd(cost.mid)})</span>
+        </p>
+
+        <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
+          {(
+            [
+              {
+                key: "low" as const,
+                label: "Toward low",
+                value: cost.low,
+                hint: cost.bandHints.low,
+              },
+              {
+                key: "mid" as const,
+                label: "Mid planning",
+                value: cost.mid,
+                hint: cost.bandHints.mid,
+              },
+              {
+                key: "high" as const,
+                label: "Toward high",
+                value: cost.high,
+                hint: cost.bandHints.high,
+              },
+            ] as const
+          ).map((b) => (
             <div
-              key={b.label}
-              className={`rounded-2xl border px-2.5 py-3 sm:px-4 sm:py-4 ${
-                b.label === "Mid"
-                  ? "border-[var(--accent)] bg-[var(--accent-soft)]"
-                  : "border-[var(--border)] bg-[var(--bg)]"
+              key={b.key}
+              className={`rounded-2xl border bg-white px-3 py-3 sm:px-4 sm:py-3.5 ${
+                b.key === "mid"
+                  ? "border-[var(--accent)] shadow-[var(--shadow-sm)]"
+                  : "border-[var(--border)]"
               }`}
             >
-              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)] sm:text-xs">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
                 {b.label}
               </p>
-              <p className="mt-1 text-lg font-semibold tabular-nums text-[var(--navy)] sm:text-2xl">
+              <p className="mt-1 text-xl font-semibold tabular-nums text-[var(--navy)] sm:text-2xl">
                 {formatUsd(b.value)}
               </p>
-              <p className="mt-0.5 hidden text-xs text-[var(--muted)] sm:block">{b.hint}</p>
+              <p className="mt-1.5 text-xs leading-relaxed text-[var(--muted)]">{b.hint}</p>
             </div>
           ))}
         </div>
 
-        <details className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 sm:mt-5">
-          <summary className="cursor-pointer text-xs font-semibold text-[var(--navy)]">
-            What drives this range
-          </summary>
-          <ul className="mt-2 space-y-1 pb-1 text-sm text-[var(--muted)]">
+        <div className="mt-4 rounded-xl border border-[var(--border)] bg-white px-3 py-3">
+          <p className="text-xs font-semibold text-[var(--navy)]">What usually moves the number</p>
+          <ul className="mt-2 grid gap-1.5 text-sm text-[var(--muted)] sm:grid-cols-2">
             {cost.drivers.map((d) => (
-              <li key={d}>· {d}</li>
+              <li key={d} className="flex gap-2">
+                <span className="text-[var(--accent)]" aria-hidden>
+                  ·
+                </span>
+                <span>{d}</span>
+              </li>
             ))}
           </ul>
-        </details>
+        </div>
 
-        <p className="mt-4 text-xs leading-relaxed text-[var(--muted)]">
-          {cost.disclaimer || COST_DISCLAIMER}
+        <p className="mt-3 text-xs leading-relaxed text-[var(--muted)]">
+          {cost.disclaimer || COST_DISCLAIMER} These bands support planning before you talk to
+          licensed contractors below — they are not contractor-specific prices.
         </p>
       </section>
 

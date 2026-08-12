@@ -56,6 +56,12 @@ export type PlanInput = {
   budgetBand?: BudgetBand | null;
 };
 
+export type CostBandHints = {
+  low: string;
+  mid: string;
+  high: string;
+};
+
 export type CostRangeResult = {
   projectType: ProjectTypeId;
   projectLabel: string;
@@ -65,9 +71,13 @@ export type CostRangeResult = {
   low: number;
   mid: number;
   high: number;
+  /** Shared drivers that move cost overall */
   drivers: string[];
+  /** Plain-language what typically sits at low / mid / high */
+  bandHints: CostBandHints;
   unitNote: string;
   disclaimer: string;
+  methodologyNote?: string;
 };
 
 /** Contractor card for plan results with honest match explanations. */
