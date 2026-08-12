@@ -1,6 +1,11 @@
 import { getProjectType } from "@/lib/plan/project-types";
 import { countyFromFloridaZip, formatLocationLabel, normalizeZip } from "@/lib/plan/location";
-import type { BudgetBand, CostRangeResult, ScaleBand } from "@/lib/plan/types";
+import type {
+  BudgetBand,
+  CostRangeResult,
+  ProjectTypeId,
+  ScaleBand,
+} from "@/lib/plan/types";
 import { getCostRange } from "@/lib/plan/cost-model";
 import { getStudioBySlug } from "./registry";
 import type { StudioAnswers, StudioContext, StudioDefinition } from "./types";
@@ -57,20 +62,28 @@ export function resolveDrivers(
   return out.slice(0, 6);
 }
 
+export function effectiveProjectType(
+  studio: StudioDefinition,
+  answers: StudioAnswers
+): ProjectTypeId {
+  return studio.resolveProjectType?.(answers) ?? studio.projectType;
+}
+
 export function buildStudioContext(
   studio: StudioDefinition,
   answers: StudioAnswers
 ): StudioContext {
   const scale = studio.resolveScale(answers);
-  const def = getProjectType(studio.projectType);
+  const projectType = effectiveProjectType(studio, answers);
+  const def = getProjectType(projectType);
   const zip = normalizeZip(answers.zip);
   const county = countyFromFloridaZip(zip);
   return {
     studioSlug: studio.slug,
     studioName: studio.name,
-    projectType: studio.projectType,
+    projectType,
     projectLabel: def.label,
-    answers,
+    answers: { ...answers, projectType },
     answerSummary: buildAnswerSummary(studio, answers),
     scale,
     scaleLabel: def.scaleLabels[scale],
@@ -89,22 +102,36 @@ export function studioCostRange(
   answers: StudioAnswers
 ): CostRangeResult {
   const scale = studio.resolveScale(answers);
-  const base = getCostRange(studio.projectType, scale, answers.state || "FL");
+  const projectType = effectiveProjectType(studio, answers);
+  const base = getCostRange(projectType, scale, answers.state || "FL");
   const drivers = resolveDrivers(studio, answers);
   const unitNote = studio.resolveUnitNote?.(answers) || base.unitNote;
   // Mild adjustments: multi-select complexity
   let { low, mid, high } = base;
   const multi = answers.values.work_included;
-  if (Array.isArray(multi) && multi.length >= 5) {
+  const multiAreas = answers.values.major_areas;
+  const workCount =
+    (Array.isArray(multi) ? multi.length : 0) +
+    (Array.isArray(multiAreas) ? multiAreas.length : 0);
+  if (workCount >= 5) {
     low = Math.round(low * 1.05);
     mid = Math.round(mid * 1.08);
     high = Math.round(high * 1.1);
   }
-  if (answers.values.plumbing_move === "plumbing_move" || (Array.isArray(multi) && multi.includes("plumbing_move"))) {
+  if (
+    answers.values.plumbing_move === "plumbing_move" ||
+    (Array.isArray(multi) && multi.includes("plumbing_move")) ||
+    (Array.isArray(multi) && multi.includes("bathroom_add"))
+  ) {
     mid = Math.round(mid * 1.06);
     high = Math.round(high * 1.1);
   }
-  if (answers.values.layout === "layout" || (Array.isArray(multi) && multi.includes("layout"))) {
+  if (
+    answers.values.layout === "layout" ||
+    (Array.isArray(multi) && multi.includes("layout")) ||
+    (Array.isArray(multi) && multi.includes("structural")) ||
+    (Array.isArray(multiAreas) && multiAreas.includes("layout"))
+  ) {
     mid = Math.round(mid * 1.05);
     high = Math.round(high * 1.08);
   }
@@ -112,10 +139,24 @@ export function studioCostRange(
     mid = Math.round(mid * 1.08);
     high = Math.round(high * 1.12);
   }
+  if (answers.values.addition_type === "second_story") {
+    mid = Math.round(mid * 1.12);
+    high = Math.round(high * 1.15);
+  }
+  if (answers.values.occupied === "yes") {
+    mid = Math.round(mid * 1.04);
+    high = Math.round(high * 1.06);
+  }
+  if (Array.isArray(multi) && multi.includes("moisture")) {
+    mid = Math.round(mid * 1.05);
+    high = Math.round(high * 1.08);
+  }
   return {
     ...base,
+    projectType,
+    projectLabel: getProjectType(projectType).label,
     scale,
-    scaleLabel: getProjectType(studio.projectType).scaleLabels[scale],
+    scaleLabel: getProjectType(projectType).scaleLabels[scale],
     low,
     mid,
     high,

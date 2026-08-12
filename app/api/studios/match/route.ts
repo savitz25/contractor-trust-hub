@@ -32,7 +32,7 @@ export async function POST(request: Request) {
   const cost = studioCostRange(studio, answers);
   const match = await matchContractorsForPlan(
     {
-      projectType: studio.projectType,
+      projectType: ctx.projectType,
       scale: ctx.scale,
       state: ctx.location.state,
       zip: ctx.location.zip,

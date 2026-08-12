@@ -34,6 +34,11 @@ export type StudioStep = {
 export type StudioDefinition = {
   slug: string;
   projectType: ProjectTypeId;
+  /**
+   * Additional plan project types that deep-link here from /plan
+   * (e.g. exterior covers deck_outdoor + siding_exterior).
+   */
+  relatedProjectTypes?: ProjectTypeId[];
   name: string;
   shortName: string;
   headline: string;
@@ -54,6 +59,8 @@ export type StudioDefinition = {
   resolveScale: (answers: StudioAnswers) => ScaleBand;
   /** Optional unit note override from answers. */
   resolveUnitNote?: (answers: StudioAnswers) => string;
+  /** Override cost/matching project type from answers (exterior → siding vs deck). */
+  resolveProjectType?: (answers: StudioAnswers) => ProjectTypeId;
 };
 
 export type StudioAnswers = {
