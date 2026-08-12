@@ -15,7 +15,12 @@ import {
   type EvidenceTone,
 } from "@/lib/contractors/trust-report";
 import type { ContractorDetail } from "@/lib/contractors/types";
-import { occupationLabel, type EvidenceState } from "@/lib/states/config";
+import type { EvidenceState } from "@/lib/states/config";
+import {
+  getTxTradeInfo,
+  txTradeOfficialSuffix,
+  txTradePlainLabel,
+} from "@/lib/states/tx-trades";
 
 const toneRing: Record<EvidenceTone, string> = {
   good: "border-emerald-200 bg-emerald-50/80",
@@ -42,6 +47,7 @@ export function EvidenceSummary({ contractor }: { contractor: ContractorDetail }
   const pillars = buildEvidencePillars(contractor);
   const entity = contractor.entities[0];
   const conf = matchConfidenceLine(entity);
+  const isTx = (contractor.homeState || "").toUpperCase() === "TX";
 
   return (
     <section aria-labelledby="evidence-summary-heading">
@@ -54,20 +60,22 @@ export function EvidenceSummary({ contractor }: { contractor: ContractorDetail }
             Evidence at a glance
           </h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Three checks from official extracts — not a score or ranking.
+            {isTx
+              ? "Three checks from the TDLR specialty extract — not a score or ranking."
+              : "Three checks from official extracts — not a score or ranking."}
           </p>
         </div>
-        {conf && (
+        {conf && !isTx ? (
           <p className="w-fit max-w-full rounded-full border border-[var(--accent)]/25 bg-[var(--accent-soft)] px-3 py-1 text-xs font-medium leading-snug text-[var(--accent)]">
             {conf}
           </p>
-        )}
+        ) : null}
       </div>
-      <div className="mt-4 grid gap-2.5 sm:grid-cols-3 sm:gap-3">
+      <div className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-3 sm:gap-3">
         {pillars.map((p) => (
           <div
             key={p.id}
-            className={`rounded-2xl border px-4 py-3.5 sm:py-4 ${toneRing[p.tone]}`}
+            className={`rounded-2xl border px-3.5 py-3 sm:px-4 sm:py-4 ${toneRing[p.tone]}`}
           >
             <div className="flex items-center gap-2">
               <span
@@ -78,15 +86,15 @@ export function EvidenceSummary({ contractor }: { contractor: ContractorDetail }
                 {p.label}
               </p>
             </div>
-            <p className={`mt-1.5 text-base font-semibold leading-snug ${toneText[p.tone]}`}>
+            <p className={`mt-1.5 text-[15px] font-semibold leading-snug sm:text-base ${toneText[p.tone]}`}>
               {p.statusLine}
             </p>
             <p className="mt-1 text-xs leading-relaxed text-[var(--muted)]">{p.detail}</p>
-            {p.lastVerifiedAt && (
+            {p.lastVerifiedAt ? (
               <p className="mt-2 text-[11px] text-[var(--muted)]">
                 In our data {formatDateTime(p.lastVerifiedAt)}
               </p>
-            )}
+            ) : null}
           </div>
         ))}
       </div>
@@ -231,14 +239,16 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
           const isTx =
             (lic.sourceSystem || "").toLowerCase() === "tx_tdlr" || lic.state === "TX";
           const occ = getOccupationInfo(lic.occupationCode);
-          const label = isTx ? occupationLabel(lic.occupationCode) : occ.label;
+          const txTrade = isTx ? getTxTradeInfo(lic.occupationCode) : null;
+          const label = isTx ? txTradePlainLabel(lic.occupationCode) : occ.label;
+          const officialSuffix = isTx ? txTradeOfficialSuffix(lic.occupationCode) : null;
           return (
             <article
               key={lic.id}
-              className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4"
+              className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-3.5 sm:p-4"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="font-mono text-base font-semibold tracking-wide text-[var(--accent)]">
+                <p className="break-all font-mono text-sm font-semibold tracking-wide text-[var(--accent)] sm:text-base">
                   {lic.externalKey}
                 </p>
                 <StatusBadge
@@ -246,7 +256,21 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   label={`License: ${statusLabel(lic.statusNormalized)}`}
                 />
               </div>
-              <p className="mt-2 text-sm font-medium text-[var(--text)]">{label}</p>
+              <p className="mt-2 text-sm font-semibold leading-snug text-[var(--text)] sm:text-[15px]">
+                {label}
+              </p>
+              {isTx ? (
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                  <span className="inline-flex rounded-full border border-[var(--navy)]/15 bg-[var(--navy)]/[0.04] px-2 py-0.5 text-[11px] font-medium text-[var(--navy)]">
+                    {txTrade?.chip ?? "Specialty"} · TDLR
+                  </span>
+                  {officialSuffix ? (
+                    <span className="text-xs text-[var(--muted)]">
+                      Official: {officialSuffix}
+                    </span>
+                  ) : null}
+                </div>
+              ) : null}
               {!isTx ? (
                 <div className="mt-3 rounded-lg border border-[var(--border)]/80 bg-[var(--bg)]/50 px-3 py-3">
                   <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
@@ -259,17 +283,18 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   </p>
                 </div>
               ) : (
-                <div className="mt-3 rounded-lg border border-[var(--border)]/80 bg-[var(--bg)]/50 px-3 py-3">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-                    Texas TDLR specialty
+                <div className="mt-3 rounded-lg border border-sky-200/80 bg-sky-50/60 px-3 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-sky-900/70">
+                    Specialty trade — not a general contractor license
                   </p>
                   <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">
-                    This is a TDLR specialty trade license, not a statewide general contractor
-                    credential. Scope is limited to the licensed trade class.
+                    {txTrade?.scopeNote ??
+                      "This is a TDLR specialty trade license. Texas does not issue a statewide general contractor credential for this search."}
                   </p>
-                  <p className="mt-2 border-t border-[var(--border)]/60 pt-2 text-sm leading-relaxed text-[var(--muted)]">
+                  <p className="mt-2 border-t border-sky-200/70 pt-2 text-sm leading-relaxed text-[var(--muted)]">
                     <span className="font-medium text-[var(--text)]/90">Good to know: </span>
                     Confirm current status on the official TDLR license search before hiring.
+                    Plumbing and most local builder registrations are outside this extract.
                   </p>
                 </div>
               )}
@@ -293,7 +318,7 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   </dd>
                 </div>
                 <div className="sm:col-span-2">
-                  <dt className="text-[var(--muted)]">Address on file</dt>
+                  <dt className="text-[var(--muted)]">Address / county on file</dt>
                   <dd className="text-[var(--text)]">
                     {[lic.addressLine1, lic.city, lic.state, lic.postalCode, lic.countyName]
                       .filter(Boolean)
@@ -302,7 +327,7 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                 </div>
                 <div className="sm:col-span-2">
                   <dt className="text-[var(--muted)]">Source / last verified</dt>
-                  <dd className="text-[var(--text)]">
+                  <dd className="break-words text-[var(--text)]">
                     {isTx ? "Texas TDLR" : "Florida DBPR"} ({lic.sourceSystem}) ·{" "}
                     {formatDateTime(lic.lastVerifiedAt)}
                   </dd>

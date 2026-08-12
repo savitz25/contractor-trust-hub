@@ -8,6 +8,7 @@ import { LegalNotice } from "@/components/trust/LegalNotice";
 import { searchContractors } from "@/lib/contractors/queries";
 import { pageMetadata } from "@/lib/seo/page-meta";
 import { getLiveStates, getStateBySlug } from "@/lib/states/config";
+import { TX_COVERED_TRADES_PLAIN } from "@/lib/states/tx-trades";
 
 type Props = {
   searchParams: Promise<{ q?: string; intent?: string; state?: string }>;
@@ -29,7 +30,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       ? "Verify a Texas specialty contractor (TDLR)"
       : "Verify a Florida contractor",
     description: isTx
-      ? "Search TDLR specialty trade licenses in Texas (electrical, A/C, and related). Not a statewide general contractor directory. Evidence only — not a marketplace."
+      ? "Search TDLR specialty trade licenses in Texas (electrical, air conditioning, and related). Not a statewide general contractor directory. Evidence only — not a marketplace."
       : "Search Florida contractor licenses by name or license number. Official DBPR status, Sunbiz entity links, and board discipline — free Trust Reports, not a marketplace.",
     path: isTx ? "/verify?state=tx" : "/verify",
   });
@@ -68,25 +69,29 @@ export default async function VerifyPage({ searchParams }: Props) {
   const liveStates = getLiveStates();
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+    <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--accent)] sm:text-xs">
         {isTx ? "Texas · TDLR specialty trades" : "Florida · DBPR + Sunbiz"}
       </p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)] sm:text-4xl">
+      <h1 className="mt-1.5 text-[1.65rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:mt-2 sm:text-4xl">
         {isTx ? "Verify a Texas specialty contractor" : "Verify a Florida contractor"}
       </h1>
-      <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--muted)] sm:text-base">
+      <p className="mt-2.5 max-w-2xl text-sm leading-relaxed text-[var(--muted)] sm:mt-3 sm:text-base">
         {isTx
-          ? "Search TDLR specialty licenses by number or business / owner name. Results show license type, status, and county when available — then open a Trust Report."
+          ? "Search TDLR specialty licenses by number or business / owner name. You’ll see the trade type in plain language, license status, and county when available."
           : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report."}
       </p>
-      {intentBlurb && (
+      {intentBlurb ? (
         <p className="mt-2 max-w-2xl text-sm text-[var(--accent)]/90">{intentBlurb}</p>
-      )}
+      ) : null}
 
-      {/* State switcher */}
+      {/* State switcher — full-width touch targets on mobile */}
       {liveStates.length > 1 ? (
-        <div className="mt-5 flex flex-wrap gap-2" role="tablist" aria-label="Verify state">
+        <div
+          className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:mt-5 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
+          role="tablist"
+          aria-label="Verify state"
+        >
           {liveStates.map((s) => {
             const active = s.slug === state.slug;
             const href =
@@ -97,19 +102,30 @@ export default async function VerifyPage({ searchParams }: Props) {
                 : q
                   ? `/verify?state=${s.slug}&q=${encodeURIComponent(q)}`
                   : `/verify?state=${s.slug}`;
+            const subtitle =
+              s.slug === "tx" ? "Specialty trades" : s.slug === "fl" ? "Full construction" : null;
             return (
               <Link
                 key={s.slug}
                 href={href}
                 role="tab"
                 aria-selected={active}
-                className={`inline-flex min-h-10 items-center rounded-full border px-4 text-sm font-semibold no-underline transition ${
+                className={`inline-flex min-h-11 shrink-0 flex-col justify-center rounded-2xl border px-4 py-2 no-underline transition sm:min-h-10 sm:rounded-full sm:py-0 ${
                   active
                     ? "border-[var(--navy)] bg-[var(--navy)] text-white"
                     : "border-[var(--border)] bg-white text-[var(--navy)] hover:border-[var(--navy)]/30"
                 }`}
               >
-                {s.name}
+                <span className="text-sm font-semibold leading-none">{s.name}</span>
+                {subtitle ? (
+                  <span
+                    className={`mt-1 text-[10px] font-medium leading-none sm:hidden ${
+                      active ? "text-white/75" : "text-[var(--muted)]"
+                    }`}
+                  >
+                    {subtitle}
+                  </span>
+                ) : null}
               </Link>
             );
           })}
@@ -117,29 +133,29 @@ export default async function VerifyPage({ searchParams }: Props) {
       ) : null}
 
       {isTx ? (
-        <div className="mt-5 max-w-3xl">
-          <TexasCoverageBanner />
+        <div className="mt-4 max-w-3xl sm:mt-5">
+          <TexasCoverageBanner showFloridaLink={!q} />
         </div>
       ) : null}
 
-      <div className="mt-7 max-w-3xl sm:mt-8">
+      <div className="mt-5 max-w-3xl sm:mt-7">
         <SearchForm
           defaultQuery={q}
           autoFocus={!q}
           intent={intent}
           stateSlug={state.slug}
         />
-        <p className="mt-2.5 text-xs leading-relaxed text-[var(--muted)]">
+        <p className="mt-2 text-xs leading-relaxed text-[var(--muted)] sm:mt-2.5">
           {isTx
-            ? "Specialty trades only (electrical, A/C, and related TDLR contractor classes). Not a statewide general contractor directory."
+            ? `Specialty trades: ${TX_COVERED_TRADES_PLAIN.join(" · ").toLowerCase()}. Not a statewide general contractor directory.`
             : "Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay high-confidence only."}
         </p>
       </div>
 
-      {error && (
+      {error ? (
         <div
           role="alert"
-          className="mt-8 rounded-xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm leading-relaxed text-rose-900"
+          className="mt-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm leading-relaxed text-rose-900 sm:mt-8"
         >
           <p className="font-medium text-rose-950">Search is temporarily unavailable</p>
           <p className="mt-1 text-rose-900/90">
@@ -148,7 +164,7 @@ export default async function VerifyPage({ searchParams }: Props) {
           <p className="mt-3 text-xs text-rose-800/80">
             {isTx ? (
               <>
-                Texas data may still be loading into production. Florida Verify remains at{" "}
+                Florida Verify remains at{" "}
                 <Link href="/verify" className="font-medium underline">
                   /verify
                 </Link>
@@ -166,68 +182,68 @@ export default async function VerifyPage({ searchParams }: Props) {
             <span className="opacity-70">(Technical: {error})</span>
           </p>
         </div>
-      )}
+      ) : null}
 
-      {q.length > 0 && q.length < 2 && (
-        <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+      {q.length > 0 && q.length < 2 ? (
+        <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950 sm:mt-8">
           Enter at least 2 characters to search.
         </div>
-      )}
+      ) : null}
 
-      {q.length >= 2 && !error && (
-        <section className="mt-9 sm:mt-10" aria-live="polite">
-          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+      {q.length >= 2 && !error ? (
+        <section className="mt-7 sm:mt-10" aria-live="polite">
+          <div className="mb-3 flex flex-col gap-0.5 sm:mb-4 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-2">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
               Results
             </h2>
-            <p className="text-sm text-[var(--muted)]">
+            <p className="text-xs text-[var(--muted)] sm:text-sm">
               {results.length === 0
                 ? "No matches"
                 : `${results.length} match${results.length === 1 ? "" : "es"}`}
               {mode === "license" ? " · license search" : " · name search"}
               {isTx ? " · TDLR specialty" : ""}
-              {results.length >= 25 ? " · showing first 25" : ""}
+              {results.length >= 25 ? " · first 25" : ""}
             </p>
           </div>
 
           {results.length === 0 ? (
-            <div className="space-y-4">
-              <EmptyResults query={q} mode={mode} />
-              {isTx ? (
-                <TexasCoverageBanner compact />
-              ) : null}
-            </div>
+            <EmptyResults query={q} mode={mode} stateSlug={state.slug} />
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2.5 sm:space-y-3">
               {results.map((r) => (
                 <ResultCard key={r.id} result={r} hideEntityWhenMissing={isTx} />
               ))}
-              {results.length >= 25 && (
-                <p className="pt-2 text-center text-sm text-[var(--muted)]">
+              {results.length >= 25 ? (
+                <p className="pt-1 text-center text-sm text-[var(--muted)] sm:pt-2">
                   Showing the first 25 matches. Add more of the company name or a license number to
                   narrow results.
                 </p>
-              )}
+              ) : null}
+              {isTx ? (
+                <div className="pt-2 sm:pt-3">
+                  <TexasCoverageBanner compact showFloridaLink={false} />
+                </div>
+              ) : null}
             </div>
           )}
         </section>
-      )}
+      ) : null}
 
-      {!q && (
-        <section className="mt-10 grid gap-3 sm:mt-12 sm:grid-cols-3 sm:gap-4">
+      {!q ? (
+        <section className="mt-8 grid gap-2.5 sm:mt-12 sm:grid-cols-3 sm:gap-4">
           {(isTx
             ? [
                 {
                   t: "License number",
-                  d: "TDLR numbers (e.g. 10001) or full product keys. Most precise when you have the card.",
+                  d: "TDLR numbers (e.g. 10001) are most precise when you have the card or invoice.",
                 },
                 {
                   t: "Business or owner name",
-                  d: "Matches business name and owner name from the TDLR open extract.",
+                  d: "Matches business and owner names from the TDLR open extract for specialty trades.",
                 },
                 {
                   t: "What you’ll see",
-                  d: "License type (electrical, A/C, …), status from expiration when available, and county — then a Trust Report.",
+                  d: "Plain-language trade type (air conditioning, electrical, …), status, county when available — then a Trust Report.",
                 },
               ]
             : [
@@ -247,13 +263,13 @@ export default async function VerifyPage({ searchParams }: Props) {
           ).map((card) => (
             <div
               key={card.t}
-              className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 sm:p-5"
+              className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-3.5 sm:p-5"
             >
               <p className="text-sm font-semibold text-[var(--text)]">{card.t}</p>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{card.d}</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)] sm:mt-2">{card.d}</p>
             </div>
           ))}
-          <div className="sm:col-span-3 space-y-1">
+          <div className="space-y-1 sm:col-span-3">
             {!isTx ? (
               <p className="text-xs text-[var(--muted)]">
                 Don&apos;t have a specific name?{" "}
@@ -278,9 +294,9 @@ export default async function VerifyPage({ searchParams }: Props) {
             </p>
           </div>
         </section>
-      )}
+      ) : null}
 
-      <div className="mt-12">
+      <div className="mt-10 sm:mt-12">
         <LegalNotice />
       </div>
     </main>

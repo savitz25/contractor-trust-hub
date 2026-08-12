@@ -102,18 +102,18 @@ export const FL_OCCUPATION_LABELS: Record<string, string> = {
   RF: "Registered Specialty",
 };
 
-/** Texas TDLR specialty codes used by tx_tdlr adapter (not a GC taxonomy). */
+/** Texas TDLR specialty codes — plain-language labels (see also lib/states/tx-trades.ts). */
 export const TX_OCCUPATION_LABELS: Record<string, string> = {
-  TEC: "Electrical Contractor (TDLR)",
-  TAC: "A/C Contractor (TDLR)",
-  TES: "Electrical Sign Contractor (TDLR)",
-  TAP: "Appliance Installation Contractor (TDLR)",
-  TEL: "Elevator Contractor (TDLR)",
-  TWW: "Water Well Driller/Pump Installer (TDLR)",
-  TME: "Master Electrician (TDLR)",
-  TJE: "Journeyman Electrician (TDLR)",
-  TAE: "Apprentice Electrician (TDLR)",
-  TAI: "Appliance Installer (TDLR)",
+  TEC: "Electrical Contractor",
+  TAC: "Air Conditioning Contractor",
+  TES: "Electrical Sign Contractor",
+  TAP: "Appliance Installation Contractor",
+  TEL: "Elevator Contractor",
+  TWW: "Water Well Driller / Pump Installer",
+  TME: "Master Electrician",
+  TJE: "Journeyman Electrician",
+  TAE: "Apprentice Electrician",
+  TAI: "Appliance Installer",
 };
 
 export function occupationLabel(code: string | null | undefined): string {

@@ -24,9 +24,9 @@ const PLACEHOLDERS = {
 };
 
 const TX_PLACEHOLDERS = {
-  hero: "TDLR license number or business / owner name…",
-  default: "TDLR license # or company name",
-  compact: "License or company name",
+  hero: "License # or business / owner name…",
+  default: "License # or business name",
+  compact: "License or name",
 };
 
 export function SearchForm({

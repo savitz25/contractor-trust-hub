@@ -1,4 +1,5 @@
 import { occupationLabel } from "@/lib/states/config";
+import { getTxTradeInfo, txTradePlainLabel } from "@/lib/states/tx-trades";
 import { formatDate, matchMethodLabel, statusLabel } from "./format";
 import { getOccupationInfo } from "./occupations";
 import type { ContractorDetail, EntityDetail, LicenseDetail } from "./types";
@@ -77,8 +78,11 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
         ? "bad"
         : "warn";
 
+  const txTrade = isTx && lic ? getTxTradeInfo(lic.occupationCode) : null;
   const occLabel = lic
-    ? occupationLabel(lic.occupationCode) || getOccupationInfo(lic.occupationCode).label
+    ? isTx
+      ? txTradePlainLabel(lic.occupationCode)
+      : occupationLabel(lic.occupationCode) || getOccupationInfo(lic.occupationCode).label
     : null;
 
   const pillars: EvidencePillar[] = [
@@ -99,20 +103,21 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
   if (isTx) {
     pillars.push({
       id: "entity",
-      label: "Coverage",
-      statusLine: "Specialty only",
-      detail:
-        "Texas has no statewide GC license. This profile is a TDLR specialty trade only — not plumbing (TSBPE) or local GC registration.",
-      tone: "warn",
+      label: "Trade type",
+      statusLine: txTrade?.chip ?? "Specialty",
+      detail: txTrade
+        ? `${txTrade.scopeNote}`
+        : "Texas TDLR specialty trade only — not a statewide general contractor license.",
+      tone: "neutral",
       lastVerifiedAt: lic?.lastVerifiedAt ?? null,
     });
     pillars.push({
       id: "discipline",
-      label: "Discipline",
-      statusLine: "Not in v1 extract",
+      label: "Coverage",
+      statusLine: "Specialty only",
       detail:
-        "Board discipline is not loaded for Texas TDLR in this version. Confirm on the official TDLR license search when it matters.",
-      tone: "neutral",
+        "No statewide GC license in Texas. Plumbing (TSBPE) and city/county builder registration are not fully covered here. Discipline records are not loaded for TX v1.",
+      tone: "warn",
       lastVerifiedAt: lic?.lastVerifiedAt ?? null,
     });
     return pillars;

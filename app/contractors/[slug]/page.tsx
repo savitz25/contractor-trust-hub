@@ -30,7 +30,8 @@ import { matchConfidenceLine } from "@/lib/contractors/trust-report";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
 import { pageMetadata } from "@/lib/seo/page-meta";
 import { absoluteUrl } from "@/lib/site";
-import { getStateBySlug, occupationLabel } from "@/lib/states/config";
+import { getStateBySlug } from "@/lib/states/config";
+import { txTradePlainLabel } from "@/lib/states/tx-trades";
 import { parseHandoffQuery } from "@/lib/studios/handoff";
 
 type Props = {
@@ -55,7 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const lic = c.licenses[0];
     const occ = lic
       ? isTx
-        ? occupationLabel(lic.occupationCode)
+        ? txTradePlainLabel(lic.occupationCode)
         : getOccupationInfo(lic.occupationCode).label
       : isTx
         ? "Texas specialty contractor"
@@ -211,8 +212,14 @@ export default async function ContractorPage({ params, searchParams }: Props) {
       .sort()
       .reverse()[0] || null;
 
+  const txTradeLabel = isTx && primary ? txTradePlainLabel(primary.occupationCode) : null;
+
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 pb-28 sm:px-6 sm:py-10 sm:pb-10">
+    <main
+      className={`mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10 ${
+        isTx ? "pb-10" : "pb-28 sm:pb-10"
+      }`}
+    >
       <ContractorJsonLd contractor={contractor} path={path} />
       <BreadcrumbJsonLd
         items={[
@@ -242,22 +249,37 @@ export default async function ContractorPage({ params, searchParams }: Props) {
             </Link>
           </>
         ) : null}
-        <span className="text-[var(--border)]" aria-hidden>
-          ·
-        </span>
-        <Link href="/tools" className="text-[var(--muted)] no-underline hover:text-[var(--text)]">
-          Decision tools
-        </Link>
+        {!isTx ? (
+          <>
+            <span className="text-[var(--border)]" aria-hidden>
+              ·
+            </span>
+            <Link href="/tools" className="text-[var(--muted)] no-underline hover:text-[var(--text)]">
+              Decision tools
+            </Link>
+          </>
+        ) : (
+          <>
+            <span className="text-[var(--border)]" aria-hidden>
+              ·
+            </span>
+            <Link href="/verify" className="text-[var(--muted)] no-underline hover:text-[var(--text)]">
+              Florida Verify
+            </Link>
+          </>
+        )}
       </div>
 
-      <StudioHandoffBanner
-        initial={studioHandoff}
-        contractorSlug={contractor.slug}
-        contractorName={contractor.displayName}
-      />
+      {!isTx ? (
+        <StudioHandoffBanner
+          initial={studioHandoff}
+          contractorSlug={contractor.slug}
+          contractorName={contractor.displayName}
+        />
+      ) : null}
 
       {isTx ? (
-        <div className="mt-4 max-w-3xl">
+        <div className="mt-3 max-w-3xl sm:mt-4">
           <TexasCoverageBanner compact />
         </div>
       ) : null}
@@ -265,50 +287,56 @@ export default async function ContractorPage({ params, searchParams }: Props) {
       {/* A. Identity snapshot */}
       <header
         id="identity"
-        className="mt-4 scroll-mt-28 border-b border-[var(--border)] pb-6 sm:pb-8"
+        className="mt-3 scroll-mt-24 border-b border-[var(--border)] pb-5 sm:mt-4 sm:scroll-mt-28 sm:pb-8"
       >
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--accent)] sm:text-xs">
           {isTx
-            ? "Texas · TDLR specialty · Contractor Trust Report"
+            ? "Texas · TDLR specialty · Trust Report"
             : "Florida · Contractor Trust Report 2.0"}
         </p>
-        <h1 className="mt-2 text-[1.65rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:text-4xl">
+        <h1 className="mt-1.5 text-[1.5rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:mt-2 sm:text-4xl">
           {contractor.displayName}
         </h1>
-        <p className="mt-2 max-w-2xl text-sm text-[var(--muted)]">
+        {txTradeLabel ? (
+          <p className="mt-2 text-sm font-medium text-[var(--navy)] sm:text-[15px]">
+            {txTradeLabel}
+            <span className="font-normal text-[var(--muted)]"> · specialty trade</span>
+          </p>
+        ) : null}
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
           {isTx
-            ? "Review TDLR specialty license type, status, and available location fields. This is not a statewide general contractor credential."
+            ? "Plain-language trade type, license status, and available location from the TDLR open extract. Not a statewide general contractor credential."
             : "Evidence-first profile: who this business is, license and entity records, caution signals, and what to do next — not a score or endorsement."}
           {contractor.isThinProfile
             ? " Limited fields in our extract — treat missing data as unknown, not cleared."
             : ""}
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          {primary && (
-            <span className="font-mono text-sm tracking-wide text-[var(--accent)]">
+          {primary ? (
+            <span className="break-all font-mono text-sm tracking-wide text-[var(--accent)]">
               {primary.externalKey}
             </span>
-          )}
-          {primary && (
+          ) : null}
+          {primary ? (
             <StatusBadge
               status={primary.statusNormalized}
               label={`License: ${statusLabel(primary.statusNormalized)}`}
             />
-          )}
-          {entity ? (
-            <StatusBadge status={entity.status} label={`Entity: ${statusLabel(entity.status)}`} />
-          ) : !isTx ? (
-            <StatusBadge status="unknown" label="No high-confidence entity link" />
           ) : null}
+          {isTx ? (
+            <StatusBadge status="unknown" label="Specialty only" />
+          ) : entity ? (
+            <StatusBadge status={entity.status} label={`Entity: ${statusLabel(entity.status)}`} />
+          ) : (
+            <StatusBadge status="unknown" label="No high-confidence entity link" />
+          )}
           {contractor.discipline.length > 0 ? (
             <StatusBadge status="warn" label="Discipline records identified" />
           ) : !isTx ? (
             <StatusBadge status="unknown" label="No discipline in current extracts" />
-          ) : (
-            <StatusBadge status="unknown" label="Discipline not in TX v1 extract" />
-          )}
+          ) : null}
         </div>
-        {location ? <p className="mt-3 text-[15px] text-[var(--muted)]">{location}</p> : null}
+        {location ? <p className="mt-3 text-sm text-[var(--muted)] sm:text-[15px]">{location}</p> : null}
         {(contractor.legalName || contractor.dbaName) && (
           <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
             {contractor.legalName ? <>Legal / linked name: {contractor.legalName}</> : null}
@@ -334,20 +362,29 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <CompareToggle slug={contractor.slug} />
-          <a
-            href="#next-actions"
-            className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--navy)] no-underline"
-          >
-            Next actions
-          </a>
-          {!isTx ? (
+          {isTx ? (
             <a
-              href="#caution"
-              className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm text-[var(--muted)] no-underline hover:text-[var(--text)]"
+              href="#licenses"
+              className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--navy)] no-underline"
             >
-              Caution history
+              License details
             </a>
-          ) : null}
+          ) : (
+            <>
+              <a
+                href="#next-actions"
+                className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--navy)] no-underline"
+              >
+                Next actions
+              </a>
+              <a
+                href="#caution"
+                className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm text-[var(--muted)] no-underline hover:text-[var(--text)]"
+              >
+                Caution history
+              </a>
+            </>
+          )}
         </div>
       </header>
 

@@ -10,7 +10,9 @@
 | State config | `EVIDENCE_STATES.tx.live = true` with honest `coverageNote` |
 | Verify UI | `/verify?state=tx` — name or license # search |
 | Trust Report | `/contractors/[slug]` for TX rows (TDLR fields; no Sunbiz) |
-| Coverage banner | Required copy on Verify + empty results + Trust Report |
+| Coverage banner | Calm sky-toned banner: included vs not-yet trades |
+| Trade labels | Plain-language labels via `lib/states/tx-trades.ts` (e.g. Air Conditioning Contractor) |
+| Empty states | Texas-specific copy + next actions (FL switch, TDLR official search) |
 
 ### Specialty license types (v1)
 

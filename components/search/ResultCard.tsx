@@ -3,6 +3,11 @@ import { CompareToggle } from "@/components/compare/CompareToggle";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { statusLabel } from "@/lib/contractors/format";
 import { occupationLabel } from "@/lib/states/config";
+import {
+  getTxTradeInfo,
+  txTradeOfficialSuffix,
+  txTradePlainLabel,
+} from "@/lib/states/tx-trades";
 import type { SearchResult } from "@/lib/contractors/types";
 
 function signalTone(
@@ -31,6 +36,21 @@ const toneBar: Record<string, string> = {
   neutral: "bg-slate-400",
 };
 
+function isTexasResult(result: SearchResult, hideEntityWhenMissing: boolean): boolean {
+  if (hideEntityWhenMissing) return true;
+  return (result.state || "").toUpperCase() === "TX";
+}
+
+function displayLicenseKey(result: SearchResult, isTx: boolean): string | null {
+  const key = result.primaryLicenseKey;
+  if (!key) return null;
+  if (!isTx) return key;
+  // Prefer short numeric id when product key is long TX-TDLR:…
+  const m = key.match(/:(\d+)(?::|$)/);
+  if (m) return m[1];
+  return key;
+}
+
 export function ResultCard({
   result,
   hideEntityWhenMissing = false,
@@ -39,18 +59,33 @@ export function ResultCard({
   /** Texas / specialty states without entity linking */
   hideEntityWhenMissing?: boolean;
 }) {
+  const isTx = isTexasResult(result, hideEntityWhenMissing);
   const location = [result.city, result.county, result.state].filter(Boolean).join(" · ");
   const licTone = signalTone("license", result);
   const entTone = signalTone("entity", result);
   const showEntity = Boolean(result.entityStatus) || !hideEntityWhenMissing;
+  const trade = isTx ? getTxTradeInfo(result.occupationCode) : null;
+  const tradeLabel = isTx
+    ? txTradePlainLabel(result.occupationCode)
+    : occupationLabel(result.occupationCode);
+  const officialSuffix = isTx ? txTradeOfficialSuffix(result.occupationCode) : null;
+  const shortKey = displayLicenseKey(result, isTx);
 
   return (
     <article className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/20 hover:shadow-[var(--shadow-md)]">
+      {/* Status strip — fewer, clearer signals on mobile */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-[var(--border)]/80 px-3.5 py-2.5 sm:gap-x-4 sm:px-5">
         <span className="inline-flex items-center gap-1.5 text-xs text-[var(--muted)]">
           <span className={`h-1.5 w-1.5 rounded-full ${toneBar[licTone]}`} aria-hidden />
           License {statusLabel(result.licenseStatus)}
         </span>
+        {isTx && trade ? (
+          <span className="inline-flex max-w-full items-center gap-1.5 text-xs font-medium text-[var(--navy)]">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--navy)]/50" aria-hidden />
+            <span className="truncate">{trade.chip}</span>
+            <span className="hidden text-[var(--muted)] font-normal sm:inline">· specialty</span>
+          </span>
+        ) : null}
         {showEntity ? (
           <span className="inline-flex items-center gap-1.5 text-xs text-[var(--muted)]">
             <span className={`h-1.5 w-1.5 rounded-full ${toneBar[entTone]}`} aria-hidden />
@@ -59,23 +94,25 @@ export function ResultCard({
               : "No Sunbiz link"}
           </span>
         ) : null}
-        {location && (
-          <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-xs text-[var(--muted)] sm:max-w-[45%]">
+        {location ? (
+          <span className="inline-flex min-w-0 max-w-full items-center gap-1.5 text-xs text-[var(--muted)] sm:max-w-[50%]">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]/70" aria-hidden />
             <span className="truncate">{location}</span>
           </span>
-        )}
-        {result.hasDiscipline ? (
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-800">
-            <span className={`h-1.5 w-1.5 rounded-full ${toneBar.warn}`} aria-hidden />
-            Discipline on file
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1.5 text-xs text-[var(--muted)]">
-            <span className={`h-1.5 w-1.5 rounded-full ${toneBar.good}`} aria-hidden />
-            No discipline in extract
-          </span>
-        )}
+        ) : null}
+        {!isTx ? (
+          result.hasDiscipline ? (
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-800">
+              <span className={`h-1.5 w-1.5 rounded-full ${toneBar.warn}`} aria-hidden />
+              Discipline on file
+            </span>
+          ) : (
+            <span className="hidden items-center gap-1.5 text-xs text-[var(--muted)] sm:inline-flex">
+              <span className={`h-1.5 w-1.5 rounded-full ${toneBar.good}`} aria-hidden />
+              No discipline in extract
+            </span>
+          )
+        ) : null}
       </div>
 
       <div className="p-3.5 sm:p-5">
@@ -89,13 +126,32 @@ export function ResultCard({
                 {result.displayName}
               </Link>
             </h2>
-            {result.primaryLicenseKey && (
+            {shortKey ? (
               <p className="mt-1 font-mono text-sm tracking-wide text-[var(--accent)]">
-                {result.primaryLicenseKey}
+                {isTx ? (
+                  <>
+                    <span className="mr-1.5 font-sans text-[11px] font-medium uppercase tracking-wider text-[var(--muted)]">
+                      TDLR
+                    </span>
+                    {shortKey}
+                    {result.primaryLicenseKey && result.primaryLicenseKey !== shortKey ? (
+                      <span className="mt-0.5 block font-mono text-[11px] tracking-normal text-[var(--muted)] sm:mt-0 sm:ml-2 sm:inline">
+                        {result.primaryLicenseKey}
+                      </span>
+                    ) : null}
+                  </>
+                ) : (
+                  shortKey
+                )}
               </p>
-            )}
+            ) : null}
           </div>
-          <div className="hidden flex-wrap gap-1.5 sm:flex sm:max-w-[42%] sm:justify-end">
+          <div className="flex flex-wrap gap-1.5 sm:max-w-[42%] sm:justify-end">
+            {isTx ? (
+              <span className="inline-flex items-center rounded-full border border-[var(--navy)]/15 bg-[var(--navy)]/[0.04] px-2.5 py-1 text-[11px] font-medium text-[var(--navy)]">
+                Specialty trade
+              </span>
+            ) : null}
             <StatusBadge
               status={result.licenseStatus}
               label={`License: ${statusLabel(result.licenseStatus)}`}
@@ -110,27 +166,38 @@ export function ResultCard({
             ) : null}
           </div>
         </div>
-        <p className="mt-2.5 text-sm leading-relaxed text-[var(--muted)] sm:mt-3">
-          {occupationLabel(result.occupationCode)}
-          {result.entityName ? (
-            <>
-              {" · "}
-              <span className="text-[var(--text)]/80">Entity: {result.entityName}</span>
-            </>
+
+        <div className="mt-2.5 sm:mt-3">
+          <p className="text-sm font-medium leading-snug text-[var(--text)]">{tradeLabel}</p>
+          {officialSuffix ? (
+            <p className="mt-0.5 text-xs text-[var(--muted)]">
+              Official type: {officialSuffix}
+            </p>
+          ) : isTx ? (
+            <p className="mt-0.5 text-xs text-[var(--muted)]">TDLR specialty license</p>
           ) : null}
-          {location ? (
-            <>
-              {" · "}
-              <span>{location}</span>
-            </>
+          {(result.entityName || location) && !isTx ? (
+            <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+              {result.entityName ? (
+                <span className="text-[var(--text)]/80">Entity: {result.entityName}</span>
+              ) : null}
+              {result.entityName && location ? " · " : null}
+              {location ? <span>{location}</span> : null}
+            </p>
+          ) : location && isTx ? (
+            <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">{location}</p>
           ) : null}
-        </p>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
+        </div>
+
+        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
           <Link
             href={`/contractors/${encodeURIComponent(result.slug)}`}
-            className="text-xs font-medium text-[var(--accent)] no-underline hover:underline"
+            className="inline-flex min-h-10 items-center rounded-xl bg-[var(--navy)] px-3.5 text-xs font-semibold text-white no-underline sm:min-h-0 sm:bg-transparent sm:px-0 sm:font-medium sm:text-[var(--accent)] sm:hover:underline"
           >
-            Open Trust Report →
+            Open Trust Report
+            <span className="ml-1 sm:ml-0" aria-hidden>
+              →
+            </span>
           </Link>
           <CompareToggle slug={result.slug} compact />
         </div>
