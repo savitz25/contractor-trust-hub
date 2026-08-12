@@ -2,6 +2,11 @@ import { cache } from "react";
 import { query, queryOne } from "@/lib/db";
 import { getStateBySlug, type EvidenceState } from "@/lib/states/config";
 import { asLicenseStatus } from "./format";
+import {
+  looksLikeLicenseKey,
+  normalizeLicenseKey,
+  prepareNameSearch,
+} from "./search-normalize";
 import type {
   ContractorDetail,
   DisciplineDetail,
@@ -20,11 +25,6 @@ export const SITEMAP_PAGE_SIZE = 40_000;
 
 function normalizeSearchInput(q: string): string {
   return q.trim().replace(/\s+/g, " ");
-}
-
-function looksLikeLicenseKey(q: string): boolean {
-  // CBC015082, CGC1234567, or numeric core
-  return /^[A-Za-z]{2,5}\d{4,}$/.test(q.replace(/\s+/g, "")) || /^\d{5,}$/.test(q);
 }
 
 export type SearchOptions = {
@@ -50,7 +50,7 @@ export async function searchContractors(
   const licenseMode = looksLikeLicenseKey(q);
 
   if (licenseMode) {
-    const key = q.replace(/\s+/g, "").toUpperCase();
+    const key = normalizeLicenseKey(q);
     const rows = await query<{
       id: string;
       slug: string;
@@ -126,10 +126,20 @@ export async function searchContractors(
     };
   }
 
-  // Name search — prefix + contains, prefer prefix (GIN trigram indexes help ILIKE)
-  const escaped = q.replace(/[%_\\]/g, "\\$&");
-  const like = `%${escaped}%`;
-  const prefix = `${escaped}%`;
+  // Name search — forgiving on legal suffixes / multi-word tokens; entity links stay strict
+  const prepared = prepareNameSearch(q);
+  // Up to 4 significant tokens must all appear (AND). Pad with "%" so unused slots always match.
+  const tokenLikes = prepared.tokenLikes.slice(0, 4);
+  while (tokenLikes.length < 4) tokenLikes.push("%");
+
+  // Combined name blob for multi-token AND matching
+  const nameBlob = `(
+    COALESCE(c.display_name, '') || ' ' ||
+    COALESCE(c.legal_name, '') || ' ' ||
+    COALESCE(c.dba_name, '') || ' ' ||
+    COALESCE(l.licensee_name_raw, '') || ' ' ||
+    COALESCE(l.dba_name_raw, '')
+  )`;
 
   const rows = await query<{
     id: string;
@@ -167,18 +177,31 @@ export async function searchContractors(
           WHEN c.display_name ILIKE $1 THEN 0
           WHEN c.dba_name ILIKE $1 THEN 1
           WHEN c.legal_name ILIKE $1 THEN 2
-          ELSE 3
+          WHEN c.display_name ILIKE $2 THEN 3
+          WHEN c.dba_name ILIKE $2 OR c.legal_name ILIKE $2 THEN 4
+          ELSE 5
         END AS rank_score
       FROM contractors c
       JOIN licenses l ON l.contractor_id = c.id AND l.source_system = $3
       WHERE c.is_thin_profile = FALSE
         AND (c.home_state = $4 OR l.state = $4)
         AND (
-          c.display_name ILIKE $2
+          c.display_name ILIKE $5
+          OR c.legal_name ILIKE $5
+          OR c.dba_name ILIKE $5
+          OR l.licensee_name_raw ILIKE $5
+          OR l.dba_name_raw ILIKE $5
+          OR c.display_name ILIKE $2
           OR c.legal_name ILIKE $2
           OR c.dba_name ILIKE $2
           OR l.licensee_name_raw ILIKE $2
           OR l.dba_name_raw ILIKE $2
+          OR (
+            ${nameBlob} ILIKE $8
+            AND ${nameBlob} ILIKE $9
+            AND ${nameBlob} ILIKE $10
+            AND ${nameBlob} ILIKE $11
+          )
         )
       ORDER BY c.id,
         CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
@@ -198,16 +221,29 @@ export async function searchContractors(
       JOIN entities ent ON ent.id = ce.entity_id
       WHERE ce.contractor_id = m.id
         AND ce.role = 'sunbiz_entity'
-        AND ent.source_system = $5
+        AND ent.source_system = $6
         AND ce.confidence IS NOT NULL
-        AND ce.confidence >= $7
+        AND ce.confidence >= $12
       ORDER BY ce.confidence DESC NULLS LAST
       LIMIT 1
     ) e ON TRUE
     ORDER BY m.rank_score, m.display_name
-    LIMIT $6
+    LIMIT $7
     `,
-    [prefix, like, state.licenseSource, state.code, state.entitySource, limit, MIN_SUNBIZ_CONFIDENCE]
+    [
+      prepared.prefixStripped, // $1 rank prefix
+      prepared.likeStripped, // $2 stripped contains
+      state.licenseSource, // $3
+      state.code, // $4
+      prepared.likeOriginal, // $5 original contains
+      state.entitySource, // $6
+      limit, // $7
+      tokenLikes[0], // $8
+      tokenLikes[1], // $9
+      tokenLikes[2], // $10
+      tokenLikes[3], // $11
+      MIN_SUNBIZ_CONFIDENCE, // $12
+    ]
   );
 
   return {

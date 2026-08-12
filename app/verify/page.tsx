@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { EmptyResults } from "@/components/search/EmptyResults";
 import { ResultCard } from "@/components/search/ResultCard";
 import { SearchForm } from "@/components/search/SearchForm";
 import { searchContractors } from "@/lib/contractors/queries";
@@ -19,12 +20,13 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; intent?: string }>;
 };
 
 export default async function VerifyPage({ searchParams }: Props) {
   const sp = await searchParams;
   const q = (sp.q || "").trim();
+  const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
   let results: Awaited<ReturnType<typeof searchContractors>>["results"] = [];
   let mode: "license" | "name" = "name";
   let error: string | null = null;
@@ -42,6 +44,13 @@ export default async function VerifyPage({ searchParams }: Props) {
     }
   }
 
+  const intentBlurb =
+    intent === "have"
+      ? "Confirming someone you’re already talking to — license id is most precise when you have it."
+      : intent === "research"
+        ? "Researching by name — try distinctive words from the company; drop LLC / Inc if needed."
+        : null;
+
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
@@ -51,12 +60,19 @@ export default async function VerifyPage({ searchParams }: Props) {
         Verify a Florida contractor
       </h1>
       <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--muted)] sm:text-base">
-        Search by license number or business name. Results show license status, county, and
-        linked entity status only when a high-confidence Sunbiz match exists.
+        Search by license number or business name. Result cards show license status, entity
+        status, and location first — then open a full Trust Report.
       </p>
+      {intentBlurb && (
+        <p className="mt-2 max-w-2xl text-sm text-[var(--accent)]/90">{intentBlurb}</p>
+      )}
 
       <div className="mt-7 max-w-3xl sm:mt-8">
-        <SearchForm defaultQuery={q} autoFocus={!q} />
+        <SearchForm defaultQuery={q} autoFocus={!q} intent={intent} />
+        <p className="mt-2.5 text-xs leading-relaxed text-[var(--muted)]">
+          Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay
+          high-confidence only.
+        </p>
       </div>
 
       {error && (
@@ -95,31 +111,18 @@ export default async function VerifyPage({ searchParams }: Props) {
           </div>
 
           {results.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-5 py-9 sm:px-8">
-              <p className="text-base font-medium text-[var(--text)]">
-                No licensed Florida contractors matched &ldquo;{q}&rdquo;
-              </p>
-              <ul className="mt-4 space-y-2 text-sm leading-relaxed text-[var(--muted)]">
-                <li>
-                  Try the full license id (e.g.{" "}
-                  <Link href="/verify?q=CBC015082" className="text-[var(--accent)]">
-                    CBC015082
-                  </Link>
-                  ) when you have it — most precise.
-                </li>
-                <li>Use fewer words from the legal or DBA name (drop LLC / Inc).</li>
-                <li>Check spelling; we match official board extracts, not marketing names.</li>
-              </ul>
-              <p className="mt-5 text-xs leading-relaxed text-[var(--muted)]">
-                Thin “qualifying business” shells without a full license board record are hidden
-                from consumer search by design.
-              </p>
-            </div>
+            <EmptyResults query={q} mode={mode} />
           ) : (
             <div className="space-y-3">
               {results.map((r) => (
                 <ResultCard key={r.id} result={r} />
               ))}
+              {results.length >= 25 && (
+                <p className="pt-2 text-center text-sm text-[var(--muted)]">
+                  Showing the first 25 matches. Add more of the company name or a license number to
+                  narrow results.
+                </p>
+              )}
             </div>
           )}
         </section>
@@ -130,15 +133,15 @@ export default async function VerifyPage({ searchParams }: Props) {
           {[
             {
               t: "License number",
-              d: "Best precision. Use the full alternate id when you have it (CBC, CGC, CCC…).",
+              d: "Most precise. Full ids like CBC015082 — spaces or dashes are fine.",
             },
             {
               t: "Company name",
-              d: "Matches display name, DBA, and licensee name fields from the board extract.",
+              d: "Matches display, legal, and DBA fields. LLC / Inc endings are optional.",
             },
             {
               t: "What you’ll see",
-              d: "Status, license type, county, and Sunbiz entity status only when confidently linked.",
+              d: "License status, entity status, and location on every card — then a Trust Report.",
             },
           ].map((card) => (
             <div
@@ -149,6 +152,15 @@ export default async function VerifyPage({ searchParams }: Props) {
               <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{card.d}</p>
             </div>
           ))}
+          <div className="sm:col-span-3">
+            <p className="text-xs text-[var(--muted)]">
+              Coming from the homepage?{" "}
+              <Link href="/#search" className="text-[var(--accent)]">
+                Back to the main search
+              </Link>
+              .
+            </p>
+          </div>
         </section>
       )}
     </main>

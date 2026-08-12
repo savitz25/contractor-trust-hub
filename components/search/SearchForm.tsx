@@ -1,21 +1,52 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useId, useTransition } from "react";
 
 type SearchFormProps = {
   defaultQuery?: string;
-  compact?: boolean;
+  /** hero = homepage primary; default = verify page; compact = tight layouts */
+  size?: "hero" | "default" | "compact";
   autoFocus?: boolean;
+  /** Optional visible label above the field */
+  label?: string;
+  placeholder?: string;
+  /** Extra query params (e.g. intent=have) */
+  intent?: "have" | "research" | null;
+};
+
+const PLACEHOLDERS = {
+  hero: "License number (CBC015082) or company name…",
+  default: "License (CBC015082) or company name",
+  compact: "License or company name",
 };
 
 export function SearchForm({
   defaultQuery = "",
-  compact = false,
+  size = "default",
   autoFocus = false,
+  label,
+  placeholder,
+  intent = null,
 }: SearchFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const inputId = useId();
+
+  const isHero = size === "hero";
+  const isCompact = size === "compact";
+
+  const inputClass = isHero
+    ? "min-h-14 w-full flex-1 rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-5 text-base text-[var(--text)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70 sm:min-h-[3.75rem] sm:text-lg"
+    : isCompact
+      ? "min-h-11 w-full flex-1 rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 text-sm text-[var(--text)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70"
+      : "min-h-12 w-full flex-1 rounded-xl border border-[var(--border)] bg-[var(--panel)] px-4 text-base text-[var(--text)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70 sm:text-[15px]";
+
+  const buttonClass = isHero
+    ? "min-h-14 shrink-0 rounded-2xl bg-[var(--accent)] px-8 text-base font-semibold text-[var(--navy)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70 sm:min-h-[3.75rem] sm:px-10 sm:text-lg"
+    : isCompact
+      ? "min-h-11 rounded-xl bg-[var(--accent)] px-4 text-sm font-semibold text-[var(--navy)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70"
+      : "min-h-12 rounded-xl bg-[var(--accent)] px-6 text-sm font-semibold text-[var(--navy)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70";
 
   return (
     <form
@@ -26,44 +57,55 @@ export function SearchForm({
         const fd = new FormData(e.currentTarget);
         const q = String(fd.get("q") || "").trim();
         if (q.length < 2) return;
+        const params = new URLSearchParams({ q });
+        if (intent) params.set("intent", intent);
         startTransition(() => {
-          router.push(`/verify?q=${encodeURIComponent(q)}`);
+          router.push(`/verify?${params.toString()}`);
         });
       }}
-      className={
-        compact
-          ? "flex w-full flex-col gap-2 sm:flex-row sm:items-stretch"
-          : "flex w-full flex-col gap-3 sm:flex-row sm:items-stretch"
-      }
+      className="w-full"
     >
-      <label className="sr-only" htmlFor="q">
-        Search by license number or contractor name
-      </label>
-      <input
-        id="q"
-        name="q"
-        type="search"
-        required
-        minLength={2}
-        defaultValue={defaultQuery}
-        autoFocus={autoFocus}
-        autoComplete="off"
-        enterKeyHint="search"
-        disabled={pending}
-        placeholder="License (CBC015082) or company name"
-        className="min-h-12 w-full flex-1 rounded-xl border border-[var(--border)] bg-[var(--panel)] px-4 text-base text-[var(--text)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70 sm:text-[15px]"
-      />
-      <button
-        type="submit"
-        disabled={pending}
+      {intent && <input type="hidden" name="intent" value={intent} />}
+      {label && (
+        <label
+          htmlFor={inputId}
+          className="mb-2 block text-sm font-medium text-[var(--text)]"
+        >
+          {label}
+        </label>
+      )}
+      {!label && (
+        <label className="sr-only" htmlFor={inputId}>
+          Search by license number or contractor name
+        </label>
+      )}
+      <div
         className={
-          compact
-            ? "min-h-11 rounded-xl bg-[var(--accent)] px-5 text-sm font-semibold text-[var(--navy)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70 sm:min-h-12"
-            : "min-h-12 rounded-xl bg-[var(--accent)] px-6 text-sm font-semibold text-[var(--navy)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70"
+          isHero
+            ? "flex w-full flex-col gap-3 sm:flex-row sm:items-stretch"
+            : isCompact
+              ? "flex w-full flex-col gap-2 sm:flex-row sm:items-stretch"
+              : "flex w-full flex-col gap-3 sm:flex-row sm:items-stretch"
         }
       >
-        {pending ? "Searching…" : "Verify"}
-      </button>
+        <input
+          id={inputId}
+          name="q"
+          type="search"
+          required
+          minLength={2}
+          defaultValue={defaultQuery}
+          autoFocus={autoFocus}
+          autoComplete="off"
+          enterKeyHint="search"
+          disabled={pending}
+          placeholder={placeholder || PLACEHOLDERS[size]}
+          className={inputClass}
+        />
+        <button type="submit" disabled={pending} className={buttonClass}>
+          {pending ? "Searching…" : "Verify"}
+        </button>
+      </div>
     </form>
   );
 }

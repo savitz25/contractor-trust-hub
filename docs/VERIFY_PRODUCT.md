@@ -44,12 +44,21 @@ User query → lib/contractors/queries.ts
   → contractors + licenses + contractor_entities + entities + discipline_actions
 ```
 
-- **License search** when input looks like `CBC015082` or a long numeric core.
-- **Name search** otherwise (display / legal / DBA / licensee fields).
+- **License search** when input looks like `CBC015082` (spaces/dashes OK) or a long numeric core.
+- **Name search** otherwise — more forgiving for consumers:
+  - Strips common legal suffixes (LLC, Inc, Corp, …) for matching
+  - Multi-word queries require all significant tokens (AND) across name fields
+  - Still ranks prefix matches highest
 - Thin QB shells (`is_thin_profile = true`) are excluded from consumer search.
-- Sunbiz status appears only when:
+- **Entity linking stays strict** — Sunbiz status appears only when:
   - `contractor_entities.role = 'sunbiz_entity'`, and
   - `confidence >= 0.90` (high-confidence linker methods only).
+
+### Entry experience
+
+- Homepage hero is a large **Verify** search (not a lead form).
+- Two consumer intents both route to search: “I already have a contractor” vs “I need to research.”
+- Result cards lead with license status · entity status · location before occupation detail.
 
 ## Multi-state readiness
 
