@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
-import { CONTRACTOR_NETWORK_LINKS } from "@/lib/network/network-links";
+import { AskNetworkBar } from "@/components/network/AskNetworkBar";
+import { SwitchHubMenu } from "@/components/network/SwitchHubMenu";
 
 const secondaryNav = [
   { href: "/studios", label: "Studios", shortLabel: "Studios" },
@@ -13,73 +14,56 @@ const secondaryNav = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg-elevated)]/95 shadow-[var(--shadow-sm)] backdrop-blur-md">
-      {/* Network strip — sibling hubs + shared standard */}
-      <div className="border-b border-[var(--navy)]/10 bg-[var(--navy)] text-[11px] text-white/90 sm:text-xs">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-1.5 px-3 py-1.5 sm:px-6">
-          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            <span className="text-white/70">Part of the</span>
-            <a
-              href="https://www.asktrusthub.com"
-              className="font-medium text-[var(--accent)] no-underline hover:underline"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Ask Trust Hub
-            </a>
-            <span className="hidden text-white/40 sm:inline" aria-hidden>
-              ·
-            </span>
-            <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-              {CONTRACTOR_NETWORK_LINKS.filter((h) => h.id !== "ask").map((hub) => (
-                <a
-                  key={hub.id}
-                  href={hub.href}
-                  className="text-white/80 no-underline hover:text-white hover:underline"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {hub.shortLabel}
-                </a>
-              ))}
-            </span>
-          </p>
-          <a
-            href="https://www.asktrusthub.com/methodology"
-            className="text-white/75 no-underline hover:text-white hover:underline"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Shared research standard
-          </a>
-        </div>
-      </div>
+      <AskNetworkBar />
 
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3.5">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-3 sm:px-6 sm:py-3">
         <Link
           href="/"
-          className="min-w-0 max-w-[58%] shrink no-underline sm:max-w-none"
+          className="min-w-0 max-w-[48%] shrink no-underline sm:max-w-none"
           aria-label="Contractor Trust Hub home"
         >
           <BrandLogo height={34} priority surface="onLight" />
         </Link>
-        <nav className="flex shrink-0 items-center gap-0.5 sm:gap-1" aria-label="Primary">
-          {secondaryNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-lg px-2 py-2 text-xs font-medium text-[var(--muted)] no-underline transition hover:bg-[var(--navy-soft)] hover:text-[var(--navy)] sm:px-3 sm:text-sm"
-            >
-              <span className="sm:hidden">{item.shortLabel}</span>
-              <span className="hidden sm:inline">{item.label}</span>
-            </Link>
-          ))}
+
+        <div className="flex shrink-0 items-center gap-0.5 sm:gap-1.5">
+          <nav
+            className="hidden items-center gap-0.5 sm:flex sm:gap-1"
+            aria-label="Primary"
+          >
+            {secondaryNav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-lg px-2 py-2 text-xs font-medium text-[var(--muted)] no-underline transition hover:bg-[var(--navy-soft)] hover:text-[var(--navy)] sm:px-3 sm:text-sm"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Compact product links on small screens (Switch Hub covers network) */}
+          <nav className="flex items-center gap-0.5 sm:hidden" aria-label="Primary">
+            {secondaryNav.slice(0, 3).map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-lg px-1.5 py-2 text-[11px] font-medium text-[var(--muted)] no-underline hover:text-[var(--navy)]"
+              >
+                {item.shortLabel}
+              </Link>
+            ))}
+          </nav>
+
+          <SwitchHubMenu className="hidden sm:block" />
+          <SwitchHubMenu className="sm:hidden" compact />
+
           <Link
             href="/verify"
-            className="ml-0.5 rounded-lg bg-[var(--accent)] px-2.5 py-2 text-xs font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)] hover:brightness-105 sm:ml-1 sm:px-3.5 sm:text-sm"
+            className="ml-0.5 inline-flex min-h-9 items-center rounded-lg bg-[var(--accent)] px-2.5 py-2 text-xs font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)] hover:brightness-105 sm:ml-1 sm:px-3.5 sm:text-sm"
           >
             Verify
           </Link>
-        </nav>
+        </div>
       </div>
     </header>
   );
