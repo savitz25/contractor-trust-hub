@@ -18,6 +18,7 @@ Consumer-facing “Verify a Florida contractor” experience.
 | `/independence` | Independence & how we make money |
 | `/corrections` | Request a data correction |
 | `/disclaimer` | Legal / educational disclaimer |
+| `/compare?slugs=` | Side-by-side evidence for 2–3 contractors (no scores) |
 | `/sitemap.xml` | Sitemap index (static + discovery + contractor profiles) |
 | `/robots.txt` | Crawler rules + sitemap pointer |
 

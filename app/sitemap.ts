@@ -76,6 +76,7 @@ export default async function sitemap(props: {
       "/independence",
       "/corrections",
       "/disclaimer",
+      "/compare",
     ] as const;
     for (const path of staticPaths) {
       entries.push({

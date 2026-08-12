@@ -375,47 +375,114 @@ export function DisciplineSection({
 }: {
   discipline: ContractorDetail["discipline"];
 }) {
+  const hasActions = discipline.length > 0;
+
   return (
-    <section className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 sm:p-6">
-      <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
-        Discipline & regulatory actions
-      </h2>
-      {discipline.length === 0 ? (
-        <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
-          No discipline actions linked to this contractor in our current board extracts. This is
-          not a certificate of clean history outside these sources.
-        </p>
+    <section
+      id="discipline"
+      className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-4 sm:p-6"
+      aria-labelledby="discipline-heading"
+    >
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2
+            id="discipline-heading"
+            className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]"
+          >
+            Discipline &amp; board actions
+          </h2>
+          <p className="mt-1 text-xs text-[var(--muted)]">
+            From Florida board discipline extracts linked to this contractor in our data.
+          </p>
+        </div>
+        <span
+          className={
+            hasActions
+              ? "rounded-full bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-100 ring-1 ring-inset ring-amber-500/30"
+              : "rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-200 ring-1 ring-inset ring-emerald-500/30"
+          }
+        >
+          {hasActions
+            ? `${discipline.length} action${discipline.length === 1 ? "" : "s"} in our extract`
+            : "None linked in our extract"}
+        </span>
+      </div>
+
+      {!hasActions ? (
+        <div className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-4">
+          <p className="text-sm font-medium text-emerald-100">
+            No disciplinary actions linked in our current board extracts
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+            That means our Florida discipline files do not currently attach a board action to this
+            contractor profile. It is <strong className="font-medium text-[var(--text)]">not</strong>{" "}
+            a certificate of clean history: actions may exist outside these extracts, under a
+            different name, or after our last data load. Re-check the official DBPR board before
+            hiring.
+          </p>
+        </div>
       ) : (
-        <ul className="mt-4 space-y-3">
-          {discipline.map((d) => (
-            <li
-              key={d.id}
-              className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-4 text-sm"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="font-medium text-[var(--text)]">
-                  {d.disposition || d.classification || "Board action"}
-                </p>
-                <p className="text-xs text-[var(--muted)]">
-                  {formatDate(d.dispositionDate || d.enteredDate)}
-                </p>
-              </div>
-              {d.complaintNumber && (
-                <p className="mt-1 font-mono text-xs text-[var(--accent)]">
-                  Complaint {d.complaintNumber}
-                </p>
-              )}
-              {d.disciplineDescription && (
-                <p className="mt-2 leading-relaxed text-[var(--muted)]">
-                  {d.disciplineDescription}
-                </p>
-              )}
-              <p className="mt-2 text-xs text-[var(--muted)]">
-                Source: {d.sourceDataset} · verified {formatDateTime(d.lastVerifiedAt)}
-              </p>
-            </li>
-          ))}
-        </ul>
+        <>
+          <p className="mt-4 text-sm leading-relaxed text-[var(--muted)]">
+            The following actions appear in our extracts. Read each row factually — we do not score
+            or rank severity. Confirm details on the official board if a decision depends on them.
+          </p>
+          <ul className="mt-4 space-y-3">
+            {discipline.map((d) => {
+              const when = formatDate(d.dispositionDate || d.enteredDate);
+              const headline =
+                d.disposition || d.classification || d.violationCode || "Board action";
+              return (
+                <li
+                  key={d.id}
+                  className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 text-sm"
+                >
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <p className="font-semibold text-[var(--text)]">{headline}</p>
+                    <p className="shrink-0 text-xs tabular-nums text-[var(--muted)]">{when}</p>
+                  </div>
+                  <dl className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
+                    {d.classification && d.classification !== headline && (
+                      <div>
+                        <dt className="text-[var(--muted)]">Classification</dt>
+                        <dd className="text-[var(--text)]">{d.classification}</dd>
+                      </div>
+                    )}
+                    {d.licenseType && (
+                      <div>
+                        <dt className="text-[var(--muted)]">License type (as filed)</dt>
+                        <dd className="text-[var(--text)]">{d.licenseType}</dd>
+                      </div>
+                    )}
+                    {d.complaintNumber && (
+                      <div>
+                        <dt className="text-[var(--muted)]">Complaint / case</dt>
+                        <dd className="font-mono text-[var(--accent)]">{d.complaintNumber}</dd>
+                      </div>
+                    )}
+                    {d.violationCode && (
+                      <div>
+                        <dt className="text-[var(--muted)]">Violation code</dt>
+                        <dd className="text-[var(--text)]">{d.violationCode}</dd>
+                      </div>
+                    )}
+                  </dl>
+                  {d.disciplineDescription && (
+                    <p className="mt-3 leading-relaxed text-[var(--muted)]">
+                      {d.disciplineDescription}
+                    </p>
+                  )}
+                  <p className="mt-3 border-t border-[var(--border)]/80 pt-2 text-xs text-[var(--muted)]">
+                    Source: {d.sourceDataset || "Florida board discipline extract"}
+                    {d.lastVerifiedAt
+                      ? ` · in our data ${formatDateTime(d.lastVerifiedAt)}`
+                      : ""}
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        </>
       )}
     </section>
   );

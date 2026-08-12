@@ -102,11 +102,11 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
       id: "discipline",
       label: "Discipline",
       statusLine: hasDiscipline
-        ? `${contractor.discipline.length} on file`
-        : "None in extract",
+        ? `${contractor.discipline.length} linked`
+        : "None linked",
       detail: hasDiscipline
-        ? "Board action(s) linked in our current extracts — see details below."
-        : "No discipline rows linked in our current board extracts.",
+        ? "Board action(s) in our extracts — open the Discipline section below for dates and source."
+        : "No board actions linked in our current extracts (not a warranty of clean history).",
       tone: hasDiscipline ? "warn" : "good",
       lastVerifiedAt:
         contractor.discipline[0]?.lastVerifiedAt ?? lic?.lastVerifiedAt ?? null,
@@ -262,17 +262,24 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
     points.push({
       id: "disc",
       label: "Discipline",
-      text: `${contractor.discipline.length} board action(s) linked. Read the details below and verify on official records.`,
+      text: `${contractor.discipline.length} board action(s) appear in our extracts. Review the Discipline section (dates, disposition, source) and confirm on the official board if it matters to your decision.`,
       tone: "warn",
     });
   } else {
     points.push({
       id: "no-disc",
       label: "Discipline",
-      text: "None linked in our current extracts. That is not a guarantee of a clean history outside these sources.",
+      text: "None linked in our current extracts. That is a factual statement about our files — not a certificate of a clean record outside these sources or after our last load.",
       tone: "good",
     });
   }
+
+  points.push({
+    id: "wc",
+    label: "Workers’ comp",
+    text: "We do not store coverage status. Use the official Florida Proof of Coverage tools linked on this report before relying on a contractor’s claim.",
+    tone: "neutral",
+  });
 
   points.push({
     id: "confirm",

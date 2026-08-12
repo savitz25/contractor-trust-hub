@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CompareToggle } from "@/components/compare/CompareToggle";
 import {
   DisciplineSection,
   DiscrepanciesSection,
@@ -10,6 +11,7 @@ import {
   LicensesSection,
   SourcesFooter,
 } from "@/components/contractor/TrustReport";
+import { WorkersCompGuidance } from "@/components/contractor/WorkersCompGuidance";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { statusLabel } from "@/lib/contractors/format";
@@ -224,8 +226,10 @@ export default async function ContractorPage({ params }: Props) {
           ) : (
             <StatusBadge status="unknown" label="No Sunbiz link" />
           )}
-          {contractor.discipline.length > 0 && (
+          {contractor.discipline.length > 0 ? (
             <StatusBadge status="warn" label="Discipline on file" />
+          ) : (
+            <StatusBadge status="unknown" label="No discipline in extract" />
           )}
         </div>
         {location && <p className="mt-3 text-[15px] text-[var(--muted)]">{location}</p>}
@@ -242,10 +246,22 @@ export default async function ContractorPage({ params }: Props) {
             {conf}
           </p>
         )}
+        <div className="mt-4 flex flex-wrap gap-2">
+          <CompareToggle slug={contractor.slug} />
+          {contractor.discipline.length > 0 && (
+            <a
+              href="#discipline"
+              className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm text-[var(--muted)] no-underline hover:text-[var(--text)]"
+            >
+              Jump to discipline
+            </a>
+          )}
+        </div>
       </header>
 
       <div className="mt-6 space-y-5 sm:mt-8 sm:space-y-6">
         <EvidenceSummary contractor={contractor} />
+        <DisciplineSection discipline={contractor.discipline} />
         <HiringGuidance contractor={contractor} />
         <DiscrepanciesSection contractor={contractor} />
 
@@ -253,7 +269,7 @@ export default async function ContractorPage({ params }: Props) {
           <LicensesSection licenses={contractor.licenses} />
           <div className="space-y-5 sm:space-y-6">
             <EntitySection entities={contractor.entities} state={state} />
-            <DisciplineSection discipline={contractor.discipline} />
+            <WorkersCompGuidance contractorName={contractor.displayName} />
           </div>
         </div>
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CompareBar } from "@/components/compare/CompareBar";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import "./globals.css";
@@ -56,8 +57,9 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex min-h-screen flex-col antialiased">
         <SiteHeader />
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 pb-24 sm:pb-20">{children}</div>
         <SiteFooter />
+        <CompareBar />
       </body>
     </html>
   );
