@@ -53,8 +53,11 @@ export type PlanInput = {
   city?: string;
   county?: string | null;
   scale: ScaleBand;
-  /** Plan BudgetBand or studio-specific budget id string. */
-  budgetBand?: BudgetBand | string | null;
+  /**
+   * Budget comfort band id.
+   * Plan defaults use BudgetBand; studios may use their own ids (e.g. under_10k, 50_100k).
+   */
+  budgetBand?: string | null;
 };
 
 export type CostBandHints = {
@@ -109,7 +112,8 @@ export type QuoteRequestPayload = {
   location: string;
   scale: ScaleBand;
   scaleLabel: string;
-  budgetBand?: BudgetBand | null;
+  /** Plan or studio-specific budget id. */
+  budgetBand?: string | null;
   details?: string;
   costLow?: number;
   costMid?: number;

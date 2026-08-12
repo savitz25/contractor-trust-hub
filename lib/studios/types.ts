@@ -1,4 +1,4 @@
-import type { BudgetBand, ProjectTypeId, ScaleBand } from "@/lib/plan/types";
+import type { ProjectTypeId, ScaleBand } from "@/lib/plan/types";
 
 /** Config-driven Project Studio definition. */
 
@@ -86,8 +86,8 @@ export type StudioAnswers = {
   projectType: ProjectTypeId;
   /** fieldId → single option id or multi option ids */
   values: Record<string, string | string[]>;
-  /** Plan BudgetBand id or studio-specific budget id (e.g. under_10k). */
-  budgetBand?: BudgetBand | string | null;
+  /** Plan or studio-specific budget id (e.g. under_10k, 50_100k, not_sure). */
+  budgetBand?: string | null;
   zip?: string;
   city?: string;
   state?: string;
@@ -103,7 +103,7 @@ export type StudioContext = {
   answerSummary: string[];
   scale: ScaleBand;
   scaleLabel: string;
-  budgetBand?: BudgetBand | string | null;
+  budgetBand?: string | null;
   location: {
     state: string;
     zip?: string;

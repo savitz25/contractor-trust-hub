@@ -1,7 +1,6 @@
 import { getProjectType } from "@/lib/plan/project-types";
 import { countyFromFloridaZip, formatLocationLabel, normalizeZip } from "@/lib/plan/location";
 import type {
-  BudgetBand,
   CostRangeResult,
   ProjectTypeId,
   ScaleBand,
@@ -355,7 +354,7 @@ export function parseStudioQuery(
     studioSlug,
     projectType: studio.projectType,
     values,
-    budgetBand: (get("budget") as BudgetBand) || null,
+    budgetBand: get("budget") || null,
     zip: get("zip") || undefined,
     city: get("city") || undefined,
     state: get("state") || "FL",

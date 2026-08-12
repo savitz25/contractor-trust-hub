@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BUDGET_BANDS } from "@/lib/plan/project-types";
 import { encodeStudioQuery, storageKey } from "@/lib/studios/context";
 import { getStudioBySlug } from "@/lib/studios/registry";
-import type { StudioField } from "@/lib/studios/types";
+import type { StudioAnswers, StudioField } from "@/lib/studios/types";
 
 type Props = { slug: string };
 
@@ -119,7 +119,7 @@ export function StudioFlow({ slug }: Props) {
       setStep(step + 1);
       return;
     }
-    const answers = {
+    const answers: StudioAnswers = {
       studioSlug: studio.slug,
       projectType: studio.projectType,
       values,

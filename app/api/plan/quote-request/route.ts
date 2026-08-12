@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { getProjectType, isProjectTypeId } from "@/lib/plan/project-types";
-import type { BudgetBand, ProjectTypeId, ScaleBand } from "@/lib/plan/types";
+import type { ProjectTypeId, ScaleBand } from "@/lib/plan/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     projectLabel: def.label,
     scale,
     scaleLabel,
-    budgetBand: body.budgetBand as BudgetBand | null,
+    budgetBand: body.budgetBand || null,
     details: body.details?.slice(0, 1000) || null,
     notes: body.notes?.slice(0, 2000) || null,
     location,

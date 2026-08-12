@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BUDGET_BANDS, PROJECT_TYPES, isProjectTypeId } from "@/lib/plan/project-types";
 import { encodePlanQuery, parsePlanQuery } from "@/lib/plan/plan-url";
 import { getStudioByProjectType } from "@/lib/studios/registry";
-import type { BudgetBand, ProjectTypeId, ScaleBand } from "@/lib/plan/types";
+import type { ProjectTypeId, ScaleBand } from "@/lib/plan/types";
 
 const STEPS = ["Project", "Location", "Scale"] as const;
 const PLAN_STORAGE_KEY = "cth-plan-context";
@@ -20,7 +20,7 @@ export function PlanFlow() {
   const [zip, setZip] = useState("");
   const [city, setCity] = useState("");
   const [scale, setScale] = useState<ScaleBand>("medium");
-  const [budgetBand, setBudgetBand] = useState<BudgetBand | string | null>("not_sure");
+  const [budgetBand, setBudgetBand] = useState<string | null>("not_sure");
   const [error, setError] = useState<string | null>(null);
   const [resumePath, setResumePath] = useState<string | null>(null);
 
@@ -46,7 +46,7 @@ export function PlanFlow() {
           zip?: string;
           city?: string;
           scale?: ScaleBand;
-          budgetBand?: BudgetBand | null;
+          budgetBand?: string | null;
         };
         resultsPath?: string | null;
       };
