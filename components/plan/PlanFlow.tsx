@@ -20,7 +20,7 @@ export function PlanFlow() {
   const [zip, setZip] = useState("");
   const [city, setCity] = useState("");
   const [scale, setScale] = useState<ScaleBand>("medium");
-  const [budgetBand, setBudgetBand] = useState<BudgetBand | null>("not_sure");
+  const [budgetBand, setBudgetBand] = useState<BudgetBand | string | null>("not_sure");
   const [error, setError] = useState<string | null>(null);
   const [resumePath, setResumePath] = useState<string | null>(null);
 
