@@ -8,7 +8,14 @@
 |------|------|----------------------|
 | `kitchen` | Kitchen Remodel | `kitchen_remodel` |
 | `bathroom` | Bathroom Remodel | `bathroom_remodel` |
-| `roofing` | Roofing (full replacement first-class) | `roofing` |
+| `roofing` | Roofing — full replacement first-class (CCC/RR strict) | `roofing` |
+
+### Roofing Studio notes
+- Full replacement is featured (“Most common”) on step 1
+- Replacement multi-select shows only when action is full replacement or not sure
+- Budget bands: Under $10k / $10–20k / $20–35k / $35k+ / Not sure
+- Access: single-story, multi-story, steep/complex, limited site, not sure
+- Thin states use roofing-specific CCC/RR language
 | `addition` | Addition / Extension | `addition` |
 | `basement` | Basement Finish | `basement_finish` |
 | `exterior` | Exterior & Deck | `deck_outdoor`, `siding_exterior` |

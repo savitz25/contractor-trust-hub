@@ -231,14 +231,17 @@ export function PlanFlow() {
                   Want a deeper scope for {linkedStudio.shortName}?
                 </p>
                 <p className="mt-1 text-xs text-[var(--muted)]">
-                  The {linkedStudio.name} asks a few more questions so cost drivers and matches fit
-                  your project better.
+                  {linkedStudio.slug === "roofing"
+                    ? "Open the Roofing Studio for full replacement scope — material, tear-off, access, and licensed CCC/RR matches."
+                    : `The ${linkedStudio.name} asks a few more questions so cost drivers and matches fit your project better.`}
                 </p>
                 <Link
                   href={`/studios/${linkedStudio.slug}`}
                   className="mt-2 inline-block text-sm font-semibold text-[var(--navy)] no-underline hover:underline"
                 >
-                  Open detailed studio →
+                  {linkedStudio.slug === "roofing"
+                    ? "Open Roofing Studio for replacement scope →"
+                    : "Open detailed studio →"}
                 </Link>
               </div>
             ) : null}

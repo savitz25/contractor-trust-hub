@@ -5,12 +5,12 @@ import { listStudios } from "@/lib/studios/registry";
 export const metadata: Metadata = {
   title: "Project Studios — scope, cost drivers, verified contractors",
   description:
-    "Kitchen, bathroom, and roofing project studios: clarify scope, see conceptual Florida cost ranges, and match licensed contractors. Get clearer on scope. Verify the right trades.",
+    "Kitchen, bathroom, roofing replacement, addition, basement, exterior, and whole-home studios: clarify scope, see conceptual Florida cost ranges, and match licensed contractors.",
   alternates: { canonical: "/studios" },
   openGraph: {
     title: "Project Studios | Contractor Trust Hub",
     description:
-      "Expert planning guides for kitchen, bathroom, and roofing — not design software. Scope, ranges, verified licenses.",
+      "Expert planning guides — roof replacement, kitchen, bath, and more. Scope, ranges, verified licenses. Not design software.",
     url: "/studios",
     type: "website",
   },

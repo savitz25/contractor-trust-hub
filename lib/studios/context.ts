@@ -164,10 +164,26 @@ export function studioCostRange(
       mid = Math.round(mid * 1.03);
       high = Math.round(high * 1.05);
     }
-    if (roofFactors.includes("wind_mit")) {
+    if (roofFactors.includes("wind_mit") || roofFactors.includes("hoa_permit")) {
       mid = Math.round(mid * 1.03);
       high = Math.round(high * 1.06);
     }
+    if (roofFactors.includes("ventilation")) {
+      mid = Math.round(mid * 1.02);
+      high = Math.round(high * 1.04);
+    }
+    if (roofFactors.includes("active_leak")) {
+      // Urgency — slight mid lift; still conceptual
+      mid = Math.round(mid * 1.02);
+    }
+  }
+  if (
+    answers.values.access === "multi_story" ||
+    answers.values.access === "steep" ||
+    answers.values.access === "limited"
+  ) {
+    mid = Math.round(mid * 1.06);
+    high = Math.round(high * 1.1);
   }
   if (answers.values.addition_type === "second_story") {
     mid = Math.round(mid * 1.12);

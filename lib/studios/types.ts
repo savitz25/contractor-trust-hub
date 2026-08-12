@@ -10,6 +10,12 @@ export type StudioFieldOption = {
   featured?: boolean;
 };
 
+/** Show field only when another answer matches one of these values. */
+export type StudioFieldShowWhen = {
+  fieldId: string;
+  values: string[];
+};
+
 export type StudioField =
   | {
       id: string;
@@ -17,6 +23,7 @@ export type StudioField =
       label: string;
       required?: boolean;
       options: StudioFieldOption[];
+      showWhen?: StudioFieldShowWhen;
     }
   | {
       id: string;
@@ -24,7 +31,14 @@ export type StudioField =
       label: string;
       required?: boolean;
       options: StudioFieldOption[];
+      showWhen?: StudioFieldShowWhen;
     };
+
+/** Optional studio-specific budget chips (defaults to plan BUDGET_BANDS). */
+export type StudioBudgetOption = {
+  id: string;
+  label: string;
+};
 
 export type StudioStep = {
   id: string;
@@ -63,6 +77,8 @@ export type StudioDefinition = {
   resolveUnitNote?: (answers: StudioAnswers) => string;
   /** Override cost/matching project type from answers (exterior → siding vs deck). */
   resolveProjectType?: (answers: StudioAnswers) => ProjectTypeId;
+  /** Studio-specific budget bands (e.g. roofing dollar ranges). */
+  budgetOptions?: StudioBudgetOption[];
 };
 
 export type StudioAnswers = {

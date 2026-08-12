@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BUDGET_BANDS } from "@/lib/plan/project-types";
 import { encodeStudioQuery, storageKey } from "@/lib/studios/context";
 import { getStudioBySlug } from "@/lib/studios/registry";
-import type { BudgetBand } from "@/lib/plan/types";
+import type { StudioField } from "@/lib/studios/types";
 
 type Props = { slug: string };
 
@@ -21,7 +21,7 @@ export function StudioFlow({ slug }: Props) {
   const [values, setValues] = useState<Record<string, string | string[]>>({});
   const [zip, setZip] = useState("");
   const [city, setCity] = useState("");
-  const [budgetBand, setBudgetBand] = useState<BudgetBand | null>("not_sure");
+  const [budgetBand, setBudgetBand] = useState<string | null>("not_sure");
   const [error, setError] = useState<string | null>(null);
 
   // Restore local save
@@ -34,7 +34,7 @@ export function StudioFlow({ slug }: Props) {
         values?: Record<string, string | string[]>;
         zip?: string;
         city?: string;
-        budgetBand?: BudgetBand;
+        budgetBand?: string;
       };
       if (saved.values) setValues(saved.values);
       if (saved.zip) setZip(saved.zip);
@@ -44,6 +44,17 @@ export function StudioFlow({ slug }: Props) {
       /* ignore */
     }
   }, [studio]);
+
+  const fieldVisible = (field: StudioField) => {
+    if (!field.showWhen) return true;
+    const raw = values[field.showWhen.fieldId];
+    const current = typeof raw === "string" ? raw : "";
+    return field.showWhen.values.includes(current);
+  };
+
+  const budgetOptions =
+    studio?.budgetOptions ??
+    BUDGET_BANDS.map((b) => ({ id: b.id, label: b.label }));
 
   const totalSteps = studio ? studio.steps.length + 1 : 1;
 
@@ -79,9 +90,11 @@ export function StudioFlow({ slug }: Props) {
   };
 
   const canNext = () => {
+    if (!studio) return false;
     if (step < studio.steps.length) {
       const s = studio.steps[step];
       for (const f of s.fields) {
+        if (!fieldVisible(f)) continue;
         if (!f.required) continue;
         const val = values[f.id];
         if (f.type === "single" && !val) return false;
@@ -158,11 +171,16 @@ export function StudioFlow({ slug }: Props) {
               <p className="mt-2 text-sm text-[var(--muted)]">{studio.steps[step].body}</p>
             ) : null}
             <div className="mt-5 space-y-6">
-              {studio.steps[step].fields.map((field) => (
+              {studio.steps[step].fields.filter(fieldVisible).map((field) => (
                 <div key={field.id}>
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
                     {field.label}
                     {field.required ? " *" : ""}
+                    {!field.required ? (
+                      <span className="ml-1 font-normal normal-case tracking-normal text-[var(--muted)]">
+                        (optional)
+                      </span>
+                    ) : null}
                   </p>
                   <div className="mt-2 grid gap-2">
                     {field.options.map((opt) => {
@@ -242,7 +260,7 @@ export function StudioFlow({ slug }: Props) {
                 Budget comfort (optional)
               </legend>
               <div className="mt-2 flex flex-wrap gap-2">
-                {BUDGET_BANDS.map((b) => (
+                {budgetOptions.map((b) => (
                   <button
                     key={b.id}
                     type="button"
