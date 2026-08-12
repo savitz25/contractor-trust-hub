@@ -17,20 +17,6 @@ type Props = { slug: string };
 export function StudioFlow({ slug }: Props) {
   const studio = getStudioBySlug(slug);
   const router = useRouter();
-
-  if (!studio) {
-    return (
-      <p className="text-sm text-[var(--muted)]">
-        Studio not found.{" "}
-        <Link href="/studios" className="font-medium text-[var(--navy)]">
-          Back to studios
-        </Link>
-      </p>
-    );
-  }
-
-  // steps + location + budget
-  const totalSteps = studio.steps.length + 1;
   const [step, setStep] = useState(0);
   const [values, setValues] = useState<Record<string, string | string[]>>({});
   const [zip, setZip] = useState("");
@@ -40,6 +26,7 @@ export function StudioFlow({ slug }: Props) {
 
   // Restore local save
   useEffect(() => {
+    if (!studio) return;
     try {
       const raw = localStorage.getItem(storageKey(studio.slug));
       if (!raw) return;
@@ -56,12 +43,26 @@ export function StudioFlow({ slug }: Props) {
     } catch {
       /* ignore */
     }
-  }, [studio.slug]);
+  }, [studio]);
+
+  const totalSteps = studio ? studio.steps.length + 1 : 1;
 
   const progressLabel = useMemo(() => {
+    if (!studio) return "Studio";
     if (step < studio.steps.length) return studio.steps[step].title;
     return "Location & budget";
-  }, [step, studio.steps]);
+  }, [step, studio]);
+
+  if (!studio) {
+    return (
+      <p className="text-sm text-[var(--muted)]">
+        Studio not found.{" "}
+        <Link href="/studios" className="font-medium text-[var(--navy)]">
+          Back to studios
+        </Link>
+      </p>
+    );
+  }
 
   const setSingle = (fieldId: string, optionId: string) => {
     setValues((v) => ({ ...v, [fieldId]: optionId }));
