@@ -201,10 +201,10 @@ export function CorrectionForm({ defaultSlug = "", defaultLicense = "" }: Props)
       {submitted && (
         <div
           role="status"
-          className="mt-5 rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100"
+          className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900"
         >
-          <p className="font-medium">Your mail client should open next.</p>
-          <p className="mt-1 text-emerald-100/85">
+          <p className="font-medium text-emerald-950">Your mail client should open next.</p>
+          <p className="mt-1 text-emerald-900/90">
             If it did not, email us directly at{" "}
             <a href={`mailto:${DEFAULT_TO}`} className="text-[var(--accent)]">
               {DEFAULT_TO}

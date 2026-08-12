@@ -76,7 +76,7 @@ export default async function ComparePage({ searchParams }: Props) {
       )}
 
       {slugs.length === 1 && contractors.length === 1 && (
-        <div className="mt-8 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+        <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
           Add at least one more contractor to compare. You can keep searching with this one in your
           compare list.
         </div>
@@ -155,11 +155,11 @@ export default async function ComparePage({ searchParams }: Props) {
                         const tone = field.tones?.[i] || "neutral";
                         const color =
                           tone === "good"
-                            ? "text-emerald-200"
+                            ? "text-emerald-800"
                             : tone === "warn"
-                              ? "text-amber-100"
+                              ? "text-amber-900"
                               : tone === "bad"
-                                ? "text-rose-200"
+                                ? "text-rose-800"
                                 : "text-[var(--text)]";
                         return (
                           <td key={`${field.id}-${i}`} className={`px-4 py-3 align-top ${color}`}>

@@ -1,17 +1,32 @@
 @import "tailwindcss";
 
+/**
+ * AskTrustHub network light theme — Contractor brand accents on a clean light shell.
+ * Yellow #F5C518 + Navy #0A2540 (same usage pattern as sibling hubs).
+ */
 :root {
-  --bg: #0b1220;
-  --bg-elevated: #121a2b;
-  --panel: #162033;
-  --border: #243047;
-  --text: #e8eef9;
-  --muted: #9aabc4;
+  --bg: #f6f8fb;
+  --bg-elevated: #ffffff;
+  --panel: #ffffff;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --text: #0a2540;
+  --muted: #5b6b7c;
   --accent: #f5c518;
-  --accent-soft: rgba(245, 197, 24, 0.14);
+  --accent-soft: rgba(245, 197, 24, 0.18);
   --navy: #0a2540;
-  --success: #3dbe8c;
-  --link: #9ec5ff;
+  --navy-soft: rgba(10, 37, 64, 0.06);
+  --success: #0d7a4f;
+  --success-soft: rgba(13, 122, 79, 0.1);
+  --warn: #b45309;
+  --warn-soft: rgba(180, 83, 9, 0.1);
+  --danger: #b91c1c;
+  --danger-soft: rgba(185, 28, 28, 0.08);
+  --link: #0a2540;
+  --link-hover: #163a5f;
+  --shadow-sm: 0 1px 2px rgba(10, 37, 64, 0.04);
+  --shadow-md: 0 4px 16px rgba(10, 37, 64, 0.06);
+  --shadow-lg: 0 12px 40px rgba(10, 37, 64, 0.08);
 }
 
 * {
@@ -24,8 +39,8 @@ body {
   padding: 0;
   min-height: 100%;
   background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(245, 197, 24, 0.07), transparent 55%),
-    radial-gradient(900px 500px at 90% 0%, rgba(62, 120, 220, 0.1), transparent 50%),
+    radial-gradient(1000px 480px at 8% -8%, rgba(245, 197, 24, 0.12), transparent 55%),
+    radial-gradient(900px 420px at 96% 0%, rgba(10, 37, 64, 0.05), transparent 50%),
     var(--bg);
   color: var(--text);
   font-family:
@@ -37,6 +52,7 @@ body {
     Helvetica,
     Arial,
     sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -45,7 +61,22 @@ a {
 }
 
 a:hover {
+  color: var(--link-hover);
   text-decoration: underline;
+}
+
+/* Primary CTA utility (yellow on navy text) */
+.btn-primary {
+  background: var(--accent);
+  color: var(--navy);
+  font-weight: 600;
+  border-radius: 0.75rem;
+  transition: filter 0.15s ease;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.04);
+  text-decoration: none;
 }
 
 .sr-only {
@@ -70,13 +101,11 @@ a:hover {
   }
 }
 
-/* Comfortable tap targets on small screens */
 @media (max-width: 640px) {
   body {
     -webkit-text-size-adjust: 100%;
   }
 
-  /* Prevent iOS zoom on form controls (16px floor) */
   input,
   select,
   textarea {
@@ -84,8 +113,14 @@ a:hover {
   }
 }
 
-/* Wordmark should never overflow mobile header */
 header img {
   max-width: 100%;
   height: auto;
+}
+
+/* Card elevation consistent with network hubs */
+.card-surface {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }

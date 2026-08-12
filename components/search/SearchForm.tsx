@@ -37,16 +37,16 @@ export function SearchForm({
   const isCompact = size === "compact";
 
   const inputClass = isHero
-    ? "min-h-12 w-full flex-1 rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 text-base text-[var(--text)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70 sm:min-h-[3.75rem] sm:px-5 sm:text-lg"
+    ? "min-h-12 w-full flex-1 rounded-2xl border border-[var(--border)] bg-white px-4 text-base text-[var(--text)] shadow-[var(--shadow-sm)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70 sm:min-h-[3.75rem] sm:px-5 sm:text-lg"
     : isCompact
-      ? "min-h-11 w-full flex-1 rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 text-base text-[var(--text)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70 sm:text-sm"
-      : "min-h-12 w-full flex-1 rounded-xl border border-[var(--border)] bg-[var(--panel)] px-4 text-base text-[var(--text)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70";
+      ? "min-h-11 w-full flex-1 rounded-xl border border-[var(--border)] bg-white px-3 text-base text-[var(--text)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70 sm:text-sm"
+      : "min-h-12 w-full flex-1 rounded-xl border border-[var(--border)] bg-white px-4 text-base text-[var(--text)] shadow-[var(--shadow-sm)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70";
 
   const buttonClass = isHero
-    ? "min-h-12 w-full shrink-0 rounded-2xl bg-[var(--accent)] px-6 text-base font-semibold text-[var(--navy)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70 sm:min-h-[3.75rem] sm:w-auto sm:px-10 sm:text-lg"
+    ? "min-h-12 w-full shrink-0 rounded-2xl bg-[var(--accent)] px-6 text-base font-semibold text-[var(--navy)] shadow-[var(--shadow-sm)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70 sm:min-h-[3.75rem] sm:w-auto sm:px-10 sm:text-lg"
     : isCompact
       ? "min-h-11 w-full rounded-xl bg-[var(--accent)] px-4 text-sm font-semibold text-[var(--navy)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70 sm:w-auto"
-      : "min-h-12 w-full rounded-xl bg-[var(--accent)] px-6 text-sm font-semibold text-[var(--navy)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70 sm:w-auto";
+      : "min-h-12 w-full rounded-xl bg-[var(--accent)] px-6 text-sm font-semibold text-[var(--navy)] shadow-[var(--shadow-sm)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70 sm:w-auto";
 
   return (
     <form

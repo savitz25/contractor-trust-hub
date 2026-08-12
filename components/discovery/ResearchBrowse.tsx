@@ -95,7 +95,7 @@ export function ResearchBrowse({ defaultExpanded = true }: Props) {
   return (
     <section
       id="research"
-      className="scroll-mt-28 rounded-3xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5 sm:p-6 md:p-8"
+      className="scroll-mt-28 rounded-3xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)] sm:p-6 md:p-8"
       aria-labelledby="research-heading"
     >
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
@@ -126,7 +126,7 @@ export function ResearchBrowse({ defaultExpanded = true }: Props) {
             id="research-county"
             value={countySlug}
             onChange={(e) => setCountySlug(e.target.value)}
-            className="mt-2 min-h-12 w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 text-base text-[var(--text)] outline-none ring-[var(--accent)] focus:ring-2"
+            className="mt-2 min-h-12 w-full rounded-xl border border-[var(--border)] bg-white px-3 text-base text-[var(--text)] shadow-[var(--shadow-sm)] outline-none ring-[var(--accent)] focus:ring-2"
           >
             <option value="">All Florida</option>
             {state.counties.map((c) => (
@@ -157,8 +157,8 @@ export function ResearchBrowse({ defaultExpanded = true }: Props) {
                   aria-pressed={active}
                   className={
                     active
-                      ? "rounded-full border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-3 py-1.5 text-sm font-medium text-[var(--accent)]"
-                      : "rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-sm text-[var(--muted)] transition hover:border-[var(--accent)]/30 hover:text-[var(--text)]"
+                      ? "rounded-full border border-[var(--navy)]/20 bg-[var(--accent-soft)] px-3 py-1.5 text-sm font-medium text-[var(--navy)]"
+                      : "rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-sm text-[var(--muted)] transition hover:border-[var(--navy)]/20 hover:text-[var(--text)]"
                   }
                 >
                   {t.label}

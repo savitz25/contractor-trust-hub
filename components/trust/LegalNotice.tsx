@@ -6,7 +6,7 @@ export function LegalNotice({ className = "" }: { className?: string }) {
     <aside
       className={
         className ||
-        "rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-elevated)]/40 px-4 py-4 text-xs leading-relaxed text-[var(--muted)] sm:px-5 sm:text-sm"
+        "rounded-2xl border border-[var(--border)] bg-white px-4 py-4 text-xs leading-relaxed text-[var(--muted)] shadow-[var(--shadow-sm)] sm:px-5 sm:text-sm"
       }
     >
       <p>

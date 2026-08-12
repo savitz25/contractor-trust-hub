@@ -11,12 +11,12 @@ export function StatusBadge({
   const text = label || statusLabel(status);
   const classes =
     tone === "good"
-      ? "bg-emerald-500/15 text-emerald-300 ring-emerald-500/30"
+      ? "bg-emerald-50 text-emerald-800 ring-emerald-200"
       : tone === "bad"
-        ? "bg-rose-500/15 text-rose-300 ring-rose-500/30"
+        ? "bg-rose-50 text-rose-800 ring-rose-200"
         : tone === "warn"
-          ? "bg-amber-500/15 text-amber-200 ring-amber-500/30"
-          : "bg-slate-500/15 text-slate-300 ring-slate-500/30";
+          ? "bg-amber-50 text-amber-900 ring-amber-200"
+          : "bg-slate-100 text-slate-700 ring-slate-200";
 
   return (
     <span

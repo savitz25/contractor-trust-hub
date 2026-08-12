@@ -79,15 +79,15 @@ export default async function VerifyPage({ searchParams }: Props) {
       {error && (
         <div
           role="alert"
-          className="mt-8 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-4 text-sm leading-relaxed text-rose-100"
+          className="mt-8 rounded-xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm leading-relaxed text-rose-900"
         >
-          <p className="font-medium text-rose-50">Search is temporarily unavailable</p>
-          <p className="mt-1 text-rose-100/90">
+          <p className="font-medium text-rose-950">Search is temporarily unavailable</p>
+          <p className="mt-1 text-rose-900/90">
             We could not reach the license database right now. Please try again in a few minutes.
           </p>
-          <p className="mt-3 text-xs text-rose-100/70">
+          <p className="mt-3 text-xs text-rose-800/80">
             You can still{" "}
-            <Link href="/#research" className="text-rose-50 underline">
+            <Link href="/#research" className="font-medium text-rose-950 underline">
               browse by county and trade
             </Link>{" "}
             or return later.{" "}
@@ -97,7 +97,7 @@ export default async function VerifyPage({ searchParams }: Props) {
       )}
 
       {q.length > 0 && q.length < 2 && (
-        <div className="mt-8 rounded-xl border border-amber-500/25 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+        <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
           Enter at least 2 characters to search.
         </div>
       )}

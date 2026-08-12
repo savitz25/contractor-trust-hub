@@ -6,8 +6,8 @@ type BrandLogoProps = {
   /** Horizontal wordmark (default) or square mark only */
   variant?: "wordmark" | "mark";
   /**
-   * onDark (default): light hub + TRUST HUB for dark headers.
-   * onLight: brand navy for light / marketing surfaces.
+   * onLight (default): navy wordmark for light network UI.
+   * onDark: light mark for rare dark surfaces.
    */
   surface?: "onDark" | "onLight";
   height?: number;
@@ -27,7 +27,7 @@ export function BrandLogo({
   className = "",
   priority = false,
   variant = "wordmark",
-  surface = "onDark",
+  surface = "onLight",
   height = 40,
 }: BrandLogoProps) {
   const sharedClass = ["block", "h-auto", "max-w-full", "bg-transparent", className]

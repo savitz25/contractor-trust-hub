@@ -71,13 +71,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         type: "profile",
         siteName: "Contractor Trust Hub",
         locale: "en_US",
-        images: [{ url: "/brand/contractor-trust-hub-logo-on-dark.svg" }],
+        images: [{ url: "/brand/contractor-trust-hub-logo.svg" }],
       },
       twitter: {
         card: "summary",
         title,
         description,
-        images: ["/brand/contractor-trust-hub-logo-on-dark.svg"],
+        images: ["/brand/contractor-trust-hub-logo.svg"],
       },
       robots: {
         index: true,

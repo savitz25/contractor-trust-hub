@@ -25,10 +25,10 @@ function signalTone(
 }
 
 const toneBar: Record<string, string> = {
-  good: "bg-emerald-400",
-  warn: "bg-amber-300",
-  bad: "bg-rose-400",
-  neutral: "bg-slate-500",
+  good: "bg-emerald-600",
+  warn: "bg-amber-500",
+  bad: "bg-rose-600",
+  neutral: "bg-slate-400",
 };
 
 export function ResultCard({ result }: { result: SearchResult }) {
@@ -37,7 +37,7 @@ export function ResultCard({ result }: { result: SearchResult }) {
   const entTone = signalTone("entity", result);
 
   return (
-    <article className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] transition hover:border-[var(--accent)]/40 hover:bg-[var(--bg-elevated)]">
+    <article className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/20 hover:shadow-[var(--shadow-md)]">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-[var(--border)]/80 px-3.5 py-2.5 sm:gap-x-4 sm:px-5">
         <span className="inline-flex items-center gap-1.5 text-xs text-[var(--muted)]">
           <span className={`h-1.5 w-1.5 rounded-full ${toneBar[licTone]}`} aria-hidden />
@@ -56,7 +56,7 @@ export function ResultCard({ result }: { result: SearchResult }) {
           </span>
         )}
         {result.hasDiscipline ? (
-          <span className="inline-flex items-center gap-1.5 text-xs text-amber-200/90">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-800">
             <span className={`h-1.5 w-1.5 rounded-full ${toneBar.warn}`} aria-hidden />
             Discipline on file
           </span>
@@ -74,7 +74,7 @@ export function ResultCard({ result }: { result: SearchResult }) {
             <h2 className="text-[15px] font-semibold leading-snug text-[var(--text)] sm:text-lg">
               <Link
                 href={`/contractors/${encodeURIComponent(result.slug)}`}
-                className="text-[var(--text)] no-underline hover:text-white"
+                className="text-[var(--text)] no-underline hover:text-[var(--navy)]"
               >
                 {result.displayName}
               </Link>

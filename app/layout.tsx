@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Contractor Trust Hub",
     locale: "en_US",
-    images: [{ url: "/brand/contractor-trust-hub-logo-on-dark.svg" }],
+    images: [{ url: "/brand/contractor-trust-hub-logo.svg" }],
   },
   twitter: {
     card: "summary",

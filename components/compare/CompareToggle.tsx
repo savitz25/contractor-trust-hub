@@ -53,11 +53,11 @@ export function CompareToggle({
       className={
         compact
           ? selected
-            ? "rounded-lg border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-2.5 py-1.5 text-xs font-medium text-[var(--accent)]"
-            : "rounded-lg border border-[var(--border)] px-2.5 py-1.5 text-xs font-medium text-[var(--muted)] hover:border-[var(--accent)]/40 hover:text-[var(--text)]"
+            ? "rounded-lg border border-[var(--navy)]/25 bg-[var(--accent-soft)] px-2.5 py-1.5 text-xs font-medium text-[var(--navy)]"
+            : "rounded-lg border border-[var(--border)] bg-white px-2.5 py-1.5 text-xs font-medium text-[var(--muted)] hover:border-[var(--navy)]/25 hover:text-[var(--text)]"
           : selected
-            ? "inline-flex min-h-10 items-center rounded-xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 text-sm font-medium text-[var(--accent)]"
-            : "inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] hover:border-[var(--accent)]/40"
+            ? "inline-flex min-h-10 items-center rounded-xl border border-[var(--navy)]/25 bg-[var(--accent-soft)] px-4 text-sm font-medium text-[var(--navy)]"
+            : "inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] bg-white px-4 text-sm font-medium text-[var(--text)] hover:border-[var(--navy)]/25"
       }
     >
       {selected ? "In compare" : full ? "Compare full" : "Compare"}

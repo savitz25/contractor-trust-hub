@@ -57,7 +57,7 @@ export default function HomePage() {
           <div className="mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-2 sm:gap-4">
             <a
               href="#search"
-              className="rounded-2xl border border-[var(--accent)]/35 bg-[var(--accent-soft)] px-4 py-3.5 no-underline transition hover:border-[var(--accent)]/60 sm:px-5 sm:py-4"
+              className="rounded-2xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--accent)] sm:px-5 sm:py-4"
             >
               <p className="text-sm font-semibold text-[var(--text)]">
                 I already have a contractor
@@ -71,7 +71,7 @@ export default function HomePage() {
             </a>
             <a
               href="#research"
-              className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] px-4 py-3.5 no-underline transition hover:border-[var(--accent)]/40 sm:px-5 sm:py-4"
+              className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3.5 no-underline shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/25 sm:px-5 sm:py-4"
             >
               <p className="text-sm font-semibold text-[var(--text)]">
                 I need to research contractors
@@ -85,9 +85,9 @@ export default function HomePage() {
             </a>
           </div>
 
-          <div
-            id="search"
-            className="mt-8 scroll-mt-28 rounded-3xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 shadow-[0_0_0_1px_rgba(245,197,24,0.06)] sm:mt-10 sm:p-6 md:p-8"
+            <div
+              id="search"
+            className="mt-8 scroll-mt-28 rounded-3xl border border-[var(--border)] bg-white p-4 shadow-[var(--shadow-md)] sm:mt-10 sm:p-6 md:p-8"
           >
             <p className="text-sm font-medium text-[var(--text)]">
               Search by license number or company name
