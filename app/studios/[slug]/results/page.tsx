@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { Suspense } from "react";
 import { StudioResults } from "@/components/studios/StudioResults";
 import { parseStudioQuery } from "@/lib/studios/context";
 import { getStudioBySlug, listStudios } from "@/lib/studios/registry";
@@ -54,7 +55,15 @@ export default async function StudioResultsPage({ params, searchParams }: Props)
         </div>
       </section>
       <section className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-        <StudioResults studioSlug={slug} answers={answers} />
+        <Suspense
+          fallback={
+            <div className="rounded-3xl border border-[var(--border)] bg-white p-8 text-center text-sm text-[var(--muted)]">
+              Loading studio results…
+            </div>
+          }
+        >
+          <StudioResults studioSlug={slug} answers={answers} />
+        </Suspense>
       </section>
     </main>
   );

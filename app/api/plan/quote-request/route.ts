@@ -24,11 +24,15 @@ type Body = {
   costMid?: number;
   costHigh?: number;
   contractorSlugs?: string[];
-  /** Richer studio scope (Phase 1 studios). */
+  /** Richer studio scope (Phase 1–3 studios). */
   studioSlug?: string;
   studioName?: string;
   answerSummary?: string[];
   studioAnswers?: Record<string, string | string[]>;
+  /** studio_results | trust_report | plan_results */
+  sourcePath?: string;
+  focusedContractorSlug?: string | null;
+  focusedContractorName?: string | null;
 };
 
 function validEmail(e: string) {
@@ -89,6 +93,13 @@ export async function POST(request: Request) {
           name: body.studioName || null,
           answerSummary: body.answerSummary?.slice(0, 30) || [],
           answers: body.studioAnswers || {},
+        }
+      : null,
+    sourcePath: body.sourcePath || "plan_results",
+    focusedContractor: body.focusedContractorSlug
+      ? {
+          slug: body.focusedContractorSlug,
+          name: body.focusedContractorName || null,
         }
       : null,
   };

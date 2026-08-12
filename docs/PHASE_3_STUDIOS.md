@@ -43,6 +43,30 @@ Add a studio with config only:
 - Roofing: `strictMatching: true`
 - Exterior may resolve cost model to siding vs deck from answers
 
+## Phase 3 — Smarter fit · Trust Report handoff · conversion
+
+### Fit context (results cards)
+- `lib/studios/fit-notes.ts` — rule-based fit note + chips (primary/secondary class, status, location tier, Sunbiz)
+- `StudioMatchCard` — “Why this matched” (evidence only, no ranking)
+- Coverage summary: local / mixed / statewide / secondary_heavy
+
+### Trust Report handoff
+- Query params via `lib/studios/handoff.ts` (`from=studio`, `studio`, `back`, `summary`, …)
+- `StudioHandoffBanner` on `/contractors/[slug]`
+- CTA: controlled introduction with studio scope pre-attached
+
+### Thin / empty states
+- `StudioThinState` — empty, statewide-only, secondary-only, thin-local
+- Actionable next steps (adjust scope, verify name, browse FL, other studio)
+
+### Introduction payload extras
+- `sourcePath`: `studio_results` | `trust_report`
+- `focusedContractor` when started from a specific card/profile
+
+### Conversion polish
+- Hierarchy: sticky scope → planning range (secondary) → contractors (primary) → next steps
+- Jump links, mobile bottom CTA, “controlled introduction” language
+
 ## Out of scope
 
 3D design, material SKUs, photo upload, multi-state engines, public ratings

@@ -12,6 +12,7 @@ import {
   SourcesFooter,
 } from "@/components/contractor/TrustReport";
 import { WorkersCompGuidance } from "@/components/contractor/WorkersCompGuidance";
+import { StudioHandoffBanner } from "@/components/studios/StudioHandoffBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { statusLabel } from "@/lib/contractors/format";
@@ -20,9 +21,11 @@ import { getContractorBySlug } from "@/lib/contractors/queries";
 import { matchConfidenceLine } from "@/lib/contractors/trust-report";
 import { absoluteUrl } from "@/lib/site";
 import { getStateBySlug } from "@/lib/states/config";
+import { parseHandoffQuery } from "@/lib/studios/handoff";
 
 type Props = {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -137,9 +140,11 @@ function JsonLd({
   );
 }
 
-export default async function ContractorPage({ params }: Props) {
+export default async function ContractorPage({ params, searchParams }: Props) {
   const { slug: raw } = await params;
   const slug = decodeURIComponent(raw);
+  const sp = await searchParams;
+  const studioHandoff = parseHandoffQuery(sp);
   const state = getStateBySlug("fl")!;
 
   let contractor;
@@ -197,7 +202,26 @@ export default async function ContractorPage({ params }: Props) {
         <Link href="/florida" className="text-[var(--muted)] no-underline hover:text-[var(--text)]">
           Florida browse
         </Link>
+        {studioHandoff ? (
+          <>
+            <span className="text-[var(--border)]" aria-hidden>
+              ·
+            </span>
+            <Link
+              href="/studios"
+              className="text-[var(--muted)] no-underline hover:text-[var(--text)]"
+            >
+              Studios
+            </Link>
+          </>
+        ) : null}
       </div>
+
+      <StudioHandoffBanner
+        initial={studioHandoff}
+        contractorSlug={contractor.slug}
+        contractorName={contractor.displayName}
+      />
 
       <header className="mt-4 border-b border-[var(--border)] pb-6 sm:pb-8">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
@@ -206,6 +230,13 @@ export default async function ContractorPage({ params }: Props) {
         <h1 className="mt-2 text-[1.65rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:text-4xl">
           {contractor.displayName}
         </h1>
+        <p className="mt-2 max-w-2xl text-sm text-[var(--muted)]">
+          Review license status and class, discipline history (present or absent in our extract),
+          and business entity linkage before you request any introduction.
+          {contractor.isThinProfile
+            ? " This profile has limited fields in our extract — treat missing data as unknown, not cleared."
+            : ""}
+        </p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           {primary && (
             <span className="font-mono text-sm tracking-wide text-[var(--accent)]">

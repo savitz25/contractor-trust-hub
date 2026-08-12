@@ -55,6 +55,8 @@ export async function POST(request: Request) {
       slug: studio.slug,
       name: studio.name,
       resultFraming: studio.resultFraming,
+      primaryOccupationCodes: studio.primaryOccupationCodes,
+      secondaryOccupationCodes: studio.secondaryOccupationCodes,
     },
     context: ctx,
     cost,
