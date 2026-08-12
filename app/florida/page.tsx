@@ -14,6 +14,9 @@ import {
 
 const PUBLIC = "florida";
 
+/** Refresh landing stats periodically (build-time cache is fine otherwise). */
+export const revalidate = 3600;
+
 export async function generateMetadata(): Promise<Metadata> {
   const state = getDiscoveryState(PUBLIC)!;
   return discoveryMetadata({

@@ -70,7 +70,7 @@ function buildFilterClause(opts: {
     where += ` AND l.occupation_code = ANY($${params.length}::text[])`;
   }
 
-  if (opts.county?.matchNames.length) {
+  if (opts.county) {
     const clauses: string[] = [];
     for (const name of opts.county.matchNames) {
       params.push(name.toLowerCase());
@@ -84,7 +84,15 @@ function buildFilterClause(opts: {
         `LOWER(REPLACE(TRIM(COALESCE(c.primary_county, '')), ' ', '-')) = REPLACE($${i}, ' ', '-')`
       );
     }
-    where += ` AND (${clauses.join(" OR ")})`;
+    // When extract stores only county_code (null name), match known DBPR codes
+    for (const code of opts.county.matchCodes || []) {
+      params.push(code);
+      const i = params.length;
+      clauses.push(`TRIM(COALESCE(l.county_code, '')) = $${i}`);
+    }
+    if (clauses.length) {
+      where += ` AND (${clauses.join(" OR ")})`;
+    }
   }
 
   return { where, params };
@@ -253,27 +261,56 @@ export async function getStateDiscoveryStats(publicStateSlug: string): Promise<{
   }
 }
 
+/**
+ * Trade facets — one SQL group-by when scoped to a county; batch occupation
+ * counts statewide otherwise. Avoids N full listDiscoveryContractors calls.
+ */
 export async function countByTrade(
   publicStateSlug: string,
   county?: CountyDef | null
 ): Promise<DiscoveryFacet[]> {
   const disc = getDiscoveryState(publicStateSlug);
   if (!disc) return [];
+  const state = getStateBySlug(disc.evidenceSlug);
+  if (!state?.live) return [];
 
-  // Parallel trade counts for a fixed county (bounded set of trades)
-  const facets = await Promise.all(
-    disc.trades.map(async (trade) => {
-      const { total } = await listDiscoveryContractors({
-        publicStateSlug,
-        county: county ?? null,
-        trade,
-        limit: 1,
-        offset: 0,
-      });
-      return { slug: trade.slug, label: trade.label, count: total };
-    })
-  );
-  return facets.filter((f) => f.count > 0).sort((a, b) => b.count - a.count);
+  if (!county) {
+    return countTradesBatch(publicStateSlug);
+  }
+
+  try {
+    const { where, params } = buildFilterClause({
+      licenseSource: state.licenseSource,
+      stateCode: state.code,
+      county,
+    });
+    const rows = await query<{ occupation_code: string; n: string }>(
+      `
+      SELECT l.occupation_code, COUNT(DISTINCT c.id)::text AS n
+      FROM contractors c
+      JOIN licenses l ON l.contractor_id = c.id
+      WHERE ${where}
+      GROUP BY l.occupation_code
+      `,
+      params
+    );
+    const byCode = new Map(
+      rows.map((r) => [r.occupation_code.toUpperCase(), Number(r.n)])
+    );
+    return disc.trades
+      .map((t) => ({
+        slug: t.slug,
+        label: t.label,
+        count: t.occupationCodes.reduce(
+          (sum, code) => sum + (byCode.get(code.toUpperCase()) || 0),
+          0
+        ),
+      }))
+      .filter((f) => f.count > 0)
+      .sort((a, b) => b.count - a.count);
+  } catch {
+    return [];
+  }
 }
 
 /** County facets for a single trade — one SQL pass + map to curated slugs. */

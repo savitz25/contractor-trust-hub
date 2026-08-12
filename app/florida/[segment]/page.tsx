@@ -20,6 +20,9 @@ import {
 
 const PUBLIC = "florida";
 
+/** Dynamic discovery lists; revalidate facets periodically. */
+export const revalidate = 1800;
+
 type Props = {
   params: Promise<{ segment: string }>;
   searchParams: Promise<{ page?: string }>;

@@ -126,7 +126,7 @@ export function ResearchBrowse({ defaultExpanded = true }: Props) {
             id="research-county"
             value={countySlug}
             onChange={(e) => setCountySlug(e.target.value)}
-            className="mt-2 min-h-12 w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 text-[15px] text-[var(--text)] outline-none ring-[var(--accent)] focus:ring-2"
+            className="mt-2 min-h-12 w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 text-base text-[var(--text)] outline-none ring-[var(--accent)] focus:ring-2"
           >
             <option value="">All Florida</option>
             {state.counties.map((c) => (

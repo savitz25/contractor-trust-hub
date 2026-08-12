@@ -20,9 +20,13 @@ export type CountyDef = {
   name: string;
   /**
    * Values matched against licenses.county_name / contractors.primary_county
-   * (case-insensitive exact or prefix).
+   * (case-insensitive).
    */
   matchNames: string[];
+  /**
+   * Optional DBPR licenses.county_code values (extract codes when name is missing).
+   */
+  matchCodes?: string[];
 };
 
 export type DiscoveryStateConfig = {

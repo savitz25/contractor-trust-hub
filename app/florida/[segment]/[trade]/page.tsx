@@ -18,6 +18,8 @@ import {
 
 const PUBLIC = "florida";
 
+export const revalidate = 1800;
+
 type Props = {
   params: Promise<{ segment: string; trade: string }>;
   searchParams: Promise<{ page?: string }>;
