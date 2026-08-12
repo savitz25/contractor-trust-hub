@@ -45,9 +45,28 @@ DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@db.YOUR_REF.supabase.co:5432/po
 
 `.env.local` is gitignored (`.env*.local`). Do **not** commit it.
 
-### Optional: Vercel / CI
+### Vercel / production (required for the Verify web app)
 
-Add the same `DATABASE_URL` as a **sensitive** / encrypted environment variable in the host dashboard. Not required for local load scripts.
+The Next.js app **requires** `DATABASE_URL` at runtime (search + detail pages query Postgres).
+
+| Setting | Value |
+|---------|--------|
+| Variable | `DATABASE_URL` |
+| Value | **Session pooler** URI (port **5432**, user `postgres.<project-ref>`) |
+| Scope | Production (and Preview if you exercise PR deploys) |
+| Sensitivity | Sensitive / encrypted — never commit |
+
+Also recommended:
+
+```env
+NEXT_PUBLIC_SITE_URL=https://your-production-host.vercel.app
+```
+
+**Do not** use the direct `db.<ref>.supabase.co` host on Vercel if your Supabase project is IPv6-only on the direct path — Session pooler is the supported path.
+
+Transaction pooler (`:6543`) is for short serverless queries with different prepared-statement semantics; this app is written for Session pooler / standard Postgres sessions.
+
+Not required for local offline load scripts if you run those against Direct/Session separately.
 
 ## 3. Load path
 

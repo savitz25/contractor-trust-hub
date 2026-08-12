@@ -8,6 +8,7 @@ import {
   VerificationSummary,
 } from "@/components/contractor/DetailSections";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { statusLabel } from "@/lib/contractors/format";
 import { getContractorBySlug } from "@/lib/contractors/queries";
 import { getStateBySlug } from "@/lib/states/config";
 
@@ -60,39 +61,48 @@ export default async function ContractorPage({ params }: Props) {
     .join(" · ");
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
       <Link
         href="/verify"
         className="text-sm text-[var(--muted)] no-underline hover:text-[var(--text)]"
       >
-        ← Search results
+        ← Back to search
       </Link>
 
-      <header className="mt-4 border-b border-[var(--border)] pb-8">
+      <header className="mt-4 border-b border-[var(--border)] pb-6 sm:pb-8">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
           Florida contractor profile
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)] sm:text-4xl">
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-[var(--text)] sm:text-4xl">
           {contractor.displayName}
         </h1>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           {primary && (
-            <span className="font-mono text-sm text-[var(--accent)]">{primary.externalKey}</span>
+            <span className="font-mono text-sm tracking-wide text-[var(--accent)]">
+              {primary.externalKey}
+            </span>
           )}
-          {primary && <StatusBadge status={primary.statusNormalized} />}
-          {contractor.entities[0] && (
+          {primary && (
+            <StatusBadge
+              status={primary.statusNormalized}
+              label={`License: ${statusLabel(primary.statusNormalized)}`}
+            />
+          )}
+          {contractor.entities[0] ? (
             <StatusBadge
               status={contractor.entities[0].status}
-              label={`Entity: ${contractor.entities[0].status}`}
+              label={`Entity: ${statusLabel(contractor.entities[0].status)}`}
             />
+          ) : (
+            <StatusBadge status="unknown" label="No Sunbiz link" />
           )}
           {contractor.discipline.length > 0 && (
             <StatusBadge status="warn" label="Discipline on file" />
           )}
         </div>
-        {location && <p className="mt-3 text-[var(--muted)]">{location}</p>}
+        {location && <p className="mt-3 text-[15px] text-[var(--muted)]">{location}</p>}
         {(contractor.legalName || contractor.dbaName) && (
-          <p className="mt-1 text-sm text-[var(--muted)]">
+          <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
             {contractor.legalName && <>Legal: {contractor.legalName}</>}
             {contractor.legalName && contractor.dbaName ? " · " : null}
             {contractor.dbaName && <>DBA: {contractor.dbaName}</>}
@@ -100,9 +110,11 @@ export default async function ContractorPage({ params }: Props) {
         )}
       </header>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
-        <VerificationSummary contractor={contractor} state={state} />
-        <div className="space-y-6">
+      <div className="mt-6 grid gap-5 sm:mt-8 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+        <div className="lg:sticky lg:top-24 lg:self-start">
+          <VerificationSummary contractor={contractor} state={state} />
+        </div>
+        <div className="space-y-5 sm:space-y-6">
           <LicensesSection licenses={contractor.licenses} />
           <EntitySection entities={contractor.entities} state={state} />
           <DisciplineSection discipline={contractor.discipline} />

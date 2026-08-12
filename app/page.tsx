@@ -41,12 +41,13 @@ export default function HomePage() {
 
         <div className="mt-8 max-w-2xl rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 sm:p-5">
           <SearchForm autoFocus />
-          <p className="mt-3 text-xs text-[var(--muted)]">
+          <p className="mt-3 text-xs leading-relaxed text-[var(--muted)]">
             Try a license like{" "}
             <Link href="/verify?q=CBC015082" className="text-[var(--accent)]">
               CBC015082
             </Link>{" "}
-            or a company name.
+            or a company name. Results use official DBPR extracts; Sunbiz only when
+            high-confidence linked.
           </p>
         </div>
 

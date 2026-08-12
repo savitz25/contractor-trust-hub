@@ -6,7 +6,7 @@ Independent, evidence-backed contractor verification for homeowners and commerci
 
 | | |
 |---|---|
-| **Status** | Phase 0 — foundation + first FL DBPR adapter |
+| **Status** | Florida Verify live — search + detail on main |
 | **Repo** | https://github.com/savitz25/contractor-trust-hub |
 | **Primary market (wave 1)** | Florida (DBPR Construction Industry Licensing Board) |
 | **Tagline** | Before you hire, verify. |
@@ -54,7 +54,13 @@ npm run build  # production build (what Vercel runs)
 
 See [docs/VERIFY_PRODUCT.md](docs/VERIFY_PRODUCT.md).
 
-Vercel: framework **Next.js** (`vercel.json`). Set `DATABASE_URL` as a sensitive env var. Python under `ingest/` is offline tooling only.
+Vercel: framework **Next.js** (`vercel.json`). Set **`DATABASE_URL`** (Supabase **Session pooler**, sensitive) and optionally `NEXT_PUBLIC_SITE_URL`. See [docs/VERIFY_PRODUCT.md](docs/VERIFY_PRODUCT.md). Python under `ingest/` is offline tooling only.
+
+Search indexes (once per database):
+
+```bash
+psql "$DATABASE_URL" -f schema/migrations/002_search_indexes.sql
+```
 
 ## Quick start (ingest)
 

@@ -11,6 +11,9 @@ import type {
 
 const DEFAULT_LIMIT = 25;
 
+/** Only surface Sunbiz links at or above this confidence (matches linker defaults). */
+const MIN_SUNBIZ_CONFIDENCE = 0.9;
+
 function normalizeSearchInput(q: string): string {
   return q.trim().replace(/\s+/g, " ");
 }
@@ -90,6 +93,8 @@ export async function searchContractors(
         WHERE ce.contractor_id = c.id
           AND ce.role = 'sunbiz_entity'
           AND ent.source_system = $3
+          AND ce.confidence IS NOT NULL
+          AND ce.confidence >= $5
         ORDER BY ce.confidence DESC NULLS LAST
         LIMIT 1
       ) e ON TRUE
@@ -107,7 +112,7 @@ export async function searchContractors(
         c.display_name
       LIMIT $4
       `,
-      [key, state.licenseSource, state.entitySource, limit]
+      [key, state.licenseSource, state.entitySource, limit, MIN_SUNBIZ_CONFIDENCE]
     );
 
     return {
@@ -117,9 +122,10 @@ export async function searchContractors(
     };
   }
 
-  // Name search — prefix + contains, prefer prefix
-  const like = `%${q.replace(/[%_]/g, "\\$&")}%`;
-  const prefix = `${q.replace(/[%_]/g, "\\$&")}%`;
+  // Name search — prefix + contains, prefer prefix (GIN trigram indexes help ILIKE)
+  const escaped = q.replace(/[%_\\]/g, "\\$&");
+  const like = `%${escaped}%`;
+  const prefix = `${escaped}%`;
 
   const rows = await query<{
     id: string;
@@ -189,13 +195,15 @@ export async function searchContractors(
       WHERE ce.contractor_id = m.id
         AND ce.role = 'sunbiz_entity'
         AND ent.source_system = $5
+        AND ce.confidence IS NOT NULL
+        AND ce.confidence >= $7
       ORDER BY ce.confidence DESC NULLS LAST
       LIMIT 1
     ) e ON TRUE
     ORDER BY m.rank_score, m.display_name
     LIMIT $6
     `,
-    [prefix, like, state.licenseSource, state.code, state.entitySource, limit]
+    [prefix, like, state.licenseSource, state.code, state.entitySource, limit, MIN_SUNBIZ_CONFIDENCE]
   );
 
   return {
@@ -333,9 +341,11 @@ export async function getContractorBySlug(
     WHERE ce.contractor_id = $1
       AND ce.role = 'sunbiz_entity'
       AND e.source_system = $2
+      AND ce.confidence IS NOT NULL
+      AND ce.confidence >= $3
     ORDER BY ce.confidence DESC NULLS LAST
     `,
-    [c.id, state.entitySource]
+    [c.id, state.entitySource, MIN_SUNBIZ_CONFIDENCE]
   );
 
   const discipline = await query<{

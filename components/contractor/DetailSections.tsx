@@ -17,10 +17,23 @@ export function VerificationSummary({
 }) {
   const primary = contractor.licenses[0];
   const entity = contractor.entities[0];
-  const checks = [
+  const licenseActive =
+    primary &&
+    (primary.statusNormalized === "active" || primary.statusNormalized === "current");
+  const hasDiscipline = contractor.discipline.length > 0;
+
+  type Tone = "good" | "neutral" | "warn" | "bad";
+  const checks: {
+    label: string;
+    tone: Tone;
+    mark: string;
+    detail: string;
+    when?: string | null;
+  }[] = [
     {
       label: "State license record",
-      ok: contractor.licenses.length > 0,
+      tone: !primary ? "neutral" : licenseActive ? "good" : "warn",
+      mark: primary ? (licenseActive ? "✓" : "!") : "–",
       detail: primary
         ? `${primary.externalKey} · ${primary.statusNormalized || "status unknown"}`
         : "No license linked",
@@ -28,29 +41,37 @@ export function VerificationSummary({
     },
     {
       label: "Business entity (Sunbiz)",
-      ok: !!entity,
+      tone: entity ? "good" : "neutral",
+      mark: entity ? "✓" : "–",
       detail: entity
         ? `${entity.legalName} · ${entity.status || "status unknown"} · doc ${entity.externalKey}`
-        : "No high-confidence entity link",
+        : "No high-confidence Sunbiz link (we only show exact name/geo matches)",
       when: entity?.lastVerifiedAt,
     },
     {
       label: "Discipline scan",
-      ok: true,
-      detail:
-        contractor.discipline.length === 0
-          ? "No discipline actions linked in our extract"
-          : `${contractor.discipline.length} action(s) on file`,
+      tone: hasDiscipline ? "warn" : "good",
+      mark: hasDiscipline ? "!" : "✓",
+      detail: hasDiscipline
+        ? `${contractor.discipline.length} board action(s) linked in our extract — review details below`
+        : "No discipline actions linked in our current extract",
       when: contractor.discipline[0]?.lastVerifiedAt || primary?.lastVerifiedAt,
     },
   ];
+
+  const toneClass: Record<Tone, string> = {
+    good: "bg-emerald-500/20 text-emerald-300",
+    neutral: "bg-slate-500/20 text-slate-400",
+    warn: "bg-amber-500/20 text-amber-200",
+    bad: "bg-rose-500/20 text-rose-300",
+  };
 
   return (
     <section className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-5 sm:p-6">
       <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
         Verification summary
       </h2>
-      <p className="mt-2 text-sm text-[var(--muted)]">
+      <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         Independent checks against {state.boardLabel} and {state.entityRegistryLabel}. Not a
         substitute for the official board.
       </p>
@@ -58,18 +79,14 @@ export function VerificationSummary({
         {checks.map((c) => (
           <li key={c.label} className="flex gap-3">
             <span
-              className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                c.ok
-                  ? "bg-emerald-500/20 text-emerald-300"
-                  : "bg-slate-500/20 text-slate-400"
-              }`}
+              className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold ${toneClass[c.tone]}`}
               aria-hidden
             >
-              {c.ok ? "✓" : "–"}
+              {c.mark}
             </span>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-[var(--text)]">{c.label}</p>
-              <p className="mt-0.5 text-sm text-[var(--muted)]">{c.detail}</p>
+              <p className="mt-0.5 text-sm leading-relaxed text-[var(--muted)]">{c.detail}</p>
               {c.when && (
                 <p className="mt-0.5 text-xs text-[var(--muted)]">
                   Last verified in our data: {formatDateTime(c.when)}
