@@ -1,9 +1,10 @@
 /**
- * Stage 6.1 / 7 lightweight ops visibility — coverage/join health snapshot.
+ * Stage 6.1 / 7 / 8C ops visibility — file extract + optional DB production truth.
  */
 
 import { allCoverageMatrix, coverageAnalyticsSnapshot } from "./coverage";
 import { extractStats } from "./permits";
+import type { DbOpsSnapshot } from "./ops-db";
 import { WAVE_A_COUNTIES, WAVE_A_SLUGS } from "./wave-a";
 import {
   WAVE_B_COUNTIES,
@@ -60,7 +61,7 @@ export function waveOpsSnapshot(
 
   return {
     generatedAt: new Date().toISOString(),
-    stage: "7",
+    stage: "8C",
     wave,
     counties: [...counties],
     matrix,
@@ -77,6 +78,8 @@ export function waveOpsSnapshot(
       freshness: stats.freshness,
       byJurisdiction: stats.byJurisdiction,
     },
+    dataSourceNote:
+      "File extract stats (sample-permits.json). Prefer production.db when available.",
     matching: {
       rule: "exact_license_only",
       nameOnlyJoins: false,
@@ -89,28 +92,31 @@ export function waveOpsSnapshot(
     },
     knownLimits: [
       `Wave ${wave} is partial — many real addresses return zero rows`,
-      "Sample/JSON extracts are not a full AHJ dump",
+      "Never display sample density as complete live AHJ coverage",
       "Trust Report activity only for licenses present in activity rollups or DB",
-      "DB join requires migration 006 + batch load; otherwise file extracts only",
+      "DB join requires migration 006 + load:permits; otherwise file extracts only",
       "Never claim complete county coverage",
       "Auto-join is exact license key only — no name-only joins",
     ],
   };
 }
 
-/** Combined Wave A–C ops for Stage 7 coverage API / admin snapshot */
-export function floridaWavesOpsSnapshot() {
+/** Combined Wave A–C ops for coverage API / admin snapshot */
+export function floridaWavesOpsSnapshot(db?: DbOpsSnapshot | null) {
   return {
     generatedAt: new Date().toISOString(),
-    stage: "7",
+    stage: "8C",
     waveA: waveAOpsSnapshot(),
     waveB: waveBOpsSnapshot(),
     waveC: waveCOpsSnapshot(),
     extract: extractStats(),
+    production: db || null,
     njVerify: {
       pilot: true,
       note: "NJ is Verify pilot only — not FL permit-wave coverage",
       path: "/verify?state=nj",
+      dcaLicenses: db?.njDcaLicenses ?? null,
     },
   };
 }
+

@@ -6,6 +6,7 @@ import {
   waveBOpsSnapshot,
   waveCOpsSnapshot,
 } from "@/lib/property/ops-health";
+import { loadDbOpsSnapshot } from "@/lib/property/ops-db";
 import { extractStats } from "@/lib/property/permits";
 import { pageMetadata } from "@/lib/seo/page-meta";
 import { isNjVerifyPilotEnabled } from "@/lib/states/feature-flags";
@@ -14,7 +15,7 @@ import { NJ_SOURCE_MATRIX } from "@/lib/states/nj-credentials";
 export const metadata: Metadata = pageMetadata({
   title: "Permit coverage matrix — Florida jurisdictions",
   description:
-    "Which Florida counties have partial permit extract coverage on Contractor Trust Hub, Wave B/C depth, freshness, and matching rules. NJ Verify pilot is separate.",
+    "Which Florida counties have partial permit extract coverage on Contractor Trust Hub, production load status, freshness, and matching rules. NJ Verify pilot is separate.",
   path: "/tools/coverage",
 });
 
@@ -46,18 +47,20 @@ function WaveOpsBlock({
   );
 }
 
-export default function CoveragePage() {
+export default async function CoveragePage() {
   const snap = coverageAnalyticsSnapshot();
   const stats = extractStats();
   const waveA = waveAOpsSnapshot();
   const waveB = waveBOpsSnapshot();
   const waveC = waveCOpsSnapshot();
   const njPilot = isNjVerifyPilotEnabled();
+  const production = await loadDbOpsSnapshot();
+  const usingDb = production.available && production.wavePermits > 0;
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
-        Stage 7 — Florida waves + multi-state note
+        Stage 8C — live data ops · coverage truthfulness
       </p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--text)]">
         Permit coverage matrix
@@ -67,6 +70,28 @@ export default function CoveragePage() {
         permit history. High-confidence license joins only — never name-only auto-links.
       </p>
 
+      <div
+        className={`mt-4 rounded-xl border px-4 py-3 text-sm ${
+          usingDb
+            ? "border-emerald-200 bg-emerald-50/80 text-emerald-950"
+            : "border-amber-200 bg-amber-50/80 text-amber-950"
+        }`}
+      >
+        {usingDb ? (
+          <p>
+            <strong>Production DB loaded.</strong> Wave permits: {production.wavePermits} ·
+            activity keys: {production.activityKeys} · permit freshness:{" "}
+            {production.permitFreshness || "—"}. Counts below prefer production when present.
+          </p>
+        ) : (
+          <p>
+            <strong>File / sample extract mode.</strong> Production wave permits not detected in DB
+            yet. Run <code className="text-xs">npm run load:permits</code> after migration 006/007.
+            Do not treat sample density as complete AHJ coverage.
+          </p>
+        )}
+      </div>
+
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3">
           <p className="text-xs text-[var(--muted)]">Jurisdictions enabled</p>
@@ -75,15 +100,19 @@ export default function CoveragePage() {
           </p>
         </div>
         <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3">
-          <p className="text-xs text-[var(--muted)]">Shipped extract rows</p>
-          <p className="text-2xl font-semibold text-[var(--navy)]">{stats.permitRows}</p>
+          <p className="text-xs text-[var(--muted)]">
+            {usingDb ? "Production wave rows" : "Shipped extract rows"}
+          </p>
+          <p className="text-2xl font-semibold text-[var(--navy)]">
+            {usingDb ? production.wavePermits : stats.permitRows}
+          </p>
         </div>
         <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3">
-          <p className="text-xs text-[var(--muted)]">License-bearing rows</p>
+          <p className="text-xs text-[var(--muted)]">License-bearing (file)</p>
           <p className="text-2xl font-semibold text-[var(--navy)]">{stats.withLicenseKey}</p>
         </div>
         <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3">
-          <p className="text-xs text-[var(--muted)]">Join rate proxy</p>
+          <p className="text-xs text-[var(--muted)]">Join rate proxy (file)</p>
           <p className="text-2xl font-semibold text-[var(--navy)]">
             {stats.joinRateProxy}%
           </p>
@@ -93,9 +122,32 @@ export default function CoveragePage() {
         </div>
       </div>
 
-      <WaveOpsBlock title="Wave A ops snapshot" ops={waveA} />
-      <WaveOpsBlock title="Wave B ops snapshot (Stage 7 depth)" ops={waveB} />
-      <WaveOpsBlock title="Wave C ops snapshot (Stage 7 depth)" ops={waveC} />
+      {usingDb && production.jurisdictions.length > 0 ? (
+        <section className="mt-6 rounded-3xl border border-[var(--border)] bg-white p-5 sm:p-6">
+          <h2 className="text-lg font-semibold text-[var(--text)]">
+            Production jurisdiction counts
+          </h2>
+          <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+            {production.jurisdictions.map((j) => (
+              <li
+                key={j.jurisdictionSlug}
+                className="rounded-xl border border-[var(--border)] px-3 py-2"
+              >
+                <span className="font-medium text-[var(--text)]">{j.jurisdictionSlug}</span>
+                <span className="text-[var(--muted)]">
+                  {" "}
+                  · {j.recordCount} rows · lic {j.withLicenseKey}
+                  {j.freshness ? ` · ${j.freshness}` : ""}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <WaveOpsBlock title="Wave A ops snapshot (file extract)" ops={waveA} />
+      <WaveOpsBlock title="Wave B ops snapshot (file extract)" ops={waveB} />
+      <WaveOpsBlock title="Wave C ops snapshot (file extract)" ops={waveC} />
 
       <section className="mt-6 rounded-3xl border border-[var(--border)] bg-white p-5 sm:p-6">
         <h2 className="text-lg font-semibold text-[var(--text)]">Extract join health</h2>

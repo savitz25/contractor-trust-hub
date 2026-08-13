@@ -13,9 +13,15 @@
     "test:funnel": "node scripts/test_funnel_smoke.mjs",
     "verify:stage6": "node scripts/verify_stage6_migration.mjs",
     "verify:stage7": "node scripts/verify_stage7_data.mjs",
-    "load:wave-a": "node scripts/load_wave_a_permits.mjs",
-    "load:wave-bc": "node scripts/load_wave_a_permits.mjs",
-    "audit:joins": "node scripts/audit_permit_joins.mjs"
+    "verify:ops": "node scripts/verify_production_data.mjs",
+    "load:wave-a": "node scripts/load_wave_permits.mjs --wave A",
+    "load:wave-bc": "node scripts/load_wave_permits.mjs --wave B,C",
+    "load:permits": "node scripts/load_wave_permits.mjs",
+    "rebuild:activity": "node scripts/rebuild_permit_activity.mjs",
+    "audit:joins": "node scripts/audit_permit_joins.mjs",
+    "audit:production": "node scripts/audit_production_joins.mjs",
+    "ops:snapshot": "node scripts/ops_snapshot.mjs",
+    "test:ops": "node scripts/test_ops_smoke.mjs"
   },
   "dependencies": {
     "next": "^15.5.23",
