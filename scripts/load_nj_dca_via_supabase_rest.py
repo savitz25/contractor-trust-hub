@@ -260,7 +260,7 @@ def main() -> int:
         print(f"licenses {min(i+bs, len(lic_payloads))}/{len(lic_payloads)}")
 
     # Final counts
-    for code in ["HIC", "ELE", "PLB", "HVAC"]:
+    for code in ["HIC", "ELE", "TEL", "ALM", "LCK", "PLB", "HVAC", "HRT"]:
         path = f"licenses?source_system=eq.nj_dca&occupation_code=eq.{code}&select=id&limit=1"
         _, _, headers = rest(
             base,
@@ -270,6 +270,16 @@ def main() -> int:
             extra_headers={"Prefer": "count=exact"},
         )
         print(code, headers.get("Content-Range") or headers.get("content-range"))
+    for status in ["active", "inactive"]:
+        path = f"licenses?source_system=eq.nj_dca&status_normalized=eq.{status}&select=id&limit=1"
+        _, _, headers = rest(
+            base,
+            key,
+            "GET",
+            path,
+            extra_headers={"Prefer": "count=exact"},
+        )
+        print(f"status_{status}", headers.get("Content-Range") or headers.get("content-range"))
 
     print("DONE")
     return 0

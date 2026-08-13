@@ -113,8 +113,8 @@ python scripts/load_nj_dca_to_postgres.py --staging-dir data/staging/nj_dca
 # or: python scripts/load_nj_dca_via_supabase_rest.py --staging-dir data/staging/nj_dca
 ```
 
-**Active Standard Files counts (2026-08-03):** HIC 25,111 · ELE 2,853 · PLB 1,719 · HVAC 1,575 (total 31,258).  
-Coverage banner remains: no statewide GC; HIC primary; specialty boards only when loaded.
+**Expanded Standard Files counts (2026-08-03):** HIC 25,111 · ELE 32,304 · PLB 11,455 · HVAC 9,520 · ALM 4,863 · TEL 3,043 · LCK 993 · HRT 66 (total **87,355**; ≈55k active / ≈32k non-active specialty).  
+HIC is active-only from Box; specialty inactive/expired included. Coverage banner remains: no statewide GC; HIC primary.
 
 ## Coverage truthfulness
 

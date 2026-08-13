@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CompareToggle } from "@/components/compare/CompareToggle";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { statusLabel } from "@/lib/contractors/format";
+import { displayStatusLabel, statusLabel, statusTone } from "@/lib/contractors/format";
 import { occupationLabel } from "@/lib/states/config";
 import { getOrCcbTypeInfo, orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { getNjCredentialInfo, njCredentialPlainLabel } from "@/lib/states/nj-credentials";
@@ -24,11 +24,8 @@ function signalTone(
     if (s === "inactive" || s === "dissolved") return "bad";
     return "warn";
   }
-  const s = (result.licenseStatus || "").toLowerCase();
-  if (s === "active" || s === "current") return "good";
-  if (s === "inactive") return "bad";
-  if (!s) return "neutral";
-  return "warn";
+  // Prefer raw board status when present (Expired vs coarse Inactive)
+  return statusTone(result.primaryStatus || result.licenseStatus);
 }
 
 const toneBar: Record<string, string> = {
@@ -107,7 +104,8 @@ export function ResultCard({
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-[var(--border)]/80 px-3.5 py-2.5 sm:gap-x-4 sm:px-5">
         <span className="inline-flex items-center gap-1.5 text-xs text-[var(--muted)]">
           <span className={`h-1.5 w-1.5 rounded-full ${toneBar[licTone]}`} aria-hidden />
-          {isNj ? "Registration" : "License"} {statusLabel(result.licenseStatus)}
+          {isNj ? "Registration" : "License"}{" "}
+          {displayStatusLabel(result.licenseStatus, result.primaryStatus)}
         </span>
         {isTx && trade ? (
           <span className="inline-flex max-w-full items-center gap-1.5 text-xs font-medium text-[var(--navy)]">
@@ -212,8 +210,11 @@ export function ResultCard({
               </span>
             ) : null}
             <StatusBadge
-              status={result.licenseStatus}
-              label={`${isNj ? "Registration" : "License"}: ${statusLabel(result.licenseStatus)}`}
+              status={result.primaryStatus || result.licenseStatus}
+              label={`${isNj ? "Registration" : "License"}: ${displayStatusLabel(
+                result.licenseStatus,
+                result.primaryStatus
+              )}`}
             />
             {result.entityStatus ? (
               <StatusBadge

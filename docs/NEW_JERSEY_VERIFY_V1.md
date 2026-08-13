@@ -14,13 +14,20 @@
 | Coverage banner | Violet pilot banner: no statewide GC; HIC + specialty limits |
 | Credential labels | `lib/states/nj-credentials.ts` |
 
-### Credential types (v1 default)
+### Credential types (loaded from Standard Files)
 
-- **Home Improvement Contractor (HIC)** — primary residential set  
-- **Electrical (ELE)** — when present in extract  
-- **Plumbing (PLB)** — when present in extract  
-- **HVAC / Mechanical (HVAC)** — when present in extract  
-- Other DCA types only if published in free bulk with a stable key  
+| Code | Credential | Source extract |
+|------|------------|----------------|
+| **HIC** | Home Improvement Business Contr (+ elevation) | Facilities **active** only |
+| **ELE** | Electrical Business Permit + Electrical Contractor (person) | Facilities + individuals all-status |
+| **TEL** | Telecom Contractor | Facilities all-status |
+| **ALM** | Burglar / fire alarm business + person licenses | Facilities + individuals all-status |
+| **LCK** | Locksmith business + person licenses | Facilities + individuals all-status |
+| **PLB** | Master Plumber | Individuals all-status |
+| **HVAC** | Master HVACR Contractor | Individuals all-status |
+| **HRT** | Master Hearth Specialist | Individuals all-status |
+
+Skipped by default: apprentices, journeymen, CE sponsors, electrologists, medical-gas subclasses.
 
 ## Honest product claims
 
@@ -90,47 +97,51 @@ NEXT_PUBLIC_NJ_VERIFY_PILOT=true   # default: show NJ in state switcher when liv
 NEXT_PUBLIC_NJ_VERIFY_PILOT=false  # hide NJ entry without code removal
 ```
 
-## Production counts (Box Standard Files, active statuses, 2026-08-03 extract)
+## Production counts (Box Standard Files expanded, 2026-08-03)
 
-Staged from official free bulk (not sample):
+| occupation_code | Active | Inactive-ish* | Total |
+|-----------------|-------:|--------------:|------:|
+| **HIC** | 25,111 | 0 | **25,111** |
+| **ELE** | 13,091 | 19,213 | **32,304** |
+| **PLB** | 4,903 | 6,552 | **11,455** |
+| **HVAC** | 6,654 | 2,866 | **9,520** |
+| **ALM** | 2,081 | 2,782 | **4,863** |
+| **TEL** | 3,018 | 25 | **3,043** |
+| **LCK** | 392 | 601 | **993** |
+| **HRT** | 59 | 7 | **66** |
+| **Total** | **55,309** | **32,046** | **87,355** |
 
-| occupation_code | Source in Standard Files | Rows staged |
-|-----------------|--------------------------|------------:|
-| **HIC** | Facilities → Home Improvement Business Contr (+ Home Elevation) | **25,111** |
-| **ELE** | Facilities → Electrical Business Permit | **2,853** |
-| **PLB** | Individuals → Master Plumber | **1,719** |
-| **HVAC** | Individuals → Master HVACR Contractor | **1,575** |
-| **Total** | | **31,258** |
+\*Inactive-ish = Expired, Inactive, Closed, Deceased, Retired, Suspended, Revoked, Out of Business, Voluntary Surrender (normalized to `inactive`). UI shows **raw board status** so Expired cannot look Active.
 
-All rows in this extract are **Active**. Expired/inactive HIC appear on MyLicense interactive/bulk profession export but are **not** in the Box “active” Standard Files (the facilities “all statuses” file also omits HIC profession entirely as of this extract).
+**HIC status limitation:** Box facilities all-status omits Home Improvement Contractors. HIC is active-only from facilities active file. Expired HIC may exist via MyLicense Verification_Bulk (not yet automated).
 
 After Postgres load, confirm:
 
 | Metric | SQL |
 |--------|-----|
 | HIC | `SELECT COUNT(*) FROM licenses WHERE source_system='nj_dca' AND occupation_code='HIC'` |
-| Specialty | `… AND occupation_code IN ('ELE','PLB','HVAC')` |
-| Batch | `SELECT * FROM ingest_batches WHERE source_system='nj_dca' ORDER BY id DESC LIMIT 3` |
+| Specialty | `… AND occupation_code IN ('ELE','TEL','ALM','LCK','PLB','HVAC','HRT')` |
+| By raw status | `SELECT primary_status, COUNT(*) FROM licenses WHERE source_system='nj_dca' GROUP BY 1` |
+| Batch | `SELECT * FROM ingest_batches WHERE source_system='nj_dca' ORDER BY created_at DESC LIMIT 3` |
 
 ### Field notes from full extract
 
-- Stable keys: `NJ-HIC:{license_no}`, `NJ-ELE:…`, `NJ-PLB:…`, `NJ-HVAC:…`  
-- Location fill is strong on facilities (city/state/ZIP/county present)  
-- Individuals specialty rows are **person-named** credentials (Master Plumber / Master HVACR), not business shells  
+- Stable keys: `NJ-{CODE}:{license_no}`  
+- Specialty inactive/expired included from all-status Standard Files  
+- Individuals specialty rows are person-named (Master Plumber / HVACR / Electrical Contractor)  
 - Entity / enforcement not present in Standard Files — optional depth only  
-- Phone present on facilities; often absent on individuals  
 
 ### Remaining gaps
 
 | Gap | Notes |
 |-----|--------|
-| Expired / inactive HIC | Use MyLicense Verification_Bulk profession download if needed |
-| Full electrical person cards | Only business permits from facilities by default |
-| Journeyman / apprentice | Intentionally excluded (contractor-facing only) |
+| Expired / inactive HIC | Not in Box Standard Files; evaluate MyLicense Verification_Bulk HIC export |
+| Journeyman / apprentice | Intentionally excluded |
+| Medical gas subclasses | Not default consumer set |
 | Entity linkage | No automatic SOS join |
-| Enforcement depth | Not in Standard Files active extract |
+| Enforcement depth | Discipline columns not yet mapped to discipline_actions |
 | Municipal-only cards | Out of scope |
-| Refresh schedule | Re-run `--from-box --convert` when Box files update (dated in filename) |
+| Refresh schedule | Re-run `--from-box --convert` when Box file dates change |
 
 ## Guardrails checklist
 
@@ -138,9 +149,10 @@ After Postgres load, confirm:
 2. ✅ No name-only auto-joins  
 3. ✅ FL/TX paths unchanged  
 4. ✅ Official bulk preferred over scrape  
-5. ✅ Production full HIC (+ specialty) staged from Box Standard Files  
-6. ⬜ Postgres production load (requires `DATABASE_URL`) + UI smoke on live DB  
-7. ⬜ Scheduled refresh when Box file dates change  
+5. ✅ Production HIC + expanded specialty from Box Standard Files  
+6. ✅ Inactive/expired specialty statuses loaded with visible raw status  
+7. ⬜ Expired HIC via MyLicense bulk (if product prioritizes)  
+8. ⬜ Scheduled refresh when Box file dates change  
 
 ## Related
 

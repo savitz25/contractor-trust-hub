@@ -30,27 +30,63 @@ export const NJ_CREDENTIAL_LABELS: Record<string, NjCredentialInfo> = {
     plain: "Electrical Contractor (NJ)",
     chip: "Electrical",
     allows:
-      "Electrical contractor credentials, when present in extracts, relate to electrical work authorized under New Jersey trade rules for that class.",
+      "Electrical contractor or electrical business credentials in extracts relate to electrical work authorized under New Jersey trade rules for that class.",
     doesNotImply:
       "Does not replace local permitting, inspections, or proof of insurance. Confirm class and status for your specific job.",
   },
+  TEL: {
+    code: "TEL",
+    plain: "Telecom Contractor (NJ)",
+    chip: "Telecom",
+    allows:
+      "Telecom contractor business credentials relate to telecommunications contracting when required under New Jersey electrical board rules.",
+    doesNotImply:
+      "Not a general home-improvement registration and not a statewide GC credential.",
+  },
+  ALM: {
+    code: "ALM",
+    plain: "Alarm Contractor (NJ)",
+    chip: "Alarm",
+    allows:
+      "Burglar / fire alarm business or individual licenses when present in official extracts.",
+    doesNotImply:
+      "Does not cover general remodeling or a general contractor endorsement. Confirm status for your job type.",
+  },
+  LCK: {
+    code: "LCK",
+    plain: "Locksmith (NJ)",
+    chip: "Locksmith",
+    allows:
+      "Locksmith business or individual licenses when published in official DCA extracts.",
+    doesNotImply:
+      "Not a home-improvement contractor registration or general builder credential.",
+  },
   PLB: {
     code: "PLB",
-    plain: "Plumbing Contractor (NJ)",
+    plain: "Master Plumber (NJ)",
     chip: "Plumbing",
     allows:
-      "Plumbing contractor credentials in current extracts relate to plumbing trade authorization when applicable under NJ rules.",
+      "Master Plumber credentials in current extracts relate to plumbing trade authorization when applicable under NJ rules.",
     doesNotImply:
-      "Does not prove insurance, workers’ compensation, or municipal-only requirements are met.",
+      "Does not prove insurance, workers’ compensation, or municipal-only requirements are met. Journeyman/apprentice cards are not the default consumer set.",
   },
   HVAC: {
     code: "HVAC",
-    plain: "HVAC / Mechanical Contractor (NJ)",
+    plain: "Master HVACR Contractor (NJ)",
     chip: "HVAC",
     allows:
-      "HVAC / mechanical credentials in extracts relate to heating, ventilation, air conditioning, or mechanical work for that class when required.",
+      "Master HVACR contractor credentials relate to heating, ventilation, air conditioning, or refrigeration work for that class when required.",
     doesNotImply:
       "Does not include full permit history or a general contractor endorsement.",
+  },
+  HRT: {
+    code: "HRT",
+    plain: "Master Hearth Specialist (NJ)",
+    chip: "Hearth",
+    allows:
+      "Master Hearth Specialist credentials relate to hearth / solid-fuel appliance work when required under NJ rules.",
+    doesNotImply:
+      "Not a general home-improvement registration or statewide GC credential.",
   },
   GEN: {
     code: "GEN",
@@ -59,7 +95,7 @@ export const NJ_CREDENTIAL_LABELS: Record<string, NjCredentialInfo> = {
     allows:
       "Some extracts include general contractor-style registration fields when the source publishes them. Coverage is source-dependent.",
     doesNotImply:
-      "Not equivalent to a Florida CGC/CBC/CRC class map. Always confirm the exact credential type with official sources.",
+      "New Jersey has no single statewide general contractor license like Florida CGC/CBC/CRC. Always confirm the exact credential type with official sources.",
   },
 };
 
@@ -93,17 +129,17 @@ export function njCredentialPlainLabel(code: string | null | undefined): string 
 }
 
 export const NJ_PILOT_COVERED = [
-  "Home Improvement Contractor (HIC) registration",
-  "Specialty boards when present (electrical, plumbing, HVAC)",
+  "Home Improvement Contractor (HIC) registration (active Standard Files)",
+  "Electrical, telecom, alarm, locksmith, master plumber, master HVACR, hearth when in bulk",
+  "Inactive / expired specialty rows when present in all-status Standard Files",
   "High-confidence business entity links when matched",
-  "Public enforcement rows when linked in extract",
 ] as const;
 
 export const NJ_PILOT_NOT_COVERED = [
   "A single statewide general contractor license (does not exist in NJ)",
-  "Every municipal trade card / local-only credential",
+  "Expired / inactive HIC in Box Standard Files (HIC is active-only in that feed)",
+  "Every municipal trade card / apprentices / CE-only cards",
   "Full permit history, studios, or Florida-depth journey",
-  "Live insurance / COI verification",
 ] as const;
 
 export const NJ_SOURCE_MATRIX = [

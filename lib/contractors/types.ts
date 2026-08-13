@@ -17,6 +17,8 @@ export type SearchResult = {
   primaryLicenseKey: string | null;
   occupationCode: string | null;
   licenseStatus: LicenseStatus | null;
+  /** Raw board status text when available (e.g. Expired, Closed) — prefer for display */
+  primaryStatus?: string | null;
   entityStatus: string | null;
   entityName: string | null;
   hasDiscipline: boolean;

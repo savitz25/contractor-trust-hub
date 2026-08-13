@@ -26,7 +26,7 @@ import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
 import { StudioHandoffBanner } from "@/components/studios/StudioHandoffBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { formatDateTime, statusLabel } from "@/lib/contractors/format";
+import { displayStatusLabel, formatDateTime, statusLabel } from "@/lib/contractors/format";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { getContractorBySlug } from "@/lib/contractors/queries";
 import { matchConfidenceLine } from "@/lib/contractors/trust-report";
@@ -404,8 +404,11 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           ) : null}
           {primary ? (
             <StatusBadge
-              status={primary.statusNormalized}
-              label={`${isNj ? "Registration" : "License"}: ${statusLabel(primary.statusNormalized)}`}
+              status={primary.primaryStatus || primary.statusNormalized}
+              label={`${isNj ? "Registration" : "License"}: ${displayStatusLabel(
+                primary.statusNormalized,
+                primary.primaryStatus
+              )}`}
             />
           ) : null}
           {isTx ? (

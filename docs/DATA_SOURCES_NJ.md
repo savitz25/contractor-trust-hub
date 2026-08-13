@@ -32,11 +32,14 @@ Florida remains the full-journey product. Texas is specialty-license Verify.
 
 | File | Role for Verify |
 |------|-----------------|
-| `MLO_Facilities_active_statuses_*.txt` | **Primary** — Home Improvement Business Contr (~25k Active HIC) + Electrical Business Permit (~2.8k) |
-| `MLO_Individuals_active_statuses_*.txt` | Specialty persons — Master Plumber, Master HVACR Contractor |
-| `*_all_statuses_with_discipline_*.txt` | Broader statuses / discipline for some boards; **HIC profession absent** in facilities all-status file as of this extract |
+| `MLO_Facilities_active_statuses_*.txt` | **HIC only path** — Home Improvement Business Contr (~25k Active). HIC is **not** in facilities all-status. |
+| `MLO_Facilities_all_statuses_with_discipline_*.txt` | Electrical Business Permit + telecom / alarm / locksmith **business** classes (Active + Expired/Inactive/…) |
+| `MLO_Individuals_all_statuses_with_discipline_*.txt` | Electrical Contractor, Master Plumber, Master HVACR, alarm/locksmith person, Master Hearth (all statuses) |
+| `MLO_Individuals_active_statuses_*.txt` | Subset of individuals; converter prefers all-status for depth |
 
 Delimiter: `%` (header line is a truncated SQL concat expression; field order is fixed — see `scripts/convert_nj_mlo_facilities.py`).
+
+**Inactive / expired:** Specialty boards are loaded with board status preserved (`primary_status`). HIC remains active-only from Box.
 
 ### Home Improvement Contractor (HIC) — primary residential set
 
@@ -103,7 +106,7 @@ Interactive case search remains authoritative for enforcement detail.
 | Registry | `lib/states/config.ts` → `nj` |
 | Verify UI | `/verify?state=nj` |
 
-**Production staged counts (active Standard Files, 2026-08-03):** HIC 25,111 · ELE 2,853 · PLB 1,719 · HVAC 1,575 · **total 31,258**.
+**Production staged counts (expanded Standard Files, 2026-08-03):** HIC 25,111 · ELE 32,304 · PLB 11,455 · HVAC 9,520 · ALM 4,863 · TEL 3,043 · LCK 993 · HRT 66 · **total 87,355** (≈55k active / ≈32k inactive-ish).
 
 ### Committed sample (no network)
 

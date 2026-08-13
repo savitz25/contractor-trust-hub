@@ -130,17 +130,33 @@ OCCUPATION_MAP = {
     "HOME IMPROVEMENT CONTRACTOR": ("HIC", "Home Improvement Contractor"),
     "HOME IMPROVEMENT": ("HIC", "Home Improvement Contractor"),
     "HOME IMPROVEMENT CONTRACTOR REGISTRATION": ("HIC", "Home Improvement Contractor"),
+    "HOME IMPROVEMENT BUSINESS CONTR": ("HIC", "Home Improvement Contractor"),
+    "HOME ELEVATION BUSINESS CONTR": ("HIC", "Home Elevation Contractor (NJ)"),
     "ELE": ("ELE", "Electrical Contractor (NJ)"),
     "ELECTRICAL": ("ELE", "Electrical Contractor (NJ)"),
     "ELECTRICAL CONTRACTOR": ("ELE", "Electrical Contractor (NJ)"),
-    "PLB": ("PLB", "Plumbing Contractor (NJ)"),
-    "PLUMBING": ("PLB", "Plumbing Contractor (NJ)"),
-    "PLUMBING CONTRACTOR": ("PLB", "Plumbing Contractor (NJ)"),
-    "MASTER PLUMBER": ("PLB", "Plumbing Contractor (NJ)"),
-    "HVAC": ("HVAC", "HVAC / Mechanical Contractor (NJ)"),
-    "HVACR": ("HVAC", "HVAC / Mechanical Contractor (NJ)"),
-    "MECHANICAL": ("HVAC", "HVAC / Mechanical Contractor (NJ)"),
-    "HEATING": ("HVAC", "HVAC / Mechanical Contractor (NJ)"),
+    "ELECTRICAL BUSINESS PERMIT": ("ELE", "Electrical Business Permit (NJ)"),
+    "TEL": ("TEL", "Telecom Contractor (NJ)"),
+    "TELECOM": ("TEL", "Telecom Contractor (NJ)"),
+    "TELECOM CONTRACTOR": ("TEL", "Telecom Contractor (NJ)"),
+    "ALM": ("ALM", "Alarm Contractor (NJ)"),
+    "ALARM": ("ALM", "Alarm Contractor (NJ)"),
+    "BURGLAR ALARM": ("ALM", "Alarm Contractor (NJ)"),
+    "FIRE ALARM": ("ALM", "Alarm Contractor (NJ)"),
+    "LCK": ("LCK", "Locksmith (NJ)"),
+    "LOCKSMITH": ("LCK", "Locksmith (NJ)"),
+    "PLB": ("PLB", "Master Plumber (NJ)"),
+    "PLUMBING": ("PLB", "Master Plumber (NJ)"),
+    "PLUMBING CONTRACTOR": ("PLB", "Master Plumber (NJ)"),
+    "MASTER PLUMBER": ("PLB", "Master Plumber (NJ)"),
+    "HVAC": ("HVAC", "Master HVACR Contractor (NJ)"),
+    "HVACR": ("HVAC", "Master HVACR Contractor (NJ)"),
+    "MASTER HVACR": ("HVAC", "Master HVACR Contractor (NJ)"),
+    "MECHANICAL": ("HVAC", "Master HVACR Contractor (NJ)"),
+    "HEATING": ("HVAC", "Master HVACR Contractor (NJ)"),
+    "HRT": ("HRT", "Master Hearth Specialist (NJ)"),
+    "HEARTH": ("HRT", "Master Hearth Specialist (NJ)"),
+    "MASTER HEARTH": ("HRT", "Master Hearth Specialist (NJ)"),
     "GEN": ("GEN", "General contractor registration (NJ)"),
     "GENERAL": ("GEN", "General contractor registration (NJ)"),
 }
@@ -300,13 +316,40 @@ def slugify(*parts: str) -> str:
 
 
 def normalize_status(raw: str) -> str:
+    """Map board status text → product status_normalized.
+
+    Important: check inactive tokens before 'active' so 'Inactive' is not
+    misclassified (substring of 'active').
+    """
     h = _clean(raw).lower()
     if not h:
         return "unknown"
-    if any(x in h for x in ("active", "current", "valid", "registered")):
-        return "active"
-    if any(x in h for x in ("inactive", "expired", "lapsed", "suspended", "revoked", "cancelled")):
+    # Non-active / caution first (substring-safe ordering)
+    inactive_tokens = (
+        "inactive",
+        "expired",
+        "lapsed",
+        "suspended",
+        "revoked",
+        "cancelled",
+        "canceled",
+        "closed",
+        "deceased",
+        "retired",
+        "out of business",
+        "voluntary surrender",
+        "terminated",
+        "surrender",
+        "dissolved",
+    )
+    if any(tok in h for tok in inactive_tokens):
         return "inactive"
+    if h in {"active", "current", "valid", "registered"} or h.startswith("active "):
+        return "active"
+    if "pending" in h:
+        return "unknown"
+    if h == "active" or h.startswith("active"):
+        return "active"
     return "unknown"
 
 

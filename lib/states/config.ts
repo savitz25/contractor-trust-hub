@@ -84,7 +84,7 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     live: true,
     pilot: true,
     coverageNote:
-      "New Jersey does not issue a single statewide general contractor license. Coverage prioritizes Home Improvement Contractor (HIC) registrations and available specialty boards (electrical, plumbing, HVAC when in extract). Not Florida-depth. Always confirm on the official DCA / MyLicense site.",
+      "New Jersey does not issue a single statewide general contractor license. Coverage prioritizes Home Improvement Contractor (HIC) registrations (active Standard Files) plus specialty boards when loaded (electrical, telecom, alarm, locksmith, master plumber, master HVACR, hearth). Specialty inactive/expired rows are included when present; HIC inactive is not in Box Standard Files. Always confirm on the official DCA / MyLicense site.",
   },
   or: {
     code: "OR",
@@ -170,8 +170,12 @@ export const TX_OCCUPATION_LABELS: Record<string, string> = {
 export const NJ_OCCUPATION_LABELS: Record<string, string> = {
   HIC: "Home Improvement Contractor",
   ELE: "Electrical Contractor (NJ)",
-  PLB: "Plumbing Contractor (NJ)",
-  HVAC: "HVAC / Mechanical Contractor (NJ)",
+  TEL: "Telecom Contractor (NJ)",
+  ALM: "Alarm Contractor (NJ)",
+  LCK: "Locksmith (NJ)",
+  PLB: "Master Plumber (NJ)",
+  HVAC: "Master HVACR Contractor (NJ)",
+  HRT: "Master Hearth Specialist (NJ)",
   GEN: "General contractor registration (NJ)",
 };
 

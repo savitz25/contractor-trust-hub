@@ -298,15 +298,21 @@ python scripts/load_nj_dca_to_postgres.py \
   --staging-dir data/staging/nj_dca_sample --limit 100
 ```
 
-### Production load snapshot (Box active Standard Files, 2026-08-03)
+### Production load snapshot (Box Standard Files expanded, 2026-08-03)
 
-| Code | Rows |
-|------|-----:|
-| HIC | 25,111 |
-| ELE | 2,853 |
-| PLB | 1,719 |
-| HVAC | 1,575 |
-| **Total** | **31,258** |
+| Code | Active | Non-active | Total |
+|------|-------:|-----------:|------:|
+| HIC | 25,111 | 0 | 25,111 |
+| ELE | 13,091 | 19,213 | 32,304 |
+| PLB | 4,903 | 6,552 | 11,455 |
+| HVAC | 6,654 | 2,866 | 9,520 |
+| ALM | 2,081 | 2,782 | 4,863 |
+| TEL | 3,018 | 25 | 3,043 |
+| LCK | 392 | 601 | 993 |
+| HRT | 59 | 7 | 66 |
+| **Total** | **55,309** | **32,046** | **87,355** |
+
+HIC inactive/expired is not in Box facilities all-status (profession absent). Specialty boards include Expired/Inactive/Closed/etc. with raw `primary_status` for UI.
 
 **Rules:**
 

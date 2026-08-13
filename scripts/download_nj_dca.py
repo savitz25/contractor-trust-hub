@@ -172,10 +172,11 @@ def run_convert() -> Path:
     assert spec and spec.loader
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    fac = next(RAW_DIR.glob("MLO_Facilities_active_statuses_*.txt"), None)
-    ind = next(RAW_DIR.glob("MLO_Individuals_active_statuses_*.txt"), None)
-    out = RAW_DIR / "hic_and_specialty_from_mlo_active.csv"
-    result = mod.convert(fac, ind, out)
+    fac_active = next(RAW_DIR.glob("MLO_Facilities_active_statuses_*.txt"), None)
+    fac_all = next(RAW_DIR.glob("MLO_Facilities_all_statuses_with_discipline_*.txt"), None)
+    ind_all = next(RAW_DIR.glob("MLO_Individuals_all_statuses_with_discipline_*.txt"), None)
+    out = RAW_DIR / "hic_and_specialty_from_mlo.csv"
+    result = mod.convert(fac_active, fac_all, ind_all, out)
     print(json.dumps(result, indent=2))
     return out
 

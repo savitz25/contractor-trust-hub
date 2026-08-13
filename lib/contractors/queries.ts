@@ -86,6 +86,7 @@ export async function searchContractors(
         l.external_key,
         l.occupation_code,
         l.status_normalized,
+        l.primary_status,
         l.last_verified_at,
         l.source_system,
         l.secondary_status,
@@ -195,6 +196,7 @@ export async function searchContractors(
         l.external_key,
         l.occupation_code,
         l.status_normalized,
+        l.primary_status,
         l.last_verified_at,
         l.source_system,
         l.secondary_status,
@@ -293,6 +295,7 @@ function mapSearchRow(r: {
   external_key: string | null;
   occupation_code: string | null;
   status_normalized: string | null;
+  primary_status?: string | null;
   last_verified_at: Date | null;
   entity_status: string | null;
   entity_name: string | null;
@@ -312,6 +315,7 @@ function mapSearchRow(r: {
     primaryLicenseKey: r.external_key,
     occupationCode: r.occupation_code,
     licenseStatus: asLicenseStatus(r.status_normalized),
+    primaryStatus: r.primary_status || null,
     entityStatus: r.entity_status,
     entityName: r.entity_name,
     hasDiscipline: r.has_discipline,
