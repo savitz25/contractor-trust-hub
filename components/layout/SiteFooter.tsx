@@ -9,6 +9,7 @@ const columns = [
       { href: "/verify", label: "Verify a contractor (Florida)" },
       { href: "/verify?state=tx", label: "Texas specialty verify (TDLR)" },
       { href: "/florida", label: "Browse Florida" },
+      { href: "/guides", label: "Homeowner guides" },
       { href: "/tools/coverage", label: "Permit coverage" },
       { href: "/methodology", label: "Trust standards" },
       { href: "/independence", label: "Independence" },

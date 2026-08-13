@@ -95,6 +95,12 @@ export default function AboutPage() {
           Verify a contractor
         </Link>
         <Link
+          href="/guides"
+          className="inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] px-5 text-sm font-medium text-[var(--text)] no-underline"
+        >
+          Homeowner guides
+        </Link>
+        <Link
           href="/methodology"
           className="inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] px-5 text-sm font-medium text-[var(--text)] no-underline"
         >

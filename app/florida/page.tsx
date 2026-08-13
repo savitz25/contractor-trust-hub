@@ -116,7 +116,15 @@ export default async function FloridaLandingPage() {
           <Link href="/verify" className="text-[var(--accent)]">
             Use search
           </Link>{" "}
-          for the fastest path to a Trust Report.
+          for the fastest path to a Trust Report. New to the process?{" "}
+          <Link href="/guides/how-to-verify-florida-contractor" className="text-[var(--accent)]">
+            How to verify a Florida contractor
+          </Link>
+          {" · "}
+          <Link href="/guides/florida-contractor-license-types" className="text-[var(--accent)]">
+            License types
+          </Link>
+          .
         </p>
       </div>
     </main>

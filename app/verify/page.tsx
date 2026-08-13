@@ -236,7 +236,16 @@ export default async function VerifyPage({ searchParams }: Props) {
             ? `Specialty trades: ${TX_COVERED_TRADES_PLAIN.join(" · ").toLowerCase()}. Not a statewide general contractor directory.`
             : isNj
               ? "Registration-first search. Entity links only when high-confidence. No name-only auto-joins."
-              : "Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay high-confidence only."}
+              : (
+                <>
+                  Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay
+                  high-confidence only.{" "}
+                  <Link href="/guides/how-to-verify-florida-contractor" className="text-[var(--accent)]">
+                    How to verify a Florida contractor
+                  </Link>
+                  .
+                </>
+              )}
         </p>
       </div>
 
@@ -348,6 +357,10 @@ export default async function VerifyPage({ searchParams }: Props) {
                 Don&apos;t have a specific name?{" "}
                 <Link href="/#research" className="text-[var(--accent)]">
                   Browse by county and trade
+                </Link>
+                {" · "}
+                <Link href="/guides/how-to-verify-florida-contractor" className="text-[var(--accent)]">
+                  How to verify
                 </Link>
                 .
               </p>

@@ -85,6 +85,16 @@ export function ToolDiscovery() {
         </div>
 
         <p className="mt-5 text-sm text-[var(--muted)]">
+          New to verifying?{" "}
+          <Link href="/guides/how-to-verify-florida-contractor" className="font-semibold text-[var(--navy)]">
+            How to verify a Florida contractor
+          </Link>
+          {" · "}
+          <Link href="/guides" className="font-semibold text-[var(--navy)]">
+            All guides
+          </Link>
+        </p>
+        <p className="mt-2 text-sm text-[var(--muted)]">
           Need a detailed studio?{" "}
           <Link href="/studio/kitchen" className="font-semibold text-[var(--navy)]">
             Kitchen calculator

@@ -14,6 +14,7 @@ const primaryNav = [
 
 const moreNav = [
   { href: "/florida", label: "Research" },
+  { href: "/guides", label: "Guides" },
   { href: "/studios", label: "Studios" },
   { href: "/account", label: "Account" },
 ] as const;

@@ -145,6 +145,10 @@ export default function MethodologyPage() {
           Disclaimer
         </Link>
         <span className="text-[var(--border)]">·</span>
+        <Link href="/guides" className="text-[var(--accent)]">
+          Homeowner guides
+        </Link>
+        <span className="text-[var(--border)]">·</span>
         <Link href="/about" className="text-[var(--accent)]">
           How it works
         </Link>
