@@ -2,14 +2,16 @@
  * Multi-state product config. Florida is the live reference implementation.
  * Texas: TDLR specialty trades + TSBPE plumbing (no statewide GC) — see docs/DATA_SOURCES_TX.md.
  * New Jersey: HIC + specialty boards via DCA (no statewide GC) — see docs/DATA_SOURCES_NJ.md.
+ * Oregon: CCB statewide contractor licenses — see docs/DATA_SOURCES_OR.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
 
 import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { isNjVerifyPilotEnabled } from "./feature-flags";
 import { njCredentialPlainLabel } from "./nj-credentials";
+import { orCcbPlainLabel } from "./or-ccb";
 
-export type StateCode = "FL" | "TX" | "NJ";
+export type StateCode = "FL" | "TX" | "NJ" | "OR";
 
 export type EvidenceState = {
   code: StateCode;
@@ -84,12 +86,29 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     coverageNote:
       "New Jersey does not issue a single statewide general contractor license. Coverage prioritizes Home Improvement Contractor (HIC) registrations and available specialty boards (electrical, plumbing, HVAC when in extract). Not Florida-depth. Always confirm on the official DCA / MyLicense site.",
   },
+  or: {
+    code: "OR",
+    slug: "or",
+    name: "Oregon",
+    shortName: "OR",
+    boardLabel: "Oregon Construction Contractors Board (CCB)",
+    boardUrl: "https://www.oregon.gov/ccb/",
+    entityRegistryLabel: "Oregon SOS business registry (not yet linked)",
+    entityRegistryUrl: "https://sos.oregon.gov/business/Pages/default.aspx",
+    licenseSource: "or_ccb",
+    entitySource: "or_sos",
+    live: true,
+    coverageNote:
+      "Oregon licenses contractors statewide through the CCB. This search uses the official Active Licenses open-data extract. Bond and insurance fields are as published — not a live certificate check. Always confirm on the official CCB site.",
+  },
 };
 
 export const DEFAULT_STATE_SLUG = "fl";
 
 export function getStateBySlug(slug: string): EvidenceState | null {
-  const s = EVIDENCE_STATES[slug.toLowerCase()] ?? null;
+  const key = slug.toLowerCase();
+  const mapped = key === "oregon" ? "or" : key;
+  const s = EVIDENCE_STATES[mapped] ?? null;
   if (!s) return null;
   // NJ pilot can be disabled without removing config
   if (s.slug === "nj" && !isNjVerifyPilotEnabled()) {
@@ -163,6 +182,7 @@ export function occupationLabel(code: string | null | undefined): string {
     FL_OCCUPATION_LABELS[upper] ??
     TX_OCCUPATION_LABELS[upper] ??
     NJ_OCCUPATION_LABELS[upper] ??
+    orCcbPlainLabel(upper) ??
     njCredentialPlainLabel(upper) ??
     getOccupationInfo(upper).label
   );

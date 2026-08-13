@@ -225,6 +225,18 @@ python -m ingest.adapters.tx_tsbpe \
 
 Keys: `TX-TSBPE:RMP:{n}` / `TX-TSBPE:MP:{n}`. `source_system = tx_tsbpe`. Texas Verify searches `tx_tdlr` and `tx_tsbpe` together.
 
+---
+
+# Oregon CCB Active Licenses → Postgres
+
+```bash
+python scripts/download_or_ccb.py
+python -m ingest.adapters.or_ccb --input data/raw/or_ccb/ccb_active_licenses.csv --out-dir data/staging/or_ccb
+python scripts/load_or_ccb_to_postgres.py --staging-dir data/staging/or_ccb
+```
+
+Sample: `data/samples/or_ccb_active_sample.csv`. Keys: `OR-CCB:{number}:{type}`. `source_system = or_ccb`.
+
 ## Troubleshooting
 
 | Symptom | Fix |

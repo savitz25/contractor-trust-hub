@@ -23,6 +23,8 @@ export type SearchResult = {
   lastVerifiedAt: string | null;
   /** License/registration source_system (e.g. fl_dbpr, nj_dca, tx_tdlr) */
   sourceSystem?: string | null;
+  /** Published extra signal (e.g. Oregon bond/insurance listed) */
+  secondaryStatus?: string | null;
 };
 
 export type LicenseDetail = {

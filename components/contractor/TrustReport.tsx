@@ -30,6 +30,7 @@ import {
   txTradeOfficialSuffix,
   txTradePlainLabel,
 } from "@/lib/states/tx-trades";
+import { getOrCcbTypeInfo, orCcbDisplayLabel, OR_CCB_SEARCH_URL } from "@/lib/states/or-ccb";
 
 const toneRing: Record<EvidenceTone, string> = {
   good: "border-emerald-200 bg-emerald-50/80",
@@ -71,6 +72,8 @@ export function EvidenceSummary({ contractor }: { contractor: ContractorDetail }
           <p className="mt-1 text-sm text-[var(--muted)]">
             {isTx
               ? "Three checks from the TDLR specialty extract — not a score or ranking."
+              : (contractor.homeState || "").toUpperCase() === "OR"
+                ? "Three checks from the Oregon CCB Active Licenses extract — not a score or ranking."
               : "Three checks from official extracts — not a score or ranking."}
           </p>
         </div>
@@ -248,6 +251,7 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
         {licenses.map((lic) => {
           const src = (lic.sourceSystem || "").toLowerCase();
           const isTsbpe = src === "tx_tsbpe";
+          const isOr = src === "or_ccb" || lic.state === "OR";
           const isTx =
             src === "tx_tdlr" || isTsbpe || lic.state === "TX";
           const isNj =
@@ -255,10 +259,13 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
           const occ = getOccupationInfo(lic.occupationCode);
           const txTrade = isTx ? getTxTradeInfo(lic.occupationCode) : null;
           const njCred = isNj ? getNjCredentialInfo(lic.occupationCode) : null;
+          const orType = isOr ? getOrCcbTypeInfo(lic.occupationCode) : null;
           const label = isTx
             ? txTradePlainLabel(lic.occupationCode)
             : isNj
               ? njCredentialPlainLabel(lic.occupationCode)
+              : isOr
+                ? orCcbDisplayLabel(lic.occupationCode)
               : occ.label;
           const officialSuffix = isTx ? txTradeOfficialSuffix(lic.occupationCode) : null;
           return (
@@ -304,6 +311,13 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   </span>
                 </div>
               ) : null}
+              {isOr && orType ? (
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                  <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-950">
+                    {orType.chip} · CCB
+                  </span>
+                </div>
+              ) : null}
               {isNj && njCred ? (
                 <div className="mt-3 rounded-lg border border-violet-200/80 bg-violet-50/50 px-3 py-3">
                   <p className="text-xs font-semibold uppercase tracking-wider text-violet-900/80">
@@ -313,6 +327,35 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   <p className="mt-2 border-t border-violet-200/70 pt-2 text-sm leading-relaxed text-[var(--muted)]">
                     <span className="font-medium text-[var(--text)]/90">Does not imply: </span>
                     {njCred.doesNotImply}
+                  </p>
+                </div>
+              ) : isOr ? (
+                <div className="mt-3 rounded-lg border border-emerald-200/80 bg-emerald-50/60 px-3 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-emerald-900/70">
+                    Oregon CCB — statewide contractor license
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">
+                    {orType?.scopeNote ??
+                      "Published CCB Active Licenses row. Confirm current status on the official CCB search."}
+                  </p>
+                  {lic.secondaryStatus ? (
+                    <p className="mt-2 text-sm leading-relaxed text-[var(--text)]">
+                      {lic.secondaryStatus}
+                    </p>
+                  ) : null}
+                  <p className="mt-2 border-t border-emerald-200/70 pt-2 text-sm leading-relaxed text-[var(--muted)]">
+                    <span className="font-medium text-[var(--text)]/90">Good to know: </span>
+                    Bond and insurance amounts are as published in the extract — not a live
+                    certificate check.{" "}
+                    <a
+                      href={OR_CCB_SEARCH_URL}
+                      className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Official CCB search
+                    </a>
+                    .
                   </p>
                 </div>
               ) : !isTx ? (
@@ -361,7 +404,15 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   <dt className="text-[var(--muted)]">Board / source</dt>
                   <dd className="text-[var(--text)]">
                     {lic.boardNumber ||
-                      (isNj ? "NJ DCA" : isTsbpe ? "TSBPE" : isTx ? "TDLR" : "CILB / DBPR")}
+                      (isNj
+                        ? "NJ DCA"
+                        : isOr
+                          ? "CCB"
+                          : isTsbpe
+                            ? "TSBPE"
+                            : isTx
+                              ? "TDLR"
+                              : "CILB / DBPR")}
                   </dd>
                 </div>
                 <div className="sm:col-span-2">
@@ -377,6 +428,8 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   <dd className="break-words text-[var(--text)]">
                     {isNj
                       ? "New Jersey registration extract"
+                      : isOr
+                        ? "Oregon CCB"
                       : isTsbpe
                         ? "Texas TSBPE"
                         : isTx
@@ -659,6 +712,7 @@ export function SourcesFooter({
   const hs = (contractor.homeState || "").toUpperCase();
   const isTx = state.slug === "tx" || hs === "TX";
   const isNj = state.slug === "nj" || hs === "NJ";
+  const isOr = state.slug === "or" || hs === "OR";
 
   return (
     <aside className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-elevated)]/50 px-4 py-5 text-sm leading-relaxed text-[var(--muted)] sm:px-5">
@@ -672,6 +726,8 @@ export function SourcesFooter({
           <span className="font-medium text-[var(--text)]">
             {isNj
               ? "Registration / credential (NJ extract)"
+              : isOr
+                ? "License (Oregon CCB)"
               : isTx
                 ? "License (TDLR)"
                 : "License (DBPR)"}
@@ -685,13 +741,20 @@ export function SourcesFooter({
             Source system:{" "}
             {lic?.sourceSystem ||
               state.licenseSource ||
-              (isNj ? "nj_dca" : isTx ? "tx_tdlr" : "fl_dbpr")}
+              (isNj ? "nj_dca" : isOr ? "or_ccb" : isTx ? "tx_tdlr" : "fl_dbpr")}
             {lic?.lastVerifiedAt
               ? ` · in our data ${formatDateTime(lic.lastVerifiedAt)}`
               : " · timestamp not on file"}
           </span>
         </li>
-        {isTx ? (
+        {isOr ? (
+          <li>
+            <span className="font-medium text-[var(--text)]">Coverage note</span>
+            <br />
+            Oregon CCB Active Licenses extract. Bond and insurance fields are as published — not a
+            live certificate check. Confirm current status on the official CCB search.
+          </li>
+        ) : isTx ? (
           <li>
             <span className="font-medium text-[var(--text)]">Coverage note</span>
             <br />
@@ -734,7 +797,9 @@ export function SourcesFooter({
         )}
       </ul>
       <p className="mt-4">
-        {isTx
+        {isOr
+          ? "Always confirm current status on the official Oregon CCB search before hiring."
+          : isTx
           ? "Always confirm current status on the official TDLR or TSBPE search before hiring."
           : isNj
             ? "Always confirm current status on official New Jersey DCA / board tools before hiring."

@@ -11,7 +11,8 @@
 | 3 | `adapters/tx_tdlr.py` | TX TDLR specialty licenses (Open Data) | `data/staging/tx_tdlr/` |
 | 4 | `adapters/tx_tsbpe.py` | TX plumbing (TSBPE free CSV lists) | `data/staging/tx_tsbpe/` |
 | 5 | `adapters/nj_dca.py` | NJ DCA HIC + specialty boards (no statewide GC) | `data/staging/nj_dca/` |
-| 6 | Permits | County / city open data | Later |
+| 6 | `adapters/or_ccb.py` | Oregon CCB Active Licenses | `data/staging/or_ccb/` |
+| 7 | Permits | County / city open data | Later |
 
 **Texas note:** No statewide GC license. TDLR adapter filters to specialty contractor types only — see `docs/DATA_SOURCES_TX.md`.  
 **New Jersey note:** No statewide GC license. HIC is the primary residential set; specialty boards when bulk files exist — see `docs/DATA_SOURCES_NJ.md`.
@@ -84,6 +85,11 @@ python -m ingest.adapters.nj_dca \
   --input data/samples/nj_dca_hic_sample.csv \
   --out-dir data/staging/nj_dca_sample
 python scripts/load_nj_dca_to_postgres.py --staging-dir data/staging/nj_dca
+
+# Oregon CCB Active Licenses
+python scripts/download_or_ccb.py
+python -m ingest.adapters.or_ccb --input data/raw/or_ccb/ccb_active_licenses.csv --out-dir data/staging/or_ccb
+python scripts/load_or_ccb_to_postgres.py --staging-dir data/staging/or_ccb
 ```
 
 ## Staging files produced

@@ -1,4 +1,5 @@
 import { occupationLabel } from "@/lib/states/config";
+import { getOrCcbTypeInfo, orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { getTxTradeInfo, txTradePlainLabel } from "@/lib/states/tx-trades";
 import { formatDate, matchMethodLabel, statusLabel } from "./format";
 import { getOccupationInfo } from "./occupations";
@@ -61,6 +62,7 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
   const ent = contractor.entities[0];
   const hasDiscipline = contractor.discipline.length > 0;
   const isTx = (contractor.homeState || "").toUpperCase() === "TX";
+  const isOr = (contractor.homeState || "").toUpperCase() === "OR";
 
   const licenseTone: EvidenceTone = !lic
     ? "neutral"
@@ -79,26 +81,54 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
         : "warn";
 
   const txTrade = isTx && lic ? getTxTradeInfo(lic.occupationCode) : null;
+  const orType = isOr && lic ? getOrCcbTypeInfo(lic.occupationCode) : null;
   const occLabel = lic
     ? isTx
       ? txTradePlainLabel(lic.occupationCode)
+      : isOr
+        ? orCcbDisplayLabel(lic.occupationCode)
       : occupationLabel(lic.occupationCode) || getOccupationInfo(lic.occupationCode).label
     : null;
 
   const pillars: EvidencePillar[] = [
     {
       id: "license",
-      label: isTx ? "Texas license" : "License",
+      label: isOr ? "CCB license" : isTx ? "Texas license" : "License",
       statusLine: lic ? statusLabel(lic.statusNormalized) : "Not on profile",
       detail: lic
         ? `${lic.externalKey} · ${occLabel}`
         : isTx
           ? "No TDLR specialty or TSBPE plumbing license linked here."
+          : isOr
+            ? "No Oregon CCB active license linked here."
           : "No Florida DBPR construction license linked here.",
       tone: licenseTone,
       lastVerifiedAt: lic?.lastVerifiedAt ?? null,
     },
   ];
+
+  if (isOr) {
+    pillars.push({
+      id: "entity",
+      label: "Bond / insurance",
+      statusLine: lic?.secondaryStatus ? "Listed in extract" : "Not on this row",
+      detail: lic?.secondaryStatus
+        ? `${lic.secondaryStatus}. As published — not a live certificate check.`
+        : "No bond/insurance fields on this CCB row.",
+      tone: lic?.secondaryStatus ? "neutral" : "warn",
+      lastVerifiedAt: lic?.lastVerifiedAt ?? null,
+    });
+    pillars.push({
+      id: "discipline",
+      label: "Coverage",
+      statusLine: "CCB active list",
+      detail:
+        "Oregon CCB statewide contractor licensing. Confirm current status on the official CCB search. Discipline/SOS entity linking is not in this extract.",
+      tone: "warn",
+      lastVerifiedAt: lic?.lastVerifiedAt ?? null,
+    });
+    return pillars;
+  }
 
   if (isTx) {
     pillars.push({
@@ -238,6 +268,7 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
   const ent = contractor.entities[0];
   const points: HiringPoint[] = [];
   const isTx = (contractor.homeState || "").toUpperCase() === "TX";
+  const isOr = (contractor.homeState || "").toUpperCase() === "OR";
   const isTsbpe = (lic?.sourceSystem || "").toLowerCase() === "tx_tsbpe";
   const occ = lic ? getOccupationInfo(lic.occupationCode) : null;
   const txTrade = isTx && lic ? getTxTradeInfo(lic.occupationCode) : null;
@@ -248,7 +279,9 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
       points.push({
         id: "lic-active",
         label: "License status",
-        text: isTx
+        text: isOr
+          ? `${lic.externalKey} is ${statusLabel(lic.statusNormalized)} in the CCB Active Licenses extract. Re-check the official CCB search the day you hire.`
+          : isTx
           ? `${lic.externalKey} is ${statusLabel(lic.statusNormalized)} in our ${txBoard} extract. Re-check the official ${txBoard} search the day you hire.`
           : `${lic.externalKey} is ${statusLabel(lic.statusNormalized)} in our DBPR extract. Always re-check the official board the day you hire.`,
         tone: "good",
@@ -263,7 +296,25 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
         tone: isInactiveish(lic.statusNormalized) ? "bad" : "warn",
       });
     }
-    if (isTx) {
+    if (isOr) {
+      const orType = getOrCcbTypeInfo(lic.occupationCode);
+      points.push({
+        id: "scope",
+        label: "What this license is",
+        text: orType
+          ? `${orType.plain}. ${orType.scopeNote}`
+          : "Oregon CCB statewide contractor license as published on the Active Licenses extract.",
+        tone: "neutral",
+      });
+      if (lic.secondaryStatus) {
+        points.push({
+          id: "bond-ins",
+          label: "Bond / insurance on file",
+          text: `${lic.secondaryStatus}. These are extract fields — not proof a policy is in force today.`,
+          tone: "warn",
+        });
+      }
+    } else if (isTx) {
       points.push({
         id: "scope",
         label: "What this license is",
@@ -299,6 +350,16 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
         : "No Florida construction license is linked on this consumer profile.",
       tone: "warn",
     });
+  }
+
+  if (isOr) {
+    points.push({
+      id: "confirm",
+      label: "Before you sign",
+      text: "1) Confirm the license on the official Oregon CCB search. 2) Treat bond/insurance amounts as published only. 3) Get a written contract and ask for current certificates.",
+      tone: "neutral",
+    });
+    return points;
   }
 
   if (!isTx) {

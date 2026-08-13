@@ -8,6 +8,7 @@ const columns = [
     links: [
       { href: "/verify", label: "Verify a contractor (Florida)" },
       { href: "/verify?state=tx", label: "Texas specialty verify (TDLR)" },
+      { href: "/verify?state=or", label: "Oregon CCB verify" },
       { href: "/florida", label: "Browse Florida" },
       { href: "/guides", label: "Homeowner guides" },
       { href: "/tools/coverage", label: "Permit coverage" },

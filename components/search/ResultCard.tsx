@@ -3,6 +3,7 @@ import { CompareToggle } from "@/components/compare/CompareToggle";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { statusLabel } from "@/lib/contractors/format";
 import { occupationLabel } from "@/lib/states/config";
+import { getOrCcbTypeInfo, orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { getNjCredentialInfo, njCredentialPlainLabel } from "@/lib/states/nj-credentials";
 import {
   getTxTradeInfo,
@@ -45,6 +46,10 @@ function isNjResult(result: SearchResult): boolean {
   return (result.state || "").toUpperCase() === "NJ";
 }
 
+function isOregonResult(result: SearchResult): boolean {
+  return (result.state || "").toUpperCase() === "OR" || result.sourceSystem === "or_ccb";
+}
+
 function displayLicenseKey(
   result: SearchResult,
   isTx: boolean,
@@ -60,6 +65,10 @@ function displayLicenseKey(
   if (isNj && key.includes(":")) {
     return key.split(":").pop() || key;
   }
+  if (key.startsWith("OR-CCB:")) {
+    const parts = key.split(":");
+    return parts[1] || key;
+  }
   return key;
 }
 
@@ -73,17 +82,21 @@ export function ResultCard({
 }) {
   const isTx = isTexasResult(result);
   const isNj = isNjResult(result);
+  const isOr = isOregonResult(result);
   const location = [result.city, result.county, result.state].filter(Boolean).join(" · ");
   const licTone = signalTone("license", result);
   const entTone = signalTone("entity", result);
   const showEntity =
-    Boolean(result.entityStatus) || !(hideEntityWhenMissing || isTx || isNj);
+    Boolean(result.entityStatus) || !(hideEntityWhenMissing || isTx || isNj || isOr);
   const trade = isTx ? getTxTradeInfo(result.occupationCode) : null;
   const njCred = isNj ? getNjCredentialInfo(result.occupationCode) : null;
+  const orType = isOr ? getOrCcbTypeInfo(result.occupationCode) : null;
   const tradeLabel = isNj
     ? njCredentialPlainLabel(result.occupationCode)
     : isTx
       ? txTradePlainLabel(result.occupationCode)
+      : isOr
+        ? orCcbDisplayLabel(result.occupationCode)
       : occupationLabel(result.occupationCode);
   const officialSuffix = isTx ? txTradeOfficialSuffix(result.occupationCode) : null;
   const shortKey = displayLicenseKey(result, isTx, isNj);
@@ -108,6 +121,13 @@ export function ResultCard({
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500/70" aria-hidden />
             <span className="truncate">{njCred.chip}</span>
             <span className="hidden text-[var(--muted)] font-normal sm:inline">· NJ</span>
+          </span>
+        ) : null}
+        {isOr && orType ? (
+          <span className="inline-flex max-w-full items-center gap-1.5 text-xs font-medium text-[var(--navy)]">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600/70" aria-hidden />
+            <span className="truncate">{orType.chip}</span>
+            <span className="hidden text-[var(--muted)] font-normal sm:inline">· CCB</span>
           </span>
         ) : null}
         {result.sourceSystem ? (
@@ -186,6 +206,11 @@ export function ResultCard({
                 NJ pilot
               </span>
             ) : null}
+            {isOr ? (
+              <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-950">
+                Oregon CCB
+              </span>
+            ) : null}
             <StatusBadge
               status={result.licenseStatus}
               label={`${isNj ? "Registration" : "License"}: ${statusLabel(result.licenseStatus)}`}
@@ -213,8 +238,12 @@ export function ResultCard({
             <p className="mt-0.5 text-xs text-[var(--muted)]">
               NJ registration extract · not Florida-depth coverage
             </p>
+          ) : isOr ? (
+            <p className="mt-0.5 text-xs text-[var(--muted)]">
+              {result.secondaryStatus || "Oregon CCB Active Licenses extract"}
+            </p>
           ) : null}
-          {(result.entityName || location) && !isTx && !isNj ? (
+          {(result.entityName || location) && !isTx && !isNj && !isOr ? (
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
               {result.entityName ? (
                 <span className="text-[var(--text)]/80">Entity: {result.entityName}</span>
@@ -222,7 +251,7 @@ export function ResultCard({
               {result.entityName && location ? " · " : null}
               {location ? <span>{location}</span> : null}
             </p>
-          ) : location && (isTx || isNj) ? (
+          ) : location && (isTx || isNj || isOr) ? (
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">{location}</p>
           ) : null}
         </div>

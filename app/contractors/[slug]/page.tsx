@@ -21,6 +21,7 @@ import { TrustReportNav } from "@/components/contractor/TrustReportNav";
 import { WhatWeChecked } from "@/components/contractor/WhatWeChecked";
 import { NjNextActions } from "@/components/contractor/NjNextActions";
 import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
+import { OregonCoverageBanner } from "@/components/search/OregonCoverageBanner";
 import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
 import { StudioHandoffBanner } from "@/components/studios/StudioHandoffBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
@@ -38,6 +39,7 @@ import {
   trustReportTitleSuffix,
 } from "@/lib/states/evidence-copy";
 import { njCredentialPlainLabel } from "@/lib/states/nj-credentials";
+import { orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { txTradePlainLabel } from "@/lib/states/tx-trades";
 import { parseHandoffQuery } from "@/lib/studios/handoff";
 
@@ -62,17 +64,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const stateSlug = evidenceSlugFromHomeState(c.homeState);
     const isTx = stateSlug === "tx";
     const isNj = stateSlug === "nj";
+    const isOr = stateSlug === "or";
     const lic = c.licenses[0];
     const occ = lic
       ? isTx
         ? txTradePlainLabel(lic.occupationCode)
         : isNj
           ? njCredentialPlainLabel(lic.occupationCode)
+          : isOr
+            ? orCcbDisplayLabel(lic.occupationCode)
           : getOccupationInfo(lic.occupationCode).label
       : isTx
         ? "Texas specialty contractor"
         : isNj
           ? "New Jersey contractor registration"
+          : isOr
+            ? "Oregon CCB contractor"
           : "Florida contractor";
     const status = lic ? statusLabel(lic.statusNormalized) : "status unknown";
     const city = c.primaryCity ? ` in ${c.primaryCity}` : "";
@@ -83,6 +90,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       lic ? `Credential ${lic.externalKey} (${occ}) — ${status}.` : null,
       isTx
         ? "TDLR specialty or TSBPE plumbing evidence — not a statewide general contractor directory."
+        : isOr
+          ? "Oregon CCB Active Licenses evidence. Bond/insurance as published — not a live COI."
         : isNj
           ? "New Jersey HIC / specialty evidence — no statewide general contractor license; coverage differs by state."
           : c.entities[0]
@@ -93,6 +102,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         : "No discipline linked in our extract.",
       isTx
         ? "Official TDLR / TSBPE open-data evidence — not a marketplace."
+        : isOr
+          ? "Official Oregon CCB open-data evidence — not a marketplace."
         : isNj
           ? "Official NJ DCA extract evidence — not a marketplace."
           : "Official DBPR and Sunbiz evidence — not a marketplace.",
@@ -216,9 +227,10 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const stateSlug = evidenceSlugFromHomeState(contractor.homeState);
   const isTx = stateSlug === "tx";
   const isNj = stateSlug === "nj";
-  /** TX keeps thin specialty report; NJ Stage 8A is full Verify depth. */
-  const isTxOnly = isTx;
-  const isFlFull = !isTx && !isNj;
+  const isOr = stateSlug === "or";
+  /** TX/OR keep thin reports; NJ Stage 8A is fuller Verify depth. */
+  const isTxOnly = isTx || isOr;
+  const isFlFull = !isTx && !isNj && !isOr;
   const state = getStateBySlug(stateSlug) || getStateBySlug("fl")!;
   const verifyHref =
     stateSlug === "fl" ? "/verify" : `/verify?state=${stateSlug}`;
@@ -242,6 +254,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
 
   const txTradeLabel = isTx && primary ? txTradePlainLabel(primary.occupationCode) : null;
   const njCredLabel = isNj && primary ? njCredentialPlainLabel(primary.occupationCode) : null;
+  const orTypeLabel = isOr && primary ? orCcbDisplayLabel(primary.occupationCode) : null;
 
   return (
     <main
@@ -330,6 +343,11 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           <NjCoverageBanner compact />
         </div>
       ) : null}
+      {isOr ? (
+        <div className="mt-3 max-w-3xl sm:mt-4">
+          <OregonCoverageBanner compact />
+        </div>
+      ) : null}
 
       {/* A. Identity snapshot */}
       <header
@@ -341,6 +359,8 @@ export default async function ContractorPage({ params, searchParams }: Props) {
             ? "New Jersey · HIC + specialty · Trust Report"
             : isTx
               ? "Texas · TDLR / TSBPE · Trust Report"
+              : isOr
+                ? "Oregon · CCB statewide · Trust Report"
               : "Florida · Contractor Trust Report 2.0"}
         </p>
         <h1 className="mt-1.5 text-[1.5rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:mt-2 sm:text-4xl">
@@ -358,11 +378,19 @@ export default async function ContractorPage({ params, searchParams }: Props) {
             <span className="font-normal text-[var(--muted)]"> · NJ DCA extract</span>
           </p>
         ) : null}
+        {orTypeLabel ? (
+          <p className="mt-2 text-sm font-medium text-[var(--navy)] sm:text-[15px]">
+            {orTypeLabel}
+            <span className="font-normal text-[var(--muted)]"> · Oregon CCB</span>
+          </p>
+        ) : null}
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
           {isNj
             ? "Credential status and identity from New Jersey DCA extracts (HIC and specialty boards when present). No statewide GC license — not Florida-depth planning or permit history."
             : isTx
               ? "Plain-language trade type, license status, and available location from the TDLR open extract. Not a statewide general contractor credential."
+              : isOr
+                ? "Oregon CCB Active Licenses extract: type, status, location, and published bond/insurance fields. Confirm on the official CCB search before hiring."
               : "Evidence-first profile: who this business is, license and entity records, caution signals, and what to do next — not a score or endorsement."}
           {contractor.isThinProfile
             ? " Limited fields in our extract — treat missing data as unknown, not cleared."
@@ -513,6 +541,25 @@ export default async function ContractorPage({ params, searchParams }: Props) {
             <EntitySection entities={contractor.entities} state={state} />
             <DiscrepanciesSection contractor={contractor} />
           </div>
+        ) : isOr ? (
+          <section className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
+              Sources
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+              License evidence from the Oregon CCB Active Licenses open-data extract. Bond and
+              insurance fields are as published — not a live certificate check. Confirm on the
+              official CCB search when decisions matter.
+            </p>
+            <a
+              href="https://search.ccb.state.or.us/search/"
+              className="mt-3 inline-flex text-sm font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Official CCB license search →
+            </a>
+          </section>
         ) : (
           <section className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">

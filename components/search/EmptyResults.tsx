@@ -16,6 +16,9 @@ export function EmptyResults({ query, mode, stateSlug = "fl" }: Props) {
   if (stateSlug === "nj") {
     return <NjEmptyResults query={query} mode={mode} />;
   }
+  if (stateSlug === "or") {
+    return <OregonEmptyResults query={query} mode={mode} />;
+  }
   return <FloridaEmptyResults query={query} mode={mode} />;
 }
 
@@ -285,6 +288,63 @@ function TexasEmptyResults({ query, mode }: { query: string; mode: "license" | "
         Evidence only — not a directory of all Texas contractors, and not a substitute for checking
         local permitting or registration requirements.
       </p>
+    </div>
+  );
+}
+
+function OregonEmptyResults({ query, mode }: { query: string; mode: "license" | "name" }) {
+  const prepared = prepareNameSearch(query);
+  const strippedDiffers =
+    prepared.stripped.length >= 2 &&
+    prepared.stripped.toLowerCase() !== query.trim().toLowerCase();
+
+  return (
+    <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-6 sm:px-8 sm:py-9">
+      <p className="text-base font-medium leading-snug text-[var(--text)]">
+        No Oregon CCB active licenses matched &ldquo;{query}&rdquo;
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+        {mode === "license"
+          ? "We searched CCB numbers and OR-CCB product keys in the Active Licenses extract. A miss can mean a typo, an inactive credential, or a name-only business."
+          : "We searched business names in the official CCB Active Licenses extract."}
+      </p>
+      <ul className="mt-5 list-disc space-y-2 pl-5 text-sm leading-relaxed text-[var(--muted)]">
+        {mode === "name" && strippedDiffers ? (
+          <li>
+            Try without legal endings:{" "}
+            <Link
+              href={`/verify?state=or&q=${encodeURIComponent(prepared.stripped)}`}
+              className="text-[var(--accent)]"
+            >
+              {prepared.stripped}
+            </Link>
+          </li>
+        ) : null}
+        <li>Prefer the CCB license number when you have it.</li>
+        <li>This feed is active licenses only — expired or inactive rows are not listed here.</li>
+      </ul>
+      <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+        <Link
+          href="/verify?state=or"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+        >
+          Clear search
+        </Link>
+        <Link
+          href="/verify"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--accent)] px-4 text-sm font-semibold text-[var(--navy)] no-underline"
+        >
+          Search Florida instead
+        </Link>
+        <a
+          href="https://search.ccb.state.or.us/search/"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+        >
+          Official CCB search
+        </a>
+      </div>
     </div>
   );
 }

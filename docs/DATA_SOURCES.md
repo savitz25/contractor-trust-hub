@@ -94,6 +94,19 @@ Full documentation, columns, coverage limits, and ingest commands:
 
 **Ingest:** `scripts/download_tx_tdlr.py` + `ingest/adapters/tx_tdlr.py` → `data/staging/tx_tdlr/`
 
+## Oregon — CCB Active Licenses
+
+Statewide contractor licensing through the Construction Contractors Board.
+
+→ **[DATA_SOURCES_OR.md](./DATA_SOURCES_OR.md)** · product: **[OREGON_VERIFY_V1.md](./OREGON_VERIFY_V1.md)**
+
+| Resource | URL | Notes |
+|----------|-----|--------|
+| CCB Active Licenses | https://data.oregon.gov/Business/CCB-Active-Licenses/g77e-6bhs | Socrata `g77e-6bhs`; daily refresh |
+| CCB search | https://search.ccb.state.or.us/search/ | Interactive human verify |
+
+**Ingest:** `scripts/download_or_ccb.py` + `ingest/adapters/or_ccb.py` → `data/staging/or_ccb/`
+
 ## New Jersey — DCA (HIC + specialty boards)
 
 **New Jersey has no single statewide general contractor license.** The primary consumer-facing credential for most residential improvement work is **Home Improvement Contractor (HIC)** registration via the Division of Consumer Affairs (DCA). Specialty trades sit under separate boards (Electrical, Plumbing, HVACR, etc.).

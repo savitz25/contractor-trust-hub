@@ -74,6 +74,7 @@ function staticProductEntries(): SitemapUrlEntry[] {
   const items: { path: string; priority: number; changefreq: string }[] = [
     { path: "/", priority: 1, changefreq: "weekly" },
     { path: "/verify", priority: 0.95, changefreq: "daily" },
+    { path: "/verify?state=or", priority: 0.9, changefreq: "weekly" },
     { path: "/plan", priority: 0.9, changefreq: "weekly" },
     { path: "/studios", priority: 0.9, changefreq: "weekly" },
     { path: "/tools", priority: 0.92, changefreq: "weekly" },

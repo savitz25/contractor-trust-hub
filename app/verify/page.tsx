@@ -4,6 +4,7 @@ import { EmptyResults } from "@/components/search/EmptyResults";
 import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
 import { ResultCard } from "@/components/search/ResultCard";
 import { SearchForm } from "@/components/search/SearchForm";
+import { OregonCoverageBanner } from "@/components/search/OregonCoverageBanner";
 import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { searchContractors } from "@/lib/contractors/queries";
@@ -41,6 +42,14 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       path: "/verify?state=nj",
     });
   }
+  if (state.slug === "or") {
+    return pageMetadata({
+      title: "Verify an Oregon contractor (CCB)",
+      description:
+        "Search Oregon Construction Contractors Board active licenses by number or business name. Bond and insurance fields as published. Evidence only — not a marketplace.",
+      path: "/verify?state=or",
+    });
+  }
   return pageMetadata({
     title: "Verify a Florida contractor",
     description:
@@ -54,7 +63,8 @@ export default async function VerifyPage({ searchParams }: Props) {
   const state = resolveVerifyState(sp.state);
   const isTx = state.slug === "tx";
   const isNj = state.slug === "nj";
-  const isSpecialty = isTx || isNj;
+  const isOr = state.slug === "or";
+  const isSpecialty = isTx || isNj || isOr;
   const q = (sp.q || "").trim();
   const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
   let results: Awaited<ReturnType<typeof searchContractors>>["results"] = [];
@@ -87,19 +97,25 @@ export default async function VerifyPage({ searchParams }: Props) {
     ? "New Jersey · HIC + specialty boards"
     : isTx
       ? "Texas · TDLR specialty + TSBPE plumbing"
-      : "Florida · DBPR + Sunbiz";
+      : isOr
+        ? "Oregon · CCB statewide licenses"
+        : "Florida · DBPR + Sunbiz";
 
   const heading = isNj
     ? "Verify a New Jersey HIC or specialty contractor"
     : isTx
       ? "Verify a Texas specialty contractor"
-      : "Verify a Florida contractor";
+      : isOr
+        ? "Verify an Oregon contractor"
+        : "Verify a Florida contractor";
 
   const lead = isNj
     ? "Search by registration number or company name. New Jersey has no single statewide GC license — coverage is HIC registration plus available specialty boards from official DCA extracts."
     : isTx
       ? "Search TDLR specialty licenses or TSBPE plumbing by number or business / owner name. You’ll see the trade type in plain language, license status, and county when available."
-      : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
+      : isOr
+        ? "Search CCB active licenses by number or business name. Result cards show type, status, location, and published bond/insurance signals — then open a Trust Report."
+        : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
 
   const helpCards = isNj
     ? [
@@ -131,6 +147,21 @@ export default async function VerifyPage({ searchParams }: Props) {
             d: "Plain-language trade type (air conditioning, electrical, …), status, county when available — then a Trust Report.",
           },
         ]
+      : isOr
+        ? [
+            {
+              t: "CCB license number",
+              d: "Oregon CCB numbers (e.g. 259513) are most precise.",
+            },
+            {
+              t: "Business name",
+              d: "Matches the CCB Active Licenses business / licensee name.",
+            },
+            {
+              t: "What you’ll see",
+              d: "License type, status, county, and bond/insurance listed signals when published — then a Trust Report.",
+            },
+          ]
       : [
           {
             t: "License number",
@@ -182,6 +213,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                 ? "Specialty trades"
                 : s.slug === "nj"
                   ? "Verify pilot"
+                : s.slug === "or"
+                  ? "CCB statewide"
                   : s.slug === "fl"
                     ? "Full journey"
                     : null;
@@ -223,6 +256,11 @@ export default async function VerifyPage({ searchParams }: Props) {
           <NjCoverageBanner showFloridaLink={!q} />
         </div>
       ) : null}
+      {isOr ? (
+        <div className="mt-4 max-w-3xl sm:mt-5">
+          <OregonCoverageBanner showFloridaLink={!q} />
+        </div>
+      ) : null}
 
       <div className="mt-5 max-w-3xl sm:mt-7">
         <SearchForm
@@ -236,6 +274,8 @@ export default async function VerifyPage({ searchParams }: Props) {
             ? `Specialty trades: ${TX_COVERED_TRADES_PLAIN.join(" · ").toLowerCase()}. Not a statewide general contractor directory.`
             : isNj
               ? "HIC + specialty boards when in extract. No statewide GC license. Entity links only when high-confidence — no name-only auto-joins."
+              : isOr
+                ? "Oregon CCB Active Licenses extract. Bond and insurance signals are as published — not a live certificate check."
               : (
                 <>
                   Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay
@@ -300,6 +340,7 @@ export default async function VerifyPage({ searchParams }: Props) {
               {mode === "license" ? " · license search" : " · name search"}
               {isTx ? " · TDLR + TSBPE" : ""}
               {isNj ? " · NJ pilot" : ""}
+              {isOr ? " · CCB" : ""}
               {results.length >= 25 ? " · first 25" : ""}
             </p>
           </div>
@@ -325,6 +366,11 @@ export default async function VerifyPage({ searchParams }: Props) {
               {isNj ? (
                 <div className="pt-2 sm:pt-3">
                   <NjCoverageBanner compact showFloridaLink={false} />
+                </div>
+              ) : null}
+              {isOr ? (
+                <div className="pt-2 sm:pt-3">
+                  <OregonCoverageBanner compact showFloridaLink={false} />
                 </div>
               ) : null}
             </div>

@@ -37,6 +37,12 @@ const NJ_PLACEHOLDERS = {
   compact: "Registration or name",
 };
 
+const OR_PLACEHOLDERS = {
+  hero: "CCB license number or company name…",
+  default: "CCB license # or company name",
+  compact: "License or name",
+};
+
 export function SearchForm({
   defaultQuery = "",
   size = "default",
@@ -57,9 +63,16 @@ export function SearchForm({
   const isCompact = size === "compact";
   const isTx = activeState === "tx";
   const isNj = activeState === "nj";
+  const isOr = activeState === "or";
   const ph =
     placeholder ||
-    (isTx ? TX_PLACEHOLDERS[size] : isNj ? NJ_PLACEHOLDERS[size] : PLACEHOLDERS[size]);
+    (isTx
+      ? TX_PLACEHOLDERS[size]
+      : isNj
+        ? NJ_PLACEHOLDERS[size]
+        : isOr
+          ? OR_PLACEHOLDERS[size]
+          : PLACEHOLDERS[size]);
 
   const inputClass = isHero
     ? "min-h-12 w-full flex-1 rounded-2xl border border-[var(--border)] bg-white px-4 text-base text-[var(--text)] shadow-[var(--shadow-sm)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70 sm:min-h-[3.75rem] sm:px-5 sm:text-lg"
@@ -101,6 +114,7 @@ export function SearchForm({
             [
               { id: "fl", label: "Florida", hint: "Full construction licenses" },
               { id: "tx", label: "Texas", hint: "TDLR + TSBPE plumbing" },
+              { id: "or", label: "Oregon", hint: "CCB statewide licenses" },
             ] as const
           ).map((s) => {
             const on = activeState === s.id;

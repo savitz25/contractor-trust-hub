@@ -6,7 +6,7 @@
 import type { EvidenceState } from "./config";
 import { getStateBySlug } from "./config";
 
-export type EvidenceStateSlug = "fl" | "tx" | "nj";
+export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or";
 
 export function evidenceSlugFromHomeState(
   homeState: string | null | undefined,
@@ -15,45 +15,53 @@ export function evidenceSlugFromHomeState(
   const hs = (homeState || "").toUpperCase();
   if (hs === "TX") return "tx";
   if (hs === "NJ") return "nj";
+  if (hs === "OR") return "or";
   if (hs === "FL") return "fl";
   const p = (preferred || "").toLowerCase();
-  if (p === "tx" || p === "nj" || p === "fl") return p;
+  if (p === "oregon") return "or";
+  if (p === "tx" || p === "nj" || p === "fl" || p === "or") return p;
   return "fl";
 }
 
 export function credentialNoun(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "registration / license";
   if (slug === "tx") return "specialty license";
+  if (slug === "or") return "CCB license";
   return "license";
 }
 
 export function boardShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "New Jersey DCA extract";
   if (slug === "tx") return "Texas TDLR / TSBPE";
+  if (slug === "or") return "Oregon CCB";
   return "Florida DBPR";
 }
 
 export function entityRegistryShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "NJ business entity records (high-confidence only)";
   if (slug === "tx") return "Texas SOS entity data (not fully linked yet)";
+  if (slug === "or") return "Oregon SOS entity data (not yet linked)";
   return "Florida Sunbiz";
 }
 
 export function sourceExtractLabel(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "New Jersey registration extract";
   if (slug === "tx") return "TDLR specialty + TSBPE plumbing extract";
+  if (slug === "or") return "Oregon CCB Active Licenses extract";
   return "Florida DBPR extract";
 }
 
 export function trustReportTitleSuffix(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "New Jersey Contractor Trust Report";
   if (slug === "tx") return "Texas Contractor Trust Report";
+  if (slug === "or") return "Oregon Contractor Trust Report";
   return "Florida Contractor Trust Report";
 }
 
 export function pilotBadge(slug: EvidenceStateSlug): string | null {
   if (slug === "nj") return "New Jersey HIC + specialty (no statewide GC)";
   if (slug === "tx") return "Texas specialty trades";
+  if (slug === "or") return "Oregon CCB statewide";
   return null;
 }
 
@@ -74,6 +82,15 @@ export function checkedItems(slug: EvidenceStateSlug): string[] {
       "TSBPE plumbing credentials (Responsible Master Plumber and Master when loaded)",
       "Trade type in plain language from the board class",
       "County / location fields when present in the open extract",
+    ];
+  }
+  if (slug === "or") {
+    return [
+      "Oregon CCB Active Licenses extract (when linked)",
+      "License type / endorsement as published",
+      "Bond and liability insurance fields as published (not a live COI)",
+      "Workers’ comp Exempt/Nonexempt flag as published",
+      "County / city when present",
     ];
   }
   return [
@@ -99,6 +116,14 @@ export function notCheckedItems(slug: EvidenceStateSlug): string[] {
       "Statewide general contractor directory (Texas has no statewide GC license)",
       "City/county-only builder registration",
       "Reviews, ratings, or private financials",
+    ];
+  }
+  if (slug === "or") {
+    return [
+      "Inactive / revoked historical archive (this feed is active licenses)",
+      "Live bond or insurance certificate validity",
+      "Oregon SOS entity linking",
+      "Reviews, rankings, or “safe to hire” determinations",
     ];
   }
   return [
@@ -144,6 +169,12 @@ export function consumerNote(slug: EvidenceStateSlug, state?: EvidenceState | nu
     return (
       s?.coverageNote ||
       "Texas coverage is selected TDLR specialty trades plus TSBPE plumbing — not a statewide general contractor directory."
+    );
+  }
+  if (slug === "or") {
+    return (
+      s?.coverageNote ||
+      "Oregon CCB statewide contractor licensing from the official Active Licenses extract. Confirm on the official CCB site."
     );
   }
   return "Educational research from Florida public records — not a marketplace or endorsement.";

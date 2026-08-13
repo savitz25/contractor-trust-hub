@@ -88,6 +88,7 @@ export async function searchContractors(
         l.status_normalized,
         l.last_verified_at,
         l.source_system,
+        l.secondary_status,
         e.status AS entity_status,
         e.legal_name AS entity_name,
         EXISTS (
@@ -196,6 +197,7 @@ export async function searchContractors(
         l.status_normalized,
         l.last_verified_at,
         l.source_system,
+        l.secondary_status,
         CASE
           WHEN c.display_name ILIKE $1 THEN 0
           WHEN c.dba_name ILIKE $1 THEN 1
@@ -296,6 +298,7 @@ function mapSearchRow(r: {
   entity_name: string | null;
   has_discipline: boolean;
   source_system?: string | null;
+  secondary_status?: string | null;
 }): SearchResult {
   return {
     id: r.id,
@@ -314,6 +317,7 @@ function mapSearchRow(r: {
     hasDiscipline: r.has_discipline,
     lastVerifiedAt: r.last_verified_at ? r.last_verified_at.toISOString() : null,
     sourceSystem: r.source_system || null,
+    secondaryStatus: r.secondary_status || null,
   };
 }
 
@@ -326,6 +330,7 @@ function evidenceSlugForContractor(
   const hs = (homeState || "").toUpperCase();
   if (hs === "TX") return "tx";
   if (hs === "NJ") return "nj";
+  if (hs === "OR") return "or";
   if (hs === "FL") return "fl";
   if (preferredSlug && getStateBySlug(preferredSlug)?.live) {
     return preferredSlug.toLowerCase();
