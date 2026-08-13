@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  CA_COMMON_CLASS_EXAMPLES,
   CA_PILOT_COVERED,
   CA_PILOT_NOT_COVERED,
 } from "@/lib/states/ca-classifications";
@@ -10,7 +11,8 @@ type Props = {
 };
 
 /**
- * Honest California Verify banner — CSLB top-county extract, not complete CA dump.
+ * Honest California Verify banner —
+ * statewide CSLB licensing; dataset prioritizes top-30 county extracts.
  */
 export function CaliforniaCoverageBanner({
   compact = false,
@@ -23,11 +25,11 @@ export function CaliforniaCoverageBanner({
         role="note"
       >
         <p className="text-xs font-semibold leading-snug sm:text-[13px]">
-          California CSLB — high-impact counties in this extract
+          California statewide CSLB — top counties in this extract
         </p>
         <p className="mt-1 text-[11px] leading-relaxed text-amber-900/85 sm:text-xs">
-          Official public list downloads for selected counties. Always confirm on CSLB Instant
-          License Check. Missing from results does not mean unlicensed.
+          Dataset prioritizes high-impact counties from official CSLB list extracts. Always confirm
+          live status on CSLB Instant License Check. Missing ≠ unlicensed.
         </p>
       </div>
     );
@@ -47,13 +49,14 @@ export function CaliforniaCoverageBanner({
         </span>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold leading-snug sm:text-[15px]">
-            California CSLB licensing — county extract coverage
+            California statewide CSLB licensing
           </p>
           <p className="mt-1.5 text-xs leading-relaxed text-amber-950/90 sm:text-sm">
             California licenses contractors statewide through the{" "}
-            <strong className="font-semibold">CSLB</strong>. This search uses official public list
-            downloads for <strong className="font-semibold">high-impact counties</strong> in our
-            current extract — not every county file. Always confirm current status on{" "}
+            <strong className="font-semibold">CSLB</strong>. Our current dataset prioritizes{" "}
+            <strong className="font-semibold">top high-impact counties</strong> from official CSLB
+            public list extracts — not a complete statewide dump of every county file. Always
+            confirm live status on{" "}
             <a
               href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx"
               className="font-semibold underline underline-offset-2"
@@ -63,6 +66,9 @@ export function CaliforniaCoverageBanner({
               CSLB Instant License Check
             </a>
             .
+          </p>
+          <p className="mt-2 text-xs leading-relaxed text-amber-900/85 sm:text-[13px]">
+            Common classes: {CA_COMMON_CLASS_EXAMPLES.join(" · ")}.
           </p>
 
           <div className="mt-3 grid gap-2 sm:grid-cols-2 sm:gap-3">

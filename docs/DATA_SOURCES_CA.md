@@ -87,6 +87,29 @@ python -m ingest.adapters.ca_cslb \
   --out-dir data/staging/ca_cslb_sample
 ```
 
+## Production counts (2026-08-13)
+
+| Metric | Value |
+|--------|------:|
+| Unique licenses loaded | **36,665** |
+| Status | CLEAR only |
+| Counties | 30 (Riverside missing from target Tier 1) |
+| Top class tokens | C-10, A, B, C-36, C-20, C-53, … |
+
+Full county / class tables: [CALIFORNIA_VERIFY_V1.md](./CALIFORNIA_VERIFY_V1.md).
+
+## Remaining gaps
+
+| Gap | Notes |
+|-----|--------|
+| Statewide completeness | High-impact county extracts — not every CA county file |
+| Riverside | Not in current download set |
+| Personnel file | Qualifier/personnel depth not in list columns |
+| Workers’ comp | Fields as published only — not live COI |
+| Enforcement | Not present — do not invent |
+| Inactive/expired | CLEAR-only extract |
+| CA Plan/Studios | Out of scope (Verify first) |
+
 ## Provenance rules
 
 1. Store `source_system = ca_cslb`, source file list, SHA-256 when available, `extracted_at`  
@@ -100,3 +123,4 @@ python -m ingest.adapters.ca_cslb \
 - Product slice: [CALIFORNIA_VERIFY_V1.md](./CALIFORNIA_VERIFY_V1.md)  
 - Load path: [LOAD_PATH.md](./LOAD_PATH.md)  
 - Ingest: [../ingest/README.md](../ingest/README.md)  
+

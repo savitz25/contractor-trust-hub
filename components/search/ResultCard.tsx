@@ -3,7 +3,11 @@ import { CompareToggle } from "@/components/compare/CompareToggle";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { displayStatusLabel, statusLabel, statusTone } from "@/lib/contractors/format";
 import { occupationLabel } from "@/lib/states/config";
-import { getCaClassInfo, caClassPlainLabel } from "@/lib/states/ca-classifications";
+import {
+  caClassChipLabel,
+  caClassPlainLabel,
+  getCaClassInfo,
+} from "@/lib/states/ca-classifications";
 import { getOrCcbTypeInfo, orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { getNjCredentialInfo, njCredentialPlainLabel } from "@/lib/states/nj-credentials";
 import {
@@ -143,7 +147,7 @@ export function ResultCard({
         {isCa && caClass ? (
           <span className="inline-flex max-w-full items-center gap-1.5 text-xs font-medium text-[var(--navy)]">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500/80" aria-hidden />
-            <span className="truncate">{caClass.chip}</span>
+            <span className="truncate">{caClassChipLabel(result.occupationCode)}</span>
             <span className="hidden text-[var(--muted)] font-normal sm:inline">· CSLB</span>
           </span>
         ) : null}

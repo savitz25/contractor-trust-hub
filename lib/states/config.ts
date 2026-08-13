@@ -118,7 +118,7 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     live: true,
     pilot: true,
     coverageNote:
-      "California licenses contractors statewide through CSLB. This extract covers high-impact counties from official public list downloads — not every county file. Always confirm current status on CSLB Instant License Check. Bond and workers’ comp fields are as published, not live certificates.",
+      "California statewide CSLB licensing. Current dataset prioritizes top high-impact counties from official CSLB list extracts. Always confirm live status on CSLB Instant License Check. Bond and workers’ comp fields are as published — not live certificates. No discipline invented from list files.",
   },
 };
 

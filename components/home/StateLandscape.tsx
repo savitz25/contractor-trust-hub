@@ -35,10 +35,20 @@ const states = [
     paths: [{ href: "/verify?state=nj", label: "New Jersey Verify" }],
     accent: "border-violet-200 bg-violet-50/80",
   },
+  {
+    id: "ca",
+    name: "California",
+    badge: "CSLB counties",
+    href: "/verify?state=ca",
+    summary:
+      "Statewide CSLB licensing. Current dataset prioritizes top high-impact counties from official list extracts — always confirm on Instant License Check.",
+    paths: [{ href: "/verify?state=ca", label: "California Verify" }],
+    accent: "border-amber-200 bg-amber-50/80",
+  },
 ] as const;
 
 /**
- * Early homepage framing: Florida full journey + TX/NJ verify scopes.
+ * Early homepage framing: FL full journey + TX/NJ/CA verify scopes.
  */
 export function StateLandscape() {
   return (
@@ -56,13 +66,13 @@ export function StateLandscape() {
             Where we have evidence today
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-            Coverage differs by state. Florida is the deepest product. Texas and New Jersey are
-            verification-focused with honest specialty and registration limits — not “all
-            contractors everywhere.”
+            Coverage differs by state. Florida is the deepest product. Texas, New Jersey, and
+            California are verification-focused with honest scope limits — not “all contractors
+            everywhere.”
           </p>
         </div>
 
-        <ul className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-3 sm:gap-4">
+        <ul className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4">
           {states.map((s) => (
             <li
               key={s.id}

@@ -359,6 +359,14 @@ python scripts/load_ca_cslb_via_supabase_rest.py --staging-dir data/staging/ca_c
 
 **Rules:** upsert on `(source_system, external_key)` with `CA-CSLB:{license}`; `home_state = CA`; multi-class in `class_code`; bond/WC in `secondary_status` + raw payload.
 
+### Production snapshot (2026-08-13)
+
+| Metric | Value |
+|--------|------:|
+| Unique licenses | **36,665** CLEAR |
+| Counties | 30 (Riverside missing) |
+| Product | `/verify?state=ca` |
+
 ---
 
 ## Troubleshooting (Florida / shared)
