@@ -72,7 +72,7 @@ User query → lib/contractors/queries.ts
 
 ## Multi-state readiness
 
-State metadata lives in `lib/states/config.ts`. Florida is `live: true`. New Jersey is stubbed for wave 2. UI copy and queries take a `stateSlug` so new states plug in without rewriting pages.
+State metadata lives in `lib/states/config.ts`. Florida is full-journey `live: true`. Texas is specialty-license Verify (`/verify?state=tx`). New Jersey is HIC + specialty Verify pilot (`/verify?state=nj`) with honest “no statewide GC” coverage — see [DATA_SOURCES_NJ.md](./DATA_SOURCES_NJ.md) and [NEW_JERSEY_VERIFY_V1.md](./NEW_JERSEY_VERIFY_V1.md). UI copy and queries take a `stateSlug` so new states plug in without rewriting pages.
 
 ## Environment (required for production)
 

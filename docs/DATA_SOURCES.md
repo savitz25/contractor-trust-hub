@@ -94,12 +94,21 @@ Full documentation, columns, coverage limits, and ingest commands:
 
 **Ingest:** `scripts/download_tx_tdlr.py` + `ingest/adapters/tx_tdlr.py` → `data/staging/tx_tdlr/`
 
-## New Jersey — DCA
+## New Jersey — DCA (HIC + specialty boards)
 
-| Resource | Notes |
-|----------|--------|
-| NJ DCA contractor registration | Public contractor / home improvement registration lists |
-| Use | After FL remains solid and TX specialty Verify is proven |
+**New Jersey has no single statewide general contractor license.** The primary consumer-facing credential for most residential improvement work is **Home Improvement Contractor (HIC)** registration via the Division of Consumer Affairs (DCA). Specialty trades sit under separate boards (Electrical, Plumbing, HVACR, etc.).
+
+Full documentation, coverage limits, bulk sources, and ingest commands:
+
+→ **[DATA_SOURCES_NJ.md](./DATA_SOURCES_NJ.md)** · product slice: **[NEW_JERSEY_VERIFY_V1.md](./NEW_JERSEY_VERIFY_V1.md)**
+
+| Resource | URL | Notes |
+|----------|-----|--------|
+| DCA Standard Files (Box) | https://app.box.com/v/DCAStandardFiles | Free bulk / standard licensee lists |
+| NJ Consumer Affairs | https://www.njconsumeraffairs.gov/ | Program + board pages |
+| MyLicense verification | https://newjersey.mylicense.com/verification | Interactive confirm — not bulk ingest |
+
+**Ingest:** `scripts/download_nj_dca.py` + `ingest/adapters/nj_dca.py` → `data/staging/nj_dca/`
 
 ## Permits (local)
 

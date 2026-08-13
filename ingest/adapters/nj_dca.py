@@ -1,22 +1,28 @@
 """
-New Jersey DCA / home-improvement contractor registration adapter (Stage 7 spike).
+New Jersey DCA / Home Improvement Contractor (HIC) + specialty board adapter.
 
-Normalizes official-style registration extracts into the shared Trust Hub license schema.
-Does NOT force Florida DBPR field semantics.
+Normalizes official bulk registration extracts into the shared Trust Hub license schema.
+Does NOT force Florida DBPR field semantics. Prefer free DCA Standard Files / MyLicense
+bulk CSVs — do not scrape the interactive verification portal.
 
 NJ reality:
-  - Home Improvement Contractor (HIC) registration is a core consumer-facing credential
-  - Other trade boards / municipal cards may exist separately
-  - Business entity linkage is a separate high-confidence join (not name-only)
+  - No single statewide general contractor license
+  - Home Improvement Contractor (HIC) is the primary residential consumer credential
+  - Specialty boards (Electrical, Plumbing, HVACR, etc.) are separate when bulk exists
+  - Business entity linkage is high-confidence only (not name-only)
 
 Usage:
+  python scripts/download_nj_dca.py --from-file path/to/official_bulk.csv
   python -m ingest.adapters.nj_dca --input data/samples/nj_dca_hic_sample.csv
   python -m ingest.adapters.nj_dca --input data/raw/nj_dca/registrations.csv --out-dir data/staging/nj_dca
 
 Source matrix (ops):
-  - Primary: NJ Division of Consumer Affairs contractor / HIC registration extracts
+  - Primary: NJ DCA free bulk / Standard Files (HIC first)
+  - Specialty: Electrical, Plumbing, HVAC when clean bulk files exist
   - Entity: NJ business records (optional high-confidence only)
   - Enforcement: flag fields when present; full case files may lag
+
+Docs: docs/DATA_SOURCES_NJ.md · docs/NEW_JERSEY_VERIFY_V1.md
 """
 
 from __future__ import annotations
@@ -123,14 +129,123 @@ OCCUPATION_MAP = {
     "HIC": ("HIC", "Home Improvement Contractor"),
     "HOME IMPROVEMENT CONTRACTOR": ("HIC", "Home Improvement Contractor"),
     "HOME IMPROVEMENT": ("HIC", "Home Improvement Contractor"),
+    "HOME IMPROVEMENT CONTRACTOR REGISTRATION": ("HIC", "Home Improvement Contractor"),
     "ELE": ("ELE", "Electrical Contractor (NJ)"),
     "ELECTRICAL": ("ELE", "Electrical Contractor (NJ)"),
+    "ELECTRICAL CONTRACTOR": ("ELE", "Electrical Contractor (NJ)"),
     "PLB": ("PLB", "Plumbing Contractor (NJ)"),
     "PLUMBING": ("PLB", "Plumbing Contractor (NJ)"),
+    "PLUMBING CONTRACTOR": ("PLB", "Plumbing Contractor (NJ)"),
+    "MASTER PLUMBER": ("PLB", "Plumbing Contractor (NJ)"),
     "HVAC": ("HVAC", "HVAC / Mechanical Contractor (NJ)"),
+    "HVACR": ("HVAC", "HVAC / Mechanical Contractor (NJ)"),
     "MECHANICAL": ("HVAC", "HVAC / Mechanical Contractor (NJ)"),
+    "HEATING": ("HVAC", "HVAC / Mechanical Contractor (NJ)"),
     "GEN": ("GEN", "General contractor registration (NJ)"),
     "GENERAL": ("GEN", "General contractor registration (NJ)"),
+}
+
+# Official bulk exports often use Title Case / spaced headers.
+# Map normalized header → canonical snake keys used in transform_row.
+HEADER_ALIASES: dict[str, str] = {
+    "registration_number": "registration_number",
+    "registration number": "registration_number",
+    "registration_no": "registration_number",
+    "registration no": "registration_number",
+    "reg_number": "registration_number",
+    "reg number": "registration_number",
+    "license_number": "license_number",
+    "license number": "license_number",
+    "license_no": "license_number",
+    "license no": "license_number",
+    "licensenumber": "license_number",
+    "lic #": "license_number",
+    "lic#": "license_number",
+    "external_key": "external_key",
+    "credential_type": "credential_type",
+    "credential type": "credential_type",
+    "license_type": "license_type",
+    "license type": "license_type",
+    "license type name": "license_type",
+    "profession": "license_type",
+    "board": "license_type",
+    "business_name": "business_name",
+    "business name": "business_name",
+    "company_name": "business_name",
+    "company name": "business_name",
+    "organization_name": "business_name",
+    "organization name": "business_name",
+    "dba": "business_name",
+    "dba name": "business_name",
+    "licensee_name": "business_name",
+    "licensee name": "business_name",
+    "name": "business_name",
+    "owner_name": "owner_name",
+    "owner name": "owner_name",
+    "principal_name": "owner_name",
+    "principal name": "owner_name",
+    "contact_name": "owner_name",
+    "contact name": "owner_name",
+    "first_name": "first_name",
+    "first name": "first_name",
+    "last_name": "last_name",
+    "last name": "last_name",
+    "status": "status",
+    "license_status": "status",
+    "license status": "status",
+    "registration_status": "status",
+    "registration status": "status",
+    "expiration_date": "expiration_date",
+    "expiration date": "expiration_date",
+    "license_expiration_date": "expiration_date",
+    "license expiration date": "expiration_date",
+    "exp_date": "expiration_date",
+    "exp date": "expiration_date",
+    "address_line1": "address_line1",
+    "address_line_1": "address_line1",
+    "address line 1": "address_line1",
+    "address1": "address_line1",
+    "street_address": "address_line1",
+    "street address": "address_line1",
+    "address": "address_line1",
+    "address_line2": "address_line2",
+    "address_line_2": "address_line2",
+    "address line 2": "address_line2",
+    "address2": "address_line2",
+    "city": "city",
+    "state": "state",
+    "postal_code": "postal_code",
+    "zip": "postal_code",
+    "zip_code": "postal_code",
+    "zip code": "postal_code",
+    "zipcode": "postal_code",
+    "county": "county",
+    "county_name": "county",
+    "county name": "county",
+    "phone": "phone",
+    "telephone": "phone",
+    "business_phone": "phone",
+    "business phone": "phone",
+    "enforcement_flag": "enforcement_flag",
+    "enforcement flag": "enforcement_flag",
+    "entity_key": "entity_key",
+    "entity key": "entity_key",
+    "entity_name": "entity_name",
+    "entity name": "entity_name",
+    "entity_status": "entity_status",
+    "entity status": "entity_status",
+    "entity_formation_date": "entity_formation_date",
+    "entity formation date": "entity_formation_date",
+    "principal_title": "principal_title",
+    "principal title": "principal_title",
+    "enforcement_case": "enforcement_case",
+    "enforcement case": "enforcement_case",
+    "enforcement_disposition": "enforcement_disposition",
+    "enforcement disposition": "enforcement_disposition",
+    "enforcement_date": "enforcement_date",
+    "enforcement date": "enforcement_date",
+    "enforcement_summary": "enforcement_summary",
+    "enforcement summary": "enforcement_summary",
 }
 
 
@@ -138,6 +253,36 @@ def _clean(value: str | None) -> str:
     if value is None:
         return ""
     return str(value).strip()
+
+
+def _normalize_header(name: str) -> str:
+    h = _clean(name).lower()
+    h = re.sub(r"[\s_]+", " ", h).strip()
+    return HEADER_ALIASES.get(h, h.replace(" ", "_"))
+
+
+def _canonicalize_row(raw: dict[str, str]) -> dict[str, str]:
+    """Map bulk-export headers (Title Case, spaces) to snake_case keys."""
+    out: dict[str, str] = {}
+    for k, v in raw.items():
+        if k is None:
+            continue
+        key = _normalize_header(str(k))
+        val = _clean(v) if isinstance(v, str) else _clean(str(v) if v is not None else "")
+        # Prefer first non-empty value if duplicate aliases map to same key
+        if key in out and out[key] and not val:
+            continue
+        if key in out and out[key] and val:
+            continue
+        out[key] = val
+    # Compose owner from first/last when owner_name empty
+    if not out.get("owner_name"):
+        first = out.get("first_name") or ""
+        last = out.get("last_name") or ""
+        composed = " ".join(p for p in (first, last) if p).strip()
+        if composed:
+            out["owner_name"] = composed
+    return out
 
 
 def _sha256_file(path: Path) -> str:
@@ -185,7 +330,8 @@ def compose_external_key(registration_number: str, occupation_code: str) -> str 
     return f"NJ-{occupation_code}:{num}"
 
 
-def transform_row(raw: dict[str, str]) -> dict[str, Any] | None:
+def transform_row(raw_in: dict[str, str]) -> dict[str, Any] | None:
+    raw = _canonicalize_row(raw_in)
     reg = (
         _clean(raw.get("registration_number"))
         or _clean(raw.get("license_number"))
@@ -291,10 +437,15 @@ def transform_row(raw: dict[str, str]) -> dict[str, Any] | None:
 
 
 def iter_csv(path: Path) -> Iterator[dict[str, str]]:
-    with path.open("r", encoding="utf-8", errors="replace", newline="") as f:
+    # utf-8-sig strips Excel/PowerShell BOM so first header still maps
+    with path.open("r", encoding="utf-8-sig", errors="replace", newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            yield {k: (v or "").strip() if isinstance(v, str) else "" for k, v in row.items()}
+            yield {
+                (k or ""): (v or "").strip() if isinstance(v, str) else ""
+                for k, v in row.items()
+                if k is not None
+            }
 
 
 def write_csv(path: Path, fieldnames: list[str], rows: list[dict[str, Any]]) -> None:
@@ -420,14 +571,20 @@ def run(input_path: Path, out_dir: Path, limit: int | None = None) -> dict[str, 
         "row_count": len(licenses),
         "entity_count": len(entities),
         "enforcement_count": len(enforcement),
-        "notes": "Stage 8A NJ Verify depth — registration + optional high-confidence entity/enforcement",
+        "notes": (
+            "NJ DCA HIC + specialty boards — no statewide GC. "
+            "Registration + optional high-confidence entity/enforcement."
+        ),
         "field_gaps": [
+            "No single statewide general contractor license in New Jersey",
             "Entity links only when entity_key present (no name-only joins)",
             "Enforcement is extract-level factual rows — not full case files",
             "Municipal-only credentials may be absent",
-            "Permit/activity history out of scope for Stage 8A",
+            "Permit/activity history out of scope for NJ Verify v1",
+            "Specialty board coverage depends on available free bulk files",
         ],
         "matching_strategy": "exact registration/license key first; entity exact key only; no name-only auto-join",
+        "coverage": "HIC primary; ELE/PLB/HVAC when present in extract",
     }
     (out_dir / "batch_manifest.json").write_text(
         json.dumps(manifest, indent=2), encoding="utf-8"

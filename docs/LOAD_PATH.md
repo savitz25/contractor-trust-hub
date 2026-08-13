@@ -235,6 +235,81 @@ Keys: `TX-TSBPE:RMP:{n}` / `TX-TSBPE:MP:{n}`. `source_system = tx_tsbpe`. Texas 
 
 ---
 
+---
+
+# New Jersey DCA / HIC → Postgres load path
+
+New Jersey Verify loads **Home Improvement Contractor (HIC)** registrations and **available specialty board** credentials from DCA bulk extracts. There is **no** single statewide general contractor license in New Jersey — do not treat this load as a full NJ contractor directory.
+
+See [NEW_JERSEY_VERIFY_V1.md](./NEW_JERSEY_VERIFY_V1.md) and [DATA_SOURCES_NJ.md](./DATA_SOURCES_NJ.md).
+
+## Stage data first
+
+```bash
+# Official bulk CSV already downloaded (Box Standard Files / MyLicense free lists)
+python scripts/download_nj_dca.py --from-file path/to/dca_bulk.csv
+python -m ingest.adapters.nj_dca \
+  --input data/raw/nj_dca/registrations.csv \
+  --out-dir data/staging/nj_dca
+```
+
+Sample (committed, no network):
+
+```bash
+python -m ingest.adapters.nj_dca \
+  --input data/samples/nj_dca_hic_sample.csv \
+  --out-dir data/staging/nj_dca_sample
+```
+
+Expected staging files:
+
+| File | Maps to |
+|------|---------|
+| `licenses_normalized.csv` | `licenses` + `contractors` (`source_system = nj_dca`) |
+| `contractor_seeds.csv` | reference seed (loader uses licenses + seeds) |
+| `entities_normalized.csv` | `entities` (`source_system = nj_sos`) when high-confidence keys present |
+| `enforcement_normalized.csv` | `discipline_actions` (`source_system = nj_enforcement`) when present |
+| `batch_manifest.json` | provenance metadata |
+
+## Load
+
+```bash
+# Idempotent upserts (safe to re-run)
+python scripts/load_nj_dca_to_postgres.py \
+  --staging-dir data/staging/nj_dca
+
+# Smoke / sample
+python scripts/load_nj_dca_to_postgres.py \
+  --staging-dir data/staging/nj_dca_sample --limit 100
+```
+
+**Rules:**
+
+- Upsert licenses on `(source_system, external_key)` — e.g. `NJ-HIC:HIC-13VH00012300`
+- One contractor shell per license slug (`home_state = NJ`)
+- Entity links only when stable `entity_key` present — **no name-only joins**
+- Every load creates an `ingest_batches` row (`source_system = nj_dca`)
+- Prefer official free bulk over scraping MyLicense interactive search
+
+Useful flags: `--limit N`, `--staging-dir`, dry-run when `DATABASE_URL` is unset (prints plan).
+
+## Product surface after load
+
+- `/verify?state=nj` — HIC + specialty extract search + honest coverage banner  
+- Florida remains `/verify` default; Texas remains `/verify?state=tx`  
+- Feature flag: `NEXT_PUBLIC_NJ_VERIFY_PILOT` (default on)
+
+## Troubleshooting (NJ)
+
+| Symptom | Fix |
+|---------|-----|
+| Missing staging CSV | Place bulk via `download_nj_dca.py --from-file` + run `nj_dca` adapter |
+| Empty NJ search | Confirm load; `SELECT COUNT(*) FROM licenses WHERE source_system = 'nj_dca'` |
+| Header validation failed | Ensure CSV has registration/license # + business/owner name columns |
+| Overclaiming GC coverage | Product must say HIC + specialty only — no statewide GC |
+
+---
+
 ## Troubleshooting (Florida / shared)
 
 | Symptom | Fix |

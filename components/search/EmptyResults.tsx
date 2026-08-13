@@ -27,15 +27,15 @@ function NjEmptyResults({ query, mode }: { query: string; mode: "license" | "nam
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"
-          ? "We looked for that registration / license key in the NJ pilot extract (HIC and selected trades)."
-          : "We searched business and owner names in the NJ registration extract only."}
+          ? "We looked for that registration / license key in the NJ DCA extract (HIC and available specialty boards)."
+          : "We searched business and owner names in the NJ HIC / specialty extract only."}
       </p>
       <ul className="mt-5 list-disc space-y-2.5 pl-5 text-sm leading-relaxed text-[var(--muted)]">
         <li>
-          This is a <strong className="font-medium text-[var(--text)]">verification pilot</strong> —
-          not every NJ trade or municipal card is loaded yet.
+          New Jersey has <strong className="font-medium text-[var(--text)]">no single statewide general contractor license</strong>{" "}
+          — coverage is HIC registration plus specialty boards when bulk data is loaded.
         </li>
-        <li>Missing from results does not prove someone is unregistered — confirm on the official DCA tools.</li>
+        <li>Missing from results does not prove someone is unregistered — always confirm on the official DCA / MyLicense site.</li>
         <li>
           Florida&apos;s full journey (plan, property, projects, passport) remains at{" "}
           <Link href="/verify" className="text-[var(--accent)]">

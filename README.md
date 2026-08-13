@@ -6,10 +6,11 @@ Independent, evidence-backed contractor verification for homeowners and commerci
 
 | | |
 |---|---|
-| **Status** | Florida Verify live; Texas Verify v1 (TDLR specialty trades only) |
+| **Status** | Florida Verify live; Texas Verify v1 (TDLR); New Jersey Verify pilot (HIC + specialty) |
 | **Repo** | https://github.com/savitz25/contractor-trust-hub |
 | **Primary market (wave 1)** | Florida (DBPR Construction Industry Licensing Board) |
 | **Texas** | TDLR specialty trades only — no statewide GC license (see [docs/TEXAS_VERIFY_V1.md](docs/TEXAS_VERIFY_V1.md)) |
+| **New Jersey** | HIC + specialty boards only — no statewide GC license (see [docs/NEW_JERSEY_VERIFY_V1.md](docs/NEW_JERSEY_VERIFY_V1.md)) |
 | **Tagline** | Before you hire, verify. |
 
 ## Product positioning
@@ -25,16 +26,18 @@ Independent, evidence-backed contractor verification for homeowners and commerci
 contractor-trust-hub/
 ├── app/                     # Next.js product shell (Vercel)
 ├── docs/
-│   ├── DATA_SOURCES.md      # FL DBPR CSVs, Sunbiz, NJ DCA, permits
+│   ├── DATA_SOURCES.md      # FL DBPR, Sunbiz, TX, NJ index
+│   ├── DATA_SOURCES_TX.md   # Texas TDLR specialty (no statewide GC)
+│   ├── DATA_SOURCES_NJ.md   # NJ DCA HIC + specialty (no statewide GC)
 │   ├── PHASE_0.md
 │   └── SCHEMA.md
 ├── schema/
 │   └── initial_schema.sql
 ├── ingest/                  # Python offline adapters (not a Vercel Python app)
 │   ├── requirements.txt
-│   └── adapters/fl_dbpr.py
+│   └── adapters/{fl_dbpr,tx_tdlr,nj_dca}.py
 ├── data/samples/
-└── scripts/download_fl_dbpr.py
+└── scripts/download_{fl_dbpr,tx_tdlr,nj_dca}.py
 ```
 
 ## Quick start (web — Verify product)
@@ -51,7 +54,8 @@ npm run build  # production build (what Vercel runs)
 | `/` | Homepage + search CTA |
 | `/verify` | Florida search by license or name |
 | `/verify?state=tx` | Texas TDLR specialty trades (honest coverage banner) |
-| `/contractors/[slug]` | Trust Report (FL or TX by `home_state`) |
+| `/verify?state=nj` | New Jersey HIC + specialty boards (honest coverage banner) |
+| `/contractors/[slug]` | Trust Report (FL / TX / NJ by `home_state`) |
 | `/about` · `/methodology` | Trust / transparency |
 
 See [docs/VERIFY_PRODUCT.md](docs/VERIFY_PRODUCT.md).

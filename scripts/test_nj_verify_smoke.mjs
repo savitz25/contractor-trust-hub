@@ -55,9 +55,28 @@ const njBanner = fs.readFileSync(
   path.join(root, "components/search/NjCoverageBanner.tsx"),
   "utf8"
 );
-assert.match(njBanner, /verification pilot/i);
-assert.match(njBanner, /Coverage differs/i);
+assert.match(njBanner, /no single statewide general contractor license/i);
+assert.match(njBanner, /Home Improvement Contractor \(HIC\)/i);
+assert.match(njBanner, /MyLicense|official DCA/i);
 assert.doesNotMatch(njBanner, /DBPR construction license extract/);
+assert.doesNotMatch(njBanner, /all New Jersey contractors/i);
+
+// Foundation docs (Phase 0)
+const dataSourcesNj = path.join(root, "docs/DATA_SOURCES_NJ.md");
+assert.ok(fs.existsSync(dataSourcesNj), "DATA_SOURCES_NJ.md missing");
+const njDoc = fs.readFileSync(dataSourcesNj, "utf8");
+assert.match(njDoc, /no single statewide/i);
+assert.match(njDoc, /DCAStandardFiles|app\.box\.com/i);
+assert.match(njDoc, /Home Improvement Contractor/i);
+
+const dataSourcesMain = fs.readFileSync(
+  path.join(root, "docs/DATA_SOURCES.md"),
+  "utf8"
+);
+assert.match(dataSourcesMain, /DATA_SOURCES_NJ\.md/);
+
+const downloadHelper = path.join(root, "scripts/download_nj_dca.py");
+assert.ok(fs.existsSync(downloadHelper), "download_nj_dca.py missing");
 
 const evidenceCopy = fs.readFileSync(
   path.join(root, "lib/states/evidence-copy.ts"),

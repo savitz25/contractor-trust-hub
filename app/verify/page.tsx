@@ -35,9 +35,9 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   }
   if (state.slug === "nj") {
     return pageMetadata({
-      title: "Verify a New Jersey contractor (pilot)",
+      title: "Verify a New Jersey HIC or specialty contractor",
       description:
-        "New Jersey verification pilot — search home-improvement contractor registration and selected trade credentials from official extracts. Coverage differs by state. Not a marketplace.",
+        "Search New Jersey Home Improvement Contractor (HIC) registrations and available specialty boards. No statewide general contractor license. Evidence only — not a marketplace.",
       path: "/verify?state=nj",
     });
   }
@@ -84,19 +84,19 @@ export default async function VerifyPage({ searchParams }: Props) {
   const liveStates = getLiveStates();
 
   const kicker = isNj
-    ? "New Jersey · verification pilot"
+    ? "New Jersey · HIC + specialty boards"
     : isTx
       ? "Texas · TDLR specialty + TSBPE plumbing"
       : "Florida · DBPR + Sunbiz";
 
   const heading = isNj
-    ? "Verify a New Jersey contractor"
+    ? "Verify a New Jersey HIC or specialty contractor"
     : isTx
       ? "Verify a Texas specialty contractor"
       : "Verify a Florida contractor";
 
   const lead = isNj
-    ? "Search by registration number or company name. Built from official registration extracts — not Florida-depth coverage."
+    ? "Search by registration number or company name. New Jersey has no single statewide GC license — coverage is HIC registration plus available specialty boards from official DCA extracts."
     : isTx
       ? "Search TDLR specialty licenses or TSBPE plumbing by number or business / owner name. You’ll see the trade type in plain language, license status, and county when available."
       : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
@@ -105,15 +105,15 @@ export default async function VerifyPage({ searchParams }: Props) {
     ? [
         {
           t: "Registration number",
-          d: "HIC or trade registration ids from invoices or contracts are most precise.",
+          d: "HIC or specialty board ids from invoices or contracts are most precise.",
         },
         {
           t: "Company name",
-          d: "Matches business and owner names in the NJ pilot extract only.",
+          d: "Matches business and owner names in the NJ DCA extract only.",
         },
         {
           t: "What you’ll see",
-          d: "Credential type, status, location when available — then a Trust Report with honest source limits.",
+          d: "Credential type, status, location when available — then a Trust Report. Always confirm on the official DCA site.",
         },
       ]
     : isTx
@@ -235,7 +235,7 @@ export default async function VerifyPage({ searchParams }: Props) {
           {isTx
             ? `Specialty trades: ${TX_COVERED_TRADES_PLAIN.join(" · ").toLowerCase()}. Not a statewide general contractor directory.`
             : isNj
-              ? "Registration-first search. Entity links only when high-confidence. No name-only auto-joins."
+              ? "HIC + specialty boards when in extract. No statewide GC license. Entity links only when high-confidence — no name-only auto-joins."
               : (
                 <>
                   Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay

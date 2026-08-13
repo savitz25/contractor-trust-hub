@@ -1,7 +1,7 @@
 /**
  * Multi-state product config. Florida is the live reference implementation.
  * Texas: TDLR specialty trades + TSBPE plumbing (no statewide GC) — see docs/DATA_SOURCES_TX.md.
- * New Jersey: Stage 7 Verify pilot (registration-first) — see docs/STAGE_7_FL_DEPTH_AND_NJ_SPIKE.md.
+ * New Jersey: HIC + specialty boards via DCA (no statewide GC) — see docs/DATA_SOURCES_NJ.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
 
@@ -72,17 +72,17 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     slug: "nj",
     name: "New Jersey",
     shortName: "NJ",
-    boardLabel: "New Jersey Division of Consumer Affairs (DCA) — contractor / HIC registration",
+    boardLabel: "New Jersey Division of Consumer Affairs (DCA) — HIC + specialty boards",
     boardUrl: "https://www.njconsumeraffairs.gov/",
     entityRegistryLabel: "NJ business entity records (high-confidence only when linked)",
     entityRegistryUrl: "https://www.njportal.com/DOR/BusinessRecords/",
     licenseSource: "nj_dca",
     entitySource: "nj_sos",
-    // Stage 7 pilot — controlled by feature flag (default on)
+    // Verify pilot — controlled by feature flag (default on). Not Florida-depth.
     live: true,
     pilot: true,
     coverageNote:
-      "New Jersey verification pilot (Stage 8A depth): home-improvement contractor registration, selected trade credentials, high-confidence entity links, and public enforcement rows when present in extracts. Not Florida-depth (no full permit history, studios, or protection journey). Coverage differs by state.",
+      "New Jersey does not issue a single statewide general contractor license. Coverage prioritizes Home Improvement Contractor (HIC) registrations and available specialty boards (electrical, plumbing, HVAC when in extract). Not Florida-depth. Always confirm on the official DCA / MyLicense site.",
   },
 };
 

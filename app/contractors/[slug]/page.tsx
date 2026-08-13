@@ -84,7 +84,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       isTx
         ? "TDLR specialty or TSBPE plumbing evidence — not a statewide general contractor directory."
         : isNj
-          ? "New Jersey verification pilot — registration extracts only; coverage differs by state."
+          ? "New Jersey HIC / specialty evidence — no statewide general contractor license; coverage differs by state."
           : c.entities[0]
             ? `Sunbiz entity ${statusLabel(c.entities[0].status)}.`
             : "No high-confidence Sunbiz link.",
@@ -94,7 +94,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       isTx
         ? "Official TDLR / TSBPE open-data evidence — not a marketplace."
         : isNj
-          ? "Official NJ registration extract evidence — not a marketplace."
+          ? "Official NJ DCA extract evidence — not a marketplace."
           : "Official DBPR and Sunbiz evidence — not a marketplace.",
     ]
       .filter(Boolean)
@@ -338,7 +338,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
       >
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--accent)] sm:text-xs">
           {isNj
-            ? "New Jersey · verification pilot · Trust Report"
+            ? "New Jersey · HIC + specialty · Trust Report"
             : isTx
               ? "Texas · TDLR / TSBPE · Trust Report"
               : "Florida · Contractor Trust Report 2.0"}
@@ -355,12 +355,12 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         {njCredLabel ? (
           <p className="mt-2 text-sm font-medium text-[var(--navy)] sm:text-[15px]">
             {njCredLabel}
-            <span className="font-normal text-[var(--muted)]"> · NJ registration extract</span>
+            <span className="font-normal text-[var(--muted)]"> · NJ DCA extract</span>
           </p>
         ) : null}
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
           {isNj
-            ? "Credential status and identity from New Jersey registration extracts. Coverage differs by state — not Florida-depth planning or permit history."
+            ? "Credential status and identity from New Jersey DCA extracts (HIC and specialty boards when present). No statewide GC license — not Florida-depth planning or permit history."
             : isTx
               ? "Plain-language trade type, license status, and available location from the TDLR open extract. Not a statewide general contractor credential."
               : "Evidence-first profile: who this business is, license and entity records, caution signals, and what to do next — not a score or endorsement."}

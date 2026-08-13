@@ -93,17 +93,17 @@ export function njCredentialPlainLabel(code: string | null | undefined): string 
 }
 
 export const NJ_PILOT_COVERED = [
-  "Home Improvement Contractor registration",
-  "Selected trade credentials when present in extract",
+  "Home Improvement Contractor (HIC) registration",
+  "Specialty boards when present (electrical, plumbing, HVAC)",
   "High-confidence business entity links when matched",
   "Public enforcement rows when linked in extract",
 ] as const;
 
 export const NJ_PILOT_NOT_COVERED = [
-  "Full NJ permit / activity history",
-  "Every municipal trade card",
+  "A single statewide general contractor license (does not exist in NJ)",
+  "Every municipal trade card / local-only credential",
+  "Full permit history, studios, or Florida-depth journey",
   "Live insurance / COI verification",
-  "Florida-style planning, studios, and protection journey",
 ] as const;
 
 export const NJ_SOURCE_MATRIX = [

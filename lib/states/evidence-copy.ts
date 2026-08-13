@@ -52,7 +52,7 @@ export function trustReportTitleSuffix(slug: EvidenceStateSlug): string {
 }
 
 export function pilotBadge(slug: EvidenceStateSlug): string | null {
-  if (slug === "nj") return "New Jersey verification pilot";
+  if (slug === "nj") return "New Jersey HIC + specialty (no statewide GC)";
   if (slug === "tx") return "Texas specialty trades";
   return null;
 }
@@ -60,11 +60,12 @@ export function pilotBadge(slug: EvidenceStateSlug): string | null {
 export function checkedItems(slug: EvidenceStateSlug): string[] {
   if (slug === "nj") {
     return [
-      "NJ home-improvement / contractor registration extract (when linked)",
-      "Selected trade credentials when present in the extract",
+      "Home Improvement Contractor (HIC) registration when linked",
+      "Specialty board credentials (electrical, plumbing, HVAC) when present in extract",
       "Business entity linkage only when high-confidence match rules pass",
       "Public enforcement / action rows when linked in our extract",
       "Source attribution and extract freshness on this profile",
+      "Not a statewide general contractor directory (NJ has no single GC license)",
     ];
   }
   if (slug === "tx") {

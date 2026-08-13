@@ -10,10 +10,11 @@
 | 2 | `adapters/fl_sunbiz.py` | Sunbiz corporate fixed-width (SFTP) | `data/staging/fl_sunbiz/` |
 | 3 | `adapters/tx_tdlr.py` | TX TDLR specialty licenses (Open Data) | `data/staging/tx_tdlr/` |
 | 4 | `adapters/tx_tsbpe.py` | TX plumbing (TSBPE free CSV lists) | `data/staging/tx_tsbpe/` |
-| 5 | `adapters/nj_dca.py` | NJ DCA / HIC registration (Stage 7 pilot) | `data/staging/nj_dca/` |
+| 5 | `adapters/nj_dca.py` | NJ DCA HIC + specialty boards (no statewide GC) | `data/staging/nj_dca/` |
 | 6 | Permits | County / city open data | Later |
 
-**Texas note:** No statewide GC license. TDLR adapter filters to specialty contractor types only — see `docs/DATA_SOURCES_TX.md`.
+**Texas note:** No statewide GC license. TDLR adapter filters to specialty contractor types only — see `docs/DATA_SOURCES_TX.md`.  
+**New Jersey note:** No statewide GC license. HIC is the primary residential set; specialty boards when bulk files exist — see `docs/DATA_SOURCES_NJ.md`.
 
 ## Conventions
 
@@ -72,10 +73,16 @@ python scripts/download_tx_tsbpe.py
 python -m ingest.adapters.tx_tsbpe --raw-dir data/raw/tx_tsbpe --out-dir data/staging/tx_tsbpe
 python scripts/load_tx_tsbpe_to_postgres.py --staging-dir data/staging/tx_tsbpe
 
-# New Jersey Verify pilot (Stage 7)
+# New Jersey HIC + specialty (official bulk preferred) — see docs/DATA_SOURCES_NJ.md
+# and docs/NEW_JERSEY_VERIFY_V1.md
+python scripts/download_nj_dca.py --from-file path/to/dca_bulk.csv
+python -m ingest.adapters.nj_dca \
+  --input data/raw/nj_dca/registrations.csv \
+  --out-dir data/staging/nj_dca
+# Sample (committed, no network)
 python -m ingest.adapters.nj_dca \
   --input data/samples/nj_dca_hic_sample.csv \
-  --out-dir data/staging/nj_dca
+  --out-dir data/staging/nj_dca_sample
 python scripts/load_nj_dca_to_postgres.py --staging-dir data/staging/nj_dca
 ```
 
