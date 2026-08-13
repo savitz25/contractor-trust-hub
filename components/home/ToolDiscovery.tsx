@@ -90,6 +90,10 @@ export function ToolDiscovery() {
             Kitchen calculator
           </Link>
           {" · "}
+          <Link href="/studio/bathroom" className="font-semibold text-[var(--navy)]">
+            Bathroom calculator
+          </Link>
+          {" · "}
           <Link href="/studio/roofing" className="font-semibold text-[var(--navy)]">
             Roofing calculator
           </Link>

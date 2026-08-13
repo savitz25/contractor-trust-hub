@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
-  computeKitchenEstimate,
-  defaultKitchenCalcInput,
+  computeBathroomEstimate,
+  defaultBathroomCalcInput,
   formatUsd,
-  getKitchenCalculatorConfig,
-  type KitchenCalcInput,
-  type KitchenOption,
-} from "@/lib/plan/kitchen-calculator";
+  getBathroomCalculatorConfig,
+  type BathroomCalcInput,
+  type BathroomOption,
+} from "@/lib/plan/bathroom-calculator";
 import { encodePlanQuery } from "@/lib/plan/plan-url";
 
 function OptionGroup({
@@ -21,7 +21,7 @@ function OptionGroup({
 }: {
   legend: string;
   help?: string;
-  options: KitchenOption[];
+  options: BathroomOption[];
   value: string;
   onChange: (id: string) => void;
 }) {
@@ -71,21 +71,21 @@ function pushLabel(direction: string): string {
   return "Baseline";
 }
 
-export function KitchenCostCalculator() {
-  const config = useMemo(() => getKitchenCalculatorConfig(), []);
-  const [input, setInput] = useState<KitchenCalcInput>(() => defaultKitchenCalcInput());
+export function BathroomCostCalculator() {
+  const config = useMemo(() => getBathroomCalculatorConfig(), []);
+  const [input, setInput] = useState<BathroomCalcInput>(() => defaultBathroomCalcInput());
   const [zip, setZip] = useState("");
   const [city, setCity] = useState("");
 
-  const estimate = useMemo(() => computeKitchenEstimate(input), [input]);
+  const estimate = useMemo(() => computeBathroomEstimate(input), [input]);
 
-  const set = <K extends keyof KitchenCalcInput>(key: K, id: string) => {
+  const set = <K extends keyof BathroomCalcInput>(key: K, id: string) => {
     setInput((s) => ({ ...s, [key]: id }));
   };
 
   const planResultsHref = useMemo(() => {
     const qs = encodePlanQuery({
-      projectType: "kitchen_remodel",
+      projectType: "bathroom_remodel",
       scale: estimate.planScale,
       state: "FL",
       zip: zip.replace(/\D/g, "").slice(0, 5) || undefined,
@@ -93,8 +93,6 @@ export function KitchenCostCalculator() {
     });
     return `/plan/results?${qs}`;
   }, [estimate.planScale, zip, city]);
-
-  const studioHref = `/studios/kitchen`;
 
   const midMarkerPct = Math.min(
     95,
@@ -109,38 +107,38 @@ export function KitchenCostCalculator() {
       <div className="space-y-5">
         <section className="rounded-3xl border border-[var(--border)] bg-white p-4 shadow-[var(--shadow-md)] sm:p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
-            1 · Kitchen profile
+            1 · Bathroom profile
           </p>
           <h2 className="mt-1.5 text-lg font-semibold text-[var(--text)] sm:text-xl">
-            Size, depth, layout, and finish
+            Type, depth, layout, and finish
           </h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Adjust the main Florida kitchen cost drivers. The planning band updates live — still not
-            a bid.
+            Adjust the main Florida bathroom cost drivers. The planning band updates live — still
+            not a bid.
           </p>
 
           <div className="mt-5 space-y-5">
             <OptionGroup
-              legend="Kitchen size"
-              help="Use footprint as a rough proxy if you do not have a drawing."
+              legend="Project scale / bath type"
+              help="Powder rooms sit in a smaller band than a primary suite, even at the same finish level."
               options={config.sizeOptions}
               value={input.sizeId}
               onChange={(id) => set("sizeId", id)}
             />
             <OptionGroup
-              legend="Remodel depth"
+              legend="Scope depth"
               options={config.depthOptions}
               value={input.depthId}
               onChange={(id) => set("depthId", id)}
             />
             <OptionGroup
-              legend="Layout"
+              legend="Layout complexity"
               options={config.layoutOptions}
               value={input.layoutId}
               onChange={(id) => set("layoutId", id)}
             />
             <OptionGroup
-              legend="Finish & material level"
+              legend="Finish level"
               options={config.finishOptions}
               value={input.finishId}
               onChange={(id) => set("finishId", id)}
@@ -157,7 +155,7 @@ export function KitchenCostCalculator() {
           </h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
             ZIP or city does not invent local prices — it improves matching to verified Florida
-            building / residential licenses (CGC, CBC, CRC).
+            residential remodel and plumbing-related licenses (CRC, CBC, CGC, CFC).
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <label className="block">
@@ -192,14 +190,14 @@ export function KitchenCostCalculator() {
           <div className="border-b border-[var(--border)] bg-[var(--navy)] px-4 py-3 sm:px-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
-                Kitchen calculator · live
+                Bathroom calculator · live
               </p>
               <span className="rounded-full bg-[var(--accent)] px-2.5 py-0.5 text-[11px] font-bold text-[var(--navy)]">
                 Planning only — not a bid
               </span>
             </div>
             <h2 className="mt-2 text-lg font-semibold text-white sm:text-xl">
-              Florida kitchen remodel planning range
+              Florida bathroom remodel planning range
             </h2>
             <p className="text-sm text-white/75">
               {estimate.scaleLabel} · {estimate.depth.label}
@@ -303,13 +301,13 @@ export function KitchenCostCalculator() {
             Next · verification
           </p>
           <h2 className="mt-1.5 text-lg font-semibold text-[var(--text)]">
-            Find verified kitchen contractors
+            Find verified bathroom contractors
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
             Matching uses Florida DBPR{" "}
-            <strong className="text-[var(--text)]">building and residential licenses</strong>{" "}
-            (CGC, CBC, CRC) for remodel scope. Evidence only — no rankings or introductions sold
-            here.
+            <strong className="text-[var(--text)]">residential remodel and related licenses</strong>{" "}
+            (CRC, CBC, CGC, plus CFC when plumbing scope fits). Evidence only — no rankings or
+            introductions sold here.
           </p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             <Link
@@ -319,10 +317,10 @@ export function KitchenCostCalculator() {
               Find verified contractors →
             </Link>
             <Link
-              href={studioHref}
+              href="/studios/bathroom"
               className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-5 text-sm font-medium text-[var(--navy)] no-underline hover:bg-[var(--bg)]"
             >
-              Open Kitchen Studio Q&amp;A
+              Open Bathroom Studio Q&amp;A
             </Link>
             <Link
               href="/verify"
@@ -335,7 +333,7 @@ export function KitchenCostCalculator() {
 
         <section className="rounded-3xl border border-[var(--border)] bg-white p-4 shadow-[var(--shadow-sm)] sm:p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
-            Learn · Florida kitchens
+            Learn · Florida bathrooms
           </p>
           <ul className="mt-3 space-y-2 text-sm leading-relaxed text-[var(--muted)]">
             {estimate.education.map((e) => (
@@ -361,9 +359,9 @@ export function KitchenCostCalculator() {
             ))}
           </ul>
           <p className="mt-4 text-xs text-[var(--muted)]">
-            Prefer another planning tool?{" "}
-            <Link href="/studio/bathroom" className="font-medium text-[var(--navy)] hover:underline">
-              Bathroom calculator
+            Other planning tools?{" "}
+            <Link href="/studio/kitchen" className="font-medium text-[var(--navy)] hover:underline">
+              Kitchen calculator
             </Link>
             {" · "}
             <Link href="/studio/roofing" className="font-medium text-[var(--navy)] hover:underline">
@@ -381,7 +379,7 @@ export function KitchenCostCalculator() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate text-xs font-medium text-[var(--muted)]">
-              Planning only · kitchen
+              Planning only · bathroom
             </p>
             <p className="truncate text-sm font-semibold tabular-nums text-[var(--navy)]">
               {estimate.spanLabel}

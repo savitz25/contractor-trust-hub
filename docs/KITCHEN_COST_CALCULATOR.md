@@ -2,7 +2,7 @@
 
 Interactive Florida kitchen remodel planning at **`/studio/kitchen`**.
 
-Sibling tools: [Cost Studio](./COST_STUDIO.md) · [Roofing Cost Calculator](./ROOFING_COST_CALCULATOR.md) · Kitchen Studio Q&A at `/studios/kitchen`.
+Sibling tools: [Cost Studio](./COST_STUDIO.md) · [Bathroom Cost Calculator](./BATHROOM_COST_CALCULATOR.md) · [Roofing Cost Calculator](./ROOFING_COST_CALCULATOR.md) · Kitchen Studio Q&A at `/studios/kitchen`.
 
 ## What it is
 

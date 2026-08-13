@@ -15,7 +15,7 @@ const intents = [
     href: "/studios",
     title: "Plan a project",
     bestWhen: "Best when you're deciding Florida scope and cost.",
-    bullets: ["Kitchen calculator, roofing, Cost Studio", "Then verified license matches"],
+    bullets: ["Kitchen, bath, roofing calculators", "Then verified license matches"],
     cta: "Start planning",
     accent: true,
   },

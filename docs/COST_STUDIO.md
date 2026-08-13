@@ -2,7 +2,7 @@
 
 Interactive Florida project cost planning at **`/studio/cost`**.
 
-For roofing specifically, prefer the dedicated **[Roofing Cost Calculator](./ROOFING_COST_CALCULATOR.md)** at **`/studio/roofing`**. For kitchens, use the **[Kitchen Cost Calculator](./KITCHEN_COST_CALCULATOR.md)** at **`/studio/kitchen`**.
+For roofing specifically, prefer the dedicated **[Roofing Cost Calculator](./ROOFING_COST_CALCULATOR.md)** at **`/studio/roofing`**. For kitchens, use the **[Kitchen Cost Calculator](./KITCHEN_COST_CALCULATOR.md)** at **`/studio/kitchen`**. For bathrooms, use the **[Bathroom Cost Calculator](./BATHROOM_COST_CALCULATOR.md)** at **`/studio/bathroom`**.
 
 ## What it is
 

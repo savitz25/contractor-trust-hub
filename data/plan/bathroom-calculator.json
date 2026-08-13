@@ -1,0 +1,155 @@
+{
+  "_meta": {
+    "description": "Florida bathroom cost calculator inputs and multipliers. Planning only — not bids. Base dollar bands come from fl-cost-ranges.json (bathroom_remodel × size→scale).",
+    "updated": "2026-08-12",
+    "state": "FL"
+  },
+  "disclaimer": "Planning only — not a bid or contractor quote. These ranges are conceptual Florida planning bands for homeowner budgeting. They are not contractor-specific prices, guarantees, or formal estimates.",
+  "methodologyNote": "Start from statewide Florida bathroom bands by bath type (powder / standard full / primary), then apply relative multipliers for remodel depth, layout change, and finish level. Multipliers are relative planning factors, not market quotes. Location (ZIP/city) is for contractor matching only and does not invent local prices.",
+  "floridaNotes": [
+    "Florida humidity makes waterproofing and ventilation more than finish details — leaks and mold repairs often appear after demo.",
+    "Shower pans, wet-wall tile, and glass packages move cost faster than vanity swaps.",
+    "Accessibility updates (curbless showers, grab bars, clearances) can change layout even when the room stays the same size.",
+    "Permits and inspections vary by city and county; full guts and plumbing moves almost always need a permit."
+  ],
+  "sizeOptions": [
+    {
+      "id": "powder",
+      "scale": "small",
+      "label": "Powder / half bath",
+      "description": "No tub or shower — vanity, toilet, finishes",
+      "proxyHint": "Typically the smallest bathroom on the floor plan",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1
+    },
+    {
+      "id": "standard",
+      "scale": "medium",
+      "label": "Standard full bath",
+      "description": "Guest or hall bath with tub or shower",
+      "proxyHint": "Most common Florida remodel path",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1
+    },
+    {
+      "id": "primary",
+      "scale": "large",
+      "label": "Primary / luxury bath",
+      "description": "Main suite — larger footprint and higher finish expectations",
+      "proxyHint": "Often dual vanity, larger shower, or spa-style layout",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1
+    }
+  ],
+  "depthOptions": [
+    {
+      "id": "refresh",
+      "label": "Cosmetic refresh",
+      "description": "Fixtures, paint, limited tile — wet area mostly stays",
+      "lowMul": 0.7,
+      "midMul": 0.6,
+      "highMul": 0.66,
+      "push": "down",
+      "explain": "Refresh stays closer to a fixture-and-finish package when waterproofing is not rebuilt."
+    },
+    {
+      "id": "mid",
+      "label": "Full remodel",
+      "description": "New finishes and wet area with layout mostly intact — most common path",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1,
+      "push": "neutral",
+      "explain": "The baseline Florida bathroom band assumes a real wet-area update, not just paint."
+    },
+    {
+      "id": "full_gut",
+      "label": "Gut / reconfiguration",
+      "description": "Strip, new waterproofing, possible plumbing and layout moves",
+      "lowMul": 1.12,
+      "midMul": 1.2,
+      "highMul": 1.3,
+      "push": "up",
+      "explain": "Full guts raise demo, waterproofing, permit, and finish coordination cost."
+    }
+  ],
+  "layoutOptions": [
+    {
+      "id": "same",
+      "label": "Same footprint",
+      "description": "Toilet, vanity, and wet area stay put",
+      "lowMul": 0.9,
+      "midMul": 0.88,
+      "highMul": 0.9,
+      "push": "down",
+      "explain": "Keeping fixture locations limits plumbing relocation and wet-wall rebuild."
+    },
+    {
+      "id": "minor",
+      "label": "Move fixtures slightly",
+      "description": "Small shifts without a new wet wall",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1,
+      "push": "neutral",
+      "explain": "Limited fixture moves stay near the mid band when major drains stay."
+    },
+    {
+      "id": "major",
+      "label": "Move fixtures or walls",
+      "description": "New wet wall, tub-to-shower conversion with re-plumb, or room expansion",
+      "lowMul": 1.16,
+      "midMul": 1.24,
+      "highMul": 1.34,
+      "push": "up",
+      "explain": "Relocating drains, expanding showers, or opening walls adds plumbing, waterproofing, and inspection work."
+    }
+  ],
+  "finishOptions": [
+    {
+      "id": "standard",
+      "label": "Standard",
+      "description": "Stock vanity, mid tile, builder-grade glass",
+      "lowMul": 0.9,
+      "midMul": 0.88,
+      "highMul": 0.9,
+      "push": "down",
+      "explain": "Standard products pull the band down when waterproofing stays simple."
+    },
+    {
+      "id": "mid",
+      "label": "Mid",
+      "description": "Better tile, solid vanity, framed or semi-frameless glass",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1,
+      "push": "neutral",
+      "explain": "Mid-market tile and fixtures are the baseline for these bands."
+    },
+    {
+      "id": "premium",
+      "label": "Premium",
+      "description": "Custom tile or stone, quality glass, higher fixture package",
+      "lowMul": 1.16,
+      "midMul": 1.26,
+      "highMul": 1.4,
+      "push": "up",
+      "explain": "Premium tile, glass, and fixtures move the high end faster than the low end."
+    }
+  ],
+  "defaults": {
+    "size": "standard",
+    "depth": "mid",
+    "layout": "minor",
+    "finish": "mid"
+  },
+  "education": [
+    "Full shower rebuilds and waterproofing typically move a project beyond cosmetic range.",
+    "Plumbing relocation increases both dollars and schedule risk.",
+    "Primary bathrooms usually carry higher finish and layout expectations than powder rooms.",
+    "This tool does not invent contractor prices — get written bids from licensed Florida contractors."
+  ]
+}

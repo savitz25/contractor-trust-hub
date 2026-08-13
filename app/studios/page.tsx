@@ -42,6 +42,12 @@ export default function StudiosHubPage() {
               Kitchen calculator
             </Link>
             <Link
+              href="/studio/bathroom"
+              className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] bg-white px-4 text-sm font-medium text-[var(--navy)] no-underline"
+            >
+              Bathroom calculator
+            </Link>
+            <Link
               href="/studio/roofing"
               className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] bg-white px-4 text-sm font-medium text-[var(--navy)] no-underline"
             >

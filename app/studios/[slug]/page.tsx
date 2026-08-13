@@ -51,6 +51,22 @@ export default async function StudioPage({ params }: Props) {
             Expert planning guide — not design software. Conceptual ranges only; license matches
             from official Florida records.
           </p>
+          {studio.slug === "bathroom" ? (
+            <p className="mt-3 text-sm text-[var(--muted)]">
+              Prefer live planning bands?{" "}
+              <Link href="/studio/bathroom" className="font-medium text-[var(--navy)] hover:underline">
+                Bathroom Cost Calculator
+              </Link>
+            </p>
+          ) : null}
+          {studio.slug === "kitchen" ? (
+            <p className="mt-3 text-sm text-[var(--muted)]">
+              Prefer live planning bands?{" "}
+              <Link href="/studio/kitchen" className="font-medium text-[var(--navy)] hover:underline">
+                Kitchen Cost Calculator
+              </Link>
+            </p>
+          ) : null}
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6">

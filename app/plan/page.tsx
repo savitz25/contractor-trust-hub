@@ -36,6 +36,20 @@ export default function PlanPage() {
             </Link>
             {" · "}
             <Link
+              href="/studio/kitchen"
+              className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+            >
+              Kitchen calculator
+            </Link>
+            {" · "}
+            <Link
+              href="/studio/bathroom"
+              className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+            >
+              Bathroom calculator
+            </Link>
+            {" · "}
+            <Link
               href="/studio/roofing"
               className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
             >

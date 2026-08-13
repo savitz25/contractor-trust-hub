@@ -20,6 +20,7 @@ const columns = [
       { href: "/plan", label: "Plan a project" },
       { href: "/studios", label: "Project Studios" },
       { href: "/studio/kitchen", label: "Kitchen calculator" },
+      { href: "/studio/bathroom", label: "Bathroom calculator" },
       { href: "/tools/scope-builder", label: "Scope Builder" },
       { href: "/property", label: "Check my address" },
       { href: "/tools/permit-planner", label: "Permit planner" },

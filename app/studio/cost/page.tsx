@@ -47,6 +47,11 @@ export default function CostStudioPage() {
               Kitchen Cost Calculator
             </Link>
             {" · "}
+            Bathroom?{" "}
+            <Link href="/studio/bathroom" className="font-medium text-[var(--navy)] hover:underline">
+              Bathroom calculator
+            </Link>
+            {" · "}
             Roofing?{" "}
             <Link href="/studio/roofing" className="font-medium text-[var(--navy)] hover:underline">
               Roofing calculator
