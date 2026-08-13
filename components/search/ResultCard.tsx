@@ -123,7 +123,11 @@ export function ResultCard({
         : isCa
           ? caClassPlainLabel(result.occupationCode) || occupationLabel(result.occupationCode)
           : isAz
-            ? azClass || occupationLabel(result.occupationCode)
+            ? // Do not fall through to CA labels — codes like C-39 collide across boards
+              azClass ||
+              (result.occupationCode
+                ? `Class ${result.occupationCode}`
+                : "Arizona ROC contractor")
             : occupationLabel(result.occupationCode);
   const officialSuffix = isTx ? txTradeOfficialSuffix(result.occupationCode) : null;
   const shortKey = displayLicenseKey(result, isTx, isNj);
