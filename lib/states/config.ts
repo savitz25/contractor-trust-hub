@@ -5,6 +5,7 @@
  * Oregon: CCB statewide contractor licenses — see docs/DATA_SOURCES_OR.md.
  * California: CSLB top-county public list extracts — see docs/DATA_SOURCES_CA.md.
  * Arizona: ROC current active posting lists — see docs/DATA_SOURCES_AZ.md.
+ * Washington: L&I contractor extract — Verify-first.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
 
@@ -14,8 +15,9 @@ import { caClassPlainLabel } from "./ca-classifications";
 import { isNjVerifyPilotEnabled } from "./feature-flags";
 import { njCredentialPlainLabel } from "./nj-credentials";
 import { orCcbPlainLabel } from "./or-ccb";
+import { waOccupationPlainLabel } from "./wa-lni";
 
-export type StateCode = "FL" | "TX" | "NJ" | "OR" | "CA" | "AZ";
+export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ";
 
 export type EvidenceState = {
   code: StateCode;
@@ -122,6 +124,22 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     coverageNote:
       "California statewide CSLB licensing. Current dataset prioritizes top high-impact counties from official CSLB list extracts. Always confirm live status on CSLB Instant License Check. Bond and workers’ comp fields are as published — not live certificates. No discipline invented from list files.",
   },
+  wa: {
+    code: "WA",
+    slug: "wa",
+    name: "Washington",
+    shortName: "WA",
+    boardLabel: "Washington Department of Labor & Industries (L&I)",
+    boardUrl: "https://www.lni.wa.gov/",
+    entityRegistryLabel: "Washington SOS business registry (not yet linked)",
+    entityRegistryUrl: "https://www.sos.wa.gov/corps/",
+    licenseSource: "wa_lni",
+    entitySource: "wa_sos",
+    live: true,
+    pilot: true,
+    coverageNote:
+      "Washington licenses contractors statewide through L&I. This search uses the official contractor extract. Always confirm live status on L&I Verify. Not Florida-depth planning tools.",
+  },
   az: {
     code: "AZ",
     slug: "az",
@@ -136,11 +154,14 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     live: true,
     pilot: true,
     coverageNote:
-      "Arizona licenses contractors statewide through the ROC. This search uses the official current active contractor posting list (residential, commercial, and dual). Always confirm on the official ROC contractor search. Discipline and live bond/insurance are not loaded from this extract.",
+      "Arizona licenses contractors statewide through the ROC. This search uses the official current active contractor posting list (residential, commercial, and dual) plus linked disciplinary actions when present. Always confirm on the official ROC contractor search.",
   },
 };
 
 export const DEFAULT_STATE_SLUG = "fl";
+
+/** Stable display order for homepage + Verify tabs */
+export const LIVE_STATE_ORDER = ["fl", "tx", "nj", "or", "wa", "ca", "az"] as const;
 
 export function getStateBySlug(slug: string): EvidenceState | null {
   const key = slug.toLowerCase();
@@ -151,7 +172,9 @@ export function getStateBySlug(slug: string): EvidenceState | null {
         ? "ca"
         : key === "arizona"
           ? "az"
-          : key;
+          : key === "washington"
+            ? "wa"
+            : key;
   const s = EVIDENCE_STATES[mapped] ?? null;
   if (!s) return null;
   // NJ pilot can be disabled without removing config
@@ -162,9 +185,13 @@ export function getStateBySlug(slug: string): EvidenceState | null {
 }
 
 export function getLiveStates(): EvidenceState[] {
-  return Object.values(EVIDENCE_STATES)
-    .map((s) => getStateBySlug(s.slug)!)
-    .filter((s) => s.live);
+  const ordered = LIVE_STATE_ORDER.map((slug) => getStateBySlug(slug)).filter(
+    (s): s is EvidenceState => Boolean(s?.live)
+  );
+  const extras = Object.values(EVIDENCE_STATES)
+    .map((s) => getStateBySlug(s.slug))
+    .filter((s): s is EvidenceState => Boolean(s?.live && !ordered.some((o) => o.slug === s.slug)));
+  return [...ordered, ...extras];
 }
 
 export function licenseSourcesFor(state: EvidenceState): string[] {
@@ -237,7 +264,57 @@ export function occupationLabel(code: string | null | undefined): string {
     caClassPlainLabel(raw) ??
     caClassPlainLabel(upper) ??
     orCcbPlainLabel(upper) ??
+    waOccupationPlainLabel(upper) ??
     njCredentialPlainLabel(upper) ??
     getOccupationInfo(upper).label
   );
 }
+
+/** Short scope labels for homepage / pickers (honest, not marketing). */
+export const STATE_SCOPE_UI: Record<
+  string,
+  { badge: string; summary: string; verifyHint: string }
+> = {
+  fl: {
+    badge: "Full journey",
+    summary:
+      "Full construction verification plus planning tools: licenses, Sunbiz entity links, discipline, discovery, plan, studios, and guides.",
+    verifyHint: "Full construction licenses",
+  },
+  tx: {
+    badge: "Specialty verify",
+    summary:
+      "TDLR specialty trades and TSBPE plumbing. No statewide general contractor license — not a full builder directory.",
+    verifyHint: "TDLR + TSBPE plumbing",
+  },
+  nj: {
+    badge: "HIC + specialty",
+    summary:
+      "Home Improvement Contractor registrations plus specialty boards (electrical, plumbing, HVACR, and related). No single statewide GC license.",
+    verifyHint: "HIC + specialty boards",
+  },
+  or: {
+    badge: "CCB statewide",
+    summary:
+      "Oregon CCB active contractor licenses statewide. Bond and insurance fields as published — not a live COI check.",
+    verifyHint: "CCB statewide licenses",
+  },
+  wa: {
+    badge: "L&I statewide",
+    summary:
+      "Washington L&I contractor licensing extract statewide. Always confirm live status on L&I Verify.",
+    verifyHint: "L&I contractors",
+  },
+  ca: {
+    badge: "CSLB counties",
+    summary:
+      "CSLB licenses from official public list extracts for high-impact counties — not every California county file.",
+    verifyHint: "CSLB high-impact counties",
+  },
+  az: {
+    badge: "ROC + discipline",
+    summary:
+      "Arizona ROC statewide active licenses plus linked disciplinary actions when present. Confirm on ROC contractor search.",
+    verifyHint: "ROC statewide + discipline",
+  },
+};

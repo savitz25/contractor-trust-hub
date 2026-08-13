@@ -6,7 +6,7 @@
 import type { EvidenceState } from "./config";
 import { getStateBySlug } from "./config";
 
-export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or" | "ca" | "az";
+export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or" | "wa" | "ca" | "az";
 
 export function evidenceSlugFromHomeState(
   homeState: string | null | undefined,
@@ -16,6 +16,7 @@ export function evidenceSlugFromHomeState(
   if (hs === "TX") return "tx";
   if (hs === "NJ") return "nj";
   if (hs === "OR") return "or";
+  if (hs === "WA") return "wa";
   if (hs === "CA") return "ca";
   if (hs === "AZ") return "az";
   if (hs === "FL") return "fl";
@@ -23,11 +24,13 @@ export function evidenceSlugFromHomeState(
   if (p === "oregon") return "or";
   if (p === "california") return "ca";
   if (p === "arizona") return "az";
+  if (p === "washington") return "wa";
   if (
     p === "tx" ||
     p === "nj" ||
     p === "fl" ||
     p === "or" ||
+    p === "wa" ||
     p === "ca" ||
     p === "az"
   )
@@ -41,6 +44,7 @@ export function credentialNoun(slug: EvidenceStateSlug): string {
   if (slug === "or") return "CCB license";
   if (slug === "ca") return "CSLB license";
   if (slug === "az") return "ROC license";
+  if (slug === "wa") return "L&I license";
   return "license";
 }
 
@@ -48,6 +52,7 @@ export function boardShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "New Jersey DCA extract";
   if (slug === "tx") return "Texas TDLR / TSBPE";
   if (slug === "or") return "Oregon CCB";
+  if (slug === "wa") return "Washington L&I";
   if (slug === "ca") return "California CSLB";
   if (slug === "az") return "Arizona ROC";
   return "Florida DBPR";
@@ -57,6 +62,7 @@ export function entityRegistryShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "NJ business entity records (high-confidence only)";
   if (slug === "tx") return "Texas SOS entity data (not fully linked yet)";
   if (slug === "or") return "Oregon SOS entity data (not yet linked)";
+  if (slug === "wa") return "Washington SOS entity data (not yet linked)";
   if (slug === "ca") return "California SOS entity data (not yet linked)";
   if (slug === "az") return "Arizona ACC entity data (not yet linked)";
   return "Florida Sunbiz";
@@ -66,6 +72,7 @@ export function sourceExtractLabel(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "New Jersey registration extract";
   if (slug === "tx") return "TDLR specialty + TSBPE plumbing extract";
   if (slug === "or") return "Oregon CCB Active Licenses extract";
+  if (slug === "wa") return "Washington L&I contractor extract";
   if (slug === "ca") return "CSLB public list extract (high-impact counties)";
   if (slug === "az") return "Arizona ROC current active posting list";
   return "Florida DBPR extract";
@@ -75,6 +82,7 @@ export function trustReportTitleSuffix(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "New Jersey Contractor Trust Report";
   if (slug === "tx") return "Texas Contractor Trust Report";
   if (slug === "or") return "Oregon Contractor Trust Report";
+  if (slug === "wa") return "Washington Contractor Trust Report";
   if (slug === "ca") return "California Contractor Trust Report";
   if (slug === "az") return "Arizona Contractor Trust Report";
   return "Florida Contractor Trust Report";
@@ -84,6 +92,7 @@ export function pilotBadge(slug: EvidenceStateSlug): string | null {
   if (slug === "nj") return "New Jersey HIC + specialty (no statewide GC)";
   if (slug === "tx") return "Texas specialty trades";
   if (slug === "or") return "Oregon CCB statewide";
+  if (slug === "wa") return "Washington L&I statewide";
   if (slug === "ca") return "California CSLB (high-impact counties)";
   if (slug === "az") return "Arizona ROC statewide (current active list)";
   return null;
@@ -123,6 +132,14 @@ export function checkedItems(slug: EvidenceStateSlug): string[] {
       "Class code, class detail, and residential / commercial / dual category when published",
       "City / address and issued / expiration dates when present",
       "Qualifying party name when published (not a full personnel roster)",
+      "ROC disciplinary actions when linked from the official disciplinary CSV",
+    ];
+  }
+  if (slug === "wa") {
+    return [
+      "Washington L&I contractor license number and business name from the official extract",
+      "Status and trade / specialty class when published",
+      "City / state when present",
     ];
   }
   if (slug === "or") {
@@ -181,6 +198,14 @@ export function notCheckedItems(slug: EvidenceStateSlug): string[] {
       "Full case narrative / findings text (disciplinary CSV is status-word level)",
       "Live bond / insurance certificate validity",
       "ACC entity auto-links or Florida-depth planning journey",
+    ];
+  }
+  if (slug === "wa") {
+    return [
+      "Florida-depth planning, studios, or passport journey",
+      "Live bond / insurance certificate validity",
+      "Automatic SOS entity linkage",
+      "Reviews, rankings, or “safe to hire” determinations",
     ];
   }
   return [

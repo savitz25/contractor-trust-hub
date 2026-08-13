@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 /**
- * Homepage hero — message hierarchy + primary CTAs.
- * data-entry-path attributes support future analytics without new deps.
+ * Homepage hero — multi-state network identity + primary CTAs.
+ * Florida remains the full-journey product; peers are Verify-first.
  */
 export function HomeHero() {
   return (
@@ -15,13 +15,13 @@ export function HomeHero() {
           Plan clearly. Verify thoroughly. Hire with confidence.
         </h1>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-[var(--muted)] sm:text-lg">
-          Independent contractor research from official public records.{" "}
-          <strong className="font-medium text-[var(--text)]">Florida</strong> is the full journey
+          Independent contractor research from official public records across a{" "}
+          <strong className="font-medium text-[var(--text)]">multi-state evidence network</strong>.{" "}
+          <strong className="font-medium text-[var(--text)]">Florida</strong> is the deepest product
           (verify, plan, browse, protect).{" "}
-          <strong className="font-medium text-[var(--text)]">Texas</strong> is specialty-trade verify
-          (TDLR + plumbing).{" "}
-          <strong className="font-medium text-[var(--text)]">New Jersey</strong> is Home Improvement
-          Contractor + specialty board verify — no single statewide GC license in TX or NJ.
+          <strong className="font-medium text-[var(--text)]">Texas, New Jersey, Oregon, Washington,
+          California, and Arizona</strong>{" "}
+          are Verify-first with honest board scope — not a nationwide contractor marketplace.
         </p>
         <p className="mt-3 text-sm font-medium text-[var(--navy)]">
           Not a marketplace. No paid rankings. Evidence only.
@@ -31,25 +31,49 @@ export function HomeHero() {
             href="/verify"
             className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline"
           >
-            Florida Verify
+            Florida
           </Link>
           <Link
             href="/verify?state=tx"
             className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline"
           >
-            Texas specialty
+            Texas
           </Link>
           <Link
             href="/verify?state=nj"
             className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline"
           >
-            New Jersey HIC + specialty
+            New Jersey
+          </Link>
+          <Link
+            href="/verify?state=or"
+            className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline"
+          >
+            Oregon
+          </Link>
+          <Link
+            href="/verify?state=wa"
+            className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline"
+          >
+            Washington
+          </Link>
+          <Link
+            href="/verify?state=ca"
+            className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline"
+          >
+            California
+          </Link>
+          <Link
+            href="/verify?state=az"
+            className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline"
+          >
+            Arizona
           </Link>
         </p>
 
         <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center">
           <Link
-            href="/verify"
+            href="/#search"
             data-entry-path="verify"
             className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[var(--accent)] px-6 py-3 text-center text-sm font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)] hover:brightness-105 sm:min-h-11"
           >

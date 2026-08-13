@@ -61,6 +61,10 @@ function isArizonaResult(result: SearchResult): boolean {
   return (result.state || "").toUpperCase() === "AZ" || result.sourceSystem === "az_roc";
 }
 
+function isWashingtonResult(result: SearchResult): boolean {
+  return (result.state || "").toUpperCase() === "WA" || result.sourceSystem === "wa_lni";
+}
+
 function displayLicenseKey(
   result: SearchResult,
   isTx: boolean,
@@ -86,6 +90,9 @@ function displayLicenseKey(
   if (key.startsWith("AZ-ROC:")) {
     return key.split(":").pop() || key;
   }
+  if (key.startsWith("WA-LNI:")) {
+    return key.split(":").pop() || key;
+  }
   return key;
 }
 
@@ -102,12 +109,13 @@ export function ResultCard({
   const isOr = isOregonResult(result);
   const isCa = isCaliforniaResult(result);
   const isAz = isArizonaResult(result);
+  const isWa = isWashingtonResult(result);
   const location = [result.city, result.county, result.state].filter(Boolean).join(" · ");
   const licTone = signalTone("license", result);
   const entTone = signalTone("entity", result);
   const showEntity =
     Boolean(result.entityStatus) ||
-    !(hideEntityWhenMissing || isTx || isNj || isOr || isCa || isAz);
+    !(hideEntityWhenMissing || isTx || isNj || isOr || isCa || isAz || isWa);
   const trade = isTx ? getTxTradeInfo(result.occupationCode) : null;
   const njCred = isNj ? getNjCredentialInfo(result.occupationCode) : null;
   const orType = isOr ? getOrCcbTypeInfo(result.occupationCode) : null;
@@ -282,6 +290,11 @@ export function ResultCard({
                 Arizona ROC
               </span>
             ) : null}
+            {isWa ? (
+              <span className="inline-flex items-center rounded-full border border-teal-200 bg-teal-50 px-2.5 py-1 text-[11px] font-medium text-teal-950">
+                Washington L&amp;I
+              </span>
+            ) : null}
             <StatusBadge
               status={result.primaryStatus || result.licenseStatus}
               label={`${isNj ? "Registration" : "License"}: ${displayStatusLabel(
@@ -321,7 +334,7 @@ export function ResultCard({
               {result.secondaryStatus || "Arizona ROC current active posting list"}
             </p>
           ) : null}
-          {(result.entityName || location) && !isTx && !isNj && !isOr && !isAz ? (
+          {(result.entityName || location) && !isTx && !isNj && !isOr && !isAz && !isWa ? (
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
               {result.entityName ? (
                 <span className="text-[var(--text)]/80">Entity: {result.entityName}</span>
@@ -329,7 +342,7 @@ export function ResultCard({
               {result.entityName && location ? " · " : null}
               {location ? <span>{location}</span> : null}
             </p>
-          ) : location && (isTx || isNj || isOr || isAz) ? (
+          ) : location && (isTx || isNj || isOr || isAz || isWa) ? (
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">{location}</p>
           ) : null}
         </div>

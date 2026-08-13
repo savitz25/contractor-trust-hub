@@ -14,9 +14,19 @@ import { pageMetadata } from "@/lib/seo/page-meta";
 export const metadata: Metadata = pageMetadata({
   title: "Contractor Trust Hub — Before you hire, verify",
   description:
-    "Independent contractor research. Florida is the full journey. Texas is specialty-trade verify. New Jersey is HIC + specialty board verify. Evidence — not a marketplace.",
+    "Independent multi-state contractor research. Florida is the full journey. Texas, New Jersey, Oregon, Washington, California, and Arizona are Verify-first with honest board scope. Evidence only — not a marketplace.",
   path: "/",
 });
+
+const VERIFY_CTAS = [
+  { href: "/verify", label: "Florida Verify" },
+  { href: "/verify?state=tx", label: "Texas" },
+  { href: "/verify?state=nj", label: "New Jersey" },
+  { href: "/verify?state=or", label: "Oregon" },
+  { href: "/verify?state=wa", label: "Washington" },
+  { href: "/verify?state=ca", label: "California" },
+  { href: "/verify?state=az", label: "Arizona" },
+] as const;
 
 export default function HomePage() {
   return (
@@ -24,10 +34,10 @@ export default function HomePage() {
       {/* Returning users: continue project / passport / property */}
       <HomeContinuity />
 
-      {/* 1. Hero — identity + CTAs */}
+      {/* 1. Hero — multi-state network + primary CTAs */}
       <HomeHero />
 
-      {/* 2. Multi-state landscape (FL full / TX specialty / NJ HIC) */}
+      {/* 2. Multi-state landscape (all live states) */}
       <StateLandscape />
 
       {/* 3. Primary intent router */}
@@ -55,40 +65,34 @@ export default function HomePage() {
             <ol className="mt-5 space-y-4 text-sm leading-relaxed text-[var(--muted)]">
               <li>
                 <span className="font-medium text-[var(--text)]">1. License / registration evidence</span>{" "}
-                — Florida DBPR, Texas specialty (TDLR/TSBPE), or New Jersey HIC + specialty status,
-                trade class, and dates from the public extract.
+                — official board extracts by state (Florida DBPR, Texas specialty, NJ HIC + specialty,
+                Oregon CCB, Washington L&amp;I, California CSLB counties, Arizona ROC).
               </li>
               <li>
                 <span className="font-medium text-[var(--text)]">2. Entity link (Florida-deep)</span>{" "}
-                — high-confidence Sunbiz match only. Texas and New Jersey do not invent SOS entity
-                links.
+                — high-confidence Sunbiz match only. Other states do not invent SOS entity links.
               </li>
               <li>
                 <span className="font-medium text-[var(--text)]">3. Discipline / coverage notes</span>{" "}
-                — Florida board actions when linked; New Jersey public discipline flags when present
-                in bulk files; Texas specialty-only limits called out plainly.
+                — Florida board actions and Arizona ROC disciplinary rows when linked; NJ public
+                flags when present; other states call out extract limits plainly. Absence ≠ clean
+                history.
               </li>
             </ol>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                href="/verify"
-                data-entry-path="trust-report-verify"
-                className="inline-flex min-h-11 items-center rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline hover:brightness-105"
-              >
-                Florida Verify
-              </Link>
-              <Link
-                href="/verify?state=tx"
-                className="inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
-              >
-                Texas Verify
-              </Link>
-              <Link
-                href="/verify?state=nj"
-                className="inline-flex min-h-11 items-center rounded-xl border border-violet-200 bg-violet-50 px-5 py-2.5 text-sm font-medium text-violet-950 no-underline hover:bg-violet-100"
-              >
-                New Jersey Verify
-              </Link>
+            <div className="mt-6 flex flex-wrap gap-2 sm:gap-3">
+              {VERIFY_CTAS.map((c, i) => (
+                <Link
+                  key={c.href}
+                  href={c.href}
+                  className={
+                    i === 0
+                      ? "inline-flex min-h-11 items-center rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline hover:brightness-105"
+                      : "inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+                  }
+                >
+                  {c.label}
+                </Link>
+              ))}
               <Link
                 href="/methodology"
                 className="inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
@@ -108,8 +112,8 @@ export default function HomePage() {
               Browse by county &amp; trade
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-              Florida discovery from public license data — not paid rankings. Texas and New Jersey
-              use Verify search (specialty / HIC registration) rather than county browse.
+              Florida discovery from public license data — not paid rankings. Other states use
+              Verify search with board-specific scope rather than county browse.
             </p>
           </div>
           <ResearchBrowse />

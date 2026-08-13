@@ -25,6 +25,7 @@ import { CaliforniaCoverageBanner } from "@/components/search/CaliforniaCoverage
 import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
 import { OregonCoverageBanner } from "@/components/search/OregonCoverageBanner";
 import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
+import { WashingtonCoverageBanner } from "@/components/search/WashingtonCoverageBanner";
 import { StudioHandoffBanner } from "@/components/studios/StudioHandoffBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -234,9 +235,10 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const isOr = stateSlug === "or";
   const isCa = stateSlug === "ca";
   const isAz = stateSlug === "az";
-  /** TX/OR/CA/AZ keep thin reports; NJ Stage 8A is fuller Verify depth. */
-  const isTxOnly = isTx || isOr || isCa || isAz;
-  const isFlFull = !isTx && !isNj && !isOr && !isCa && !isAz;
+  const isWa = stateSlug === "wa";
+  /** TX/OR/CA/AZ/WA keep thin reports; NJ Stage 8A is fuller Verify depth. */
+  const isTxOnly = isTx || isOr || isCa || isAz || isWa;
+  const isFlFull = !isTx && !isNj && !isOr && !isCa && !isAz && !isWa;
   const state = getStateBySlug(stateSlug) || getStateBySlug("fl")!;
   const verifyHref =
     stateSlug === "fl" ? "/verify" : `/verify?state=${stateSlug}`;
@@ -366,6 +368,11 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           <ArizonaCoverageBanner compact />
         </div>
       ) : null}
+      {isWa ? (
+        <div className="mt-3 max-w-3xl sm:mt-4">
+          <WashingtonCoverageBanner compact />
+        </div>
+      ) : null}
 
       {/* A. Identity snapshot */}
       <header
@@ -383,6 +390,8 @@ export default async function ContractorPage({ params, searchParams }: Props) {
                   ? "California · CSLB counties · Trust Report"
                   : isAz
                     ? "Arizona · ROC statewide · Trust Report"
+                    : isWa
+                      ? "Washington · L&I statewide · Trust Report"
               : "Florida · Contractor Trust Report 2.0"}
         </p>
         <h1 className="mt-1.5 text-[1.5rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:mt-2 sm:text-4xl">
@@ -427,6 +436,8 @@ export default async function ContractorPage({ params, searchParams }: Props) {
                 ? "Oregon CCB Active Licenses extract: type, status, location, and published bond/insurance fields. Confirm on the official CCB search before hiring."
                 : isAz
                   ? "Arizona ROC current active posting list: class, category, status, and location when published. Confirm on the official ROC contractor search before hiring."
+                  : isWa
+                    ? "Washington L&I contractor extract: status, trade class when published, and location. Confirm on official L&I Verify before hiring."
               : "Evidence-first profile: who this business is, license and entity records, caution signals, and what to do next — not a score or endorsement."}
           {contractor.isThinProfile
             ? " Limited fields in our extract — treat missing data as unknown, not cleared."

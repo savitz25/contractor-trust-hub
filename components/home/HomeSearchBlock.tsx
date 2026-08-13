@@ -18,8 +18,8 @@ export function HomeSearchBlock() {
             Search by license number or company name
           </h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Pick Florida (full construction licenses), Texas (specialty trades), or New Jersey (HIC +
-            specialty boards). Free — no account, no lead form.
+            Choose a state, then search. Florida is the full construction journey; other states are
+            Verify-first with honest board scope. Free — no account, no lead form.
           </p>
           <div className="mt-4 sm:mt-5">
             <SearchForm size="hero" showStatePicker />
@@ -46,10 +46,28 @@ export function HomeSearchBlock() {
                 NJ 13VH13621300
               </Link>
               <Link
-                href="/verify?state=nj&q=VISTA%20FENCING"
+                href="/verify?state=or&q=259513"
                 className="rounded-lg border border-[var(--border)] bg-[var(--panel)] px-2.5 py-1 text-xs text-[var(--text)] no-underline hover:border-[var(--accent)]/40"
               >
-                NJ Vista Fencing
+                OR 259513
+              </Link>
+              <Link
+                href="/verify?state=wa&q=COLUMEG793KJ"
+                className="rounded-lg border border-[var(--border)] bg-[var(--panel)] px-2.5 py-1 text-xs text-[var(--text)] no-underline hover:border-[var(--accent)]/40"
+              >
+                WA COLUMEG793KJ
+              </Link>
+              <Link
+                href="/verify?state=ca&q=815758"
+                className="rounded-lg border border-[var(--border)] bg-[var(--panel)] px-2.5 py-1 text-xs text-[var(--text)] no-underline hover:border-[var(--accent)]/40"
+              >
+                CA 815758
+              </Link>
+              <Link
+                href="/verify?state=az&q=002386"
+                className="rounded-lg border border-[var(--border)] bg-[var(--panel)] px-2.5 py-1 text-xs text-[var(--text)] no-underline hover:border-[var(--accent)]/40"
+              >
+                AZ 002386
               </Link>
             </div>
           </div>

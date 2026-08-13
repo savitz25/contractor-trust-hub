@@ -3,24 +3,24 @@ import Link from "next/link";
 const proofs = [
   {
     title: "Florida full journey",
-    body: "DBPR construction licenses, high-confidence Sunbiz links, discipline extracts, plan, studios, and guides.",
+    body: "DBPR licenses, high-confidence Sunbiz links, discipline, discovery, plan, studios, and guides.",
   },
   {
-    title: "Texas specialty verify",
-    body: "TDLR specialty trades plus TSBPE plumbing. Not a statewide GC directory.",
+    title: "Six Verify-first states",
+    body: "TX specialty · NJ HIC + specialty · OR CCB · WA L&I · CA CSLB counties · AZ ROC + discipline.",
   },
   {
-    title: "New Jersey HIC + specialty",
-    body: "Home Improvement Contractor registrations and specialty boards from DCA Standard Files — no single statewide GC.",
+    title: "Official extracts only",
+    body: "Board posting lists and open data — no invented coverage, no paid rankings, no lead board.",
   },
   {
-    title: "Discipline / enforcement when present",
-    body: "Florida board actions and NJ public discipline flags with source attribution — not reviews or rankings.",
+    title: "Honest limits",
+    body: "Scope differs by state. Always confirm status on the official board before you hire.",
   },
 ] as const;
 
 /**
- * Restrained credibility strip — factual, no mismatched vanity metrics.
+ * Restrained credibility strip — factual, multi-state, no vanity metrics.
  */
 export function ProofStrip() {
   return (
@@ -37,9 +37,9 @@ export function ProofStrip() {
             Built for evidence, not opinions
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-            Official sources: Florida DBPR + Sunbiz (full journey), Texas TDLR / TSBPE specialty,
-            and New Jersey DCA HIC + specialty boards. Coverage differs by state — confirm on the
-            official board before you hire.
+            A multi-state evidence network grounded in official public records. Florida is deepest.
+            Other states are Verify-first with board-specific scope — not “all contractors
+            nationwide.”
           </p>
         </div>
 
@@ -62,8 +62,8 @@ export function ProofStrip() {
           <Link href="/independence" className="text-[var(--navy)] no-underline hover:underline">
             Independence
           </Link>
-          <Link href="/tools/coverage" className="text-[var(--navy)] no-underline hover:underline">
-            Permit coverage
+          <Link href="/#states" className="text-[var(--navy)] no-underline hover:underline">
+            State coverage
           </Link>
           <Link href="/disclaimer" className="text-[var(--muted)] no-underline hover:underline">
             Disclaimer

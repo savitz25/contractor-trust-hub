@@ -3,11 +3,11 @@ import Link from "next/link";
 const intents = [
   {
     id: "verify",
-    href: "/verify",
+    href: "/#search",
     title: "Verify a contractor",
     bestWhen: "Best when you already have a name, license, or registration number.",
     bullets: [
-      "Florida DBPR · Texas specialty · New Jersey HIC + specialty",
+      "Seven live states — FL full depth; others Verify-first",
       "Open a Trust Report with honest coverage limits",
     ],
     cta: "Search contractors",
@@ -15,7 +15,7 @@ const intents = [
   },
   {
     id: "plan",
-    href: "/studios",
+    href: "/plan",
     title: "Plan a project",
     bestWhen: "Best when you're deciding Florida scope and cost.",
     bullets: ["Kitchen, bath, roofing calculators", "Florida planning tools — then verify"],
@@ -27,7 +27,7 @@ const intents = [
     href: "/#research",
     title: "Research / browse",
     bestWhen: "Best when you want to explore Florida by county and trade.",
-    bullets: ["Roofing, GC, A/C, plumbing listings", "Florida discovery — TX/NJ use Verify"],
+    bullets: ["Roofing, GC, A/C, plumbing listings", "Florida discovery — other states use Verify"],
     cta: "Browse Florida",
     accent: false,
   },

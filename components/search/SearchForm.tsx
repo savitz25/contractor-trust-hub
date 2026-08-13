@@ -55,6 +55,12 @@ const AZ_PLACEHOLDERS = {
   compact: "License or name",
 };
 
+const WA_PLACEHOLDERS = {
+  hero: "L&I license number or company name…",
+  default: "L&I license # or company name",
+  compact: "License or name",
+};
+
 export function SearchForm({
   defaultQuery = "",
   size = "default",
@@ -76,6 +82,7 @@ export function SearchForm({
   const isTx = activeState === "tx";
   const isNj = activeState === "nj";
   const isOr = activeState === "or";
+  const isWa = activeState === "wa";
   const isCa = activeState === "ca";
   const isAz = activeState === "az";
   const ph =
@@ -86,11 +93,13 @@ export function SearchForm({
         ? NJ_PLACEHOLDERS[size]
         : isOr
           ? OR_PLACEHOLDERS[size]
-          : isCa
-            ? CA_PLACEHOLDERS[size]
-            : isAz
-              ? AZ_PLACEHOLDERS[size]
-          : PLACEHOLDERS[size]);
+          : isWa
+            ? WA_PLACEHOLDERS[size]
+            : isCa
+              ? CA_PLACEHOLDERS[size]
+              : isAz
+                ? AZ_PLACEHOLDERS[size]
+                : PLACEHOLDERS[size]);
 
   const inputClass = isHero
     ? "min-h-12 w-full flex-1 rounded-2xl border border-[var(--border)] bg-white px-4 text-base text-[var(--text)] shadow-[var(--shadow-sm)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70 sm:min-h-[3.75rem] sm:px-5 sm:text-lg"
@@ -127,15 +136,20 @@ export function SearchForm({
         <input type="hidden" name="state" value={activeState} />
       ) : null}
       {showStatePicker ? (
-        <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Search state">
+        <div
+          className="-mx-1 mb-3 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0"
+          role="group"
+          aria-label="Search state"
+        >
           {(
             [
               { id: "fl", label: "Florida", hint: "Full construction licenses" },
               { id: "tx", label: "Texas", hint: "TDLR + TSBPE plumbing" },
               { id: "nj", label: "New Jersey", hint: "HIC + specialty boards" },
+              { id: "or", label: "Oregon", hint: "CCB statewide" },
+              { id: "wa", label: "Washington", hint: "L&I contractors" },
               { id: "ca", label: "California", hint: "CSLB high-impact counties" },
-              { id: "or", label: "Oregon", hint: "CCB statewide licenses" },
-              { id: "az", label: "Arizona", hint: "ROC statewide licenses" },
+              { id: "az", label: "Arizona", hint: "ROC + discipline" },
             ] as const
           ).map((s) => {
             const on = activeState === s.id;
@@ -144,7 +158,7 @@ export function SearchForm({
                 key={s.id}
                 type="button"
                 onClick={() => setPickedState(s.id)}
-                className={`inline-flex min-h-10 flex-col justify-center rounded-2xl border px-3.5 py-1.5 text-left sm:min-h-9 sm:flex-row sm:items-center sm:gap-2 sm:rounded-full sm:py-0 ${
+                className={`inline-flex min-h-10 shrink-0 flex-col justify-center rounded-2xl border px-3.5 py-1.5 text-left sm:min-h-9 sm:flex-row sm:items-center sm:gap-2 sm:rounded-full sm:py-0 ${
                   on
                     ? "border-[var(--navy)] bg-[var(--navy)] text-white"
                     : "border-[var(--border)] bg-[var(--bg)] text-[var(--navy)]"

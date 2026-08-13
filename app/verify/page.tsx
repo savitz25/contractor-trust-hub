@@ -5,6 +5,7 @@ import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
 import { ResultCard } from "@/components/search/ResultCard";
 import { SearchForm } from "@/components/search/SearchForm";
 import { ArizonaCoverageBanner } from "@/components/search/ArizonaCoverageBanner";
+import { WashingtonCoverageBanner } from "@/components/search/WashingtonCoverageBanner";
 import { CaliforniaCoverageBanner } from "@/components/search/CaliforniaCoverageBanner";
 import { OregonCoverageBanner } from "@/components/search/OregonCoverageBanner";
 import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
@@ -68,6 +69,14 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       path: "/verify?state=az",
     });
   }
+  if (state.slug === "wa") {
+    return pageMetadata({
+      title: "Verify a Washington contractor (L&I)",
+      description:
+        "Search Washington L&I contractor licenses by number or business name. Always confirm on L&I Verify. Evidence only — not a marketplace.",
+      path: "/verify?state=wa",
+    });
+  }
   return pageMetadata({
     title: "Verify a Florida contractor",
     description:
@@ -84,7 +93,8 @@ export default async function VerifyPage({ searchParams }: Props) {
   const isOr = state.slug === "or";
   const isCa = state.slug === "ca";
   const isAz = state.slug === "az";
-  const isSpecialty = isTx || isNj || isOr || isCa || isAz;
+  const isWa = state.slug === "wa";
+  const isSpecialty = isTx || isNj || isOr || isCa || isAz || isWa;
   const q = (sp.q || "").trim();
   const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
   let results: Awaited<ReturnType<typeof searchContractors>>["results"] = [];
@@ -123,6 +133,8 @@ export default async function VerifyPage({ searchParams }: Props) {
           ? "California · CSLB high-impact counties"
           : isAz
             ? "Arizona · ROC statewide licenses"
+            : isWa
+              ? "Washington · L&I statewide licenses"
             : "Florida · DBPR + Sunbiz";
 
   const heading = isNj
@@ -135,6 +147,8 @@ export default async function VerifyPage({ searchParams }: Props) {
           ? "Verify a California contractor"
           : isAz
             ? "Verify an Arizona contractor"
+            : isWa
+              ? "Verify a Washington contractor"
             : "Verify a Florida contractor";
 
   const lead = isNj
@@ -147,6 +161,8 @@ export default async function VerifyPage({ searchParams }: Props) {
           ? "Search CSLB licenses by number or business name from official public list extracts for high-impact counties. Always confirm on Instant License Check."
           : isAz
             ? "Search ROC licenses by number or business name from the official current active posting list. Result cards show status, class, and residential/commercial/dual category when published."
+            : isWa
+              ? "Search Washington L&I contractor licenses by number or business name. Always confirm on L&I Verify."
             : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
 
   const helpCards = isNj
@@ -224,6 +240,21 @@ export default async function VerifyPage({ searchParams }: Props) {
                   d: "Status, class code/detail, residential/commercial/dual category, location — then a Trust Report. Confirm on ROC search.",
                 },
               ]
+            : isWa
+              ? [
+                  {
+                    t: "L&I license number",
+                    d: "Washington L&I contractor numbers from cards or invoices are most precise.",
+                  },
+                  {
+                    t: "Business name",
+                    d: "Matches business names in the Washington L&I contractor extract.",
+                  },
+                  {
+                    t: "What you’ll see",
+                    d: "Status, trade class when published, location — then a Trust Report. Confirm on L&I Verify.",
+                  },
+                ]
       : [
           {
             t: "License number",
@@ -281,6 +312,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                     ? "CSLB counties"
                     : s.slug === "az"
                       ? "ROC statewide"
+                      : s.slug === "wa"
+                        ? "L&I statewide"
                   : s.slug === "fl"
                     ? "Full journey"
                     : null;
@@ -337,6 +370,11 @@ export default async function VerifyPage({ searchParams }: Props) {
           <ArizonaCoverageBanner showFloridaLink={!q} />
         </div>
       ) : null}
+      {isWa ? (
+        <div className="mt-4 max-w-3xl sm:mt-5">
+          <WashingtonCoverageBanner showFloridaLink={!q} />
+        </div>
+      ) : null}
 
       <div className="mt-5 max-w-3xl sm:mt-7">
         <SearchForm
@@ -356,6 +394,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                   ? "CSLB public list extract for high-impact counties. Confirm on Instant License Check. Missing ≠ unlicensed."
                   : isAz
                     ? "Arizona ROC current active posting list. Confirm on official ROC contractor search. Missing ≠ unlicensed."
+                    : isWa
+                      ? "Washington L&I contractor extract. Confirm on official L&I Verify. Missing ≠ unlicensed."
               : (
                 <>
                   Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay
@@ -423,6 +463,7 @@ export default async function VerifyPage({ searchParams }: Props) {
               {isOr ? " · CCB" : ""}
               {isCa ? " · CSLB" : ""}
               {isAz ? " · ROC" : ""}
+              {isWa ? " · L&I" : ""}
               {results.length >= 25 ? " · first 25" : ""}
             </p>
           </div>
@@ -463,6 +504,11 @@ export default async function VerifyPage({ searchParams }: Props) {
               {isAz ? (
                 <div className="pt-2 sm:pt-3">
                   <ArizonaCoverageBanner compact showFloridaLink={false} />
+                </div>
+              ) : null}
+              {isWa ? (
+                <div className="pt-2 sm:pt-3">
+                  <WashingtonCoverageBanner compact showFloridaLink={false} />
                 </div>
               ) : null}
             </div>
