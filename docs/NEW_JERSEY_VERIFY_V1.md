@@ -139,7 +139,7 @@ After Postgres load, confirm:
 | Journeyman / apprentice | Intentionally excluded |
 | Medical gas subclasses | Not default consumer set |
 | Entity linkage | No automatic SOS join |
-| Enforcement depth | Discipline columns not yet mapped to discipline_actions |
+| Full enforcement case files | Bulk feed is a **Y/N discipline flag only** (~1.1k mapped flags); no complaint narrative/dates |
 | Municipal-only cards | Out of scope |
 | Refresh schedule | Re-run `--from-box --convert` when Box file dates change |
 
@@ -151,8 +151,20 @@ After Postgres load, confirm:
 4. ✅ Official bulk preferred over scrape  
 5. ✅ Production HIC + expanded specialty from Box Standard Files  
 6. ✅ Inactive/expired specialty statuses loaded with visible raw status  
-7. ⬜ Expired HIC via MyLicense bulk (if product prioritizes)  
-8. ⬜ Scheduled refresh when Box file dates change  
+7. ✅ Public discipline flags mapped to `discipline_actions` (`nj_enforcement`, ~1.1k)  
+8. ⬜ Expired HIC via MyLicense bulk (if product prioritizes)  
+9. ⬜ Scheduled refresh when Box file dates change  
+
+### Discipline / enforcement (Standard Files flag)
+
+| Metric | Value |
+|--------|------:|
+| Rows with discipline flag Y (mapped credentials) | **1,134** |
+| Soft-linked to `nj_dca` license number | **1,134** (100%) |
+| Source | Trailing Y/N column on all-status MLO files |
+| What is **not** in bulk | Case id narrative, disposition dates, full docket |
+
+External key: `NJ-ENF:FLAG:{license_no}` · `source_system = nj_enforcement`
 
 ## Related
 

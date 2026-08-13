@@ -18,16 +18,32 @@ export function HomeHero() {
           Independent contractor research from official public records.{" "}
           <strong className="font-medium text-[var(--text)]">Florida</strong> is the full journey
           (verify, plan, browse, protect).{" "}
-          <strong className="font-medium text-[var(--text)]">Texas</strong> is a specialty-trade
-          verify pilot — TDLR only, not a statewide GC directory.
+          <strong className="font-medium text-[var(--text)]">Texas</strong> is specialty-trade verify
+          (TDLR + plumbing).{" "}
+          <strong className="font-medium text-[var(--text)]">New Jersey</strong> is Home Improvement
+          Contractor + specialty board verify — no single statewide GC license in TX or NJ.
         </p>
         <p className="mt-3 text-sm font-medium text-[var(--navy)]">
           Not a marketplace. No paid rankings. Evidence only.
         </p>
-        <p className="mt-2 text-xs text-[var(--muted)]">
-          Florida full journey ·{" "}
-          <Link href="/verify?state=tx" className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline">
-            Texas specialty verify
+        <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-[var(--muted)]">
+          <Link
+            href="/verify"
+            className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline"
+          >
+            Florida Verify
+          </Link>
+          <Link
+            href="/verify?state=tx"
+            className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline"
+          >
+            Texas specialty
+          </Link>
+          <Link
+            href="/verify?state=nj"
+            className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline"
+          >
+            New Jersey HIC + specialty
           </Link>
         </p>
 
@@ -45,6 +61,7 @@ export function HomeHero() {
             className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--navy)]/20 bg-[var(--navy)] px-6 py-3 text-center text-sm font-semibold text-white no-underline shadow-[var(--shadow-sm)] hover:brightness-110 sm:min-h-11"
           >
             Plan a project
+            <span className="ml-1.5 text-[11px] font-medium text-white/80">(Florida)</span>
           </Link>
           <a
             href="#research"
@@ -52,6 +69,7 @@ export function HomeHero() {
             className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-6 py-3 text-center text-sm font-semibold text-[var(--navy)] no-underline hover:border-[var(--navy)]/30 sm:min-h-11"
           >
             Research / browse
+            <span className="ml-1.5 text-[11px] font-medium text-[var(--muted)]">(Florida)</span>
           </a>
         </div>
       </div>

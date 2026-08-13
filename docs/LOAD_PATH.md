@@ -280,7 +280,7 @@ Expected staging files:
 | `licenses_normalized.csv` | `licenses` + `contractors` (`source_system = nj_dca`) |
 | `contractor_seeds.csv` | reference seed (loader uses licenses + seeds) |
 | `entities_normalized.csv` | `entities` (`source_system = nj_sos`) when high-confidence keys present |
-| `enforcement_normalized.csv` | `discipline_actions` (`source_system = nj_enforcement`) when present |
+| `enforcement_normalized.csv` | `discipline_actions` (`source_system = nj_enforcement`) — public discipline flags from Standard Files |
 | `batch_manifest.json` | provenance metadata |
 
 ## Load

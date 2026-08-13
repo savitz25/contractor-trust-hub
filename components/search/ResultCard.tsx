@@ -147,19 +147,22 @@ export function ResultCard({
             <span className="truncate">{location}</span>
           </span>
         ) : null}
-        {!isTx && !isNj ? (
-          result.hasDiscipline ? (
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-800">
-              <span className={`h-1.5 w-1.5 rounded-full ${toneBar.warn}`} aria-hidden />
-              Discipline on file
-            </span>
-          ) : (
-            <span className="hidden items-center gap-1.5 text-xs text-[var(--muted)] sm:inline-flex">
-              <span className={`h-1.5 w-1.5 rounded-full ${toneBar.good}`} aria-hidden />
-              No discipline in extract
-            </span>
-          )
-        ) : null}
+        {isTx ? null : result.hasDiscipline ? (
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-800">
+            <span className={`h-1.5 w-1.5 rounded-full ${toneBar.warn}`} aria-hidden />
+            {isNj ? "Enforcement flag on file" : "Discipline on file"}
+          </span>
+        ) : isNj ? (
+          <span className="hidden items-center gap-1.5 text-xs text-[var(--muted)] sm:inline-flex">
+            <span className={`h-1.5 w-1.5 rounded-full ${toneBar.neutral}`} aria-hidden />
+            No enforcement flag in extract
+          </span>
+        ) : (
+          <span className="hidden items-center gap-1.5 text-xs text-[var(--muted)] sm:inline-flex">
+            <span className={`h-1.5 w-1.5 rounded-full ${toneBar.good}`} aria-hidden />
+            No discipline in extract
+          </span>
+        )}
       </div>
 
       <div className="p-3.5 sm:p-5">

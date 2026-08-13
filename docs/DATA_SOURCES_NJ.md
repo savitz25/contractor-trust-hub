@@ -82,7 +82,7 @@ Apprentice / individual trainee cards may exist in some lists — **default inge
 | Layer | `source_system` | Notes |
 |-------|-----------------|--------|
 | Business entity | `nj_sos` | High-confidence only when a stable entity key is available — **no name-only joins** |
-| Public enforcement | `nj_enforcement` | Factual rows when present; absence ≠ clean history |
+| Public enforcement | `nj_enforcement` | Standard Files trailing **discipline flag (Y/N)** mapped to `discipline_actions`; no case narrative in bulk — absence ≠ clean history |
 
 Interactive case search remains authoritative for enforcement detail.
 

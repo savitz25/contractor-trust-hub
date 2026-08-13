@@ -95,18 +95,31 @@ def main() -> int:
     ap.add_argument("--staging-dir", type=Path, default=ROOT / "data/staging/nj_dca")
     ap.add_argument("--batch-size", type=int, default=200)
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument(
+        "--enforcement-only",
+        action="store_true",
+        help="Skip license/contractor upsert; load enforcement_normalized.csv only",
+    )
     args = ap.parse_args()
 
     lic_path = args.staging_dir / "licenses_normalized.csv"
-    if not lic_path.is_file():
+    enf_path = args.staging_dir / "enforcement_normalized.csv"
+    if not args.enforcement_only and not lic_path.is_file():
         print(f"Missing {lic_path}", file=sys.stderr)
+        return 1
+    if args.enforcement_only and not enf_path.is_file():
+        print(f"Missing {enf_path}", file=sys.stderr)
         return 1
 
     base, key = load_json_env()
-    rows = list(csv.DictReader(lic_path.open(encoding="utf-8")))
-    if args.limit:
-        rows = rows[: args.limit]
-    print(f"Loading {len(rows)} licenses via PostgREST → {base}")
+    rows: list[dict] = []
+    if not args.enforcement_only:
+        rows = list(csv.DictReader(lic_path.open(encoding="utf-8")))
+        if args.limit:
+            rows = rows[: args.limit]
+        print(f"Loading {len(rows)} licenses via PostgREST → {base}")
+    else:
+        print(f"Enforcement-only load via PostgREST → {base}")
 
     manifest = {}
     mp = args.staging_dir / "batch_manifest.json"
@@ -114,15 +127,26 @@ def main() -> int:
         manifest = json.loads(mp.read_text(encoding="utf-8"))
 
     batch_body = {
-        "source_system": "nj_dca",
-        "source_dataset": manifest.get("source_dataset") or "contractor_hic_and_specialty_bulk",
+        "source_system": "nj_dca" if not args.enforcement_only else "nj_enforcement",
+        "source_dataset": manifest.get("source_dataset")
+        or (
+            "dca_standard_files_discipline_flag"
+            if args.enforcement_only
+            else "contractor_hic_and_specialty_bulk"
+        ),
         "source_url": manifest.get("source_url") or "https://app.box.com/v/DCAStandardFiles",
-        "source_file": str(lic_path.as_posix()),
+        "source_file": str(
+            (enf_path if args.enforcement_only else lic_path).as_posix()
+        ),
         "extracted_at": manifest.get("extracted_at") or datetime.now(timezone.utc).isoformat(),
-        "row_count": len(rows),
+        "row_count": len(rows) if rows else None,
         "checksum_sha256": manifest.get("checksum_sha256"),
         "notes": manifest.get("notes")
-        or "NJ DCA production HIC+specialty load via PostgREST service role",
+        or (
+            "NJ enforcement flags load via PostgREST"
+            if args.enforcement_only
+            else "NJ DCA production HIC+specialty load via PostgREST service role"
+        ),
     }
     status, raw, _ = rest(
         base,
@@ -201,85 +225,188 @@ def main() -> int:
             }
         )
 
-    # Upsert contractors in batches
     bs = args.batch_size
-    for i in range(0, len(contractors), bs):
-        chunk = contractors[i : i + bs]
-        rest(
-            base,
-            key,
-            "POST",
-            "contractors?on_conflict=slug",
-            chunk,
+    if not args.enforcement_only and contractors:
+        # Upsert contractors in batches
+        for i in range(0, len(contractors), bs):
+            chunk = contractors[i : i + bs]
+            rest(
+                base,
+                key,
+                "POST",
+                "contractors?on_conflict=slug",
+                chunk,
+                {
+                    "Prefer": "resolution=merge-duplicates,return=minimal",
+                },
+            )
+            print(f"contractors {min(i+bs, len(contractors))}/{len(contractors)}")
+
+        # Map slug → id
+        slug_to_id: dict[str, str] = {}
+        slugs = list(seen_slug)
+        for i in range(0, len(slugs), 40):
+            chunk = slugs[i : i + 40]
+
+            def q(s: str) -> str:
+                return '"' + s.replace('"', "") + '"'
+
+            filt = ",".join(q(s) for s in chunk)
+            path = f"contractors?select=id,slug&slug=in.({filt})"
+            _, raw, _ = rest(base, key, "GET", path)
+            for row in json.loads(raw):
+                slug_to_id[row["slug"]] = row["id"]
+        missing = [s for s in slugs if s not in slug_to_id]
+        if missing:
+            print(f"WARN missing contractor ids: {len(missing)} e.g. {missing[:3]}")
+        print(f"Resolved {len(slug_to_id)} contractor ids")
+
+        # Attach contractor_id and upsert licenses
+        lic_payloads = []
+        for lic in licenses:
+            slug = lic.pop("_slug")
+            cid = slug_to_id.get(slug)
+            if not cid:
+                continue
+            lic["contractor_id"] = cid
+            lic_payloads.append(lic)
+
+        for i in range(0, len(lic_payloads), bs):
+            chunk = lic_payloads[i : i + bs]
+            rest(
+                base,
+                key,
+                "POST",
+                "licenses?on_conflict=source_system,external_key",
+                chunk,
+                {"Prefer": "resolution=merge-duplicates,return=minimal"},
+            )
+            print(f"licenses {min(i+bs, len(lic_payloads))}/{len(lic_payloads)}")
+
+    # Discipline flags → discipline_actions (soft-link by exact license_number)
+    enf_path = args.staging_dir / "enforcement_normalized.csv"
+    if enf_path.is_file():
+        enf_rows = list(csv.DictReader(enf_path.open(encoding="utf-8")))
+        print(f"Loading {len(enf_rows)} enforcement flags…")
+        # Build license_number → contractor_id map for nj_dca
+        lic_to_cid: dict[str, str] = {}
+        # Query licenses in batches by license_number
+        nums = sorted(
             {
-                "Prefer": "resolution=merge-duplicates,return=minimal",
-            },
+                (r.get("license_number_raw") or "").strip().upper()
+                for r in enf_rows
+                if (r.get("license_number_raw") or "").strip()
+            }
         )
-        print(f"contractors {min(i+bs, len(contractors))}/{len(contractors)}")
+        for i in range(0, len(nums), 40):
+            chunk = nums[i : i + 40]
 
-    # Map slug → id
-    slug_to_id: dict[str, str] = {}
-    # Fetch in chunks by slug filter is hard for 30k — use OR batches of 50
-    slugs = list(seen_slug)
-    for i in range(0, len(slugs), 40):
-        chunk = slugs[i : i + 40]
-        # in=(a,b,c) with quoted values
-        def q(s: str) -> str:
-            return '"' + s.replace('"', "") + '"'
+            def q(s: str) -> str:
+                return '"' + s.replace('"', "") + '"'
 
-        filt = ",".join(q(s) for s in chunk)
-        path = f"contractors?select=id,slug&slug=in.({filt})"
-        _, raw, _ = rest(base, key, "GET", path)
-        for row in json.loads(raw):
-            slug_to_id[row["slug"]] = row["id"]
-    missing = [s for s in slugs if s not in slug_to_id]
-    if missing:
-        print(f"WARN missing contractor ids: {len(missing)} e.g. {missing[:3]}")
-    print(f"Resolved {len(slug_to_id)} contractor ids")
+            filt = ",".join(q(s) for s in chunk)
+            path = (
+                f"licenses?select=license_number,contractor_id,id"
+                f"&source_system=eq.nj_dca&license_number=in.({filt})"
+            )
+            _, raw, _ = rest(base, key, "GET", path)
+            for row in json.loads(raw):
+                ln = (row.get("license_number") or "").strip().upper()
+                if ln and row.get("contractor_id"):
+                    lic_to_cid[ln] = row["contractor_id"]
+        print(f"Linked license numbers for enforcement: {len(lic_to_cid)}")
 
-    # Attach contractor_id and upsert licenses
-    lic_payloads = []
-    for lic in licenses:
-        slug = lic.pop("_slug")
-        cid = slug_to_id.get(slug)
-        if not cid:
-            continue
-        lic["contractor_id"] = cid
-        lic_payloads.append(lic)
-
-    for i in range(0, len(lic_payloads), bs):
-        chunk = lic_payloads[i : i + bs]
-        rest(
+        disc_payloads = []
+        linked = 0
+        unlinked = 0
+        for d in enf_rows:
+            dkey = (d.get("external_key") or "").strip()
+            if not dkey:
+                continue
+            ln = (d.get("license_number_raw") or "").strip().upper()
+            cid = lic_to_cid.get(ln)
+            if cid:
+                linked += 1
+            else:
+                unlinked += 1
+            try:
+                raw_payload = json.loads(d.get("raw_payload_json") or "{}")
+            except json.JSONDecodeError:
+                raw_payload = {"_raw": d.get("raw_payload_json")}
+            payload = {
+                "source_system": d.get("source_system") or "nj_enforcement",
+                "source_dataset": d.get("source_dataset")
+                or "dca_standard_files_discipline_flag",
+                "external_key": dkey,
+                "complaint_number": d.get("complaint_number") or None,
+                "license_type": d.get("license_type") or None,
+                "license_number_raw": d.get("license_number_raw") or None,
+                "respondent_name": (d.get("respondent_name") or "Unknown").strip(),
+                "classification": d.get("classification") or "public_discipline_flag",
+                "entered_date": parse_date(d.get("entered_date")),
+                "disposition": d.get("disposition") or None,
+                "disposition_date": parse_date(d.get("disposition_date")),
+                "discipline_description": d.get("discipline_description") or None,
+                "violation_code": d.get("violation_code") or None,
+                "city": d.get("city") or None,
+                "state": (d.get("state") or "NJ")[:2] if d.get("state") else "NJ",
+                "postal_code": d.get("postal_code") or None,
+                "county_name": d.get("county_name") or None,
+                "raw_payload": raw_payload if isinstance(raw_payload, dict) else {},
+                "ingest_batch_id": batch_id,
+            }
+            # Soft-link only when exact license_number match on nj_dca
+            if cid:
+                payload["contractor_id"] = cid
+            disc_payloads.append(payload)
+        for i in range(0, len(disc_payloads), bs):
+            chunk = disc_payloads[i : i + bs]
+            rest(
+                base,
+                key,
+                "POST",
+                "discipline_actions?on_conflict=source_system,external_key",
+                chunk,
+                {"Prefer": "resolution=merge-duplicates,return=minimal"},
+            )
+            print(f"discipline {min(i+bs, len(disc_payloads))}/{len(disc_payloads)}")
+        print(f"enforcement linked={linked} unlinked={unlinked}")
+        _, _, headers = rest(
             base,
             key,
-            "POST",
-            "licenses?on_conflict=source_system,external_key",
-            chunk,
-            {"Prefer": "resolution=merge-duplicates,return=minimal"},
+            "GET",
+            "discipline_actions?source_system=eq.nj_enforcement&select=id&limit=1",
+            extra_headers={"Prefer": "count=exact"},
         )
-        print(f"licenses {min(i+bs, len(lic_payloads))}/{len(lic_payloads)}")
+        print(
+            "nj_enforcement",
+            headers.get("Content-Range") or headers.get("content-range"),
+        )
+    else:
+        print("No enforcement_normalized.csv — skip discipline load")
 
     # Final counts
-    for code in ["HIC", "ELE", "TEL", "ALM", "LCK", "PLB", "HVAC", "HRT"]:
-        path = f"licenses?source_system=eq.nj_dca&occupation_code=eq.{code}&select=id&limit=1"
-        _, _, headers = rest(
-            base,
-            key,
-            "GET",
-            path,
-            extra_headers={"Prefer": "count=exact"},
-        )
-        print(code, headers.get("Content-Range") or headers.get("content-range"))
-    for status in ["active", "inactive"]:
-        path = f"licenses?source_system=eq.nj_dca&status_normalized=eq.{status}&select=id&limit=1"
-        _, _, headers = rest(
-            base,
-            key,
-            "GET",
-            path,
-            extra_headers={"Prefer": "count=exact"},
-        )
-        print(f"status_{status}", headers.get("Content-Range") or headers.get("content-range"))
+    if not args.enforcement_only:
+        for code in ["HIC", "ELE", "TEL", "ALM", "LCK", "PLB", "HVAC", "HRT"]:
+            path = f"licenses?source_system=eq.nj_dca&occupation_code=eq.{code}&select=id&limit=1"
+            _, _, headers = rest(
+                base,
+                key,
+                "GET",
+                path,
+                extra_headers={"Prefer": "count=exact"},
+            )
+            print(code, headers.get("Content-Range") or headers.get("content-range"))
+        for status in ["active", "inactive"]:
+            path = f"licenses?source_system=eq.nj_dca&status_normalized=eq.{status}&select=id&limit=1"
+            _, _, headers = rest(
+                base,
+                key,
+                "GET",
+                path,
+                extra_headers={"Prefer": "count=exact"},
+            )
+            print(f"status_{status}", headers.get("Content-Range") or headers.get("content-range"))
 
     print("DONE")
     return 0

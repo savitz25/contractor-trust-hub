@@ -69,9 +69,9 @@ export function checkedItems(slug: EvidenceStateSlug): string[] {
   if (slug === "nj") {
     return [
       "Home Improvement Contractor (HIC) registration when linked",
-      "Specialty board credentials (electrical, plumbing, HVAC) when present in extract",
+      "Specialty board credentials (electrical, telecom, alarm, locksmith, plumbing, HVACR, hearth) when present",
       "Business entity linkage only when high-confidence match rules pass",
-      "Public enforcement / action rows when linked in our extract",
+      "Public discipline flags from DCA Standard Files when the bulk flag is Y",
       "Source attribution and extract freshness on this profile",
       "Not a statewide general contractor directory (NJ has no single GC license)",
     ];
@@ -143,7 +143,7 @@ export function disciplineSectionTitle(slug: EvidenceStateSlug): string {
 
 export function disciplineSectionBlurb(slug: EvidenceStateSlug): string {
   if (slug === "nj") {
-    return "Public enforcement or action rows linked in New Jersey extracts. Factual records only — not a determination of guilt or a quality score.";
+    return "Public discipline flags from DCA Standard Files bulk extracts when present. Flags do not include case detail — not a determination of guilt or a quality score. Confirm on the official DCA / MyLicense site.";
   }
   if (slug === "tx") {
     return "Regulatory history from TDLR-linked extracts when present. Factual records only.";

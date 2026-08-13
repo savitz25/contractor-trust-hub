@@ -132,7 +132,7 @@ export const NJ_PILOT_COVERED = [
   "Home Improvement Contractor (HIC) registration (active Standard Files)",
   "Electrical, telecom, alarm, locksmith, master plumber, master HVACR, hearth when in bulk",
   "Inactive / expired specialty rows when present in all-status Standard Files",
-  "High-confidence business entity links when matched",
+  "Public discipline flags (Y/N) from Standard Files when present — no full case files",
 ] as const;
 
 export const NJ_PILOT_NOT_COVERED = [

@@ -44,6 +44,35 @@ OUT_FIELDS = [
     "source_file",
 ]
 
+ENFORCEMENT_OUT_FIELDS = [
+    "source_system",
+    "source_dataset",
+    "external_key",
+    "complaint_number",
+    "license_type",
+    "license_number_raw",
+    "respondent_name",
+    "classification",
+    "entered_date",
+    "disposition",
+    "disposition_date",
+    "discipline_description",
+    "violation_code",
+    "city",
+    "state",
+    "postal_code",
+    "county_name",
+    "contractor_slug",
+    "raw_payload_json",
+]
+
+DISCIPLINE_FLAG_DESC = (
+    "DCA Standard Files bulk extract marks this registration with a public discipline flag. "
+    "Case detail, disposition text, and dates are not published in this file. "
+    "Confirm full enforcement history on the official DCA / MyLicense site. "
+    "Absence of a flag is not a clearance."
+)
+
 # Prefer latest-dated file matching pattern
 def _pick(pattern: str) -> Path | None:
     matches = sorted(RAW.glob(pattern), key=lambda p: p.name)
@@ -272,6 +301,23 @@ def convert(
         w.writeheader()
         w.writerows(rows)
 
+    # Discipline flags from all-status files (trailing Y/N column) for mapped credentials only
+    enf_rows, enf_stats = extract_discipline_flags(facilities_all, individuals_all)
+    # Prefer staging next to licenses when out is under data/raw; also write staging path
+    staging_dir = Path("data/staging/nj_dca")
+    staging_dir.mkdir(parents=True, exist_ok=True)
+    enf_out = staging_dir / "enforcement_normalized.csv"
+    with enf_out.open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=ENFORCEMENT_OUT_FIELDS)
+        w.writeheader()
+        w.writerows(enf_rows)
+    # Mirror under raw for provenance
+    raw_enf = out.parent / "enforcement_from_mlo.csv"
+    with raw_enf.open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=ENFORCEMENT_OUT_FIELDS)
+        w.writeheader()
+        w.writerows(enf_rows)
+
     # Summary rollups for ops
     by_cred_status: Counter[str] = Counter()
     for r in rows:
@@ -282,6 +328,9 @@ def convert(
         "rows": len(rows),
         "stats": dict(stats),
         "by_cred_status": dict(by_cred_status),
+        "enforcement_out": str(enf_out),
+        "enforcement_rows": len(enf_rows),
+        "enforcement_stats": dict(enf_stats),
         "sources": {
             "facilities_active": str(facilities_active) if facilities_active else None,
             "facilities_all": str(facilities_all) if facilities_all else None,
@@ -289,9 +338,99 @@ def convert(
         },
         "notes": (
             "HIC from facilities active only (not in facilities all-status file). "
-            "Specialty + inactive/expired from all-status extracts where present."
+            "Specialty + inactive/expired from all-status extracts where present. "
+            "Discipline: public Y/N flag only — no case detail in bulk file."
         ),
     }
+
+
+def extract_discipline_flags(
+    facilities_all: Path | None,
+    individuals_all: Path | None,
+) -> tuple[list[dict[str, str]], Counter[str]]:
+    """Map Standard Files trailing discipline flag (Y) into enforcement rows."""
+    import json
+
+    stats: Counter[str] = Counter()
+    rows: list[dict[str, str]] = []
+    seen: set[str] = set()
+
+    def ingest(path: Path | None, kind: str) -> None:
+        if not path or not path.is_file():
+            return
+        for cols in iter_mlo(path):
+            if len(cols) < 24:
+                continue
+            flag = cols[23].strip().upper()
+            if flag != "Y":
+                continue
+            if kind == "facility":
+                cred = map_facility(cols[0], cols[1] if len(cols) > 1 else "", hic_only=False)
+            else:
+                cred = map_individual(cols[0], cols[1] if len(cols) > 1 else "")
+            if not cred:
+                stats["skipped_unmapped"] += 1
+                continue
+            lic = cols[2].strip()
+            if not lic:
+                stats["skipped_no_lic"] += 1
+                continue
+            ekey = f"NJ-ENF:FLAG:{lic.upper()}"
+            if ekey in seen:
+                stats["dup"] += 1
+                continue
+            seen.add(ekey)
+            if kind == "facility":
+                name = cols[13].strip() or " ".join(
+                    p for p in [cols[9].strip(), cols[11].strip()] if p
+                )
+            else:
+                name = cols[13].strip() or " ".join(
+                    p for p in [cols[9], cols[10], cols[11]] if p.strip()
+                )
+            if not name:
+                stats["skipped_no_name"] += 1
+                continue
+            stats[f"included_{cred}"] += 1
+            stats[f"status_{cols[3].strip() or 'blank'}"] += 1
+            rows.append(
+                {
+                    "source_system": "nj_enforcement",
+                    "source_dataset": "dca_standard_files_discipline_flag",
+                    "external_key": ekey,
+                    "complaint_number": f"FLAG-{lic}",
+                    "license_type": cols[1].strip() or cols[0].strip(),
+                    "license_number_raw": lic,
+                    "respondent_name": name,
+                    "classification": "public_discipline_flag",
+                    "entered_date": "",
+                    "disposition": "Discipline flag present in DCA Standard Files extract",
+                    "disposition_date": "",
+                    "discipline_description": DISCIPLINE_FLAG_DESC,
+                    "violation_code": "",
+                    "city": cols[18].strip(),
+                    "state": (cols[19].strip() or "NJ")[:2].upper(),
+                    "postal_code": re.sub(r"[^0-9A-Za-z-]", "", cols[20].strip())[:10],
+                    "county_name": cols[21].strip(),
+                    "contractor_slug": "",
+                    "raw_payload_json": json.dumps(
+                        {
+                            "profession": cols[0].strip(),
+                            "license_type": cols[1].strip(),
+                            "license_no": lic,
+                            "status": cols[3].strip(),
+                            "discipline_flag": "Y",
+                            "source_file": path.name,
+                            "credential_code": cred,
+                        },
+                        ensure_ascii=False,
+                    ),
+                }
+            )
+
+    ingest(facilities_all, "facility")
+    ingest(individuals_all, "individual")
+    return rows, stats
 
 
 def main() -> int:

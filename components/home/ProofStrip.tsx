@@ -2,20 +2,20 @@ import Link from "next/link";
 
 const proofs = [
   {
-    title: "Searchable Florida license records",
-    body: "Construction board extracts from official public data (DBPR).",
+    title: "Florida full journey",
+    body: "DBPR construction licenses, high-confidence Sunbiz links, discipline extracts, plan, studios, and guides.",
   },
   {
-    title: "High-confidence business entity links",
-    body: "Sunbiz matches only when names and location evidence align strictly.",
+    title: "Texas specialty verify",
+    body: "TDLR specialty trades plus TSBPE plumbing. Not a statewide GC directory.",
   },
   {
-    title: "Discipline extracts indexed",
-    body: "Board actions linked in our load — with source attribution, not reviews.",
+    title: "New Jersey HIC + specialty",
+    body: "Home Improvement Contractor registrations and specialty boards from DCA Standard Files — no single statewide GC.",
   },
   {
-    title: "Texas specialty verify (pilot)",
-    body: "TDLR specialty licenses plus TSBPE plumbing. Not a statewide GC directory. Local builder registration is not fully covered.",
+    title: "Discipline / enforcement when present",
+    body: "Florida board actions and NJ public discipline flags with source attribution — not reviews or rankings.",
   },
 ] as const;
 
@@ -37,9 +37,9 @@ export function ProofStrip() {
             Built for evidence, not opinions
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-            Official sources: Florida DBPR + Sunbiz for the full journey, and Texas TDLR specialty
-            trades only (no statewide GC). Educational research — confirm on the official board
-            before you hire.
+            Official sources: Florida DBPR + Sunbiz (full journey), Texas TDLR / TSBPE specialty,
+            and New Jersey DCA HIC + specialty boards. Coverage differs by state — confirm on the
+            official board before you hire.
           </p>
         </div>
 

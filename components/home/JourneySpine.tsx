@@ -67,8 +67,9 @@ export function JourneySpine() {
             From first idea to lasting records
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-            Use only the steps you need. The full spine is here so you can see how research,
-            decisions, and protection fit together.
+            Use only the steps you need. This full spine is Florida-deep today — plan, studios,
+            projects, and passport are Florida-first. Texas and New Jersey use Verify with honest
+            specialty / HIC limits.
           </p>
         </div>
 

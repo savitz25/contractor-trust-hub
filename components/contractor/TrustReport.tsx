@@ -612,11 +612,12 @@ export function DisciplineSection({
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
             {slug === "nj" ? (
               <>
-                Our New Jersey enforcement extract does not currently attach a public action to this
-                profile. That is{" "}
+                Our New Jersey Standard Files extract does not currently attach a public discipline
+                flag to this profile. That is{" "}
                 <strong className="font-medium text-[var(--text)]">not</strong> a certificate of
-                clean history: records may exist outside these extracts or after our last load.
-                Re-check official New Jersey tools before hiring.
+                clean history: the bulk file is a flag only (no full case history), and records may
+                exist outside these extracts or after our last load. Re-check official DCA /
+                MyLicense tools before hiring.
               </>
             ) : (
               <>
@@ -635,9 +636,19 @@ export function DisciplineSection({
       ) : (
         <>
           <p className="mt-4 text-sm leading-relaxed text-[var(--muted)]">
-            The following records appear in board extracts. Each row includes date and source fields
-            when present. We describe records factually — we do not score severity or recommend
-            hire/avoid.
+            {slug === "nj" ? (
+              <>
+                The following rows are public discipline flags from the DCA Standard Files bulk
+                extract. They do not include case narrative or disposition dates in this feed. We
+                describe records factually — we do not score severity or recommend hire/avoid.
+              </>
+            ) : (
+              <>
+                The following records appear in board extracts. Each row includes date and source
+                fields when present. We describe records factually — we do not score severity or
+                recommend hire/avoid.
+              </>
+            )}
           </p>
           <ul className="mt-4 space-y-3">
             {discipline.map((d) => {

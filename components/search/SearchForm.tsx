@@ -114,6 +114,7 @@ export function SearchForm({
             [
               { id: "fl", label: "Florida", hint: "Full construction licenses" },
               { id: "tx", label: "Texas", hint: "TDLR + TSBPE plumbing" },
+              { id: "nj", label: "New Jersey", hint: "HIC + specialty boards" },
               { id: "or", label: "Oregon", hint: "CCB statewide licenses" },
             ] as const
           ).map((s) => {
