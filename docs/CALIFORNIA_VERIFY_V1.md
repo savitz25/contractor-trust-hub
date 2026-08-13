@@ -74,7 +74,7 @@ Multi-class licenses: primary class drives the card label; full set is in `class
 | | | Merced | 192 |
 | | | Imperial | 115 |
 
-**Missing from target Tier 1:** **Riverside** (re-download when available).
+**Tier 1 high-impact:** all present after Riverside batch (**Riverside ≈ 3,472** unique CLEAR).
 
 ### Major classifications (token frequency; multi-class licenses count multiple)
 
@@ -115,7 +115,7 @@ python -m ingest.adapters.ca_cslb \
 | Gap | Notes |
 |-----|--------|
 | **Statewide completeness** | Extract is high-impact counties present in downloads — not every CA county file |
-| **Riverside** | Target Tier 1 county missing from 2026-08-13 file set |
+| **Smaller counties** | Low-population counties may still be absent |
 | **Personnel / qualifier file** | Not in these list columns |
 | **Workers’ comp depth** | Fields stored as published; **not** live COI / policy verification |
 | **Enforcement / discipline** | Not in list Excel files — do not invent |

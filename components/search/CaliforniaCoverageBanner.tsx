@@ -12,7 +12,7 @@ type Props = {
 
 /**
  * Honest California Verify banner —
- * statewide CSLB licensing; dataset prioritizes top-30 county extracts.
+ * statewide CSLB licensing; dataset prioritizes high-impact county extracts.
  */
 export function CaliforniaCoverageBanner({
   compact = false,

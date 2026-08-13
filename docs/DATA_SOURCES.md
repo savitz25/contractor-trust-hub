@@ -125,7 +125,7 @@ Full documentation, coverage limits, bulk sources, and ingest commands:
 
 ## California — CSLB (high-impact counties)
 
-**California licenses contractors statewide through CSLB.** This product extract uses official Public Data Portal county/classification Excel lists for high-impact counties present in `data/raw/ca_contractors/` (Riverside not in the initial file set).
+**California licenses contractors statewide through CSLB.** This product extract uses official Public Data Portal county/classification list downloads for high-impact counties present in `data/raw/ca_contractors/` (includes Riverside; not a full statewide board dump).
 
 → **[DATA_SOURCES_CA.md](./DATA_SOURCES_CA.md)** · product: **[CALIFORNIA_VERIFY_V1.md](./CALIFORNIA_VERIFY_V1.md)**
 
@@ -135,6 +135,20 @@ Full documentation, coverage limits, bulk sources, and ingest commands:
 | Public list Excel downloads | CSLB Public Data Portal | `CSLBSearchData_*.xlsx` by county/class |
 
 **Ingest:** `python -m ingest.adapters.ca_cslb --input-dir data/raw/ca_contractors` → `data/staging/ca_cslb/`
+
+## Arizona — ROC (statewide current active)
+
+**Arizona licenses contractors statewide through the Registrar of Contractors (ROC).** This product extract uses the official free **current active contractor posting list** CSVs (residential, commercial, and dual licenses).
+
+→ **[DATA_SOURCES_AZ.md](./DATA_SOURCES_AZ.md)** · product: **[ARIZONA_VERIFY_V1.md](./ARIZONA_VERIFY_V1.md)**
+
+| Resource | URL | Notes |
+|----------|-----|--------|
+| ROC Posting List | https://roc.az.gov/posting-list | Free bulk current active CSVs |
+| ROC contractor search | https://azroc.my.site.com/AZRoc/s/contractor-search | Human confirm |
+| ROC home | https://roc.az.gov/ | Board + consumer info |
+
+**Ingest:** `python scripts/download_az_roc.py` (or manual browser download) + `python -m ingest.adapters.az_roc` → `data/staging/az_roc/`
 
 ## Permits (local)
 

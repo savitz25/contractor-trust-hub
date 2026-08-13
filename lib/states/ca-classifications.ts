@@ -129,7 +129,7 @@ export const CA_COMMON_CLASS_EXAMPLES = [
 ] as const;
 
 export const CA_COVERED_COUNTIES_NOTE =
-  "Top high-impact counties from official CSLB list extracts (Riverside not in current file set)";
+  "High-impact counties from official CSLB list extracts (includes Riverside; not every CA county)";
 
 export const CA_PILOT_COVERED = [
   "California statewide CSLB licensing (this extract prioritizes top high-impact counties)",
@@ -139,7 +139,7 @@ export const CA_PILOT_COVERED = [
 ] as const;
 
 export const CA_PILOT_NOT_COVERED = [
-  "Complete statewide file for every county (Riverside and some counties may be missing)",
+  "Complete statewide file for every California county (smaller counties may still be missing)",
   "Personnel / qualifier roster depth beyond the public list columns",
   "Live bond / COI / workers’ comp certificate verification",
   "Discipline / enforcement history (not in these list files)",

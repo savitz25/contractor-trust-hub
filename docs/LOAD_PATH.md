@@ -363,9 +363,32 @@ python scripts/load_ca_cslb_via_supabase_rest.py --staging-dir data/staging/ca_c
 
 | Metric | Value |
 |--------|------:|
-| Unique licenses | **36,665** CLEAR |
-| Counties | 30 (Riverside missing) |
+| Unique licenses | **43,779** CLEAR |
+| Counties | 39 (includes Riverside + coverage batches) |
 | Product | `/verify?state=ca` |
+
+## Arizona (ROC)
+
+```bash
+# Prefer browser download if Cloudflare blocks automation:
+# https://roc.az.gov/posting-list → All Current Contractors → data/raw/az_roc/
+
+python scripts/download_az_roc.py
+python -m ingest.adapters.az_roc --input-dir data/raw/az_roc --out-dir data/staging/az_roc
+python scripts/load_az_roc_to_postgres.py --staging-dir data/staging/az_roc
+# or:
+python scripts/load_az_roc_via_supabase_rest.py --staging-dir data/staging/az_roc
+```
+
+**Rules:** upsert on `(source_system, external_key)` with `AZ-ROC:{license}`; `home_state = AZ`; class type/category in `secondary_status` + raw payload.
+
+### Production snapshot (2026-08-13)
+
+| Metric | Value |
+|--------|------:|
+| Unique licenses | **58,199** Active |
+| Categories | Dual 36,475 · Residential 11,015 · Commercial 10,709 |
+| Product | `/verify?state=az` |
 
 ---
 

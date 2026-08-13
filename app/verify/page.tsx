@@ -4,6 +4,7 @@ import { EmptyResults } from "@/components/search/EmptyResults";
 import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
 import { ResultCard } from "@/components/search/ResultCard";
 import { SearchForm } from "@/components/search/SearchForm";
+import { ArizonaCoverageBanner } from "@/components/search/ArizonaCoverageBanner";
 import { CaliforniaCoverageBanner } from "@/components/search/CaliforniaCoverageBanner";
 import { OregonCoverageBanner } from "@/components/search/OregonCoverageBanner";
 import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
@@ -59,6 +60,14 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       path: "/verify?state=ca",
     });
   }
+  if (state.slug === "az") {
+    return pageMetadata({
+      title: "Verify an Arizona contractor (ROC)",
+      description:
+        "Search Arizona Registrar of Contractors licenses from the official current active posting list. Always confirm on ROC contractor search. Evidence only — not a marketplace.",
+      path: "/verify?state=az",
+    });
+  }
   return pageMetadata({
     title: "Verify a Florida contractor",
     description:
@@ -74,7 +83,8 @@ export default async function VerifyPage({ searchParams }: Props) {
   const isNj = state.slug === "nj";
   const isOr = state.slug === "or";
   const isCa = state.slug === "ca";
-  const isSpecialty = isTx || isNj || isOr || isCa;
+  const isAz = state.slug === "az";
+  const isSpecialty = isTx || isNj || isOr || isCa || isAz;
   const q = (sp.q || "").trim();
   const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
   let results: Awaited<ReturnType<typeof searchContractors>>["results"] = [];
@@ -111,7 +121,9 @@ export default async function VerifyPage({ searchParams }: Props) {
         ? "Oregon · CCB statewide licenses"
         : isCa
           ? "California · CSLB high-impact counties"
-          : "Florida · DBPR + Sunbiz";
+          : isAz
+            ? "Arizona · ROC statewide licenses"
+            : "Florida · DBPR + Sunbiz";
 
   const heading = isNj
     ? "Verify a New Jersey HIC or specialty contractor"
@@ -121,7 +133,9 @@ export default async function VerifyPage({ searchParams }: Props) {
         ? "Verify an Oregon contractor"
         : isCa
           ? "Verify a California contractor"
-          : "Verify a Florida contractor";
+          : isAz
+            ? "Verify an Arizona contractor"
+            : "Verify a Florida contractor";
 
   const lead = isNj
     ? "Search by registration number or company name. New Jersey has no single statewide GC license — coverage is HIC registration plus available specialty boards from official DCA extracts."
@@ -131,7 +145,9 @@ export default async function VerifyPage({ searchParams }: Props) {
         ? "Search CCB active licenses by number or business name. Result cards show type, status, location, and published bond/insurance signals — then open a Trust Report."
         : isCa
           ? "Search CSLB licenses by number or business name from official public list extracts for high-impact counties. Always confirm on Instant License Check."
-          : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
+          : isAz
+            ? "Search ROC licenses by number or business name from the official current active posting list. Result cards show status, class, and residential/commercial/dual category when published."
+            : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
 
   const helpCards = isNj
     ? [
@@ -193,6 +209,21 @@ export default async function VerifyPage({ searchParams }: Props) {
                 d: "Status, primary classification(s), location — then a Trust Report. Confirm on Instant License Check.",
               },
             ]
+          : isAz
+            ? [
+                {
+                  t: "ROC license number",
+                  d: "Arizona ROC numbers from cards or contracts are most precise (leading zeros are fine).",
+                },
+                {
+                  t: "Business name",
+                  d: "Matches business and DBA names in the ROC current active posting list.",
+                },
+                {
+                  t: "What you’ll see",
+                  d: "Status, class code/detail, residential/commercial/dual category, location — then a Trust Report. Confirm on ROC search.",
+                },
+              ]
       : [
           {
             t: "License number",
@@ -248,6 +279,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                   ? "CCB statewide"
                   : s.slug === "ca"
                     ? "CSLB counties"
+                    : s.slug === "az"
+                      ? "ROC statewide"
                   : s.slug === "fl"
                     ? "Full journey"
                     : null;
@@ -299,6 +332,11 @@ export default async function VerifyPage({ searchParams }: Props) {
           <CaliforniaCoverageBanner showFloridaLink={!q} />
         </div>
       ) : null}
+      {isAz ? (
+        <div className="mt-4 max-w-3xl sm:mt-5">
+          <ArizonaCoverageBanner showFloridaLink={!q} />
+        </div>
+      ) : null}
 
       <div className="mt-5 max-w-3xl sm:mt-7">
         <SearchForm
@@ -316,6 +354,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                 ? "Oregon CCB Active Licenses extract. Bond and insurance signals are as published — not a live certificate check."
                 : isCa
                   ? "CSLB public list extract for high-impact counties. Confirm on Instant License Check. Missing ≠ unlicensed."
+                  : isAz
+                    ? "Arizona ROC current active posting list. Confirm on official ROC contractor search. Missing ≠ unlicensed."
               : (
                 <>
                   Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay
@@ -382,6 +422,7 @@ export default async function VerifyPage({ searchParams }: Props) {
               {isNj ? " · NJ pilot" : ""}
               {isOr ? " · CCB" : ""}
               {isCa ? " · CSLB" : ""}
+              {isAz ? " · ROC" : ""}
               {results.length >= 25 ? " · first 25" : ""}
             </p>
           </div>
@@ -417,6 +458,11 @@ export default async function VerifyPage({ searchParams }: Props) {
               {isCa ? (
                 <div className="pt-2 sm:pt-3">
                   <CaliforniaCoverageBanner compact showFloridaLink={false} />
+                </div>
+              ) : null}
+              {isAz ? (
+                <div className="pt-2 sm:pt-3">
+                  <ArizonaCoverageBanner compact showFloridaLink={false} />
                 </div>
               ) : null}
             </div>

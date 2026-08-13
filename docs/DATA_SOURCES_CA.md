@@ -33,9 +33,9 @@ Raw directory: `data/raw/ca_contractors/`
 |------|--------|
 | Files | 24 × `CSLBSearchData_*.xlsx` |
 | Schema | Shared 24-column layout (LicenseNumber, BusinessName, County, Classification(s), Status, bond/WC fields, …) |
-| Unique licenses (after dedupe) | **~36,665** (raw row sum ~38.7k; ~2k cross-file dups) |
+| Unique licenses (after dedupe) | **~43,779** (baseline 36,665 + Riverside + coverage batches) |
 | Status in extract | **CLEAR** only in the 2026-08-13 download set |
-| Counties present | **30** (see below) |
+| Counties present | **39** (includes Riverside + smaller northern counties from later extracts) |
 
 ### Columns observed
 
@@ -47,13 +47,12 @@ WorkersCompCoverageType, WorkersCompInsuranceCompany, WorkersCompPolicyNumber,
 EffectiveDate, ExpirationDate1, CancellationDate, WorkersCompSuspendDate
 ```
 
-### Target top-30 high-impact counties vs download
+### Target high-impact counties vs download
 
-**Present in extract (30 counties):**  
-Los Angeles, Orange, San Diego, San Bernardino, Sacramento, Santa Clara, Alameda, Contra Costa, Fresno, Ventura, Sonoma, Kern, San Luis Obispo, San Mateo, Placer, Santa Barbara, El Dorado, San Joaquin, Marin, Santa Cruz, Stanislaus, Monterey, Solano, Butte, Tulare, Yolo, Napa, Merced, Imperial, **San Francisco** (present though not on original Tier list)
+**Present (39 counties after Riverside batch):**  
+Los Angeles, Orange, San Diego, **Riverside**, San Bernardino, Sacramento, Santa Clara, Alameda, Contra Costa, Fresno, Ventura, Sonoma, Kern, San Luis Obispo, San Mateo, Placer, Santa Barbara, El Dorado, San Joaquin, Marin, Santa Cruz, Stanislaus, Monterey, Solano, Butte, Tulare, Yolo, Napa, Merced, Imperial, San Francisco, plus smaller counties from later extracts (Shasta, Nevada, Humboldt, Madera, Sutter, San Benito, Yuba, Kings).
 
-**Missing from current download set:**  
-**Riverside** (Tier 1 target) — re-download from CSLB portal when available.
+**Tier 1 high-impact:** all present (Riverside closed with 7 portal extracts).
 
 Approximate unique license counts by county (after license-number dedupe) are written to `batch_manifest.json` on each adapter run.
 
@@ -91,19 +90,20 @@ python -m ingest.adapters.ca_cslb \
 
 | Metric | Value |
 |--------|------:|
-| Unique licenses loaded | **36,665** |
+| Unique licenses loaded | **43,779** |
 | Status | CLEAR only |
-| Counties | 30 (Riverside missing from target Tier 1) |
+| Counties | **39** (includes Riverside + several smaller counties) |
 | Top class tokens | C-10, A, B, C-36, C-20, C-53, … |
 
-Full county / class tables: [CALIFORNIA_VERIFY_V1.md](./CALIFORNIA_VERIFY_V1.md).
+Full county / class tables: [CALIFORNIA_VERIFY_V1.md](./CALIFORNIA_VERIFY_V1.md) · staging `batch_manifest.json`.
 
 ## Remaining gaps
 
 | Gap | Notes |
 |-----|--------|
 | Statewide completeness | High-impact county extracts — not every CA county file |
-| Riverside | Not in current download set |
+| Smaller / rural counties | e.g. Alpine, Amador, and other low-population counties may still be absent |
+| License-type breadth | Portal 10-type limit may under-cover some trades even in loaded counties |
 | Personnel file | Qualifier/personnel depth not in list columns |
 | Workers’ comp | Fields as published only — not live COI |
 | Enforcement | Not present — do not invent |

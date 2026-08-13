@@ -4,16 +4,18 @@
  * New Jersey: HIC + specialty boards via DCA (no statewide GC) — see docs/DATA_SOURCES_NJ.md.
  * Oregon: CCB statewide contractor licenses — see docs/DATA_SOURCES_OR.md.
  * California: CSLB top-county public list extracts — see docs/DATA_SOURCES_CA.md.
+ * Arizona: ROC current active posting lists — see docs/DATA_SOURCES_AZ.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
 
 import { getOccupationInfo } from "@/lib/contractors/occupations";
+import { azClassPlainLabel } from "./az-roc";
 import { caClassPlainLabel } from "./ca-classifications";
 import { isNjVerifyPilotEnabled } from "./feature-flags";
 import { njCredentialPlainLabel } from "./nj-credentials";
 import { orCcbPlainLabel } from "./or-ccb";
 
-export type StateCode = "FL" | "TX" | "NJ" | "OR" | "CA";
+export type StateCode = "FL" | "TX" | "NJ" | "OR" | "CA" | "AZ";
 
 export type EvidenceState = {
   code: StateCode;
@@ -120,6 +122,22 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     coverageNote:
       "California statewide CSLB licensing. Current dataset prioritizes top high-impact counties from official CSLB list extracts. Always confirm live status on CSLB Instant License Check. Bond and workers’ comp fields are as published — not live certificates. No discipline invented from list files.",
   },
+  az: {
+    code: "AZ",
+    slug: "az",
+    name: "Arizona",
+    shortName: "AZ",
+    boardLabel: "Arizona Registrar of Contractors (ROC)",
+    boardUrl: "https://roc.az.gov/",
+    entityRegistryLabel: "Arizona Corporation Commission (not yet linked)",
+    entityRegistryUrl: "https://ecorp.azcc.gov/",
+    licenseSource: "az_roc",
+    entitySource: "az_acc",
+    live: true,
+    pilot: true,
+    coverageNote:
+      "Arizona licenses contractors statewide through the ROC. This search uses the official current active contractor posting list (residential, commercial, and dual). Always confirm on the official ROC contractor search. Discipline and live bond/insurance are not loaded from this extract.",
+  },
 };
 
 export const DEFAULT_STATE_SLUG = "fl";
@@ -127,7 +145,13 @@ export const DEFAULT_STATE_SLUG = "fl";
 export function getStateBySlug(slug: string): EvidenceState | null {
   const key = slug.toLowerCase();
   const mapped =
-    key === "oregon" ? "or" : key === "california" ? "ca" : key;
+    key === "oregon"
+      ? "or"
+      : key === "california"
+        ? "ca"
+        : key === "arizona"
+          ? "az"
+          : key;
   const s = EVIDENCE_STATES[mapped] ?? null;
   if (!s) return null;
   // NJ pilot can be disabled without removing config
@@ -207,6 +231,7 @@ export function occupationLabel(code: string | null | undefined): string {
     TX_OCCUPATION_LABELS[upper] ??
     NJ_OCCUPATION_LABELS[upper] ??
     caClassPlainLabel(upper) ??
+    azClassPlainLabel(upper) ??
     orCcbPlainLabel(upper) ??
     njCredentialPlainLabel(upper) ??
     getOccupationInfo(upper).label

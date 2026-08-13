@@ -20,6 +20,7 @@ import { TrustNextActions } from "@/components/contractor/TrustNextActions";
 import { TrustReportNav } from "@/components/contractor/TrustReportNav";
 import { WhatWeChecked } from "@/components/contractor/WhatWeChecked";
 import { NjNextActions } from "@/components/contractor/NjNextActions";
+import { ArizonaCoverageBanner } from "@/components/search/ArizonaCoverageBanner";
 import { CaliforniaCoverageBanner } from "@/components/search/CaliforniaCoverageBanner";
 import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
 import { OregonCoverageBanner } from "@/components/search/OregonCoverageBanner";
@@ -39,6 +40,7 @@ import {
   evidenceSlugFromHomeState,
   trustReportTitleSuffix,
 } from "@/lib/states/evidence-copy";
+import { azClassPlainLabel } from "@/lib/states/az-roc";
 import { caClassPlainLabel } from "@/lib/states/ca-classifications";
 import { njCredentialPlainLabel } from "@/lib/states/nj-credentials";
 import { orCcbDisplayLabel } from "@/lib/states/or-ccb";
@@ -231,9 +233,10 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const isNj = stateSlug === "nj";
   const isOr = stateSlug === "or";
   const isCa = stateSlug === "ca";
-  /** TX/OR/CA keep thin reports; NJ Stage 8A is fuller Verify depth. */
-  const isTxOnly = isTx || isOr || isCa;
-  const isFlFull = !isTx && !isNj && !isOr && !isCa;
+  const isAz = stateSlug === "az";
+  /** TX/OR/CA/AZ keep thin reports; NJ Stage 8A is fuller Verify depth. */
+  const isTxOnly = isTx || isOr || isCa || isAz;
+  const isFlFull = !isTx && !isNj && !isOr && !isCa && !isAz;
   const state = getStateBySlug(stateSlug) || getStateBySlug("fl")!;
   const verifyHref =
     stateSlug === "fl" ? "/verify" : `/verify?state=${stateSlug}`;
@@ -259,6 +262,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const njCredLabel = isNj && primary ? njCredentialPlainLabel(primary.occupationCode) : null;
   const orTypeLabel = isOr && primary ? orCcbDisplayLabel(primary.occupationCode) : null;
   const caClassLabel = isCa && primary ? caClassPlainLabel(primary.occupationCode) : null;
+  const azClassLabel = isAz && primary ? azClassPlainLabel(primary.occupationCode) : null;
 
   return (
     <main
@@ -357,6 +361,11 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           <CaliforniaCoverageBanner compact />
         </div>
       ) : null}
+      {isAz ? (
+        <div className="mt-3 max-w-3xl sm:mt-4">
+          <ArizonaCoverageBanner compact />
+        </div>
+      ) : null}
 
       {/* A. Identity snapshot */}
       <header
@@ -372,6 +381,8 @@ export default async function ContractorPage({ params, searchParams }: Props) {
                 ? "Oregon · CCB statewide · Trust Report"
                 : isCa
                   ? "California · CSLB counties · Trust Report"
+                  : isAz
+                    ? "Arizona · ROC statewide · Trust Report"
               : "Florida · Contractor Trust Report 2.0"}
         </p>
         <h1 className="mt-1.5 text-[1.5rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:mt-2 sm:text-4xl">
@@ -387,6 +398,12 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           <p className="mt-2 text-sm font-medium text-[var(--navy)] sm:text-[15px]">
             {caClassLabel}
             <span className="font-normal text-[var(--muted)]"> · CSLB extract</span>
+          </p>
+        ) : null}
+        {azClassLabel ? (
+          <p className="mt-2 text-sm font-medium text-[var(--navy)] sm:text-[15px]">
+            {azClassLabel}
+            <span className="font-normal text-[var(--muted)]"> · Arizona ROC</span>
           </p>
         ) : null}
         {njCredLabel ? (
@@ -408,6 +425,8 @@ export default async function ContractorPage({ params, searchParams }: Props) {
               ? "Plain-language trade type, license status, and available location from the TDLR open extract. Not a statewide general contractor credential."
               : isOr
                 ? "Oregon CCB Active Licenses extract: type, status, location, and published bond/insurance fields. Confirm on the official CCB search before hiring."
+                : isAz
+                  ? "Arizona ROC current active posting list: class, category, status, and location when published. Confirm on the official ROC contractor search before hiring."
               : "Evidence-first profile: who this business is, license and entity records, caution signals, and what to do next — not a score or endorsement."}
           {contractor.isThinProfile
             ? " Limited fields in our extract — treat missing data as unknown, not cleared."

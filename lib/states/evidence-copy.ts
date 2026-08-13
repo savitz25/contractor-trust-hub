@@ -6,7 +6,7 @@
 import type { EvidenceState } from "./config";
 import { getStateBySlug } from "./config";
 
-export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or" | "ca";
+export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or" | "ca" | "az";
 
 export function evidenceSlugFromHomeState(
   homeState: string | null | undefined,
@@ -17,11 +17,21 @@ export function evidenceSlugFromHomeState(
   if (hs === "NJ") return "nj";
   if (hs === "OR") return "or";
   if (hs === "CA") return "ca";
+  if (hs === "AZ") return "az";
   if (hs === "FL") return "fl";
   const p = (preferred || "").toLowerCase();
   if (p === "oregon") return "or";
   if (p === "california") return "ca";
-  if (p === "tx" || p === "nj" || p === "fl" || p === "or" || p === "ca") return p;
+  if (p === "arizona") return "az";
+  if (
+    p === "tx" ||
+    p === "nj" ||
+    p === "fl" ||
+    p === "or" ||
+    p === "ca" ||
+    p === "az"
+  )
+    return p;
   return "fl";
 }
 
@@ -30,6 +40,7 @@ export function credentialNoun(slug: EvidenceStateSlug): string {
   if (slug === "tx") return "specialty license";
   if (slug === "or") return "CCB license";
   if (slug === "ca") return "CSLB license";
+  if (slug === "az") return "ROC license";
   return "license";
 }
 
@@ -38,6 +49,7 @@ export function boardShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "tx") return "Texas TDLR / TSBPE";
   if (slug === "or") return "Oregon CCB";
   if (slug === "ca") return "California CSLB";
+  if (slug === "az") return "Arizona ROC";
   return "Florida DBPR";
 }
 
@@ -46,6 +58,7 @@ export function entityRegistryShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "tx") return "Texas SOS entity data (not fully linked yet)";
   if (slug === "or") return "Oregon SOS entity data (not yet linked)";
   if (slug === "ca") return "California SOS entity data (not yet linked)";
+  if (slug === "az") return "Arizona ACC entity data (not yet linked)";
   return "Florida Sunbiz";
 }
 
@@ -54,6 +67,7 @@ export function sourceExtractLabel(slug: EvidenceStateSlug): string {
   if (slug === "tx") return "TDLR specialty + TSBPE plumbing extract";
   if (slug === "or") return "Oregon CCB Active Licenses extract";
   if (slug === "ca") return "CSLB public list extract (high-impact counties)";
+  if (slug === "az") return "Arizona ROC current active posting list";
   return "Florida DBPR extract";
 }
 
@@ -62,6 +76,7 @@ export function trustReportTitleSuffix(slug: EvidenceStateSlug): string {
   if (slug === "tx") return "Texas Contractor Trust Report";
   if (slug === "or") return "Oregon Contractor Trust Report";
   if (slug === "ca") return "California Contractor Trust Report";
+  if (slug === "az") return "Arizona Contractor Trust Report";
   return "Florida Contractor Trust Report";
 }
 
@@ -70,6 +85,7 @@ export function pilotBadge(slug: EvidenceStateSlug): string | null {
   if (slug === "tx") return "Texas specialty trades";
   if (slug === "or") return "Oregon CCB statewide";
   if (slug === "ca") return "California CSLB (high-impact counties)";
+  if (slug === "az") return "Arizona ROC statewide (current active list)";
   return null;
 }
 
@@ -99,6 +115,14 @@ export function checkedItems(slug: EvidenceStateSlug): string[] {
       "City / county / ZIP and phone when present",
       "Bond and workers’ comp fields as published (not live COI checks)",
       "County coverage limited to high-impact counties in the current download set",
+    ];
+  }
+  if (slug === "az") {
+    return [
+      "ROC license number, business name, and Active status from the current posting list",
+      "Class code, class detail, and residential / commercial / dual category when published",
+      "City / address and issued / expiration dates when present",
+      "Qualifying party name when published (not a full personnel roster)",
     ];
   }
   if (slug === "or") {
@@ -145,10 +169,18 @@ export function notCheckedItems(slug: EvidenceStateSlug): string[] {
   }
   if (slug === "ca") {
     return [
-      "Every California county (current extract is high-impact counties only; Riverside may be missing)",
+      "Every California county (current extract is high-impact counties only; not a full statewide board dump)",
       "Live bond / COI / workers’ comp certificate validity",
       "SOS entity auto-links or full permit history",
       "Florida-depth planning, studios, or passport journey",
+    ];
+  }
+  if (slug === "az") {
+    return [
+      "Inactive / revoked historical archive (this feed is current active licenses)",
+      "Disciplinary case detail (not loaded from posting-list extract)",
+      "Live bond / insurance certificate validity",
+      "ACC entity auto-links or Florida-depth planning journey",
     ];
   }
   return [

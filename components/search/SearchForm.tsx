@@ -49,6 +49,12 @@ const CA_PLACEHOLDERS = {
   compact: "License or name",
 };
 
+const AZ_PLACEHOLDERS = {
+  hero: "ROC license number or business name…",
+  default: "ROC license # or business name",
+  compact: "License or name",
+};
+
 export function SearchForm({
   defaultQuery = "",
   size = "default",
@@ -71,6 +77,7 @@ export function SearchForm({
   const isNj = activeState === "nj";
   const isOr = activeState === "or";
   const isCa = activeState === "ca";
+  const isAz = activeState === "az";
   const ph =
     placeholder ||
     (isTx
@@ -81,6 +88,8 @@ export function SearchForm({
           ? OR_PLACEHOLDERS[size]
           : isCa
             ? CA_PLACEHOLDERS[size]
+            : isAz
+              ? AZ_PLACEHOLDERS[size]
           : PLACEHOLDERS[size]);
 
   const inputClass = isHero
@@ -126,6 +135,7 @@ export function SearchForm({
               { id: "nj", label: "New Jersey", hint: "HIC + specialty boards" },
               { id: "ca", label: "California", hint: "CSLB high-impact counties" },
               { id: "or", label: "Oregon", hint: "CCB statewide licenses" },
+              { id: "az", label: "Arizona", hint: "ROC statewide licenses" },
             ] as const
           ).map((s) => {
             const on = activeState === s.id;
