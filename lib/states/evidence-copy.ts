@@ -61,8 +61,9 @@ export function checkedItems(slug: EvidenceStateSlug): string[] {
   if (slug === "nj") {
     return [
       "NJ home-improvement / contractor registration extract (when linked)",
-      "Business entity linkage only when high-confidence name/geo match",
-      "Enforcement / discipline rows when present in our extract",
+      "Selected trade credentials when present in the extract",
+      "Business entity linkage only when high-confidence match rules pass",
+      "Public enforcement / action rows when linked in our extract",
       "Source attribution and extract freshness on this profile",
     ];
   }
@@ -85,9 +86,10 @@ export function checkedItems(slug: EvidenceStateSlug): string[] {
 export function notCheckedItems(slug: EvidenceStateSlug): string[] {
   if (slug === "nj") {
     return [
-      "Full New Jersey permit history (not in Stage 7 pilot)",
-      "Active insurance / COI validity (request & verify)",
+      "Full New Jersey permit history (not in Stage 8A Verify depth)",
+      "Active insurance / COI validity (request & verify with carrier)",
       "Municipal-only trade cards not in the state extract",
+      "Florida-specific lien, payment, or studio cost models",
       "Reviews, rankings, or “safe to hire” determinations",
     ];
   }
@@ -107,12 +109,35 @@ export function notCheckedItems(slug: EvidenceStateSlug): string[] {
   ];
 }
 
+/** Credential / enforcement section headings by state */
+export function disciplineSectionTitle(slug: EvidenceStateSlug): string {
+  if (slug === "nj") return "Enforcement / public actions";
+  if (slug === "tx") return "Caution & regulatory history";
+  return "Caution & regulatory history";
+}
+
+export function disciplineSectionBlurb(slug: EvidenceStateSlug): string {
+  if (slug === "nj") {
+    return "Public enforcement or action rows linked in New Jersey extracts. Factual records only — not a determination of guilt or a quality score.";
+  }
+  if (slug === "tx") {
+    return "Regulatory history from TDLR-linked extracts when present. Factual records only.";
+  }
+  return "Board discipline from Florida extracts linked to this contractor. Separate from insurance, permits, or reviews — factual records only.";
+}
+
+export function entitySectionTitle(slug: EvidenceStateSlug): string {
+  if (slug === "nj") return "Business entity (high-confidence)";
+  if (slug === "tx") return "Business entity";
+  return "Business entity (Sunbiz)";
+}
+
 export function consumerNote(slug: EvidenceStateSlug, state?: EvidenceState | null): string {
   const s = state || getStateBySlug(slug);
   if (slug === "nj") {
     return (
       s?.coverageNote ||
-      "New Jersey verification pilot — official registration extracts only. Coverage differs from Florida’s full planning and protection journey."
+      "New Jersey verification pilot — official registration extracts and high-confidence entity/enforcement links when available. Coverage differs from Florida’s full planning and protection journey."
     );
   }
   if (slug === "tx") {

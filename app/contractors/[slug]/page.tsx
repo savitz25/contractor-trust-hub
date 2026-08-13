@@ -19,6 +19,7 @@ import {
 import { TrustNextActions } from "@/components/contractor/TrustNextActions";
 import { TrustReportNav } from "@/components/contractor/TrustReportNav";
 import { WhatWeChecked } from "@/components/contractor/WhatWeChecked";
+import { NjNextActions } from "@/components/contractor/NjNextActions";
 import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
 import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
 import { StudioHandoffBanner } from "@/components/studios/StudioHandoffBanner";
@@ -215,7 +216,9 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const stateSlug = evidenceSlugFromHomeState(contractor.homeState);
   const isTx = stateSlug === "tx";
   const isNj = stateSlug === "nj";
-  const isSpecialty = isTx || isNj;
+  /** TX keeps thin specialty report; NJ Stage 8A is full Verify depth. */
+  const isTxOnly = isTx;
+  const isFlFull = !isTx && !isNj;
   const state = getStateBySlug(stateSlug) || getStateBySlug("fl")!;
   const verifyHref =
     stateSlug === "fl" ? "/verify" : `/verify?state=${stateSlug}`;
@@ -243,7 +246,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   return (
     <main
       className={`mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10 ${
-        isSpecialty ? "pb-10" : "pb-28 sm:pb-10"
+        isTxOnly ? "pb-10" : "pb-28 sm:pb-10"
       }`}
     >
       <ContractorJsonLd contractor={contractor} path={path} />
@@ -262,7 +265,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         >
           ← Search
         </Link>
-        {!isSpecialty ? (
+        {isFlFull ? (
           <>
             <span className="text-[var(--border)]" aria-hidden>
               ·
@@ -275,7 +278,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
             </Link>
           </>
         ) : null}
-        {!isSpecialty ? (
+        {isFlFull ? (
           <>
             <span className="text-[var(--border)]" aria-hidden>
               ·
@@ -292,11 +295,24 @@ export default async function ContractorPage({ params, searchParams }: Props) {
             <Link href="/verify" className="text-[var(--muted)] no-underline hover:text-[var(--text)]">
               Florida Verify
             </Link>
+            {isNj ? (
+              <>
+                <span className="text-[var(--border)]" aria-hidden>
+                  ·
+                </span>
+                <Link
+                  href="/tools/pre-hire-checklist?state=nj"
+                  className="text-[var(--muted)] no-underline hover:text-[var(--text)]"
+                >
+                  Checklist
+                </Link>
+              </>
+            ) : null}
           </>
         )}
       </div>
 
-      {!isSpecialty ? (
+      {isFlFull ? (
         <StudioHandoffBanner
           initial={studioHandoff}
           contractorSlug={contractor.slug}
@@ -366,17 +382,37 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           ) : null}
           {isTx ? (
             <StatusBadge status="unknown" label="Specialty only" />
-          ) : isNj ? (
-            <StatusBadge status="unknown" label="NJ pilot" />
           ) : entity ? (
             <StatusBadge status={entity.status} label={`Entity: ${statusLabel(entity.status)}`} />
           ) : (
             <StatusBadge status="unknown" label="No high-confidence entity link" />
           )}
+          {isNj ? (
+            <StatusBadge status="unknown" label="NJ Verify depth" />
+          ) : null}
           {contractor.discipline.length > 0 ? (
-            <StatusBadge status="warn" label="Discipline records identified" />
-          ) : !isSpecialty ? (
-            <StatusBadge status="unknown" label="No discipline in current extracts" />
+            <StatusBadge
+              status="warn"
+              label={
+                isNj
+                  ? "Enforcement records identified"
+                  : "Discipline records identified"
+              }
+            />
+          ) : !isTxOnly ? (
+            <StatusBadge
+              status="unknown"
+              label={
+                isNj
+                  ? "No enforcement in current extracts"
+                  : "No discipline in current extracts"
+              }
+            />
+          ) : null}
+          {primary?.sourceSystem ? (
+            <span className="rounded-full border border-[var(--border)] bg-white px-2.5 py-0.5 font-mono text-[10px] text-[var(--muted)]">
+              {primary.sourceSystem}
+            </span>
           ) : null}
         </div>
         {location ? <p className="mt-3 text-sm text-[var(--muted)] sm:text-[15px]">{location}</p> : null}
@@ -384,15 +420,16 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
             {contractor.legalName ? <>Legal / linked name: {contractor.legalName}</> : null}
             {contractor.legalName && contractor.dbaName ? " · " : null}
-            {contractor.dbaName ? <>DBA: {contractor.dbaName}</> : null}
+            {contractor.dbaName ? <>Principal / DBA field: {contractor.dbaName}</> : null}
           </p>
         )}
-        {!isSpecialty ? (
+        {!isTxOnly ? (
           entity ? (
             <p className="mt-1 text-sm text-[var(--muted)]">
               Linked entity: <span className="text-[var(--text)]">{entity.legalName}</span>
               {entity.status ? ` · ${statusLabel(entity.status)}` : ""}
               {conf ? ` · ${conf}` : ""}
+              {entity.matchMethod ? ` · match: ${entity.matchMethod}` : ""}
             </p>
           ) : (
             <p className="mt-1 text-sm text-[var(--muted)]">
@@ -405,7 +442,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <CompareToggle slug={contractor.slug} />
-          {isSpecialty ? (
+          {isTxOnly ? (
             <a
               href="#licenses"
               className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--navy)] no-underline"
@@ -424,21 +461,21 @@ export default async function ContractorPage({ params, searchParams }: Props) {
                 href="#caution"
                 className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm text-[var(--muted)] no-underline hover:text-[var(--text)]"
               >
-                Caution history
+                {isNj ? "Enforcement" : "Caution history"}
               </a>
             </>
           )}
         </div>
       </header>
 
-      {!isSpecialty ? (
+      {!isTxOnly ? (
         <div className="mt-4">
           <TrustReportNav />
         </div>
       ) : null}
 
       <div className="mt-6 space-y-5 sm:mt-8 sm:space-y-6">
-        {!isSpecialty ? (
+        {isFlFull ? (
           <ProjectFitBanner
             contractor={contractor}
             handoff={studioHandoff}
@@ -447,17 +484,22 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         ) : null}
 
         <EvidenceSummary contractor={contractor} />
-        {!isSpecialty ? <CautionSummary contractor={contractor} /> : null}
+        {isFlFull ? <CautionSummary contractor={contractor} /> : null}
         <WhatWeChecked contractor={contractor} />
 
         {/* B. License / registration evidence */}
         <LicensesSection licenses={contractor.licenses} />
 
-        {/* C. Caution & regulatory */}
-        {!isSpecialty ? <DisciplineSection discipline={contractor.discipline} /> : null}
+        {/* C. Enforcement / discipline */}
+        {!isTxOnly ? (
+          <DisciplineSection
+            discipline={contractor.discipline}
+            homeState={contractor.homeState}
+          />
+        ) : null}
 
         {/* D. Business / entity */}
-        {!isSpecialty ? (
+        {!isTxOnly ? (
           <div className="grid gap-5 sm:gap-6 lg:grid-cols-2">
             <EntitySection entities={contractor.entities} state={state} />
             <DiscrepanciesSection contractor={contractor} />
@@ -468,37 +510,47 @@ export default async function ContractorPage({ params, searchParams }: Props) {
               Sources
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-              {isNj
-                ? "Credential evidence from New Jersey registration extracts (DCA / HIC and selected trades when present). High-confidence entity linkage only when designed. Confirm on official New Jersey tools when decisions matter."
-                : "License evidence from the Texas Department of Licensing and Regulation (TDLR) open-data extract. No statewide general contractor license exists in Texas. Confirm details on the official TDLR license search when decisions matter."}
+              License evidence from the Texas Department of Licensing and Regulation (TDLR)
+              open-data extract. No statewide general contractor license exists in Texas. Confirm
+              details on the official TDLR license search when decisions matter.
             </p>
             <a
-              href={isNj ? state.boardUrl : "https://www.tdlr.texas.gov/LicenseSearch/"}
+              href="https://www.tdlr.texas.gov/LicenseSearch/"
               className="mt-3 inline-flex text-sm font-medium text-[var(--navy)] underline-offset-2 hover:underline"
               target="_blank"
               rel="noreferrer"
             >
-              {isNj ? "Official NJ Consumer Affairs →" : "Official TDLR license search →"}
+              Official TDLR license search →
             </a>
           </section>
         )}
-        {!isSpecialty ? <RelatedEntitySection contractor={contractor} /> : null}
+        {!isTxOnly ? <RelatedEntitySection contractor={contractor} /> : null}
 
-        {/* Insurance guidance */}
-        {!isSpecialty ? <InsuranceGuidance contractor={contractor} /> : null}
+        {/* Insurance guidance — FL only educational panels with FL assumptions */}
+        {isFlFull ? <InsuranceGuidance contractor={contractor} /> : null}
 
-        {/* E. Activity framework (Florida permit waves — not TX/NJ pilot) */}
-        {!isSpecialty ? <ActivitySection contractor={contractor} /> : null}
+        {/* E. Activity framework (Florida permit waves only) */}
+        {isFlFull ? <ActivitySection contractor={contractor} /> : null}
 
-        {!isSpecialty ? <HiringGuidance contractor={contractor} /> : null}
+        {isFlFull ? <HiringGuidance contractor={contractor} /> : null}
 
         {/* F. Next actions */}
-        {!isSpecialty ? (
+        {isFlFull ? (
           <TrustNextActions
             slug={contractor.slug}
             name={contractor.displayName}
             handoff={studioHandoff}
             projectType={projectType}
+            licenseKey={primary?.externalKey}
+            licenseStatus={primary?.statusNormalized}
+            entityStatus={entity?.status}
+            disciplineCount={contractor.discipline.length}
+          />
+        ) : null}
+        {isNj ? (
+          <NjNextActions
+            slug={contractor.slug}
+            name={contractor.displayName}
             licenseKey={primary?.externalKey}
             licenseStatus={primary?.statusNormalized}
             entityStatus={entity?.status}

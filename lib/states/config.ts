@@ -79,7 +79,7 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     live: true,
     pilot: true,
     coverageNote:
-      "New Jersey verification pilot: home-improvement contractor registration and selected trade credentials from official extracts. Not Florida-depth (no full permit history, studios, or protection journey yet). Coverage differs by state.",
+      "New Jersey verification pilot (Stage 8A depth): home-improvement contractor registration, selected trade credentials, high-confidence entity links, and public enforcement rows when present in extracts. Not Florida-depth (no full permit history, studios, or protection journey). Coverage differs by state.",
   },
 };
 

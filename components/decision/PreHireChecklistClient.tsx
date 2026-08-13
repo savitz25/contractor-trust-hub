@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { PRE_HIRE_CHECKLIST, RED_FLAG_GUIDE } from "@/lib/decision/checklist";
 import { DECISION_ENGINE_DISCLAIMER } from "@/lib/decision/disclaimers";
@@ -9,7 +10,12 @@ import { generateQuestionGroups } from "@/lib/decision/questions";
 import { DecisionJourney } from "./DecisionJourney";
 import { QuestionsList } from "./QuestionsList";
 
+/** NJ-safe checklist filters Florida-specific workers' comp / Sunbiz wording. */
+const NJ_HIDDEN_ITEM_IDS = new Set(["wc", "entity"]);
+
 export function PreHireChecklistClient() {
+  const searchParams = useSearchParams();
+  const isNj = (searchParams.get("state") || "").toLowerCase() === "nj";
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -17,12 +23,52 @@ export function PreHireChecklistClient() {
     if (saved?.checked) setChecked(saved.checked);
   }, []);
 
+  const modules = useMemo(() => {
+    if (!isNj) return PRE_HIRE_CHECKLIST;
+    return PRE_HIRE_CHECKLIST.map((mod) => ({
+      ...mod,
+      title:
+        mod.id === "identity"
+          ? "1. Verify identity & registration"
+          : mod.id === "discipline"
+            ? "2. Review enforcement / caution signals"
+            : mod.title,
+      items: mod.items
+        .filter((i) => !NJ_HIDDEN_ITEM_IDS.has(i.id))
+        .map((i) => {
+          if (i.id === "active_license") {
+            return {
+              ...i,
+              title: "Confirm active/current registration status on the NJ Trust Report",
+              why: "Inactive or expired credentials are a hard stop until resolved on official NJ tools.",
+              hrefs: [{ href: "/verify?state=nj", label: "NJ Verify" }],
+            };
+          }
+          if (i.id === "correct_class") {
+            return {
+              ...i,
+              title: "Confirm credential type fits the work (e.g. HIC vs trade-specific)",
+              why: "A valid registration of the wrong type may not authorize the work you need.",
+            };
+          }
+          if (i.id === "discipline_rows") {
+            return {
+              ...i,
+              title: "Read any public enforcement entries on the Trust Report",
+              why: "Enforcement rows are evidence, not a score — understand what the extract shows and when.",
+            };
+          }
+          return i;
+        }),
+    }));
+  }, [isNj]);
+
   const allIds = useMemo(
-    () => PRE_HIRE_CHECKLIST.flatMap((m) => m.items.map((i) => i.id)),
-    []
+    () => modules.flatMap((m) => m.items.map((i) => i.id)),
+    [modules]
   );
   const done = allIds.filter((id) => checked[id]).length;
-  const pct = Math.round((done / allIds.length) * 100);
+  const pct = Math.round((done / Math.max(allIds.length, 1)) * 100);
 
   const toggle = (id: string) => {
     setChecked((c) => {
@@ -42,19 +88,32 @@ export function PreHireChecklistClient() {
 
   return (
     <div className="space-y-6">
-      <DecisionJourney current="/tools/pre-hire-checklist" />
+      {!isNj ? <DecisionJourney current="/tools/pre-hire-checklist" /> : null}
 
       <div className="rounded-3xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)] sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
-          Pre-hire checklist
+          {isNj ? "Pre-hire checklist · New Jersey" : "Pre-hire checklist"}
         </p>
         <h1 className="mt-2 text-2xl font-semibold text-[var(--text)] sm:text-3xl">
           Before you sign
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
-          A practical sequence after you have a shortlist. Progress is saved on this device.
-          Caution patterns are educational — not accusations.
+          {isNj
+            ? "NJ-safe educational checklist — registration and evidence first. Florida-specific workers’ comp and Sunbiz items are hidden. Progress is saved on this device."
+            : "A practical sequence after you have a shortlist. Progress is saved on this device. Caution patterns are educational — not accusations."}
         </p>
+        {isNj ? (
+          <p className="mt-2 text-xs text-[var(--muted)]">
+            Florida full journey remains at{" "}
+            <Link href="/verify" className="font-semibold text-[var(--navy)]">
+              /verify
+            </Link>
+            .{" "}
+            <Link href="/verify?state=nj" className="font-semibold text-[var(--navy)]">
+              Back to NJ Verify
+            </Link>
+          </p>
+        ) : null}
 
         <div className="mt-5">
           <div className="flex items-center justify-between text-xs font-semibold text-[var(--muted)]">
@@ -72,7 +131,7 @@ export function PreHireChecklistClient() {
         </div>
       </div>
 
-      {PRE_HIRE_CHECKLIST.map((mod) => (
+      {modules.map((mod) => (
         <section
           key={mod.id}
           className="rounded-3xl border border-[var(--border)] bg-white p-5 sm:p-6"

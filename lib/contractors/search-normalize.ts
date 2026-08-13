@@ -55,21 +55,33 @@ export function prepareNameSearch(raw: string): PreparedNameSearch {
 }
 
 /**
- * True when input looks like a board license id:
+ * True when input looks like a board license / registration id:
  * - Florida style CBC015082
  * - Numeric core (TX TDLR numbers, FL cores)
  * - Explicit TX-TDLR:… product keys
+ * - NJ HIC / NJ-… registration keys
  */
 export function looksLikeLicenseKey(q: string): boolean {
   const trimmed = q.trim();
   if (/^TX-TDLR:/i.test(trimmed)) return true;
+  if (/^NJ-/i.test(trimmed)) return true;
+  if (/^HIC[-_]?/i.test(trimmed)) return true;
+  if (/^(ELE|PLB|HVAC|GEN)-NJ-/i.test(trimmed)) return true;
   const compact = trimmed.replace(/[\s\-_.]/g, "");
+  // Mixed alphanumerics common in NJ registration ids (e.g. HIC13VH00012300)
+  if (/^[A-Za-z]{2,6}\d{2,}[A-Za-z0-9]{2,}$/i.test(compact) && compact.length >= 8) {
+    return true;
+  }
   return /^[A-Za-z]{2,5}\d{4,}$/.test(compact) || /^\d{4,}$/.test(compact);
 }
 
 export function normalizeLicenseKey(q: string): string {
   const trimmed = q.trim();
   if (/^TX-TDLR:/i.test(trimmed)) {
+    return trimmed.toUpperCase().replace(/\s+/g, "");
+  }
+  if (/^NJ-/i.test(trimmed) || /^HIC/i.test(trimmed) || /-(NJ|HIC)/i.test(trimmed)) {
+    // Keep structure for NJ product keys; strip spaces only
     return trimmed.toUpperCase().replace(/\s+/g, "");
   }
   return trimmed.replace(/[\s\-_.]/g, "").toUpperCase();

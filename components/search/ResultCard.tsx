@@ -107,7 +107,12 @@ export function ResultCard({
           <span className="inline-flex max-w-full items-center gap-1.5 text-xs font-medium text-[var(--navy)]">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500/70" aria-hidden />
             <span className="truncate">{njCred.chip}</span>
-            <span className="hidden text-[var(--muted)] font-normal sm:inline">· NJ pilot</span>
+            <span className="hidden text-[var(--muted)] font-normal sm:inline">· NJ</span>
+          </span>
+        ) : null}
+        {result.sourceSystem ? (
+          <span className="inline-flex items-center gap-1 font-mono text-[10px] text-[var(--muted)]">
+            {result.sourceSystem}
           </span>
         ) : null}
         {showEntity ? (

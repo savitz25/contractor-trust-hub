@@ -175,16 +175,24 @@ def main() -> int:
             log.info("ingest_batch %s", batch_id)
 
             n = 0
+            slug_to_id: dict[str, Any] = {}
             for r in rows:
                 external_key = (r.get("external_key") or "").strip()
                 if not external_key:
                     continue
-                display = (r.get("licensee_name_raw") or external_key).strip()
+                raw = parse_json(r.get("raw_payload_json")) or {}
+                display = (
+                    (raw.get("business_name") or "").strip()
+                    or (r.get("licensee_name_raw") or "").strip()
+                    or external_key
+                )
+                legal = display
+                dba = (r.get("dba_name_raw") or raw.get("owner_name") or "").strip() or None
                 slug = slugify("nj", external_key, display)
                 home_state = (r.get("state") or "NJ")[:2].upper()
                 city = r.get("city") or None
                 county = r.get("county_name") or None
-                raw = parse_json(r.get("raw_payload_json"))
+                search_blob = (r.get("licensee_name_raw") or display).strip()
 
                 cur.execute(
                     """
@@ -205,14 +213,15 @@ def main() -> int:
                     (
                         slug,
                         display,
-                        display,
-                        r.get("dba_name_raw") or None,
+                        legal,
+                        dba,
                         home_state,
                         city,
                         county,
                     ),
                 )
                 contractor_id = cur.fetchone()[0]
+                slug_to_id[slug] = contractor_id
 
                 cur.execute(
                     """
@@ -237,6 +246,8 @@ def main() -> int:
                       occupation_description = EXCLUDED.occupation_description,
                       status_normalized = EXCLUDED.status_normalized,
                       primary_status = EXCLUDED.primary_status,
+                      licensee_name_raw = EXCLUDED.licensee_name_raw,
+                      dba_name_raw = EXCLUDED.dba_name_raw,
                       expiration_date = EXCLUDED.expiration_date,
                       city = EXCLUDED.city,
                       county_name = EXCLUDED.county_name,
@@ -255,7 +266,7 @@ def main() -> int:
                         r.get("occupation_description") or "Home Improvement Contractor",
                         r.get("license_number") or None,
                         r.get("class_code") or None,
-                        display,
+                        search_blob,
                         r.get("dba_name_raw") or None,
                         r.get("primary_status") or None,
                         r.get("secondary_status") or None,
@@ -274,8 +285,150 @@ def main() -> int:
                 )
                 n += 1
 
+            # High-confidence entities
+            ent_path = args.staging_dir / "entities_normalized.csv"
+            ent_n = 0
+            if ent_path.exists():
+                for e in iter_csv(ent_path):
+                    cslug = (e.get("contractor_slug") or "").strip()
+                    cid = slug_to_id.get(cslug)
+                    if not cid:
+                        continue
+                    ekey = (e.get("external_key") or "").strip()
+                    ename = (e.get("legal_name") or "").strip()
+                    if not ekey or not ename:
+                        continue
+                    officers = parse_json(e.get("officers_json"))
+                    if isinstance(officers, dict):
+                        officers = [officers]
+                    if not isinstance(officers, list):
+                        officers = []
+                    conf = float(e.get("confidence") or "0.95")
+                    cur.execute(
+                        """
+                        INSERT INTO entities (
+                          source_system, external_key, legal_name, name_normalized,
+                          entity_type, status, formation_date, principal_address,
+                          city, state, postal_code, county_name, registered_agent_name,
+                          officers, raw_payload, ingest_batch_id, last_verified_at, updated_at
+                        ) VALUES (
+                          %s,%s,%s,%s,
+                          %s,%s,%s,%s,
+                          %s,%s,%s,%s,%s,
+                          %s,%s,%s,now(),now()
+                        )
+                        ON CONFLICT (source_system, external_key) DO UPDATE SET
+                          legal_name = EXCLUDED.legal_name,
+                          status = EXCLUDED.status,
+                          formation_date = EXCLUDED.formation_date,
+                          officers = EXCLUDED.officers,
+                          last_verified_at = now(),
+                          updated_at = now()
+                        RETURNING id
+                        """,
+                        (
+                            e.get("source_system") or "nj_sos",
+                            ekey,
+                            ename,
+                            e.get("name_normalized") or ename.upper(),
+                            e.get("entity_type") or "business",
+                            e.get("status") or None,
+                            parse_date(e.get("formation_date")),
+                            e.get("principal_address") or None,
+                            e.get("city") or None,
+                            (e.get("state") or "NJ")[:2],
+                            e.get("postal_code") or None,
+                            e.get("county_name") or None,
+                            e.get("registered_agent_name") or None,
+                            Jsonb(officers),
+                            Jsonb({"match_method": e.get("match_method")}),
+                            batch_id,
+                        ),
+                    )
+                    entity_id = cur.fetchone()[0]
+                    cur.execute(
+                        """
+                        INSERT INTO contractor_entities (
+                          contractor_id, entity_id, role, confidence, match_method, evidence, linked_at
+                        ) VALUES (%s,%s,%s,%s,%s,%s,now())
+                        ON CONFLICT (contractor_id, entity_id, role) DO UPDATE SET
+                          confidence = EXCLUDED.confidence,
+                          match_method = EXCLUDED.match_method,
+                          evidence = EXCLUDED.evidence
+                        """,
+                        (
+                            cid,
+                            entity_id,
+                            e.get("role") or "linked",
+                            conf,
+                            e.get("match_method") or "exact_registration_entity_key",
+                            Jsonb({"source": "nj_stage8a"}),
+                        ),
+                    )
+                    ent_n += 1
+
+            # Enforcement / public actions → discipline_actions
+            enf_path = args.staging_dir / "enforcement_normalized.csv"
+            enf_n = 0
+            if enf_path.exists():
+                for d in iter_csv(enf_path):
+                    cslug = (d.get("contractor_slug") or "").strip()
+                    cid = slug_to_id.get(cslug)
+                    if not cid:
+                        continue
+                    dkey = (d.get("external_key") or "").strip()
+                    if not dkey:
+                        continue
+                    cur.execute(
+                        """
+                        INSERT INTO discipline_actions (
+                          contractor_id, source_system, source_dataset, external_key,
+                          complaint_number, license_type, license_number_raw, respondent_name,
+                          classification, entered_date, disposition, disposition_date,
+                          discipline_description, violation_code, city, state, postal_code,
+                          county_name, raw_payload, ingest_batch_id, last_verified_at, updated_at
+                        ) VALUES (
+                          %s,%s,%s,%s,
+                          %s,%s,%s,%s,
+                          %s,%s,%s,%s,
+                          %s,%s,%s,%s,%s,
+                          %s,%s,%s,now(),now()
+                        )
+                        ON CONFLICT (source_system, external_key) DO UPDATE SET
+                          contractor_id = EXCLUDED.contractor_id,
+                          disposition = EXCLUDED.disposition,
+                          disposition_date = EXCLUDED.disposition_date,
+                          discipline_description = EXCLUDED.discipline_description,
+                          last_verified_at = now(),
+                          updated_at = now()
+                        """,
+                        (
+                            cid,
+                            d.get("source_system") or "nj_enforcement",
+                            d.get("source_dataset") or "public_actions",
+                            dkey,
+                            d.get("complaint_number") or None,
+                            d.get("license_type") or None,
+                            d.get("license_number_raw") or None,
+                            d.get("respondent_name") or "Unknown",
+                            d.get("classification") or None,
+                            parse_date(d.get("entered_date")),
+                            d.get("disposition") or None,
+                            parse_date(d.get("disposition_date")),
+                            d.get("discipline_description") or None,
+                            d.get("violation_code") or None,
+                            d.get("city") or None,
+                            (d.get("state") or "NJ")[:2],
+                            d.get("postal_code") or None,
+                            d.get("county_name") or None,
+                            Jsonb(parse_json(d.get("raw_payload_json")) or {}),
+                            batch_id,
+                        ),
+                    )
+                    enf_n += 1
+
             conn.commit()
-            log.info("Upserted %s NJ licenses", n)
+            log.info("Upserted %s NJ licenses, %s entities, %s enforcement rows", n, ent_n, enf_n)
     return 0
 
 

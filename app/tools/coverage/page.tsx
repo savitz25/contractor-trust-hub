@@ -9,6 +9,7 @@ import {
 import { extractStats } from "@/lib/property/permits";
 import { pageMetadata } from "@/lib/seo/page-meta";
 import { isNjVerifyPilotEnabled } from "@/lib/states/feature-flags";
+import { NJ_SOURCE_MATRIX } from "@/lib/states/nj-credentials";
 
 export const metadata: Metadata = pageMetadata({
   title: "Permit coverage matrix — Florida jurisdictions",
@@ -125,11 +126,32 @@ export default function CoveragePage() {
       {njPilot ? (
         <section className="mt-6 rounded-3xl border border-violet-200 bg-violet-50/50 p-5 sm:p-6">
           <h2 className="text-lg font-semibold text-[var(--text)]">
-            New Jersey verification pilot
+            New Jersey Verify depth (Stage 8A)
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-            Separate from Florida permit waves. NJ is Verify-first (registration search + Trust
-            Report core) — not permit history parity.
+            Separate from Florida permit waves. NJ is Verify-first — registration search, Trust
+            Report depth, high-confidence entity and enforcement when available. Not permit history
+            or Florida full-journey parity.
+          </p>
+          <ul className="mt-4 space-y-2 text-sm">
+            {NJ_SOURCE_MATRIX.map((row) => (
+              <li
+                key={row.id}
+                className="rounded-xl border border-violet-200/80 bg-white px-3 py-2"
+              >
+                <p className="font-medium text-[var(--text)]">
+                  <span className="font-mono text-[11px] text-[var(--muted)]">{row.id}</span>
+                  {" · "}
+                  {row.label}
+                </p>
+                <p className="mt-1 text-xs text-[var(--muted)]">Includes: {row.includes}</p>
+                <p className="text-xs text-[var(--muted)]">Gaps: {row.gaps}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-xs text-[var(--muted)]">
+            Florida-only: Plan, Studios, property/permit waves, payment legal trackers, full Home
+            Passport localization.
           </p>
           <Link
             href="/verify?state=nj"

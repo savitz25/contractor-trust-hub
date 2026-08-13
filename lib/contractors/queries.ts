@@ -86,6 +86,7 @@ export async function searchContractors(
         l.occupation_code,
         l.status_normalized,
         l.last_verified_at,
+        l.source_system,
         e.status AS entity_status,
         e.legal_name AS entity_name,
         EXISTS (
@@ -99,7 +100,7 @@ export async function searchContractors(
         FROM contractor_entities ce
         JOIN entities ent ON ent.id = ce.entity_id
         WHERE ce.contractor_id = c.id
-          AND ce.role = 'sunbiz_entity'
+          AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
           AND ent.source_system = $3
           AND ce.confidence IS NOT NULL
           AND ce.confidence >= $5
@@ -111,14 +112,17 @@ export async function searchContractors(
         AND (c.home_state = $6 OR l.state = $6 OR $6 = '')
         AND (
           UPPER(REPLACE(l.external_key, ' ', '')) = $1
-          OR l.license_number = $1
+          OR UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) = $1
           OR UPPER(REPLACE(l.external_key, ' ', '')) LIKE '%' || $1 || '%'
-          OR l.license_number LIKE $1 || '%'
+          OR UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) LIKE '%' || $1 || '%'
+          OR UPPER(REPLACE(l.external_key, '-', '')) = REPLACE($1, '-', '')
+          OR UPPER(l.external_key) = $1
         )
       ORDER BY
         CASE
           WHEN UPPER(REPLACE(l.external_key, ' ', '')) = $1 THEN 0
-          WHEN l.license_number = $1 THEN 1
+          WHEN UPPER(l.external_key) = $1 THEN 0
+          WHEN UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) = $1 THEN 1
           ELSE 2
         END,
         CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
@@ -189,13 +193,15 @@ export async function searchContractors(
         l.occupation_code,
         l.status_normalized,
         l.last_verified_at,
+        l.source_system,
         CASE
           WHEN c.display_name ILIKE $1 THEN 0
           WHEN c.dba_name ILIKE $1 THEN 1
           WHEN c.legal_name ILIKE $1 THEN 2
           WHEN c.display_name ILIKE $2 THEN 3
           WHEN c.dba_name ILIKE $2 OR c.legal_name ILIKE $2 THEN 4
-          ELSE 5
+          WHEN l.licensee_name_raw ILIKE $2 THEN 5
+          ELSE 6
         END AS rank_score
       FROM contractors c
       JOIN licenses l ON l.contractor_id = c.id AND l.source_system = $3
@@ -236,7 +242,7 @@ export async function searchContractors(
       FROM contractor_entities ce
       JOIN entities ent ON ent.id = ce.entity_id
       WHERE ce.contractor_id = m.id
-        AND ce.role = 'sunbiz_entity'
+        AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
         AND ent.source_system = $6
         AND ce.confidence IS NOT NULL
         AND ce.confidence >= $12
@@ -285,6 +291,7 @@ function mapSearchRow(r: {
   entity_status: string | null;
   entity_name: string | null;
   has_discipline: boolean;
+  source_system?: string | null;
 }): SearchResult {
   return {
     id: r.id,
@@ -302,6 +309,7 @@ function mapSearchRow(r: {
     entityName: r.entity_name,
     hasDiscipline: r.has_discipline,
     lastVerifiedAt: r.last_verified_at ? r.last_verified_at.toISOString() : null,
+    sourceSystem: r.source_system || null,
   };
 }
 
@@ -412,7 +420,7 @@ async function getContractorBySlugUncached(
     FROM contractor_entities ce
     JOIN entities e ON e.id = ce.entity_id
     WHERE ce.contractor_id = $1
-      AND ce.role = 'sunbiz_entity'
+      AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
       AND e.source_system = $2
       AND ce.confidence IS NOT NULL
       AND ce.confidence >= $3

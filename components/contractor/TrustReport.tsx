@@ -17,6 +17,15 @@ import {
 import type { ContractorDetail } from "@/lib/contractors/types";
 import type { EvidenceState } from "@/lib/states/config";
 import {
+  disciplineSectionBlurb,
+  disciplineSectionTitle,
+  evidenceSlugFromHomeState,
+} from "@/lib/states/evidence-copy";
+import {
+  getNjCredentialInfo,
+  njCredentialPlainLabel,
+} from "@/lib/states/nj-credentials";
+import {
   getTxTradeInfo,
   txTradeOfficialSuffix,
   txTradePlainLabel,
@@ -238,9 +247,16 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
         {licenses.map((lic) => {
           const isTx =
             (lic.sourceSystem || "").toLowerCase() === "tx_tdlr" || lic.state === "TX";
+          const isNj =
+            (lic.sourceSystem || "").toLowerCase() === "nj_dca" || lic.state === "NJ";
           const occ = getOccupationInfo(lic.occupationCode);
           const txTrade = isTx ? getTxTradeInfo(lic.occupationCode) : null;
-          const label = isTx ? txTradePlainLabel(lic.occupationCode) : occ.label;
+          const njCred = isNj ? getNjCredentialInfo(lic.occupationCode) : null;
+          const label = isTx
+            ? txTradePlainLabel(lic.occupationCode)
+            : isNj
+              ? njCredentialPlainLabel(lic.occupationCode)
+              : occ.label;
           const officialSuffix = isTx ? txTradeOfficialSuffix(lic.occupationCode) : null;
           return (
             <article
@@ -251,10 +267,17 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                 <p className="break-all font-mono text-sm font-semibold tracking-wide text-[var(--accent)] sm:text-base">
                   {lic.externalKey}
                 </p>
-                <StatusBadge
-                  status={lic.statusNormalized}
-                  label={`License: ${statusLabel(lic.statusNormalized)}`}
-                />
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {lic.sourceSystem ? (
+                    <span className="rounded-full border border-[var(--border)] bg-white px-2 py-0.5 font-mono text-[10px] text-[var(--muted)]">
+                      {lic.sourceSystem}
+                    </span>
+                  ) : null}
+                  <StatusBadge
+                    status={lic.statusNormalized}
+                    label={`${isNj ? "Registration" : "License"}: ${statusLabel(lic.statusNormalized)}`}
+                  />
+                </div>
               </div>
               <p className="mt-2 text-sm font-semibold leading-snug text-[var(--text)] sm:text-[15px]">
                 {label}
@@ -271,7 +294,25 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   ) : null}
                 </div>
               ) : null}
-              {!isTx ? (
+              {isNj && njCred ? (
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                  <span className="inline-flex rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[11px] font-medium text-violet-950">
+                    {njCred.chip} · NJ extract
+                  </span>
+                </div>
+              ) : null}
+              {isNj && njCred ? (
+                <div className="mt-3 rounded-lg border border-violet-200/80 bg-violet-50/50 px-3 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-violet-900/80">
+                    What this credential allows / does not imply
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">{njCred.allows}</p>
+                  <p className="mt-2 border-t border-violet-200/70 pt-2 text-sm leading-relaxed text-[var(--muted)]">
+                    <span className="font-medium text-[var(--text)]/90">Does not imply: </span>
+                    {njCred.doesNotImply}
+                  </p>
+                </div>
+              ) : !isTx ? (
                 <div className="mt-3 rounded-lg border border-[var(--border)]/80 bg-[var(--bg)]/50 px-3 py-3">
                   <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
                     What this class typically covers
@@ -312,9 +353,9 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   <dd className="text-[var(--text)]">{formatDate(lic.expirationDate)}</dd>
                 </div>
                 <div>
-                  <dt className="text-[var(--muted)]">Board</dt>
+                  <dt className="text-[var(--muted)]">Board / source</dt>
                   <dd className="text-[var(--text)]">
-                    {lic.boardNumber || (isTx ? "TDLR" : "CILB / DBPR")}
+                    {lic.boardNumber || (isNj ? "NJ DCA" : isTx ? "TDLR" : "CILB / DBPR")}
                   </dd>
                 </div>
                 <div className="sm:col-span-2">
@@ -328,8 +369,12 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                 <div className="sm:col-span-2">
                   <dt className="text-[var(--muted)]">Source / last verified</dt>
                   <dd className="break-words text-[var(--text)]">
-                    {isTx ? "Texas TDLR" : "Florida DBPR"} ({lic.sourceSystem}) ·{" "}
-                    {formatDateTime(lic.lastVerifiedAt)}
+                    {isNj
+                      ? "New Jersey registration extract"
+                      : isTx
+                        ? "Texas TDLR"
+                        : "Florida DBPR"}{" "}
+                    ({lic.sourceSystem}) · {formatDateTime(lic.lastVerifiedAt)}
                   </dd>
                 </div>
               </dl>
@@ -458,10 +503,16 @@ export function EntitySection({
 
 export function DisciplineSection({
   discipline,
+  homeState,
 }: {
   discipline: ContractorDetail["discipline"];
+  homeState?: string | null;
 }) {
   const hasActions = discipline.length > 0;
+  const slug = evidenceSlugFromHomeState(homeState);
+  const title = disciplineSectionTitle(slug);
+  const blurb = disciplineSectionBlurb(slug);
+  const recordWord = slug === "nj" ? "Enforcement" : "Discipline";
 
   return (
     <section
@@ -475,12 +526,9 @@ export function DisciplineSection({
             id="discipline-heading"
             className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]"
           >
-            Caution &amp; regulatory history
+            {title}
           </h2>
-          <p className="mt-1 text-xs text-[var(--muted)]">
-            Board discipline from Florida extracts linked to this contractor. Separate from
-            insurance, permits, or reviews — factual records only.
-          </p>
+          <p className="mt-1 text-xs text-[var(--muted)]">{blurb}</p>
         </div>
         <span
           className={
@@ -490,25 +538,37 @@ export function DisciplineSection({
           }
         >
           {hasActions
-            ? `Discipline records identified (${discipline.length})`
-            : "No discipline records identified in current extracts"}
+            ? `${recordWord} records identified (${discipline.length})`
+            : `No ${recordWord.toLowerCase()} records identified in current extracts`}
         </span>
       </div>
 
       {!hasActions ? (
         <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50/70 px-4 py-4">
           <p className="text-sm font-medium text-emerald-900">
-            No discipline records identified in current extracts
+            No {recordWord.toLowerCase()} records identified in current extracts
           </p>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-            Our Florida board discipline files do not currently attach an action to this profile.
-            That is <strong className="font-medium text-[var(--text)]">not</strong> a certificate of
-            clean history: records may exist outside these extracts, under another name, or after our
-            last load. Re-check the official DBPR board before hiring.
+            {slug === "nj" ? (
+              <>
+                Our New Jersey enforcement extract does not currently attach a public action to this
+                profile. That is{" "}
+                <strong className="font-medium text-[var(--text)]">not</strong> a certificate of
+                clean history: records may exist outside these extracts or after our last load.
+                Re-check official New Jersey tools before hiring.
+              </>
+            ) : (
+              <>
+                Our Florida board discipline files do not currently attach an action to this profile.
+                That is <strong className="font-medium text-[var(--text)]">not</strong> a certificate
+                of clean history: records may exist outside these extracts, under another name, or
+                after our last load. Re-check the official DBPR board before hiring.
+              </>
+            )}
           </p>
           <p className="mt-2 text-xs text-[var(--muted)]">
-            What this means: absence in our extract ≠ cleared. Worth confirming on the official board
-            the day you hire.
+            What this means: absence in our extract ≠ cleared. Worth confirming on the official
+            source the day you hire.
           </p>
         </div>
       ) : (

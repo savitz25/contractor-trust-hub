@@ -21,6 +21,8 @@ export type SearchResult = {
   entityName: string | null;
   hasDiscipline: boolean;
   lastVerifiedAt: string | null;
+  /** License/registration source_system (e.g. fl_dbpr, nj_dca, tx_tdlr) */
+  sourceSystem?: string | null;
 };
 
 export type LicenseDetail = {
