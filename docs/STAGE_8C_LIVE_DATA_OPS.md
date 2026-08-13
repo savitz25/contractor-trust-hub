@@ -104,7 +104,17 @@ Loader:
 | `nj_sos` | High-confidence entities |
 | `nj_enforcement` | Public action rows |
 
-Pilot banner remains until product intentionally expands coverage.
+### Production refresh (HIC + specialty)
+
+```bash
+python scripts/download_nj_dca.py --from-box --convert
+python -m ingest.adapters.nj_dca --input data/raw/nj_dca/registrations.csv --out-dir data/staging/nj_dca
+python scripts/load_nj_dca_to_postgres.py --staging-dir data/staging/nj_dca
+# or: python scripts/load_nj_dca_via_supabase_rest.py --staging-dir data/staging/nj_dca
+```
+
+**Active Standard Files counts (2026-08-03):** HIC 25,111 · ELE 2,853 · PLB 1,719 · HVAC 1,575 (total 31,258).  
+Coverage banner remains: no statewide GC; HIC primary; specialty boards only when loaded.
 
 ## Coverage truthfulness
 

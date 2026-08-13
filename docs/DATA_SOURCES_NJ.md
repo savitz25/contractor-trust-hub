@@ -20,13 +20,23 @@ Florida remains the full-journey product. Texas is specialty-license Verify.
 
 | Resource | URL | Notes |
 |----------|-----|--------|
-| DCA Standard Files (Box) | https://app.box.com/v/DCAStandardFiles | Free bulk / standard licensee list distribution |
+| DCA Standard Files (Box) | https://app.box.com/v/DCAStandardFiles | **Primary free bulk** — MLO Facilities + Individuals `.txt` files (`%`-delimited), dated in filename |
+| MyLicense bulk download | https://newjersey.mylicense.com/Verification_Bulk | Profession-filtered free roster download (can include expired HIC) |
 | NJ Consumer Affairs | https://www.njconsumeraffairs.gov/ | Program pages, board links, consumer info |
-| MyLicense bulk / download flows | Via njconsumeraffairs.gov / MyLicense portals | Follow official request/download steps for current files |
 | Interactive verification | https://newjersey.mylicense.com/verification | Human confirm — not bulk ingest |
 
-**Prefer:** Official free bulk downloads (Standard Files / board CSVs).  
+**Prefer:** Official free bulk downloads (Standard Files / MyLicense bulk).  
 **Avoid:** Scraping the interactive verification portal or third-party directories as primary truth.
+
+### Box Standard Files layout (observed 2026-08-03)
+
+| File | Role for Verify |
+|------|-----------------|
+| `MLO_Facilities_active_statuses_*.txt` | **Primary** — Home Improvement Business Contr (~25k Active HIC) + Electrical Business Permit (~2.8k) |
+| `MLO_Individuals_active_statuses_*.txt` | Specialty persons — Master Plumber, Master HVACR Contractor |
+| `*_all_statuses_with_discipline_*.txt` | Broader statuses / discipline for some boards; **HIC profession absent** in facilities all-status file as of this extract |
+
+Delimiter: `%` (header line is a truncated SQL concat expression; field order is fixed — see `scripts/convert_nj_mlo_facilities.py`).
 
 ### Home Improvement Contractor (HIC) — primary residential set
 
@@ -85,13 +95,15 @@ Interactive case search remains authoritative for enforcement detail.
 | Step | Command / asset |
 |------|-----------------|
 | Document | This file + [NEW_JERSEY_VERIFY_V1.md](./NEW_JERSEY_VERIFY_V1.md) |
-| Place bulk file | Official Box / MyLicense download → `data/raw/nj_dca/` |
-| Helper | `python scripts/download_nj_dca.py --from-file path/to/bulk.csv` |
-| Normalize | `python -m ingest.adapters.nj_dca --input … --out-dir data/staging/nj_dca` |
-| Staging | `data/staging/nj_dca/` (gitignored except samples) |
+| Download + convert | `python scripts/download_nj_dca.py --from-box --convert` |
+| Converter | `scripts/convert_nj_mlo_facilities.py` → HIC + ELE + PLB + HVAC CSV |
+| Normalize | `python -m ingest.adapters.nj_dca --input data/raw/nj_dca/registrations.csv --out-dir data/staging/nj_dca` |
+| Staging | `data/staging/nj_dca/` (gitignored) |
 | Load | `python scripts/load_nj_dca_to_postgres.py --staging-dir data/staging/nj_dca` |
-| Registry | `lib/states/config.ts` → `nj` (`live` gated by flag + load) |
+| Registry | `lib/states/config.ts` → `nj` |
 | Verify UI | `/verify?state=nj` |
+
+**Production staged counts (active Standard Files, 2026-08-03):** HIC 25,111 · ELE 2,853 · PLB 1,719 · HVAC 1,575 · **total 31,258**.
 
 ### Committed sample (no network)
 

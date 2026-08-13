@@ -70,6 +70,10 @@ export function looksLikeLicenseKey(q: string): boolean {
   if (/^HIC[-_]?/i.test(trimmed)) return true;
   if (/^(ELE|PLB|HVAC|GEN)-NJ-/i.test(trimmed)) return true;
   const compact = trimmed.replace(/[\s\-_.]/g, "");
+  // NJ DCA registration ids often start with digits then letters, e.g. 13VH13621300, 34EB00138000
+  if (/^\d{2}[A-Za-z]{2}\d{5,}$/i.test(compact)) {
+    return true;
+  }
   // Mixed alphanumerics common in NJ registration ids (e.g. HIC13VH00012300)
   if (/^[A-Za-z]{2,6}\d{2,}[A-Za-z0-9]{2,}$/i.test(compact) && compact.length >= 8) {
     return true;

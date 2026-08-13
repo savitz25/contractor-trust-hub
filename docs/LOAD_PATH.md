@@ -286,14 +286,27 @@ Expected staging files:
 ## Load
 
 ```bash
-# Idempotent upserts (safe to re-run)
+# Preferred when DATABASE_URL (Session pooler) is set locally
 python scripts/load_nj_dca_to_postgres.py \
   --staging-dir data/staging/nj_dca
+
+# Alternate: PostgREST service-role bulk upsert (when only SUPABASE_SERVICE_ROLE_KEY is available)
+# python scripts/load_nj_dca_via_supabase_rest.py --staging-dir data/staging/nj_dca
 
 # Smoke / sample
 python scripts/load_nj_dca_to_postgres.py \
   --staging-dir data/staging/nj_dca_sample --limit 100
 ```
+
+### Production load snapshot (Box active Standard Files, 2026-08-03)
+
+| Code | Rows |
+|------|-----:|
+| HIC | 25,111 |
+| ELE | 2,853 |
+| PLB | 1,719 |
+| HVAC | 1,575 |
+| **Total** | **31,258** |
 
 **Rules:**
 

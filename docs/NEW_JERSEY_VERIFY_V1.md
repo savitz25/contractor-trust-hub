@@ -47,19 +47,24 @@
 - Name-only entity auto-joins  
 - Cross-state identity merge with FL/TX  
 
-## End-to-end load path
+## End-to-end load path (production)
+
+Official free bulk is the **DCA Standard Files** Box folder (MLO Facilities + Individuals, `%`-delimited).
 
 ```bash
-# 1) Obtain official bulk CSV (Box Standard Files / MyLicense free lists)
-#    Place under data/raw/nj_dca/  OR:
-python scripts/download_nj_dca.py --from-file path/to/dca_bulk.csv
+# 1) Download Box Standard Files + convert HIC / specialty → adapter CSV
+python scripts/download_nj_dca.py --from-box --convert
+# Equivalent two-step:
+#   python scripts/download_nj_dca.py --from-box
+#   python scripts/convert_nj_mlo_facilities.py
+#   python scripts/download_nj_dca.py --from-file data/raw/nj_dca/hic_and_specialty_from_mlo_active.csv
 
 # 2) Normalize → staging
 python -m ingest.adapters.nj_dca \
   --input data/raw/nj_dca/registrations.csv \
   --out-dir data/staging/nj_dca
 
-# 3) Idempotent Postgres load
+# 3) Idempotent Postgres load (requires DATABASE_URL)
 python scripts/load_nj_dca_to_postgres.py --staging-dir data/staging/nj_dca
 
 # Sample (committed, no network)
@@ -85,18 +90,47 @@ NEXT_PUBLIC_NJ_VERIFY_PILOT=true   # default: show NJ in state switcher when liv
 NEXT_PUBLIC_NJ_VERIFY_PILOT=false  # hide NJ entry without code removal
 ```
 
-## Counts & gaps (ops)
+## Production counts (Box Standard Files, active statuses, 2026-08-03 extract)
 
-After load, record:
+Staged from official free bulk (not sample):
 
-| Metric | How |
+| occupation_code | Source in Standard Files | Rows staged |
+|-----------------|--------------------------|------------:|
+| **HIC** | Facilities → Home Improvement Business Contr (+ Home Elevation) | **25,111** |
+| **ELE** | Facilities → Electrical Business Permit | **2,853** |
+| **PLB** | Individuals → Master Plumber | **1,719** |
+| **HVAC** | Individuals → Master HVACR Contractor | **1,575** |
+| **Total** | | **31,258** |
+
+All rows in this extract are **Active**. Expired/inactive HIC appear on MyLicense interactive/bulk profession export but are **not** in the Box “active” Standard Files (the facilities “all statuses” file also omits HIC profession entirely as of this extract).
+
+After Postgres load, confirm:
+
+| Metric | SQL |
 |--------|-----|
-| HIC rows | `SELECT COUNT(*) FROM licenses WHERE source_system='nj_dca' AND occupation_code='HIC'` |
-| Specialty rows | same with `occupation_code IN ('ELE','PLB','HVAC',…)` |
-| Entity links | `entities` where `source_system='nj_sos'` |
-| Enforcement rows | `discipline_actions` where `source_system='nj_enforcement'` |
+| HIC | `SELECT COUNT(*) FROM licenses WHERE source_system='nj_dca' AND occupation_code='HIC'` |
+| Specialty | `… AND occupation_code IN ('ELE','PLB','HVAC')` |
+| Batch | `SELECT * FROM ingest_batches WHERE source_system='nj_dca' ORDER BY id DESC LIMIT 3` |
 
-**Known gaps:** bulk file availability varies by board; addresses may be sparse; entity/enforcement optional; municipal-only credentials excluded.
+### Field notes from full extract
+
+- Stable keys: `NJ-HIC:{license_no}`, `NJ-ELE:…`, `NJ-PLB:…`, `NJ-HVAC:…`  
+- Location fill is strong on facilities (city/state/ZIP/county present)  
+- Individuals specialty rows are **person-named** credentials (Master Plumber / Master HVACR), not business shells  
+- Entity / enforcement not present in Standard Files — optional depth only  
+- Phone present on facilities; often absent on individuals  
+
+### Remaining gaps
+
+| Gap | Notes |
+|-----|--------|
+| Expired / inactive HIC | Use MyLicense Verification_Bulk profession download if needed |
+| Full electrical person cards | Only business permits from facilities by default |
+| Journeyman / apprentice | Intentionally excluded (contractor-facing only) |
+| Entity linkage | No automatic SOS join |
+| Enforcement depth | Not in Standard Files active extract |
+| Municipal-only cards | Out of scope |
+| Refresh schedule | Re-run `--from-box --convert` when Box files update (dated in filename) |
 
 ## Guardrails checklist
 
@@ -104,8 +138,9 @@ After load, record:
 2. ✅ No name-only auto-joins  
 3. ✅ FL/TX paths unchanged  
 4. ✅ Official bulk preferred over scrape  
-5. ⬜ Production full HIC refresh schedule (ops)  
-6. ⬜ Specialty board bulk when files are stable  
+5. ✅ Production full HIC (+ specialty) staged from Box Standard Files  
+6. ⬜ Postgres production load (requires `DATABASE_URL`) + UI smoke on live DB  
+7. ⬜ Scheduled refresh when Box file dates change  
 
 ## Related
 
