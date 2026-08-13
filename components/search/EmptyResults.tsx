@@ -13,7 +13,47 @@ export function EmptyResults({ query, mode, stateSlug = "fl" }: Props) {
   if (stateSlug === "tx") {
     return <TexasEmptyResults query={query} mode={mode} />;
   }
+  if (stateSlug === "nj") {
+    return <NjEmptyResults query={query} mode={mode} />;
+  }
   return <FloridaEmptyResults query={query} mode={mode} />;
+}
+
+function NjEmptyResults({ query, mode }: { query: string; mode: "license" | "name" }) {
+  return (
+    <div className="rounded-2xl border border-dashed border-violet-200 bg-violet-50/40 px-4 py-8 sm:px-8 sm:py-9">
+      <p className="text-base font-medium text-[var(--text)]">
+        No New Jersey registrations matched &ldquo;{query}&rdquo;
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+        {mode === "license"
+          ? "We looked for that registration / license key in the NJ pilot extract (HIC and selected trades)."
+          : "We searched business and owner names in the NJ registration extract only."}
+      </p>
+      <ul className="mt-5 list-disc space-y-2.5 pl-5 text-sm leading-relaxed text-[var(--muted)]">
+        <li>
+          This is a <strong className="font-medium text-[var(--text)]">verification pilot</strong> —
+          not every NJ trade or municipal card is loaded yet.
+        </li>
+        <li>Missing from results does not prove someone is unregistered — confirm on the official DCA tools.</li>
+        <li>
+          Florida&apos;s full journey (plan, property, projects, passport) remains at{" "}
+          <Link href="/verify" className="text-[var(--accent)]">
+            /verify
+          </Link>
+          .
+        </li>
+      </ul>
+      <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold">
+        <Link href="/verify?state=nj" className="text-[var(--navy)]">
+          Clear search
+        </Link>
+        <Link href="/verify" className="text-[var(--navy)]">
+          Florida Verify
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 function FloridaEmptyResults({ query, mode }: { query: string; mode: "license" | "name" }) {

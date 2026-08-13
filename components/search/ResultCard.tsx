@@ -3,6 +3,7 @@ import { CompareToggle } from "@/components/compare/CompareToggle";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { statusLabel } from "@/lib/contractors/format";
 import { occupationLabel } from "@/lib/states/config";
+import { getNjCredentialInfo, njCredentialPlainLabel } from "@/lib/states/nj-credentials";
 import {
   getTxTradeInfo,
   txTradeOfficialSuffix,
@@ -36,18 +37,29 @@ const toneBar: Record<string, string> = {
   neutral: "bg-slate-400",
 };
 
-function isTexasResult(result: SearchResult, hideEntityWhenMissing: boolean): boolean {
-  if (hideEntityWhenMissing) return true;
+function isTexasResult(result: SearchResult): boolean {
   return (result.state || "").toUpperCase() === "TX";
 }
 
-function displayLicenseKey(result: SearchResult, isTx: boolean): string | null {
+function isNjResult(result: SearchResult): boolean {
+  return (result.state || "").toUpperCase() === "NJ";
+}
+
+function displayLicenseKey(
+  result: SearchResult,
+  isTx: boolean,
+  isNj: boolean
+): string | null {
   const key = result.primaryLicenseKey;
   if (!key) return null;
-  if (!isTx) return key;
-  // Prefer short numeric id when product key is long TX-TDLR:…
-  const m = key.match(/:(\d+)(?::|$)/);
-  if (m) return m[1];
+  if (isTx) {
+    // Prefer short numeric id when product key is long TX-TDLR:…
+    const m = key.match(/:(\d+)(?::|$)/);
+    if (m) return m[1];
+  }
+  if (isNj && key.includes(":")) {
+    return key.split(":").pop() || key;
+  }
   return key;
 }
 
@@ -56,20 +68,25 @@ export function ResultCard({
   hideEntityWhenMissing = false,
 }: {
   result: SearchResult;
-  /** Texas / specialty states without entity linking */
+  /** Specialty / pilot states without entity linking */
   hideEntityWhenMissing?: boolean;
 }) {
-  const isTx = isTexasResult(result, hideEntityWhenMissing);
+  const isTx = isTexasResult(result);
+  const isNj = isNjResult(result);
   const location = [result.city, result.county, result.state].filter(Boolean).join(" · ");
   const licTone = signalTone("license", result);
   const entTone = signalTone("entity", result);
-  const showEntity = Boolean(result.entityStatus) || !hideEntityWhenMissing;
+  const showEntity =
+    Boolean(result.entityStatus) || !(hideEntityWhenMissing || isTx || isNj);
   const trade = isTx ? getTxTradeInfo(result.occupationCode) : null;
-  const tradeLabel = isTx
-    ? txTradePlainLabel(result.occupationCode)
-    : occupationLabel(result.occupationCode);
+  const njCred = isNj ? getNjCredentialInfo(result.occupationCode) : null;
+  const tradeLabel = isNj
+    ? njCredentialPlainLabel(result.occupationCode)
+    : isTx
+      ? txTradePlainLabel(result.occupationCode)
+      : occupationLabel(result.occupationCode);
   const officialSuffix = isTx ? txTradeOfficialSuffix(result.occupationCode) : null;
-  const shortKey = displayLicenseKey(result, isTx);
+  const shortKey = displayLicenseKey(result, isTx, isNj);
 
   return (
     <article className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/20 hover:shadow-[var(--shadow-md)]">
@@ -77,13 +94,20 @@ export function ResultCard({
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-[var(--border)]/80 px-3.5 py-2.5 sm:gap-x-4 sm:px-5">
         <span className="inline-flex items-center gap-1.5 text-xs text-[var(--muted)]">
           <span className={`h-1.5 w-1.5 rounded-full ${toneBar[licTone]}`} aria-hidden />
-          License {statusLabel(result.licenseStatus)}
+          {isNj ? "Registration" : "License"} {statusLabel(result.licenseStatus)}
         </span>
         {isTx && trade ? (
           <span className="inline-flex max-w-full items-center gap-1.5 text-xs font-medium text-[var(--navy)]">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--navy)]/50" aria-hidden />
             <span className="truncate">{trade.chip}</span>
             <span className="hidden text-[var(--muted)] font-normal sm:inline">· specialty</span>
+          </span>
+        ) : null}
+        {isNj && njCred ? (
+          <span className="inline-flex max-w-full items-center gap-1.5 text-xs font-medium text-[var(--navy)]">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500/70" aria-hidden />
+            <span className="truncate">{njCred.chip}</span>
+            <span className="hidden text-[var(--muted)] font-normal sm:inline">· NJ pilot</span>
           </span>
         ) : null}
         {showEntity ? (
@@ -100,7 +124,7 @@ export function ResultCard({
             <span className="truncate">{location}</span>
           </span>
         ) : null}
-        {!isTx ? (
+        {!isTx && !isNj ? (
           result.hasDiscipline ? (
             <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-800">
               <span className={`h-1.5 w-1.5 rounded-full ${toneBar.warn}`} aria-hidden />
@@ -128,10 +152,10 @@ export function ResultCard({
             </h2>
             {shortKey ? (
               <p className="mt-1 font-mono text-sm tracking-wide text-[var(--accent)]">
-                {isTx ? (
+                {isTx || isNj ? (
                   <>
                     <span className="mr-1.5 font-sans text-[11px] font-medium uppercase tracking-wider text-[var(--muted)]">
-                      TDLR
+                      {isNj ? "NJ" : "TDLR"}
                     </span>
                     {shortKey}
                     {result.primaryLicenseKey && result.primaryLicenseKey !== shortKey ? (
@@ -152,9 +176,14 @@ export function ResultCard({
                 Specialty trade
               </span>
             ) : null}
+            {isNj ? (
+              <span className="inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[11px] font-medium text-violet-950">
+                NJ pilot
+              </span>
+            ) : null}
             <StatusBadge
               status={result.licenseStatus}
-              label={`License: ${statusLabel(result.licenseStatus)}`}
+              label={`${isNj ? "Registration" : "License"}: ${statusLabel(result.licenseStatus)}`}
             />
             {result.entityStatus ? (
               <StatusBadge
@@ -175,8 +204,12 @@ export function ResultCard({
             </p>
           ) : isTx ? (
             <p className="mt-0.5 text-xs text-[var(--muted)]">TDLR specialty license</p>
+          ) : isNj ? (
+            <p className="mt-0.5 text-xs text-[var(--muted)]">
+              NJ registration extract · not Florida-depth coverage
+            </p>
           ) : null}
-          {(result.entityName || location) && !isTx ? (
+          {(result.entityName || location) && !isTx && !isNj ? (
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
               {result.entityName ? (
                 <span className="text-[var(--text)]/80">Entity: {result.entityName}</span>
@@ -184,7 +217,7 @@ export function ResultCard({
               {result.entityName && location ? " · " : null}
               {location ? <span>{location}</span> : null}
             </p>
-          ) : location && isTx ? (
+          ) : location && (isTx || isNj) ? (
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">{location}</p>
           ) : null}
         </div>

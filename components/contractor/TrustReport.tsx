@@ -588,7 +588,9 @@ export function SourcesFooter({
 }) {
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
-  const isTx = state.slug === "tx" || (contractor.homeState || "").toUpperCase() === "TX";
+  const hs = (contractor.homeState || "").toUpperCase();
+  const isTx = state.slug === "tx" || hs === "TX";
+  const isNj = state.slug === "nj" || hs === "NJ";
 
   return (
     <aside className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-elevated)]/50 px-4 py-5 text-sm leading-relaxed text-[var(--muted)] sm:px-5">
@@ -600,7 +602,11 @@ export function SourcesFooter({
       <ul className="mt-4 space-y-3">
         <li>
           <span className="font-medium text-[var(--text)]">
-            {isTx ? "License (TDLR)" : "License (DBPR)"}
+            {isNj
+              ? "Registration / credential (NJ extract)"
+              : isTx
+                ? "License (TDLR)"
+                : "License (DBPR)"}
           </span>
           <br />
           <a href={state.boardUrl} target="_blank" rel="noreferrer">
@@ -608,7 +614,10 @@ export function SourcesFooter({
           </a>
           <br />
           <span className="text-xs">
-            Source system: {lic?.sourceSystem || state.licenseSource || (isTx ? "tx_tdlr" : "fl_dbpr")}
+            Source system:{" "}
+            {lic?.sourceSystem ||
+              state.licenseSource ||
+              (isNj ? "nj_dca" : isTx ? "tx_tdlr" : "fl_dbpr")}
             {lic?.lastVerifiedAt
               ? ` · in our data ${formatDateTime(lic.lastVerifiedAt)}`
               : " · timestamp not on file"}
@@ -621,6 +630,14 @@ export function SourcesFooter({
             Texas has no statewide general contractor license. This profile reflects selected TDLR
             specialty trades only. Plumbing (TSBPE) and city/county GC registration are not fully
             covered.
+          </li>
+        ) : isNj ? (
+          <li>
+            <span className="font-medium text-[var(--text)]">Coverage note</span>
+            <br />
+            New Jersey verification pilot — registration and public-record extracts only. Not
+            Florida-depth (no full permit history or planning journey in this pilot). Coverage
+            differs by state.
           </li>
         ) : (
           <>
@@ -651,7 +668,9 @@ export function SourcesFooter({
       <p className="mt-4">
         {isTx
           ? "Always confirm current status on the official TDLR license search before hiring."
-          : "Always confirm current status on the official board and corporate registry before hiring."}{" "}
+          : isNj
+            ? "Always confirm current status on official New Jersey DCA / board tools before hiring."
+            : "Always confirm current status on the official board and corporate registry before hiring."}{" "}
         Educational research only — not a consumer reporting agency, not paid rankings.{" "}
         <Link href="/methodology" className="text-[var(--accent)]">
           Methodology

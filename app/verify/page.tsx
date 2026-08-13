@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { EmptyResults } from "@/components/search/EmptyResults";
+import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
 import { ResultCard } from "@/components/search/ResultCard";
 import { SearchForm } from "@/components/search/SearchForm";
 import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
@@ -24,15 +25,27 @@ function resolveVerifyState(raw: string | undefined) {
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const sp = await searchParams;
   const state = resolveVerifyState(sp.state);
-  const isTx = state.slug === "tx";
+  if (state.slug === "tx") {
+    return pageMetadata({
+      title: "Verify a Texas specialty contractor (TDLR)",
+      description:
+        "Search TDLR specialty trade licenses in Texas (electrical, air conditioning, and related). Not a statewide general contractor directory. Evidence only — not a marketplace.",
+      path: "/verify?state=tx",
+    });
+  }
+  if (state.slug === "nj") {
+    return pageMetadata({
+      title: "Verify a New Jersey contractor (pilot)",
+      description:
+        "New Jersey verification pilot — search home-improvement contractor registration and selected trade credentials from official extracts. Coverage differs by state. Not a marketplace.",
+      path: "/verify?state=nj",
+    });
+  }
   return pageMetadata({
-    title: isTx
-      ? "Verify a Texas specialty contractor (TDLR)"
-      : "Verify a Florida contractor",
-    description: isTx
-      ? "Search TDLR specialty trade licenses in Texas (electrical, air conditioning, and related). Not a statewide general contractor directory. Evidence only — not a marketplace."
-      : "Search Florida contractor licenses by name or license number. Official DBPR status, Sunbiz entity links, and board discipline — free Trust Reports, not a marketplace.",
-    path: isTx ? "/verify?state=tx" : "/verify",
+    title: "Verify a Florida contractor",
+    description:
+      "Search Florida contractor licenses by name or license number. Official DBPR status, Sunbiz entity links, and board discipline — free Trust Reports, not a marketplace.",
+    path: "/verify",
   });
 }
 
@@ -40,6 +53,8 @@ export default async function VerifyPage({ searchParams }: Props) {
   const sp = await searchParams;
   const state = resolveVerifyState(sp.state);
   const isTx = state.slug === "tx";
+  const isNj = state.slug === "nj";
+  const isSpecialty = isTx || isNj;
   const q = (sp.q || "").trim();
   const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
   let results: Awaited<ReturnType<typeof searchContractors>>["results"] = [];
@@ -61,31 +76,91 @@ export default async function VerifyPage({ searchParams }: Props) {
 
   const intentBlurb =
     intent === "have"
-      ? "Confirming someone you’re already talking to — license id is most precise when you have it."
+      ? "Confirming someone you’re already talking to — registration or license id is most precise when you have it."
       : intent === "research"
         ? "Researching by name — try distinctive words from the company; drop LLC / Inc if needed."
         : null;
 
   const liveStates = getLiveStates();
 
+  const kicker = isNj
+    ? "New Jersey · verification pilot"
+    : isTx
+      ? "Texas · TDLR specialty trades"
+      : "Florida · DBPR + Sunbiz";
+
+  const heading = isNj
+    ? "Verify a New Jersey contractor"
+    : isTx
+      ? "Verify a Texas specialty contractor"
+      : "Verify a Florida contractor";
+
+  const lead = isNj
+    ? "Search by registration number or company name. Built from official registration extracts — not Florida-depth coverage."
+    : isTx
+      ? "Search TDLR specialty licenses by number or business / owner name. You’ll see the trade type in plain language, license status, and county when available."
+      : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
+
+  const helpCards = isNj
+    ? [
+        {
+          t: "Registration number",
+          d: "HIC or trade registration ids from invoices or contracts are most precise.",
+        },
+        {
+          t: "Company name",
+          d: "Matches business and owner names in the NJ pilot extract only.",
+        },
+        {
+          t: "What you’ll see",
+          d: "Credential type, status, location when available — then a Trust Report with honest source limits.",
+        },
+      ]
+    : isTx
+      ? [
+          {
+            t: "License number",
+            d: "TDLR numbers (e.g. 10001) are most precise when you have the card or invoice.",
+          },
+          {
+            t: "Business or owner name",
+            d: "Matches business and owner names from the TDLR open extract for specialty trades.",
+          },
+          {
+            t: "What you’ll see",
+            d: "Plain-language trade type (air conditioning, electrical, …), status, county when available — then a Trust Report.",
+          },
+        ]
+      : [
+          {
+            t: "License number",
+            d: "Most precise. Full ids like CBC015082 — spaces or dashes are fine.",
+          },
+          {
+            t: "Company name",
+            d: "Matches display, legal, and DBA fields. LLC / Inc endings are optional.",
+          },
+          {
+            t: "What you’ll see",
+            d: "License status, entity status, and location on every card — then a Trust Report.",
+          },
+        ];
+
   return (
     <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--accent)] sm:text-xs">
-        {isTx ? "Texas · TDLR specialty trades" : "Florida · DBPR + Sunbiz"}
+        {kicker}
       </p>
       <h1 className="mt-1.5 text-[1.65rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:mt-2 sm:text-4xl">
-        {isTx ? "Verify a Texas specialty contractor" : "Verify a Florida contractor"}
+        {heading}
       </h1>
       <p className="mt-2.5 max-w-2xl text-sm leading-relaxed text-[var(--muted)] sm:mt-3 sm:text-base">
-        {isTx
-          ? "Search TDLR specialty licenses by number or business / owner name. You’ll see the trade type in plain language, license status, and county when available."
-          : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report."}
+        {lead}
       </p>
       {intentBlurb ? (
         <p className="mt-2 max-w-2xl text-sm text-[var(--accent)]/90">{intentBlurb}</p>
       ) : null}
 
-      {/* State switcher — full-width touch targets on mobile */}
       {liveStates.length > 1 ? (
         <div
           className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:mt-5 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
@@ -103,7 +178,13 @@ export default async function VerifyPage({ searchParams }: Props) {
                   ? `/verify?state=${s.slug}&q=${encodeURIComponent(q)}`
                   : `/verify?state=${s.slug}`;
             const subtitle =
-              s.slug === "tx" ? "Specialty trades" : s.slug === "fl" ? "Full construction" : null;
+              s.slug === "tx"
+                ? "Specialty trades"
+                : s.slug === "nj"
+                  ? "Verify pilot"
+                  : s.slug === "fl"
+                    ? "Full journey"
+                    : null;
             return (
               <Link
                 key={s.slug}
@@ -137,6 +218,11 @@ export default async function VerifyPage({ searchParams }: Props) {
           <TexasCoverageBanner showFloridaLink={!q} />
         </div>
       ) : null}
+      {isNj ? (
+        <div className="mt-4 max-w-3xl sm:mt-5">
+          <NjCoverageBanner showFloridaLink={!q} />
+        </div>
+      ) : null}
 
       <div className="mt-5 max-w-3xl sm:mt-7">
         <SearchForm
@@ -148,7 +234,9 @@ export default async function VerifyPage({ searchParams }: Props) {
         <p className="mt-2 text-xs leading-relaxed text-[var(--muted)] sm:mt-2.5">
           {isTx
             ? `Specialty trades: ${TX_COVERED_TRADES_PLAIN.join(" · ").toLowerCase()}. Not a statewide general contractor directory.`
-            : "Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay high-confidence only."}
+            : isNj
+              ? "Registration-first search. Entity links only when high-confidence. No name-only auto-joins."
+              : "Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay high-confidence only."}
         </p>
       </div>
 
@@ -162,7 +250,7 @@ export default async function VerifyPage({ searchParams }: Props) {
             We could not reach the license database right now. Please try again in a few minutes.
           </p>
           <p className="mt-3 text-xs text-rose-800/80">
-            {isTx ? (
+            {isSpecialty ? (
               <>
                 Florida Verify remains at{" "}
                 <Link href="/verify" className="font-medium underline">
@@ -202,6 +290,7 @@ export default async function VerifyPage({ searchParams }: Props) {
                 : `${results.length} match${results.length === 1 ? "" : "es"}`}
               {mode === "license" ? " · license search" : " · name search"}
               {isTx ? " · TDLR specialty" : ""}
+              {isNj ? " · NJ pilot" : ""}
               {results.length >= 25 ? " · first 25" : ""}
             </p>
           </div>
@@ -211,7 +300,7 @@ export default async function VerifyPage({ searchParams }: Props) {
           ) : (
             <div className="space-y-2.5 sm:space-y-3">
               {results.map((r) => (
-                <ResultCard key={r.id} result={r} hideEntityWhenMissing={isTx} />
+                <ResultCard key={r.id} result={r} hideEntityWhenMissing={isSpecialty} />
               ))}
               {results.length >= 25 ? (
                 <p className="pt-1 text-center text-sm text-[var(--muted)] sm:pt-2">
@@ -224,6 +313,11 @@ export default async function VerifyPage({ searchParams }: Props) {
                   <TexasCoverageBanner compact showFloridaLink={false} />
                 </div>
               ) : null}
+              {isNj ? (
+                <div className="pt-2 sm:pt-3">
+                  <NjCoverageBanner compact showFloridaLink={false} />
+                </div>
+              ) : null}
             </div>
           )}
         </section>
@@ -231,36 +325,7 @@ export default async function VerifyPage({ searchParams }: Props) {
 
       {!q ? (
         <section className="mt-8 grid gap-2.5 sm:mt-12 sm:grid-cols-3 sm:gap-4">
-          {(isTx
-            ? [
-                {
-                  t: "License number",
-                  d: "TDLR numbers (e.g. 10001) are most precise when you have the card or invoice.",
-                },
-                {
-                  t: "Business or owner name",
-                  d: "Matches business and owner names from the TDLR open extract for specialty trades.",
-                },
-                {
-                  t: "What you’ll see",
-                  d: "Plain-language trade type (air conditioning, electrical, …), status, county when available — then a Trust Report.",
-                },
-              ]
-            : [
-                {
-                  t: "License number",
-                  d: "Most precise. Full ids like CBC015082 — spaces or dashes are fine.",
-                },
-                {
-                  t: "Company name",
-                  d: "Matches display, legal, and DBA fields. LLC / Inc endings are optional.",
-                },
-                {
-                  t: "What you’ll see",
-                  d: "License status, entity status, and location on every card — then a Trust Report.",
-                },
-              ]
-          ).map((card) => (
+          {helpCards.map((card) => (
             <div
               key={card.t}
               className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-3.5 sm:p-5"
@@ -270,19 +335,19 @@ export default async function VerifyPage({ searchParams }: Props) {
             </div>
           ))}
           <div className="space-y-1 sm:col-span-3">
-            {!isTx ? (
+            {isSpecialty ? (
               <p className="text-xs text-[var(--muted)]">
-                Don&apos;t have a specific name?{" "}
-                <Link href="/#research" className="text-[var(--accent)]">
-                  Browse by county and trade
+                Looking for Florida DBPR construction licenses and the full journey?{" "}
+                <Link href="/verify" className="text-[var(--accent)]">
+                  Open Florida Verify
                 </Link>
                 .
               </p>
             ) : (
               <p className="text-xs text-[var(--muted)]">
-                Looking for Florida DBPR construction licenses?{" "}
-                <Link href="/verify" className="text-[var(--accent)]">
-                  Open Florida Verify
+                Don&apos;t have a specific name?{" "}
+                <Link href="/#research" className="text-[var(--accent)]">
+                  Browse by county and trade
                 </Link>
                 .
               </p>
@@ -291,6 +356,14 @@ export default async function VerifyPage({ searchParams }: Props) {
               <Link href="/#search" className="text-[var(--accent)]">
                 Back to homepage search
               </Link>
+              {isNj ? null : (
+                <>
+                  {" · "}
+                  <Link href="/verify?state=nj" className="text-[var(--accent)]">
+                    New Jersey pilot
+                  </Link>
+                </>
+              )}
             </p>
           </div>
         </section>

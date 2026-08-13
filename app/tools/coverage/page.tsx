@@ -1,26 +1,62 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { coverageAnalyticsSnapshot } from "@/lib/property/coverage";
-import { waveAOpsSnapshot } from "@/lib/property/ops-health";
+import {
+  waveAOpsSnapshot,
+  waveBOpsSnapshot,
+  waveCOpsSnapshot,
+} from "@/lib/property/ops-health";
 import { extractStats } from "@/lib/property/permits";
 import { pageMetadata } from "@/lib/seo/page-meta";
+import { isNjVerifyPilotEnabled } from "@/lib/states/feature-flags";
 
 export const metadata: Metadata = pageMetadata({
   title: "Permit coverage matrix — Florida jurisdictions",
   description:
-    "Which Florida counties have partial permit extract coverage on Contractor Trust Hub, freshness, and matching rules. Not complete statewide coverage.",
+    "Which Florida counties have partial permit extract coverage on Contractor Trust Hub, Wave B/C depth, freshness, and matching rules. NJ Verify pilot is separate.",
   path: "/tools/coverage",
 });
+
+function WaveOpsBlock({
+  title,
+  ops,
+}: {
+  title: string;
+  ops: ReturnType<typeof waveAOpsSnapshot>;
+}) {
+  return (
+    <section className="mt-6 rounded-3xl border border-[var(--accent)]/30 bg-[var(--accent-soft)] p-5 sm:p-6">
+      <h2 className="text-lg font-semibold text-[var(--text)]">{title}</h2>
+      <p className="mt-1 text-xs text-[var(--muted)]">
+        Freshness {ops.extract.freshness || "—"} · join rate proxy {ops.extract.joinRateProxyPercent}%
+      </p>
+      <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+        {Object.entries(ops.recordsByCounty).map(([county, n]) => (
+          <li
+            key={county}
+            className="rounded-xl border border-[var(--border)] bg-white px-3 py-2"
+          >
+            <span className="font-medium text-[var(--text)]">{county}</span>
+            <span className="text-[var(--muted)]"> · {n} sample/extract row(s)</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
 export default function CoveragePage() {
   const snap = coverageAnalyticsSnapshot();
   const stats = extractStats();
-  const ops = waveAOpsSnapshot();
+  const waveA = waveAOpsSnapshot();
+  const waveB = waveBOpsSnapshot();
+  const waveC = waveCOpsSnapshot();
+  const njPilot = isNjVerifyPilotEnabled();
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
-        Stage 6.1 — Wave A production focus
+        Stage 7 — Florida waves + multi-state note
       </p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--text)]">
         Permit coverage matrix
@@ -56,42 +92,53 @@ export default function CoveragePage() {
         </div>
       </div>
 
-      <section className="mt-8 rounded-3xl border border-[var(--accent)]/30 bg-[var(--accent-soft)] p-5 sm:p-6">
-        <h2 className="text-lg font-semibold text-[var(--text)]">Wave A ops snapshot</h2>
-        <p className="mt-1 text-xs text-[var(--muted)]">
-          Production focus counties · freshness {ops.extract.freshness || "—"}
-        </p>
-        <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-          {Object.entries(ops.waveA.recordsByCounty).map(([county, n]) => (
-            <li
-              key={county}
-              className="rounded-xl border border-[var(--border)] bg-white px-3 py-2"
-            >
-              <span className="font-medium text-[var(--text)]">{county}</span>
-              <span className="text-[var(--muted)]"> · {n} sample/extract row(s)</span>
-            </li>
-          ))}
-        </ul>
-        <dl className="mt-4 grid gap-2 text-xs text-[var(--muted)] sm:grid-cols-2">
+      <WaveOpsBlock title="Wave A ops snapshot" ops={waveA} />
+      <WaveOpsBlock title="Wave B ops snapshot (Stage 7 depth)" ops={waveB} />
+      <WaveOpsBlock title="Wave C ops snapshot (Stage 7 depth)" ops={waveC} />
+
+      <section className="mt-6 rounded-3xl border border-[var(--border)] bg-white p-5 sm:p-6">
+        <h2 className="text-lg font-semibold text-[var(--text)]">Extract join health</h2>
+        <dl className="mt-3 grid gap-2 text-sm text-[var(--muted)] sm:grid-cols-2">
           <div>
-            Unmatched license-bearing keys (no activity row):{" "}
-            <strong className="text-[var(--text)]">
-              {ops.extract.unmatchedLicenseBearing}
-            </strong>
+            Unmatched license-bearing keys:{" "}
+            <strong className="text-[var(--text)]">{stats.unmatchedLicenseBearingRows}</strong>
           </div>
           <div>
             Activity keys also on permits:{" "}
-            <strong className="text-[var(--text)]">
-              {ops.extract.activityKeysAlsoOnPermits}
-            </strong>
+            <strong className="text-[var(--text)]">{stats.activityKeysAlsoOnPermits}</strong>
+          </div>
+          <div>
+            Join rate proxy:{" "}
+            <strong className="text-[var(--text)]">{stats.joinRateProxy}%</strong>
+          </div>
+          <div>
+            Freshness: <strong className="text-[var(--text)]">{stats.freshness || "—"}</strong>
           </div>
         </dl>
         <ul className="mt-3 space-y-1 text-xs text-[var(--muted)]">
-          {ops.knownLimits.map((l) => (
+          {waveA.knownLimits.map((l) => (
             <li key={l}>· {l}</li>
           ))}
         </ul>
       </section>
+
+      {njPilot ? (
+        <section className="mt-6 rounded-3xl border border-violet-200 bg-violet-50/50 p-5 sm:p-6">
+          <h2 className="text-lg font-semibold text-[var(--text)]">
+            New Jersey verification pilot
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+            Separate from Florida permit waves. NJ is Verify-first (registration search + Trust
+            Report core) — not permit history parity.
+          </p>
+          <Link
+            href="/verify?state=nj"
+            className="mt-3 inline-flex text-sm font-semibold text-[var(--navy)]"
+          >
+            Open NJ Verify →
+          </Link>
+        </section>
+      ) : null}
 
       <section className="mt-8 rounded-3xl border border-[var(--border)] bg-white p-5 sm:p-6">
         <h2 className="text-lg font-semibold text-[var(--text)]">Waves</h2>

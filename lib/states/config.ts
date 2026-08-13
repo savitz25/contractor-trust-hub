@@ -1,10 +1,13 @@
 /**
  * Multi-state product config. Florida is the live reference implementation.
  * Texas: TDLR specialty trades only (no statewide GC) — see docs/DATA_SOURCES_TX.md.
+ * New Jersey: Stage 7 Verify pilot (registration-first) — see docs/STAGE_7_FL_DEPTH_AND_NJ_SPIKE.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
 
 import { getOccupationInfo } from "@/lib/contractors/occupations";
+import { isNjVerifyPilotEnabled } from "./feature-flags";
+import { njCredentialPlainLabel } from "./nj-credentials";
 
 export type StateCode = "FL" | "TX" | "NJ";
 
@@ -27,6 +30,8 @@ export type EvidenceState = {
    * Optional honest coverage note for product UI (required for partial-coverage states).
    */
   coverageNote?: string;
+  /** Pilot / partial product surface (e.g. NJ Verify-only) */
+  pilot?: boolean;
 };
 
 export const EVIDENCE_STATES: Record<string, EvidenceState> = {
@@ -64,24 +69,36 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     slug: "nj",
     name: "New Jersey",
     shortName: "NJ",
-    boardLabel: "New Jersey DCA (planned)",
-    boardUrl: "https://www.nj.gov/dca/",
-    entityRegistryLabel: "NJ Business Gateway (planned)",
-    entityRegistryUrl: "https://www.njportal.com/",
+    boardLabel: "New Jersey Division of Consumer Affairs (DCA) — contractor / HIC registration",
+    boardUrl: "https://www.njconsumeraffairs.gov/",
+    entityRegistryLabel: "NJ business entity records (high-confidence only when linked)",
+    entityRegistryUrl: "https://www.njportal.com/DOR/BusinessRecords/",
     licenseSource: "nj_dca",
     entitySource: "nj_sos",
-    live: false,
+    // Stage 7 pilot — controlled by feature flag (default on)
+    live: true,
+    pilot: true,
+    coverageNote:
+      "New Jersey verification pilot: home-improvement contractor registration and selected trade credentials from official extracts. Not Florida-depth (no full permit history, studios, or protection journey yet). Coverage differs by state.",
   },
 };
 
 export const DEFAULT_STATE_SLUG = "fl";
 
 export function getStateBySlug(slug: string): EvidenceState | null {
-  return EVIDENCE_STATES[slug.toLowerCase()] ?? null;
+  const s = EVIDENCE_STATES[slug.toLowerCase()] ?? null;
+  if (!s) return null;
+  // NJ pilot can be disabled without removing config
+  if (s.slug === "nj" && !isNjVerifyPilotEnabled()) {
+    return { ...s, live: false };
+  }
+  return s;
 }
 
 export function getLiveStates(): EvidenceState[] {
-  return Object.values(EVIDENCE_STATES).filter((s) => s.live);
+  return Object.values(EVIDENCE_STATES)
+    .map((s) => getStateBySlug(s.slug)!)
+    .filter((s) => s.live);
 }
 
 /** Occupation codes seen in FL DBPR construction extract (subset of common labels). */
@@ -116,12 +133,23 @@ export const TX_OCCUPATION_LABELS: Record<string, string> = {
   TAI: "Appliance Installer",
 };
 
+/** New Jersey pilot occupation / credential codes */
+export const NJ_OCCUPATION_LABELS: Record<string, string> = {
+  HIC: "Home Improvement Contractor",
+  ELE: "Electrical Contractor (NJ)",
+  PLB: "Plumbing Contractor (NJ)",
+  HVAC: "HVAC / Mechanical Contractor (NJ)",
+  GEN: "General contractor registration (NJ)",
+};
+
 export function occupationLabel(code: string | null | undefined): string {
   if (!code) return "Construction license";
   const upper = code.toUpperCase();
   return (
     FL_OCCUPATION_LABELS[upper] ??
     TX_OCCUPATION_LABELS[upper] ??
+    NJ_OCCUPATION_LABELS[upper] ??
+    njCredentialPlainLabel(upper) ??
     getOccupationInfo(upper).label
   );
 }

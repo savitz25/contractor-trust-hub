@@ -1,8 +1,13 @@
 {
   "_meta": {
-    "description": "Stage 6 Wave A–C educational/pilot permit extracts. Not complete AHJ history. Addresses outside keys return empty lists with coverage honesty.",
-    "updated": "2026-03-20",
-    "waves": ["A", "B", "C"]
+    "description": "Stage 7 Wave A–C educational/pilot permit extracts with Wave B/C depth. Not complete AHJ history.",
+    "updated": "2026-04-15",
+    "waves": [
+      "A",
+      "B",
+      "C"
+    ],
+    "stage": "7"
   },
   "byAddressKey": {
     "100 OCEAN DR|33139": [
@@ -270,62 +275,413 @@
         "sourceLabel": "CTH Wave C extract",
         "retrievedAt": "2026-03-01"
       }
+    ],
+    "450 CLEMATIS ST|33401": [
+      {
+        "id": "pb-w2",
+        "permitNumber": "PB-BLD-2025-102",
+        "description": "Kitchen remodel — non-structural",
+        "category": "Building",
+        "status": "In Progress",
+        "filedDate": "2025-02-01",
+        "issuedDate": "2025-02-20",
+        "finalDate": null,
+        "declaredValue": 41000,
+        "contractorName": "Palm Coast Builders LLC",
+        "contractorLicenseKey": "CBC1255001",
+        "sourceJurisdiction": "Palm Beach County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-04-10",
+        "notes": "Appears open/in progress in extract. Confirm with AHJ."
+      },
+      {
+        "id": "pb-w3",
+        "permitNumber": "PB-ELE-2024-88",
+        "description": "Electrical panel upgrade",
+        "category": "Electrical",
+        "status": "Final Inspection",
+        "filedDate": "2024-08-01",
+        "issuedDate": "2024-08-12",
+        "finalDate": "2024-09-01",
+        "declaredValue": 6200,
+        "contractorName": null,
+        "contractorLicenseKey": "CGC1526123",
+        "sourceJurisdiction": "Palm Beach County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-04-10"
+      }
+    ],
+    "301 S OLIVE AVE|33401": [
+      {
+        "id": "pb-w4",
+        "permitNumber": "PB-RRF-2023-401",
+        "description": "Residential re-roof",
+        "category": "Roofing",
+        "status": "finaled",
+        "filedDate": "2023-06-01",
+        "issuedDate": "2023-06-10",
+        "finalDate": "2023-07-02",
+        "declaredValue": 19000,
+        "contractorName": null,
+        "contractorLicenseKey": "CCC1330999",
+        "sourceJurisdiction": "Palm Beach County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-04-10"
+      }
+    ],
+    "225 WATER ST|32202": [
+      {
+        "id": "du-w2",
+        "permitNumber": "DU-BLD-2025-44",
+        "description": "Bathroom remodel — wet area",
+        "category": "Building",
+        "status": "Permit Issued",
+        "filedDate": "2025-01-10",
+        "issuedDate": "2025-01-28",
+        "finalDate": null,
+        "declaredValue": 36000,
+        "contractorName": "River City GC LLC",
+        "contractorLicenseKey": "CGC1526123",
+        "sourceJurisdiction": "Duval County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-04-10"
+      },
+      {
+        "id": "du-w3",
+        "permitNumber": "DU-PLB-2024-19",
+        "description": "Water heater replacement",
+        "category": "Plumbing",
+        "status": "closed",
+        "filedDate": "2024-03-01",
+        "issuedDate": "2024-03-05",
+        "finalDate": "2024-03-18",
+        "declaredValue": 2800,
+        "contractorName": null,
+        "contractorLicenseKey": "CFC1429001",
+        "sourceJurisdiction": "Duval County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-04-10"
+      }
+    ],
+    "200 CENTRAL AVE|33701": [
+      {
+        "id": "pi-w2",
+        "permitNumber": "PI-BLD-2024-77",
+        "description": "Condo unit interior renovation",
+        "category": "Building",
+        "status": "finaled",
+        "filedDate": "2024-04-01",
+        "issuedDate": "2024-04-15",
+        "finalDate": "2024-07-20",
+        "declaredValue": 52000,
+        "contractorName": null,
+        "contractorLicenseKey": "CBC1255001",
+        "sourceJurisdiction": "Pinellas County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-04-10"
+      },
+      {
+        "id": "pi-w3",
+        "permitNumber": "PI-RRF-2025-3",
+        "description": "Re-roof asphalt shingles",
+        "category": "Roofing",
+        "status": "open",
+        "filedDate": "2025-03-01",
+        "issuedDate": "2025-03-12",
+        "finalDate": null,
+        "declaredValue": 16500,
+        "contractorName": null,
+        "contractorLicenseKey": "CCC1330999",
+        "sourceJurisdiction": "Pinellas County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-04-10"
+      }
+    ],
+    "2110 FIRST ST|33901": [
+      {
+        "id": "le-w2",
+        "permitNumber": "LE-BLD-2024-90",
+        "description": "Screen enclosure",
+        "category": "Building",
+        "status": "Expired",
+        "filedDate": "2024-01-05",
+        "issuedDate": "2024-01-20",
+        "finalDate": null,
+        "declaredValue": 12000,
+        "contractorName": null,
+        "contractorLicenseKey": "CGC1526123",
+        "sourceJurisdiction": "Lee County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-04-10",
+        "notes": "Expired status in extract — worth confirming with AHJ."
+      },
+      {
+        "id": "le-w3",
+        "permitNumber": "LE-HVAC-2023-12",
+        "description": "HVAC change-out",
+        "category": "Mechanical",
+        "status": "finaled",
+        "filedDate": "2023-09-01",
+        "issuedDate": "2023-09-08",
+        "finalDate": "2023-09-22",
+        "declaredValue": 9800,
+        "contractorName": null,
+        "contractorLicenseKey": "CBC015082",
+        "sourceJurisdiction": "Lee County",
+        "sourceLabel": "CTH Wave B extract",
+        "retrievedAt": "2026-04-10"
+      }
+    ],
+    "400 5TH AVE S|34102": [
+      {
+        "id": "co-w2",
+        "permitNumber": "CO-ELE-2024-22",
+        "description": "Electrical service upgrade",
+        "category": "Electrical",
+        "status": "Finaled",
+        "filedDate": "2024-05-01",
+        "issuedDate": "2024-05-10",
+        "finalDate": "2024-05-30",
+        "declaredValue": 5400,
+        "contractorName": null,
+        "contractorLicenseKey": "CGC1526123",
+        "sourceJurisdiction": "Collier County",
+        "sourceLabel": "CTH Wave C extract",
+        "retrievedAt": "2026-04-10"
+      },
+      {
+        "id": "co-w3",
+        "permitNumber": "CO-BLD-2025-1",
+        "description": "Impact window replacement",
+        "category": "Building",
+        "status": "Issued",
+        "filedDate": "2025-01-15",
+        "issuedDate": "2025-02-01",
+        "finalDate": null,
+        "declaredValue": 28000,
+        "contractorName": null,
+        "contractorLicenseKey": "CBC1255001",
+        "sourceJurisdiction": "Collier County",
+        "sourceLabel": "CTH Wave C extract",
+        "retrievedAt": "2026-04-10"
+      }
+    ],
+    "1400 MAIN ST|34236": [
+      {
+        "id": "sa-w2",
+        "permitNumber": "SA-RRF-2024-30",
+        "description": "Commercial re-roof",
+        "category": "Roofing",
+        "status": "closed",
+        "filedDate": "2024-02-01",
+        "issuedDate": "2024-02-14",
+        "finalDate": "2024-03-20",
+        "declaredValue": 64000,
+        "contractorName": null,
+        "contractorLicenseKey": "CCC1330999",
+        "sourceJurisdiction": "Sarasota County",
+        "sourceLabel": "CTH Wave C extract",
+        "retrievedAt": "2026-04-10"
+      },
+      {
+        "id": "sa-w3",
+        "permitNumber": "SA-BLD-2025-9",
+        "description": "Tenant interior build-out",
+        "category": "Building",
+        "status": "In Progress",
+        "filedDate": "2025-02-10",
+        "issuedDate": "2025-02-28",
+        "finalDate": null,
+        "declaredValue": 88000,
+        "contractorName": null,
+        "contractorLicenseKey": "CGC1526123",
+        "sourceJurisdiction": "Sarasota County",
+        "sourceLabel": "CTH Wave C extract",
+        "retrievedAt": "2026-04-10"
+      }
+    ],
+    "8731 CITIZENS DR|34654": [
+      {
+        "id": "pa-w1",
+        "permitNumber": "PA-BLD-2024-15",
+        "description": "Garage conversion interior",
+        "category": "Building",
+        "status": "finaled",
+        "filedDate": "2024-06-01",
+        "issuedDate": "2024-06-15",
+        "finalDate": "2024-09-01",
+        "declaredValue": 45000,
+        "contractorName": null,
+        "contractorLicenseKey": "CBC1255001",
+        "sourceJurisdiction": "Pasco County",
+        "sourceLabel": "CTH Wave C extract",
+        "retrievedAt": "2026-04-10"
+      },
+      {
+        "id": "pa-w2",
+        "permitNumber": "PA-PLB-2023-8",
+        "description": "Repipe partial",
+        "category": "Plumbing",
+        "status": "VOID",
+        "filedDate": "2023-08-01",
+        "issuedDate": null,
+        "finalDate": null,
+        "declaredValue": 9000,
+        "contractorName": null,
+        "contractorLicenseKey": null,
+        "sourceJurisdiction": "Pasco County",
+        "sourceLabel": "CTH Wave C extract",
+        "retrievedAt": "2026-04-10"
+      }
+    ],
+    "255 N BROADWAY AVE|33830": [
+      {
+        "id": "po-w1",
+        "permitNumber": "PO-BLD-2024-60",
+        "description": "Office interior renovation",
+        "category": "Building",
+        "status": "Completed",
+        "filedDate": "2024-03-01",
+        "issuedDate": "2024-03-20",
+        "finalDate": "2024-06-15",
+        "declaredValue": 71000,
+        "contractorName": null,
+        "contractorLicenseKey": "CGC1526123",
+        "sourceJurisdiction": "Polk County",
+        "sourceLabel": "CTH Wave C extract",
+        "retrievedAt": "2026-04-10"
+      },
+      {
+        "id": "po-w2",
+        "permitNumber": "PO-RRF-2025-2",
+        "description": "Residential re-roof",
+        "category": "Roofing",
+        "status": "issued",
+        "filedDate": "2025-03-01",
+        "issuedDate": "2025-03-18",
+        "finalDate": null,
+        "declaredValue": 15500,
+        "contractorName": null,
+        "contractorLicenseKey": "CCC1330999",
+        "sourceJurisdiction": "Polk County",
+        "sourceLabel": "CTH Wave C extract",
+        "retrievedAt": "2026-04-10"
+      }
     ]
   },
   "contractorActivityByLicense": {
     "CGC1526123": {
-      "permitCount": 5,
-      "counties": ["Miami-Dade", "Broward", "Orange", "Duval", "Collier"],
-      "categories": ["Building"],
+      "permitCount": 12,
+      "counties": [
+        "Miami-Dade",
+        "Broward",
+        "Orange",
+        "Duval",
+        "Collier",
+        "Palm Beach",
+        "Lee",
+        "Sarasota",
+        "Polk"
+      ],
+      "categories": [
+        "Building",
+        "Electrical"
+      ],
       "recentWindow": "2023–2025",
       "sampleTypes": [
         "Kitchen remodel",
-        "Office interior renovation",
         "Interior alterations",
-        "Tenant space alterations"
+        "Bathroom remodel",
+        "Tenant interior build-out",
+        "Electrical panel upgrade"
       ],
       "sourceLabel": "CTH Wave A–C activity rollup",
-      "retrievedAt": "2026-03-01",
+      "retrievedAt": "2026-04-10",
       "matchMethod": "license"
     },
     "CCC1330999": {
-      "permitCount": 3,
-      "counties": ["Broward", "Hillsborough", "Lee"],
-      "categories": ["Roofing"],
-      "recentWindow": "2022–2023",
-      "sampleTypes": ["Re-roof asphalt shingles", "Commercial re-roof", "Residential re-roof"],
-      "sourceLabel": "CTH Wave A–B activity rollup",
-      "retrievedAt": "2026-03-01",
+      "permitCount": 7,
+      "counties": [
+        "Broward",
+        "Hillsborough",
+        "Lee",
+        "Palm Beach",
+        "Pinellas",
+        "Sarasota",
+        "Polk"
+      ],
+      "categories": [
+        "Roofing"
+      ],
+      "recentWindow": "2022–2025",
+      "sampleTypes": [
+        "Re-roof asphalt shingles",
+        "Commercial re-roof",
+        "Residential re-roof"
+      ],
+      "sourceLabel": "CTH Wave A–C activity rollup",
+      "retrievedAt": "2026-04-10",
       "matchMethod": "license"
     },
     "CBC1255001": {
-      "permitCount": 3,
-      "counties": ["Miami-Dade", "Palm Beach", "Sarasota"],
-      "categories": ["Building"],
-      "recentWindow": "2023–2024",
-      "sampleTypes": ["Bathroom remodel", "Storefront renovation"],
+      "permitCount": 8,
+      "counties": [
+        "Miami-Dade",
+        "Palm Beach",
+        "Sarasota",
+        "Pinellas",
+        "Collier",
+        "Pasco"
+      ],
+      "categories": [
+        "Building"
+      ],
+      "recentWindow": "2023–2025",
+      "sampleTypes": [
+        "Bathroom remodel",
+        "Storefront renovation",
+        "Condo unit interior renovation",
+        "Kitchen remodel"
+      ],
       "sourceLabel": "CTH Wave A–C activity rollup",
-      "retrievedAt": "2026-03-01",
+      "retrievedAt": "2026-04-10",
       "matchMethod": "license"
     },
     "CBC015082": {
-      "permitCount": 2,
-      "counties": ["Hillsborough"],
-      "categories": ["Building", "Roofing"],
+      "permitCount": 3,
+      "counties": [
+        "Hillsborough",
+        "Lee"
+      ],
+      "categories": [
+        "Building",
+        "Roofing",
+        "Mechanical"
+      ],
       "recentWindow": "2023–2024",
-      "sampleTypes": ["General construction permits associated in extract"],
-      "sourceLabel": "CTH Wave A activity rollup (demo license key)",
-      "retrievedAt": "2026-03-01",
+      "sampleTypes": [
+        "General construction permits associated in extract",
+        "HVAC change-out"
+      ],
+      "sourceLabel": "CTH Wave A–B activity rollup (demo license key)",
+      "retrievedAt": "2026-04-10",
       "matchMethod": "license"
     },
     "CFC1429001": {
-      "permitCount": 1,
-      "counties": ["Miami-Dade"],
-      "categories": ["Plumbing"],
-      "recentWindow": "2022",
-      "sampleTypes": ["Water heater replacement"],
-      "sourceLabel": "CTH Wave A activity rollup",
-      "retrievedAt": "2026-03-01",
+      "permitCount": 2,
+      "counties": [
+        "Miami-Dade",
+        "Duval"
+      ],
+      "categories": [
+        "Plumbing"
+      ],
+      "recentWindow": "2022–2024",
+      "sampleTypes": [
+        "Water heater replacement"
+      ],
+      "sourceLabel": "CTH Wave A–B activity rollup",
+      "retrievedAt": "2026-04-10",
       "matchMethod": "license"
     }
   }

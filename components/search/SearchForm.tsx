@@ -29,6 +29,12 @@ const TX_PLACEHOLDERS = {
   compact: "License or name",
 };
 
+const NJ_PLACEHOLDERS = {
+  hero: "Registration # or company name…",
+  default: "Registration # or company name",
+  compact: "Registration or name",
+};
+
 export function SearchForm({
   defaultQuery = "",
   size = "default",
@@ -45,9 +51,10 @@ export function SearchForm({
   const isHero = size === "hero";
   const isCompact = size === "compact";
   const isTx = stateSlug === "tx";
+  const isNj = stateSlug === "nj";
   const ph =
     placeholder ||
-    (isTx ? TX_PLACEHOLDERS[size] : PLACEHOLDERS[size]);
+    (isTx ? TX_PLACEHOLDERS[size] : isNj ? NJ_PLACEHOLDERS[size] : PLACEHOLDERS[size]);
 
   const inputClass = isHero
     ? "min-h-12 w-full flex-1 rounded-2xl border border-[var(--border)] bg-white px-4 text-base text-[var(--text)] shadow-[var(--shadow-sm)] placeholder:text-[var(--muted)] outline-none ring-[var(--accent)] focus:ring-2 disabled:opacity-70 sm:min-h-[3.75rem] sm:px-5 sm:text-lg"

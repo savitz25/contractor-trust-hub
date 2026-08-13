@@ -1,9 +1,17 @@
 import { formatDateTime } from "@/lib/contractors/format";
 import type { ContractorDetail } from "@/lib/contractors/types";
+import {
+  checkedItems,
+  evidenceSlugFromHomeState,
+  notCheckedItems,
+} from "@/lib/states/evidence-copy";
 
 export function WhatWeChecked({ contractor }: { contractor: ContractorDetail }) {
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
+  const slug = evidenceSlugFromHomeState(contractor.homeState);
+  const checked = checkedItems(slug);
+  const notChecked = notCheckedItems(slug);
   const freshest =
     [lic?.lastVerifiedAt, ent?.lastVerifiedAt, contractor.discipline[0]?.lastVerifiedAt]
       .filter(Boolean)
@@ -21,10 +29,9 @@ export function WhatWeChecked({ contractor }: { contractor: ContractorDetail }) 
             Evidence on file
           </p>
           <ul className="mt-2 space-y-1 text-[var(--muted)]">
-            <li>· Florida DBPR construction license extract (when linked)</li>
-            <li>· High-confidence Sunbiz entity link (strict match only)</li>
-            <li>· Board discipline rows linked in our extracts</li>
-            <li>· Related-entity pattern rules on this profile</li>
+            {checked.map((line) => (
+              <li key={line}>· {line}</li>
+            ))}
           </ul>
         </div>
         <div>
@@ -32,10 +39,9 @@ export function WhatWeChecked({ contractor }: { contractor: ContractorDetail }) 
             Not checked here
           </p>
           <ul className="mt-2 space-y-1 text-[var(--muted)]">
-            <li>· Active insurance / COI validity (request &amp; verify)</li>
-            <li>· Workers&apos; comp policy status (use official portals)</li>
-            <li>· Permit/activity volume (not yet linked)</li>
-            <li>· Reviews, ratings, or private financials</li>
+            {notChecked.map((line) => (
+              <li key={line}>· {line}</li>
+            ))}
           </ul>
         </div>
       </div>

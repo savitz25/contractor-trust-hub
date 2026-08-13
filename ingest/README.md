@@ -10,7 +10,7 @@
 | 2 | `adapters/fl_sunbiz.py` | Sunbiz corporate fixed-width (SFTP) | `data/staging/fl_sunbiz/` |
 | 3 | `adapters/tx_tdlr.py` | TX TDLR specialty licenses (Open Data) | `data/staging/tx_tdlr/` |
 | 4 | `adapters/tx_tsbpe.py` | TX plumbing (TSBPE free CSV lists) | Phase 1 |
-| 5 | `adapters/nj_dca.py` | NJ DCA registration | Later |
+| 5 | `adapters/nj_dca.py` | NJ DCA / HIC registration (Stage 7 pilot) | `data/staging/nj_dca/` |
 | 6 | Permits | County / city open data | Later |
 
 **Texas note:** No statewide GC license. TDLR adapter filters to specialty contractor types only — see `docs/DATA_SOURCES_TX.md`.
@@ -66,6 +66,12 @@ python -m ingest.adapters.tx_tdlr \
 
 # Load into Postgres (idempotent upserts + ingest_batches)
 python scripts/load_tx_tdlr_to_postgres.py --staging-dir data/staging/tx_tdlr
+
+# New Jersey Verify pilot (Stage 7)
+python -m ingest.adapters.nj_dca \
+  --input data/samples/nj_dca_hic_sample.csv \
+  --out-dir data/staging/nj_dca
+python scripts/load_nj_dca_to_postgres.py --staging-dir data/staging/nj_dca
 ```
 
 ## Staging files produced

@@ -310,9 +310,10 @@ function evidenceSlugForContractor(
   homeState: string | null | undefined,
   preferredSlug?: string
 ): string {
-  // Prefer the contractor's home state so TX profiles work even when callers pass "fl".
+  // Prefer the contractor's home state so TX/NJ profiles work even when callers pass "fl".
   const hs = (homeState || "").toUpperCase();
   if (hs === "TX") return "tx";
+  if (hs === "NJ") return "nj";
   if (hs === "FL") return "fl";
   if (preferredSlug && getStateBySlug(preferredSlug)?.live) {
     return preferredSlug.toLowerCase();

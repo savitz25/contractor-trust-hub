@@ -21,6 +21,12 @@ export function HomeHero() {
         <p className="mt-3 text-sm font-medium text-[var(--navy)]">
           Not a marketplace. No paid rankings. Evidence only.
         </p>
+        <p className="mt-2 text-xs text-[var(--muted)]">
+          Florida full journey ·{" "}
+          <a href="/verify?state=nj" className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline">
+            New Jersey verification pilot
+          </a>
+        </p>
 
         <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center">
           <Link
