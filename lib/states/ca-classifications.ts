@@ -107,7 +107,11 @@ export function getCaClassInfo(code: string | null | undefined): CaClassInfo {
   };
 }
 
-export function caClassPlainLabel(code: string | null | undefined): string {
+/** Plain label only for known CSLB codes — null so other states can resolve their labels. */
+export function caClassPlainLabel(code: string | null | undefined): string | null {
+  if (!code) return null;
+  const upper = normalizeCaClassCode(code);
+  if (!LABELS[upper] && !CA_CLASS_LABELS[upper]) return null;
   return getCaClassInfo(code).plain;
 }
 

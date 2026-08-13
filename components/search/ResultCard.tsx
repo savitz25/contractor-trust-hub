@@ -3,6 +3,7 @@ import { CompareToggle } from "@/components/compare/CompareToggle";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { displayStatusLabel, statusLabel, statusTone } from "@/lib/contractors/format";
 import { occupationLabel } from "@/lib/states/config";
+import { azCategoryFromSecondary, azClassPlainLabel } from "@/lib/states/az-roc";
 import {
   caClassChipLabel,
   caClassPlainLabel,
@@ -56,6 +57,10 @@ function isCaliforniaResult(result: SearchResult): boolean {
   return (result.state || "").toUpperCase() === "CA" || result.sourceSystem === "ca_cslb";
 }
 
+function isArizonaResult(result: SearchResult): boolean {
+  return (result.state || "").toUpperCase() === "AZ" || result.sourceSystem === "az_roc";
+}
+
 function displayLicenseKey(
   result: SearchResult,
   isTx: boolean,
@@ -78,6 +83,9 @@ function displayLicenseKey(
   if (key.startsWith("CA-CSLB:")) {
     return key.split(":").pop() || key;
   }
+  if (key.startsWith("AZ-ROC:")) {
+    return key.split(":").pop() || key;
+  }
   return key;
 }
 
@@ -93,15 +101,19 @@ export function ResultCard({
   const isNj = isNjResult(result);
   const isOr = isOregonResult(result);
   const isCa = isCaliforniaResult(result);
+  const isAz = isArizonaResult(result);
   const location = [result.city, result.county, result.state].filter(Boolean).join(" · ");
   const licTone = signalTone("license", result);
   const entTone = signalTone("entity", result);
   const showEntity =
-    Boolean(result.entityStatus) || !(hideEntityWhenMissing || isTx || isNj || isOr || isCa);
+    Boolean(result.entityStatus) ||
+    !(hideEntityWhenMissing || isTx || isNj || isOr || isCa || isAz);
   const trade = isTx ? getTxTradeInfo(result.occupationCode) : null;
   const njCred = isNj ? getNjCredentialInfo(result.occupationCode) : null;
   const orType = isOr ? getOrCcbTypeInfo(result.occupationCode) : null;
   const caClass = isCa ? getCaClassInfo(result.occupationCode) : null;
+  const azClass = isAz ? azClassPlainLabel(result.occupationCode) : null;
+  const azCategory = isAz ? azCategoryFromSecondary(result.secondaryStatus) : null;
   const tradeLabel = isNj
     ? njCredentialPlainLabel(result.occupationCode)
     : isTx
@@ -109,8 +121,10 @@ export function ResultCard({
       : isOr
         ? orCcbDisplayLabel(result.occupationCode)
         : isCa
-          ? caClassPlainLabel(result.occupationCode)
-      : occupationLabel(result.occupationCode);
+          ? caClassPlainLabel(result.occupationCode) || occupationLabel(result.occupationCode)
+          : isAz
+            ? azClass || occupationLabel(result.occupationCode)
+            : occupationLabel(result.occupationCode);
   const officialSuffix = isTx ? txTradeOfficialSuffix(result.occupationCode) : null;
   const shortKey = displayLicenseKey(result, isTx, isNj);
 
@@ -149,6 +163,16 @@ export function ResultCard({
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500/80" aria-hidden />
             <span className="truncate">{caClassChipLabel(result.occupationCode)}</span>
             <span className="hidden text-[var(--muted)] font-normal sm:inline">· CSLB</span>
+          </span>
+        ) : null}
+        {isAz ? (
+          <span className="inline-flex max-w-full items-center gap-1.5 text-xs font-medium text-[var(--navy)]">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500/80" aria-hidden />
+            <span className="truncate">
+              {result.occupationCode || "ROC"}
+              {azCategory ? ` · ${azCategory}` : ""}
+            </span>
+            <span className="hidden text-[var(--muted)] font-normal sm:inline">· ROC</span>
           </span>
         ) : null}
         {result.sourceSystem ? (
@@ -240,6 +264,11 @@ export function ResultCard({
                 California CSLB
               </span>
             ) : null}
+            {isAz ? (
+              <span className="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-2.5 py-1 text-[11px] font-medium text-sky-950">
+                Arizona ROC
+              </span>
+            ) : null}
             <StatusBadge
               status={result.primaryStatus || result.licenseStatus}
               label={`${isNj ? "Registration" : "License"}: ${displayStatusLabel(
@@ -274,8 +303,12 @@ export function ResultCard({
             <p className="mt-0.5 text-xs text-[var(--muted)]">
               {result.secondaryStatus || "Oregon CCB Active Licenses extract"}
             </p>
+          ) : isAz ? (
+            <p className="mt-0.5 text-xs text-[var(--muted)]">
+              {result.secondaryStatus || "Arizona ROC current active posting list"}
+            </p>
           ) : null}
-          {(result.entityName || location) && !isTx && !isNj && !isOr ? (
+          {(result.entityName || location) && !isTx && !isNj && !isOr && !isAz ? (
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
               {result.entityName ? (
                 <span className="text-[var(--text)]/80">Entity: {result.entityName}</span>
@@ -283,7 +316,7 @@ export function ResultCard({
               {result.entityName && location ? " · " : null}
               {location ? <span>{location}</span> : null}
             </p>
-          ) : location && (isTx || isNj || isOr) ? (
+          ) : location && (isTx || isNj || isOr || isAz) ? (
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">{location}</p>
           ) : null}
         </div>

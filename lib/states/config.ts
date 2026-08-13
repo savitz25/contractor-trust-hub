@@ -226,12 +226,16 @@ export const NJ_OCCUPATION_LABELS: Record<string, string> = {
 export function occupationLabel(code: string | null | undefined): string {
   if (!code) return "Construction license";
   const upper = code.toUpperCase().replace(/-/g, "");
+  // Keep original code for hyphenated AZ/CA class forms (CR-3, C-10)
+  const raw = code.trim();
   return (
     FL_OCCUPATION_LABELS[upper] ??
     TX_OCCUPATION_LABELS[upper] ??
     NJ_OCCUPATION_LABELS[upper] ??
-    caClassPlainLabel(upper) ??
+    azClassPlainLabel(raw) ??
     azClassPlainLabel(upper) ??
+    caClassPlainLabel(raw) ??
+    caClassPlainLabel(upper) ??
     orCcbPlainLabel(upper) ??
     njCredentialPlainLabel(upper) ??
     getOccupationInfo(upper).label
