@@ -14,8 +14,13 @@ import {
 
 const PUBLIC = "florida";
 
-/** Refresh landing stats periodically (build-time cache is fine otherwise). */
-export const revalidate = 3600;
+/**
+ * Force dynamic so Vercel builds do not open many parallel DB sessions during
+ * static generation (Supabase session pooler EMAXCONNSESSION).
+ * Runtime requests still use the shared serverless pool (max 1).
+ */
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
   const state = getDiscoveryState(PUBLIC)!;
@@ -29,11 +34,21 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function FloridaLandingPage() {
   const state = getDiscoveryState(PUBLIC)!;
-  const [stats, counties, trades] = await Promise.all([
-    getStateDiscoveryStats(PUBLIC),
-    countCountiesBatch(PUBLIC),
-    countTradesBatch(PUBLIC),
-  ]);
+  let stats = { contractors: 0, licenses: 0, sunbizLinks: 0 };
+  let counties: Awaited<ReturnType<typeof countCountiesBatch>> = [];
+  let trades: Awaited<ReturnType<typeof countTradesBatch>> = [];
+  try {
+    [stats, counties, trades] = await Promise.all([
+      getStateDiscoveryStats(PUBLIC),
+      countCountiesBatch(PUBLIC),
+      countTradesBatch(PUBLIC),
+    ]);
+  } catch (err) {
+    console.error(
+      "[florida] discovery stats unavailable:",
+      err instanceof Error ? err.message : err
+    );
+  }
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">

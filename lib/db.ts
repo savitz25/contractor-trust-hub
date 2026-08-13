@@ -27,14 +27,21 @@ function getPool(): Pool {
     process.env.PGSSLMODE === "require" ||
     process.env.VERCEL === "1";
 
-  // Vercel serverless: keep pool small; Session pooler handles multiplexing.
-  const max = process.env.VERCEL ? 2 : 5;
+  // Supabase Session pooler caps ~15 clients per mode. Next.js static
+  // generation fans out many workers — each with its own pool — so keep max=1
+  // on Vercel/build. Local dev can use a slightly larger pool.
+  const isBuild =
+    process.env.NEXT_PHASE === "phase-production-build" ||
+    process.env.npm_lifecycle_event === "build";
+  const max = process.env.VERCEL || isBuild || process.env.CI ? 1 : 5;
 
   pool = new Pool({
     connectionString,
     max,
-    idleTimeoutMillis: 10_000,
+    // Release idle clients quickly so parallel build workers don't pile up.
+    idleTimeoutMillis: isBuild ? 1_000 : 5_000,
     connectionTimeoutMillis: 12_000,
+    allowExitOnIdle: true,
     // Session pooler supports prepared statements; keep default true.
     ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
   });
@@ -44,6 +51,16 @@ function getPool(): Pool {
   });
 
   return pool;
+}
+
+export function isDbCapacityError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err);
+  return (
+    msg.includes("EMAXCONNSESSION") ||
+    msg.includes("max clients reached") ||
+    msg.includes("too many clients") ||
+    msg.includes("remaining connection slots")
+  );
 }
 
 export async function query<T extends QueryResultRow = QueryResultRow>(

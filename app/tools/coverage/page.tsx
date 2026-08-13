@@ -19,6 +19,9 @@ export const metadata: Metadata = pageMetadata({
   path: "/tools/coverage",
 });
 
+/** Soft DB probe at runtime only — avoid build-time pool contention. */
+export const dynamic = "force-dynamic";
+
 function WaveOpsBlock({
   title,
   ops,

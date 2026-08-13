@@ -115,6 +115,7 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
   const state = getStateBySlug(disc.evidenceSlug);
   if (!state?.live) return { results: [], total: 0 };
 
+  try {
   const limit = filters.limit ?? DISCOVERY_PAGE_SIZE;
   const offset = filters.offset ?? 0;
 
@@ -218,6 +219,10 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
   );
 
   return { results: rows.map(mapRow), total };
+  } catch (err) {
+    console.error("[discovery] listDiscoveryContractors failed:", err instanceof Error ? err.message : err);
+    return { results: [], total: 0 };
+  }
 }
 
 export async function getStateDiscoveryStats(publicStateSlug: string): Promise<{
@@ -457,19 +462,14 @@ export async function countCountiesBatch(publicStateSlug: string): Promise<Disco
       })
       .filter((f) => f.count > 0)
       .sort((a, b) => b.count - a.count);
-  } catch {
-    const results = await Promise.all(
-      disc.counties.map(async (county) => {
-        const { total } = await listDiscoveryContractors({
-          publicStateSlug,
-          county,
-          limit: 1,
-          offset: 0,
-        });
-        return { slug: county.slug, label: county.name, count: total };
-      })
+  } catch (err) {
+    // Do NOT fall back to N per-county queries — that multiplies pool usage
+    // and can exhaust Supabase session mode (EMAXCONNSESSION) during SSG.
+    console.error(
+      "[discovery] countCountiesBatch failed:",
+      err instanceof Error ? err.message : err
     );
-    return results.filter((f) => f.count > 0).sort((a, b) => b.count - a.count);
+    return [];
   }
 }
 

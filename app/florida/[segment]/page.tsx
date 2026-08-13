@@ -20,8 +20,9 @@ import {
 
 const PUBLIC = "florida";
 
-/** Dynamic discovery lists; revalidate facets periodically. */
-export const revalidate = 1800;
+/** Avoid parallel SSG DB fan-out against Supabase session pooler limits. */
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 type Props = {
   params: Promise<{ segment: string }>;
