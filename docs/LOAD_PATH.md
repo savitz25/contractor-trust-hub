@@ -341,6 +341,26 @@ Useful flags: `--limit N`, `--staging-dir`, dry-run when `DATABASE_URL` is unset
 
 ---
 
+---
+
+# California CSLB → Postgres load path
+
+California Verify loads **CSLB public list extracts** for high-impact counties present under `data/raw/ca_contractors/`. Not every CA county is guaranteed in the download set — see [DATA_SOURCES_CA.md](./DATA_SOURCES_CA.md).
+
+```bash
+python -m ingest.adapters.ca_cslb \
+  --input-dir data/raw/ca_contractors \
+  --out-dir data/staging/ca_cslb
+
+python scripts/load_ca_cslb_to_postgres.py --staging-dir data/staging/ca_cslb
+# or:
+python scripts/load_ca_cslb_via_supabase_rest.py --staging-dir data/staging/ca_cslb
+```
+
+**Rules:** upsert on `(source_system, external_key)` with `CA-CSLB:{license}`; `home_state = CA`; multi-class in `class_code`; bond/WC in `secondary_status` + raw payload.
+
+---
+
 ## Troubleshooting (Florida / shared)
 
 | Symptom | Fix |

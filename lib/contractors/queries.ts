@@ -335,6 +335,7 @@ function evidenceSlugForContractor(
   if (hs === "TX") return "tx";
   if (hs === "NJ") return "nj";
   if (hs === "OR") return "or";
+  if (hs === "CA") return "ca";
   if (hs === "FL") return "fl";
   if (preferredSlug && getStateBySlug(preferredSlug)?.live) {
     return preferredSlug.toLowerCase();

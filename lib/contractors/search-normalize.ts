@@ -66,6 +66,7 @@ export function looksLikeLicenseKey(q: string): boolean {
   if (/^TX-TDLR:/i.test(trimmed)) return true;
   if (/^TX-TSBPE:/i.test(trimmed)) return true;
   if (/^OR-CCB:/i.test(trimmed)) return true;
+  if (/^CA-CSLB:/i.test(trimmed)) return true;
   if (/^NJ-/i.test(trimmed)) return true;
   if (/^HIC[-_]?/i.test(trimmed)) return true;
   if (/^(ELE|PLB|HVAC|GEN)-NJ-/i.test(trimmed)) return true;
@@ -83,7 +84,12 @@ export function looksLikeLicenseKey(q: string): boolean {
 
 export function normalizeLicenseKey(q: string): string {
   const trimmed = q.trim();
-  if (/^TX-TDLR:/i.test(trimmed) || /^TX-TSBPE:/i.test(trimmed) || /^OR-CCB:/i.test(trimmed)) {
+  if (
+    /^TX-TDLR:/i.test(trimmed) ||
+    /^TX-TSBPE:/i.test(trimmed) ||
+    /^OR-CCB:/i.test(trimmed) ||
+    /^CA-CSLB:/i.test(trimmed)
+  ) {
     return trimmed.toUpperCase().replace(/\s+/g, "");
   }
   if (/^NJ-/i.test(trimmed) || /^HIC/i.test(trimmed) || /-(NJ|HIC)/i.test(trimmed)) {

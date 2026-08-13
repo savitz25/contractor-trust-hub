@@ -3,15 +3,17 @@
  * Texas: TDLR specialty trades + TSBPE plumbing (no statewide GC) — see docs/DATA_SOURCES_TX.md.
  * New Jersey: HIC + specialty boards via DCA (no statewide GC) — see docs/DATA_SOURCES_NJ.md.
  * Oregon: CCB statewide contractor licenses — see docs/DATA_SOURCES_OR.md.
+ * California: CSLB top-county public list extracts — see docs/DATA_SOURCES_CA.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
 
 import { getOccupationInfo } from "@/lib/contractors/occupations";
+import { caClassPlainLabel } from "./ca-classifications";
 import { isNjVerifyPilotEnabled } from "./feature-flags";
 import { njCredentialPlainLabel } from "./nj-credentials";
 import { orCcbPlainLabel } from "./or-ccb";
 
-export type StateCode = "FL" | "TX" | "NJ" | "OR";
+export type StateCode = "FL" | "TX" | "NJ" | "OR" | "CA";
 
 export type EvidenceState = {
   code: StateCode;
@@ -101,13 +103,31 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     coverageNote:
       "Oregon licenses contractors statewide through the CCB. This search uses the official Active Licenses open-data extract. Bond and insurance fields are as published — not a live certificate check. Always confirm on the official CCB site.",
   },
+  ca: {
+    code: "CA",
+    slug: "ca",
+    name: "California",
+    shortName: "CA",
+    boardLabel: "California Contractors State License Board (CSLB)",
+    boardUrl: "https://www.cslb.ca.gov/",
+    entityRegistryLabel: "California SOS business entities (not yet linked)",
+    entityRegistryUrl: "https://bizfileonline.sos.ca.gov/",
+    licenseSource: "ca_cslb",
+    entitySource: "ca_sos",
+    // Live once load + Verify path are ready (set true after production load)
+    live: true,
+    pilot: true,
+    coverageNote:
+      "California licenses contractors statewide through CSLB. This extract covers high-impact counties from official public list downloads — not every county file. Always confirm current status on CSLB Instant License Check. Bond and workers’ comp fields are as published, not live certificates.",
+  },
 };
 
 export const DEFAULT_STATE_SLUG = "fl";
 
 export function getStateBySlug(slug: string): EvidenceState | null {
   const key = slug.toLowerCase();
-  const mapped = key === "oregon" ? "or" : key;
+  const mapped =
+    key === "oregon" ? "or" : key === "california" ? "ca" : key;
   const s = EVIDENCE_STATES[mapped] ?? null;
   if (!s) return null;
   // NJ pilot can be disabled without removing config
@@ -181,11 +201,12 @@ export const NJ_OCCUPATION_LABELS: Record<string, string> = {
 
 export function occupationLabel(code: string | null | undefined): string {
   if (!code) return "Construction license";
-  const upper = code.toUpperCase();
+  const upper = code.toUpperCase().replace(/-/g, "");
   return (
     FL_OCCUPATION_LABELS[upper] ??
     TX_OCCUPATION_LABELS[upper] ??
     NJ_OCCUPATION_LABELS[upper] ??
+    caClassPlainLabel(upper) ??
     orCcbPlainLabel(upper) ??
     njCredentialPlainLabel(upper) ??
     getOccupationInfo(upper).label

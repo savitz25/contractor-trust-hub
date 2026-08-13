@@ -123,6 +123,19 @@ Full documentation, coverage limits, bulk sources, and ingest commands:
 
 **Ingest:** `scripts/download_nj_dca.py` + `ingest/adapters/nj_dca.py` → `data/staging/nj_dca/`
 
+## California — CSLB (high-impact counties)
+
+**California licenses contractors statewide through CSLB.** This product extract uses official Public Data Portal county/classification Excel lists for high-impact counties present in `data/raw/ca_contractors/` (Riverside not in the initial file set).
+
+→ **[DATA_SOURCES_CA.md](./DATA_SOURCES_CA.md)** · product: **[CALIFORNIA_VERIFY_V1.md](./CALIFORNIA_VERIFY_V1.md)**
+
+| Resource | URL | Notes |
+|----------|-----|--------|
+| CSLB Instant License Check | https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx | Human confirm |
+| Public list Excel downloads | CSLB Public Data Portal | `CSLBSearchData_*.xlsx` by county/class |
+
+**Ingest:** `python -m ingest.adapters.ca_cslb --input-dir data/raw/ca_contractors` → `data/staging/ca_cslb/`
+
 ## Permits (local)
 
 County / city open data portals (building permits) for activity volume and complaint adjacency. Prioritize high-volume FL counties after license core is stable.

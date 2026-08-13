@@ -11,6 +11,7 @@
 | 3 | `adapters/tx_tdlr.py` | TX TDLR specialty licenses (Open Data) | `data/staging/tx_tdlr/` |
 | 4 | `adapters/tx_tsbpe.py` | TX plumbing (TSBPE free CSV lists) | `data/staging/tx_tsbpe/` |
 | 5 | `adapters/nj_dca.py` | NJ DCA HIC + specialty boards (no statewide GC) | `data/staging/nj_dca/` |
+| 6 | `adapters/ca_cslb.py` | CA CSLB public list Excel (high-impact counties) | `data/staging/ca_cslb/` |
 | 6 | `adapters/or_ccb.py` | Oregon CCB Active Licenses | `data/staging/or_ccb/` |
 | 7 | Permits | County / city open data | Later |
 
@@ -90,6 +91,12 @@ python scripts/load_nj_dca_to_postgres.py --staging-dir data/staging/nj_dca
 python scripts/download_or_ccb.py
 python -m ingest.adapters.or_ccb --input data/raw/or_ccb/ccb_active_licenses.csv --out-dir data/staging/or_ccb
 python scripts/load_or_ccb_to_postgres.py --staging-dir data/staging/or_ccb
+
+# California CSLB high-impact counties — see docs/DATA_SOURCES_CA.md
+python -m ingest.adapters.ca_cslb \
+  --input-dir data/raw/ca_contractors \
+  --out-dir data/staging/ca_cslb
+python scripts/load_ca_cslb_to_postgres.py --staging-dir data/staging/ca_cslb
 ```
 
 ## Staging files produced

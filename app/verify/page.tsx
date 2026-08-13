@@ -4,6 +4,7 @@ import { EmptyResults } from "@/components/search/EmptyResults";
 import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
 import { ResultCard } from "@/components/search/ResultCard";
 import { SearchForm } from "@/components/search/SearchForm";
+import { CaliforniaCoverageBanner } from "@/components/search/CaliforniaCoverageBanner";
 import { OregonCoverageBanner } from "@/components/search/OregonCoverageBanner";
 import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
@@ -50,6 +51,14 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       path: "/verify?state=or",
     });
   }
+  if (state.slug === "ca") {
+    return pageMetadata({
+      title: "Verify a California contractor (CSLB)",
+      description:
+        "Search California CSLB licenses from official public list extracts for high-impact counties. Always confirm on CSLB Instant License Check. Evidence only — not a marketplace.",
+      path: "/verify?state=ca",
+    });
+  }
   return pageMetadata({
     title: "Verify a Florida contractor",
     description:
@@ -64,7 +73,8 @@ export default async function VerifyPage({ searchParams }: Props) {
   const isTx = state.slug === "tx";
   const isNj = state.slug === "nj";
   const isOr = state.slug === "or";
-  const isSpecialty = isTx || isNj || isOr;
+  const isCa = state.slug === "ca";
+  const isSpecialty = isTx || isNj || isOr || isCa;
   const q = (sp.q || "").trim();
   const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
   let results: Awaited<ReturnType<typeof searchContractors>>["results"] = [];
@@ -99,7 +109,9 @@ export default async function VerifyPage({ searchParams }: Props) {
       ? "Texas · TDLR specialty + TSBPE plumbing"
       : isOr
         ? "Oregon · CCB statewide licenses"
-        : "Florida · DBPR + Sunbiz";
+        : isCa
+          ? "California · CSLB high-impact counties"
+          : "Florida · DBPR + Sunbiz";
 
   const heading = isNj
     ? "Verify a New Jersey HIC or specialty contractor"
@@ -107,7 +119,9 @@ export default async function VerifyPage({ searchParams }: Props) {
       ? "Verify a Texas specialty contractor"
       : isOr
         ? "Verify an Oregon contractor"
-        : "Verify a Florida contractor";
+        : isCa
+          ? "Verify a California contractor"
+          : "Verify a Florida contractor";
 
   const lead = isNj
     ? "Search by registration number or company name. New Jersey has no single statewide GC license — coverage is HIC registration plus available specialty boards from official DCA extracts."
@@ -115,7 +129,9 @@ export default async function VerifyPage({ searchParams }: Props) {
       ? "Search TDLR specialty licenses or TSBPE plumbing by number or business / owner name. You’ll see the trade type in plain language, license status, and county when available."
       : isOr
         ? "Search CCB active licenses by number or business name. Result cards show type, status, location, and published bond/insurance signals — then open a Trust Report."
-        : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
+        : isCa
+          ? "Search CSLB licenses by number or business name from official public list extracts for high-impact counties. Always confirm on Instant License Check."
+          : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
 
   const helpCards = isNj
     ? [
@@ -162,6 +178,21 @@ export default async function VerifyPage({ searchParams }: Props) {
               d: "License type, status, county, and bond/insurance listed signals when published — then a Trust Report.",
             },
           ]
+        : isCa
+          ? [
+              {
+                t: "CSLB license number",
+                d: "Numeric CSLB license numbers from cards or invoices are most precise.",
+              },
+              {
+                t: "Business name",
+                d: "Matches the business name in the CSLB public list extract for loaded counties.",
+              },
+              {
+                t: "What you’ll see",
+                d: "Status, primary classification(s), location — then a Trust Report. Confirm on Instant License Check.",
+              },
+            ]
       : [
           {
             t: "License number",
@@ -215,6 +246,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                   ? "Verify pilot"
                 : s.slug === "or"
                   ? "CCB statewide"
+                  : s.slug === "ca"
+                    ? "CSLB counties"
                   : s.slug === "fl"
                     ? "Full journey"
                     : null;
@@ -261,6 +294,11 @@ export default async function VerifyPage({ searchParams }: Props) {
           <OregonCoverageBanner showFloridaLink={!q} />
         </div>
       ) : null}
+      {isCa ? (
+        <div className="mt-4 max-w-3xl sm:mt-5">
+          <CaliforniaCoverageBanner showFloridaLink={!q} />
+        </div>
+      ) : null}
 
       <div className="mt-5 max-w-3xl sm:mt-7">
         <SearchForm
@@ -276,6 +314,8 @@ export default async function VerifyPage({ searchParams }: Props) {
               ? "HIC + specialty boards when in extract. No statewide GC license. Entity links only when high-confidence — no name-only auto-joins."
               : isOr
                 ? "Oregon CCB Active Licenses extract. Bond and insurance signals are as published — not a live certificate check."
+                : isCa
+                  ? "CSLB public list extract for high-impact counties. Confirm on Instant License Check. Missing ≠ unlicensed."
               : (
                 <>
                   Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay
@@ -341,6 +381,7 @@ export default async function VerifyPage({ searchParams }: Props) {
               {isTx ? " · TDLR + TSBPE" : ""}
               {isNj ? " · NJ pilot" : ""}
               {isOr ? " · CCB" : ""}
+              {isCa ? " · CSLB" : ""}
               {results.length >= 25 ? " · first 25" : ""}
             </p>
           </div>
@@ -371,6 +412,11 @@ export default async function VerifyPage({ searchParams }: Props) {
               {isOr ? (
                 <div className="pt-2 sm:pt-3">
                   <OregonCoverageBanner compact showFloridaLink={false} />
+                </div>
+              ) : null}
+              {isCa ? (
+                <div className="pt-2 sm:pt-3">
+                  <CaliforniaCoverageBanner compact showFloridaLink={false} />
                 </div>
               ) : null}
             </div>

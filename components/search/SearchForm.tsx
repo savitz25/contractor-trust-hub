@@ -43,6 +43,12 @@ const OR_PLACEHOLDERS = {
   compact: "License or name",
 };
 
+const CA_PLACEHOLDERS = {
+  hero: "CSLB license number or business name…",
+  default: "CSLB license # or business name",
+  compact: "License or name",
+};
+
 export function SearchForm({
   defaultQuery = "",
   size = "default",
@@ -64,6 +70,7 @@ export function SearchForm({
   const isTx = activeState === "tx";
   const isNj = activeState === "nj";
   const isOr = activeState === "or";
+  const isCa = activeState === "ca";
   const ph =
     placeholder ||
     (isTx
@@ -72,6 +79,8 @@ export function SearchForm({
         ? NJ_PLACEHOLDERS[size]
         : isOr
           ? OR_PLACEHOLDERS[size]
+          : isCa
+            ? CA_PLACEHOLDERS[size]
           : PLACEHOLDERS[size]);
 
   const inputClass = isHero
@@ -115,6 +124,7 @@ export function SearchForm({
               { id: "fl", label: "Florida", hint: "Full construction licenses" },
               { id: "tx", label: "Texas", hint: "TDLR + TSBPE plumbing" },
               { id: "nj", label: "New Jersey", hint: "HIC + specialty boards" },
+              { id: "ca", label: "California", hint: "CSLB high-impact counties" },
               { id: "or", label: "Oregon", hint: "CCB statewide licenses" },
             ] as const
           ).map((s) => {

@@ -3,6 +3,7 @@ import { CompareToggle } from "@/components/compare/CompareToggle";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { displayStatusLabel, statusLabel, statusTone } from "@/lib/contractors/format";
 import { occupationLabel } from "@/lib/states/config";
+import { getCaClassInfo, caClassPlainLabel } from "@/lib/states/ca-classifications";
 import { getOrCcbTypeInfo, orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { getNjCredentialInfo, njCredentialPlainLabel } from "@/lib/states/nj-credentials";
 import {
@@ -47,6 +48,10 @@ function isOregonResult(result: SearchResult): boolean {
   return (result.state || "").toUpperCase() === "OR" || result.sourceSystem === "or_ccb";
 }
 
+function isCaliforniaResult(result: SearchResult): boolean {
+  return (result.state || "").toUpperCase() === "CA" || result.sourceSystem === "ca_cslb";
+}
+
 function displayLicenseKey(
   result: SearchResult,
   isTx: boolean,
@@ -66,6 +71,9 @@ function displayLicenseKey(
     const parts = key.split(":");
     return parts[1] || key;
   }
+  if (key.startsWith("CA-CSLB:")) {
+    return key.split(":").pop() || key;
+  }
   return key;
 }
 
@@ -80,20 +88,24 @@ export function ResultCard({
   const isTx = isTexasResult(result);
   const isNj = isNjResult(result);
   const isOr = isOregonResult(result);
+  const isCa = isCaliforniaResult(result);
   const location = [result.city, result.county, result.state].filter(Boolean).join(" · ");
   const licTone = signalTone("license", result);
   const entTone = signalTone("entity", result);
   const showEntity =
-    Boolean(result.entityStatus) || !(hideEntityWhenMissing || isTx || isNj || isOr);
+    Boolean(result.entityStatus) || !(hideEntityWhenMissing || isTx || isNj || isOr || isCa);
   const trade = isTx ? getTxTradeInfo(result.occupationCode) : null;
   const njCred = isNj ? getNjCredentialInfo(result.occupationCode) : null;
   const orType = isOr ? getOrCcbTypeInfo(result.occupationCode) : null;
+  const caClass = isCa ? getCaClassInfo(result.occupationCode) : null;
   const tradeLabel = isNj
     ? njCredentialPlainLabel(result.occupationCode)
     : isTx
       ? txTradePlainLabel(result.occupationCode)
       : isOr
         ? orCcbDisplayLabel(result.occupationCode)
+        : isCa
+          ? caClassPlainLabel(result.occupationCode)
       : occupationLabel(result.occupationCode);
   const officialSuffix = isTx ? txTradeOfficialSuffix(result.occupationCode) : null;
   const shortKey = displayLicenseKey(result, isTx, isNj);
@@ -126,6 +138,13 @@ export function ResultCard({
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600/70" aria-hidden />
             <span className="truncate">{orType.chip}</span>
             <span className="hidden text-[var(--muted)] font-normal sm:inline">· CCB</span>
+          </span>
+        ) : null}
+        {isCa && caClass ? (
+          <span className="inline-flex max-w-full items-center gap-1.5 text-xs font-medium text-[var(--navy)]">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500/80" aria-hidden />
+            <span className="truncate">{caClass.chip}</span>
+            <span className="hidden text-[var(--muted)] font-normal sm:inline">· CSLB</span>
           </span>
         ) : null}
         {result.sourceSystem ? (
@@ -210,6 +229,11 @@ export function ResultCard({
             {isOr ? (
               <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-950">
                 Oregon CCB
+              </span>
+            ) : null}
+            {isCa ? (
+              <span className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-medium text-amber-950">
+                California CSLB
               </span>
             ) : null}
             <StatusBadge
