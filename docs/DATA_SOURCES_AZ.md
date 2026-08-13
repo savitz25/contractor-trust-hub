@@ -35,7 +35,13 @@ Published on the Posting List page (date-stamped filenames, e.g. `ROC_Posting-Li
 | Residential Contractors | Residential-only subset |
 | Dual License Contractors | Dual-only subset |
 
-Also published (not required for Verify v1 core): Pending Applications, New Licenses, Disciplinary Actions CSVs.
+Also published:
+
+| File | Role in product |
+|------|-----------------|
+| Pending Applications | Not loaded (v1) |
+| New Licenses | Not loaded (v1) |
+| **Disciplinary Actions** | Loaded into `discipline_actions` when present |
 
 **Prefer:** Official free posting-list downloads.  
 **Avoid:** Scraping the interactive contractor search as primary truth.  
@@ -97,19 +103,20 @@ Strip whitespace; keep leading zeros as published (e.g. `002386`).
 |------|---------|
 | Download (when CF allows) | `python scripts/download_az_roc.py` |
 | Or place manual browser download | `data/raw/az_roc/ROC_Posting-List_*.csv` |
-| Normalize | `python -m ingest.adapters.az_roc --input data/raw/az_roc/ROC_Posting-List_….csv` |
-| Load (Postgres) | `python scripts/load_az_roc_to_postgres.py --staging-dir data/staging/az_roc` |
-| Load (PostgREST) | `python scripts/load_az_roc_via_supabase_rest.py --staging-dir data/staging/az_roc` |
+| Normalize licenses | `python -m ingest.adapters.az_roc --input-dir data/raw/az_roc` |
+| Normalize discipline | `python -m ingest.adapters.az_roc_discipline --input data/raw/az_roc/ROC_Disciplinary-Actions_….csv` |
+| Load licenses | `python scripts/load_az_roc_via_supabase_rest.py --staging-dir data/staging/az_roc` |
+| Load discipline | `python scripts/load_az_roc_discipline_via_supabase_rest.py --staging-dir data/staging/az_roc` |
 | Verify UI | `/verify?state=az` |
 
 ## Remaining gaps
 
 | Gap | Notes |
 |-----|--------|
-| Inactive / revoked history | Current posting list is active-only |
-| Disciplinary depth | Separate disciplinary CSV on posting list — not wired in Verify v1 (do not invent) |
+| Full inactive archive | Beyond disciplinary + current active lists |
+| Disciplinary narrative depth | CSV is status-word level (Suspended/Revoked), not full case files |
 | Bond / insurance live validity | Not in current-contractor columns as COI |
-| Qualifying party depth | Name only when present; “QP Exempt” / missing names as published |
+| Qualifying party depth | Name only when present on active list; “QP Exempt” as published |
 | Entity linkage | ACC / SOS not auto-linked |
 | AZ Plan / Studios | Out of scope (Verify first) |
 

@@ -28,8 +28,8 @@ export function ArizonaCoverageBanner({
           Arizona ROC statewide contractor licenses
         </p>
         <p className="mt-1 text-[11px] leading-relaxed text-sky-900/85 sm:text-xs">
-          Official current active posting list. Always confirm live status on the ROC contractor
-          search. Missing ≠ unlicensed.
+          Current active posting list plus linked ROC disciplinary actions when present. Always
+          confirm live status on the ROC contractor search. Missing ≠ unlicensed or clean history.
         </p>
       </div>
     );

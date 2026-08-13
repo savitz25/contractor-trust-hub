@@ -8,7 +8,8 @@ Minimum viable **evidence-only** Verify for Arizona Registrar of Contractors (RO
 |----|-----|
 | `/verify?state=az` license + name search | AZ Plan / Studios / Passport |
 | Official **current active** posting-list CSV | Scraping interactive search as primary truth |
-| Class + Class Type + location + dates | Invented discipline or live COI |
+| Official **disciplinary actions** posting-list CSV | Full case narrative / invented dispositions |
+| Class + Class Type + location + dates | Live bond / COI verification |
 | Trust Report from loaded ROC fields | Full Florida-depth journey |
 
 ## Data

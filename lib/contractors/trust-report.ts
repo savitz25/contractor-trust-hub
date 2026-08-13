@@ -63,6 +63,7 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
   const hasDiscipline = contractor.discipline.length > 0;
   const isTx = (contractor.homeState || "").toUpperCase() === "TX";
   const isOr = (contractor.homeState || "").toUpperCase() === "OR";
+  const isAz = (contractor.homeState || "").toUpperCase() === "AZ";
 
   const licenseTone: EvidenceTone = !lic
     ? "neutral"
@@ -149,6 +150,35 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
         "No statewide GC license in Texas. City/county builder registration is not fully covered. Discipline records are not loaded for TX v1.",
       tone: "warn",
       lastVerifiedAt: lic?.lastVerifiedAt ?? null,
+    });
+    return pillars;
+  }
+
+  if (isAz) {
+    pillars.push({
+      id: "entity",
+      label: "Category",
+      statusLine: lic?.secondaryStatus?.includes("Category:")
+        ? "Published class type"
+        : "ROC extract",
+      detail: lic?.secondaryStatus
+        ? `${lic.secondaryStatus}. Confirm standing on the official ROC contractor search.`
+        : "Arizona ROC posting-list extract. Confirm current status on the official ROC search.",
+      tone: "neutral",
+      lastVerifiedAt: lic?.lastVerifiedAt ?? null,
+    });
+    pillars.push({
+      id: "discipline",
+      label: "Discipline",
+      statusLine: hasDiscipline
+        ? `${contractor.discipline.length} linked`
+        : "None linked",
+      detail: hasDiscipline
+        ? "ROC disciplinary actions posting list row(s) linked — open the section below for case number and published status. Not a full case narrative."
+        : "No ROC disciplinary actions posting-list row linked in our current extracts (not a warranty of clean history).",
+      tone: hasDiscipline ? "warn" : "good",
+      lastVerifiedAt:
+        contractor.discipline[0]?.lastVerifiedAt ?? lic?.lastVerifiedAt ?? null,
     });
     return pillars;
   }

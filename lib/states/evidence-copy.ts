@@ -177,8 +177,8 @@ export function notCheckedItems(slug: EvidenceStateSlug): string[] {
   }
   if (slug === "az") {
     return [
-      "Inactive / revoked historical archive (this feed is current active licenses)",
-      "Disciplinary case detail (not loaded from posting-list extract)",
+      "Full historical inactive archive beyond disciplinary + current active lists",
+      "Full case narrative / findings text (disciplinary CSV is status-word level)",
       "Live bond / insurance certificate validity",
       "ACC entity auto-links or Florida-depth planning journey",
     ];
@@ -195,6 +195,7 @@ export function notCheckedItems(slug: EvidenceStateSlug): string[] {
 export function disciplineSectionTitle(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "Enforcement / public actions";
   if (slug === "tx") return "Caution & regulatory history";
+  if (slug === "az") return "ROC disciplinary actions";
   return "Caution & regulatory history";
 }
 
@@ -204,6 +205,9 @@ export function disciplineSectionBlurb(slug: EvidenceStateSlug): string {
   }
   if (slug === "tx") {
     return "Regulatory history from TDLR-linked extracts when present. Factual records only.";
+  }
+  if (slug === "az") {
+    return "Public disciplinary actions from the official ROC posting-list CSV when linked. Rows typically list Suspended or Revoked with a case number — not full case narrative. Confirm current standing on the official ROC contractor search.";
   }
   return "Board discipline from Florida extracts linked to this contractor. Separate from insurance, permits, or reviews — factual records only.";
 }

@@ -63,11 +63,12 @@ export const AZ_PILOT_COVERED = [
   "License number, business name, class code + class detail",
   "Residential / commercial / dual category when Class Type is published",
   "City, address, issued and expiration dates when present",
+  "ROC disciplinary actions posting list (Suspended / Revoked + case number when linked)",
 ] as const;
 
 export const AZ_PILOT_NOT_COVERED = [
-  "Inactive / revoked / revoked historical archive",
-  "Disciplinary case detail (separate ROC list not loaded in Verify v1)",
+  "Full historical inactive archive beyond disciplinary + current active lists",
+  "Full case narrative / findings text (disciplinary CSV is status-word level)",
   "Live bond / insurance certificate verification",
   "Automatic ACC / SOS entity linkage",
   "Florida-depth planning, studios, or passport journey",

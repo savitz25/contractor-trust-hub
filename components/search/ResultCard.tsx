@@ -201,12 +201,21 @@ export function ResultCard({
         {isTx ? null : result.hasDiscipline ? (
           <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-800">
             <span className={`h-1.5 w-1.5 rounded-full ${toneBar.warn}`} aria-hidden />
-            {isNj ? "Enforcement flag on file" : "Discipline on file"}
+            {isNj
+              ? "Enforcement flag on file"
+              : isAz
+                ? "ROC discipline on file"
+                : "Discipline on file"}
           </span>
         ) : isNj ? (
           <span className="hidden items-center gap-1.5 text-xs text-[var(--muted)] sm:inline-flex">
             <span className={`h-1.5 w-1.5 rounded-full ${toneBar.neutral}`} aria-hidden />
             No enforcement flag in extract
+          </span>
+        ) : isAz ? (
+          <span className="hidden items-center gap-1.5 text-xs text-[var(--muted)] sm:inline-flex">
+            <span className={`h-1.5 w-1.5 rounded-full ${toneBar.good}`} aria-hidden />
+            No ROC discipline row in extract
           </span>
         ) : (
           <span className="hidden items-center gap-1.5 text-xs text-[var(--muted)] sm:inline-flex">

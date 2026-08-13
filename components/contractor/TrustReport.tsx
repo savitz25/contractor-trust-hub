@@ -619,6 +619,15 @@ export function DisciplineSection({
                 exist outside these extracts or after our last load. Re-check official DCA /
                 MyLicense tools before hiring.
               </>
+            ) : slug === "az" ? (
+              <>
+                Our Arizona ROC disciplinary actions posting list does not currently attach a row to
+                this profile. That is{" "}
+                <strong className="font-medium text-[var(--text)]">not</strong> a certificate of clean
+                history: the official CSV is a published snapshot (typically Suspended/Revoked with a
+                case number), may omit actions outside that file or after our last load, and current
+                standing can change. Re-check the official ROC contractor search before hiring.
+              </>
             ) : (
               <>
                 Our Florida board discipline files do not currently attach an action to this profile.
@@ -641,6 +650,14 @@ export function DisciplineSection({
                 The following rows are public discipline flags from the DCA Standard Files bulk
                 extract. They do not include case narrative or disposition dates in this feed. We
                 describe records factually — we do not score severity or recommend hire/avoid.
+              </>
+            ) : slug === "az" ? (
+              <>
+                The following rows come from the official ROC disciplinary actions posting list.
+                Published fields are typically case number, license class, and a short status word
+                (e.g. Suspended, Revoked) — not full case narrative. Some forms of discipline are
+                temporary. Confirm current standing on the official ROC contractor search. We describe
+                records factually — we do not score severity or recommend hire/avoid.
               </>
             ) : (
               <>
@@ -696,7 +713,15 @@ export function DisciplineSection({
                     </p>
                   )}
                   <p className="mt-3 border-t border-[var(--border)]/80 pt-2 text-xs text-[var(--muted)]">
-                    Source: {d.sourceDataset || "Florida board discipline extract"}
+                    Source:{" "}
+                    {d.sourceDataset === "roc_disciplinary_actions"
+                      ? "Arizona ROC disciplinary actions posting list"
+                      : d.sourceDataset ||
+                        (slug === "az"
+                          ? "Arizona ROC disciplinary extract"
+                          : slug === "nj"
+                            ? "NJ DCA Standard Files extract"
+                            : "Florida board discipline extract")}
                     {d.lastVerifiedAt
                       ? ` · in our data ${formatDateTime(d.lastVerifiedAt)}`
                       : ""}
