@@ -1,6 +1,6 @@
 /**
  * Multi-state product config. Florida is the live reference implementation.
- * Texas: TDLR specialty trades only (no statewide GC) — see docs/DATA_SOURCES_TX.md.
+ * Texas: TDLR specialty trades + TSBPE plumbing (no statewide GC) — see docs/DATA_SOURCES_TX.md.
  * New Jersey: Stage 7 Verify pilot (registration-first) — see docs/STAGE_7_FL_DEPTH_AND_NJ_SPIKE.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
@@ -23,6 +23,8 @@ export type EvidenceState = {
   entityRegistryUrl: string;
   /** License source_system in DB */
   licenseSource: string;
+  /** Additional license source_systems searched with licenseSource (e.g. TX TSBPE). */
+  licenseSources?: string[];
   /** Corporate entity source_system for high-confidence links */
   entitySource: string;
   live: boolean;
@@ -58,11 +60,12 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     entityRegistryLabel: "Texas SOS / Comptroller entity data (not yet linked)",
     entityRegistryUrl: "https://www.sos.state.tx.us/",
     licenseSource: "tx_tdlr",
+    licenseSources: ["tx_tdlr", "tx_tsbpe"],
     // No high-confidence statewide entity linker yet (unlike FL Sunbiz)
     entitySource: "tx_sos",
     live: true,
     coverageNote:
-      "Texas does not issue a statewide general contractor license. Coverage is TDLR specialty trades only (e.g. electrical, A/C). Plumbing is under TSBPE (separate). Many general builders are city/county only.",
+      "Texas does not issue a statewide general contractor license. Coverage is TDLR specialty trades plus TSBPE plumbing. Many general builders are city/county only.",
   },
   nj: {
     code: "NJ",
@@ -101,6 +104,13 @@ export function getLiveStates(): EvidenceState[] {
     .filter((s) => s.live);
 }
 
+export function licenseSourcesFor(state: EvidenceState): string[] {
+  if (state.licenseSources && state.licenseSources.length > 0) {
+    return state.licenseSources;
+  }
+  return [state.licenseSource];
+}
+
 /** Occupation codes seen in FL DBPR construction extract (subset of common labels). */
 export const FL_OCCUPATION_LABELS: Record<string, string> = {
   CBC: "Certified Building Contractor",
@@ -131,6 +141,10 @@ export const TX_OCCUPATION_LABELS: Record<string, string> = {
   TJE: "Journeyman Electrician",
   TAE: "Apprentice Electrician",
   TAI: "Appliance Installer",
+  TRMP: "Plumbing — Responsible Master Plumber",
+  TMP: "Plumbing — Master Plumber",
+  TJP: "Plumbing — Journeyman Plumber",
+  TTP: "Plumbing — Tradesman Plumber-Limited",
 };
 
 /** New Jersey pilot occupation / credential codes */

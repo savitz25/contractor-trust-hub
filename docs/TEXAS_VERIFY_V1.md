@@ -32,9 +32,9 @@ Apprentices / journeymen / master electrician individual cards are **not** the d
 **Do say:**
 
 - Texas has **no** statewide general contractor license.  
-- This product covers **selected TDLR specialty trades** only.  
-- Plumbing is under **TSBPE** and is **not fully covered** yet.  
-- Many general builders are **city/county only** — confirm local requirements.  
+- This product covers **selected TDLR specialty trades** plus **TSBPE plumbing**.  
+- Responsible Master Plumbers are the public-facing plumbing credential.  
+- Many general builders are **city/county only** — confirm local requirements.
 - Prefer fewer accurate matches over weak padded results.
 
 **Do not say:**
@@ -45,8 +45,7 @@ Apprentices / journeymen / master electrician individual cards are **not** the d
 
 ## Still out of scope (v1)
 
-- TSBPE plumbing adapter (`tx_tsbpe`)  
-- Municipal / county GC registration feeds  
+- Municipal / county GC registration feeds
 - Full TDLR non-construction programs  
 - Texas Discovery browse by county (thin without solid addresses)  
 - Plan / Cost Studio Texas cost bands  
@@ -91,10 +90,10 @@ Details: [LOAD_PATH.md](./LOAD_PATH.md) · [DATA_SOURCES_TX.md](./DATA_SOURCES_T
 | URL | Behavior |
 |-----|----------|
 | `/verify` | Florida (default) — unchanged |
-| `/verify?state=tx` | Texas TDLR specialty search + coverage banner |
+| `/verify?state=tx` | Texas TDLR specialty + TSBPE plumbing search + coverage banner |
 | `/contractors/{slug}` | Trust Report; TX detected via `home_state` |
 
-Search accepts TDLR license numbers (e.g. `10001`) or product keys (`TX-TDLR:…`), or business / owner name tokens.
+Search accepts TDLR or TSBPE license numbers, product keys (`TX-TDLR:…` / `TX-TSBPE:…`), or business / owner name tokens.
 
 ## Implementation checklist
 
@@ -104,8 +103,8 @@ Search accepts TDLR license numbers (e.g. `10001`) or product keys (`TX-TDLR:…
 4. ✅ `EVIDENCE_STATES.tx.live = true`  
 5. ✅ Verify UI state switcher + coverage banner  
 6. ✅ Trust Report TX path (no Sunbiz requirement)  
-7. ⬜ Production full specialty refresh on schedule (ops)  
-8. ⬜ Optional: TSBPE plumbing as separate source later  
+7. ✅ TSBPE plumbing (`tx_tsbpe`) — RMP + Master default  
+8. ⬜ Production full specialty + plumbing refresh on schedule (ops)
 
 ## Success criteria
 
@@ -119,4 +118,4 @@ Search accepts TDLR license numbers (e.g. `10001`) or product keys (`TX-TDLR:…
 - Not a statewide GC registry  
 - Not “all Texas contractors”  
 - Not a substitute for municipal permitting or local registration checks  
-- Not TSBPE until that adapter ships  
+- Not a substitute for checking TSBPE insurance-on-file the day you hire  

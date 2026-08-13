@@ -208,7 +208,7 @@ export function ResultCard({
               Official type: {officialSuffix}
             </p>
           ) : isTx ? (
-            <p className="mt-0.5 text-xs text-[var(--muted)]">TDLR specialty license</p>
+            <p className="mt-0.5 text-xs text-[var(--muted)]">Texas specialty / plumbing license</p>
           ) : isNj ? (
             <p className="mt-0.5 text-xs text-[var(--muted)]">
               NJ registration extract · not Florida-depth coverage

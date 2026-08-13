@@ -82,7 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `Trust report for ${c.displayName}${city}.`,
       lic ? `Credential ${lic.externalKey} (${occ}) — ${status}.` : null,
       isTx
-        ? "TDLR specialty trade evidence — not a statewide general contractor directory."
+        ? "TDLR specialty or TSBPE plumbing evidence — not a statewide general contractor directory."
         : isNj
           ? "New Jersey verification pilot — registration extracts only; coverage differs by state."
           : c.entities[0]
@@ -92,7 +92,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ? `${c.discipline.length} discipline action(s) linked.`
         : "No discipline linked in our extract.",
       isTx
-        ? "Official TDLR open-data evidence — not a marketplace."
+        ? "Official TDLR / TSBPE open-data evidence — not a marketplace."
         : isNj
           ? "Official NJ registration extract evidence — not a marketplace."
           : "Official DBPR and Sunbiz evidence — not a marketplace.",
@@ -160,7 +160,7 @@ function ContractorJsonLd({
         : undefined,
     },
     description: isTx
-      ? `Independent Texas TDLR specialty license evidence for ${contractor.displayName}. Not a statewide general contractor directory — not a ranking or endorsement.`
+      ? `Independent Texas TDLR specialty or TSBPE plumbing evidence for ${contractor.displayName}. Not a statewide general contractor directory — not a ranking or endorsement.`
       : isNj
         ? `New Jersey verification pilot report for ${contractor.displayName}. Registration extract evidence — not a ranking or endorsement.`
         : `Independent Florida contractor evidence report for ${contractor.displayName}. License and entity data from public records — not a ranking or endorsement.`,
@@ -340,7 +340,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           {isNj
             ? "New Jersey · verification pilot · Trust Report"
             : isTx
-              ? "Texas · TDLR specialty · Trust Report"
+              ? "Texas · TDLR / TSBPE · Trust Report"
               : "Florida · Contractor Trust Report 2.0"}
         </p>
         <h1 className="mt-1.5 text-[1.5rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:mt-2 sm:text-4xl">
@@ -519,18 +519,28 @@ export default async function ContractorPage({ params, searchParams }: Props) {
               Sources
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-              License evidence from the Texas Department of Licensing and Regulation (TDLR)
-              open-data extract. No statewide general contractor license exists in Texas. Confirm
-              details on the official TDLR license search when decisions matter.
+              License evidence from TDLR specialty extracts and/or TSBPE plumbing lists. No
+              statewide general contractor license exists in Texas. Confirm details on the official
+              board search when decisions matter.
             </p>
-            <a
-              href="https://www.tdlr.texas.gov/LicenseSearch/"
-              className="mt-3 inline-flex text-sm font-medium text-[var(--navy)] underline-offset-2 hover:underline"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Official TDLR license search →
-            </a>
+            <div className="mt-3 flex flex-col gap-1.5">
+              <a
+                href="https://www.tdlr.texas.gov/LicenseSearch/"
+                className="inline-flex text-sm font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Official TDLR license search →
+              </a>
+              <a
+                href="https://tsbpe.texas.gov/"
+                className="inline-flex text-sm font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Official TSBPE (plumbing) →
+              </a>
+            </div>
           </section>
         )}
         {!isTxOnly ? <RelatedEntitySection contractor={contractor} /> : null}

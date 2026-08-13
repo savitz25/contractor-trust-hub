@@ -15,7 +15,7 @@ const proofs = [
   },
   {
     title: "Texas specialty verify (pilot)",
-    body: "37k+ TDLR specialty licenses. Not a statewide GC directory. Plumbing and local registration not fully covered.",
+    body: "TDLR specialty licenses plus TSBPE plumbing. Not a statewide GC directory. Local builder registration is not fully covered.",
   },
 ] as const;
 

@@ -100,7 +100,7 @@ export function SearchForm({
           {(
             [
               { id: "fl", label: "Florida", hint: "Full construction licenses" },
-              { id: "tx", label: "Texas", hint: "TDLR specialty only" },
+              { id: "tx", label: "Texas", hint: "TDLR + TSBPE plumbing" },
             ] as const
           ).map((s) => {
             const on = activeState === s.id;

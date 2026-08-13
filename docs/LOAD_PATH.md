@@ -200,8 +200,30 @@ Useful flags: `--limit N`, `--batch-size N`, `--init-schema`, `-v` (same spirit 
 
 ## Product surface after load
 
-- `/verify?state=tx` — specialty search  
+- `/verify?state=tx` — TDLR specialty + TSBPE plumbing search  
 - Florida remains `/verify` default  
+
+---
+
+# Texas TSBPE plumbing → Postgres load path
+
+Official daily CSVs from [TSBPE free licensee list](https://tsbpe.texas.gov/free-licensee-list/). Default set: Responsible Master Plumber + Master Plumber.
+
+```bash
+python scripts/download_tx_tsbpe.py
+python -m ingest.adapters.tx_tsbpe --raw-dir data/raw/tx_tsbpe --out-dir data/staging/tx_tsbpe
+python scripts/load_tx_tsbpe_to_postgres.py --staging-dir data/staging/tx_tsbpe
+```
+
+Sample (committed):
+
+```bash
+python -m ingest.adapters.tx_tsbpe \
+  --input data/samples/tx_tsbpe_rmp_sample.csv --kind rmp \
+  --out-dir data/staging/tx_tsbpe_sample
+```
+
+Keys: `TX-TSBPE:RMP:{n}` / `TX-TSBPE:MP:{n}`. `source_system = tx_tsbpe`. Texas Verify searches `tx_tdlr` and `tx_tsbpe` together.
 
 ## Troubleshooting
 

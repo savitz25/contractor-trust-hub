@@ -9,8 +9,8 @@ type Props = {
 };
 
 /**
- * Calm, persistent honesty banner for Texas Verify — specialty trades only.
- * Informative, not alarmist; never implies statewide GC coverage.
+ * Calm, persistent honesty banner for Texas Verify —
+ * TDLR specialty trades + TSBPE plumbing. Not a statewide GC directory.
  */
 export function TexasCoverageBanner({
   compact = false,
@@ -25,11 +25,12 @@ export function TexasCoverageBanner({
         role="note"
       >
         <p className="text-xs font-semibold leading-snug sm:text-[13px]">
-          Specialty trades only — not a statewide general contractor directory
+          Specialty trades + plumbing — not a statewide general contractor directory
         </p>
         <p className="mt-1 text-[11px] leading-relaxed text-sky-900/85 sm:text-xs">
-          Covers selected TDLR licenses ({trades.toLowerCase()}). No statewide GC license in Texas.
-          Plumbing (TSBPE) and city/county builder registration are not fully covered here.
+          Covers selected TDLR licenses ({trades.toLowerCase().replace(" · plumbing (tsbpe)", "")})
+          and TSBPE plumbing. No statewide GC license in Texas. City/county builder registration is
+          not fully covered here.
         </p>
       </div>
     );
@@ -49,12 +50,12 @@ export function TexasCoverageBanner({
         </span>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold leading-snug sm:text-[15px]">
-            Texas coverage is TDLR specialty trades only
+            Texas coverage is TDLR specialty trades + TSBPE plumbing
           </p>
           <p className="mt-1.5 text-xs leading-relaxed text-sky-950/90 sm:text-sm">
             Texas does <strong className="font-semibold">not</strong> issue a statewide general
-            contractor license. This search checks selected TDLR specialty contractor licenses —
-            not every builder in the state.
+            contractor license. This search checks selected TDLR specialty contractor licenses and
+            TSBPE plumbing credentials — not every builder in the state.
           </p>
 
           <div className="mt-3 grid gap-2 sm:grid-cols-2 sm:gap-3">
@@ -71,7 +72,8 @@ export function TexasCoverageBanner({
                 Not fully covered yet
               </p>
               <p className="mt-1 text-xs leading-relaxed text-sky-950/90 sm:text-[13px]">
-                Plumbing (TSBPE), and most general builders registered only with a city or county
+                Most general builders registered only with a city or county. Confirm local
+                requirements.
               </p>
             </div>
           </div>

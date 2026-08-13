@@ -82,6 +82,34 @@ const BY_CODE: Record<string, Omit<TxTradeInfo, "code">> = {
     chip: "Appliance installer",
     scopeNote: "Individual TDLR appliance credential — not a general contractor license.",
   },
+  TRMP: {
+    plain: "Plumbing — Responsible Master Plumber",
+    official: "Responsible Master Plumber",
+    chip: "Plumbing (RMP)",
+    scopeNote:
+      "TSBPE Responsible Master Plumber — the credential that may offer and contract plumbing to the public. Not a statewide general contractor license.",
+  },
+  TMP: {
+    plain: "Plumbing — Master Plumber",
+    official: "Master Plumber",
+    chip: "Master plumber",
+    scopeNote:
+      "TSBPE Master Plumber license. Contracting with the public typically requires a Responsible Master Plumber and insurance on file with TSBPE.",
+  },
+  TJP: {
+    plain: "Plumbing — Journeyman Plumber",
+    official: "Journeyman Plumber",
+    chip: "Journeyman plumber",
+    scopeNote:
+      "Individual TSBPE journeyman credential — not by itself a public-facing contracting license.",
+  },
+  TTP: {
+    plain: "Plumbing — Tradesman Plumber-Limited",
+    official: "Tradesman Plumber-Limited",
+    chip: "Tradesman plumber",
+    scopeNote:
+      "Limited TSBPE tradesman credential — not a statewide general contractor license.",
+  },
 };
 
 /** Covered specialty contractor types (Verify v1 default ingest). */
@@ -92,6 +120,7 @@ export const TX_COVERED_TRADES_PLAIN = [
   "Appliance installation",
   "Elevator",
   "Water well / pump",
+  "Plumbing (TSBPE)",
 ] as const;
 
 export function getTxTradeInfo(code: string | null | undefined): TxTradeInfo | null {
@@ -109,12 +138,12 @@ export function getTxTradeInfo(code: string | null | undefined): TxTradeInfo | n
 export function txTradePlainLabel(code: string | null | undefined): string {
   const info = getTxTradeInfo(code);
   if (info) return info.plain;
-  if (!code) return "TDLR specialty license";
-  return `TDLR specialty (${code.toUpperCase()})`;
+  if (!code) return "Texas specialty license";
+  return `Texas specialty (${code.toUpperCase()})`;
 }
 
 export function txTradeChipLabel(code: string | null | undefined): string {
-  return getTxTradeInfo(code)?.chip ?? "TDLR specialty";
+  return getTxTradeInfo(code)?.chip ?? "Texas specialty";
 }
 
 /** Official line when it differs from plain, else null (avoid redundancy). */

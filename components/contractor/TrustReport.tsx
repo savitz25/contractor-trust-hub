@@ -246,8 +246,10 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
       </h2>
       <div className="mt-4 space-y-4">
         {licenses.map((lic) => {
+          const src = (lic.sourceSystem || "").toLowerCase();
+          const isTsbpe = src === "tx_tsbpe";
           const isTx =
-            (lic.sourceSystem || "").toLowerCase() === "tx_tdlr" || lic.state === "TX";
+            src === "tx_tdlr" || isTsbpe || lic.state === "TX";
           const isNj =
             (lic.sourceSystem || "").toLowerCase() === "nj_dca" || lic.state === "NJ";
           const occ = getOccupationInfo(lic.occupationCode);
@@ -286,7 +288,7 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
               {isTx ? (
                 <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                   <span className="inline-flex rounded-full border border-[var(--navy)]/15 bg-[var(--navy)]/[0.04] px-2 py-0.5 text-[11px] font-medium text-[var(--navy)]">
-                    {txTrade?.chip ?? "Specialty"} · TDLR
+                    {txTrade?.chip ?? "Specialty"} · {isTsbpe ? "TSBPE" : "TDLR"}
                   </span>
                   {officialSuffix ? (
                     <span className="text-xs text-[var(--muted)]">
@@ -331,12 +333,14 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   </p>
                   <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">
                     {txTrade?.scopeNote ??
-                      "This is a TDLR specialty trade license. Texas does not issue a statewide general contractor credential for this search."}
+                      (isTsbpe
+                        ? "This is a TSBPE plumbing credential. Texas does not issue a statewide general contractor license."
+                        : "This is a TDLR specialty trade license. Texas does not issue a statewide general contractor credential for this search.")}
                   </p>
                   <p className="mt-2 border-t border-sky-200/70 pt-2 text-sm leading-relaxed text-[var(--muted)]">
                     <span className="font-medium text-[var(--text)]/90">Good to know: </span>
-                    Confirm current status on the official TDLR license search before hiring.
-                    Plumbing and most local builder registrations are outside this extract.
+                    Confirm current status on the official {isTsbpe ? "TSBPE" : "TDLR"} license
+                    search before hiring. Most local builder registrations are outside this extract.
                   </p>
                 </div>
               )}
@@ -356,7 +360,8 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                 <div>
                   <dt className="text-[var(--muted)]">Board / source</dt>
                   <dd className="text-[var(--text)]">
-                    {lic.boardNumber || (isNj ? "NJ DCA" : isTx ? "TDLR" : "CILB / DBPR")}
+                    {lic.boardNumber ||
+                      (isNj ? "NJ DCA" : isTsbpe ? "TSBPE" : isTx ? "TDLR" : "CILB / DBPR")}
                   </dd>
                 </div>
                 <div className="sm:col-span-2">
@@ -372,8 +377,10 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   <dd className="break-words text-[var(--text)]">
                     {isNj
                       ? "New Jersey registration extract"
-                      : isTx
-                        ? "Texas TDLR"
+                      : isTsbpe
+                        ? "Texas TSBPE"
+                        : isTx
+                          ? "Texas TDLR"
                         : "Florida DBPR"}{" "}
                     ({lic.sourceSystem}) · {formatDateTime(lic.lastVerifiedAt)}
                   </dd>
@@ -689,7 +696,7 @@ export function SourcesFooter({
             <span className="font-medium text-[var(--text)]">Coverage note</span>
             <br />
             Texas has no statewide general contractor license. This profile reflects selected TDLR
-            specialty trades only. Plumbing (TSBPE) and city/county GC registration are not fully
+            specialty trades and/or TSBPE plumbing. City/county GC registration is not fully
             covered.
           </li>
         ) : isNj ? (
@@ -728,7 +735,7 @@ export function SourcesFooter({
       </ul>
       <p className="mt-4">
         {isTx
-          ? "Always confirm current status on the official TDLR license search before hiring."
+          ? "Always confirm current status on the official TDLR or TSBPE search before hiring."
           : isNj
             ? "Always confirm current status on official New Jersey DCA / board tools before hiring."
             : "Always confirm current status on the official board and corporate registry before hiring."}{" "}

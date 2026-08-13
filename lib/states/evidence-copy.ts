@@ -29,7 +29,7 @@ export function credentialNoun(slug: EvidenceStateSlug): string {
 
 export function boardShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "New Jersey DCA extract";
-  if (slug === "tx") return "Texas TDLR";
+  if (slug === "tx") return "Texas TDLR / TSBPE";
   return "Florida DBPR";
 }
 
@@ -41,7 +41,7 @@ export function entityRegistryShortLabel(slug: EvidenceStateSlug): string {
 
 export function sourceExtractLabel(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "New Jersey registration extract";
-  if (slug === "tx") return "TDLR specialty extract";
+  if (slug === "tx") return "TDLR specialty + TSBPE plumbing extract";
   return "Florida DBPR extract";
 }
 
@@ -70,8 +70,8 @@ export function checkedItems(slug: EvidenceStateSlug): string[] {
   if (slug === "tx") {
     return [
       "TDLR specialty trade license extract (when linked)",
-      "Trade type in plain language from TDLR license class",
-      "Discipline rows when linked in our extracts",
+      "TSBPE plumbing credentials (Responsible Master Plumber and Master when loaded)",
+      "Trade type in plain language from the board class",
       "County / location fields when present in the open extract",
     ];
   }
@@ -96,7 +96,6 @@ export function notCheckedItems(slug: EvidenceStateSlug): string[] {
   if (slug === "tx") {
     return [
       "Statewide general contractor directory (Texas has no statewide GC license)",
-      "TSBPE plumbing (not fully covered yet)",
       "City/county-only builder registration",
       "Reviews, ratings, or private financials",
     ];
@@ -143,7 +142,7 @@ export function consumerNote(slug: EvidenceStateSlug, state?: EvidenceState | nu
   if (slug === "tx") {
     return (
       s?.coverageNote ||
-      "Texas coverage is selected TDLR specialty trades only — not a statewide general contractor directory."
+      "Texas coverage is selected TDLR specialty trades plus TSBPE plumbing — not a statewide general contractor directory."
     );
   }
   return "Educational research from Florida public records — not a marketplace or endorsement.";

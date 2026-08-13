@@ -3,6 +3,7 @@ import { query, queryOne } from "@/lib/db";
 import {
   DEFAULT_STATE_SLUG,
   getStateBySlug,
+  licenseSourcesFor,
   type EvidenceState,
 } from "@/lib/states/config";
 import { asLicenseStatus } from "./format";
@@ -107,7 +108,7 @@ export async function searchContractors(
         ORDER BY ce.confidence DESC NULLS LAST
         LIMIT 1
       ) e ON TRUE
-      WHERE l.source_system = $2
+      WHERE l.source_system = ANY($2::text[])
         AND c.is_thin_profile = FALSE
         AND (c.home_state = $6 OR l.state = $6 OR $6 = '')
         AND (
@@ -126,12 +127,13 @@ export async function searchContractors(
           ELSE 2
         END,
         CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
+        CASE l.occupation_code WHEN 'TRMP' THEN 0 WHEN 'TMP' THEN 1 ELSE 2 END,
         c.display_name
       LIMIT $4
       `,
       [
         key,
-        state.licenseSource,
+        licenseSourcesFor(state),
         state.entitySource,
         limit,
         MIN_SUNBIZ_CONFIDENCE,
@@ -204,7 +206,7 @@ export async function searchContractors(
           ELSE 6
         END AS rank_score
       FROM contractors c
-      JOIN licenses l ON l.contractor_id = c.id AND l.source_system = $3
+      JOIN licenses l ON l.contractor_id = c.id AND l.source_system = ANY($3::text[])
       WHERE c.is_thin_profile = FALSE
         AND (c.home_state = $4 OR l.state = $4)
         AND (
@@ -249,13 +251,15 @@ export async function searchContractors(
       ORDER BY ce.confidence DESC NULLS LAST
       LIMIT 1
     ) e ON TRUE
-    ORDER BY m.rank_score, m.display_name
+    ORDER BY m.rank_score,
+      CASE m.occupation_code WHEN 'TRMP' THEN 0 WHEN 'TMP' THEN 1 ELSE 2 END,
+      m.display_name
     LIMIT $7
     `,
     [
       prepared.prefixStripped, // $1 rank prefix
       prepared.likeStripped, // $2 stripped contains
-      state.licenseSource, // $3
+      licenseSourcesFor(state), // $3
       state.code, // $4
       prepared.likeOriginal, // $5 original contains
       state.entitySource, // $6
@@ -546,11 +550,11 @@ export async function countSearchableContractorSlugs(
           c.home_state = $1
           OR EXISTS (
             SELECT 1 FROM licenses l
-            WHERE l.contractor_id = c.id AND l.source_system = $2
+            WHERE l.contractor_id = c.id AND l.source_system = ANY($2::text[])
           )
         )
       `,
-      [state.code, state.licenseSource]
+      [state.code, licenseSourcesFor(state)]
     );
     return row ? Number(row.n) : 0;
   } catch {
@@ -577,13 +581,13 @@ export async function listSearchableContractorSlugs(options: {
           c.home_state = $1
           OR EXISTS (
             SELECT 1 FROM licenses l
-            WHERE l.contractor_id = c.id AND l.source_system = $2
+            WHERE l.contractor_id = c.id AND l.source_system = ANY($2::text[])
           )
         )
       ORDER BY c.slug
       LIMIT $3 OFFSET $4
       `,
-      [state.code, state.licenseSource, options.limit, options.offset]
+      [state.code, licenseSourcesFor(state), options.limit, options.offset]
     );
     return rows.map((r) => ({
       slug: r.slug,

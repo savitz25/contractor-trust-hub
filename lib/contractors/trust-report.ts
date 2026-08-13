@@ -88,12 +88,12 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
   const pillars: EvidencePillar[] = [
     {
       id: "license",
-      label: isTx ? "TDLR license" : "License",
+      label: isTx ? "Texas license" : "License",
       statusLine: lic ? statusLabel(lic.statusNormalized) : "Not on profile",
       detail: lic
         ? `${lic.externalKey} · ${occLabel}`
         : isTx
-          ? "No TDLR specialty license linked here."
+          ? "No TDLR specialty or TSBPE plumbing license linked here."
           : "No Florida DBPR construction license linked here.",
       tone: licenseTone,
       lastVerifiedAt: lic?.lastVerifiedAt ?? null,
@@ -107,16 +107,16 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
       statusLine: txTrade?.chip ?? "Specialty",
       detail: txTrade
         ? `${txTrade.scopeNote}`
-        : "Texas TDLR specialty trade only — not a statewide general contractor license.",
+        : "Texas specialty trade or TSBPE plumbing only — not a statewide general contractor license.",
       tone: "neutral",
       lastVerifiedAt: lic?.lastVerifiedAt ?? null,
     });
     pillars.push({
       id: "discipline",
       label: "Coverage",
-      statusLine: "Specialty only",
+      statusLine: "Specialty + plumbing",
       detail:
-        "No statewide GC license in Texas. Plumbing (TSBPE) and city/county builder registration are not fully covered here. Discipline records are not loaded for TX v1.",
+        "No statewide GC license in Texas. City/county builder registration is not fully covered. Discipline records are not loaded for TX v1.",
       tone: "warn",
       lastVerifiedAt: lic?.lastVerifiedAt ?? null,
     });
@@ -238,8 +238,10 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
   const ent = contractor.entities[0];
   const points: HiringPoint[] = [];
   const isTx = (contractor.homeState || "").toUpperCase() === "TX";
+  const isTsbpe = (lic?.sourceSystem || "").toLowerCase() === "tx_tsbpe";
   const occ = lic ? getOccupationInfo(lic.occupationCode) : null;
   const txTrade = isTx && lic ? getTxTradeInfo(lic.occupationCode) : null;
+  const txBoard = isTsbpe ? "TSBPE" : "TDLR";
 
   if (lic) {
     if (isActiveStatus(lic.statusNormalized)) {
@@ -247,7 +249,7 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
         id: "lic-active",
         label: "License status",
         text: isTx
-          ? `${lic.externalKey} is ${statusLabel(lic.statusNormalized)} in our TDLR specialty extract. Re-check the official TDLR search the day you hire.`
+          ? `${lic.externalKey} is ${statusLabel(lic.statusNormalized)} in our ${txBoard} extract. Re-check the official ${txBoard} search the day you hire.`
           : `${lic.externalKey} is ${statusLabel(lic.statusNormalized)} in our DBPR extract. Always re-check the official board the day you hire.`,
         tone: "good",
       });
@@ -256,7 +258,7 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
         id: "lic-status",
         label: "License status",
         text: isTx
-          ? `${lic.externalKey} shows as ${statusLabel(lic.statusNormalized)} in our TDLR extract. Confirm current status on the official TDLR site before relying on it.`
+          ? `${lic.externalKey} shows as ${statusLabel(lic.statusNormalized)} in our ${txBoard} extract. Confirm current status on the official ${txBoard} site before relying on it.`
           : `${lic.externalKey} shows as ${statusLabel(lic.statusNormalized)} in our extract. Confirm current status on the official DBPR site before relying on it.`,
         tone: isInactiveish(lic.statusNormalized) ? "bad" : "warn",
       });
@@ -267,7 +269,7 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
         label: "What this license is",
         text: txTrade
           ? `${txTrade.plain}. ${txTrade.scopeNote}`
-          : "TDLR specialty trade only — not a statewide general contractor license.",
+          : "Texas specialty or plumbing credential only — not a statewide general contractor license.",
         tone: "warn",
       });
     } else if (occ) {
@@ -283,7 +285,7 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
         id: "exp",
         label: "Expiration on file",
         text: isTx
-          ? `Extract lists ${formatDate(lic.expirationDate)}. Confirm renewal on the official TDLR license search.`
+          ? `Extract lists ${formatDate(lic.expirationDate)}. Confirm renewal on the official ${txBoard} license search.`
           : `Extract lists ${formatDate(lic.expirationDate)}. Confirm renewal status on DBPR.`,
         tone: "neutral",
       });
@@ -293,7 +295,7 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
       id: "no-lic",
       label: "License",
       text: isTx
-        ? "No TDLR specialty license is linked on this profile."
+        ? "No TDLR specialty or TSBPE plumbing license is linked on this profile."
         : "No Florida construction license is linked on this consumer profile.",
       tone: "warn",
     });
@@ -349,13 +351,15 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
     points.push({
       id: "coverage",
       label: "What this search cannot prove",
-      text: "Texas has no statewide GC license. This profile does not cover TSBPE plumbing or city/county builder registration. A miss or a match here is not a full “cleared to hire” for every trade.",
+      text: "Texas has no statewide GC license. City/county builder registration is not fully covered. A miss or a match here is not a full “cleared to hire” for every trade.",
       tone: "warn",
     });
     points.push({
       id: "confirm",
       label: "Before you sign",
-      text: "1) Confirm the license on the official TDLR search. 2) Ask the city or county what registration they require. 3) Get a written contract. 4) If the work is plumbing, check TSBPE separately.",
+      text: isTsbpe
+        ? "1) Confirm the license on the official TSBPE search. 2) For public plumbing contracts, confirm Responsible Master Plumber status and insurance on file. 3) Ask the city or county what registration they require. 4) Get a written contract."
+        : "1) Confirm the license on the official TDLR search. 2) Ask the city or county what registration they require. 3) Get a written contract.",
       tone: "neutral",
     });
   }

@@ -9,7 +9,7 @@
 | 1 | `adapters/fl_dbpr.py` | FL DBPR construction licensees + discipline | `data/staging/fl_dbpr/` |
 | 2 | `adapters/fl_sunbiz.py` | Sunbiz corporate fixed-width (SFTP) | `data/staging/fl_sunbiz/` |
 | 3 | `adapters/tx_tdlr.py` | TX TDLR specialty licenses (Open Data) | `data/staging/tx_tdlr/` |
-| 4 | `adapters/tx_tsbpe.py` | TX plumbing (TSBPE free CSV lists) | Phase 1 |
+| 4 | `adapters/tx_tsbpe.py` | TX plumbing (TSBPE free CSV lists) | `data/staging/tx_tsbpe/` |
 | 5 | `adapters/nj_dca.py` | NJ DCA / HIC registration (Stage 7 pilot) | `data/staging/nj_dca/` |
 | 6 | Permits | County / city open data | Later |
 
@@ -66,6 +66,11 @@ python -m ingest.adapters.tx_tdlr \
 
 # Load into Postgres (idempotent upserts + ingest_batches)
 python scripts/load_tx_tdlr_to_postgres.py --staging-dir data/staging/tx_tdlr
+
+# Texas TSBPE plumbing (official free CSVs) — RMP + Master by default
+python scripts/download_tx_tsbpe.py
+python -m ingest.adapters.tx_tsbpe --raw-dir data/raw/tx_tsbpe --out-dir data/staging/tx_tsbpe
+python scripts/load_tx_tsbpe_to_postgres.py --staging-dir data/staging/tx_tsbpe
 
 # New Jersey Verify pilot (Stage 7)
 python -m ingest.adapters.nj_dca \

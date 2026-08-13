@@ -27,9 +27,9 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const state = resolveVerifyState(sp.state);
   if (state.slug === "tx") {
     return pageMetadata({
-      title: "Verify a Texas specialty contractor (TDLR)",
+      title: "Verify a Texas specialty contractor (TDLR + TSBPE)",
       description:
-        "Search TDLR specialty trade licenses in Texas (electrical, air conditioning, and related). Not a statewide general contractor directory. Evidence only — not a marketplace.",
+        "Search Texas TDLR specialty trades and TSBPE plumbing licenses. Not a statewide general contractor directory. Evidence only — not a marketplace.",
       path: "/verify?state=tx",
     });
   }
@@ -86,7 +86,7 @@ export default async function VerifyPage({ searchParams }: Props) {
   const kicker = isNj
     ? "New Jersey · verification pilot"
     : isTx
-      ? "Texas · TDLR specialty trades"
+      ? "Texas · TDLR specialty + TSBPE plumbing"
       : "Florida · DBPR + Sunbiz";
 
   const heading = isNj
@@ -98,7 +98,7 @@ export default async function VerifyPage({ searchParams }: Props) {
   const lead = isNj
     ? "Search by registration number or company name. Built from official registration extracts — not Florida-depth coverage."
     : isTx
-      ? "Search TDLR specialty licenses by number or business / owner name. You’ll see the trade type in plain language, license status, and county when available."
+      ? "Search TDLR specialty licenses or TSBPE plumbing by number or business / owner name. You’ll see the trade type in plain language, license status, and county when available."
       : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
 
   const helpCards = isNj
@@ -298,7 +298,7 @@ export default async function VerifyPage({ searchParams }: Props) {
                 ? "No matches"
                 : `${results.length} match${results.length === 1 ? "" : "es"}`}
               {mode === "license" ? " · license search" : " · name search"}
-              {isTx ? " · TDLR specialty" : ""}
+              {isTx ? " · TDLR + TSBPE" : ""}
               {isNj ? " · NJ pilot" : ""}
               {results.length >= 25 ? " · first 25" : ""}
             </p>

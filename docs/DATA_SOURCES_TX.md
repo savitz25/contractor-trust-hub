@@ -84,8 +84,34 @@ Plumbing is **not** TDLR. Separate board.
 | Responsible Master Plumber list | Linked from free-licensee-list (`RMP` download) | Contractors offering plumbing to the public |
 | Public license search | Via TSBPE / HPC online systems | Interactive |
 
-**Phase 0–1:** Document only — adapter `tx_tsbpe` is a follow-on (same staging shape as TDLR).  
-**After TDLR Verify v1:** Optional second source once specialty electrical + A/C load is solid.
+**Verify (shipped):** Official free CSVs → `tx_tsbpe` adapter → Postgres. Default ingest is **Responsible Master Plumber (RMP)** plus **Master Plumber**. Journeyman and Tradesman lists are optional (`--include-secondary`).
+
+### Official CSV endpoints
+
+| List | URL | Consumer role |
+|------|-----|----------------|
+| Responsible Master Plumber | https://tsbpe.texas.gov/download-csv/RMP/ | **Primary** — may offer/contract plumbing to the public; includes last-known company + insurance expiry when present |
+| Master Plumber | https://tsbpe.texas.gov/download-csv/MP/ | Individual master credential (company/address often absent) |
+| Journeyman | https://tsbpe.texas.gov/wp-content/uploads/2015/03/JP.csv.zip | Optional / secondary |
+| Tradesman Plumber-Limited | https://tsbpe.texas.gov/download-csv/TP/ | Optional / secondary |
+
+### RMP columns (official header)
+
+`RANK`, `LICENSE_NBR`, `LIC_STATUS`, `LICENSE_DATE`, `EXPIRATION_DTE`, name parts, `ADDR1–3`, `CITY`, `STATE`, `ZIP`, `PHONE`, `COUNTY`, endorsement flags, `INS_EXPIRY_DTE`, `PLUMB_COMPANY`, `INSURANCE_COMPANY`.
+
+**Stable product key:** `TX-TSBPE:{RMP|MP|JP|TP}:{LICENSE_NBR}`
+
+**Occupation codes:** `TRMP` Responsible Master · `TMP` Master · `TJP` Journeyman · `TTP` Tradesman-Limited
+
+A company offering plumbing to the public must have at least one Responsible Master Plumber and a current certificate of insurance on file with TSBPE (board wording). We store company name and insurance expiry as published fields — we do not invent coverage status.
+
+### Refresh
+
+```bash
+python scripts/download_tx_tsbpe.py
+python -m ingest.adapters.tx_tsbpe --raw-dir data/raw/tx_tsbpe
+python scripts/load_tx_tsbpe_to_postgres.py --staging-dir data/staging/tx_tsbpe
+```
 
 ## Local / municipal (out of scope for TX Verify v1)
 
@@ -106,7 +132,10 @@ Many “general contractors” are regulated only by city or county (permits, re
 | Download (filtered SODA CSV) | `python scripts/download_tx_tdlr.py` |
 | Normalize | `python -m ingest.adapters.tx_tdlr --input …` |
 | Staging | `data/staging/tx_tdlr/` |
-| Registry | `lib/states/config.ts` → `tx` (`live: false` until load + Verify wired) |
+| Download TSBPE | `python scripts/download_tx_tsbpe.py` |
+| Normalize TSBPE | `python -m ingest.adapters.tx_tsbpe` |
+| Load TSBPE | `python scripts/load_tx_tsbpe_to_postgres.py` |
+| Registry | `lib/states/config.ts` → `tx.licenseSources = ['tx_tdlr','tx_tsbpe']` |
 
 ## Related
 

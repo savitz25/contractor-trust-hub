@@ -176,12 +176,12 @@ function TexasEmptyResults({ query, mode }: { query: string; mode: "license" | "
   return (
     <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-6 sm:px-8 sm:py-9">
       <p className="text-base font-medium leading-snug text-[var(--text)]">
-        No TDLR specialty licenses matched &ldquo;{query}&rdquo;
+        No Texas specialty or plumbing licenses matched &ldquo;{query}&rdquo;
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"
-          ? "We searched Texas TDLR specialty contractor numbers and product keys in our extract. A miss does not mean the person is unlicensed — they may hold a different credential or only a local registration."
-          : "We searched business and owner names on selected TDLR specialty licenses. General builders and many trades are outside this search by design."}
+          ? "We searched TDLR specialty numbers and TSBPE plumbing numbers in our extract. A miss does not mean the person is unlicensed — they may hold a different credential or only a local registration."
+          : "We searched business and owner names on selected TDLR specialty licenses and TSBPE plumbing credentials. General builders are outside this search by design."}
       </p>
 
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
@@ -196,8 +196,8 @@ function TexasEmptyResults({ query, mode }: { query: string; mode: "license" | "
             Usually not here
           </p>
           <p className="mt-1 text-xs leading-relaxed text-[var(--text)]">
-            Statewide general contractors (Texas has no statewide GC license), plumbing (TSBPE),
-            and most city/county-only builders
+            Statewide general contractors (Texas has no statewide GC license) and most
+            city/county-only builders
           </p>
         </div>
       </div>
@@ -249,6 +249,14 @@ function TexasEmptyResults({ query, mode }: { query: string; mode: "license" | "
           className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
         >
           Official TDLR search
+        </a>
+        <a
+          href="https://tsbpe.texas.gov/"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+        >
+          Official TSBPE (plumbing)
         </a>
       </div>
 

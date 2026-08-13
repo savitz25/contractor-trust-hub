@@ -18,7 +18,7 @@ export function HomeSearchBlock() {
             Search by license number or company name
           </h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Pick Florida (full construction licenses) or Texas (TDLR specialty trades). Free — no
+            Pick Florida (full construction licenses) or Texas (TDLR specialty + TSBPE plumbing). Free — no
             account, no lead form.
           </p>
           <div className="mt-4 sm:mt-5">
