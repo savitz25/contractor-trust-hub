@@ -15,6 +15,10 @@ import { matchCoverageSummary } from "@/lib/studios/fit-notes";
 import type { StudioHandoff } from "@/lib/studios/handoff";
 import type { StudioAnswers, StudioContext } from "@/lib/studios/types";
 import { DecisionToolsLinks } from "@/components/decision/DecisionToolsCard";
+import { NextBestAction } from "@/components/funnel/NextBestAction";
+import { planResultsActions } from "@/lib/funnel/cta-matrix";
+import { trackFunnel } from "@/lib/funnel/analytics";
+import { saveJourneyContext } from "@/lib/funnel/journey-context";
 import { StudioMatchCard } from "./StudioMatchCard";
 import { StudioThinState } from "./StudioThinState";
 
@@ -116,6 +120,16 @@ export function StudioResults({
 
   useEffect(() => {
     if (!data) return;
+    saveJourneyContext({
+      entryPath: "studio",
+      projectType: data.context.projectType,
+      scale: data.context.scale,
+      zip: data.context.location.zip,
+      city: data.context.location.city,
+      contractorSlug: data.match.contractors[0]?.slug,
+      contractorName: data.match.contractors[0]?.displayName,
+    });
+    trackFunnel("entry_path", { path: "studio", studio: studioSlug });
     try {
       localStorage.setItem(
         storageKey(studioSlug) + "-last-result",
@@ -418,65 +432,54 @@ export function StudioResults({
         )}
       </section>
 
-      {/* Next actions */}
-      <section
-        id="studio-next"
-        className="scroll-mt-36 rounded-3xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)] sm:p-8"
-      >
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
-          3 · Next steps
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-[var(--text)]">
-          Review evidence before you decide
-        </h2>
-        <p className="mt-2 text-sm text-[var(--muted)]">
-          Open a Trust Report for license status, discipline history, and business entity linkage.
-          Request a controlled introduction only when you are ready — we do not mass-email
-          contractors.
-        </p>
-        <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          <button
-            type="button"
-            onClick={() => {
-              setFocusContractor(null);
-              setQuoteOpen(true);
-            }}
-            className="rounded-2xl border border-[var(--accent)] bg-[var(--accent-soft)] px-4 py-4 text-left"
-          >
-            <p className="text-sm font-semibold text-[var(--text)]">
-              Request a controlled introduction
-            </p>
-            <p className="mt-1 text-xs text-[var(--muted)]">
-              Manual review · full studio scope attached
-            </p>
-          </button>
-          <Link
-            href={`/studios/${studioSlug}`}
-            className="rounded-2xl border border-[var(--border)] px-4 py-4 no-underline"
-          >
-            <p className="text-sm font-semibold text-[var(--text)]">Adjust scope</p>
-            <p className="mt-1 text-xs text-[var(--muted)]">Edit studio answers and rematch</p>
-          </Link>
-          <button
-            type="button"
-            onClick={saveLocal}
-            className="rounded-2xl border border-[var(--border)] px-4 py-4 text-left"
-          >
-            <p className="text-sm font-semibold text-[var(--text)]">Save for later</p>
-            <p className="mt-1 text-xs text-[var(--muted)]">Stored on this device only</p>
-          </button>
+      {/* Next actions — conversion hierarchy */}
+      <div id="studio-next" className="scroll-mt-36 space-y-4">
+        <NextBestAction
+          spec={planResultsActions({
+            firstContractorSlug: match.contractors[0]?.slug,
+            projectType: context.projectType,
+            scale: context.scale,
+            zip: context.location.zip,
+            city: context.location.city,
+          })}
+        />
+        <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-4">
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={saveLocal}
+              className="rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-semibold text-[var(--navy)]"
+            >
+              Save for later
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setFocusContractor(null);
+                setQuoteOpen(true);
+              }}
+              className="rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-semibold text-[var(--muted)]"
+            >
+              Optional: request introduction
+            </button>
+            <Link
+              href={`/studios/${studioSlug}`}
+              className="rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-semibold text-[var(--muted)] no-underline"
+            >
+              Adjust studio answers
+            </Link>
+          </div>
+          <div className="mt-4">
+            <DecisionToolsLinks
+              projectType={context.projectType}
+              scale={context.scale}
+              zip={context.location.zip}
+              city={context.location.city}
+              studioSlug={studioSlug}
+            />
+          </div>
         </div>
-
-        <div className="mt-6">
-          <DecisionToolsLinks
-            projectType={context.projectType}
-            scale={context.scale}
-            zip={context.location.zip}
-            city={context.location.city}
-            studioSlug={studioSlug}
-          />
-        </div>
-      </section>
+      </div>
 
       {/* Mobile sticky CTA */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--border)] bg-white/95 p-3 shadow-[0_-4px_20px_rgba(10,37,64,0.08)] backdrop-blur-md sm:hidden">

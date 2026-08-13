@@ -3,6 +3,7 @@ import { CompareBar } from "@/components/compare/CompareBar";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SaveWorkPrompt } from "@/components/account/SaveWorkPrompt";
+import { JourneyContextChip } from "@/components/funnel/JourneyContextChip";
 import { PropertyContextChip } from "@/components/property/PropertyContextChip";
 import { SitewideJsonLd } from "@/components/seo/JsonLd";
 import { getSiteUrl } from "@/lib/site";
@@ -74,6 +75,7 @@ export default function RootLayout({
         <SitewideJsonLd />
         <SiteHeader />
         <SaveWorkPrompt />
+        <JourneyContextChip />
         <PropertyContextChip />
         <div className="flex-1 pb-24 sm:pb-20">{children}</div>
         <SiteFooter />

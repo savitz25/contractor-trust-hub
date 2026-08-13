@@ -66,12 +66,15 @@ export function HomeContinuity() {
         }
       }
 
-      next.push({
-        key: "passport",
-        href: "/passport",
-        title: "Open Home Passport",
-        body: "Property history, warranties, documents",
-      });
+      // Priority: project → passport → watches → property (Stage 8B resume)
+      if (hasProject || hasWatch) {
+        next.push({
+          key: "passport",
+          href: "/passport",
+          title: "Open Home Passport",
+          body: "Property history, warranties, documents",
+        });
+      }
 
       const propRaw = localStorage.getItem(PROPERTY_KEY);
       if (propRaw) {
@@ -92,13 +95,60 @@ export function HomeContinuity() {
         }
       }
 
-      // Only show when user has local project/watch/property work (not bare passport promo)
-      if (!hasProject && !hasWatch && !propRaw) {
+      // Journey context (scope / quote in progress)
+      try {
+        const jRaw = localStorage.getItem("cth-journey-context-v1");
+        if (jRaw) {
+          const j = JSON.parse(jRaw) as {
+            hasScope?: boolean;
+            hasQuoteAnalysis?: boolean;
+            contractorSlug?: string;
+            contractorName?: string;
+            projectType?: string;
+          };
+          if (j.hasScope && !j.hasQuoteAnalysis) {
+            next.unshift({
+              key: "scope",
+              href: "/tools/quote-analyzer?from=resume",
+              title: "Continue: analyze a quote",
+              body: j.projectType
+                ? `Scope saved · ${String(j.projectType).replace(/_/g, " ")}`
+                : "Scope saved on this device",
+              primary: !hasProject,
+            });
+          } else if (j.hasQuoteAnalysis) {
+            next.unshift({
+              key: "verify-resume",
+              href: j.contractorSlug
+                ? `/contractors/${encodeURIComponent(j.contractorSlug)}`
+                : j.contractorName
+                  ? `/verify?q=${encodeURIComponent(j.contractorName)}`
+                  : "/verify",
+              title: "Continue: verify contractor",
+              body: j.contractorName || "Quote analyzed — verify before shortlist",
+              primary: !hasProject,
+            });
+          }
+        }
+      } catch {
+        /* ignore */
+      }
+
+      if (!hasProject && !hasWatch && !propRaw && next.length === 0) {
         setCards(null);
         return;
       }
 
-      // Always include passport when showing continuity
+      // Passport always available when any continuity exists
+      if (!next.some((c) => c.key === "passport")) {
+        next.push({
+          key: "passport",
+          href: "/passport",
+          title: "Open Home Passport",
+          body: "Property history, warranties, documents",
+        });
+      }
+
       setCards(next);
     } catch {
       setCards(null);

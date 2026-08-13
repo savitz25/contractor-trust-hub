@@ -16,6 +16,8 @@ import { DECISION_KEYS, loadJson, saveJson } from "@/lib/decision/session";
 import { generateQuestionGroups } from "@/lib/decision/questions";
 import type { BidSlot, QuoteAnalysis } from "@/lib/decision/types";
 import { copyText, escapeHtml, printHtmlDocument } from "@/lib/decision/print";
+import { trackFunnel } from "@/lib/funnel/analytics";
+import { saveJourneyContext } from "@/lib/funnel/journey-context";
 import { DecisionJourney } from "./DecisionJourney";
 import { QuestionsList } from "./QuestionsList";
 import { StatusChip } from "./StatusChip";
@@ -97,8 +99,16 @@ export function CompareBidsClient() {
     });
     setComparison(cmp);
     saveJson(DECISION_KEYS.compareBids, { analyses, comparison: cmp });
-    setFlash("Comparison saved on this device");
-    setTimeout(() => setFlash(null), 2000);
+    trackFunnel("bids_compared", { bidCount: bids.length, projectType });
+    saveJourneyContext({
+      projectType,
+      scale,
+      hasCompare: true,
+      hasQuoteAnalysis: true,
+      entryPath: "tools",
+    });
+    setFlash("Comparison saved — next: verify shortlist contractors");
+    setTimeout(() => setFlash(null), 2500);
   };
 
   const questionGroups = useMemo(
@@ -390,34 +400,60 @@ export function CompareBidsClient() {
 
           <QuestionsList groups={questionGroups} title="Shared questions for all bidders" />
 
-          <section className="rounded-3xl border border-[var(--border)] bg-white p-5">
-            <h2 className="text-sm font-semibold text-[var(--text)]">Next steps</h2>
+          <section className="rounded-3xl border border-[var(--accent)]/40 bg-[var(--accent-soft)] p-5 sm:p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--accent)]">
+              Next best action
+            </p>
+            <h2 className="mt-1 text-lg font-semibold text-[var(--text)]">
+              Next: verify license evidence before you shortlist
+            </h2>
+            <p className="mt-1 text-sm text-[var(--muted)]">
+              Open Trust Reports for your leading bids, then finish the pre-hire checklist.
+            </p>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+              <Link
+                href={
+                  comparison.bids.find((b) => b.contractorSlug)?.contractorSlug
+                    ? `/contractors/${comparison.bids.find((b) => b.contractorSlug)!.contractorSlug}`
+                    : `/verify?q=${encodeURIComponent(comparison.bids[0]?.label || "")}`
+                }
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--navy)] px-5 py-2.5 text-sm font-semibold text-white no-underline"
+              >
+                Verify shortlist contractor(s)
+              </Link>
+              <Link
+                href="/tools/pre-hire-checklist"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
+              >
+                Pre-hire checklist
+              </Link>
+              <Link
+                href="/tools/contract-analyzer"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
+              >
+                Review a contract
+              </Link>
+            </div>
             <div className="mt-3 flex flex-wrap gap-2">
               {comparison.bids.map((b) =>
                 b.contractorSlug ? (
                   <Link
                     key={b.id}
                     href={`/contractors/${b.contractorSlug}`}
-                    className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-xs font-semibold no-underline"
+                    className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold no-underline"
                   >
-                    Focus: {b.label} Trust Report
+                    {b.label} Trust Report
                   </Link>
                 ) : (
                   <Link
                     key={b.id}
                     href={`/verify?q=${encodeURIComponent(b.label)}`}
-                    className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-xs font-semibold no-underline"
+                    className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold no-underline"
                   >
                     Verify {b.label}
                   </Link>
                 )
               )}
-              <Link
-                href="/tools/pre-hire-checklist"
-                className="rounded-lg bg-[var(--navy)] px-3 py-1.5 text-xs font-semibold text-white no-underline"
-              >
-                Pre-hire checklist
-              </Link>
             </div>
             <p className="mt-4 text-[11px] text-[var(--muted)]">{DECISION_ENGINE_DISCLAIMER}</p>
           </section>

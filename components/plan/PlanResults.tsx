@@ -13,6 +13,10 @@ import type {
 } from "@/lib/plan/types";
 import { COST_DISCLAIMER } from "@/lib/plan/types";
 import { DecisionToolsLinks } from "@/components/decision/DecisionToolsCard";
+import { NextBestAction } from "@/components/funnel/NextBestAction";
+import { trackFunnel } from "@/lib/funnel/analytics";
+import { planResultsActions } from "@/lib/funnel/cta-matrix";
+import { saveJourneyContext } from "@/lib/funnel/journey-context";
 
 const PLAN_STORAGE_KEY = "cth-plan-context";
 
@@ -64,9 +68,19 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
     };
   }, [plan]);
 
-  // Auto-save context for return visits
+  // Auto-save context for return visits + funnel journey
   useEffect(() => {
     if (!data) return;
+    saveJourneyContext({
+      entryPath: "plan",
+      projectType: data.plan.projectType,
+      scale: data.plan.scale,
+      zip: data.plan.zip,
+      city: data.plan.city,
+      contractorSlug: data.match?.contractors?.[0]?.slug || undefined,
+      contractorName: data.match?.contractors?.[0]?.displayName || undefined,
+    });
+    trackFunnel("entry_path", { path: "plan", projectType: data.plan.projectType });
     try {
       localStorage.setItem(
         PLAN_STORAGE_KEY,
@@ -545,78 +559,51 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
         )}
       </section>
 
-      {/* 3. Next actions */}
-      <section
-        id="plan-next"
-        className="scroll-mt-36 rounded-3xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)] sm:scroll-mt-8 sm:p-8"
-      >
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
-          Step 3 · Next actions
-        </p>
-        <h2 className="mt-1.5 text-xl font-semibold tracking-tight text-[var(--text)] sm:text-2xl">
-          Decide with evidence
-        </h2>
-        <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-          Open Trust Reports, optionally request a controlled introduction, or save this context on
-          this device to return later.
-        </p>
-
-        <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          <Link
-            href={
-              contractors[0]
-                ? `/contractors/${encodeURIComponent(contractors[0].slug)}`
-                : "/florida"
-            }
-            className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-4 no-underline transition hover:border-[var(--navy)]/25"
-          >
-            <p className="text-sm font-semibold text-[var(--text)]">Open a Trust Report</p>
-            <p className="mt-1 text-xs text-[var(--muted)]">
-              License, Sunbiz, discipline, workers&apos; comp guidance
-            </p>
-          </Link>
-          <button
-            type="button"
-            onClick={() => {
-              setQuoteError(null);
-              setQuoteOpen(true);
-            }}
-            disabled={quoteDone}
-            className="rounded-2xl border border-[var(--accent)] bg-[var(--accent-soft)] px-4 py-4 text-left transition hover:brightness-105 disabled:opacity-60"
-          >
-            <p className="text-sm font-semibold text-[var(--text)]">
-              {quoteDone ? "Request already sent" : "Request an introduction"}
-            </p>
-            <p className="mt-1 text-xs text-[var(--muted)]">
-              Manual review — not an automated lead blast
-            </p>
-          </button>
-          <button
-            type="button"
-            onClick={saveExplicit}
-            className="rounded-2xl border border-[var(--border)] px-4 py-4 text-left transition hover:border-[var(--navy)]/25"
-          >
-            <p className="text-sm font-semibold text-[var(--text)]">
+      {/* 3. Next actions — conversion hierarchy */}
+      <div id="plan-next" className="scroll-mt-36 space-y-4 sm:scroll-mt-8">
+        <NextBestAction
+          spec={planResultsActions({
+            firstContractorSlug: contractors[0]?.slug,
+            projectType: data.plan.projectType,
+            scale: data.plan.scale,
+            zip: data.plan.zip,
+            city: data.plan.city,
+          })}
+        />
+        <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-4">
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={saveExplicit}
+              className="rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-semibold text-[var(--navy)]"
+            >
               {savedFlash ? "Saved on this device" : "Save & return later"}
-            </p>
-            <p className="mt-1 text-xs text-[var(--muted)]">Browser only · reopen from Plan</p>
-          </button>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setQuoteError(null);
+                setQuoteOpen(true);
+              }}
+              disabled={quoteDone}
+              className="rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-semibold text-[var(--muted)] disabled:opacity-60"
+            >
+              {quoteDone ? "Introduction requested" : "Optional: request introduction"}
+            </button>
+          </div>
+          <div className="mt-4">
+            <DecisionToolsLinks
+              projectType={data.plan.projectType}
+              scale={data.plan.scale}
+              zip={data.plan.zip}
+              city={data.plan.city}
+            />
+          </div>
+          <p className="mt-3 text-xs leading-relaxed text-[var(--muted)]">
+            Introductions are optional. Verify licenses on official DBPR records before you hire.
+          </p>
         </div>
-
-        <div className="mt-6">
-          <DecisionToolsLinks
-            projectType={data.plan.projectType}
-            scale={data.plan.scale}
-            zip={data.plan.zip}
-            city={data.plan.city}
-          />
-        </div>
-
-        <p className="mt-4 text-xs leading-relaxed text-[var(--muted)]">
-          Introductions are optional. You can always contact contractors yourself after verifying
-          licenses on official DBPR records.
-        </p>
-      </section>
+      </div>
 
       {/* Mobile sticky CTA */}
       {!quoteDone && contractors.length > 0 ? (

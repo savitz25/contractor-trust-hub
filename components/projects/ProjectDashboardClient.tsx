@@ -28,6 +28,10 @@ import type {
   WatchAlert,
 } from "@/lib/projects/types";
 import { formatUsd } from "@/lib/plan/cost-model";
+import { NextBestAction } from "@/components/funnel/NextBestAction";
+import { projectDashboardActions } from "@/lib/funnel/cta-matrix";
+import { trackFunnel } from "@/lib/funnel/analytics";
+import { saveJourneyContext } from "@/lib/funnel/journey-context";
 
 const STATUS_OPTS: ProjectStatus[] = [
   "planning",
@@ -74,6 +78,7 @@ export function ProjectDashboardClient({ projectId }: { projectId: string }) {
 
   useEffect(() => {
     refresh();
+    saveJourneyContext({ projectId });
     const t = searchParams.get("tab");
     if (t === "payments" || t === "docs" || t === "alerts" || t === "overview") {
       setTab(t);
@@ -195,6 +200,35 @@ export function ProjectDashboardClient({ projectId }: { projectId: string }) {
           />
         </div>
       </header>
+
+      {project.status !== "complete" ? (
+        <NextBestAction
+          spec={projectDashboardActions({
+            projectId: project.id,
+            looksComplete:
+              done >= Math.max(project.milestones.length - 1, 1) ||
+              (project.payments || []).some((p) => p.completed && p.hasLienWaiver),
+          })}
+          onPrimaryClick={() => {
+            const looksComplete =
+              done >= Math.max(project.milestones.length - 1, 1) ||
+              (project.payments || []).some((p) => p.completed && p.hasLienWaiver);
+            if (looksComplete) {
+              setCompleteOpen(true);
+              trackFunnel("project_completed", { projectId: project.id, stage: "prompt" });
+            } else {
+              setTab("payments");
+            }
+          }}
+        />
+      ) : (
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 px-4 py-3 text-sm">
+          <p className="font-semibold text-emerald-950">Project marked complete</p>
+          <Link href="/passport" className="mt-1 inline-block font-semibold text-[var(--navy)]">
+            Open Home Passport →
+          </Link>
+        </div>
+      )}
 
       <nav className="flex flex-wrap gap-1 rounded-2xl border border-[var(--border)] bg-white p-1">
         {(

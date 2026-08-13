@@ -15,6 +15,10 @@ import {
 import { DECISION_KEYS, saveJson } from "@/lib/decision/session";
 import { generateQuestionGroups } from "@/lib/decision/questions";
 import type { QuoteAnalysis } from "@/lib/decision/types";
+import { trackFunnel } from "@/lib/funnel/analytics";
+import { quoteAnalyzerActions } from "@/lib/funnel/cta-matrix";
+import { saveJourneyContext } from "@/lib/funnel/journey-context";
+import { NextBestAction } from "@/components/funnel/NextBestAction";
 import { DecisionJourney } from "./DecisionJourney";
 import { QuestionsList } from "./QuestionsList";
 import { StatusChip } from "./StatusChip";
@@ -87,8 +91,22 @@ export function QuoteAnalyzerClient() {
     const list = existing?.analyses || [];
     const next = [...list.filter((x) => x.id !== a.id), a].slice(-4);
     saveJson(DECISION_KEYS.compareBids, { analyses: next });
-    setFlash("Analysis saved on this device");
-    setTimeout(() => setFlash(null), 2000);
+    trackFunnel("quote_analyzed", {
+      projectType,
+      hasContractor: Boolean(contractorSlug || contractorName),
+    });
+    saveJourneyContext({
+      projectType,
+      scale,
+      zip: zip || undefined,
+      city: city || undefined,
+      contractorSlug: contractorSlug || undefined,
+      contractorName: contractorName || undefined,
+      hasQuoteAnalysis: true,
+      entryPath: "tools",
+    });
+    setFlash("Analysis saved — next: compare another bid");
+    setTimeout(() => setFlash(null), 2500);
   };
 
   const questionGroups = useMemo(
@@ -356,54 +374,18 @@ export function QuoteAnalyzerClient() {
 
           <QuestionsList groups={questionGroups} title="D · Questions to ask" />
 
-          {/* E. Next actions */}
-          <section className="rounded-3xl border border-[var(--accent)]/40 bg-[var(--accent-soft)] p-5 sm:p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--accent)]">
-              E · Next actions
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Link
-                href={`/tools/compare-bids?type=${analysis.projectType}&scale=${analysis.scale}`}
-                className="rounded-xl bg-[var(--navy)] px-4 py-2.5 text-sm font-semibold text-white no-underline"
-              >
-                Compare another bid
-              </Link>
-              <Link
-                href={`/tools/scope-builder?type=${analysis.projectType}&scale=${analysis.scale}`}
-                className="rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
-              >
-                Open / build scope
-              </Link>
-              {analysis.contractorSlug ? (
-                <Link
-                  href={`/contractors/${analysis.contractorSlug}`}
-                  className="rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
-                >
-                  View Trust Report
-                </Link>
-              ) : (
-                <Link
-                  href={
-                    analysis.contractorName
-                      ? `/verify?q=${encodeURIComponent(analysis.contractorName)}`
-                      : "/verify"
-                  }
-                  className="rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
-                >
-                  Verify contractor
-                </Link>
-              )}
-              <Link
-                href="/tools/pre-hire-checklist"
-                className="rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
-              >
-                Pre-hire checklist
-              </Link>
-            </div>
-            <p className="mt-4 text-[11px] leading-relaxed text-[var(--muted)]">
-              {DECISION_ENGINE_DISCLAIMER}
-            </p>
-          </section>
+          {/* E. Next actions — conversion hierarchy */}
+          <NextBestAction
+            spec={quoteAnalyzerActions({
+              projectType: analysis.projectType,
+              scale: analysis.scale,
+              contractorSlug: analysis.contractorSlug,
+              contractorName: analysis.contractorName,
+            })}
+          />
+          <p className="text-[11px] leading-relaxed text-[var(--muted)]">
+            {DECISION_ENGINE_DISCLAIMER}
+          </p>
         </>
       ) : null}
     </div>

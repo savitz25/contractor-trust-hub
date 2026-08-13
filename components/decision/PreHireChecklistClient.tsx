@@ -7,6 +7,8 @@ import { PRE_HIRE_CHECKLIST, RED_FLAG_GUIDE } from "@/lib/decision/checklist";
 import { DECISION_ENGINE_DISCLAIMER } from "@/lib/decision/disclaimers";
 import { DECISION_KEYS, loadJson, saveJson } from "@/lib/decision/session";
 import { generateQuestionGroups } from "@/lib/decision/questions";
+import { trackFunnel } from "@/lib/funnel/analytics";
+import { saveJourneyContext } from "@/lib/funnel/journey-context";
 import { DecisionJourney } from "./DecisionJourney";
 import { QuestionsList } from "./QuestionsList";
 
@@ -21,7 +23,17 @@ export function PreHireChecklistClient() {
   useEffect(() => {
     const saved = loadJson<{ checked?: Record<string, boolean> }>(DECISION_KEYS.checklist);
     if (saved?.checked) setChecked(saved.checked);
-  }, []);
+    trackFunnel("checklist_started", { state: isNj ? "nj" : "fl" });
+    const c = searchParams.get("contractor");
+    const n = searchParams.get("name");
+    if (c || n) {
+      saveJourneyContext({
+        contractorSlug: c || undefined,
+        contractorName: n || undefined,
+        entryPath: "tools",
+      });
+    }
+  }, [isNj, searchParams]);
 
   const modules = useMemo(() => {
     if (!isNj) return PRE_HIRE_CHECKLIST;
@@ -74,6 +86,10 @@ export function PreHireChecklistClient() {
     setChecked((c) => {
       const next = { ...c, [id]: !c[id] };
       saveJson(DECISION_KEYS.checklist, { checked: next, updatedAt: new Date().toISOString() });
+      const doneCount = allIds.filter((x) => next[x]).length;
+      if (doneCount >= allIds.length && allIds.length > 0) {
+        trackFunnel("checklist_completed", { state: isNj ? "nj" : "fl" });
+      }
       return next;
     });
   };

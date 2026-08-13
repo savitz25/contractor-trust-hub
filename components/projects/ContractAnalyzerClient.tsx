@@ -17,6 +17,8 @@ import {
   updateProject,
 } from "@/lib/projects/store";
 import type { ContractAnalysis, FindingStatus } from "@/lib/projects/types";
+import { trackFunnel } from "@/lib/funnel/analytics";
+import { saveJourneyContext } from "@/lib/funnel/journey-context";
 
 const STATUS_STYLE: Record<FindingStatus, string> = {
   present: "border-emerald-200 bg-emerald-50 text-emerald-900",
@@ -56,8 +58,17 @@ export function ContractAnalyzerClient() {
     });
     setAnalysis(a);
     saveAnalysis(a);
-    setFlash("Analysis saved on this device");
-    setTimeout(() => setFlash(null), 2000);
+    trackFunnel("contract_analyzed", {
+      hasContractor: Boolean(contractorSlug || contractorName),
+    });
+    saveJourneyContext({
+      contractorSlug: contractorSlug || undefined,
+      contractorName: contractorName || undefined,
+      projectType,
+      entryPath: "tools",
+    });
+    setFlash("Analysis saved — next: create protected project");
+    setTimeout(() => setFlash(null), 2500);
   };
 
   const saveToProject = () => {
@@ -71,6 +82,8 @@ export function ContractAnalyzerClient() {
         status:
           existing.status === "planning" ? "under_contract" : existing.status,
       });
+      trackFunnel("project_created", { mode: "update", projectId: existing.id });
+      saveJourneyContext({ projectId: existing.id });
       setFlash(`Saved to project “${existing.title}”`);
     } else {
       const p = createProject({
@@ -81,6 +94,8 @@ export function ContractAnalyzerClient() {
         status: "under_contract",
       });
       updateProject(p.id, { contractAnalysisId: analysis.id });
+      trackFunnel("project_created", { mode: "create", projectId: p.id });
+      saveJourneyContext({ projectId: p.id });
       setFlash("Created project and saved analysis");
     }
     setTimeout(() => setFlash(null), 2500);
@@ -263,50 +278,52 @@ export function ContractAnalyzerClient() {
           </section>
 
           <section className="rounded-3xl border border-[var(--accent)]/40 bg-[var(--accent-soft)] p-5 sm:p-6">
-            <h2 className="text-sm font-semibold text-[var(--text)]">Next actions</h2>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--accent)]">
+              Next best action
+            </p>
+            <h2 className="mt-1 text-lg font-semibold text-[var(--text)]">
+              Next: protect payments and documents
+            </h2>
+            <p className="mt-1 text-sm text-[var(--muted)]">
+              Create or update a project workspace after you understand what the contract leaves
+              unclear.
+            </p>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
                 onClick={saveToProject}
-                className="rounded-xl bg-[var(--navy)] px-4 py-2.5 text-sm font-semibold text-white"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--navy)] px-5 py-2.5 text-sm font-semibold text-white"
               >
-                Save to project dashboard
+                Create / save protected project
               </button>
               <Link
                 href="/tools/pre-hire-checklist"
-                className="rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
               >
-                Send to checklist
+                Checklist
               </Link>
               {analysis.contractorSlug ? (
                 <Link
                   href={`/contractors/${encodeURIComponent(analysis.contractorSlug)}`}
-                  className="rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
                 >
                   Trust Report
                 </Link>
               ) : analysis.contractorName ? (
                 <Link
                   href={`/verify?q=${encodeURIComponent(analysis.contractorName)}`}
-                  className="rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
                 >
                   Verify contractor
                 </Link>
               ) : null}
-              <Link
-                href="/tools/scope-builder"
-                className="rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
-              >
-                Scope Builder
-              </Link>
-              <Link
-                href="/projects"
-                className="rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
-              >
-                Open projects
-              </Link>
             </div>
-            <p className="mt-4 text-[11px] leading-relaxed text-[var(--muted)]">
+            <p className="mt-3 text-xs">
+              <Link href="/account" className="font-semibold text-[var(--navy)]">
+                Save / continue later →
+              </Link>
+            </p>
+            <p className="mt-3 text-[11px] leading-relaxed text-[var(--muted)]">
               {PROTECTION_DISCLAIMER}
             </p>
           </section>

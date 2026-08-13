@@ -13,6 +13,10 @@ import {
 import { SCOPE_BUILDER_NOTE, DECISION_ENGINE_DISCLAIMER } from "@/lib/decision/disclaimers";
 import { DECISION_KEYS, saveJson } from "@/lib/decision/session";
 import { copyText, escapeHtml, printHtmlDocument } from "@/lib/decision/print";
+import { trackFunnel } from "@/lib/funnel/analytics";
+import { scopeBuilderActions } from "@/lib/funnel/cta-matrix";
+import { saveJourneyContext } from "@/lib/funnel/journey-context";
+import { NextBestAction } from "@/components/funnel/NextBestAction";
 import { DecisionJourney } from "./DecisionJourney";
 import { QuestionsList } from "./QuestionsList";
 import { generateQuestionGroups } from "@/lib/decision/questions";
@@ -93,8 +97,17 @@ export function ScopeBuilderClient() {
   const save = () => {
     saveJson(DECISION_KEYS.scope, scope);
     setBuilt(true);
-    setFlash("Scope saved on this device");
-    setTimeout(() => setFlash(null), 2000);
+    setFlash("Scope saved on this device — next: analyze a quote");
+    trackFunnel("scope_created", { projectType, scale });
+    saveJourneyContext({
+      projectType,
+      scale,
+      zip: zip.replace(/\D/g, "").slice(0, 5) || undefined,
+      city: city.trim() || undefined,
+      hasScope: true,
+      entryPath: studioSlug ? "studio" : "plan",
+    });
+    setTimeout(() => setFlash(null), 2500);
   };
 
   const copy = async () => {
@@ -259,33 +272,45 @@ export function ScopeBuilderClient() {
           <button
             type="button"
             onClick={save}
-            className="rounded-xl bg-[var(--navy)] px-4 py-2.5 text-sm font-semibold text-white"
+            className="min-h-11 rounded-xl bg-[var(--navy)] px-4 py-2.5 text-sm font-semibold text-white"
           >
             Generate & save scope
           </button>
+          <Link
+            href={`/tools/quote-analyzer?type=${projectType}&scale=${scale}${zip ? `&zip=${zip}` : ""}${city ? `&city=${encodeURIComponent(city)}` : ""}&from=scope`}
+            onClick={save}
+            className="inline-flex min-h-11 items-center rounded-xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
+          >
+            Use this scope in Quote Analyzer →
+          </Link>
           <button
             type="button"
             onClick={copy}
-            className="rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-semibold text-[var(--navy)]"
+            className="min-h-11 rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-semibold text-[var(--navy)]"
           >
             Copy summary
           </button>
           <button
             type="button"
             onClick={printPdf}
-            className="rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-semibold text-[var(--navy)]"
+            className="min-h-11 rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-semibold text-[var(--navy)]"
           >
             Print / PDF
           </button>
-          <Link
-            href={`/tools/quote-analyzer?type=${projectType}&scale=${scale}${zip ? `&zip=${zip}` : ""}${city ? `&city=${encodeURIComponent(city)}` : ""}`}
-            className="rounded-xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
-          >
-            Analyze a quote →
-          </Link>
         </div>
         {flash ? <p className="mt-2 text-xs font-medium text-emerald-800">{flash}</p> : null}
       </div>
+
+      {built ? (
+        <NextBestAction
+          spec={scopeBuilderActions({
+            projectType,
+            scale,
+            zip: zip.replace(/\D/g, "").slice(0, 5),
+            city: city.trim(),
+          })}
+        />
+      ) : null}
 
       {/* Live summary */}
       <section className="rounded-3xl border border-[var(--border)] bg-white p-5 sm:p-8">
