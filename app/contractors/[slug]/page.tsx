@@ -523,6 +523,14 @@ export default async function ContractorPage({ params, searchParams }: Props) {
               >
                 Credential details
               </a>
+              {isAz ? (
+                <a
+                  href="#caution"
+                  className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm text-[var(--muted)] no-underline hover:text-[var(--text)]"
+                >
+                  ROC discipline
+                </a>
+              ) : null}
             </>
           ) : (
             <>
@@ -566,8 +574,8 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         {/* B. License / registration evidence */}
         <LicensesSection licenses={contractor.licenses} />
 
-        {/* C. Enforcement / discipline */}
-        {!isTxOnly ? (
+        {/* C. Enforcement / discipline — FL/NJ full path, or AZ thin path with ROC CSV */}
+        {!isTxOnly || isAz ? (
           <DisciplineSection
             discipline={contractor.discipline}
             homeState={contractor.homeState}
