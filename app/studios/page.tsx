@@ -32,8 +32,28 @@ export default function StudiosHubPage() {
           <p className="mt-4 max-w-2xl text-base text-[var(--muted)]">
             Focused planning guides — not a design tool or lead marketplace. Each studio asks a few
             project-specific questions, then shows conceptual cost drivers and evidence-based
-            license matches for Florida.
+            license matches for Florida. Texas planning studios are not available yet.
           </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Link
+              href="/studio/kitchen"
+              className="inline-flex min-h-10 items-center rounded-xl bg-[var(--accent)] px-4 text-sm font-semibold text-[var(--navy)] no-underline"
+            >
+              Kitchen calculator
+            </Link>
+            <Link
+              href="/studio/roofing"
+              className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] bg-white px-4 text-sm font-medium text-[var(--navy)] no-underline"
+            >
+              Roofing calculator
+            </Link>
+            <Link
+              href="/studio/cost"
+              className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] bg-white px-4 text-sm font-medium text-[var(--navy)] no-underline"
+            >
+              Cost Studio
+            </Link>
+          </div>
         </div>
       </section>
 

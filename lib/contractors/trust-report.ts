@@ -237,28 +237,43 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
   const points: HiringPoint[] = [];
+  const isTx = (contractor.homeState || "").toUpperCase() === "TX";
   const occ = lic ? getOccupationInfo(lic.occupationCode) : null;
+  const txTrade = isTx && lic ? getTxTradeInfo(lic.occupationCode) : null;
 
   if (lic) {
     if (isActiveStatus(lic.statusNormalized)) {
       points.push({
         id: "lic-active",
-        label: "License",
-        text: `${lic.externalKey} is ${statusLabel(lic.statusNormalized)} in our DBPR extract. Always re-check the official board the day you hire.`,
+        label: "License status",
+        text: isTx
+          ? `${lic.externalKey} is ${statusLabel(lic.statusNormalized)} in our TDLR specialty extract. Re-check the official TDLR search the day you hire.`
+          : `${lic.externalKey} is ${statusLabel(lic.statusNormalized)} in our DBPR extract. Always re-check the official board the day you hire.`,
         tone: "good",
       });
     } else {
       points.push({
         id: "lic-status",
-        label: "License",
-        text: `${lic.externalKey} shows as ${statusLabel(lic.statusNormalized)} in our extract. Confirm current status on the official DBPR site before relying on it.`,
+        label: "License status",
+        text: isTx
+          ? `${lic.externalKey} shows as ${statusLabel(lic.statusNormalized)} in our TDLR extract. Confirm current status on the official TDLR site before relying on it.`
+          : `${lic.externalKey} shows as ${statusLabel(lic.statusNormalized)} in our extract. Confirm current status on the official DBPR site before relying on it.`,
         tone: isInactiveish(lic.statusNormalized) ? "bad" : "warn",
       });
     }
-    if (occ) {
+    if (isTx) {
       points.push({
         id: "scope",
-        label: "Scope",
+        label: "What this license is",
+        text: txTrade
+          ? `${txTrade.plain}. ${txTrade.scopeNote}`
+          : "TDLR specialty trade only — not a statewide general contractor license.",
+        tone: "warn",
+      });
+    } else if (occ) {
+      points.push({
+        id: "scope",
+        label: "What this class typically covers",
         text: `${occ.label}. ${occ.notes}`,
         tone: "neutral",
       });
@@ -266,8 +281,10 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
     if (lic.expirationDate) {
       points.push({
         id: "exp",
-        label: "Expiration",
-        text: `Extract lists ${formatDate(lic.expirationDate)}. Confirm renewal status on DBPR.`,
+        label: "Expiration on file",
+        text: isTx
+          ? `Extract lists ${formatDate(lic.expirationDate)}. Confirm renewal on the official TDLR license search.`
+          : `Extract lists ${formatDate(lic.expirationDate)}. Confirm renewal status on DBPR.`,
         tone: "neutral",
       });
     }
@@ -275,56 +292,73 @@ export function buildHiringGuidance(contractor: ContractorDetail): HiringPoint[]
     points.push({
       id: "no-lic",
       label: "License",
-      text: "No Florida construction license is linked on this consumer profile.",
+      text: isTx
+        ? "No TDLR specialty license is linked on this profile."
+        : "No Florida construction license is linked on this consumer profile.",
       tone: "warn",
     });
   }
 
-  if (ent) {
+  if (!isTx) {
+    if (ent) {
+      points.push({
+        id: "entity",
+        label: "Business name on contract",
+        text: `Sunbiz ${statusLabel(ent.status)} · ${ent.legalName}. The name on your written contract should match this filing.`,
+        tone: isActiveStatus(ent.status) ? "good" : "warn",
+      });
+    } else {
+      points.push({
+        id: "no-entity",
+        label: "Business filing",
+        text: "No high-confidence Sunbiz link. That does not mean unregistered — only that we require a strict name and location match.",
+        tone: "neutral",
+      });
+    }
+
+    if (contractor.discipline.length > 0) {
+      points.push({
+        id: "disc",
+        label: "Discipline",
+        text: `${contractor.discipline.length} board action(s) appear in our extracts. Read dates and disposition below, then confirm on the official board if it matters to your decision.`,
+        tone: "warn",
+      });
+    } else {
+      points.push({
+        id: "no-disc",
+        label: "Discipline",
+        text: "None linked in our current extracts. That is a fact about our files — not a certificate of a clean record after our last load.",
+        tone: "good",
+      });
+    }
+
     points.push({
-      id: "entity",
-      label: "Entity",
-      text: `Sunbiz ${statusLabel(ent.status)} · ${ent.legalName}. Match the legal name on your contract to this filing.`,
-      tone: isActiveStatus(ent.status) ? "good" : "warn",
+      id: "wc",
+      label: "Insurance you should still ask for",
+      text: "We do not store workers’ comp or general liability status. Ask for current certificates and use official Florida Proof of Coverage tools before relying on a verbal claim.",
+      tone: "neutral",
+    });
+
+    points.push({
+      id: "confirm",
+      label: "Before you sign",
+      text: "1) Confirm the license on Florida DBPR. 2) Match the legal name on the contract to Sunbiz if a filing is linked. 3) Get a written scope and payment schedule. 4) Check local permits.",
+      tone: "neutral",
     });
   } else {
     points.push({
-      id: "no-entity",
-      label: "Entity",
-      text: "No high-confidence Sunbiz link. That does not mean unregistered — only that we require a strict name and location match.",
+      id: "coverage",
+      label: "What this search cannot prove",
+      text: "Texas has no statewide GC license. This profile does not cover TSBPE plumbing or city/county builder registration. A miss or a match here is not a full “cleared to hire” for every trade.",
+      tone: "warn",
+    });
+    points.push({
+      id: "confirm",
+      label: "Before you sign",
+      text: "1) Confirm the license on the official TDLR search. 2) Ask the city or county what registration they require. 3) Get a written contract. 4) If the work is plumbing, check TSBPE separately.",
       tone: "neutral",
     });
   }
-
-  if (contractor.discipline.length > 0) {
-    points.push({
-      id: "disc",
-      label: "Discipline",
-      text: `${contractor.discipline.length} board action(s) appear in our extracts. Review the Discipline section (dates, disposition, source) and confirm on the official board if it matters to your decision.`,
-      tone: "warn",
-    });
-  } else {
-    points.push({
-      id: "no-disc",
-      label: "Discipline",
-      text: "None linked in our current extracts. That is a factual statement about our files — not a certificate of a clean record outside these sources or after our last load.",
-      tone: "good",
-    });
-  }
-
-  points.push({
-    id: "wc",
-    label: "Workers’ comp",
-    text: "We do not store coverage status. Use the official Florida Proof of Coverage tools linked on this report before relying on a contractor’s claim.",
-    tone: "neutral",
-  });
-
-  points.push({
-    id: "confirm",
-    label: "Next steps",
-    text: "Confirm license on Florida DBPR, confirm the business on Sunbiz if relevant, use a written contract, and check local permits.",
-    tone: "neutral",
-  });
 
   return points;
 }

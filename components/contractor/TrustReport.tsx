@@ -115,7 +115,8 @@ export function HiringGuidance({ contractor }: { contractor: ContractorDetail })
   const points = buildHiringGuidance(contractor);
   return (
     <section
-      className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 sm:p-6"
+      id="hiring"
+      className="scroll-mt-24 rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 sm:scroll-mt-28 sm:p-6"
       aria-labelledby="hiring-guidance-heading"
     >
       <h2

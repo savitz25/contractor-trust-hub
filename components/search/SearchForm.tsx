@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useId, useTransition } from "react";
+import { useId, useState, useTransition } from "react";
 
 type SearchFormProps = {
   defaultQuery?: string;
@@ -15,6 +15,8 @@ type SearchFormProps = {
   intent?: "have" | "research" | null;
   /** Evidence state slug: fl | tx */
   stateSlug?: string;
+  /** Homepage: let the visitor choose FL vs TX before searching */
+  showStatePicker?: boolean;
 };
 
 const PLACEHOLDERS = {
@@ -43,15 +45,18 @@ export function SearchForm({
   placeholder,
   intent = null,
   stateSlug = "fl",
+  showStatePicker = false,
 }: SearchFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const [pickedState, setPickedState] = useState(stateSlug);
   const inputId = useId();
 
+  const activeState = showStatePicker ? pickedState : stateSlug;
   const isHero = size === "hero";
   const isCompact = size === "compact";
-  const isTx = stateSlug === "tx";
-  const isNj = stateSlug === "nj";
+  const isTx = activeState === "tx";
+  const isNj = activeState === "nj";
   const ph =
     placeholder ||
     (isTx ? TX_PLACEHOLDERS[size] : isNj ? NJ_PLACEHOLDERS[size] : PLACEHOLDERS[size]);
@@ -79,7 +84,7 @@ export function SearchForm({
         if (q.length < 2) return;
         const params = new URLSearchParams({ q });
         if (intent) params.set("intent", intent);
-        if (stateSlug && stateSlug !== "fl") params.set("state", stateSlug);
+        if (activeState && activeState !== "fl") params.set("state", activeState);
         startTransition(() => {
           router.push(`/verify?${params.toString()}`);
         });
@@ -87,8 +92,41 @@ export function SearchForm({
       className="w-full"
     >
       {intent && <input type="hidden" name="intent" value={intent} />}
-      {stateSlug && stateSlug !== "fl" ? (
-        <input type="hidden" name="state" value={stateSlug} />
+      {activeState && activeState !== "fl" ? (
+        <input type="hidden" name="state" value={activeState} />
+      ) : null}
+      {showStatePicker ? (
+        <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Search state">
+          {(
+            [
+              { id: "fl", label: "Florida", hint: "Full construction licenses" },
+              { id: "tx", label: "Texas", hint: "TDLR specialty only" },
+            ] as const
+          ).map((s) => {
+            const on = activeState === s.id;
+            return (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => setPickedState(s.id)}
+                className={`inline-flex min-h-10 flex-col justify-center rounded-2xl border px-3.5 py-1.5 text-left sm:min-h-9 sm:flex-row sm:items-center sm:gap-2 sm:rounded-full sm:py-0 ${
+                  on
+                    ? "border-[var(--navy)] bg-[var(--navy)] text-white"
+                    : "border-[var(--border)] bg-[var(--bg)] text-[var(--navy)]"
+                }`}
+              >
+                <span className="text-sm font-semibold leading-none">{s.label}</span>
+                <span
+                  className={`text-[10px] font-medium leading-none ${
+                    on ? "text-white/75" : "text-[var(--muted)]"
+                  }`}
+                >
+                  {s.hint}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       ) : null}
       {label && (
         <label

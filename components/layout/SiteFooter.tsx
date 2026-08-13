@@ -6,7 +6,8 @@ const columns = [
   {
     title: "Research",
     links: [
-      { href: "/verify", label: "Verify a contractor" },
+      { href: "/verify", label: "Verify a contractor (Florida)" },
+      { href: "/verify?state=tx", label: "Texas specialty verify (TDLR)" },
       { href: "/florida", label: "Browse Florida" },
       { href: "/tools/coverage", label: "Permit coverage" },
       { href: "/methodology", label: "Trust standards" },
@@ -18,6 +19,7 @@ const columns = [
     links: [
       { href: "/plan", label: "Plan a project" },
       { href: "/studios", label: "Project Studios" },
+      { href: "/studio/kitchen", label: "Kitchen calculator" },
       { href: "/tools/scope-builder", label: "Scope Builder" },
       { href: "/property", label: "Check my address" },
       { href: "/tools/permit-planner", label: "Permit planner" },

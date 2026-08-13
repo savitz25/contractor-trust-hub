@@ -18,11 +18,11 @@ export function HomeSearchBlock() {
             Search by license number or company name
           </h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Best when you already know who you&apos;re considering. Free — no account, no lead
-            form.
+            Pick Florida (full construction licenses) or Texas (TDLR specialty trades). Free — no
+            account, no lead form.
           </p>
           <div className="mt-4 sm:mt-5">
-            <SearchForm size="hero" />
+            <SearchForm size="hero" showStatePicker />
           </div>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
             <p className="text-xs text-[var(--muted)]">Try:</p>
@@ -44,6 +44,12 @@ export function HomeSearchBlock() {
                 className="rounded-lg border border-[var(--border)] bg-[var(--panel)] px-2.5 py-1 text-xs text-[var(--text)] no-underline hover:border-[var(--accent)]/40"
               >
                 ABC Roofing
+              </Link>
+              <Link
+                href="/verify?state=tx&q=10001"
+                className="rounded-lg border border-[var(--border)] bg-[var(--panel)] px-2.5 py-1 text-xs text-[var(--text)] no-underline hover:border-[var(--accent)]/40"
+              >
+                TX 10001
               </Link>
             </div>
           </div>

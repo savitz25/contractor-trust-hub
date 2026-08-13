@@ -443,12 +443,20 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         <div className="mt-4 flex flex-wrap gap-2">
           <CompareToggle slug={contractor.slug} />
           {isTxOnly ? (
-            <a
-              href="#licenses"
-              className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--navy)] no-underline"
-            >
-              Credential details
-            </a>
+            <>
+              <a
+                href="#hiring"
+                className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--navy)] no-underline"
+              >
+                Before you hire
+              </a>
+              <a
+                href="#licenses"
+                className="inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] px-4 text-sm text-[var(--muted)] no-underline hover:text-[var(--text)]"
+              >
+                Credential details
+              </a>
+            </>
           ) : (
             <>
               <a
@@ -484,6 +492,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         ) : null}
 
         <EvidenceSummary contractor={contractor} />
+        {isTxOnly ? <HiringGuidance contractor={contractor} /> : null}
         {isFlFull ? <CautionSummary contractor={contractor} /> : null}
         <WhatWeChecked contractor={contractor} />
 

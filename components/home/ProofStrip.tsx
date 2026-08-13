@@ -14,8 +14,8 @@ const proofs = [
     body: "Board actions linked in our load — with source attribution, not reviews.",
   },
   {
-    title: "Decision + protection tools",
-    body: "Scope, quotes, contracts, projects, and Home Passport for homeowners.",
+    title: "Texas specialty verify (pilot)",
+    body: "37k+ TDLR specialty licenses. Not a statewide GC directory. Plumbing and local registration not fully covered.",
   },
 ] as const;
 
@@ -37,9 +37,9 @@ export function ProofStrip() {
             Built for evidence, not opinions
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-            Official sources framing: Florida DBPR construction licenses and Florida Sunbiz
-            entities. Educational research only — confirm critical details on the board before you
-            hire.
+            Official sources: Florida DBPR + Sunbiz for the full journey, and Texas TDLR specialty
+            trades only (no statewide GC). Educational research — confirm on the official board
+            before you hire.
           </p>
         </div>
 

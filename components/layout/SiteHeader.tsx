@@ -13,6 +13,7 @@ const primaryNav = [
 ] as const;
 
 const moreNav = [
+  { href: "/florida", label: "Research" },
   { href: "/studios", label: "Studios" },
   { href: "/account", label: "Account" },
 ] as const;

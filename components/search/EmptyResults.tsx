@@ -123,6 +123,12 @@ function FloridaEmptyResults({ query, mode }: { query: string; mode: "license" |
         >
           Open Florida discovery
         </Link>
+        <Link
+          href="/verify?state=tx"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+        >
+          Try Texas specialty search
+        </Link>
       </div>
 
       <div className="mt-6 rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)]/80 px-4 py-3">

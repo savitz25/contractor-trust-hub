@@ -86,8 +86,16 @@ export function ToolDiscovery() {
 
         <p className="mt-5 text-sm text-[var(--muted)]">
           Need a detailed studio?{" "}
+          <Link href="/studio/kitchen" className="font-semibold text-[var(--navy)]">
+            Kitchen calculator
+          </Link>
+          {" · "}
+          <Link href="/studio/roofing" className="font-semibold text-[var(--navy)]">
+            Roofing calculator
+          </Link>
+          {" · "}
           <Link href="/studios" className="font-semibold text-[var(--navy)]">
-            Kitchen, bath, roofing, and more
+            All studios
           </Link>
         </p>
       </div>

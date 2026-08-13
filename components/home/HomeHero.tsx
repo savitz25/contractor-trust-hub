@@ -15,17 +15,20 @@ export function HomeHero() {
           Plan clearly. Verify thoroughly. Hire with confidence.
         </h1>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-[var(--muted)] sm:text-lg">
-          Independent Florida contractor research from official public records — plus tools to
-          plan scope, compare quotes, and protect your project.
+          Independent contractor research from official public records.{" "}
+          <strong className="font-medium text-[var(--text)]">Florida</strong> is the full journey
+          (verify, plan, browse, protect).{" "}
+          <strong className="font-medium text-[var(--text)]">Texas</strong> is a specialty-trade
+          verify pilot — TDLR only, not a statewide GC directory.
         </p>
         <p className="mt-3 text-sm font-medium text-[var(--navy)]">
           Not a marketplace. No paid rankings. Evidence only.
         </p>
         <p className="mt-2 text-xs text-[var(--muted)]">
           Florida full journey ·{" "}
-          <a href="/verify?state=nj" className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline">
-            New Jersey verification pilot
-          </a>
+          <Link href="/verify?state=tx" className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline">
+            Texas specialty verify
+          </Link>
         </p>
 
         <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center">
@@ -43,13 +46,13 @@ export function HomeHero() {
           >
             Plan a project
           </Link>
-          <Link
-            href="/property"
-            data-entry-path="property"
+          <a
+            href="#research"
+            data-entry-path="research"
             className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-6 py-3 text-center text-sm font-semibold text-[var(--navy)] no-underline hover:border-[var(--navy)]/30 sm:min-h-11"
           >
-            Check my address
-          </Link>
+            Research / browse
+          </a>
         </div>
       </div>
     </section>

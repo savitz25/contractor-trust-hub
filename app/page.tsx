@@ -13,7 +13,7 @@ import { pageMetadata } from "@/lib/seo/page-meta";
 export const metadata: Metadata = pageMetadata({
   title: "Contractor Trust Hub — Before you hire, verify",
   description:
-    "Independent Florida contractor research from official public records. Plan scope, verify licenses, compare quotes, and protect your project — not a marketplace.",
+    "Independent contractor research. Florida is the full journey (licenses, entities, planning). Texas is TDLR specialty-trade verify only. Evidence — not a marketplace.",
   path: "/",
 });
 
@@ -51,15 +51,16 @@ export default function HomePage() {
             <ol className="mt-5 space-y-4 text-sm leading-relaxed text-[var(--muted)]">
               <li>
                 <span className="font-medium text-[var(--text)]">1. License evidence</span> —
-                Florida DBPR status, occupation class, and dates from the public extract.
+                Florida DBPR or Texas TDLR specialty status, trade class, and dates from the public
+                extract.
               </li>
               <li>
-                <span className="font-medium text-[var(--text)]">2. Entity link</span> — high-confidence
-                Sunbiz match only (exact name + geo). We do not invent corporate links.
+                <span className="font-medium text-[var(--text)]">2. Entity link (Florida)</span> —
+                high-confidence Sunbiz match only. Texas reports do not invent SOS entity links.
               </li>
               <li>
-                <span className="font-medium text-[var(--text)]">3. Discipline scan</span> — board
-                actions linked in our extracts, with source attribution.
+                <span className="font-medium text-[var(--text)]">3. Discipline / coverage notes</span>{" "}
+                — Florida board actions when linked; Texas specialty-only limits called out plainly.
               </li>
             </ol>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -69,6 +70,12 @@ export default function HomePage() {
                 className="inline-flex min-h-11 items-center rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline hover:brightness-105"
               >
                 Search a name or license
+              </Link>
+              <Link
+                href="/verify?state=tx"
+                className="inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+              >
+                Texas Verify
               </Link>
               <Link
                 href="/methodology"
@@ -95,7 +102,8 @@ export default function HomePage() {
               Browse by county &amp; trade
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-              Research listings from public license data — not paid rankings or marketplace leads.
+              Florida discovery from public license data — not paid rankings. Texas browse is not
+              available yet (specialty verify only).
             </p>
           </div>
           <ResearchBrowse />

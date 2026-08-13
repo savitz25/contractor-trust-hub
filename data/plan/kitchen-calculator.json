@@ -1,0 +1,155 @@
+{
+  "_meta": {
+    "description": "Florida kitchen cost calculator inputs and multipliers. Planning only — not bids. Base dollar bands come from fl-cost-ranges.json (kitchen_remodel × size→scale).",
+    "updated": "2026-08-12",
+    "state": "FL"
+  },
+  "disclaimer": "Planning only — not a bid or contractor quote. These ranges are conceptual Florida planning bands for homeowner budgeting. They are not contractor-specific prices, guarantees, or formal estimates.",
+  "methodologyNote": "Start from statewide Florida kitchen bands by approximate kitchen size, then apply relative multipliers for remodel depth, layout change, and finish level. Multipliers are relative planning factors, not market quotes. Location (ZIP/city) is for contractor matching only and does not invent local prices.",
+  "floridaNotes": [
+    "Older Florida homes often need electrical capacity and ventilation upgrades when adding larger appliance packages.",
+    "Humidity, tile, and occupied-home phasing can add labor time versus a vacant gut.",
+    "HOA, coastal, and permit cycles vary by city and county — budget time, not just dollars.",
+    "Moving gas, plumbing, or load-bearing walls is usually the largest jump from a finish-only refresh."
+  ],
+  "sizeOptions": [
+    {
+      "id": "small",
+      "scale": "small",
+      "label": "Compact / galley",
+      "description": "Smaller work zone or secondary kitchen",
+      "proxyHint": "Often ~80–140 sq ft",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1
+    },
+    {
+      "id": "medium",
+      "scale": "medium",
+      "label": "Typical family kitchen",
+      "description": "Most common Florida single-family kitchen",
+      "proxyHint": "Often ~150–250 sq ft",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1
+    },
+    {
+      "id": "large",
+      "scale": "large",
+      "label": "Large / open-plan",
+      "description": "Island, open to living, or large footprint",
+      "proxyHint": "Often 250+ sq ft or a major opening into adjacent rooms",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1
+    }
+  ],
+  "depthOptions": [
+    {
+      "id": "refresh",
+      "label": "Cosmetic refresh",
+      "description": "Paint, hardware, limited counters or fixtures — layout stays",
+      "lowMul": 0.72,
+      "midMul": 0.62,
+      "highMul": 0.68,
+      "push": "down",
+      "explain": "Refresh stays closer to a finish package when plumbing and cabinets are not fully replaced."
+    },
+    {
+      "id": "mid",
+      "label": "Mid-range remodel",
+      "description": "Cabinets and finishes with limited layout change — most common path",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1,
+      "push": "neutral",
+      "explain": "The baseline Florida kitchen remodel band assumes a real cabinet and finish package."
+    },
+    {
+      "id": "full_gut",
+      "label": "Full gut-rehab",
+      "description": "Strip to studs; possible mechanical and layout moves",
+      "lowMul": 1.12,
+      "midMul": 1.18,
+      "highMul": 1.28,
+      "push": "up",
+      "explain": "Full guts raise demo, mechanical, permit, and finish coordination cost."
+    }
+  ],
+  "layoutOptions": [
+    {
+      "id": "same",
+      "label": "Keep the layout",
+      "description": "Sink, range, and refrigerator stay put",
+      "lowMul": 0.92,
+      "midMul": 0.9,
+      "highMul": 0.92,
+      "push": "down",
+      "explain": "Keeping wet and cooking locations limits plumbing, gas, and electrical relocation."
+    },
+    {
+      "id": "minor",
+      "label": "Minor layout changes",
+      "description": "Small shifts without a new wet wall",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1,
+      "push": "neutral",
+      "explain": "Limited moves stay near the mid band when major plumbing runs stay."
+    },
+    {
+      "id": "major",
+      "label": "Major layout change",
+      "description": "Island, wall opening, or relocated wet wall",
+      "lowMul": 1.14,
+      "midMul": 1.22,
+      "highMul": 1.32,
+      "push": "up",
+      "explain": "Islands and wet-wall moves add plumbing, electrical, and often structural work."
+    }
+  ],
+  "finishOptions": [
+    {
+      "id": "basic",
+      "label": "Basic / value",
+      "description": "Stock cabinets, simpler surfaces",
+      "lowMul": 0.88,
+      "midMul": 0.85,
+      "highMul": 0.88,
+      "push": "down",
+      "explain": "Stock products pull the band down when the layout stays simple."
+    },
+    {
+      "id": "standard",
+      "label": "Standard",
+      "description": "Typical mid-market cabinets and quartz",
+      "lowMul": 1,
+      "midMul": 1,
+      "highMul": 1,
+      "push": "neutral",
+      "explain": "Mid-market cabinets and surfaces are the baseline for these bands."
+    },
+    {
+      "id": "premium",
+      "label": "Premium",
+      "description": "Higher millwork, stone, and appliance package",
+      "lowMul": 1.14,
+      "midMul": 1.24,
+      "highMul": 1.36,
+      "push": "up",
+      "explain": "Premium millwork and appliances move the high end faster than the low end."
+    }
+  ],
+  "defaults": {
+    "size": "medium",
+    "depth": "mid",
+    "layout": "minor",
+    "finish": "standard"
+  },
+  "education": [
+    "Cabinet strategy (refacing vs full replace) is often the largest visible cost driver.",
+    "Plumbing or electrical relocation increases both dollars and schedule risk.",
+    "Occupied-home kitchens usually need more protection, phasing, and temporary cooking plans.",
+    "This tool does not invent contractor prices — get written bids from licensed Florida contractors."
+  ]
+}
