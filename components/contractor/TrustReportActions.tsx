@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
 import { WatchButton } from "@/components/projects/WatchButton";
+import { shareSummaryPath } from "@/lib/contractors/share-summary";
 
 type Props = {
   slug: string;
@@ -19,8 +20,8 @@ type Props = {
 };
 
 /**
- * Primary Trust Report actions: official board, Watch, Share/Print.
- * Correction is available but secondary.
+ * Primary Trust Report actions: official board, Watch, Share/Print summary.
+ * Share and Print open the clean evidence summary surface (not the dense dossier).
  */
 export function TrustReportActions({
   slug,
@@ -35,11 +36,17 @@ export function TrustReportActions({
   sticky = true,
 }: Props) {
   const [shareNote, setShareNote] = useState<string | null>(null);
+  const summaryPath = shareSummaryPath(slug);
+
+  const summaryUrl = useCallback(() => {
+    if (typeof window === "undefined") return summaryPath;
+    return `${window.location.origin}${summaryPath}`;
+  }, [summaryPath]);
 
   const onShare = useCallback(async () => {
-    const url = typeof window !== "undefined" ? window.location.href : "";
-    const title = `${name} — Contractor Trust Report`;
-    const text = `License evidence summary for ${name} on Contractor Trust Hub. Always confirm on the official board.`;
+    const url = summaryUrl();
+    const title = `${name} — Evidence summary`;
+    const text = `License evidence summary for ${name} on Contractor Trust Hub. Independent research — not a recommendation. Confirm on the official board.`;
 
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
@@ -49,13 +56,13 @@ export function TrustReportActions({
         return;
       }
     } catch {
-      // fall through to clipboard / print
+      // fall through to clipboard
     }
 
     try {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(url);
-        setShareNote("Link copied");
+        setShareNote("Summary link copied");
         setTimeout(() => setShareNote(null), 2500);
         return;
       }
@@ -63,12 +70,12 @@ export function TrustReportActions({
       // ignore
     }
 
-    window.print();
-  }, [name]);
+    window.location.href = summaryPath;
+  }, [name, summaryPath, summaryUrl]);
 
   const onPrint = useCallback(() => {
-    window.print();
-  }, []);
+    window.location.href = `${summaryPath}?print=1`;
+  }, [summaryPath]);
 
   const body = (
     <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
@@ -93,7 +100,7 @@ export function TrustReportActions({
         onClick={onShare}
         className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-4 text-sm font-semibold text-[var(--navy)] hover:border-[var(--navy)]/30"
       >
-        Share
+        Share summary
         {shareNote ? (
           <span className="ml-1.5 text-[11px] font-medium text-[var(--muted)]">· {shareNote}</span>
         ) : null}
@@ -105,6 +112,12 @@ export function TrustReportActions({
       >
         Print summary
       </button>
+      <Link
+        href={summaryPath}
+        className="inline-flex min-h-11 items-center justify-center px-2 text-xs font-medium text-[var(--muted)] no-underline hover:text-[var(--text)] hover:underline sm:order-last"
+      >
+        Open shareable page
+      </Link>
       <Link
         href={correctionHref}
         className="inline-flex min-h-11 items-center justify-center px-2 text-xs font-medium text-[var(--muted)] no-underline hover:text-[var(--text)] hover:underline sm:ml-auto"
@@ -161,6 +174,13 @@ export function TrustReportActions({
             className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-3 text-xs font-semibold text-[var(--navy)]"
           >
             Share
+          </button>
+          <button
+            type="button"
+            onClick={onPrint}
+            className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-3 text-xs font-medium text-[var(--text)]"
+          >
+            Print
           </button>
         </div>
       </div>

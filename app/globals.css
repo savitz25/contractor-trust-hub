@@ -157,6 +157,38 @@ button.control-off:hover {
   }
 }
 
+/* Trust Report share summary + general print hygiene */
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #0a2540 !important;
+    font-size: 12pt;
+  }
+
+  a {
+    color: inherit !important;
+    text-decoration: underline !important;
+  }
+
+  .trust-share-summary {
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .trust-share-summary a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    word-break: break-all;
+    font-weight: 400;
+  }
+
+  /* Avoid printing full absolute URLs twice on the summary footer link */
+  .trust-share-summary footer a[href]::after {
+    content: none;
+  }
+}
+
 @media (max-width: 640px) {
   body {
     -webkit-text-size-adjust: 100%;

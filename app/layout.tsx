@@ -73,13 +73,17 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex min-h-screen flex-col antialiased">
         <SitewideJsonLd />
-        <SiteHeader />
-        <SaveWorkPrompt />
-        <JourneyContextChip />
-        <PropertyContextChip />
-        <div className="flex-1 pb-24 sm:pb-20">{children}</div>
-        <SiteFooter />
-        <CompareBar />
+        <div className="print:hidden">
+          <SiteHeader />
+          <SaveWorkPrompt />
+          <JourneyContextChip />
+          <PropertyContextChip />
+        </div>
+        <div className="flex-1 pb-24 sm:pb-20 print:pb-0">{children}</div>
+        <div className="print:hidden">
+          <SiteFooter />
+          <CompareBar />
+        </div>
       </body>
     </html>
   );

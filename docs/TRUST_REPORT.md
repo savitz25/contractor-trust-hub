@@ -17,10 +17,33 @@ Above the fold, every Trust Report shows:
 4. **Primary actions** (`#report-actions`)  
    - Open official board verify  
    - Watch this contractor  
-   - Share (Web Share API or copy link) / Print summary  
+   - **Share summary** / **Print summary** → clean shareable surface  
    - Request correction (secondary)
 
 Full dossier (license rows, discipline, entity detail, FL insurance/activity, tools) stays **below**.
+
+## Shareable evidence summary (Phase 4B)
+
+**Route:** `/contractors/[slug]/summary` (always `noindex`)
+
+Clean, mobile-friendly, print-optimized page with:
+
+- Contractor name + location  
+- License id, class/type, published status  
+- Entity status when the state links entities (or when present)  
+- Discipline / enforcement-in-extract line  
+- State/board source + extract freshness  
+- Plain-language “what this means” (from `buildConsumerMeaning`)  
+- Independent research badge — **not a recommendation**, no scores  
+- Confirm on official board + link back to the **full live report**
+
+| Action | Behavior |
+|--------|----------|
+| Share summary | Web Share API or copy absolute summary URL |
+| Print summary | Navigate to `/summary?print=1` → browser print dialog |
+| PDF | Use browser “Save as PDF” from the print dialog — no server PDF dependency |
+
+Site chrome (header, footer, shortlist bar) is `print:hidden` so the printed page stays clean.
 
 ## Summary generation
 
