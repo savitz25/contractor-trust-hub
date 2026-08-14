@@ -8,4 +8,4 @@ export const PAYMENT_TRACKER_DISCLAIMER =
   "This ledger encourages documentation discipline. It does not determine lien validity, notice sufficiency, or payment obligations under Florida law.";
 
 export const WATCH_DISCLAIMER =
-  "Watch alerts report changes detected in our extracts when you open the app. They are not real-time board monitoring and may lag official systems.";
+  "Watch saves a snapshot on this device so you can re-check evidence later. Local notes appear when you reopen a watched Trust Report and our extract snapshot differs — not real-time government monitoring, and may lag official boards. Device watch alone does not send email.";

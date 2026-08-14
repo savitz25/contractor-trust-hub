@@ -42,6 +42,7 @@ export const TOOLS_GROUP: HeaderGroup = {
     { href: "/tools/quote-analyzer", label: "Quote Analyzer" },
     { href: "/tools/contract-analyzer", label: "Contract Analyzer" },
     { href: "/compare", label: "Compare" },
+    { href: "/watch", label: "Watched list", hint: "Saved on this device" },
     { href: "/property", label: "Property / permits" },
     { href: "/tools/coverage", label: "Where we cover" },
   ],
@@ -63,6 +64,7 @@ export const MY_PROJECT_GROUP: HeaderGroup = {
   label: "My Project",
   links: [
     { href: "/projects", label: "Projects" },
+    { href: "/watch", label: "Watched contractors", hint: "Saved on this device" },
     { href: "/passport", label: "Home Passport" },
     { href: "/account", label: "Account" },
   ],

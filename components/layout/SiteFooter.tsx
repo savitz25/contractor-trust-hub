@@ -23,6 +23,7 @@ const decideLinks = [
 const protectLinks = [
   { href: "/tools/contract-analyzer", label: "Contract Analyzer" },
   { href: "/projects", label: "Projects" },
+  { href: "/watch", label: "Watched contractors" },
   { href: "/passport", label: "Home Passport" },
   { href: "/account", label: "Account & alerts" },
 ] as const;

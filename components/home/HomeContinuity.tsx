@@ -56,12 +56,12 @@ export function HomeContinuity() {
           hasWatch = true;
           next.push({
             key: "watches",
-            href: "/projects",
+            href: "/watch",
             title: "Watched contractors",
             body:
               watches.length === 1
                 ? watches[0].name || watches[0].slug
-                : `${watches.length} contractors on watch`,
+                : `${watches.length} saved on this device`,
           });
         }
       }

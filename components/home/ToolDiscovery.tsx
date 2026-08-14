@@ -15,7 +15,7 @@ const groups = [
     items: [
       { href: "/tools/contract-analyzer", label: "Contract Analyzer" },
       { href: "/projects", label: "Projects Dashboard" },
-      { href: "/projects", label: "Watch a contractor" },
+      { href: "/watch", label: "Watched contractors" },
     ],
   },
   {

@@ -12,6 +12,12 @@ export const metadata: Metadata = {
 
 const tools = [
   {
+    href: "/watch",
+    title: "Watched contractors",
+    body: "Finalists saved on this device so you can re-check Trust Reports later — not live board monitoring.",
+    step: "4",
+  },
+  {
     href: "/projects",
     title: "Protect an active project",
     body: "Milestones, payments, documents, and contractor watches in one workspace.",
