@@ -1,61 +1,50 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CONTRACTOR_NETWORK_LINKS } from "@/lib/network/network-links";
+import { getLiveVerifyNavLinks } from "@/lib/states/config";
 
-const columns = [
-  {
-    title: "Research",
-    links: [
-      { href: "/verify", label: "Verify a contractor (Florida)" },
-      { href: "/verify?state=tx", label: "Texas specialty verify (TDLR)" },
-      { href: "/verify?state=or", label: "Oregon CCB verify" },
-      { href: "/verify?state=wa", label: "Washington L&I verify" },
-      { href: "/verify?state=az", label: "Arizona ROC verify" },
-      { href: "/verify?state=la", label: "Louisiana LSLBC verify" },
-      { href: "/verify?state=ms", label: "Mississippi MSBOC verify" },
-      { href: "/florida", label: "Browse Florida" },
-      { href: "/arizona", label: "Explore Arizona" },
-      { href: "/oregon", label: "Explore Oregon" },
-      { href: "/washington", label: "Explore Washington" },
-      { href: "/guides", label: "Homeowner guides" },
-      { href: "/tools/coverage", label: "Permit coverage" },
-      { href: "/methodology", label: "Trust standards" },
-      { href: "/independence", label: "Independence" },
-    ],
-  },
-  {
-    title: "Plan",
-    links: [
-      { href: "/plan", label: "Plan a project" },
-      { href: "/studios", label: "Project Studios" },
-      { href: "/studio/kitchen", label: "Kitchen calculator" },
-      { href: "/studio/bathroom", label: "Bathroom calculator" },
-      { href: "/tools/scope-builder", label: "Scope Builder" },
-      { href: "/property", label: "Check my address" },
-      { href: "/tools/permit-planner", label: "Permit planner" },
-    ],
-  },
-  {
-    title: "Decide",
-    links: [
-      { href: "/tools/quote-analyzer", label: "Quote Analyzer" },
-      { href: "/tools/compare-bids", label: "Compare bids" },
-      { href: "/tools/pre-hire-checklist", label: "Pre-hire checklist" },
-      { href: "/tools", label: "All decision tools" },
-    ],
-  },
-  {
-    title: "Protect & records",
-    links: [
-      { href: "/tools/contract-analyzer", label: "Contract Analyzer" },
-      { href: "/projects", label: "Projects" },
-      { href: "/passport", label: "Home Passport" },
-      { href: "/account", label: "Account & alerts" },
-    ],
-  },
+const planLinks = [
+  { href: "/plan", label: "Plan a project" },
+  { href: "/studios", label: "Project Studios" },
+  { href: "/studio/kitchen", label: "Kitchen calculator" },
+  { href: "/studio/bathroom", label: "Bathroom calculator" },
+  { href: "/tools/scope-builder", label: "Scope Builder" },
+  { href: "/property", label: "Check my address" },
+  { href: "/tools/permit-planner", label: "Permit planner" },
+] as const;
+
+const decideLinks = [
+  { href: "/tools/quote-analyzer", label: "Quote Analyzer" },
+  { href: "/tools/compare-bids", label: "Compare bids" },
+  { href: "/tools/pre-hire-checklist", label: "Pre-hire checklist" },
+  { href: "/tools", label: "All decision tools" },
+] as const;
+
+const protectLinks = [
+  { href: "/tools/contract-analyzer", label: "Contract Analyzer" },
+  { href: "/projects", label: "Projects" },
+  { href: "/passport", label: "Home Passport" },
+  { href: "/account", label: "Account & alerts" },
 ] as const;
 
 export function SiteFooter() {
+  const verifyLinks = getLiveVerifyNavLinks();
+  const researchLinks = [
+    ...verifyLinks,
+    { href: "/florida", label: "Browse Florida" },
+    { href: "/guides", label: "Homeowner guides" },
+    { href: "/tools/coverage", label: "Permit coverage" },
+    { href: "/methodology", label: "Trust standards" },
+    { href: "/independence", label: "Independence" },
+  ];
+
+  const columns = [
+    { title: "Research", links: researchLinks },
+    { title: "Plan", links: planLinks },
+    { title: "Decide", links: decideLinks },
+    { title: "Protect & records", links: protectLinks },
+  ];
+
   return (
     <footer className="mt-auto border-t border-[var(--border)] bg-[var(--bg-elevated)]">
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
@@ -155,27 +144,6 @@ export function SiteFooter() {
             ))}
           </ul>
         </div>
-      </div>
-
-      <div className="border-t border-[var(--border)] bg-[var(--bg)] px-4 py-5 text-xs leading-relaxed text-[var(--muted)] sm:px-6">
-        <p className="mx-auto max-w-6xl">
-          <strong className="font-medium text-[var(--text)]">Educational research only.</strong>{" "}
-          Information is derived from public records and may lag live government systems. We are not
-          a consumer reporting agency, not a licensing authority, and do not sell leads or paid
-          rankings. Always confirm license status and other critical details on the official board
-          before hiring. Public records remain property of the issuing government body.{" "}
-          <Link href="/disclaimer" className="font-medium text-[var(--navy)]">
-            Full disclaimer
-          </Link>
-          {" · "}
-          <Link href="/independence" className="font-medium text-[var(--navy)]">
-            How we make money
-          </Link>
-          {" · "}
-          <Link href="/corrections" className="font-medium text-[var(--navy)]">
-            Corrections
-          </Link>
-        </p>
       </div>
     </footer>
   );

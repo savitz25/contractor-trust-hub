@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { SearchForm } from "@/components/search/SearchForm";
+import { getLiveStateCount } from "@/lib/states/config";
 
 /** Compact verify search for visitors who already know a name or license. */
 export function HomeSearchBlock() {
+  const liveCount = getLiveStateCount();
+
   return (
     <section
       id="search"
@@ -18,8 +21,10 @@ export function HomeSearchBlock() {
             Search by license number or company name
           </h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Choose a state, then search. Florida is the full construction journey; other states are
-            Verify-first with honest board scope. Free — no account, no lead form.
+            Choose a state ({liveCount} live), then search. Free — no account, no lead form.{" "}
+            <Link href="/#states" className="font-medium text-[var(--navy)] underline-offset-2 hover:underline">
+              Coverage by state
+            </Link>
           </p>
           <div className="mt-4 sm:mt-5">
             <SearchForm size="hero" showStatePicker />

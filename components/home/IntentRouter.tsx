@@ -1,42 +1,45 @@
 import Link from "next/link";
-
-const intents = [
-  {
-    id: "verify",
-    href: "/#search",
-    title: "Verify a contractor",
-    bestWhen: "Best when you already have a name, license, or registration number.",
-    bullets: [
-      "Seven live states — FL full depth; others Verify-first",
-      "Open a Trust Report with honest coverage limits",
-    ],
-    cta: "Search contractors",
-    accent: true,
-  },
-  {
-    id: "plan",
-    href: "/plan",
-    title: "Plan a project",
-    bestWhen: "Best when you're deciding Florida scope and cost.",
-    bullets: ["Kitchen, bath, roofing calculators", "Florida planning tools — then verify"],
-    cta: "Start planning",
-    accent: true,
-  },
-  {
-    id: "research",
-    href: "/#research",
-    title: "Research / browse",
-    bestWhen: "Best when you want to explore Florida by county and trade.",
-    bullets: ["Roofing, GC, A/C, plumbing listings", "Florida discovery — other states use Verify"],
-    cta: "Browse Florida",
-    accent: false,
-  },
-] as const;
+import { getLiveStateCount } from "@/lib/states/config";
 
 /**
- * Primary 3-path chooser — the homepage front door after the hero.
+ * Primary path chooser after the hero — two clear intents + Florida browse.
  */
 export function IntentRouter() {
+  const liveCount = getLiveStateCount();
+
+  const intents = [
+    {
+      id: "verify",
+      href: "/#search",
+      title: "I already have a name or license",
+      bestWhen: "Best when you know who you’re checking.",
+      bullets: [
+        `${liveCount} live state${liveCount === 1 ? "" : "s"} — same list as Verify tabs`,
+        "Open a Trust Report with honest coverage limits",
+      ],
+      cta: "Search contractors",
+      accent: true,
+    },
+    {
+      id: "plan",
+      href: "/plan",
+      title: "I’m planning a project",
+      bestWhen: "Best when you’re still deciding Florida scope and cost.",
+      bullets: ["Kitchen, bath, roofing calculators", "Florida planning tools — then verify"],
+      cta: "Start planning",
+      accent: true,
+    },
+    {
+      id: "research",
+      href: "/#research",
+      title: "Browse Florida by trade",
+      bestWhen: "Best when you want to explore Florida by county and trade.",
+      bullets: ["Roofing, GC, A/C, plumbing listings", "Other states use Verify search"],
+      cta: "Browse Florida",
+      accent: false,
+    },
+  ] as const;
+
   return (
     <section
       id="start"
@@ -52,8 +55,7 @@ export function IntentRouter() {
             Where do you want to start?
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-            Pick the path that matches your situation. You can move between tools anytime — this is
-            research tooling, not a hiring marketplace.
+            Pick the path that matches your situation. You can move between tools anytime.
           </p>
         </div>
 

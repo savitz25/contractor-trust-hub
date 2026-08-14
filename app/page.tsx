@@ -9,27 +9,20 @@ import { JourneySpine } from "@/components/home/JourneySpine";
 import { ProofStrip } from "@/components/home/ProofStrip";
 import { StateLandscape } from "@/components/home/StateLandscape";
 import { ToolDiscovery } from "@/components/home/ToolDiscovery";
+import {
+  getLiveStateCount,
+  getLiveVerifyNavLinks,
+  liveStatesPlainList,
+} from "@/lib/states/config";
 import { pageMetadata } from "@/lib/seo/page-meta";
+
+const liveCount = getLiveStateCount();
 
 export const metadata: Metadata = pageMetadata({
   title: "Contractor Trust Hub — Before you hire, verify",
-  description:
-    "Independent multi-state contractor research. Florida is the full journey. Other states are Verify-first with honest board scope. Evidence only — not a marketplace.",
+  description: `Check official contractor license evidence before you hire. ${liveCount} live states — Florida full journey; peers are Verify-first with honest board scope.`,
   path: "/",
 });
-
-const VERIFY_CTAS = [
-  { href: "/verify", label: "Florida Verify" },
-  { href: "/verify?state=tx", label: "Texas" },
-  { href: "/verify?state=nj", label: "New Jersey" },
-  { href: "/verify?state=or", label: "Oregon" },
-  { href: "/verify?state=wa", label: "Washington" },
-  { href: "/verify?state=ca", label: "California" },
-  { href: "/verify?state=az", label: "Arizona" },
-  { href: "/verify?state=la", label: "Louisiana" },
-  { href: "/verify?state=ms", label: "Mississippi" },
-  { href: "/verify?state=ky", label: "Kentucky" },
-] as const;
 
 export default function HomePage() {
   return (
@@ -68,9 +61,8 @@ export default function HomePage() {
             <ol className="mt-5 space-y-4 text-sm leading-relaxed text-[var(--muted)]">
               <li>
                 <span className="font-medium text-[var(--text)]">1. License / registration evidence</span>{" "}
-                — official board extracts by state (Florida DBPR, Texas specialty, NJ HIC + specialty,
-                Oregon CCB, Washington L&amp;I, California CSLB counties, Arizona ROC, Louisiana
-                LSLBC, Mississippi MSBOC, Kentucky DHBC specialty).
+                — official board extracts for {liveStatesPlainList()} (scope differs by state;
+                see coverage on each tile above).
               </li>
               <li>
                 <span className="font-medium text-[var(--text)]">2. Entity link (Florida-deep)</span>{" "}
@@ -78,13 +70,12 @@ export default function HomePage() {
               </li>
               <li>
                 <span className="font-medium text-[var(--text)]">3. Discipline / coverage notes</span>{" "}
-                — Florida board actions and Arizona ROC disciplinary rows when linked; NJ public
-                flags when present; other states call out extract limits plainly. Absence ≠ clean
-                history.
+                — when present in our extracts (e.g. Florida board actions, Arizona ROC rows, NJ
+                flags). Absence ≠ clean history. Always re-check the official board.
               </li>
             </ol>
             <div className="mt-6 flex flex-wrap gap-2 sm:gap-3">
-              {VERIFY_CTAS.map((c, i) => (
+              {getLiveVerifyNavLinks().map((c, i) => (
                 <Link
                   key={c.href}
                   href={c.href}
@@ -94,7 +85,7 @@ export default function HomePage() {
                       : "inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] px-4 py-2.5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
                   }
                 >
-                  {c.label}
+                  {c.label.replace(/ Verify$/, "")}
                 </Link>
               ))}
               <Link

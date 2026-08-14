@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useId, useState, useTransition } from "react";
-import { getLiveStates, STATE_SCOPE_UI } from "@/lib/states/config";
+import { getLiveStates } from "@/lib/states/config";
 
 type SearchFormProps = {
   defaultQuery?: string;
@@ -158,7 +158,7 @@ export function SearchForm({
         <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Search state">
           {getLiveStates().map((s) => {
             const on = activeState === s.slug;
-            const hint = STATE_SCOPE_UI[s.slug]?.verifyHint || s.shortName;
+            const hint = s.scopeHint || s.shortName;
             return (
               <button
                 key={s.slug}

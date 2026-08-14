@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { getLiveStates, STATE_SCOPE_UI } from "@/lib/states/config";
+import {
+  getLiveStateCount,
+  getLiveStates,
+  verifyPathFor,
+  type EvidenceState,
+} from "@/lib/states/config";
 
 const accentBySlug: Record<string, string> = {
   fl: "border-[var(--accent)]/50 bg-[var(--accent-soft)]",
@@ -9,39 +14,40 @@ const accentBySlug: Record<string, string> = {
   wa: "border-teal-200 bg-teal-50/80",
   ca: "border-amber-200 bg-amber-50/80",
   az: "border-sky-200 bg-sky-50/80",
-  ky: "border-indigo-200 bg-indigo-50/80",
+  la: "border-rose-200 bg-rose-50/80",
+  ms: "border-indigo-200 bg-indigo-50/80",
+  ky: "border-amber-200 bg-amber-50/80",
 };
 
+function pathsFor(s: EvidenceState): { href: string; label: string }[] {
+  const verifyHref = verifyPathFor(s);
+  if (s.browseEnabled || s.depth === "full_journey") {
+    return [
+      { href: verifyHref, label: "Verify" },
+      { href: "/plan", label: "Plan" },
+      { href: "/florida", label: "Explore" },
+    ];
+  }
+  return [{ href: verifyHref, label: `${s.name} Verify` }];
+}
+
 /**
- * Multi-state evidence network map — FL full journey + Verify-first peers.
+ * Multi-state coverage grid — every live state from config (same set as Verify tabs).
  */
 export function StateLandscape() {
-  const states = getLiveStates().map((s) => {
-    const scope = STATE_SCOPE_UI[s.slug] || {
-      badge: s.pilot ? "Verify" : "Live",
-      summary: s.coverageNote || "Official public-record verify.",
-      verifyHint: "Verify",
-    };
-    const verifyHref = s.slug === "fl" ? "/verify" : `/verify?state=${s.slug}`;
-    const paths =
-      s.slug === "fl"
-        ? [
-            { href: "/verify", label: "Verify" },
-            { href: "/plan", label: "Plan" },
-            { href: "/#research", label: "Browse" },
-          ]
-        : [{ href: verifyHref, label: `${s.name} Verify` }];
+  const live = getLiveStates();
+  const count = getLiveStateCount();
 
-    return {
-      id: s.slug,
-      name: s.name,
-      badge: scope.badge,
-      summary: scope.summary,
-      href: verifyHref,
-      paths,
-      accent: accentBySlug[s.slug] || "border-[var(--border)] bg-white",
-    };
-  });
+  const states = live.map((s) => ({
+    id: s.slug,
+    name: s.name,
+    badge: s.badge,
+    scopeLine: s.scopeHint,
+    summary: s.coverageNote,
+    href: verifyPathFor(s),
+    paths: pathsFor(s),
+    accent: accentBySlug[s.slug] || "border-[var(--border)] bg-white",
+  }));
 
   return (
     <section
@@ -52,23 +58,22 @@ export function StateLandscape() {
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <div className="max-w-2xl">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
-            Multi-state evidence network
+            Where we have evidence
           </p>
           <h2
             id="states-heading"
             className="mt-1.5 text-lg font-semibold tracking-tight text-[var(--text)] sm:text-xl"
           >
-            Where we have evidence today
+            {count} live state{count === 1 ? "" : "s"} — same list as Verify
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
             <strong className="font-medium text-[var(--text)]">Florida</strong> is the full
-            product journey. Other states are{" "}
-            <strong className="font-medium text-[var(--text)]">Verify-first</strong> with honest
-            board scope — not “all contractors nationwide,” not a marketplace.
+            journey (verify, plan, browse). Other states are{" "}
+            <strong className="font-medium text-[var(--text)]">name and license Verify</strong>{" "}
+            with board-specific scope and honest limits.
           </p>
         </div>
 
-        {/* Mobile: horizontal snap strip; sm+: responsive grid */}
         <ul className="mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 sm:mt-6 sm:grid sm:snap-none sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:pb-0 lg:grid-cols-3 xl:grid-cols-4">
           {states.map((s) => (
             <li
@@ -81,7 +86,12 @@ export function StateLandscape() {
                   {s.badge}
                 </span>
               </div>
-              <p className="mt-2 flex-1 text-xs leading-relaxed text-[var(--muted)] sm:text-sm">
+              {s.scopeLine ? (
+                <p className="mt-1.5 text-xs font-medium leading-snug text-[var(--navy)] sm:text-[13px]">
+                  {s.scopeLine}
+                </p>
+              ) : null}
+              <p className="mt-1.5 flex-1 text-xs leading-relaxed text-[var(--muted)] sm:text-sm">
                 {s.summary}
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -100,8 +110,8 @@ export function StateLandscape() {
         </ul>
 
         <p className="mt-4 text-xs leading-relaxed text-[var(--muted)]">
-          Always confirm critical details on the official board before you hire. Coverage and
-          extract freshness differ by state.
+          Confirm critical details on the official board before you hire. Extract freshness
+          varies by state.
         </p>
       </div>
     </section>

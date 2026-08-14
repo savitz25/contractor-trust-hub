@@ -27,13 +27,29 @@ import { wiDspsPlainLabel } from "./wi-dsps";
 
 export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY" | "WI";
 
+/**
+ * Product depth — single source of truth for homepage badges, Verify, and coverage copy.
+ * - full_journey: Florida-style verify + plan + browse
+ * - verify: statewide (or broad) license Verify path
+ * - specialty_verify: specialty trades only / no statewide GC framing
+ * - pilot: Verify surface with explicit pilot limits
+ */
+export type StateProductDepth =
+  | "full_journey"
+  | "verify"
+  | "specialty_verify"
+  | "pilot";
+
 export type EvidenceState = {
   code: StateCode;
   slug: string;
+  /** Display name (e.g. Florida) */
   name: string;
   shortName: string;
-  /** Primary license board label */
+  /** Primary license board label (full) */
   boardLabel: string;
+  /** Short board label for chips / footer */
+  boardShortLabel: string;
   boardUrl: string;
   entityRegistryLabel: string;
   entityRegistryUrl: string;
@@ -44,13 +60,78 @@ export type EvidenceState = {
   /** Corporate entity source_system for high-confidence links */
   entitySource: string;
   live: boolean;
+  /** Product depth for badges and path framing */
+  depth: StateProductDepth;
   /**
-   * Optional honest coverage note for product UI (required for partial-coverage states).
+   * Honest plain-English coverage for homepage tiles and proof strip.
+   * Prefer short consumer language over long ingest notes.
    */
-  coverageNote?: string;
+  coverageNote: string;
+  /** Homepage / landscape badge (Full journey, Specialty, Statewide license, …) */
+  badge: string;
+  /** One-line scope hint under the name (e.g. TDLR + TSBPE plumbing) */
+  scopeHint: string;
+  /** County/trade browse product (Florida only today) */
+  browseEnabled: boolean;
   /** Pilot / partial product surface (e.g. NJ Verify-only) */
   pilot?: boolean;
 };
+
+/** Default depth badge when a state omits a custom badge (should not happen). */
+export function depthBadge(depth: StateProductDepth): string {
+  switch (depth) {
+    case "full_journey":
+      return "Full journey";
+    case "specialty_verify":
+      return "Specialty";
+    case "pilot":
+      return "Verify pilot";
+    case "verify":
+    default:
+      return "Statewide license";
+  }
+}
+
+/** Verify URL for a state slug or EvidenceState. */
+export function verifyPathFor(stateOrSlug: EvidenceState | string): string {
+  const slug =
+    typeof stateOrSlug === "string" ? stateOrSlug.toLowerCase() : stateOrSlug.slug;
+  if (slug === "fl" || slug === "florida") return "/verify";
+  return `/verify?state=${slug}`;
+}
+
+export function getLiveStateCount(): number {
+  return getLiveStates().length;
+}
+
+/** Live states excluding Florida (Verify-first peers). */
+export function getLiveVerifyPeerStates(): EvidenceState[] {
+  return getLiveStates().filter((s) => s.slug !== "fl");
+}
+
+/** "Florida, Texas, New Jersey, …" for prose that must stay in sync with tabs. */
+export function liveStatesPlainList(opts?: { short?: boolean }): string {
+  const names = getLiveStates().map((s) => (opts?.short ? s.shortName : s.name));
+  if (names.length === 0) return "";
+  if (names.length === 1) return names[0];
+  if (names.length === 2) return `${names[0]} and ${names[1]}`;
+  return `${names.slice(0, -1).join(", ")}, and ${names[names.length - 1]}`;
+}
+
+/** Compact "TX · NJ · OR" line for proof strips. */
+export function livePeerShortCodesLine(): string {
+  return getLiveVerifyPeerStates()
+    .map((s) => s.shortName)
+    .join(" · ");
+}
+
+/** Footer / homepage CTA links for every live Verify state. */
+export function getLiveVerifyNavLinks(): { href: string; label: string }[] {
+  return getLiveStates().map((s) => ({
+    href: verifyPathFor(s),
+    label: s.slug === "fl" ? "Florida Verify" : `${s.name} Verify`,
+  }));
+}
 
 export const EVIDENCE_STATES: Record<string, EvidenceState> = {
   fl: {
@@ -59,12 +140,19 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     name: "Florida",
     shortName: "FL",
     boardLabel: "Florida DBPR — Construction Industry Licensing Board",
+    boardShortLabel: "DBPR",
     boardUrl: "https://www2.myfloridalicense.com/construction-industry/",
     entityRegistryLabel: "Florida Division of Corporations (Sunbiz)",
     entityRegistryUrl: "https://dos.fl.gov/sunbiz/",
     licenseSource: "fl_dbpr",
     entitySource: "fl_sunbiz",
     live: true,
+    depth: "full_journey",
+    badge: "Full journey",
+    scopeHint: "Licenses · entity · plan · browse",
+    browseEnabled: true,
+    coverageNote:
+      "Full construction verification plus planning tools: DBPR licenses, Sunbiz entity links, discipline, discovery, plan, studios, and guides.",
   },
   tx: {
     code: "TX",
@@ -72,16 +160,20 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     name: "Texas",
     shortName: "TX",
     boardLabel: "Texas Department of Licensing and Regulation (TDLR)",
+    boardShortLabel: "TDLR + TSBPE",
     boardUrl: "https://www.tdlr.texas.gov/",
     entityRegistryLabel: "Texas SOS / Comptroller entity data (not yet linked)",
     entityRegistryUrl: "https://www.sos.state.tx.us/",
     licenseSource: "tx_tdlr",
     licenseSources: ["tx_tdlr", "tx_tsbpe"],
-    // No high-confidence statewide entity linker yet (unlike FL Sunbiz)
     entitySource: "tx_sos",
     live: true,
+    depth: "specialty_verify",
+    badge: "Specialty",
+    scopeHint: "TDLR trades + TSBPE plumbing",
+    browseEnabled: false,
     coverageNote:
-      "Texas does not issue a statewide general contractor license. Coverage is TDLR specialty trades plus TSBPE plumbing. Many general builders are city/county only.",
+      "Texas: specialty trades and plumbing only — no statewide general contractor license. Many builders are city/county only.",
   },
   nj: {
     code: "NJ",
@@ -89,16 +181,20 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     name: "New Jersey",
     shortName: "NJ",
     boardLabel: "New Jersey Division of Consumer Affairs (DCA) — HIC + specialty boards",
+    boardShortLabel: "DCA HIC + specialty",
     boardUrl: "https://www.njconsumeraffairs.gov/",
     entityRegistryLabel: "NJ business entity records (high-confidence only when linked)",
     entityRegistryUrl: "https://www.njportal.com/DOR/BusinessRecords/",
     licenseSource: "nj_dca",
     entitySource: "nj_sos",
-    // Verify pilot — controlled by feature flag (default on). Not Florida-depth.
     live: true,
     pilot: true,
+    depth: "specialty_verify",
+    badge: "Specialty",
+    scopeHint: "HIC + specialty boards",
+    browseEnabled: false,
     coverageNote:
-      "New Jersey does not issue a single statewide general contractor license. Coverage prioritizes Home Improvement Contractor (HIC) registrations (active Standard Files) plus specialty boards when loaded (electrical, telecom, alarm, locksmith, master plumber, master HVACR, hearth). Specialty inactive/expired rows are included when present; HIC inactive is not in Box Standard Files. Always confirm on the official DCA / MyLicense site.",
+      "New Jersey: home improvement + specialty boards — no single statewide GC license. Confirm on official DCA / MyLicense.",
   },
   or: {
     code: "OR",
@@ -106,14 +202,19 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     name: "Oregon",
     shortName: "OR",
     boardLabel: "Oregon Construction Contractors Board (CCB)",
+    boardShortLabel: "CCB",
     boardUrl: "https://www.oregon.gov/ccb/",
     entityRegistryLabel: "Oregon SOS business registry (not yet linked)",
     entityRegistryUrl: "https://sos.oregon.gov/business/Pages/default.aspx",
     licenseSource: "or_ccb",
     entitySource: "or_sos",
     live: true,
+    depth: "verify",
+    badge: "Statewide license",
+    scopeHint: "CCB active licenses",
+    browseEnabled: false,
     coverageNote:
-      "Oregon licenses contractors statewide through the CCB. This search uses the official Active Licenses open-data extract. Bond and insurance fields are as published — not a live certificate check. Always confirm on the official CCB site.",
+      "Oregon: statewide CCB active licenses. Bond and insurance fields as published — not a live certificate check.",
   },
   ca: {
     code: "CA",
@@ -121,16 +222,20 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     name: "California",
     shortName: "CA",
     boardLabel: "California Contractors State License Board (CSLB)",
+    boardShortLabel: "CSLB",
     boardUrl: "https://www.cslb.ca.gov/",
     entityRegistryLabel: "California SOS business entities (not yet linked)",
     entityRegistryUrl: "https://bizfileonline.sos.ca.gov/",
     licenseSource: "ca_cslb",
     entitySource: "ca_sos",
-    // Live once load + Verify path are ready (set true after production load)
     live: true,
     pilot: true,
+    depth: "verify",
+    badge: "Statewide license",
+    scopeHint: "CSLB high-impact counties",
+    browseEnabled: false,
     coverageNote:
-      "California statewide CSLB licensing. Current dataset prioritizes top high-impact counties from official CSLB list extracts. Always confirm live status on CSLB Instant License Check. Bond and workers’ comp fields are as published — not live certificates. No discipline invented from list files.",
+      "California: CSLB licenses from high-impact county extracts — not every county file. Confirm on Instant License Check.",
   },
   wa: {
     code: "WA",
@@ -138,6 +243,7 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     name: "Washington",
     shortName: "WA",
     boardLabel: "Washington Department of Labor & Industries (L&I)",
+    boardShortLabel: "L&I",
     boardUrl: "https://www.lni.wa.gov/",
     entityRegistryLabel: "Washington SOS business registry (not yet linked)",
     entityRegistryUrl: "https://www.sos.wa.gov/corps/",
@@ -145,8 +251,12 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     entitySource: "wa_sos",
     live: true,
     pilot: true,
+    depth: "verify",
+    badge: "Statewide license",
+    scopeHint: "L&I contractors",
+    browseEnabled: false,
     coverageNote:
-      "Washington licenses contractors statewide through L&I. This search uses the official contractor extract. Always confirm live status on L&I Verify. Not Florida-depth planning tools.",
+      "Washington: statewide L&I contractor extract. Always confirm live status on L&I Verify.",
   },
   az: {
     code: "AZ",
@@ -154,6 +264,7 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     name: "Arizona",
     shortName: "AZ",
     boardLabel: "Arizona Registrar of Contractors (ROC)",
+    boardShortLabel: "ROC",
     boardUrl: "https://roc.az.gov/",
     entityRegistryLabel: "Arizona Corporation Commission (not yet linked)",
     entityRegistryUrl: "https://ecorp.azcc.gov/",
@@ -161,8 +272,12 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     entitySource: "az_acc",
     live: true,
     pilot: true,
+    depth: "verify",
+    badge: "Statewide license",
+    scopeHint: "ROC active + discipline when linked",
+    browseEnabled: false,
     coverageNote:
-      "Arizona licenses contractors statewide through the ROC. This search uses the official current active contractor posting list (residential, commercial, and dual) plus linked disciplinary actions when present. Always confirm on the official ROC contractor search.",
+      "Arizona: statewide ROC active licenses plus disciplinary rows when linked. Confirm on the official ROC search.",
   },
   la: {
     code: "LA",
@@ -170,14 +285,19 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     name: "Louisiana",
     shortName: "LA",
     boardLabel: "Louisiana State Licensing Board for Contractors (LSLBC)",
+    boardShortLabel: "LSLBC",
     boardUrl: "https://arlspublic.lslbc.louisiana.gov/Public/Search",
     entityRegistryLabel: "Louisiana SOS business filings (not yet linked)",
     entityRegistryUrl: "https://coraweb.sos.la.gov/commercialsearch/commercialsearch.aspx",
     licenseSource: "la_lslbc",
     entitySource: "la_sos",
     live: true,
+    depth: "verify",
+    badge: "Statewide license",
+    scopeHint: "LSLBC public roster",
+    browseEnabled: false,
     coverageNote:
-      "Louisiana licenses contractors statewide through LSLBC. This search uses the official public Request Roster (Active commercial, residential, home improvement, and mold credentials). Trade classifications and qualifying parties are not on this export. No bond, insurance, or discipline fields. Always confirm on the official LSLBC lookup.",
+      "Louisiana: statewide LSLBC roster (commercial, residential, home improvement, mold when published). Confirm on official lookup.",
   },
   ms: {
     code: "MS",
@@ -185,14 +305,19 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     name: "Mississippi",
     shortName: "MS",
     boardLabel: "Mississippi State Board of Contractors (MSBOC)",
+    boardShortLabel: "MSBOC",
     boardUrl: "http://search.msboc.us/ConsolidatedSearch.cfm",
     entityRegistryLabel: "Mississippi SOS business filings (not yet linked)",
     entityRegistryUrl: "https://www.sos.ms.gov/business-services",
     licenseSource: "ms_sbc",
     entitySource: "ms_sos",
     live: true,
+    depth: "verify",
+    badge: "Statewide license",
+    scopeHint: "MSBOC commercial / residential",
+    browseEnabled: false,
     coverageNote:
-      "Mississippi licenses contractors statewide through the State Board of Contractors. This search uses official MSBOC public list-view credentials (commercial / residential type, status, location). Specialty class codes and qualifying parties only when published. No bond, insurance, or discipline fields. Always confirm on the official board lookup.",
+      "Mississippi: statewide MSBOC list (commercial / residential as published). Confirm on the official board lookup.",
   },
   ky: {
     code: "KY",
@@ -200,14 +325,19 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     name: "Kentucky",
     shortName: "KY",
     boardLabel: "Kentucky Department of Housing, Buildings and Construction (DHBC)",
+    boardShortLabel: "DHBC",
     boardUrl: "https://dhbc.ky.gov/Search/HBC_List_Licensees.aspx",
     entityRegistryLabel: "Kentucky SOS business filings (not yet linked)",
     entityRegistryUrl: "https://web.sos.ky.gov/ftsearch/",
     licenseSource: "ky_dhbc",
     entitySource: "ky_sos",
     live: true,
+    depth: "specialty_verify",
+    badge: "Specialty",
+    scopeHint: "Electrical · HVAC · plumbing",
+    browseEnabled: false,
     coverageNote:
-      "Kentucky does not issue a statewide general contractor license. DHBC coverage is specialty trades only (electrical, HVAC, and plumbing contractor credentials in this load). Many general builders are city/county only. Always confirm on the official DHBC search.",
+      "Kentucky: DHBC specialty trades only (electrical, HVAC, plumbing) — no statewide general contractor license.",
   },
   wi: {
     code: "WI",
@@ -215,14 +345,19 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     name: "Wisconsin",
     shortName: "WI",
     boardLabel: "Wisconsin Department of Safety and Professional Services (DSPS)",
+    boardShortLabel: "DSPS",
     boardUrl: "https://license.wi.gov/s/license-lookup",
     entityRegistryLabel: "Wisconsin DFI business filings (not yet linked)",
     entityRegistryUrl: "https://apps.dfi.wi.gov/apps/corpsearch/search.aspx",
     licenseSource: "wi_dsps",
     entitySource: "wi_dfi",
     live: false,
+    depth: "specialty_verify",
+    badge: "Specialty",
+    scopeHint: "Dwelling + trade credentials",
+    browseEnabled: false,
     coverageNote:
-      "Wisconsin does not issue a statewide commercial general contractor license. DSPS coverage is Dwelling Contractor (1–2 family building permits) plus trade credentials such as Electrical Contractor and HVAC Contractor. Missing from this search does not mean unlicensed. Always confirm on the official LicensE lookup.",
+      "Wisconsin: no statewide commercial GC. DSPS dwelling contractor plus trade credentials when loaded. Not live in Verify yet.",
   },
 };
 
@@ -350,69 +485,20 @@ export function occupationLabel(code: string | null | undefined): string {
   );
 }
 
-/** Short scope labels for homepage / pickers (honest, not marketing). */
+/**
+ * @deprecated Prefer fields on EvidenceState (badge, coverageNote, scopeHint).
+ * Kept as a derived map so older imports keep working.
+ */
 export const STATE_SCOPE_UI: Record<
   string,
   { badge: string; summary: string; verifyHint: string }
-> = {
-  fl: {
-    badge: "Full journey",
-    summary:
-      "Full construction verification plus planning tools: licenses, Sunbiz entity links, discipline, discovery, plan, studios, and guides.",
-    verifyHint: "Full construction licenses",
-  },
-  tx: {
-    badge: "Specialty verify",
-    summary:
-      "TDLR specialty trades and TSBPE plumbing. No statewide general contractor license — not a full builder directory.",
-    verifyHint: "TDLR + TSBPE plumbing",
-  },
-  nj: {
-    badge: "HIC + specialty",
-    summary:
-      "Home Improvement Contractor registrations plus specialty boards (electrical, plumbing, HVACR, and related). No single statewide GC license.",
-    verifyHint: "HIC + specialty boards",
-  },
-  or: {
-    badge: "CCB statewide",
-    summary:
-      "Oregon CCB active contractor licenses statewide. Bond and insurance fields as published — not a live COI check.",
-    verifyHint: "CCB statewide licenses",
-  },
-  wa: {
-    badge: "L&I statewide",
-    summary:
-      "Washington L&I contractor licensing extract statewide. Always confirm live status on L&I Verify.",
-    verifyHint: "L&I contractors",
-  },
-  ca: {
-    badge: "CSLB counties",
-    summary:
-      "CSLB licenses from official public list extracts for high-impact counties — not every California county file.",
-    verifyHint: "CSLB high-impact counties",
-  },
-  az: {
-    badge: "ROC + discipline",
-    summary:
-      "Arizona ROC statewide active licenses plus linked disciplinary actions when present. Confirm on ROC contractor search.",
-    verifyHint: "ROC statewide + discipline",
-  },
-  la: {
-    badge: "LSLBC statewide",
-    summary:
-      "Louisiana LSLBC official public roster — Active commercial, residential, home improvement, and mold. Confirm on the official lookup.",
-    verifyHint: "LSLBC statewide licenses",
-  },
-  ms: {
-    badge: "MSBOC statewide",
-    summary:
-      "Mississippi State Board of Contractors official exported list. Commercial / residential as published. Confirm on the official board lookup.",
-    verifyHint: "MSBOC statewide licenses",
-  },
-  ky: {
-    badge: "DHBC specialty",
-    summary:
-      "Kentucky DHBC specialty trades only — electrical, HVAC, and plumbing contractor credentials. No statewide general contractor license.",
-    verifyHint: "DHBC specialty trades",
-  },
-};
+> = Object.fromEntries(
+  Object.values(EVIDENCE_STATES).map((s) => [
+    s.slug,
+    {
+      badge: s.badge || depthBadge(s.depth),
+      summary: s.coverageNote,
+      verifyHint: s.scopeHint,
+    },
+  ])
+);

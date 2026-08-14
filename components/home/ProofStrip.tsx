@@ -1,28 +1,43 @@
 import Link from "next/link";
-
-const proofs = [
-  {
-    title: "Florida full journey",
-    body: "DBPR licenses, high-confidence Sunbiz links, discipline, discovery, plan, studios, and guides.",
-  },
-  {
-    title: "Six Verify-first states",
-    body: "TX specialty · NJ HIC + specialty · OR CCB · WA L&I · CA CSLB counties · AZ ROC + discipline.",
-  },
-  {
-    title: "Official extracts only",
-    body: "Board posting lists and open data — no invented coverage, no paid rankings, no lead board.",
-  },
-  {
-    title: "Honest limits",
-    body: "Scope differs by state. Always confirm status on the official board before you hire.",
-  },
-] as const;
+import {
+  getLiveStateCount,
+  getLiveVerifyPeerStates,
+  livePeerShortCodesLine,
+} from "@/lib/states/config";
 
 /**
- * Restrained credibility strip — factual, multi-state, no vanity metrics.
+ * Credibility strip — counts and peer list driven by live config.
  */
 export function ProofStrip() {
+  const liveCount = getLiveStateCount();
+  const peerCount = getLiveVerifyPeerStates().length;
+  const peerLine = livePeerShortCodesLine();
+
+  const proofs = [
+    {
+      title: "Florida full journey",
+      body: "DBPR licenses, Sunbiz entity links, discipline, map & county browse, plan tools, and guides.",
+    },
+    {
+      title:
+        peerCount > 0
+          ? `${peerCount} Verify-first state${peerCount === 1 ? "" : "s"}`
+          : "Multi-state Verify",
+      body:
+        peerCount > 0
+          ? `${peerLine} — name and license search with board-specific scope and honest limits.`
+          : "Additional states use Verify when loaded.",
+    },
+    {
+      title: "Official extracts",
+      body: "Built from board posting lists and open data. No paid placement in results.",
+    },
+    {
+      title: "Confirm before hire",
+      body: "Use Trust Reports to prepare questions, then verify final status on the official board.",
+    },
+  ] as const;
+
   return (
     <section
       aria-labelledby="proof-heading"
@@ -34,12 +49,14 @@ export function ProofStrip() {
             id="proof-heading"
             className="text-xl font-semibold tracking-tight text-[var(--text)] sm:text-2xl"
           >
-            Built for evidence, not opinions
+            Grounded in official public records
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-            A multi-state evidence network grounded in official public records. Florida is deepest.
-            Other states are Verify-first with board-specific scope — not “all contractors
-            nationwide.”
+            License evidence from board extracts across{" "}
+            <strong className="font-medium text-[var(--text)]">
+              {liveCount} live state{liveCount === 1 ? "" : "s"}
+            </strong>
+            . Florida is deepest; peers are Verify-first with board-specific scope.
           </p>
         </div>
 
