@@ -124,9 +124,12 @@ export function resolveDiscoverySegment(
 
 export function discoveryPath(
   state: DiscoveryStateConfig,
-  parts?: { countySlug?: string; tradeSlug?: string }
+  parts?: { countySlug?: string; tradeSlug?: string; citySlug?: string }
 ): string {
   const base = `/${state.publicSlug}`;
+  if (parts?.countySlug && parts?.citySlug && parts?.tradeSlug) {
+    return `${base}/${parts.countySlug}/${parts.citySlug}/${parts.tradeSlug}`;
+  }
   if (parts?.countySlug && parts?.tradeSlug) {
     return `${base}/${parts.countySlug}/${parts.tradeSlug}`;
   }

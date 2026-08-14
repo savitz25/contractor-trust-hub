@@ -31,6 +31,17 @@ export type SearchResult = {
   sourceSystem?: string | null;
   /** Published extra signal (e.g. Oregon bond/insurance listed) */
   secondaryStatus?: string | null;
+  /**
+   * Other licenses / qualifier profiles rolled into this firm card
+   * (high-confidence same Sunbiz entity only).
+   */
+  relatedProfiles?: {
+    slug: string;
+    displayName: string;
+    occupationCode: string | null;
+    licenseKey: string | null;
+    licenseStatus: LicenseStatus | null;
+  }[];
 };
 
 export type LicenseDetail = {

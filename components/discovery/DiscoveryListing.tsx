@@ -15,6 +15,7 @@ export function DiscoveryListing({
   browseLabel = "Back to Florida browse",
   hideEntityWhenMissing = false,
   profileQuery,
+  querySuffix = "",
 }: {
   results: SearchResult[];
   total: number;
@@ -27,6 +28,8 @@ export function DiscoveryListing({
   browseLabel?: string;
   hideEntityWhenMissing?: boolean;
   profileQuery?: string;
+  /** Extra query string (filters/sort) without leading ? */
+  querySuffix?: string;
 }) {
   const totalPages = Math.max(1, Math.ceil(total / DISCOVERY_PAGE_SIZE));
   const safePage = Math.min(Math.max(1, page), totalPages);
@@ -99,7 +102,7 @@ export function DiscoveryListing({
         >
           {safePage > 1 && (
             <Link
-              href={pageHref(basePath, safePage - 1)}
+              href={pageHref(basePath, safePage - 1, querySuffix)}
               className="inline-flex min-h-11 min-w-[5.5rem] items-center justify-center rounded-lg border border-[var(--border)] px-4 text-sm text-[var(--text)] no-underline hover:bg-[var(--panel)]"
             >
               Previous
@@ -110,7 +113,7 @@ export function DiscoveryListing({
           </span>
           {safePage < totalPages && (
             <Link
-              href={pageHref(basePath, safePage + 1)}
+              href={pageHref(basePath, safePage + 1, querySuffix)}
               className="inline-flex min-h-11 min-w-[5.5rem] items-center justify-center rounded-lg border border-[var(--border)] px-4 text-sm text-[var(--text)] no-underline hover:bg-[var(--panel)]"
             >
               Next
@@ -122,7 +125,11 @@ export function DiscoveryListing({
   );
 }
 
-function pageHref(basePath: string, page: number): string {
-  if (page <= 1) return basePath;
-  return `${basePath}?page=${page}`;
+function pageHref(basePath: string, page: number, extra = ""): string {
+  const params = extra.startsWith("?") ? extra.slice(1) : extra;
+  const p = new URLSearchParams(params);
+  if (page <= 1) p.delete("page");
+  else p.set("page", String(page));
+  const q = p.toString();
+  return q ? `${basePath}?${q}` : basePath;
 }

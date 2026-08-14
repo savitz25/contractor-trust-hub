@@ -7,6 +7,7 @@ export function discoveryMetadata(opts: {
   state: DiscoveryStateConfig;
   county?: CountyDef | null;
   trade?: TradeDef | null;
+  citySlug?: string | null;
   title: string;
   description: string;
   /** Pagination and empty utility views should not compete with page 1. */
@@ -14,6 +15,7 @@ export function discoveryMetadata(opts: {
 }): Metadata {
   const path = discoveryPath(opts.state, {
     countySlug: opts.county?.slug,
+    citySlug: opts.citySlug || undefined,
     tradeSlug: opts.trade?.slug,
   });
   return pageMetadata({

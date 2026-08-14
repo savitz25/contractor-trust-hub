@@ -4,7 +4,13 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/discovery/Breadcrumbs";
 import { DiscoveryDisclaimer } from "@/components/discovery/DiscoveryDisclaimer";
 import { FloridaBrowseSection } from "@/components/discovery/FloridaBrowseSection";
-import { browseIsVariant, parseBrowseParams } from "@/lib/discovery/browse";
+import {
+  browseIsVariant,
+  CITY_INDEX_MIN,
+  cityLabelFromSlug,
+  cityToSlug,
+  parseBrowseParams,
+} from "@/lib/discovery/browse";
 import {
   discoveryPath,
   getCounty,
@@ -20,45 +26,61 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 type Props = {
-  params: Promise<{ segment: string; trade: string }>;
+  params: Promise<{ segment: string; city: string; trade: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
-  const { segment, trade: tradeSlug } = await params;
+  const { segment, city: rawCity, trade: tradeSlug } = await params;
   const sp = await searchParams;
   const browse = parseBrowseParams(sp);
+  const citySlug = cityToSlug(rawCity);
   const state = getDiscoveryState(PUBLIC);
-  if (!state) return { title: "Not found", robots: { index: false } };
+  if (!state || !citySlug) return { title: "Not found", robots: { index: false } };
   const county = getCounty(state, segment);
   const trade = getTrade(state, tradeSlug);
   if (!county || !trade) return { title: "Not found", robots: { index: false } };
+
+  const { stats } = await listFloridaBrowse({
+    county,
+    trade,
+    browse: { ...browse, citySlug, page: 1 },
+    pathCitySlug: citySlug,
+  });
+  const cityLabel = cityLabelFromSlug(citySlug);
+  const thin = stats.firms < CITY_INDEX_MIN;
 
   return discoveryMetadata({
     state,
     county,
     trade,
-    title: `${trade.title} in ${county.name} County FL — License Evidence`,
-    description: `Florida ${trade.title.toLowerCase()} with DBPR licenses linked to ${county.name} County. Filter by city, status, Sunbiz link, and discipline — independent research, not a marketplace.`,
-    noIndex: browseIsVariant(browse),
+    citySlug,
+    title: `${trade.title} in ${cityLabel}, ${county.name} County FL — License Evidence`,
+    description: `Florida ${trade.title.toLowerCase()} with DBPR licenses listing ${cityLabel} in ${county.name} County. Evidence browse — not a ranking or marketplace.`,
+    noIndex: thin || browseIsVariant(browse, true),
   });
 }
 
-export default async function FloridaCountyTradePage({ params, searchParams }: Props) {
-  const { segment, trade: tradeSlug } = await params;
+export default async function FloridaCityTradePage({ params, searchParams }: Props) {
+  const { segment, city: rawCity, trade: tradeSlug } = await params;
   const sp = await searchParams;
   const browse = parseBrowseParams(sp);
+  const citySlug = cityToSlug(rawCity);
   const state = getDiscoveryState(PUBLIC);
-  if (!state) notFound();
+  if (!state || !citySlug) notFound();
 
   const county = getCounty(state, segment);
   const trade = getTrade(state, tradeSlug);
   if (!county || !trade) notFound();
 
   const [{ results, total, stats }, cities] = await Promise.all([
-    listFloridaBrowse({ county, trade, browse }),
+    listFloridaBrowse({ county, trade, browse, pathCitySlug: citySlug }),
     listFloridaCities(county, trade),
   ]);
+
+  if (total === 0) notFound();
+
+  const cityLabel = cityLabelFromSlug(citySlug);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
@@ -67,43 +89,41 @@ export default async function FloridaCountyTradePage({ params, searchParams }: P
           { label: "Home", href: "/" },
           { label: "Florida", href: discoveryPath(state) },
           { label: county.name, href: discoveryPath(state, { countySlug: county.slug }) },
-          { label: trade.label },
+          {
+            label: trade.label,
+            href: discoveryPath(state, { countySlug: county.slug, tradeSlug: trade.slug }),
+          },
+          { label: cityLabel },
         ]}
       />
 
       <header className="mt-4 border-b border-[var(--border)] pb-6">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
-          Florida · {county.name} · {trade.label}
+          Florida · {county.name} · {cityLabel} · {trade.label}
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)] sm:text-4xl">
-          {trade.title} in {county.name} County
+          {trade.title} in {cityLabel}
         </h1>
-        <div className="mt-4 flex flex-wrap gap-3 text-sm">
+        <p className="mt-3 text-sm">
           <Link
-            href={discoveryPath(state, { countySlug: county.slug })}
+            href={discoveryPath(state, { countySlug: county.slug, tradeSlug: trade.slug })}
             className="text-[var(--accent)]"
           >
-            All trades in {county.name}
+            All {trade.label} in {county.name} County
           </Link>
-          <span className="text-[var(--border)]">·</span>
-          <Link
-            href={discoveryPath(state, { tradeSlug: trade.slug })}
-            className="text-[var(--accent)]"
-          >
-            {trade.label} statewide
-          </Link>
-          <span className="text-[var(--border)]">·</span>
+          {" · "}
           <Link href="/verify" className="text-[var(--accent)]">
             Search
           </Link>
-        </div>
+        </p>
       </header>
 
       <FloridaBrowseSection
         state={state}
         county={county}
         trade={trade}
-        browse={browse}
+        pathCitySlug={citySlug}
+        browse={{ ...browse, citySlug }}
         results={results}
         total={total}
         stats={stats}

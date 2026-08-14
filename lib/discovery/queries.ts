@@ -64,7 +64,7 @@ function tradeHasExtraFilters(trade?: TradeDef | null): boolean {
   return Boolean(trade?.classCodes?.length || trade?.descriptionIncludes?.length);
 }
 
-function buildFilterClause(opts: {
+export function buildFilterClause(opts: {
   licenseSource: string;
   stateCode: string;
   occupationCodes?: string[] | null;

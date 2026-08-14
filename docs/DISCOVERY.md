@@ -12,8 +12,11 @@ Public paths use a full state name slug (SEO-friendly):
 | `/{state}/{county}` | `/florida/miami-dade` | County browse + trade facets |
 | `/{state}/{trade}` | `/florida/roofers` | Statewide trade browse + county facets |
 | `/{state}/{county}/{trade}` | `/florida/miami-dade/roofers` | Combined high-value SEO page |
+| `/{state}/{county}/{city}/{trade}` | `/florida/broward/fort-lauderdale/air-conditioning` | Florida city landing (indexed only when enough records) |
 
 Single segments under `/{state}/` are resolved as **county first, then trade** via curated slug registries (no collision in the Florida set).
+
+Query filters (`?status=`, `?city=`, `?sort=`, `?page=`, …) are **noindex**. Clean county + trade and qualifying city + trade URLs stay indexable.
 
 Future example: `/new-jersey/bergen/roofers` once NJ is `live: true` in discovery config.
 
@@ -45,7 +48,43 @@ Evidence DB keys still use short codes (`fl`) via `evidenceSlug` → `lib/states
 - County filter: case-insensitive match on `licenses.county_name` / `contractors.primary_county` using curated `matchNames`.
 - Trade filter: `occupation_code = ANY(trade.occupationCodes)`.
 - Sunbiz on cards: same high-confidence rule (`role = sunbiz_entity`, `confidence >= 0.90`).
-- Ordering: active/current licenses first, then name — **not** a quality ranking.
+
+## Florida browse (filters, sort, roll-up)
+
+Florida county / trade / city pages use `lib/discovery/florida-list.ts`. Other discovery states still use `listDiscoveryContractors`.
+
+### Filters (evidence fields only)
+
+| Query | Values | Meaning |
+|-------|--------|---------|
+| `city` | city slug | License / primary city on the extract |
+| `status` | `any` (default), `active`, `inactive` | Published license status |
+| `entity` | `any`, `linked`, `unlinked` | High-confidence Sunbiz link only |
+| `discipline` | `any`, `present`, `none` | Linked board action in our extract |
+| `tenure` | `any`, `lt5`, `5to15`, `gt15` | `original_licensure_date` bands when present |
+
+No quality scores. Unknown issue dates are excluded from tenure bands.
+
+### Browse order (disclosed, not a ranking)
+
+| `sort` | Order |
+|--------|--------|
+| `name` (default) | Display name A–Z |
+| `longest` | Earliest original issue date first |
+| `updated` | Most recently verified in our extract |
+| `entity` | High-confidence Sunbiz link first, then name |
+
+On-page copy must say this is browse order, not a ranking or paid placement.
+
+### Firm roll-up
+
+When two contractor rows share the **same high-confidence Sunbiz entity**, they appear as **one card**. Extra credentials show as badges that still open the license-level Trust Report.
+
+Do **not** merge on name or DBA alone. Unlinked rows stay separate (`solo:{contractor_id}`).
+
+### City pages
+
+Indexed only when the city + county + trade slice has at least **8** contractor rows (`CITY_INDEX_MIN`). Thinner city URLs render when they have any matches but stay `noindex`. City slugs are normalized from the published license city (`Fort Lauderdale` → `fort-lauderdale`).
 
 ## Indexes
 

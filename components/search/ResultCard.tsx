@@ -375,6 +375,31 @@ export function ResultCard({
           ) : null}
         </div>
 
+        {result.relatedProfiles && result.relatedProfiles.length > 0 ? (
+          <div className="mt-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+              Same firm · additional credentials
+            </p>
+            <ul className="mt-1.5 flex flex-wrap gap-1.5">
+              {result.relatedProfiles.slice(0, 6).map((rel) => (
+                <li key={`${rel.slug}-${rel.licenseKey || ""}`}>
+                  <Link
+                    href={`/contractors/${encodeURIComponent(rel.slug)}`}
+                    className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--bg)] px-2.5 py-1 text-[11px] font-medium text-[var(--navy)] no-underline hover:border-[var(--navy)]/30"
+                  >
+                    {occupationLabel(rel.occupationCode)}
+                    {rel.licenseKey ? (
+                      <span className="ml-1 font-mono text-[10px] text-[var(--muted)]">
+                        {rel.licenseKey.replace(/^FL-DBPR:/i, "")}
+                      </span>
+                    ) : null}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
         <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
           <Link
             href={profileHref}
