@@ -721,6 +721,13 @@ export function primaryLicense(contractor: ContractorDetail): LicenseDetail | un
 /** Official board verify / search URL for actions. */
 export function officialBoardVerifyUrl(contractor: ContractorDetail): string {
   const slug = homeSlug(contractor);
+  const home = (contractor.homeState || "").toUpperCase();
+  // evidenceSlugFromHomeState defaults unknown to fl — never send non-FL profiles to DBPR
+  const treatAsFl = slug === "fl" && (!home || home === "FL");
+  if (!treatAsFl && slug === "fl") {
+    if (home === "ID") return "https://dopl.idaho.gov/";
+    return "https://www.usa.gov/state-consumer";
+  }
   switch (slug) {
     case "tx":
       return (contractor.licenses[0]?.sourceSystem || "").toLowerCase() === "tx_tsbpe"
@@ -745,12 +752,22 @@ export function officialBoardVerifyUrl(contractor: ContractorDetail): string {
     case "wi":
       return "https://license.wi.gov/s/license-lookup";
     default:
-      return "https://www2.myfloridalicense.com/construction-industry/";
+      return treatAsFl
+        ? "https://www2.myfloridalicense.com/construction-industry/"
+        : "https://www.usa.gov/state-consumer";
   }
 }
 
 export function officialBoardVerifyLabel(contractor: ContractorDetail): string {
   const slug = homeSlug(contractor);
+  const home = (contractor.homeState || "").toUpperCase();
+  const treatAsFl = slug === "fl" && (!home || home === "FL");
+  if (!treatAsFl && slug === "fl") {
+    if (home === "ID") return "Open official Idaho DOPL";
+    return home
+      ? `Open official ${home} board search`
+      : "Open official board search";
+  }
   switch (slug) {
     case "tx":
       return "Open official TDLR / TSBPE search";
@@ -773,6 +790,6 @@ export function officialBoardVerifyLabel(contractor: ContractorDetail): string {
     case "wi":
       return "Open official LicensE lookup";
     default:
-      return "Open official DBPR search";
+      return treatAsFl ? "Open official DBPR search" : "Open official board search";
   }
 }
