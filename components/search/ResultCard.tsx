@@ -115,10 +115,13 @@ function displayLicenseKey(
 export function ResultCard({
   result,
   hideEntityWhenMissing = false,
+  profileQuery,
 }: {
   result: SearchResult;
   /** Specialty / pilot states without entity linking */
   hideEntityWhenMissing?: boolean;
+  /** Extra query string for Trust Report links (e.g. project=kitchen-remodel) */
+  profileQuery?: string;
 }) {
   const isTx = isTexasResult(result);
   const isNj = isNjResult(result);
@@ -161,6 +164,9 @@ export function ResultCard({
             : occupationLabel(result.occupationCode);
   const officialSuffix = isTx ? txTradeOfficialSuffix(result.occupationCode) : null;
   const shortKey = displayLicenseKey(result, isTx, isNj);
+  const profileHref = `/contractors/${encodeURIComponent(result.slug)}${
+    profileQuery ? `?${profileQuery.replace(/^\?/, "")}` : ""
+  }`;
 
   return (
     <article className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] shadow-[var(--shadow-sm)] transition hover:border-[var(--navy)]/20 hover:shadow-[var(--shadow-md)]">
@@ -260,7 +266,7 @@ export function ResultCard({
           <div className="min-w-0">
             <h2 className="text-[15px] font-semibold leading-snug text-[var(--text)] sm:text-lg">
               <Link
-                href={`/contractors/${encodeURIComponent(result.slug)}`}
+                href={profileHref}
                 className="text-[var(--text)] no-underline hover:text-[var(--navy)]"
               >
                 {result.displayName}
@@ -356,7 +362,7 @@ export function ResultCard({
               {result.secondaryStatus || "Arizona ROC current active posting list"}
             </p>
           ) : null}
-          {(result.entityName || location) && !isTx && !isNj && !isOr && !isAz && !isWa ? (
+          {(result.entityName || location) && !isTx && !isNj && !isOr && !isAz && !isWa && !isLa && !isMs ? (
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
               {result.entityName ? (
                 <span className="text-[var(--text)]/80">Entity: {result.entityName}</span>
@@ -364,14 +370,14 @@ export function ResultCard({
               {result.entityName && location ? " · " : null}
               {location ? <span>{location}</span> : null}
             </p>
-          ) : location && (isTx || isNj || isOr || isAz || isWa) ? (
+          ) : location && (isTx || isNj || isOr || isAz || isWa || isLa || isMs) ? (
             <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">{location}</p>
           ) : null}
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
           <Link
-            href={`/contractors/${encodeURIComponent(result.slug)}`}
+            href={profileHref}
             className="inline-flex min-h-10 items-center rounded-xl bg-[var(--navy)] px-3.5 text-xs font-semibold text-white no-underline sm:min-h-0 sm:bg-transparent sm:px-0 sm:font-medium sm:text-[var(--accent)] sm:hover:underline"
           >
             Open Trust Report
