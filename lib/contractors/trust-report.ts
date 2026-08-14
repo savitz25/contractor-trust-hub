@@ -607,10 +607,13 @@ export function buildConsumerMeaning(contractor: ContractorDetail): HiringPoint[
   } else if (lic && (slug === "fl" || slug === "ca" || slug === "az" || slug === "wa" || slug === "la" || slug === "ms")) {
     const occ = getOccupationInfo(lic.occupationCode);
     if (occ?.label && occ.label !== "Construction license") {
+      const note = (occ.notes || "").trim();
       points.push({
         id: "scope",
         label: "Class / type on file",
-        text: `${occ.label}${occ.notes ? `. ${occ.notes}` : ""}. Confirm scope for your project on the official board.`,
+        text: note
+          ? `${occ.label}. ${note}`
+          : `${occ.label}. Confirm scope for your project on the official board.`,
         tone: "neutral",
       });
     }
