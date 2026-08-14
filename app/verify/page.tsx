@@ -11,6 +11,7 @@ import { OregonCoverageBanner } from "@/components/search/OregonCoverageBanner";
 import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
 import { LouisianaCoverageBanner } from "@/components/search/LouisianaCoverageBanner";
 import { MississippiCoverageBanner } from "@/components/search/MississippiCoverageBanner";
+import { KentuckyCoverageBanner } from "@/components/search/KentuckyCoverageBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { searchContractors } from "@/lib/contractors/queries";
 import { pageMetadata } from "@/lib/seo/page-meta";
@@ -95,6 +96,14 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       path: "/verify?state=ms",
     });
   }
+  if (state.slug === "ky") {
+    return pageMetadata({
+      title: "Verify a Kentucky specialty contractor (DHBC)",
+      description:
+        "Search Kentucky DHBC electrical, HVAC, and plumbing contractor credentials. No statewide general contractor license. Evidence only — not a marketplace.",
+      path: "/verify?state=ky",
+    });
+  }
   return pageMetadata({
     title: "Verify a Florida contractor",
     description:
@@ -114,7 +123,8 @@ export default async function VerifyPage({ searchParams }: Props) {
   const isWa = state.slug === "wa";
   const isLa = state.slug === "la";
   const isMs = state.slug === "ms";
-  const isSpecialty = isTx || isNj || isOr || isCa || isAz || isWa || isLa || isMs;
+  const isKy = state.slug === "ky";
+  const isSpecialty = isTx || isNj || isOr || isCa || isAz || isWa || isLa || isMs || isKy;
   const q = (sp.q || "").trim();
   const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
   let results: Awaited<ReturnType<typeof searchContractors>>["results"] = [];
@@ -159,6 +169,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                 ? "Louisiana · LSLBC statewide licenses"
                 : isMs
                   ? "Mississippi · MSBOC statewide licenses"
+                  : isKy
+                    ? "Kentucky · DHBC specialty trades"
             : "Florida · DBPR + Sunbiz";
 
   const heading = isNj
@@ -177,6 +189,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                 ? "Verify a Louisiana contractor"
                 : isMs
                   ? "Verify a Mississippi contractor"
+                  : isKy
+                    ? "Verify a Kentucky specialty contractor"
             : "Verify a Florida contractor";
 
   const lead = isNj
@@ -195,6 +209,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                 ? "Search LSLBC licenses by number or business name. Result cards show published type, Active status, and parish — then open a Trust Report."
                 : isMs
                   ? "Search MSBOC licenses by number or business name. Result cards show commercial / residential type, published status, and MC / SC when on the number."
+                  : isKy
+                    ? "Search DHBC electrical, HVAC, and plumbing contractor credentials by number or name. Kentucky has no statewide GC license — a miss does not mean unlicensed."
             : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
 
   const helpCards = isNj
@@ -287,6 +303,51 @@ export default async function VerifyPage({ searchParams }: Props) {
                     d: "Status, trade class when published, location — then a Trust Report. Confirm on L&I Verify.",
                   },
                 ]
+            : isLa
+              ? [
+                  {
+                    t: "LSLBC license number",
+                    d: "Louisiana license numbers from cards or contracts are most precise.",
+                  },
+                  {
+                    t: "Business name",
+                    d: "Matches business names in the official LSLBC public roster.",
+                  },
+                  {
+                    t: "What you’ll see",
+                    d: "Published type, Active status, parish — then a Trust Report. Confirm on the official lookup.",
+                  },
+                ]
+              : isMs
+                ? [
+                    {
+                      t: "MSBOC license number",
+                      d: "Mississippi numbers such as 22954-MC are most precise.",
+                    },
+                    {
+                      t: "Business name",
+                      d: "Matches business names in the official MSBOC exported list.",
+                    },
+                    {
+                      t: "What you’ll see",
+                      d: "Commercial / residential type, published status, and MC / SC when on the number.",
+                    },
+                  ]
+                : isKy
+                  ? [
+                      {
+                        t: "DHBC license number",
+                        d: "Electrical (CE…), HVAC (HM…), and plumbing (M…) numbers from cards or invoices are most precise.",
+                      },
+                      {
+                        t: "Name or DBA",
+                        d: "Matches licensee and DBA names on the official DHBC contractor-type list.",
+                      },
+                      {
+                        t: "What you’ll see",
+                        d: "Published specialty type, Active status, and dates — then a Trust Report. Not a statewide GC directory.",
+                      },
+                    ]
       : [
           {
             t: "License number",
@@ -350,6 +411,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                           ? "LSLBC statewide"
                           : s.slug === "ms"
                             ? "MSBOC statewide"
+                            : s.slug === "ky"
+                              ? "DHBC specialty"
                   : s.slug === "fl"
                     ? "Full journey"
                     : null;
@@ -419,6 +482,11 @@ export default async function VerifyPage({ searchParams }: Props) {
           <MississippiCoverageBanner showFloridaLink={!q} />
         </div>
       ) : null}
+      {isKy ? (
+        <div className="mt-4 max-w-3xl sm:mt-5">
+          <KentuckyCoverageBanner showFloridaLink={!q} />
+        </div>
+      ) : null}
 
       <div className="mt-5 max-w-3xl sm:mt-7">
         <SearchForm
@@ -440,6 +508,12 @@ export default async function VerifyPage({ searchParams }: Props) {
                     ? "Arizona ROC current active posting list. Confirm on official ROC contractor search. Missing ≠ unlicensed."
                     : isWa
                       ? "Washington L&I contractor extract. Confirm on official L&I Verify. Missing ≠ unlicensed."
+                      : isLa
+                        ? "Louisiana LSLBC official public roster. Confirm on the official lookup. Missing ≠ unlicensed."
+                        : isMs
+                          ? "Mississippi MSBOC official exported list. Confirm on the official board lookup. Missing ≠ unlicensed."
+                          : isKy
+                            ? "Kentucky DHBC specialty trades only — electrical, HVAC, plumbing contractors. No statewide GC. Missing ≠ unlicensed."
               : (
                 <>
                   Name search ignores common legal endings (LLC, Inc, Corp). Entity links stay
@@ -508,6 +582,9 @@ export default async function VerifyPage({ searchParams }: Props) {
               {isCa ? " · CSLB" : ""}
               {isAz ? " · ROC" : ""}
               {isWa ? " · L&I" : ""}
+              {isLa ? " · LSLBC" : ""}
+              {isMs ? " · MSBOC" : ""}
+              {isKy ? " · DHBC" : ""}
               {results.length >= 25 ? " · first 25" : ""}
             </p>
           </div>
@@ -553,6 +630,21 @@ export default async function VerifyPage({ searchParams }: Props) {
               {isWa ? (
                 <div className="pt-2 sm:pt-3">
                   <WashingtonCoverageBanner compact showFloridaLink={false} />
+                </div>
+              ) : null}
+              {isLa ? (
+                <div className="pt-2 sm:pt-3">
+                  <LouisianaCoverageBanner compact showFloridaLink={false} />
+                </div>
+              ) : null}
+              {isMs ? (
+                <div className="pt-2 sm:pt-3">
+                  <MississippiCoverageBanner compact showFloridaLink={false} />
+                </div>
+              ) : null}
+              {isKy ? (
+                <div className="pt-2 sm:pt-3">
+                  <KentuckyCoverageBanner compact showFloridaLink={false} />
                 </div>
               ) : null}
             </div>

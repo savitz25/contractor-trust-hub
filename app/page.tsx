@@ -14,7 +14,7 @@ import { pageMetadata } from "@/lib/seo/page-meta";
 export const metadata: Metadata = pageMetadata({
   title: "Contractor Trust Hub — Before you hire, verify",
   description:
-    "Independent multi-state contractor research. Florida is the full journey. Texas, New Jersey, Oregon, Washington, California, and Arizona are Verify-first with honest board scope. Evidence only — not a marketplace.",
+    "Independent multi-state contractor research. Florida is the full journey. Other states are Verify-first with honest board scope. Evidence only — not a marketplace.",
   path: "/",
 });
 
@@ -28,6 +28,7 @@ const VERIFY_CTAS = [
   { href: "/verify?state=az", label: "Arizona" },
   { href: "/verify?state=la", label: "Louisiana" },
   { href: "/verify?state=ms", label: "Mississippi" },
+  { href: "/verify?state=ky", label: "Kentucky" },
 ] as const;
 
 export default function HomePage() {
@@ -68,7 +69,8 @@ export default function HomePage() {
               <li>
                 <span className="font-medium text-[var(--text)]">1. License / registration evidence</span>{" "}
                 — official board extracts by state (Florida DBPR, Texas specialty, NJ HIC + specialty,
-                Oregon CCB, Washington L&amp;I, California CSLB counties, Arizona ROC).
+                Oregon CCB, Washington L&amp;I, California CSLB counties, Arizona ROC, Louisiana
+                LSLBC, Mississippi MSBOC, Kentucky DHBC specialty).
               </li>
               <li>
                 <span className="font-medium text-[var(--text)]">2. Entity link (Florida-deep)</span>{" "}

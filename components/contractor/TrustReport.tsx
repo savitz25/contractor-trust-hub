@@ -960,6 +960,7 @@ export function SourcesFooter({
   const isAz = state.slug === "az" || hs === "AZ";
   const isLa = state.slug === "la" || hs === "LA";
   const isMs = state.slug === "ms" || hs === "MS";
+  const isKy = state.slug === "ky" || hs === "KY";
 
   return (
     <aside className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-elevated)]/50 px-4 py-5 text-sm leading-relaxed text-[var(--muted)] sm:px-5">
@@ -983,6 +984,8 @@ export function SourcesFooter({
                       ? "License (Louisiana LSLBC)"
                       : isMs
                         ? "License (Mississippi MSBOC)"
+                        : isKy
+                          ? "License (Kentucky DHBC)"
               : isTx
                 ? "License (TDLR)"
                 : "License (DBPR)"}
@@ -1008,6 +1011,8 @@ export function SourcesFooter({
                         ? "la_lslbc"
                         : isMs
                           ? "ms_sbc"
+                          : isKy
+                            ? "ky_dhbc"
                       : isTx
                         ? "tx_tdlr"
                         : "fl_dbpr")}
@@ -1052,6 +1057,14 @@ export function SourcesFooter({
             Mississippi MSBOC official exported list used for this load. No bond, insurance, or
             discipline on this extract. A miss is not proof someone is unlicensed. Confirm current
             status on the official board lookup.
+          </li>
+        ) : isKy ? (
+          <li>
+            <span className="font-medium text-[var(--text)]">Coverage note</span>
+            <br />
+            Kentucky DHBC specialty contractor credentials only (electrical, HVAC, plumbing). No
+            statewide general contractor license. No bond, insurance, or discipline on this extract.
+            Confirm current status on the official DHBC search.
           </li>
         ) : isTx ? (
           <li>
@@ -1106,6 +1119,8 @@ export function SourcesFooter({
                 ? "Always confirm current status on the official LSLBC lookup before hiring."
                 : isMs
                   ? "Always confirm current status on the official MSBOC lookup before hiring."
+                  : isKy
+                    ? "Always confirm current status on the official DHBC licensee search before hiring."
           : isTx
           ? "Always confirm current status on the official TDLR or TSBPE search before hiring."
           : isNj

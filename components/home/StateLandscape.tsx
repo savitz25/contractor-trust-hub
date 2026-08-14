@@ -9,6 +9,7 @@ const accentBySlug: Record<string, string> = {
   wa: "border-teal-200 bg-teal-50/80",
   ca: "border-amber-200 bg-amber-50/80",
   az: "border-sky-200 bg-sky-50/80",
+  ky: "border-indigo-200 bg-indigo-50/80",
 };
 
 /**

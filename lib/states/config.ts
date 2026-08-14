@@ -8,6 +8,7 @@
  * Washington: L&I contractor extract — Verify-first.
  * Louisiana: LSLBC statewide contractor licenses — see docs/DATA_SOURCES_LA.md.
  * Mississippi: MSBOC statewide contractor licenses — see docs/DATA_SOURCES_MS.md.
+ * Kentucky: DHBC specialty trades only (no statewide GC) — see docs/DATA_SOURCES_KY.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
 
@@ -20,8 +21,9 @@ import { orCcbPlainLabel } from "./or-ccb";
 import { waOccupationPlainLabel } from "./wa-lni";
 import { laLslbcPlainLabel } from "./la-lslbc";
 import { msSbcPlainLabel } from "./ms-sbc";
+import { kyDhbcPlainLabel } from "./ky-dhbc";
 
-export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS";
+export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY";
 
 export type EvidenceState = {
   code: StateCode;
@@ -190,12 +192,27 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     coverageNote:
       "Mississippi licenses contractors statewide through the State Board of Contractors. This search uses official MSBOC public list-view credentials (commercial / residential type, status, location). Specialty class codes and qualifying parties only when published. No bond, insurance, or discipline fields. Always confirm on the official board lookup.",
   },
+  ky: {
+    code: "KY",
+    slug: "ky",
+    name: "Kentucky",
+    shortName: "KY",
+    boardLabel: "Kentucky Department of Housing, Buildings and Construction (DHBC)",
+    boardUrl: "https://dhbc.ky.gov/Search/HBC_List_Licensees.aspx",
+    entityRegistryLabel: "Kentucky SOS business filings (not yet linked)",
+    entityRegistryUrl: "https://web.sos.ky.gov/ftsearch/",
+    licenseSource: "ky_dhbc",
+    entitySource: "ky_sos",
+    live: true,
+    coverageNote:
+      "Kentucky does not issue a statewide general contractor license. DHBC coverage is specialty trades only (electrical, HVAC, and plumbing contractor credentials in this load). Many general builders are city/county only. Always confirm on the official DHBC search.",
+  },
 };
 
 export const DEFAULT_STATE_SLUG = "fl";
 
 /** Stable display order for homepage + Verify tabs */
-export const LIVE_STATE_ORDER = ["fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms"] as const;
+export const LIVE_STATE_ORDER = ["fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms", "ky"] as const;
 
 export function getStateBySlug(slug: string): EvidenceState | null {
   const key = slug.toLowerCase();
@@ -212,7 +229,9 @@ export function getStateBySlug(slug: string): EvidenceState | null {
               ? "la"
               : key === "mississippi"
                 ? "ms"
-                : key;
+                : key === "kentucky"
+                  ? "ky"
+                  : key;
   const s = EVIDENCE_STATES[mapped] ?? null;
   if (!s) return null;
   // NJ pilot can be disabled without removing config
@@ -305,6 +324,7 @@ export function occupationLabel(code: string | null | undefined): string {
     waOccupationPlainLabel(upper) ??
     laLslbcPlainLabel(upper) ??
     msSbcPlainLabel(upper) ??
+    kyDhbcPlainLabel(upper) ??
     njCredentialPlainLabel(upper) ??
     getOccupationInfo(upper).label
   );
@@ -368,5 +388,11 @@ export const STATE_SCOPE_UI: Record<
     summary:
       "Mississippi State Board of Contractors official exported list. Commercial / residential as published. Confirm on the official board lookup.",
     verifyHint: "MSBOC statewide licenses",
+  },
+  ky: {
+    badge: "DHBC specialty",
+    summary:
+      "Kentucky DHBC specialty trades only — electrical, HVAC, and plumbing contractor credentials. No statewide general contractor license.",
+    verifyHint: "DHBC specialty trades",
   },
 };

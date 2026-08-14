@@ -34,6 +34,9 @@ export function EmptyResults({ query, mode, stateSlug = "fl" }: Props) {
   if (stateSlug === "ms") {
     return <MississippiEmptyResults query={query} mode={mode} />;
   }
+  if (stateSlug === "ky") {
+    return <KentuckyEmptyResults query={query} mode={mode} />;
+  }
   return <FloridaEmptyResults query={query} mode={mode} />;
 }
 
@@ -533,6 +536,57 @@ function LouisianaEmptyResults({ query, mode }: { query: string; mode: "license"
         >
           Official LSLBC lookup
         </a>
+      </div>
+    </div>
+  );
+}
+
+function KentuckyEmptyResults({ query, mode }: { query: string; mode: "license" | "name" }) {
+  return (
+    <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-6 sm:px-8 sm:py-9">
+      <p className="text-base font-medium leading-snug text-[var(--text)]">
+        No Kentucky DHBC specialty credentials matched &ldquo;{query}&rdquo;
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+        {mode === "license"
+          ? "We searched DHBC electrical, HVAC, and plumbing contractor numbers in this load. A miss is not proof someone is unlicensed — Kentucky has no statewide GC."
+          : "We searched licensee and DBA names on DHBC contractor-level specialties only. General builders are often city/county only."}
+      </p>
+      <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+        <Link
+          href="/verify?state=ky"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+        >
+          Clear search
+        </Link>
+        <a
+          href="https://dhbc.ky.gov/Search/HBC_List_Licensees.aspx"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+        >
+          Official DHBC search
+        </a>
+      </div>
+      <div className="mt-6 rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)]/80 px-4 py-3">
+        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+          Example searches
+        </p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {[
+            { q: "CE62402", label: "CE62402" },
+            { q: "HM06343", label: "HM06343" },
+            { q: "M7396", label: "M7396" },
+          ].map((ex) => (
+            <Link
+              key={ex.q}
+              href={`/verify?state=ky&q=${encodeURIComponent(ex.q)}`}
+              className="min-h-9 rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-xs text-[var(--text)] no-underline hover:border-[var(--accent)]/40"
+            >
+              {ex.label}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

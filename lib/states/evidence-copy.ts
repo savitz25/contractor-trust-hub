@@ -6,7 +6,7 @@
 import type { EvidenceState } from "./config";
 import { getStateBySlug } from "./config";
 
-export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or" | "wa" | "ca" | "az" | "la" | "ms";
+export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or" | "wa" | "ca" | "az" | "la" | "ms" | "ky";
 
 export function evidenceSlugFromHomeState(
   homeState: string | null | undefined,
@@ -21,6 +21,7 @@ export function evidenceSlugFromHomeState(
   if (hs === "AZ") return "az";
   if (hs === "LA") return "la";
   if (hs === "MS") return "ms";
+  if (hs === "KY") return "ky";
   if (hs === "FL") return "fl";
   const p = (preferred || "").toLowerCase();
   if (p === "oregon") return "or";
@@ -29,6 +30,7 @@ export function evidenceSlugFromHomeState(
   if (p === "washington") return "wa";
   if (p === "louisiana") return "la";
   if (p === "mississippi") return "ms";
+  if (p === "kentucky") return "ky";
   if (
     p === "tx" ||
     p === "nj" ||
@@ -38,7 +40,8 @@ export function evidenceSlugFromHomeState(
     p === "ca" ||
     p === "az" ||
     p === "la" ||
-    p === "ms"
+    p === "ms" ||
+    p === "ky"
   )
     return p;
   return "fl";
@@ -53,6 +56,7 @@ export function credentialNoun(slug: EvidenceStateSlug): string {
   if (slug === "wa") return "L&I license";
   if (slug === "la") return "LSLBC license";
   if (slug === "ms") return "MSBOC license";
+  if (slug === "ky") return "DHBC specialty license";
   return "license";
 }
 
@@ -65,6 +69,7 @@ export function boardShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "az") return "Arizona ROC";
   if (slug === "la") return "Louisiana LSLBC";
   if (slug === "ms") return "Mississippi MSBOC";
+  if (slug === "ky") return "Kentucky DHBC";
   return "Florida DBPR";
 }
 
@@ -77,6 +82,7 @@ export function entityRegistryShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "az") return "Arizona ACC entity data (not yet linked)";
   if (slug === "la") return "Louisiana SOS (not yet linked)";
   if (slug === "ms") return "Mississippi SOS (not yet linked)";
+  if (slug === "ky") return "Kentucky SOS (not yet linked)";
   return "Florida Sunbiz";
 }
 
@@ -89,6 +95,7 @@ export function sourceExtractLabel(slug: EvidenceStateSlug): string {
   if (slug === "az") return "Arizona ROC current active posting list";
   if (slug === "la") return "Louisiana LSLBC public contractor roster";
   if (slug === "ms") return "Mississippi MSBOC public contractor list";
+  if (slug === "ky") return "Kentucky DHBC specialty list";
   return "Florida DBPR extract";
 }
 
@@ -101,6 +108,7 @@ export function trustReportTitleSuffix(slug: EvidenceStateSlug): string {
   if (slug === "az") return "Arizona Contractor Trust Report";
   if (slug === "la") return "Louisiana Contractor Trust Report";
   if (slug === "ms") return "Mississippi Contractor Trust Report";
+  if (slug === "ky") return "Kentucky Contractor Trust Report";
   return "Florida Contractor Trust Report";
 }
 
@@ -113,6 +121,7 @@ export function pilotBadge(slug: EvidenceStateSlug): string | null {
   if (slug === "az") return "Arizona ROC statewide (current active list)";
   if (slug === "la") return "Louisiana LSLBC statewide";
   if (slug === "ms") return "Mississippi MSBOC statewide";
+  if (slug === "ky") return "Kentucky DHBC specialty (no statewide GC)";
   return null;
 }
 
@@ -183,6 +192,14 @@ export function checkedItems(slug: EvidenceStateSlug): string[] {
       "Published type: commercial or residential",
       "Official class suffix (MC / SC) when on the license number",
       "Published status and city / mailing location when present",
+    ];
+  }
+  if (slug === "ky") {
+    return [
+      "Kentucky DHBC specialty contractor credentials when linked",
+      "Electrical (Contractor Electrician-Business), HVAC (Master HVAC Contractor), and plumbing (Master Plumber)",
+      "Published status and issued / expiration dates when present",
+      "Not a statewide general contractor directory",
     ];
   }
   return [
@@ -262,6 +279,16 @@ export function notCheckedItems(slug: EvidenceStateSlug): string[] {
       "Reviews, rankings, or “safe to hire” determinations",
     ];
   }
+  if (slug === "ky") {
+    return [
+      "Statewide general contractor directory (Kentucky has no statewide GC license)",
+      "Bond or insurance (not published on the DHBC list view)",
+      "Complaints or board discipline (not in this extract)",
+      "Apprentice / journeyman / inspector credentials",
+      "City/county-only builder cards (Louisville Metro and others)",
+      "Reviews, rankings, or “safe to hire” determinations",
+    ];
+  }
   return [
     "Active insurance / COI validity (request & verify)",
     "Workers' comp policy status (use official portals)",
@@ -288,12 +315,16 @@ export function disciplineSectionBlurb(slug: EvidenceStateSlug): string {
   if (slug === "az") {
     return "Public disciplinary actions from the official ROC posting-list CSV when linked. Rows typically list Suspended or Revoked with a case number — not full case narrative. Confirm current standing on the official ROC contractor search.";
   }
+  if (slug === "ky") {
+    return "Kentucky DHBC discipline is not in this extract. Confirm standing on the official DHBC licensee search. No bond or insurance is published on the list view.";
+  }
   return "Board discipline from Florida extracts linked to this contractor. Separate from insurance, permits, or reviews — factual records only.";
 }
 
 export function entitySectionTitle(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "Business entity (high-confidence)";
   if (slug === "tx") return "Business entity";
+  if (slug === "ky") return "Business entity";
   return "Business entity (Sunbiz)";
 }
 
@@ -309,6 +340,12 @@ export function consumerNote(slug: EvidenceStateSlug, state?: EvidenceState | nu
     return (
       s?.coverageNote ||
       "Texas coverage is selected TDLR specialty trades plus TSBPE plumbing — not a statewide general contractor directory."
+    );
+  }
+  if (slug === "ky") {
+    return (
+      s?.coverageNote ||
+      "Kentucky does not issue a statewide general contractor license. DHBC specialty trades only. Confirm on the official DHBC search."
     );
   }
   if (slug === "or" || slug === "wa" || slug === "ca" || slug === "az" || slug === "la" || slug === "ms") {

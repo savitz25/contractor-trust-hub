@@ -14,9 +14,11 @@
 | 6 | `adapters/ca_cslb.py` | CA CSLB public list Excel (high-impact counties) | `data/staging/ca_cslb/` |
 | 6 | `adapters/or_ccb.py` | Oregon CCB Active Licenses | `data/staging/or_ccb/` |
 | 7 | Permits | County / city open data | Later |
+| — | `adapters/ky_dhbc.py` | KY DHBC specialty trades (no statewide GC; Phase 1 Active contractor load) | `data/staging/ky_dhbc/` |
 
 **Texas note:** No statewide GC license. TDLR adapter filters to specialty contractor types only — see `docs/DATA_SOURCES_TX.md`.  
-**New Jersey note:** No statewide GC license. HIC is the primary residential set; specialty boards when bulk files exist — see `docs/DATA_SOURCES_NJ.md`.
+**New Jersey note:** No statewide GC license. HIC is the primary residential set; specialty boards when bulk files exist — see `docs/DATA_SOURCES_NJ.md`.  
+**Kentucky note:** No statewide GC license. DHBC specialty only (electrical / HVAC / plumbing contractors); `live: true` — see `docs/DATA_SOURCES_KY.md`.
 
 ## Conventions
 

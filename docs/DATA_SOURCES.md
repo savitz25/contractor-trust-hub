@@ -161,6 +161,19 @@ Statewide contractor licensing through the Mississippi State Board of Contractor
 
 **Ingest:** `scripts/download_ms_sbc.py` + `ingest/adapters/ms_sbc.py` → `data/staging/ms_sbc/`
 
+## Kentucky — DHBC specialty trades (Phase 1)
+
+**Kentucky does not issue a statewide general contractor license.** DHBC licenses electrical, HVAC, plumbing, fire-related, and related specialties. Local city/county cards still apply. Verify v1 loads Active contractor-level electrical, HVAC, and plumbing only.
+
+→ **[DATA_SOURCES_KY.md](./DATA_SOURCES_KY.md)** · product: **[KENTUCKY_VERIFY_V1.md](./KENTUCKY_VERIFY_V1.md)**
+
+| Resource | URL | Notes |
+|----------|-----|--------|
+| DHBC licensee search | https://dhbc.ky.gov/Search/HBC_List_Licensees.aspx | Official interactive lookup — no posted CSV |
+| Overview | https://dhbc.ky.gov/newstatic_Info.aspx?static_ID=573 | Search + JO Portal pointers |
+
+**Ingest:** `python -m ingest.adapters.ky_dhbc --input <official extract>` · `live: true` · production load **8,360** Active `ky_dhbc` rows
+
 ## New Jersey — DCA (HIC + specialty boards)
 
 **New Jersey has no single statewide general contractor license.** The primary consumer-facing credential for most residential improvement work is **Home Improvement Contractor (HIC)** registration via the Division of Consumer Affairs (DCA). Specialty trades sit under separate boards (Electrical, Plumbing, HVACR, etc.).
