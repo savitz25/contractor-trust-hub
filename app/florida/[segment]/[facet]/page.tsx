@@ -4,7 +4,11 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/discovery/Breadcrumbs";
 import { DiscoveryDisclaimer } from "@/components/discovery/DiscoveryDisclaimer";
 import { FloridaBrowseSection } from "@/components/discovery/FloridaBrowseSection";
-import { browseIsVariant, parseBrowseParams } from "@/lib/discovery/browse";
+import {
+  browseIsVariant,
+  parseBrowseParams,
+  parseBrowseView,
+} from "@/lib/discovery/browse";
 import {
   discoveryPath,
   getCounty,
@@ -29,6 +33,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const { segment, facet: tradeSlug } = await params;
   const sp = await searchParams;
   const browse = parseBrowseParams(sp);
+  const view = parseBrowseView(sp);
   const state = getDiscoveryState(PUBLIC);
   if (!state) return { title: "Not found", robots: { index: false } };
   const county = getCounty(state, segment);
@@ -41,7 +46,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     trade,
     title: `${trade.title} in ${county.name} County FL — License Evidence`,
     description: `Florida ${trade.title.toLowerCase()} with DBPR licenses linked to ${county.name} County. Filter by city, status, Sunbiz link, and discipline — independent research, not a marketplace.`,
-    noIndex: browseIsVariant(browse),
+    noIndex: browseIsVariant(browse) || view === "cities",
   });
 }
 
@@ -49,6 +54,7 @@ export default async function FloridaCountyTradePage({ params, searchParams }: P
   const { segment, facet: tradeSlug } = await params;
   const sp = await searchParams;
   const browse = parseBrowseParams(sp);
+  const view = parseBrowseView(sp);
   const state = getDiscoveryState(PUBLIC);
   if (!state) notFound();
 
@@ -109,6 +115,7 @@ export default async function FloridaCountyTradePage({ params, searchParams }: P
         total={total}
         stats={stats}
         cities={cities}
+        view={view}
       />
 
       <div className="mt-10">

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ResultCard } from "@/components/search/ResultCard";
+import { SORT_LABELS, type BrowseSort } from "@/lib/discovery/browse";
 import { DISCOVERY_PAGE_SIZE } from "@/lib/discovery/queries";
 import type { SearchResult } from "@/lib/contractors/types";
 
@@ -10,6 +11,9 @@ export function DiscoveryListing({
   basePath,
   emptyTitle,
   emptyBody,
+  emptyHints,
+  clearFiltersHref,
+  sort = "name",
   verifyHref = "/verify",
   browseHref = "/florida",
   browseLabel = "Back to Florida browse",
@@ -23,6 +27,10 @@ export function DiscoveryListing({
   basePath: string;
   emptyTitle: string;
   emptyBody: string;
+  /** Concrete “what to loosen” lines when filters produced zero rows */
+  emptyHints?: string[];
+  clearFiltersHref?: string;
+  sort?: BrowseSort;
   verifyHref?: string;
   browseHref?: string;
   browseLabel?: string;
@@ -41,6 +49,26 @@ export function DiscoveryListing({
         <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-[var(--muted)]">
           {emptyBody}
         </p>
+        {emptyHints && emptyHints.length > 0 ? (
+          <div className="mx-auto mt-4 max-w-md rounded-xl border border-[var(--border)] bg-white px-4 py-3 text-left">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+              What to loosen
+            </p>
+            <ul className="mt-1.5 list-inside list-disc space-y-1 text-sm text-[var(--text)]">
+              {emptyHints.map((h) => (
+                <li key={h}>{h}</li>
+              ))}
+            </ul>
+            {clearFiltersHref ? (
+              <Link
+                href={clearFiltersHref}
+                className="mt-3 inline-flex min-h-10 items-center text-sm font-semibold text-[var(--accent)] no-underline hover:underline"
+              >
+                Clear filters and try again
+              </Link>
+            ) : null}
+          </div>
+        ) : null}
         <div className="mt-6 flex flex-col items-stretch justify-center gap-2.5 sm:flex-row sm:items-center">
           <Link
             href={verifyHref}
@@ -67,25 +95,32 @@ export function DiscoveryListing({
 
   return (
     <div>
-      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
-          Contractors
-        </h2>
-        <p className="text-sm text-[var(--muted)]">
-          {total.toLocaleString()} in this view
+      <div className="mb-3 flex flex-wrap items-end justify-between gap-x-3 gap-y-1.5">
+        <div>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
+            Evidence list
+          </h2>
+          <p className="mt-0.5 text-xs text-[var(--muted)]">
+            Browse order:{" "}
+            <span className="font-medium text-[var(--text)]">{SORT_LABELS[sort]}</span>
+            <span className="text-[var(--muted)]"> · not a ranking</span>
+          </p>
+        </div>
+        <p className="text-sm tabular-nums text-[var(--muted)]">
+          {total.toLocaleString()} firm{total === 1 ? "" : "s"}
           {total > DISCOVERY_PAGE_SIZE ? ` · page ${safePage} of ${totalPages}` : null}
         </p>
       </div>
       {total > 0 && total < 5 && (
-        <p className="mb-4 rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)]/60 px-3.5 py-2.5 text-sm text-[var(--muted)]">
-          Few matches in this view — try a nearby county, a broader trade, or{" "}
+        <p className="mb-3 rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)]/60 px-3.5 py-2.5 text-sm text-[var(--muted)]">
+          Few matches in this view — try a nearby city, a broader trade, or{" "}
           <Link href={verifyHref} className="text-[var(--accent)]">
             search by name
           </Link>
           .
         </p>
       )}
-      <div className="space-y-2.5 sm:space-y-3">
+      <div className="space-y-2 sm:space-y-2.5">
         {results.map((r) => (
           <ResultCard
             key={r.id}

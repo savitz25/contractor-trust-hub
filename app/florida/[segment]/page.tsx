@@ -5,7 +5,11 @@ import { Breadcrumbs } from "@/components/discovery/Breadcrumbs";
 import { DiscoveryDisclaimer } from "@/components/discovery/DiscoveryDisclaimer";
 import { FacetGrid } from "@/components/discovery/FacetGrid";
 import { FloridaBrowseSection } from "@/components/discovery/FloridaBrowseSection";
-import { browseIsVariant, parseBrowseParams } from "@/lib/discovery/browse";
+import {
+  browseIsVariant,
+  parseBrowseParams,
+  parseBrowseView,
+} from "@/lib/discovery/browse";
 import {
   discoveryPath,
   getDiscoveryState,
@@ -68,6 +72,7 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
 
   if (resolved.kind === "county") {
     const { county } = resolved;
+    const view = parseBrowseView(sp);
     const [{ results, total, stats }, trades, cities] = await Promise.all([
       listFloridaBrowse({ county, browse }),
       countByTrade(PUBLIC, county),
@@ -110,6 +115,7 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
           total={total}
           stats={stats}
           cities={cities}
+          view={view}
         />
 
         <div className="mt-10">
@@ -120,6 +126,7 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
   }
 
   const { trade } = resolved;
+  const view = parseBrowseView(sp);
   const [{ results, total, stats }, countyFacets] = await Promise.all([
     listFloridaBrowse({ trade, browse }),
     countCountiesForTrade(PUBLIC, trade),
@@ -166,6 +173,7 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
         total={total}
         stats={stats}
         cities={[]}
+        view={view}
       />
 
       <div className="mt-10">

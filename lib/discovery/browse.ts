@@ -122,3 +122,136 @@ export const SORT_LABELS: Record<BrowseSort, string> = {
 
 export const SORT_DISCLOSURE =
   "Browse order is for scanning this extract — not a quality ranking or paid placement.";
+
+/** List results vs city-clustered navigation (no map — no lat/lng in extracts). */
+export type BrowseView = "list" | "cities";
+
+export function parseBrowseView(
+  sp: Record<string, string | string[] | undefined>
+): BrowseView {
+  const v = sp.view;
+  const raw = typeof v === "string" ? v : Array.isArray(v) ? v[0] : undefined;
+  return raw === "cities" ? "cities" : "list";
+}
+
+export type ActiveFilterChip = {
+  id: string;
+  /** Short chip label */
+  label: string;
+  /** Browse state with this filter cleared (keeps others + sort/page reset to 1) */
+  without: DiscoveryBrowse;
+};
+
+const STATUS_CHIP: Record<Exclude<BrowseStatus, "any">, string> = {
+  active: "Active / current only",
+  inactive: "Not active in extract",
+};
+
+const ENTITY_CHIP: Record<Exclude<BrowseEntity, "any">, string> = {
+  linked: "Sunbiz linked",
+  unlinked: "No Sunbiz link",
+};
+
+const DISC_CHIP: Record<Exclude<BrowseDiscipline, "any">, string> = {
+  present: "Has discipline in extract",
+  none: "No discipline linked",
+};
+
+const TENURE_CHIP: Record<Exclude<BrowseTenure, "any">, string> = {
+  lt5: "Licensed < 5 years",
+  "5to15": "Licensed 5–15 years",
+  gt15: "Licensed 15+ years",
+};
+
+/** Active evidence filters as removable chips (sort is separate — always shown). */
+export function activeFilterChips(
+  browse: DiscoveryBrowse,
+  opts?: { pathCitySlug?: string | null; pathCityLabel?: string | null }
+): ActiveFilterChip[] {
+  const chips: ActiveFilterChip[] = [];
+  const base = { ...browse, page: 1 };
+
+  if (opts?.pathCitySlug) {
+    chips.push({
+      id: "path-city",
+      label: opts.pathCityLabel
+        ? `City: ${opts.pathCityLabel}`
+        : `City: ${cityLabelFromSlug(opts.pathCitySlug)}`,
+      // Path city cannot be cleared via query — caller should link to parent trade page
+      without: base,
+    });
+  } else if (browse.citySlug) {
+    chips.push({
+      id: "city",
+      label: `City: ${cityLabelFromSlug(browse.citySlug)}`,
+      without: { ...base, citySlug: null },
+    });
+  }
+  if (browse.status !== "any") {
+    chips.push({
+      id: "status",
+      label: STATUS_CHIP[browse.status],
+      without: { ...base, status: "any" },
+    });
+  }
+  if (browse.entity !== "any") {
+    chips.push({
+      id: "entity",
+      label: ENTITY_CHIP[browse.entity],
+      without: { ...base, entity: "any" },
+    });
+  }
+  if (browse.discipline !== "any") {
+    chips.push({
+      id: "discipline",
+      label: DISC_CHIP[browse.discipline],
+      without: { ...base, discipline: "any" },
+    });
+  }
+  if (browse.tenure !== "any") {
+    chips.push({
+      id: "tenure",
+      label: TENURE_CHIP[browse.tenure],
+      without: { ...base, tenure: "any" },
+    });
+  }
+  return chips;
+}
+
+/** Filters that a user can loosen via query (excludes path city). */
+export function loosenableFilterCount(
+  browse: DiscoveryBrowse,
+  pathCitySlug?: string | null
+): number {
+  let n = 0;
+  if (browse.citySlug && !pathCitySlug) n += 1;
+  if (browse.status !== "any") n += 1;
+  if (browse.entity !== "any") n += 1;
+  if (browse.discipline !== "any") n += 1;
+  if (browse.tenure !== "any") n += 1;
+  return n;
+}
+
+export function clearedBrowse(browse: DiscoveryBrowse): DiscoveryBrowse {
+  return {
+    ...DEFAULT_BROWSE,
+    sort: browse.sort,
+    page: 1,
+  };
+}
+
+/** Short copy for empty results: which filters to loosen. */
+export function emptyFilterHints(browse: DiscoveryBrowse, pathCitySlug?: string | null): string[] {
+  const hints: string[] = [];
+  if (browse.status === "active") hints.push("allow any published license status");
+  if (browse.status === "inactive") hints.push("include active licenses");
+  if (browse.entity === "linked") hints.push("include firms without a high-confidence Sunbiz link");
+  if (browse.entity === "unlinked") hints.push("include Sunbiz-linked firms");
+  if (browse.discipline === "present") hints.push("include firms with no discipline in the extract");
+  if (browse.discipline === "none") hints.push("include firms with a linked discipline action");
+  if (browse.tenure !== "any") hints.push("clear the license-tenure band");
+  if (browse.citySlug && !pathCitySlug) hints.push("clear the city filter");
+  if (pathCitySlug) hints.push("step up to the full county + trade list");
+  if (hints.length === 0) hints.push("try a nearby city or a broader trade");
+  return hints;
+}

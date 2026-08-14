@@ -10,6 +10,7 @@ import {
   cityLabelFromSlug,
   cityToSlug,
   parseBrowseParams,
+  parseBrowseView,
 } from "@/lib/discovery/browse";
 import {
   discoveryPath,
@@ -35,6 +36,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const { segment, facet: rawCity, trade: tradeSlug } = await params;
   const sp = await searchParams;
   const browse = parseBrowseParams(sp);
+  const view = parseBrowseView(sp);
   const citySlug = cityToSlug(rawCity);
   const state = getDiscoveryState(PUBLIC);
   if (!state || !citySlug) return { title: "Not found", robots: { index: false } };
@@ -58,7 +60,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     citySlug,
     title: `${trade.title} in ${cityLabel}, ${county.name} County FL — License Evidence`,
     description: `Florida ${trade.title.toLowerCase()} with DBPR licenses listing ${cityLabel} in ${county.name} County. Evidence browse — not a ranking or marketplace.`,
-    noIndex: thin || browseIsVariant(browse, true),
+    noIndex: thin || browseIsVariant(browse, true) || view === "cities",
   });
 }
 
@@ -66,6 +68,7 @@ export default async function FloridaCityTradePage({ params, searchParams }: Pro
   const { segment, facet: rawCity, trade: tradeSlug } = await params;
   const sp = await searchParams;
   const browse = parseBrowseParams(sp);
+  const view = parseBrowseView(sp);
   const citySlug = cityToSlug(rawCity);
   const state = getDiscoveryState(PUBLIC);
   if (!state || !citySlug) notFound();
@@ -129,6 +132,7 @@ export default async function FloridaCityTradePage({ params, searchParams }: Pro
         total={total}
         stats={stats}
         cities={cities}
+        view={view}
       />
 
       <div className="mt-10">

@@ -86,6 +86,21 @@ Do **not** merge on name or DBA alone. Unlinked rows stay separate (`solo:{contr
 
 Indexed only when the city + county + trade slice has at least **8** contractor rows (`CITY_INDEX_MIN`). Thinner city URLs render when they have any matches but stay `noindex`. City slugs are normalized from the published license city (`Fort Lauderdale` → `fort-lauderdale`).
 
+City landings are linked from county + trade pages (chip row + **By city** cluster view). Metadata titles include city + county + trade so they stay unique.
+
+### UI polish (Phase 4A)
+
+- **Active filter chips** with clear-all on the filter card
+- **Browse order** always shown (header chip + labeled control) — not a ranking
+- Empty filter results list concrete “what to loosen” hints
+- Mobile jump links to `#filters` / `#cities`
+
+### Map / list-by-city
+
+**Map deferred.** Florida DBPR browse rows expose city/county text on the license extract but **no lat/lng**. A pin map would need geocoding + storage work outside this pass.
+
+**Shipped instead:** list-by-city cluster view (`?view=cities`) using published license cities with firm counts → city landings. Documented gap: true map when coordinates exist.
+
 ## Indexes
 
 ```bash
