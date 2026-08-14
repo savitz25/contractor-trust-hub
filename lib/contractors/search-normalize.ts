@@ -71,6 +71,7 @@ export function looksLikeLicenseKey(q: string): boolean {
   if (/^AZ-ROC:/i.test(trimmed)) return true;
   if (/^LA-LSLBC:/i.test(trimmed)) return true;
   if (/^MS-SBC:/i.test(trimmed)) return true;
+  if (/^KY-DHBC:/i.test(trimmed)) return true;
   if (/^\d{4,6}-[A-Za-z]{2}$/.test(trimmed)) return true;
   if (/^NJ-/i.test(trimmed)) return true;
   if (/^HIC[-_]?/i.test(trimmed)) return true;
@@ -84,7 +85,8 @@ export function looksLikeLicenseKey(q: string): boolean {
   if (/^[A-Za-z]{2,6}\d{2,}[A-Za-z0-9]{2,}$/i.test(compact) && compact.length >= 8) {
     return true;
   }
-  return /^[A-Za-z]{2,5}\d{4,}$/.test(compact) || /^\d{4,}$/.test(compact);
+  // Include 1-letter Kentucky DHBC plumbing ids (M7396) plus 2+ letter trade prefixes (CE, HM).
+  return /^[A-Za-z]{1,5}\d{3,}$/.test(compact) || /^\d{4,}$/.test(compact);
 }
 
 export function normalizeLicenseKey(q: string): string {
@@ -97,7 +99,8 @@ export function normalizeLicenseKey(q: string): string {
     /^WA-LNI:/i.test(trimmed) ||
     /^AZ-ROC:/i.test(trimmed) ||
     /^LA-LSLBC:/i.test(trimmed) ||
-    /^MS-SBC:/i.test(trimmed)
+    /^MS-SBC:/i.test(trimmed) ||
+    /^KY-DHBC:/i.test(trimmed)
   ) {
     return trimmed.toUpperCase().replace(/\s+/g, "");
   }
