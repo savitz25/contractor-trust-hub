@@ -26,12 +26,13 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 type Props = {
-  params: Promise<{ segment: string; city: string; trade: string }>;
+  /** `facet` is the city slug at /florida/{county}/{city}/{trade} */
+  params: Promise<{ segment: string; facet: string; trade: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
-  const { segment, city: rawCity, trade: tradeSlug } = await params;
+  const { segment, facet: rawCity, trade: tradeSlug } = await params;
   const sp = await searchParams;
   const browse = parseBrowseParams(sp);
   const citySlug = cityToSlug(rawCity);
@@ -62,7 +63,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 }
 
 export default async function FloridaCityTradePage({ params, searchParams }: Props) {
-  const { segment, city: rawCity, trade: tradeSlug } = await params;
+  const { segment, facet: rawCity, trade: tradeSlug } = await params;
   const sp = await searchParams;
   const browse = parseBrowseParams(sp);
   const citySlug = cityToSlug(rawCity);
