@@ -164,7 +164,7 @@ export function PlanFlow() {
                   onClick={() => i < step && setStep(i)}
                   className={`rounded-full px-3 py-2 text-xs font-semibold transition sm:py-1.5 ${
                     active
-                      ? "bg-[var(--navy)] text-white"
+                      ? "control-selected"
                       : done
                         ? "bg-[var(--accent-soft)] text-[var(--navy)] hover:brightness-95"
                         : "bg-white text-[var(--muted)] opacity-70 ring-1 ring-[var(--border)]"
@@ -340,9 +340,7 @@ export function PlanFlow() {
                       type="button"
                       onClick={() => setBudgetBand(b.id)}
                       className={`min-h-10 rounded-full border px-3 py-2 text-xs font-medium transition ${
-                        on
-                          ? "border-[var(--navy)] bg-[var(--navy)] text-white"
-                          : "border-[var(--border)] text-[var(--muted)] hover:border-[var(--navy)]/30"
+                        on ? "control-selected" : "control-off"
                       }`}
                     >
                       {b.label}

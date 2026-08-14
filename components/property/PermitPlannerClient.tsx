@@ -126,9 +126,7 @@ export function PermitPlannerClient() {
                 type="button"
                 onClick={() => toggle(f.id)}
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium ${
-                  on
-                    ? "border-[var(--navy)] bg-[var(--navy)] text-white"
-                    : "border-[var(--border)] bg-white text-[var(--text)]"
+                  on ? "control-selected" : "control-off"
                 }`}
               >
                 {f.label}

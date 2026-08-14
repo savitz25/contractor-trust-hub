@@ -26,9 +26,7 @@ export function DecisionJourney({ current }: { current?: string }) {
             <Link
               href={s.href}
               className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 no-underline ${
-                on
-                  ? "border-[var(--navy)] bg-[var(--navy)] text-white"
-                  : "border-[var(--border)] bg-white text-[var(--muted)] hover:text-[var(--navy)]"
+                on ? "control-selected" : "control-off"
               }`}
             >
               <span

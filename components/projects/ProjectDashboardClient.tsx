@@ -243,10 +243,8 @@ export function ProjectDashboardClient({ projectId }: { projectId: string }) {
             key={id}
             type="button"
             onClick={() => setTab(id)}
-            className={`rounded-xl px-3 py-2 text-xs font-semibold ${
-              tab === id
-                ? "bg-[var(--navy)] text-white"
-                : "text-[var(--muted)] hover:text-[var(--text)]"
+            className={`rounded-xl border px-3 py-2 text-xs font-semibold ${
+              tab === id ? "control-selected" : "control-off"
             }`}
           >
             {label}

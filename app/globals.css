@@ -55,14 +55,70 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-a {
-  color: var(--link);
-  text-decoration: none;
+/*
+ * Keep default link color in @layer base so Tailwind text-* utilities can
+ * override it. Unlayered `a { color: navy }` was winning over `text-white`
+ * on selected navy pills (dark-on-dark).
+ */
+@layer base {
+  a {
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+  }
 }
 
-a:hover {
-  color: var(--link-hover);
-  text-decoration: underline;
+/* Explicit white text on links must stay white (including hover). */
+a.text-white,
+a.text-white:hover,
+a.text-white:focus {
+  color: #ffffff;
+}
+
+/* Selected inverse controls — navy fill + white label. Unlayered so it
+   still wins on <a> hover and nested spans. */
+.control-selected,
+a.control-selected,
+a.control-selected:hover,
+a.control-selected:focus,
+button.control-selected,
+button.control-selected:hover {
+  background-color: var(--navy) !important;
+  border-color: var(--navy) !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+.control-selected *,
+a.control-selected *,
+button.control-selected * {
+  color: inherit !important;
+}
+
+.control-selected:focus-visible,
+a.control-selected:focus-visible,
+button.control-selected:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.control-off,
+a.control-off,
+button.control-off {
+  background-color: #ffffff;
+  border-color: var(--border);
+  color: var(--navy);
+}
+
+.control-off:hover,
+a.control-off:hover,
+button.control-off:hover {
+  border-color: color-mix(in srgb, var(--navy) 30%, var(--border));
+  text-decoration: none;
 }
 
 /* Primary CTA utility (yellow on navy text) */

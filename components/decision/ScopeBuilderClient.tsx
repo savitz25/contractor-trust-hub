@@ -181,9 +181,7 @@ export function ScopeBuilderClient() {
                   type="button"
                   onClick={() => setScale(s.id)}
                   className={`rounded-full border px-3 py-1.5 text-xs font-medium ${
-                    scale === s.id
-                      ? "border-[var(--navy)] bg-[var(--navy)] text-white"
-                      : "border-[var(--border)] bg-white text-[var(--text)]"
+                    scale === s.id ? "control-selected" : "control-off"
                   }`}
                 >
                   {s.label}

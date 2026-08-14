@@ -266,9 +266,7 @@ export function StudioFlow({ slug }: Props) {
                     type="button"
                     onClick={() => setBudgetBand(b.id)}
                     className={`rounded-full border px-3 py-1.5 text-xs font-medium ${
-                      budgetBand === b.id
-                        ? "border-[var(--navy)] bg-[var(--navy)] text-white"
-                        : "border-[var(--border)] text-[var(--muted)]"
+                      budgetBand === b.id ? "control-selected" : "control-off"
                     }`}
                   >
                     {b.label}
