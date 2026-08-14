@@ -169,9 +169,15 @@ button.control-off:hover {
   }
 }
 
-header img {
+header img:not([data-brand-logo]) {
   max-width: 100%;
   height: auto;
+}
+
+header img[data-brand-logo] {
+  display: block;
+  max-width: none;
+  flex-shrink: 0;
 }
 
 /* Card elevation consistent with network hubs */

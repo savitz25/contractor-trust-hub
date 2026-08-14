@@ -30,7 +30,7 @@ export function BrandLogo({
   surface = "onLight",
   height = 40,
 }: BrandLogoProps) {
-  const sharedClass = ["block", "h-auto", "max-w-full", "bg-transparent", className]
+  const sharedClass = ["block", "shrink-0", "bg-transparent", className]
     .filter(Boolean)
     .join(" ");
 
@@ -41,8 +41,9 @@ export function BrandLogo({
         alt="Contractor Trust Hub"
         width={height}
         height={height}
+        data-brand-logo=""
         className={sharedClass}
-        style={{ ...transparent, height, width: height }}
+        style={{ ...transparent, height, width: height, maxWidth: "none" }}
         decoding="async"
         fetchPriority={priority ? "high" : "auto"}
       />
@@ -63,8 +64,9 @@ export function BrandLogo({
       alt="Contractor Trust Hub"
       width={width}
       height={height}
+      data-brand-logo=""
       className={sharedClass}
-      style={{ ...transparent, height, width: "auto" }}
+      style={{ ...transparent, height, width, maxWidth: "none" }}
       decoding="async"
       fetchPriority={priority ? "high" : "auto"}
     />
