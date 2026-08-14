@@ -1,0 +1,18 @@
+field,source,in_phase0_sample_rows,notes
+Name,DSPS License API guide,no,Example value in guide is not a trades licensee
+Organization Name,DSPS License API guide,no,Firm / org when present
+Status,DSPS License API guide,no,e.g. Active
+License Number,DSPS License API guide,no,Format number space-dash-space type id
+License Name,DSPS License API guide,no,Same shape as License Number in the example
+License Type,DSPS License API guide,no,Example shows Regular — not the trade name
+Regulatory Authorization Type,DSPS License API guide,no,Profession-style label in the health example
+Period End,DSPS License API guide,no,Expiration
+Granted Date,DSPS License API guide,no,Grant / issue date
+Jurisdiction Type,DSPS License API guide,no,e.g. STATE
+Disciplinary Action Indicator,DSPS License API guide,no,Pointer to LicensE orders search — not a case file
+Orders Indicator,DSPS License API guide,no,Flag in the published example
+Issuing Authority,DSPS License API guide,no,DSPS
+bond,none,no,Not published on API example or lookup hub
+insurance_coi,none,no,Not published
+street_address,none,no,Not on API example
+inactive_archive,LicenseCounts.pdf only,no,Counts exist; no licensee-level archive in Phase 0

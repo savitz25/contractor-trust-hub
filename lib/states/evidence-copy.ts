@@ -6,7 +6,7 @@
 import type { EvidenceState } from "./config";
 import { getStateBySlug } from "./config";
 
-export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or" | "wa" | "ca" | "az" | "la" | "ms" | "ky";
+export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or" | "wa" | "ca" | "az" | "la" | "ms" | "ky" | "wi";
 
 export function evidenceSlugFromHomeState(
   homeState: string | null | undefined,
@@ -22,6 +22,7 @@ export function evidenceSlugFromHomeState(
   if (hs === "LA") return "la";
   if (hs === "MS") return "ms";
   if (hs === "KY") return "ky";
+  if (hs === "WI") return "wi";
   if (hs === "FL") return "fl";
   const p = (preferred || "").toLowerCase();
   if (p === "oregon") return "or";
@@ -31,6 +32,7 @@ export function evidenceSlugFromHomeState(
   if (p === "louisiana") return "la";
   if (p === "mississippi") return "ms";
   if (p === "kentucky") return "ky";
+  if (p === "wisconsin") return "wi";
   if (
     p === "tx" ||
     p === "nj" ||
@@ -41,7 +43,8 @@ export function evidenceSlugFromHomeState(
     p === "az" ||
     p === "la" ||
     p === "ms" ||
-    p === "ky"
+    p === "ky" ||
+    p === "wi"
   )
     return p;
   return "fl";
@@ -57,6 +60,7 @@ export function credentialNoun(slug: EvidenceStateSlug): string {
   if (slug === "la") return "LSLBC license";
   if (slug === "ms") return "MSBOC license";
   if (slug === "ky") return "DHBC specialty license";
+  if (slug === "wi") return "DSPS dwelling / trade credential";
   return "license";
 }
 
@@ -70,6 +74,7 @@ export function boardShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "la") return "Louisiana LSLBC";
   if (slug === "ms") return "Mississippi MSBOC";
   if (slug === "ky") return "Kentucky DHBC";
+  if (slug === "wi") return "Wisconsin DSPS";
   return "Florida DBPR";
 }
 
@@ -83,6 +88,7 @@ export function entityRegistryShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "la") return "Louisiana SOS (not yet linked)";
   if (slug === "ms") return "Mississippi SOS (not yet linked)";
   if (slug === "ky") return "Kentucky SOS (not yet linked)";
+  if (slug === "wi") return "Wisconsin DFI (not yet linked)";
   return "Florida Sunbiz";
 }
 
@@ -96,6 +102,7 @@ export function sourceExtractLabel(slug: EvidenceStateSlug): string {
   if (slug === "la") return "Louisiana LSLBC public contractor roster";
   if (slug === "ms") return "Mississippi MSBOC public contractor list";
   if (slug === "ky") return "Kentucky DHBC specialty list";
+  if (slug === "wi") return "Wisconsin DSPS / LicensE extract";
   return "Florida DBPR extract";
 }
 
@@ -109,6 +116,7 @@ export function trustReportTitleSuffix(slug: EvidenceStateSlug): string {
   if (slug === "la") return "Louisiana Contractor Trust Report";
   if (slug === "ms") return "Mississippi Contractor Trust Report";
   if (slug === "ky") return "Kentucky Contractor Trust Report";
+  if (slug === "wi") return "Wisconsin Contractor Trust Report";
   return "Florida Contractor Trust Report";
 }
 
@@ -202,6 +210,14 @@ export function checkedItems(slug: EvidenceStateSlug): string[] {
       "Not a statewide general contractor directory",
     ];
   }
+  if (slug === "wi") {
+    return [
+      "Wisconsin DSPS / LicensE dwelling and trade credentials when linked",
+      "Dwelling Contractor is a 1–2 family permit credential, not a commercial GC",
+      "Electrical Contractor and HVAC Contractor when present",
+      "Published status and dates when the extract includes them",
+    ];
+  }
   return [
     "Florida DBPR construction license extract (when linked)",
     "High-confidence Sunbiz entity link (strict match only)",
@@ -289,6 +305,16 @@ export function notCheckedItems(slug: EvidenceStateSlug): string[] {
       "Reviews, rankings, or “safe to hire” determinations",
     ];
   }
+  if (slug === "wi") {
+    return [
+      "Statewide commercial general contractor directory (Wisconsin has no such license)",
+      "Bond or insurance (not published on Phase 0 sources)",
+      "Structured discipline archive (LicensE orders are a separate lookup)",
+      "Apprentice / journeyman / inspector credentials",
+      "Wisconsin DFI entity linking",
+      "Reviews, rankings, or “safe to hire” determinations",
+    ];
+  }
   return [
     "Active insurance / COI validity (request & verify)",
     "Workers' comp policy status (use official portals)",
@@ -318,6 +344,9 @@ export function disciplineSectionBlurb(slug: EvidenceStateSlug): string {
   if (slug === "ky") {
     return "Kentucky DHBC discipline is not in this extract. Confirm standing on the official DHBC licensee search. No bond or insurance is published on the list view.";
   }
+  if (slug === "wi") {
+    return "Wisconsin DSPS discipline is not in this extract. Confirm orders on the official LicensE public orders search. An API disciplinary indicator, if present later, is a pointer — not a case file.";
+  }
   return "Board discipline from Florida extracts linked to this contractor. Separate from insurance, permits, or reviews — factual records only.";
 }
 
@@ -325,6 +354,7 @@ export function entitySectionTitle(slug: EvidenceStateSlug): string {
   if (slug === "nj") return "Business entity (high-confidence)";
   if (slug === "tx") return "Business entity";
   if (slug === "ky") return "Business entity";
+  if (slug === "wi") return "Business entity";
   return "Business entity (Sunbiz)";
 }
 
@@ -346,6 +376,12 @@ export function consumerNote(slug: EvidenceStateSlug, state?: EvidenceState | nu
     return (
       s?.coverageNote ||
       "Kentucky does not issue a statewide general contractor license. DHBC specialty trades only. Confirm on the official DHBC search."
+    );
+  }
+  if (slug === "wi") {
+    return (
+      s?.coverageNote ||
+      "Wisconsin does not issue a statewide commercial general contractor license. DSPS dwelling + trade credentials only. Confirm on the official LicensE lookup."
     );
   }
   if (slug === "or" || slug === "wa" || slug === "ca" || slug === "az" || slug === "la" || slug === "ms") {

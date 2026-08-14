@@ -1,0 +1,8 @@
+profession,entity,license_suffix,count_table_code,active,inactive,total,as_of,source
+Dwelling Contractor,F,DC,DCFR,9460,7356,16727,2026-06-01,https://dsps.wi.gov/Credentialing/General/LicenseCounts.pdf
+Dwelling Contractor Restricted,F,DCR,DCFRR,66,125,190,2026-06-01,https://dsps.wi.gov/Credentialing/General/LicenseCounts.pdf
+Electrical Contractor,F,EC,EC,3701,1458,5161,2026-06-01,https://dsps.wi.gov/Credentialing/General/LicenseCounts.pdf
+HVAC Contractor,F,HVACCONT,HVACC,2843,2050,4894,2026-06-01,https://dsps.wi.gov/Credentialing/General/LicenseCounts.pdf
+HVAC Qualifier,I,HVACQ,HVACQ,607,199,806,2026-06-01,https://dsps.wi.gov/Credentialing/General/LicenseCounts.pdf
+Master Electrician,I,ME,ME,6232,1208,7442,2026-06-01,https://dsps.wi.gov/Credentialing/General/LicenseCounts.pdf
+Master Plumber,I,PM,PM,2833,634,3468,2026-06-01,https://dsps.wi.gov/Credentialing/General/LicenseCounts.pdf

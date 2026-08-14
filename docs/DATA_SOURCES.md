@@ -174,6 +174,21 @@ Statewide contractor licensing through the Mississippi State Board of Contractor
 
 **Ingest:** `python -m ingest.adapters.ky_dhbc --input <official extract>` · `live: true` · production load **8,360** Active `ky_dhbc` rows
 
+## Wisconsin — DSPS dwelling + trade credentials (Phase 0)
+
+**Wisconsin does not issue a statewide commercial general contractor license.** DSPS issues Dwelling Contractor (1–2 family building permits) plus Electrical Contractor, HVAC Contractor, plumbing, and related trades.
+
+→ **[DATA_SOURCES_WI.md](./DATA_SOURCES_WI.md)** · product: **[WISCONSIN_VERIFY_V1.md](./WISCONSIN_VERIFY_V1.md)**
+
+| Resource | URL | Notes |
+|----------|-----|--------|
+| LicensE License Lookup | https://license.wi.gov/s/license-lookup | Current official interactive lookup — Cloudflare on direct GET |
+| DSPS look-up hub | https://dsps.wi.gov/Pages/SelfService/LicenseLookUp.aspx | LicensE vs eSLA split |
+| Order list of licensees | https://dsps.wi.gov/Pages/SelfService/OrderListofLicensees.aspx | Official bulk list — **temporarily suspended** |
+| License counts | https://dsps.wi.gov/Credentialing/General/LicenseCounts.pdf | Profession totals as of 06/01/2026 |
+
+**Ingest (sample only):** `python -m ingest.adapters.wi_dsps --input data/samples/wi_dsps/contractor_sample.csv` · `live: false`
+
 ## New Jersey — DCA (HIC + specialty boards)
 
 **New Jersey has no single statewide general contractor license.** The primary consumer-facing credential for most residential improvement work is **Home Improvement Contractor (HIC)** registration via the Division of Consumer Affairs (DCA). Specialty trades sit under separate boards (Electrical, Plumbing, HVACR, etc.).

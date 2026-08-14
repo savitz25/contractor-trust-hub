@@ -1,0 +1,45 @@
+Wisconsin DSPS / LicensE Phase 0 probe — 2026-08-14
+User-Agent: ContractorTrustHub-wi-phase0/1.0
+Raw artifacts (gitignored): data/raw/wi_dsps/  (see probe_manifest.json)
+
+Verdict: NO STABLE ROSTER EXTRACT. Criteria search only. Do not invent licensee rows.
+
+1) DSPS look-up hub — 200
+   https://dsps.wi.gov/Pages/SelfService/LicenseLookUp.aspx
+   Points trades to LicensE. No CSV/Excel.
+
+2) https://licensesearch.wi.gov/ — 200 after redirect
+   Final: https://license.wi.gov/s/license-lookup
+   Salesforce Experience Cloud SPA shell (~318 KB). Guest (authenticated=false).
+   Lightning search button CSS present. No public roster export.
+   Aura/bootstrap paths exist; no /services REST roster. Do not harvest Aura.
+
+3) Direct https://license.wi.gov/s/license-lookup — Cloudflare 403
+   Same for /s/public-facing-orders-search
+   https://app.wi.gov/licensesearch — Cloudflare 403
+
+4) eSLA https://esla.wi.gov/verifylicense — 200
+   Plan/safety public lookup. Not the trades credential roster.
+
+5) Order List of Licensees — 200, service "Temporarily Suspended"
+   https://dsps.wi.gov/Pages/SelfService/OrderListofLicensees.aspx
+   Official bulk path exists as a page, not as a file.
+
+6) DSPS License API — 401 Authentication denied (no credentials)
+   GET .../api/blp/1000%20-%2021
+   Official guide: verification only; must not continuously sync/replicate.
+
+7) Official PDFs downloaded to data/raw/wi_dsps/
+   LicenseCounts.pdf (as of 06/01/2026) — profession totals, not rows
+   LicensEnumbering.pdf — 1234 - ABC suffixes
+   DSPSLicenseAPIConnectionGuide.pdf — verify-by-number field inventory
+
+Published active statewide totals (LicenseCounts.pdf, not a harvest):
+  Dwelling Contractor (F/DCFR)  9,460
+  Electrical Contractor (F/EC)  3,701
+  HVAC Contractor (F/HVACC)     2,843
+  Dwelling Contractor Restricted 66
+  Master Plumber (I/PM)         2,833
+
+If a later harvest is approved: one query every 5–10 seconds, hard caps,
+no unfiltered crawl. Prefer restored Order List or open records.

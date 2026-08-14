@@ -9,6 +9,7 @@
  * Louisiana: LSLBC statewide contractor licenses — see docs/DATA_SOURCES_LA.md.
  * Mississippi: MSBOC statewide contractor licenses — see docs/DATA_SOURCES_MS.md.
  * Kentucky: DHBC specialty trades only (no statewide GC) — see docs/DATA_SOURCES_KY.md.
+ * Wisconsin: DSPS dwelling + trade credentials (no statewide commercial GC) — see docs/DATA_SOURCES_WI.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
 
@@ -22,8 +23,9 @@ import { waOccupationPlainLabel } from "./wa-lni";
 import { laLslbcPlainLabel } from "./la-lslbc";
 import { msSbcPlainLabel } from "./ms-sbc";
 import { kyDhbcPlainLabel } from "./ky-dhbc";
+import { wiDspsPlainLabel } from "./wi-dsps";
 
-export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY";
+export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY" | "WI";
 
 export type EvidenceState = {
   code: StateCode;
@@ -207,6 +209,21 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     coverageNote:
       "Kentucky does not issue a statewide general contractor license. DHBC coverage is specialty trades only (electrical, HVAC, and plumbing contractor credentials in this load). Many general builders are city/county only. Always confirm on the official DHBC search.",
   },
+  wi: {
+    code: "WI",
+    slug: "wi",
+    name: "Wisconsin",
+    shortName: "WI",
+    boardLabel: "Wisconsin Department of Safety and Professional Services (DSPS)",
+    boardUrl: "https://license.wi.gov/s/license-lookup",
+    entityRegistryLabel: "Wisconsin DFI business filings (not yet linked)",
+    entityRegistryUrl: "https://apps.dfi.wi.gov/apps/corpsearch/search.aspx",
+    licenseSource: "wi_dsps",
+    entitySource: "wi_dfi",
+    live: false,
+    coverageNote:
+      "Wisconsin does not issue a statewide commercial general contractor license. DSPS coverage is Dwelling Contractor (1–2 family building permits) plus trade credentials such as Electrical Contractor and HVAC Contractor. Missing from this search does not mean unlicensed. Always confirm on the official LicensE lookup.",
+  },
 };
 
 export const DEFAULT_STATE_SLUG = "fl";
@@ -231,7 +248,9 @@ export function getStateBySlug(slug: string): EvidenceState | null {
                 ? "ms"
                 : key === "kentucky"
                   ? "ky"
-                  : key;
+                  : key === "wisconsin"
+                    ? "wi"
+                    : key;
   const s = EVIDENCE_STATES[mapped] ?? null;
   if (!s) return null;
   // NJ pilot can be disabled without removing config
@@ -325,6 +344,7 @@ export function occupationLabel(code: string | null | undefined): string {
     laLslbcPlainLabel(upper) ??
     msSbcPlainLabel(upper) ??
     kyDhbcPlainLabel(upper) ??
+    wiDspsPlainLabel(upper) ??
     njCredentialPlainLabel(upper) ??
     getOccupationInfo(upper).label
   );

@@ -15,10 +15,12 @@
 | 6 | `adapters/or_ccb.py` | Oregon CCB Active Licenses | `data/staging/or_ccb/` |
 | 7 | Permits | County / city open data | Later |
 | — | `adapters/ky_dhbc.py` | KY DHBC specialty trades (no statewide GC; Phase 1 Active contractor load) | `data/staging/ky_dhbc/` |
+| — | `adapters/wi_dsps.py` | WI DSPS dwelling + trade credentials (no statewide commercial GC; Phase 0) | `data/staging/wi_dsps/` |
 
 **Texas note:** No statewide GC license. TDLR adapter filters to specialty contractor types only — see `docs/DATA_SOURCES_TX.md`.  
 **New Jersey note:** No statewide GC license. HIC is the primary residential set; specialty boards when bulk files exist — see `docs/DATA_SOURCES_NJ.md`.  
 **Kentucky note:** No statewide GC license. DHBC specialty only (electrical / HVAC / plumbing contractors); `live: true` — see `docs/DATA_SOURCES_KY.md`.
+**Wisconsin note:** No statewide commercial GC. Dwelling Contractor + Electrical/HVAC contractor credentials; `live: false` until a real extract — see `docs/DATA_SOURCES_WI.md`.
 
 ## Conventions
 
