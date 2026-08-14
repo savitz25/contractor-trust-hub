@@ -66,6 +66,28 @@ export const AZ_PILOT_COVERED = [
   "ROC disciplinary actions posting list (Suspended / Revoked + case number when linked)",
 ] as const;
 
+export function azRocCategoryFromSecondary(secondary: string | null | undefined) {
+  const cat = azCategoryFromSecondary(secondary);
+  if (!cat) return null;
+  return { chip: cat, official: cat, scopeNote: `Arizona ROC class type: ${cat}.` };
+}
+
+export function azRocDisplayLabel(code: string | null | undefined): string {
+  return azClassPlainLabel(code) || (code ? `Class ${code}` : "Arizona ROC contractor");
+}
+
+export function getAzRocClassInfo(code: string | null | undefined) {
+  const plain = azClassPlainLabel(code);
+  if (!code && !plain) return null;
+  return {
+    code: (code || "").toUpperCase(),
+    chip: plain || code || "ROC",
+    official: code || "ROC",
+    plain: azRocDisplayLabel(code),
+    scopeNote: "Arizona ROC class as published on the current posting list.",
+  };
+}
+
 export const AZ_PILOT_NOT_COVERED = [
   "Full historical inactive archive beyond disciplinary + current active lists",
   "Full case narrative / findings text (disciplinary CSV is status-word level)",
