@@ -8,9 +8,11 @@ import {
 } from "@/lib/contractors/format";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
 import {
+  buildConsumerMeaning,
   buildEvidencePillars,
   buildHiringGuidance,
   findDiscrepancies,
+  freshestVerifiedAt,
   matchConfidenceLine,
   type EvidenceTone,
 } from "@/lib/contractors/trust-report";
@@ -70,44 +72,64 @@ const toneText: Record<EvidenceTone, string> = {
 
 export function EvidenceSummary({ contractor }: { contractor: ContractorDetail }) {
   const pillars = buildEvidencePillars(contractor);
+  // First screen: license, entity/secondary, discipline/coverage, insurance (skip pure freshness card in grid — shown in header)
+  const mainPillars = pillars.filter((p) => p.id !== "freshness");
   const entity = contractor.entities[0];
   const conf = matchConfidenceLine(entity);
-  const isTx = (contractor.homeState || "").toUpperCase() === "TX";
+  const slug = evidenceSlugFromHomeState(contractor.homeState);
+  const freshest = freshestVerifiedAt(contractor);
+  const intro =
+    slug === "tx"
+      ? "At-a-glance checks from the TDLR / TSBPE extract — not a score or ranking."
+      : slug === "or"
+        ? "At-a-glance checks from the Oregon CCB Active Licenses extract — not a score or ranking."
+        : slug === "wa"
+          ? "At-a-glance checks from the Washington L&I contractor extract — not a score or ranking."
+          : slug === "az"
+            ? "At-a-glance checks from the Arizona ROC posting list — not a score or ranking."
+            : slug === "la"
+              ? "At-a-glance checks from the Louisiana LSLBC public roster — not a score or ranking."
+              : slug === "ms"
+                ? "At-a-glance checks from the Mississippi MSBOC public list — not a score or ranking."
+                : slug === "ky"
+                  ? "At-a-glance checks from the Kentucky DHBC specialty extract — not a score or ranking."
+                  : slug === "ca"
+                    ? "At-a-glance checks from the CSLB public list extract — not a score or ranking."
+                    : slug === "nj"
+                      ? "At-a-glance checks from New Jersey DCA extracts — not a score or ranking."
+                      : "At-a-glance checks from official extracts — not a score or ranking.";
 
   return (
-    <section aria-labelledby="evidence-summary-heading">
+    <section
+      id="evidence-summary"
+      className="scroll-mt-24 sm:scroll-mt-28"
+      aria-labelledby="evidence-summary-heading"
+    >
       <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-3">
         <div>
           <h2
             id="evidence-summary-heading"
             className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]"
           >
-            Evidence at a glance
+            What we know from the extract
           </h2>
-          <p className="mt-1 text-sm text-[var(--muted)]">
-            {isTx
-              ? "Three checks from the TDLR specialty extract — not a score or ranking."
-              : (contractor.homeState || "").toUpperCase() === "OR"
-                ? "Three checks from the Oregon CCB Active Licenses extract — not a score or ranking."
-                : (contractor.homeState || "").toUpperCase() === "WA"
-                  ? "Three checks from the Washington L&I contractor extract — not a score or ranking."
-                  : (contractor.homeState || "").toUpperCase() === "AZ"
-                    ? "Three checks from the Arizona ROC current posting list — not a score or ranking."
-                    : (contractor.homeState || "").toUpperCase() === "LA"
-                      ? "Three checks from the Louisiana LSLBC official public roster — not a score or ranking."
-                      : (contractor.homeState || "").toUpperCase() === "MS"
-                        ? "Three checks from the Mississippi MSBOC official public list — not a score or ranking."
-              : "Three checks from official extracts — not a score or ranking."}
-          </p>
+          <p className="mt-1 text-sm text-[var(--muted)]">{intro}</p>
         </div>
-        {conf && !isTx ? (
-          <p className="w-fit max-w-full rounded-full border border-[var(--accent)]/25 bg-[var(--accent-soft)] px-3 py-1 text-xs font-medium leading-snug text-[var(--accent)]">
-            {conf}
-          </p>
-        ) : null}
+        <div className="flex flex-wrap items-center gap-2">
+          {conf && (slug === "fl" || slug === "nj") ? (
+            <p className="w-fit max-w-full rounded-full border border-[var(--accent)]/25 bg-[var(--accent-soft)] px-3 py-1 text-xs font-medium leading-snug text-[var(--accent)]">
+              {conf}
+            </p>
+          ) : null}
+          {freshest ? (
+            <p className="w-fit rounded-full border border-[var(--border)] bg-white px-3 py-1 text-xs text-[var(--muted)]">
+              Data updated {formatDateTime(freshest)}
+            </p>
+          ) : null}
+        </div>
       </div>
-      <div className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-3 sm:gap-3">
-        {pillars.map((p) => (
+      <div className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-3">
+        {mainPillars.map((p) => (
           <div
             key={p.id}
             className={`rounded-2xl border px-3.5 py-3 sm:px-4 sm:py-4 ${toneRing[p.tone]}`}
@@ -137,23 +159,62 @@ export function EvidenceSummary({ contractor }: { contractor: ContractorDetail }
   );
 }
 
+/** First-screen plain-language bullets (3–5). */
+export function ConsumerMeaning({ contractor }: { contractor: ContractorDetail }) {
+  const points = buildConsumerMeaning(contractor);
+  return (
+    <section
+      id="what-this-means"
+      className="scroll-mt-24 rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 sm:scroll-mt-28 sm:p-5"
+      aria-labelledby="what-this-means-heading"
+    >
+      <h2
+        id="what-this-means-heading"
+        className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]"
+      >
+        What this means for you
+      </h2>
+      <p className="mt-1.5 text-xs leading-relaxed text-[var(--muted)] sm:text-sm">
+        Plain-language notes from evidence already on this report. Educational only — not advice to
+        hire or avoid anyone.
+      </p>
+      <ul className="mt-3.5 space-y-3 sm:mt-4 sm:space-y-3.5">
+        {points.map((p) => (
+          <li key={p.id} className="flex gap-3 text-sm leading-relaxed">
+            <span
+              className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${toneDot[p.tone]}`}
+              aria-hidden
+            />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                {p.label}
+              </p>
+              <p className="mt-0.5 text-[var(--text)]">{p.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 export function HiringGuidance({ contractor }: { contractor: ContractorDetail }) {
   const points = buildHiringGuidance(contractor);
+  const isFl = (contractor.homeState || "").toUpperCase() === "FL";
   return (
     <section
       id="hiring"
-      className="scroll-mt-24 rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 sm:scroll-mt-28 sm:p-6"
+      className="scroll-mt-24 rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 sm:scroll-mt-28 sm:p-6 print:break-inside-avoid"
       aria-labelledby="hiring-guidance-heading"
     >
       <h2
         id="hiring-guidance-heading"
         className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]"
       >
-        What should I know before hiring?
+        Hiring notes (detail)
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-        Plain-language notes from the evidence on this page. Educational only — not advice to hire
-        or avoid anyone.
+        Same evidence as above, kept here for researchers who scroll the full dossier.
       </p>
       <ul className="mt-4 space-y-3.5 sm:mt-5 sm:space-y-4">
         {points.map((p) => (
@@ -171,31 +232,33 @@ export function HiringGuidance({ contractor }: { contractor: ContractorDetail })
           </li>
         ))}
       </ul>
-      <div className="mt-5 border-t border-[var(--border)] pt-4">
-        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-          Decision tools
-        </p>
-        <div className="mt-2 flex flex-wrap gap-2">
-          <a
-            href={`/tools/quote-analyzer?name=${encodeURIComponent(contractor.displayName)}&contractor=${encodeURIComponent(contractor.slug)}`}
-            className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--navy)] no-underline"
-          >
-            Analyze a quote from this contractor
-          </a>
-          <a
-            href="/tools/pre-hire-checklist"
-            className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--navy)] no-underline"
-          >
-            Pre-hire checklist
-          </a>
-          <a
-            href="/tools/scope-builder"
-            className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--navy)] no-underline"
-          >
-            Build project scope
-          </a>
+      {isFl ? (
+        <div className="mt-5 border-t border-[var(--border)] pt-4 print:hidden">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+            Decision tools
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <a
+              href={`/tools/quote-analyzer?name=${encodeURIComponent(contractor.displayName)}&contractor=${encodeURIComponent(contractor.slug)}`}
+              className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--navy)] no-underline"
+            >
+              Analyze a quote from this contractor
+            </a>
+            <a
+              href="/tools/pre-hire-checklist"
+              className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--navy)] no-underline"
+            >
+              Pre-hire checklist
+            </a>
+            <a
+              href="/tools/scope-builder"
+              className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--navy)] no-underline"
+            >
+              Build project scope
+            </a>
+          </div>
         </div>
-      </div>
+      ) : null}
     </section>
   );
 }
@@ -203,6 +266,11 @@ export function HiringGuidance({ contractor }: { contractor: ContractorDetail })
 export function DiscrepanciesSection({ contractor }: { contractor: ContractorDetail }) {
   const items = findDiscrepancies(contractor);
   if (items.length === 0) return null;
+  const slug = evidenceSlugFromHomeState(contractor.homeState);
+  const title =
+    slug === "fl"
+      ? "Notes comparing license and Sunbiz"
+      : "Notes comparing license and entity filing";
 
   return (
     <section
@@ -213,7 +281,7 @@ export function DiscrepanciesSection({ contractor }: { contractor: ContractorDet
         id="discrepancies-heading"
         className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]"
       >
-        Notes comparing DBPR and Sunbiz
+        {title}
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         These differences are common in public records and are not automatic red flags. We show
@@ -609,11 +677,17 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                               ? "ROC"
                               : isLa
                                 ? "LSLBC"
-                          : isTsbpe
-                            ? "TSBPE"
-                            : isTx
-                              ? "TDLR"
-                              : "CILB / DBPR")}
+                                : isMs
+                                  ? "MSBOC"
+                                  : isTsbpe
+                                    ? "TSBPE"
+                                    : isTx
+                                      ? "TDLR"
+                                      : src === "ky_dhbc"
+                                        ? "DHBC"
+                                        : src === "ca_cslb"
+                                          ? "CSLB"
+                                          : "CILB / DBPR")}
                   </dd>
                 </div>
                 <div className="sm:col-span-2">
@@ -635,11 +709,19 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                           ? "Washington L&I"
                           : isAz
                             ? "Arizona ROC"
-                      : isTsbpe
-                        ? "Texas TSBPE"
-                        : isTx
-                          ? "Texas TDLR"
-                        : "Florida DBPR"}{" "}
+                            : isLa
+                              ? "Louisiana LSLBC"
+                              : isMs
+                                ? "Mississippi MSBOC"
+                                : isTsbpe
+                                  ? "Texas TSBPE"
+                                  : isTx
+                                    ? "Texas TDLR"
+                                    : src === "ky_dhbc"
+                                      ? "Kentucky DHBC"
+                                      : src === "ca_cslb"
+                                        ? "California CSLB"
+                                        : "Florida DBPR"}{" "}
                     ({lic.sourceSystem}) · {formatDateTime(lic.lastVerifiedAt)}
                   </dd>
                 </div>
@@ -669,7 +751,7 @@ export function EntitySection({
           Business / entity signals ({state.entityRegistryLabel.split("(")[0].trim()})
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
-          No high-confidence Sunbiz link for this contractor yet. We only link exact name/geo
+          No high-confidence entity link for this contractor yet. We only link exact name/geo
           matches — we do not invent entity links.
         </p>
       </section>
@@ -835,12 +917,19 @@ export function DisciplineSection({
                 case number), may omit actions outside that file or after our last load, and current
                 standing can change. Re-check the official ROC contractor search before hiring.
               </>
-            ) : (
+            ) : slug === "fl" ? (
               <>
                 Our Florida board discipline files do not currently attach an action to this profile.
                 That is <strong className="font-medium text-[var(--text)]">not</strong> a certificate
                 of clean history: records may exist outside these extracts, under another name, or
                 after our last load. Re-check the official DBPR board before hiring.
+              </>
+            ) : (
+              <>
+                Our current extracts do not attach a discipline action to this profile. That is{" "}
+                <strong className="font-medium text-[var(--text)]">not</strong> a certificate of clean
+                history: records may exist outside these extracts or after our last load. Re-check the
+                official board before hiring.
               </>
             )}
           </p>
@@ -961,6 +1050,8 @@ export function SourcesFooter({
   const isLa = state.slug === "la" || hs === "LA";
   const isMs = state.slug === "ms" || hs === "MS";
   const isKy = state.slug === "ky" || hs === "KY";
+  const isCa = state.slug === "ca" || hs === "CA";
+  const isFl = !isTx && !isNj && !isOr && !isWa && !isAz && !isLa && !isMs && !isKy && !isCa;
 
   return (
     <aside className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-elevated)]/50 px-4 py-5 text-sm leading-relaxed text-[var(--muted)] sm:px-5">
@@ -986,6 +1077,8 @@ export function SourcesFooter({
                         ? "License (Mississippi MSBOC)"
                         : isKy
                           ? "License (Kentucky DHBC)"
+                          : isCa
+                            ? "License (California CSLB)"
               : isTx
                 ? "License (TDLR)"
                 : "License (DBPR)"}
@@ -1013,6 +1106,8 @@ export function SourcesFooter({
                           ? "ms_sbc"
                           : isKy
                             ? "ky_dhbc"
+                            : isCa
+                              ? "ca_cslb"
                       : isTx
                         ? "tx_tdlr"
                         : "fl_dbpr")}
@@ -1066,6 +1161,13 @@ export function SourcesFooter({
             statewide general contractor license. No bond, insurance, or discipline on this extract.
             Confirm current status on the official DHBC search.
           </li>
+        ) : isCa ? (
+          <li>
+            <span className="font-medium text-[var(--text)]">Coverage note</span>
+            <br />
+            California CSLB public list extract for high-impact counties. Bond and workers&apos; comp
+            fields are as published — not live certificates. Confirm on Instant License Check.
+          </li>
         ) : isTx ? (
           <li>
             <span className="font-medium text-[var(--text)]">Coverage note</span>
@@ -1082,7 +1184,7 @@ export function SourcesFooter({
             Florida-depth (no full permit history or planning journey in this pilot). Coverage
             differs by state.
           </li>
-        ) : (
+        ) : isFl ? (
           <>
             <li>
               <span className="font-medium text-[var(--text)]">Business entity (Sunbiz)</span>
@@ -1106,7 +1208,7 @@ export function SourcesFooter({
                 : ""}
             </li>
           </>
-        )}
+        ) : null}
       </ul>
       <p className="mt-4">
         {isOr
@@ -1121,11 +1223,15 @@ export function SourcesFooter({
                   ? "Always confirm current status on the official MSBOC lookup before hiring."
                   : isKy
                     ? "Always confirm current status on the official DHBC licensee search before hiring."
+                    : isCa
+                      ? "Always confirm current status on CSLB Instant License Check before hiring."
           : isTx
           ? "Always confirm current status on the official TDLR or TSBPE search before hiring."
           : isNj
             ? "Always confirm current status on official New Jersey DCA / board tools before hiring."
-            : "Always confirm current status on the official board and corporate registry before hiring."}{" "}
+            : isFl
+              ? "Always confirm current status on the official DBPR board and Sunbiz before hiring."
+            : "Always confirm current status on the official board before hiring."}{" "}
         Educational research only — not a consumer reporting agency, not paid rankings.{" "}
         <Link href="/methodology" className="text-[var(--accent)]">
           Methodology

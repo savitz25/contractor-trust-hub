@@ -8,6 +8,7 @@ import { InsuranceGuidance } from "@/components/contractor/InsuranceGuidance";
 import { ProjectFitBanner } from "@/components/contractor/ProjectFitBanner";
 import { RelatedEntitySection } from "@/components/contractor/RelatedEntitySection";
 import {
+  ConsumerMeaning,
   DisciplineSection,
   DiscrepanciesSection,
   EntitySection,
@@ -17,11 +18,15 @@ import {
   SourcesFooter,
 } from "@/components/contractor/TrustReport";
 import { TrustNextActions } from "@/components/contractor/TrustNextActions";
+import { TrustReportActions } from "@/components/contractor/TrustReportActions";
 import { TrustReportNav } from "@/components/contractor/TrustReportNav";
 import { WhatWeChecked } from "@/components/contractor/WhatWeChecked";
 import { NjNextActions } from "@/components/contractor/NjNextActions";
 import { ArizonaCoverageBanner } from "@/components/search/ArizonaCoverageBanner";
 import { CaliforniaCoverageBanner } from "@/components/search/CaliforniaCoverageBanner";
+import { KentuckyCoverageBanner } from "@/components/search/KentuckyCoverageBanner";
+import { LouisianaCoverageBanner } from "@/components/search/LouisianaCoverageBanner";
+import { MississippiCoverageBanner } from "@/components/search/MississippiCoverageBanner";
 import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
 import { OregonCoverageBanner } from "@/components/search/OregonCoverageBanner";
 import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
@@ -32,7 +37,11 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { displayStatusLabel, formatDateTime, statusLabel } from "@/lib/contractors/format";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { getContractorBySlug } from "@/lib/contractors/queries";
-import { matchConfidenceLine } from "@/lib/contractors/trust-report";
+import {
+  matchConfidenceLine,
+  officialBoardVerifyLabel,
+  officialBoardVerifyUrl,
+} from "@/lib/contractors/trust-report";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
 import { trustReportJsonLd, trustReportMetadata } from "@/lib/seo/trust-report-seo";
 import { getStateBySlug } from "@/lib/states/config";
@@ -131,9 +140,11 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const isLa = stateSlug === "la";
   const isMs = stateSlug === "ms";
   const isWa = stateSlug === "wa";
-  /** TX/OR/CA/AZ/WA keep thin reports; NJ Stage 8A is fuller Verify depth. */
-  const isTxOnly = isTx || isOr || isCa || isAz || isWa || isLa || isMs;
-  const isFlFull = !isTx && !isNj && !isOr && !isCa && !isAz && !isWa && !isLa && !isMs;
+  const isKy = stateSlug === "ky";
+  const isFlFull = stateSlug === "fl";
+  /** Verify-first thin reports (no FL plan/activity stack). */
+  const isThin =
+    isTx || isOr || isCa || isAz || isWa || isLa || isMs || isKy;
   const state = getStateBySlug(stateSlug) || getStateBySlug("fl")!;
   const verifyHref =
     stateSlug === "fl" ? "/verify" : `/verify?state=${stateSlug}`;
@@ -160,11 +171,16 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const orTypeLabel = isOr && primary ? orCcbDisplayLabel(primary.occupationCode) : null;
   const caClassLabel = isCa && primary ? caClassPlainLabel(primary.occupationCode) : null;
   const azClassLabel = isAz && primary ? azClassPlainLabel(primary.occupationCode) : null;
+  const officialHref = officialBoardVerifyUrl(contractor);
+  const officialLabel = officialBoardVerifyLabel(contractor);
+  const correctionHref = `/corrections?slug=${encodeURIComponent(contractor.slug)}${
+    primary?.externalKey ? `&license=${encodeURIComponent(primary.externalKey)}` : ""
+  }`;
 
   return (
     <main
       className={`mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10 ${
-        isTxOnly ? "pb-10" : "pb-28 sm:pb-10"
+        isThin && !isFlFull ? "pb-24 sm:pb-10" : "pb-28 sm:pb-10"
       }`}
     >
       <ContractorJsonLd contractor={contractor} path={path} />
@@ -268,6 +284,21 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           <WashingtonCoverageBanner compact />
         </div>
       ) : null}
+      {isLa ? (
+        <div className="mt-3 max-w-3xl sm:mt-4">
+          <LouisianaCoverageBanner compact />
+        </div>
+      ) : null}
+      {isMs ? (
+        <div className="mt-3 max-w-3xl sm:mt-4">
+          <MississippiCoverageBanner compact />
+        </div>
+      ) : null}
+      {isKy ? (
+        <div className="mt-3 max-w-3xl sm:mt-4">
+          <KentuckyCoverageBanner compact />
+        </div>
+      ) : null}
 
       {/* A. Identity snapshot */}
       <header
@@ -287,7 +318,13 @@ export default async function ContractorPage({ params, searchParams }: Props) {
                     ? "Arizona · ROC statewide · Trust Report"
                     : isWa
                       ? "Washington · L&I statewide · Trust Report"
-              : "Florida · Contractor Trust Report 2.0"}
+                      : isLa
+                        ? "Louisiana · LSLBC · Trust Report"
+                        : isMs
+                          ? "Mississippi · MSBOC · Trust Report"
+                          : isKy
+                            ? "Kentucky · DHBC specialty · Trust Report"
+                            : "Florida · Contractor Trust Report 2.0"}
         </p>
         <h1 className="mt-1.5 text-[1.5rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:mt-2 sm:text-4xl">
           {contractor.displayName}
@@ -372,7 +409,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
                   : "Discipline records identified"
               }
             />
-          ) : !isTxOnly ? (
+          ) : !isThin ? (
             <StatusBadge
               status="unknown"
               label={
@@ -396,7 +433,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
             {contractor.dbaName ? <>Principal / DBA field: {contractor.dbaName}</> : null}
           </p>
         )}
-        {!isTxOnly ? (
+        {!isThin ? (
           entity ? (
             <p className="mt-1 text-sm text-[var(--muted)]">
               Linked entity: <span className="text-[var(--text)]">{entity.legalName}</span>
@@ -415,7 +452,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <CompareToggle slug={contractor.slug} />
-          {isTxOnly ? (
+          {isThin ? (
             <>
               <a
                 href="#hiring"
@@ -457,13 +494,29 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         </div>
       </header>
 
-      {!isTxOnly ? (
-        <div className="mt-4">
+      {!isThin ? (
+        <div className="mt-4 print:hidden">
           <TrustReportNav />
         </div>
       ) : null}
 
       <div className="mt-6 space-y-5 sm:mt-8 sm:space-y-6">
+        {/* —— First screen: summary → meaning → actions —— */}
+        <EvidenceSummary contractor={contractor} />
+        <ConsumerMeaning contractor={contractor} />
+        <TrustReportActions
+          slug={contractor.slug}
+          name={contractor.displayName}
+          licenseKey={primary?.externalKey}
+          licenseStatus={primary?.statusNormalized}
+          entityStatus={entity?.status}
+          disciplineCount={contractor.discipline.length}
+          officialHref={officialHref}
+          officialLabel={officialLabel}
+          correctionHref={correctionHref}
+          sticky
+        />
+
         {isFlFull ? (
           <ProjectFitBanner
             contractor={contractor}
@@ -471,89 +524,32 @@ export default async function ContractorPage({ params, searchParams }: Props) {
             projectType={projectType}
           />
         ) : null}
-
-        <EvidenceSummary contractor={contractor} />
-        {isTxOnly ? <HiringGuidance contractor={contractor} /> : null}
         {isFlFull ? <CautionSummary contractor={contractor} /> : null}
+
+        {/* Full dossier below the fold */}
         <WhatWeChecked contractor={contractor} />
 
-        {/* B. License / registration evidence */}
         <LicensesSection licenses={contractor.licenses} />
 
-        {/* C. Enforcement / discipline — FL/NJ full path, or AZ thin path with ROC CSV */}
-        {!isTxOnly || isAz ? (
+        {!isThin || isAz || isNj || isFlFull ? (
           <DisciplineSection
             discipline={contractor.discipline}
             homeState={contractor.homeState}
           />
         ) : null}
 
-        {/* D. Business / entity */}
-        {!isTxOnly ? (
+        {!isThin ? (
           <div className="grid gap-5 sm:gap-6 lg:grid-cols-2">
             <EntitySection entities={contractor.entities} state={state} />
             <DiscrepanciesSection contractor={contractor} />
           </div>
-        ) : isOr ? (
-          <section className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
-              Sources
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-              License evidence from the Oregon CCB Active Licenses open-data extract. Bond and
-              insurance fields are as published — not a live certificate check. Confirm on the
-              official CCB search when decisions matter.
-            </p>
-            <a
-              href="https://search.ccb.state.or.us/search/"
-              className="mt-3 inline-flex text-sm font-medium text-[var(--navy)] underline-offset-2 hover:underline"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Official CCB license search →
-            </a>
-          </section>
-        ) : (
-          <section className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
-              Sources
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-              License evidence from TDLR specialty extracts and/or TSBPE plumbing lists. No
-              statewide general contractor license exists in Texas. Confirm details on the official
-              board search when decisions matter.
-            </p>
-            <div className="mt-3 flex flex-col gap-1.5">
-              <a
-                href="https://www.tdlr.texas.gov/LicenseSearch/"
-                className="inline-flex text-sm font-medium text-[var(--navy)] underline-offset-2 hover:underline"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Official TDLR license search →
-              </a>
-              <a
-                href="https://tsbpe.texas.gov/"
-                className="inline-flex text-sm font-medium text-[var(--navy)] underline-offset-2 hover:underline"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Official TSBPE (plumbing) →
-              </a>
-            </div>
-          </section>
-        )}
-        {!isTxOnly ? <RelatedEntitySection contractor={contractor} /> : null}
+        ) : null}
+        {!isThin ? <RelatedEntitySection contractor={contractor} /> : null}
 
-        {/* Insurance guidance — FL only educational panels with FL assumptions */}
         {isFlFull ? <InsuranceGuidance contractor={contractor} /> : null}
-
-        {/* E. Activity framework (Florida permit waves only) */}
         {isFlFull ? <ActivitySection contractor={contractor} /> : null}
-
         {isFlFull ? <HiringGuidance contractor={contractor} /> : null}
 
-        {/* F. Next actions */}
         {isFlFull ? (
           <TrustNextActions
             slug={contractor.slug}
@@ -578,20 +574,6 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         ) : null}
 
         <SourcesFooter contractor={contractor} state={state} />
-
-        <div className="flex flex-col gap-3 rounded-2xl border border-[var(--border)] bg-[var(--panel)] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-          <p className="text-sm text-[var(--muted)]">See something wrong on this report?</p>
-          <Link
-            href={`/corrections?slug=${encodeURIComponent(contractor.slug)}${
-              primary?.externalKey
-                ? `&license=${encodeURIComponent(primary.externalKey)}`
-                : ""
-            }`}
-            className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:border-[var(--accent)]/40"
-          >
-            Request a correction
-          </Link>
-        </div>
 
         <LegalNotice />
       </div>
