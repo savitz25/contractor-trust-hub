@@ -122,10 +122,12 @@ export function StudioResults({
     if (!data) return;
     saveJourneyContext({
       entryPath: "studio",
+      state: "fl",
       projectType: data.context.projectType,
       scale: data.context.scale,
       zip: data.context.location.zip,
       city: data.context.location.city,
+      county: data.context.location?.county || undefined,
       contractorSlug: data.match.contractors[0]?.slug,
       contractorName: data.match.contractors[0]?.displayName,
     });

@@ -94,6 +94,19 @@ export function KitchenCostCalculator() {
     return `/plan/results?${qs}`;
   }, [estimate.planScale, zip, city]);
 
+  const persistProjectContext = () => {
+    void import("@/lib/project-context/store").then(({ saveProjectContext }) => {
+      saveProjectContext({
+        state: "fl",
+        entryPath: "studio",
+        projectType: "kitchen_remodel",
+        scale: estimate.planScale,
+        zip: zip.replace(/\D/g, "").slice(0, 5) || undefined,
+        city: city.trim() || undefined,
+      });
+    });
+  };
+
   const studioHref = `/studios/kitchen`;
 
   const midMarkerPct = Math.min(
@@ -314,6 +327,7 @@ export function KitchenCostCalculator() {
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             <Link
               href={planResultsHref}
+              onClick={persistProjectContext}
               className="btn-primary inline-flex min-h-12 items-center justify-center px-5 text-sm no-underline"
             >
               Find verified contractors →
@@ -389,6 +403,7 @@ export function KitchenCostCalculator() {
           </div>
           <Link
             href={planResultsHref}
+            onClick={persistProjectContext}
             className="btn-primary shrink-0 px-4 py-2.5 text-sm no-underline"
           >
             Find contractors →

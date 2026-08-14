@@ -7,6 +7,10 @@ import {
   toggleCompareSlug,
 } from "./compare-store";
 
+/**
+ * Save / remove a contractor on the device shortlist (max 3 → Compare).
+ * localStorage only — not a marketplace ranking.
+ */
 export function CompareToggle({
   slug,
   compact = false,
@@ -45,10 +49,10 @@ export function CompareToggle({
       aria-pressed={selected}
       title={
         full && !selected
-          ? `Compare is full (${MAX_COMPARE} max). Remove one first.`
+          ? `Shortlist is full (${MAX_COMPARE} max). Remove one first.`
           : selected
-            ? "Remove from compare"
-            : "Add to compare"
+            ? "Remove from shortlist (saved on this device)"
+            : "Save to shortlist (on this device)"
       }
       className={
         compact
@@ -60,7 +64,7 @@ export function CompareToggle({
             : "inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] bg-white px-4 text-sm font-medium text-[var(--text)] hover:border-[var(--navy)]/25"
       }
     >
-      {selected ? "In compare" : full ? "Compare full" : "Compare"}
+      {selected ? "Saved" : full ? "Shortlist full" : "Save"}
     </button>
   );
 }

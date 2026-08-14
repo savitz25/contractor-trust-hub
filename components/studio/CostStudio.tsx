@@ -57,6 +57,19 @@ export function CostStudio() {
     return `/plan/results?${qs}`;
   }, [projectType, scale, zip, city]);
 
+  const persistProjectContext = () => {
+    void import("@/lib/project-context/store").then(({ saveProjectContext }) => {
+      saveProjectContext({
+        state: "fl",
+        entryPath: "studio",
+        projectType,
+        scale,
+        zip: zip.replace(/\D/g, "").slice(0, 5) || undefined,
+        city: city.trim() || undefined,
+      });
+    });
+  };
+
   const midShift =
     estimate.baseMid > 0
       ? Math.round(((estimate.mid - estimate.baseMid) / estimate.baseMid) * 100)
@@ -346,6 +359,7 @@ export function CostStudio() {
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             <Link
               href={planResultsHref}
+              onClick={persistProjectContext}
               className="btn-primary inline-flex min-h-12 items-center justify-center px-5 text-sm no-underline"
             >
               Find verified contractors →
@@ -416,6 +430,7 @@ export function CostStudio() {
           </div>
           <Link
             href={planResultsHref}
+            onClick={persistProjectContext}
             className="btn-primary shrink-0 px-4 py-2.5 text-sm no-underline"
           >
             Verify path →

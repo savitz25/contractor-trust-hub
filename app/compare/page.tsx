@@ -9,9 +9,9 @@ import type { ContractorDetail } from "@/lib/contractors/types";
 import { pageMetadata } from "@/lib/seo/page-meta";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Compare Florida contractors",
+  title: "Compare contractors (evidence shortlist)",
   description:
-    "Side-by-side evidence comparison: license status, Sunbiz entity, discipline, and related-entity signals. Not rankings or paid placement.",
+    "Side-by-side public-record comparison from your shortlist (max 3). License status, entity links when available, discipline signals. Not rankings or paid placement.",
   path: "/compare",
   noIndex: true,
 });
@@ -61,37 +61,47 @@ export default async function ComparePage({ searchParams }: Props) {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
-        Evidence comparison
+        Evidence shortlist
       </p>
       <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)]">
         Compare contractors
       </h1>
       <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--muted)]">
-        Side-by-side public-record signals — not a ranking, score, or recommendation to hire.
-        Differences in evidence availability and caution signals are highlighted. Always confirm
-        details on the official Florida DBPR board.
+        Side-by-side public-record signals from contractors you saved on this device — not a
+        ranking, score, marketplace, or recommendation to hire. Always confirm details on the
+        official board for each state.
       </p>
 
       {slugs.length === 0 && (
         <div className="mt-10 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-5 py-10 text-center">
-          <p className="text-base font-medium text-[var(--text)]">No contractors selected</p>
+          <p className="text-base font-medium text-[var(--text)]">No shortlist yet</p>
           <p className="mx-auto mt-2 max-w-md text-sm text-[var(--muted)]">
-            From search or a Trust Report, tap <strong className="text-[var(--text)]">Compare</strong>{" "}
-            on 2–{MAX_COMPARE} contractors, then open the compare bar.
+            From search, discovery, or a Trust Report, tap{" "}
+            <strong className="text-[var(--text)]">Save</strong> on up to {MAX_COMPARE} contractors.
+            Your shortlist stays on this device, then open Compare for evidence side-by-side — not a
+            winner score.
           </p>
-          <Link
-            href="/verify"
-            className="mt-6 inline-flex min-h-11 items-center rounded-xl bg-[var(--accent)] px-5 text-sm font-semibold text-[var(--navy)] no-underline"
-          >
-            Go to search
-          </Link>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/verify"
+              className="inline-flex min-h-11 items-center rounded-xl bg-[var(--accent)] px-5 text-sm font-semibold text-[var(--navy)] no-underline"
+            >
+              Go to search
+            </Link>
+            <Link
+              href="/florida"
+              className="inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] px-5 text-sm font-medium text-[var(--text)] no-underline"
+            >
+              Browse Florida
+            </Link>
+          </div>
         </div>
       )}
 
       {slugs.length === 1 && contractors.length === 1 && (
         <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-          Add at least one more contractor to compare (up to {MAX_COMPARE}). You can keep searching
-          with this one in your compare list.
+          Save at least one more contractor to compare (up to {MAX_COMPARE}). Shortlist is stored on
+          this device only.
         </div>
       )}
 

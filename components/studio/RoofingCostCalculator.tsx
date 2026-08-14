@@ -105,6 +105,19 @@ export function RoofingCostCalculator() {
     return `/plan?${qs}`;
   }, [estimate.planScale, zip, city]);
 
+  const persistProjectContext = () => {
+    void import("@/lib/project-context/store").then(({ saveProjectContext }) => {
+      saveProjectContext({
+        state: "fl",
+        entryPath: "studio",
+        projectType: "roofing",
+        scale: estimate.planScale,
+        zip: zip.replace(/\D/g, "").slice(0, 5) || undefined,
+        city: city.trim() || undefined,
+      });
+    });
+  };
+
   const midMarkerPct = Math.min(
     95,
     Math.max(
@@ -325,12 +338,14 @@ export function RoofingCostCalculator() {
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             <Link
               href={planResultsHref}
+              onClick={persistProjectContext}
               className="btn-primary inline-flex min-h-12 items-center justify-center px-5 text-sm no-underline"
             >
               Find verified roofers →
             </Link>
             <Link
               href={planFlowHref}
+              onClick={persistProjectContext}
               className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-5 text-sm font-medium text-[var(--navy)] no-underline hover:bg-[var(--bg)]"
             >
               Open full Plan flow
@@ -406,6 +421,7 @@ export function RoofingCostCalculator() {
           </div>
           <Link
             href={planResultsHref}
+            onClick={persistProjectContext}
             className="btn-primary shrink-0 px-4 py-2.5 text-sm no-underline"
           >
             Find roofers →

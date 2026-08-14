@@ -160,5 +160,5 @@ export function buildCompareFields(contractors: ContractorDetail[]): CompareFiel
   ];
 }
 
-/** Max contractors in compare tray / side-by-side view. */
-export const MAX_COMPARE = 4;
+/** Max contractors in shortlist / side-by-side evidence compare. */
+export const MAX_COMPARE = 3;

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DiscoveryContext } from "@/components/discovery/DiscoveryContext";
 import { DiscoveryFilterBar } from "@/components/discovery/DiscoveryFilterBar";
 import { DiscoveryListing } from "@/components/discovery/DiscoveryListing";
+import { ProjectContextPrompt } from "@/components/discovery/ProjectContextPrompt";
 import {
   browseQueryString,
   cityLabelFromSlug,
@@ -52,6 +53,7 @@ export function FloridaBrowseSection({
 
   return (
     <>
+      <ProjectContextPrompt countyName={county?.name} countySlug={county?.slug} />
       <DiscoveryContext
         county={county}
         trade={trade}

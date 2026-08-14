@@ -92,12 +92,25 @@ export function PlanFlow() {
       return;
     }
     if (!projectType) return;
+    const zipClean = zip.replace(/\D/g, "").slice(0, 5) || undefined;
+    const cityClean = city.trim() || undefined;
+    // Persist before navigate so results/discovery/verify rehydrate on this device
+    void import("@/lib/project-context/store").then(({ saveProjectContext }) => {
+      saveProjectContext({
+        state: "fl",
+        entryPath: "plan",
+        projectType,
+        scale: scale || undefined,
+        zip: zipClean,
+        city: cityClean,
+      });
+    });
     const qs = encodePlanQuery({
       projectType,
       details: details.trim() || undefined,
       state: "FL",
-      zip: zip.replace(/\D/g, "").slice(0, 5) || undefined,
-      city: city.trim() || undefined,
+      zip: zipClean,
+      city: cityClean,
       scale,
       budgetBand,
     });

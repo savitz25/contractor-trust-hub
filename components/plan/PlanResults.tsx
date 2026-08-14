@@ -73,10 +73,12 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
     if (!data) return;
     saveJourneyContext({
       entryPath: "plan",
+      state: "fl",
       projectType: data.plan.projectType,
       scale: data.plan.scale,
       zip: data.plan.zip,
       city: data.plan.city,
+      county: data.plan.county || undefined,
       contractorSlug: data.match?.contractors?.[0]?.slug || undefined,
       contractorName: data.match?.contractors?.[0]?.displayName || undefined,
     });
