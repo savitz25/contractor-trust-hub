@@ -13,7 +13,10 @@ const primaryNav = [
 ] as const;
 
 const moreNav = [
-  { href: "/florida", label: "Research" },
+  { href: "/florida", label: "Research FL" },
+  { href: "/arizona", label: "Explore AZ" },
+  { href: "/oregon", label: "Explore OR" },
+  { href: "/washington", label: "Explore WA" },
   { href: "/guides", label: "Guides" },
   { href: "/studios", label: "Studios" },
   { href: "/account", label: "Account" },

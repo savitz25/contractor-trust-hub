@@ -6,11 +6,14 @@ Independent, evidence-backed contractor verification for homeowners and commerci
 
 | | |
 |---|---|
-| **Status** | Florida Verify live; Texas Verify v1 (TDLR); New Jersey Verify pilot (HIC + specialty) |
+| **Status** | Florida Verify live; Texas Verify v1 (TDLR); Oregon CCB; Washington L&I; Arizona ROC; New Jersey Verify pilot (HIC + specialty) |
 | **Repo** | https://github.com/savitz25/contractor-trust-hub |
 | **Primary market (wave 1)** | Florida (DBPR Construction Industry Licensing Board) |
 | **Texas** | TDLR specialty trades only — no statewide GC license (see [docs/TEXAS_VERIFY_V1.md](docs/TEXAS_VERIFY_V1.md)) |
 | **New Jersey** | HIC + specialty boards only — no statewide GC license (see [docs/NEW_JERSEY_VERIFY_V1.md](docs/NEW_JERSEY_VERIFY_V1.md)) |
+| **Oregon** | Statewide CCB explore + verify (see [docs/OREGON_FULL_JOURNEY_V1.md](docs/OREGON_FULL_JOURNEY_V1.md)) |
+| **Washington** | Statewide L&I contractor licenses (see [docs/WASHINGTON_VERIFY_V1.md](docs/WASHINGTON_VERIFY_V1.md)) |
+| **Arizona** | Statewide ROC explore + verify (see [docs/ARIZONA_FULL_JOURNEY_V1.md](docs/ARIZONA_FULL_JOURNEY_V1.md)) |
 | **Tagline** | Before you hire, verify. |
 
 ## Product positioning
@@ -26,9 +29,11 @@ Independent, evidence-backed contractor verification for homeowners and commerci
 contractor-trust-hub/
 ├── app/                     # Next.js product shell (Vercel)
 ├── docs/
-│   ├── DATA_SOURCES.md      # FL DBPR, Sunbiz, TX, NJ index
-│   ├── DATA_SOURCES_TX.md   # Texas TDLR specialty (no statewide GC)
-│   ├── DATA_SOURCES_NJ.md   # NJ DCA HIC + specialty (no statewide GC)
+│   ├── DATA_SOURCES.md      # FL DBPR, Sunbiz, TX, OR, WA, NJ index
+    │   ├── DATA_SOURCES_TX.md   # Texas TDLR specialty (no statewide GC)
+    │   ├── DATA_SOURCES_NJ.md   # NJ DCA HIC + specialty (no statewide GC)
+    │   ├── DATA_SOURCES_OR.md   # Oregon CCB statewide
+    │   ├── DATA_SOURCES_WA.md   # Washington L&I statewide
 │   ├── PHASE_0.md
 │   └── SCHEMA.md
 ├── schema/
@@ -55,7 +60,12 @@ npm run build  # production build (what Vercel runs)
 | `/verify` | Florida search by license or name |
 | `/verify?state=tx` | Texas TDLR specialty trades (honest coverage banner) |
 | `/verify?state=nj` | New Jersey HIC + specialty boards (honest coverage banner) |
-| `/contractors/[slug]` | Trust Report (FL / TX / NJ by `home_state`) |
+| `/verify?state=or` | Oregon CCB statewide licenses (honest coverage banner) |
+| `/oregon` | Oregon explore (official county / project) |
+| `/verify?state=wa` | Washington L&I statewide licenses (honest coverage banner) |
+| `/verify?state=az` | Arizona ROC statewide licenses (honest coverage banner) |
+| `/arizona` | Arizona explore (county / city / project) |
+| `/contractors/[slug]` | Trust Report (FL / TX / NJ / OR / WA / AZ by `home_state`) |
 | `/about` · `/methodology` | Trust / transparency |
 
 See [docs/VERIFY_PRODUCT.md](docs/VERIFY_PRODUCT.md).

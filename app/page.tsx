@@ -26,6 +26,8 @@ const VERIFY_CTAS = [
   { href: "/verify?state=wa", label: "Washington" },
   { href: "/verify?state=ca", label: "California" },
   { href: "/verify?state=az", label: "Arizona" },
+  { href: "/verify?state=la", label: "Louisiana" },
+  { href: "/verify?state=ms", label: "Mississippi" },
 ] as const;
 
 export default function HomePage() {

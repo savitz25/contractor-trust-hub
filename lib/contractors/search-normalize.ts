@@ -67,6 +67,11 @@ export function looksLikeLicenseKey(q: string): boolean {
   if (/^TX-TSBPE:/i.test(trimmed)) return true;
   if (/^OR-CCB:/i.test(trimmed)) return true;
   if (/^CA-CSLB:/i.test(trimmed)) return true;
+  if (/^WA-LNI:/i.test(trimmed)) return true;
+  if (/^AZ-ROC:/i.test(trimmed)) return true;
+  if (/^LA-LSLBC:/i.test(trimmed)) return true;
+  if (/^MS-SBC:/i.test(trimmed)) return true;
+  if (/^\d{4,6}-[A-Za-z]{2}$/.test(trimmed)) return true;
   if (/^NJ-/i.test(trimmed)) return true;
   if (/^HIC[-_]?/i.test(trimmed)) return true;
   if (/^(ELE|PLB|HVAC|GEN)-NJ-/i.test(trimmed)) return true;
@@ -88,7 +93,11 @@ export function normalizeLicenseKey(q: string): string {
     /^TX-TDLR:/i.test(trimmed) ||
     /^TX-TSBPE:/i.test(trimmed) ||
     /^OR-CCB:/i.test(trimmed) ||
-    /^CA-CSLB:/i.test(trimmed)
+    /^CA-CSLB:/i.test(trimmed) ||
+    /^WA-LNI:/i.test(trimmed) ||
+    /^AZ-ROC:/i.test(trimmed) ||
+    /^LA-LSLBC:/i.test(trimmed) ||
+    /^MS-SBC:/i.test(trimmed)
   ) {
     return trimmed.toUpperCase().replace(/\s+/g, "");
   }

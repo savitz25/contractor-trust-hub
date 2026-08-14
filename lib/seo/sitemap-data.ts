@@ -40,7 +40,8 @@ function discoveryEntries(): SitemapUrlEntry[] {
       changefreq: "weekly",
       priority: 0.85,
     });
-    for (const county of state.counties) {
+    const geos = [...state.counties, ...(state.cities || [])];
+    for (const county of geos) {
       entries.push({
         loc: absoluteUrl(discoveryPath(state, { countySlug: county.slug })),
         changefreq: "weekly",
@@ -54,7 +55,7 @@ function discoveryEntries(): SitemapUrlEntry[] {
         priority: 0.75,
       });
     }
-    for (const county of state.counties) {
+    for (const county of geos) {
       for (const trade of state.trades) {
         entries.push({
           loc: absoluteUrl(
@@ -75,6 +76,20 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/", priority: 1, changefreq: "weekly" },
     { path: "/verify", priority: 0.95, changefreq: "daily" },
     { path: "/verify?state=or", priority: 0.9, changefreq: "weekly" },
+    { path: "/oregon", priority: 0.9, changefreq: "weekly" },
+    { path: "/oregon/multnomah", priority: 0.8, changefreq: "weekly" },
+    { path: "/oregon/projects/kitchen-remodel", priority: 0.78, changefreq: "weekly" },
+    { path: "/oregon/residential-general", priority: 0.78, changefreq: "weekly" },
+    { path: "/verify?state=wa", priority: 0.9, changefreq: "weekly" },
+    { path: "/washington", priority: 0.9, changefreq: "weekly" },
+    { path: "/washington/seattle", priority: 0.8, changefreq: "weekly" },
+    { path: "/washington/king", priority: 0.8, changefreq: "weekly" },
+    { path: "/washington/projects/kitchen-remodel", priority: 0.78, changefreq: "weekly" },
+    { path: "/washington/projects/roofing", priority: 0.78, changefreq: "weekly" },
+    { path: "/washington/electrical", priority: 0.78, changefreq: "weekly" },
+    { path: "/verify?state=az", priority: 0.9, changefreq: "weekly" },
+    { path: "/verify?state=la", priority: 0.9, changefreq: "weekly" },
+    { path: "/verify?state=ms", priority: 0.9, changefreq: "weekly" },
     { path: "/plan", priority: 0.9, changefreq: "weekly" },
     { path: "/studios", priority: 0.9, changefreq: "weekly" },
     { path: "/tools", priority: 0.92, changefreq: "weekly" },
@@ -98,6 +113,12 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/guides/florida-contractor-red-flags", priority: 0.86, changefreq: "monthly" },
     { path: "/guides/florida-contractor-license-types", priority: 0.86, changefreq: "monthly" },
     { path: "/florida", priority: 0.9, changefreq: "weekly" },
+    { path: "/arizona", priority: 0.9, changefreq: "weekly" },
+    { path: "/arizona/phoenix", priority: 0.8, changefreq: "weekly" },
+    { path: "/arizona/tucson", priority: 0.8, changefreq: "weekly" },
+    { path: "/arizona/projects/kitchen-remodel", priority: 0.78, changefreq: "weekly" },
+    { path: "/arizona/projects/roofing", priority: 0.78, changefreq: "weekly" },
+    { path: "/arizona/roofing", priority: 0.78, changefreq: "weekly" },
     { path: "/about", priority: 0.75, changefreq: "weekly" },
     { path: "/methodology", priority: 0.75, changefreq: "weekly" },
     { path: "/independence", priority: 0.7, changefreq: "monthly" },

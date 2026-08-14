@@ -12,6 +12,10 @@ import type { CountyDef, DiscoveryFacet, TradeDef } from "./types";
 const MIN_SUNBIZ_CONFIDENCE = 0.9;
 export const DISCOVERY_PAGE_SIZE = 24;
 
+function inStateSql(requireInState: boolean | undefined): string {
+  return requireInState === false ? "" : "AND (c.home_state = $2 OR l.state = $2)";
+}
+
 function mapRow(r: {
   id: string;
   slug: string;
@@ -28,6 +32,8 @@ function mapRow(r: {
   entity_status: string | null;
   entity_name: string | null;
   has_discipline: boolean;
+  source_system?: string | null;
+  secondary_status?: string | null;
 }): SearchResult {
   return {
     id: r.id,
@@ -45,6 +51,8 @@ function mapRow(r: {
     entityName: r.entity_name,
     hasDiscipline: r.has_discipline,
     lastVerifiedAt: r.last_verified_at ? r.last_verified_at.toISOString() : null,
+    sourceSystem: r.source_system || null,
+    secondaryStatus: r.secondary_status || null,
   };
 }
 
@@ -52,26 +60,84 @@ function mapRow(r: {
  * Build WHERE clause + params for discovery filters.
  * Param $1 = licenseSource, $2 = state code. Additional filters append from $3.
  */
+function tradeHasExtraFilters(trade?: TradeDef | null): boolean {
+  return Boolean(trade?.classCodes?.length || trade?.descriptionIncludes?.length);
+}
+
 function buildFilterClause(opts: {
   licenseSource: string;
   stateCode: string;
   occupationCodes?: string[] | null;
+  classCodes?: string[] | null;
+  descriptionIncludes?: string[] | null;
   county?: CountyDef | null;
+  activeOnly?: boolean;
+  requireInStateAddress?: boolean;
 }): { where: string; params: unknown[] } {
   const params: unknown[] = [opts.licenseSource, opts.stateCode];
   let where = `
     l.source_system = $1
     AND c.is_thin_profile = FALSE
-    AND (c.home_state = $2 OR l.state = $2)
   `;
-
-  if (opts.occupationCodes?.length) {
-    params.push(opts.occupationCodes);
-    where += ` AND l.occupation_code = ANY($${params.length}::text[])`;
+  if (opts.requireInStateAddress !== false) {
+    where += ` AND (c.home_state = $2 OR l.state = $2)`;
   }
 
-  if (opts.county) {
+  if (opts.activeOnly) {
+    where += ` AND l.status_normalized IN ('active', 'current')`;
+  }
+
+  if (opts.occupationCodes?.length) {
+    params.push(opts.occupationCodes.map((c) => c.toUpperCase()));
+    where += ` AND UPPER(l.occupation_code) = ANY($${params.length}::text[])`;
+  }
+
+  const classCodes = (opts.classCodes || []).map((c) => c.toUpperCase().trim()).filter(Boolean);
+  const descParts = (opts.descriptionIncludes || []).map((s) => s.trim()).filter(Boolean);
+  if (classCodes.length || descParts.length) {
+    const specialty: string[] = [];
+    if (classCodes.length) {
+      params.push(classCodes);
+      specialty.push(
+        `UPPER(TRIM(COALESCE(l.class_code, ''))) = ANY($${params.length}::text[])`
+      );
+    }
+    if (descParts.length) {
+      params.push(descParts.map((s) => `%${s.toLowerCase()}%`));
+      specialty.push(
+        `LOWER(COALESCE(l.occupation_description, '')) LIKE ANY($${params.length}::text[])`
+      );
+    }
+    where += ` AND (${specialty.join(" OR ")})`;
+  }
+
+  if (opts.county?.matchOutOfStateMailing) {
+    where += ` AND UPPER(TRIM(COALESCE(l.state, ''))) <> UPPER($2)`;
+  } else if (opts.county) {
+    const states = (opts.county.matchStates || [])
+      .map((s) => s.toUpperCase().trim())
+      .filter(Boolean);
+    if (states.length) {
+      params.push(states);
+      where += ` AND UPPER(TRIM(COALESCE(l.state, ''))) = ANY($${params.length}::text[])`;
+    }
     const clauses: string[] = [];
+    const cities = (opts.county.matchCities || []).map((c) => c.toLowerCase().trim()).filter(Boolean);
+    if (cities.length > 0) {
+      params.push(cities);
+      const i = params.length;
+      clauses.push(`LOWER(TRIM(COALESCE(l.city, ''))) = ANY($${i}::text[])`);
+      clauses.push(`LOWER(TRIM(COALESCE(c.primary_city, ''))) = ANY($${i}::text[])`);
+    }
+    const zips = (opts.county.matchPostalPrefixes || [])
+      .map((z) => z.replace(/\D/g, "").slice(0, 5))
+      .filter((z) => z.length === 5);
+    if (zips.length > 0) {
+      params.push(zips);
+      clauses.push(
+        `LEFT(REGEXP_REPLACE(COALESCE(l.postal_code, ''), '[^0-9]', '', 'g'), 5) = ANY($${params.length}::text[])`
+      );
+    }
     for (const name of opts.county.matchNames) {
       params.push(name.toLowerCase());
       const i = params.length;
@@ -96,6 +162,34 @@ function buildFilterClause(opts: {
   }
 
   return { where, params };
+}
+
+async function countDistinctForTrade(
+  disc: NonNullable<ReturnType<typeof getDiscoveryState>>,
+  state: NonNullable<ReturnType<typeof getStateBySlug>>,
+  trade: TradeDef,
+  county?: CountyDef | null
+): Promise<number> {
+  const { where, params } = buildFilterClause({
+    licenseSource: state.licenseSource,
+    stateCode: state.code,
+    occupationCodes: trade.occupationCodes,
+    classCodes: trade.classCodes,
+    descriptionIncludes: trade.descriptionIncludes,
+    county: county ?? null,
+    activeOnly: Boolean(disc.activeOnlyDefault),
+    requireInStateAddress: disc.requireInStateAddress,
+  });
+  const row = await queryOne<{ n: string }>(
+    `
+    SELECT COUNT(DISTINCT c.id)::text AS n
+    FROM contractors c
+    JOIN licenses l ON l.contractor_id = c.id
+    WHERE ${where}
+    `,
+    params
+  );
+  return Number(row?.n || 0);
 }
 
 type ListFilters = {
@@ -123,7 +217,11 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
     licenseSource: state.licenseSource,
     stateCode: state.code,
     occupationCodes: filters.trade?.occupationCodes ?? null,
+    classCodes: filters.trade?.classCodes ?? null,
+    descriptionIncludes: filters.trade?.descriptionIncludes ?? null,
     county: filters.county ?? null,
+    activeOnly: Boolean(disc.activeOnlyDefault),
+    requireInStateAddress: disc.requireInStateAddress,
   });
 
   const countRow = await queryOne<{ n: string }>(
@@ -164,6 +262,8 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
     occupation_code: string | null;
     status_normalized: string | null;
     last_verified_at: Date | null;
+    source_system?: string | null;
+    secondary_status?: string | null;
     entity_status: string | null;
     entity_name: string | null;
     has_discipline: boolean;
@@ -182,7 +282,9 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
         l.external_key,
         l.occupation_code,
         l.status_normalized,
-        l.last_verified_at
+        l.last_verified_at,
+        l.source_system,
+        l.secondary_status
       FROM contractors c
       JOIN licenses l ON l.contractor_id = c.id
       WHERE ${where}
@@ -284,10 +386,22 @@ export async function countByTrade(
   }
 
   try {
+    const extraTrades = disc.trades.filter((t) => tradeHasExtraFilters(t));
+    const extraCounts = new Map<string, number>();
+    if (extraTrades.length) {
+      await Promise.all(
+        extraTrades.map(async (t) => {
+          extraCounts.set(t.slug, await countDistinctForTrade(disc, state, t, county));
+        })
+      );
+    }
+
     const { where, params } = buildFilterClause({
       licenseSource: state.licenseSource,
       stateCode: state.code,
       county,
+      activeOnly: Boolean(disc.activeOnlyDefault),
+      requireInStateAddress: disc.requireInStateAddress,
     });
     const rows = await query<{ occupation_code: string; n: string }>(
       `
@@ -306,10 +420,12 @@ export async function countByTrade(
       .map((t) => ({
         slug: t.slug,
         label: t.label,
-        count: t.occupationCodes.reduce(
-          (sum, code) => sum + (byCode.get(code.toUpperCase()) || 0),
-          0
-        ),
+        count: tradeHasExtraFilters(t)
+          ? extraCounts.get(t.slug) || 0
+          : t.occupationCodes.reduce(
+              (sum, code) => sum + (byCode.get(code.toUpperCase()) || 0),
+              0
+            ),
       }))
       .filter((f) => f.count > 0)
       .sort((a, b) => b.count - a.count);
@@ -328,6 +444,27 @@ export async function countCountiesForTrade(
   const state = getStateBySlug(disc.evidenceSlug);
   if (!state?.live) return [];
 
+  const usesPostalGeo = disc.counties.some((c) => (c.matchPostalPrefixes || []).length > 0);
+  if (usesPostalGeo) {
+    try {
+      const byZip = await countByPostalPrefix(publicStateSlug, trade);
+      const facets = rollupGeosFromZips(disc.counties, byZip);
+      return await appendOutOfStateFacet(publicStateSlug, facets, trade);
+    } catch {
+      return [];
+    }
+  }
+
+  const usesCityGeo = disc.counties.some((c) => (c.matchCities || []).length > 0);
+  if (usesCityGeo) {
+    try {
+      const byCity = await countByCity(publicStateSlug, trade);
+      return rollupGeosFromCities(disc.counties, byCity);
+    } catch {
+      return [];
+    }
+  }
+
   try {
     const rows = await query<{ county: string; n: string }>(
       `
@@ -337,7 +474,7 @@ export async function countCountiesForTrade(
       JOIN licenses l ON l.contractor_id = c.id
       WHERE l.source_system = $1
         AND c.is_thin_profile = FALSE
-        AND (c.home_state = $2 OR l.state = $2)
+        ${inStateSql(disc.requireInStateAddress)}
         AND l.occupation_code = ANY($3::text[])
         AND COALESCE(NULLIF(TRIM(l.county_name), ''), c.primary_county) IS NOT NULL
         AND COALESCE(NULLIF(TRIM(l.county_name), ''), c.primary_county) ~ '[A-Za-z]'
@@ -391,24 +528,191 @@ export async function countTradesBatch(publicStateSlug: string): Promise<Discove
       JOIN licenses l ON l.contractor_id = c.id
       WHERE l.source_system = $1
         AND c.is_thin_profile = FALSE
-        AND (c.home_state = $2 OR l.state = $2)
+        ${inStateSql(disc.requireInStateAddress)}
+        ${disc.activeOnlyDefault ? "AND l.status_normalized IN ('active', 'current')" : ""}
       GROUP BY l.occupation_code
       `,
       [state.licenseSource, state.code]
     );
     const byCode = new Map(rows.map((r) => [r.occupation_code.toUpperCase(), Number(r.n)]));
+    const extraCounts = new Map<string, number>();
+    const extraTrades = disc.trades.filter((t) => tradeHasExtraFilters(t));
+    if (extraTrades.length) {
+      await Promise.all(
+        extraTrades.map(async (t) => {
+          extraCounts.set(t.slug, await countDistinctForTrade(disc, state, t));
+        })
+      );
+    }
     return disc.trades
       .map((t) => ({
         slug: t.slug,
         label: t.label,
-        count: t.occupationCodes.reduce(
-          (sum, code) => sum + (byCode.get(code.toUpperCase()) || 0),
-          0
-        ),
+        count: tradeHasExtraFilters(t)
+          ? extraCounts.get(t.slug) || 0
+          : t.occupationCodes.reduce(
+              (sum, code) => sum + (byCode.get(code.toUpperCase()) || 0),
+              0
+            ),
       }))
       .filter((f) => f.count > 0)
       .sort((a, b) => b.count - a.count);
   } catch {
+    return [];
+  }
+}
+
+async function countByCity(
+  publicStateSlug: string,
+  trade?: TradeDef | null
+): Promise<Map<string, number>> {
+  const disc = getDiscoveryState(publicStateSlug);
+  const state = disc ? getStateBySlug(disc.evidenceSlug) : null;
+  const out = new Map<string, number>();
+  if (!disc || !state?.live) return out;
+  const { where, params } = buildFilterClause({
+    licenseSource: state.licenseSource,
+    stateCode: state.code,
+    occupationCodes: trade?.occupationCodes ?? null,
+    classCodes: trade?.classCodes ?? null,
+    descriptionIncludes: trade?.descriptionIncludes ?? null,
+    activeOnly: Boolean(disc.activeOnlyDefault),
+    requireInStateAddress: disc.requireInStateAddress,
+  });
+  const rows = await query<{ city: string; n: string }>(
+    `
+    SELECT LOWER(TRIM(COALESCE(l.city, c.primary_city, ''))) AS city,
+           COUNT(DISTINCT c.id)::text AS n
+    FROM contractors c
+    JOIN licenses l ON l.contractor_id = c.id
+    WHERE ${where}
+      AND COALESCE(NULLIF(TRIM(l.city), ''), NULLIF(TRIM(c.primary_city), '')) IS NOT NULL
+    GROUP BY 1
+    `,
+    params
+  );
+  for (const r of rows) {
+    const key = (r.city || "").toLowerCase().replace(/\s+/g, " ").trim();
+    if (key) out.set(key, Number(r.n));
+  }
+  return out;
+}
+
+async function countByPostalPrefix(
+  publicStateSlug: string,
+  trade?: TradeDef | null
+): Promise<Map<string, number>> {
+  const disc = getDiscoveryState(publicStateSlug);
+  const state = disc ? getStateBySlug(disc.evidenceSlug) : null;
+  const out = new Map<string, number>();
+  if (!disc || !state?.live) return out;
+  const { where, params } = buildFilterClause({
+    licenseSource: state.licenseSource,
+    stateCode: state.code,
+    occupationCodes: trade?.occupationCodes ?? null,
+    classCodes: trade?.classCodes ?? null,
+    descriptionIncludes: trade?.descriptionIncludes ?? null,
+    activeOnly: Boolean(disc.activeOnlyDefault),
+    requireInStateAddress: disc.requireInStateAddress,
+  });
+  const rows = await query<{ zip: string; n: string }>(
+    `
+    SELECT LEFT(REGEXP_REPLACE(COALESCE(l.postal_code, ''), '[^0-9]', '', 'g'), 5) AS zip,
+           COUNT(DISTINCT c.id)::text AS n
+    FROM contractors c
+    JOIN licenses l ON l.contractor_id = c.id
+    WHERE ${where}
+      AND LENGTH(REGEXP_REPLACE(COALESCE(l.postal_code, ''), '[^0-9]', '', 'g')) >= 5
+    GROUP BY 1
+    `,
+    params
+  );
+  for (const r of rows) {
+    const key = (r.zip || "").trim();
+    if (key.length === 5) out.set(key, Number(r.n));
+  }
+  return out;
+}
+
+function rollupGeosFromZips(
+  geos: CountyDef[],
+  byZip: Map<string, number>
+): DiscoveryFacet[] {
+  return geos
+    .filter((geo) => !geo.matchOutOfStateMailing)
+    .map((geo) => {
+      const zips = geo.matchPostalPrefixes || [];
+      const count = zips.reduce((sum, zip) => {
+        const key = zip.replace(/\D/g, "").slice(0, 5);
+        return sum + (byZip.get(key) || 0);
+      }, 0);
+      return {
+        slug: geo.slug,
+        label:
+          geo.matchOutOfStateMailing || geo.kind === "city"
+            ? geo.name
+            : `${geo.name} County`,
+        count,
+      };
+    })
+    .filter((f) => f.count > 0)
+    .sort((a, b) => b.count - a.count);
+}
+
+async function appendOutOfStateFacet(
+  publicStateSlug: string,
+  facets: DiscoveryFacet[],
+  trade?: TradeDef | null
+): Promise<DiscoveryFacet[]> {
+  const disc = getDiscoveryState(publicStateSlug);
+  const state = disc ? getStateBySlug(disc.evidenceSlug) : null;
+  const oos = disc?.counties.find((c) => c.matchOutOfStateMailing);
+  if (!disc || !state?.live || !oos) return facets;
+  try {
+    const n = trade
+      ? await countDistinctForTrade(disc, state, trade, oos)
+      : await countDistinctForTrade(
+          disc,
+          state,
+          { slug: "_all", label: "", title: "", description: "", occupationCodes: [] },
+          oos
+        );
+    if (n <= 0) return facets;
+    return [...facets, { slug: oos.slug, label: oos.name, count: n }].sort(
+      (a, b) => b.count - a.count
+    );
+  } catch {
+    return facets;
+  }
+}
+
+function rollupGeosFromCities(
+  geos: CountyDef[],
+  byCity: Map<string, number>
+): DiscoveryFacet[] {
+  return geos
+    .map((geo) => {
+      const cities = geo.matchCities || [];
+      const count = cities.reduce((sum, city) => {
+        return sum + (byCity.get(city.toLowerCase().trim()) || 0);
+      }, 0);
+      return { slug: geo.slug, label: geo.kind === "city" ? geo.name : geo.name, count };
+    })
+    .filter((f) => f.count > 0)
+    .sort((a, b) => b.count - a.count);
+}
+
+export async function countCitiesBatch(publicStateSlug: string): Promise<DiscoveryFacet[]> {
+  const disc = getDiscoveryState(publicStateSlug);
+  if (!disc?.cities?.length) return [];
+  try {
+    const byCity = await countByCity(publicStateSlug);
+    return rollupGeosFromCities(disc.cities, byCity);
+  } catch (err) {
+    console.error(
+      "[discovery] countCitiesBatch failed:",
+      err instanceof Error ? err.message : err
+    );
     return [];
   }
 }
@@ -419,6 +723,35 @@ export async function countCountiesBatch(publicStateSlug: string): Promise<Disco
   const state = getStateBySlug(disc.evidenceSlug);
   if (!state?.live) return [];
 
+  const usesPostalGeo = disc.counties.some((c) => (c.matchPostalPrefixes || []).length > 0);
+  if (usesPostalGeo) {
+    try {
+      const byZip = await countByPostalPrefix(publicStateSlug);
+      const facets = rollupGeosFromZips(disc.counties, byZip);
+      return await appendOutOfStateFacet(publicStateSlug, facets);
+    } catch (err) {
+      console.error(
+        "[discovery] countCountiesBatch (ZIP rollup) failed:",
+        err instanceof Error ? err.message : err
+      );
+      return [];
+    }
+  }
+
+  const usesCityGeo = disc.counties.some((c) => (c.matchCities || []).length > 0);
+  if (usesCityGeo) {
+    try {
+      const byCity = await countByCity(publicStateSlug);
+      return rollupGeosFromCities(disc.counties, byCity);
+    } catch (err) {
+      console.error(
+        "[discovery] countCountiesBatch (city rollup) failed:",
+        err instanceof Error ? err.message : err
+      );
+      return [];
+    }
+  }
+
   try {
     const rows = await query<{ county: string; n: string }>(
       `
@@ -428,7 +761,7 @@ export async function countCountiesBatch(publicStateSlug: string): Promise<Disco
       JOIN licenses l ON l.contractor_id = c.id
       WHERE l.source_system = $1
         AND c.is_thin_profile = FALSE
-        AND (c.home_state = $2 OR l.state = $2)
+        ${inStateSql(disc.requireInStateAddress)}
         AND COALESCE(NULLIF(TRIM(l.county_name), ''), c.primary_county) IS NOT NULL
         AND COALESCE(NULLIF(TRIM(l.county_name), ''), c.primary_county) ~ '[A-Za-z]'
       GROUP BY 1

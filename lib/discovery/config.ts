@@ -1,3 +1,9 @@
+import { AZ_COUNTIES, AZ_GEO_NOTE, AZ_MAJOR_CITIES, getAzGeo } from "@/lib/arizona/geos";
+import { ARIZONA_TRADES } from "@/lib/arizona/trades";
+import { OREGON_COUNTIES, OREGON_GEO_NOTE } from "@/lib/oregon/counties";
+import { OREGON_TRADES } from "@/lib/oregon/trades";
+import { getWaGeo, WA_COUNTIES, WA_GEO_NOTE, WA_MAJOR_CITIES } from "@/lib/washington/geos";
+import { WASHINGTON_TRADES } from "@/lib/washington/trades";
 import { FLORIDA_COUNTIES } from "./counties";
 import { FLORIDA_TRADES } from "./trades";
 import type { CountyDef, DiscoveryStateConfig, TradeDef } from "./types";
@@ -34,6 +40,48 @@ export const DISCOVERY_STATES: Record<string, DiscoveryStateConfig> = {
   //   trades: [],
   //   live: false,
   // },
+  arizona: {
+    publicSlug: "arizona",
+    evidenceSlug: "az",
+    name: "Arizona",
+    shortName: "AZ",
+    blurb:
+      "Browse Arizona ROC current contractor licenses by county, major city, trade, or project type. Official posting list plus linked disciplinary rows when present — not a marketplace or ranking.",
+    counties: AZ_COUNTIES,
+    cities: AZ_MAJOR_CITIES,
+    trades: ARIZONA_TRADES,
+    live: true,
+    geoNote: AZ_GEO_NOTE,
+    activeOnlyDefault: true,
+  },
+  oregon: {
+    publicSlug: "oregon",
+    evidenceSlug: "or",
+    name: "Oregon",
+    shortName: "OR",
+    blurb:
+      "Browse Oregon CCB active contractor licenses by official county and endorsement family. Bond and insurance fields are as published — not a live certificate check.",
+    counties: OREGON_COUNTIES,
+    trades: OREGON_TRADES,
+    live: true,
+    geoNote: OREGON_GEO_NOTE,
+    activeOnlyDefault: true,
+    requireInStateAddress: false,
+  },
+  washington: {
+    publicSlug: "washington",
+    evidenceSlug: "wa",
+    name: "Washington",
+    shortName: "WA",
+    blurb:
+      "Browse Washington L&I contractor licenses by city, derived county, license type, or project. Official contractor-license extract — not a marketplace or ranking.",
+    counties: WA_COUNTIES,
+    cities: WA_MAJOR_CITIES,
+    trades: WASHINGTON_TRADES,
+    live: true,
+    geoNote: WA_GEO_NOTE,
+    activeOnlyDefault: true,
+  },
 };
 
 export function getDiscoveryState(publicSlug: string): DiscoveryStateConfig | null {
@@ -49,7 +97,13 @@ export function getCounty(
   state: DiscoveryStateConfig,
   countySlug: string
 ): CountyDef | null {
-  return state.counties.find((c) => c.slug === countySlug.toLowerCase()) ?? null;
+  const key = countySlug.toLowerCase();
+  return (
+    state.counties.find((c) => c.slug === key) ??
+    state.cities?.find((c) => c.slug === key) ??
+    (state.publicSlug === "arizona" ? getAzGeo(key) : null) ??
+    (state.publicSlug === "washington" ? getWaGeo(key) : null)
+  );
 }
 
 export function getTrade(state: DiscoveryStateConfig, tradeSlug: string): TradeDef | null {

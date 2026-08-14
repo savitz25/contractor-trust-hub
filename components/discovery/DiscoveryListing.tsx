@@ -10,6 +10,11 @@ export function DiscoveryListing({
   basePath,
   emptyTitle,
   emptyBody,
+  verifyHref = "/verify",
+  browseHref = "/florida",
+  browseLabel = "Back to Florida browse",
+  hideEntityWhenMissing = false,
+  profileQuery,
 }: {
   results: SearchResult[];
   total: number;
@@ -17,6 +22,11 @@ export function DiscoveryListing({
   basePath: string;
   emptyTitle: string;
   emptyBody: string;
+  verifyHref?: string;
+  browseHref?: string;
+  browseLabel?: string;
+  hideEntityWhenMissing?: boolean;
+  profileQuery?: string;
 }) {
   const totalPages = Math.max(1, Math.ceil(total / DISCOVERY_PAGE_SIZE));
   const safePage = Math.min(Math.max(1, page), totalPages);
@@ -30,16 +40,16 @@ export function DiscoveryListing({
         </p>
         <div className="mt-6 flex flex-col items-stretch justify-center gap-2.5 sm:flex-row sm:items-center">
           <Link
-            href="/verify"
+            href={verifyHref}
             className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--accent)] px-5 text-sm font-semibold text-[var(--navy)] no-underline"
           >
             Search by name or license
           </Link>
           <Link
-            href="/florida"
+            href={browseHref}
             className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-5 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
           >
-            Back to Florida browse
+            {browseLabel}
           </Link>
           <Link
             href="/#research"
@@ -66,7 +76,7 @@ export function DiscoveryListing({
       {total > 0 && total < 5 && (
         <p className="mb-4 rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)]/60 px-3.5 py-2.5 text-sm text-[var(--muted)]">
           Few matches in this view — try a nearby county, a broader trade, or{" "}
-          <Link href="/verify" className="text-[var(--accent)]">
+          <Link href={verifyHref} className="text-[var(--accent)]">
             search by name
           </Link>
           .
@@ -74,7 +84,12 @@ export function DiscoveryListing({
       )}
       <div className="space-y-2.5 sm:space-y-3">
         {results.map((r) => (
-          <ResultCard key={r.id} result={r} />
+          <ResultCard
+            key={r.id}
+            result={r}
+            hideEntityWhenMissing={hideEntityWhenMissing}
+            profileQuery={profileQuery}
+          />
         ))}
       </div>
       {totalPages > 1 && (

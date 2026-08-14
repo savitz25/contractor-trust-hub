@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useId, useState, useTransition } from "react";
+import { getLiveStates, STATE_SCOPE_UI } from "@/lib/states/config";
 
 type SearchFormProps = {
   defaultQuery?: string;
@@ -61,6 +62,18 @@ const WA_PLACEHOLDERS = {
   compact: "License or name",
 };
 
+const LA_PLACEHOLDERS = {
+  hero: "LSLBC license number or company name…",
+  default: "LSLBC license # or company name",
+  compact: "License or name",
+};
+
+const MS_PLACEHOLDERS = {
+  hero: "MSBOC license number or company name…",
+  default: "MSBOC license # or company name",
+  compact: "License or name",
+};
+
 export function SearchForm({
   defaultQuery = "",
   size = "default",
@@ -85,6 +98,8 @@ export function SearchForm({
   const isWa = activeState === "wa";
   const isCa = activeState === "ca";
   const isAz = activeState === "az";
+  const isLa = activeState === "la";
+  const isMs = activeState === "ms";
   const ph =
     placeholder ||
     (isTx
@@ -99,6 +114,10 @@ export function SearchForm({
               ? CA_PLACEHOLDERS[size]
               : isAz
                 ? AZ_PLACEHOLDERS[size]
+                : isLa
+                  ? LA_PLACEHOLDERS[size]
+                  : isMs
+                    ? MS_PLACEHOLDERS[size]
                 : PLACEHOLDERS[size]);
 
   const inputClass = isHero
@@ -136,42 +155,22 @@ export function SearchForm({
         <input type="hidden" name="state" value={activeState} />
       ) : null}
       {showStatePicker ? (
-        <div
-          className="-mx-1 mb-3 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0"
-          role="group"
-          aria-label="Search state"
-        >
-          {(
-            [
-              { id: "fl", label: "Florida", hint: "Full construction licenses" },
-              { id: "tx", label: "Texas", hint: "TDLR + TSBPE plumbing" },
-              { id: "nj", label: "New Jersey", hint: "HIC + specialty boards" },
-              { id: "or", label: "Oregon", hint: "CCB statewide" },
-              { id: "wa", label: "Washington", hint: "L&I contractors" },
-              { id: "ca", label: "California", hint: "CSLB high-impact counties" },
-              { id: "az", label: "Arizona", hint: "ROC + discipline" },
-            ] as const
-          ).map((s) => {
-            const on = activeState === s.id;
+        <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Search state">
+          {getLiveStates().map((s) => {
+            const on = activeState === s.slug;
+            const hint = STATE_SCOPE_UI[s.slug]?.verifyHint || s.shortName;
             return (
               <button
-                key={s.id}
+                key={s.slug}
                 type="button"
-                onClick={() => setPickedState(s.id)}
-                className={`inline-flex min-h-10 shrink-0 flex-col justify-center rounded-2xl border px-3.5 py-1.5 text-left sm:min-h-9 sm:flex-row sm:items-center sm:gap-2 sm:rounded-full sm:py-0 ${
-                  on
-                    ? "border-[var(--navy)] bg-[var(--navy)] text-white"
-                    : "border-[var(--border)] bg-[var(--bg)] text-[var(--navy)]"
+                onClick={() => setPickedState(s.slug)}
+                aria-pressed={on}
+                className={`inline-flex min-h-10 flex-col justify-center rounded-2xl border px-3.5 py-1.5 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:min-h-9 sm:flex-row sm:items-center sm:gap-2 sm:rounded-full sm:py-1 ${
+                  on ? "control-selected" : "control-off"
                 }`}
               >
-                <span className="text-sm font-semibold leading-none">{s.label}</span>
-                <span
-                  className={`text-[10px] font-medium leading-none ${
-                    on ? "text-white/75" : "text-[var(--muted)]"
-                  }`}
-                >
-                  {s.hint}
-                </span>
+                <span className="text-sm font-semibold leading-none">{s.name}</span>
+                <span className="text-[10px] font-medium leading-none">{hint}</span>
               </button>
             );
           })}

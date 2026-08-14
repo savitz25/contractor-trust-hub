@@ -64,6 +64,8 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
   const isTx = (contractor.homeState || "").toUpperCase() === "TX";
   const isOr = (contractor.homeState || "").toUpperCase() === "OR";
   const isAz = (contractor.homeState || "").toUpperCase() === "AZ";
+  const isLa = (contractor.homeState || "").toUpperCase() === "LA";
+  const isMs = (contractor.homeState || "").toUpperCase() === "MS";
 
   const licenseTone: EvidenceTone = !lic
     ? "neutral"
@@ -125,6 +127,38 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
       statusLine: "CCB active list",
       detail:
         "Oregon CCB statewide contractor licensing. Confirm current status on the official CCB search. Discipline/SOS entity linking is not in this extract.",
+      tone: "warn",
+      lastVerifiedAt: lic?.lastVerifiedAt ?? null,
+    });
+    return pillars;
+  }
+
+  if (isLa || isMs) {
+    pillars[0].label = isMs ? "MSBOC license" : "LSLBC license";
+    pillars[0].detail = lic
+      ? `${lic.externalKey} · ${occLabel}`
+      : isMs
+        ? "No Mississippi MSBOC contractor license linked here."
+        : "No Louisiana LSLBC contractor license linked here.";
+    pillars.push({
+      id: "entity",
+      label: "License type",
+      statusLine: occLabel || (isMs ? "MSBOC credential" : "LSLBC credential"),
+      detail: lic?.secondaryStatus
+        ? `${lic.secondaryStatus}. As published — not a ranking.`
+        : isMs
+          ? "Mississippi MSBOC contractor license as published."
+          : "Louisiana LSLBC contractor license as published.",
+      tone: "neutral",
+      lastVerifiedAt: lic?.lastVerifiedAt ?? null,
+    });
+    pillars.push({
+      id: "discipline",
+      label: "Coverage",
+      statusLine: isMs ? "MSBOC public list" : "LSLBC public roster",
+      detail: isMs
+        ? "Mississippi MSBOC statewide contractor licensing. This official list does not include bond, insurance, or discipline. Confirm current status on the official board lookup."
+        : "Louisiana LSLBC statewide contractor licensing. This official roster is Active only and does not include trade classifications, qualifying parties, bond, insurance, or discipline. Confirm current status on the official LSLBC lookup.",
       tone: "warn",
       lastVerifiedAt: lic?.lastVerifiedAt ?? null,
     });

@@ -9,6 +9,8 @@ import { WashingtonCoverageBanner } from "@/components/search/WashingtonCoverage
 import { CaliforniaCoverageBanner } from "@/components/search/CaliforniaCoverageBanner";
 import { OregonCoverageBanner } from "@/components/search/OregonCoverageBanner";
 import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
+import { LouisianaCoverageBanner } from "@/components/search/LouisianaCoverageBanner";
+import { MississippiCoverageBanner } from "@/components/search/MississippiCoverageBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { searchContractors } from "@/lib/contractors/queries";
 import { pageMetadata } from "@/lib/seo/page-meta";
@@ -77,6 +79,22 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       path: "/verify?state=wa",
     });
   }
+  if (state.slug === "la") {
+    return pageMetadata({
+      title: "Verify a Louisiana contractor (LSLBC)",
+      description:
+        "Search Louisiana State Licensing Board for Contractors licenses by number or business name. Official public roster. Evidence only — not a marketplace.",
+      path: "/verify?state=la",
+    });
+  }
+  if (state.slug === "ms") {
+    return pageMetadata({
+      title: "Verify a Mississippi contractor (MSBOC)",
+      description:
+        "Search Mississippi State Board of Contractors licenses by number or business name. Official public list. Evidence only — not a marketplace.",
+      path: "/verify?state=ms",
+    });
+  }
   return pageMetadata({
     title: "Verify a Florida contractor",
     description:
@@ -94,7 +112,9 @@ export default async function VerifyPage({ searchParams }: Props) {
   const isCa = state.slug === "ca";
   const isAz = state.slug === "az";
   const isWa = state.slug === "wa";
-  const isSpecialty = isTx || isNj || isOr || isCa || isAz || isWa;
+  const isLa = state.slug === "la";
+  const isMs = state.slug === "ms";
+  const isSpecialty = isTx || isNj || isOr || isCa || isAz || isWa || isLa || isMs;
   const q = (sp.q || "").trim();
   const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
   let results: Awaited<ReturnType<typeof searchContractors>>["results"] = [];
@@ -135,6 +155,10 @@ export default async function VerifyPage({ searchParams }: Props) {
             ? "Arizona · ROC statewide licenses"
             : isWa
               ? "Washington · L&I statewide licenses"
+              : isLa
+                ? "Louisiana · LSLBC statewide licenses"
+                : isMs
+                  ? "Mississippi · MSBOC statewide licenses"
             : "Florida · DBPR + Sunbiz";
 
   const heading = isNj
@@ -149,6 +173,10 @@ export default async function VerifyPage({ searchParams }: Props) {
             ? "Verify an Arizona contractor"
             : isWa
               ? "Verify a Washington contractor"
+              : isLa
+                ? "Verify a Louisiana contractor"
+                : isMs
+                  ? "Verify a Mississippi contractor"
             : "Verify a Florida contractor";
 
   const lead = isNj
@@ -163,6 +191,10 @@ export default async function VerifyPage({ searchParams }: Props) {
             ? "Search ROC licenses by number or business name from the official current active posting list. Result cards show status, class, and residential/commercial/dual category when published."
             : isWa
               ? "Search Washington L&I contractor licenses by number or business name. Always confirm on L&I Verify."
+              : isLa
+                ? "Search LSLBC licenses by number or business name. Result cards show published type, Active status, and parish — then open a Trust Report."
+                : isMs
+                  ? "Search MSBOC licenses by number or business name. Result cards show commercial / residential type, published status, and MC / SC when on the number."
             : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
 
   const helpCards = isNj
@@ -287,7 +319,7 @@ export default async function VerifyPage({ searchParams }: Props) {
 
       {liveStates.length > 1 ? (
         <div
-          className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:mt-5 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
+          className="mt-4 flex flex-wrap gap-2 sm:mt-5"
           role="tablist"
           aria-label="Verify state"
         >
@@ -314,6 +346,10 @@ export default async function VerifyPage({ searchParams }: Props) {
                       ? "ROC statewide"
                       : s.slug === "wa"
                         ? "L&I statewide"
+                        : s.slug === "la"
+                          ? "LSLBC statewide"
+                          : s.slug === "ms"
+                            ? "MSBOC statewide"
                   : s.slug === "fl"
                     ? "Full journey"
                     : null;
@@ -323,10 +359,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                 href={href}
                 role="tab"
                 aria-selected={active}
-                className={`inline-flex min-h-11 shrink-0 flex-col justify-center rounded-2xl border px-4 py-2 no-underline transition sm:min-h-10 sm:rounded-full sm:py-0 ${
-                  active
-                    ? "border-[var(--navy)] bg-[var(--navy)] text-white"
-                    : "border-[var(--border)] bg-white text-[var(--navy)] hover:border-[var(--navy)]/30"
+                className={`inline-flex min-h-11 shrink-0 flex-col justify-center rounded-2xl border px-3.5 py-2 no-underline transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:min-h-10 sm:rounded-full sm:py-1.5 ${
+                  active ? "control-selected" : "control-off"
                 }`}
               >
                 <span className="text-sm font-semibold leading-none">{s.name}</span>
@@ -373,6 +407,16 @@ export default async function VerifyPage({ searchParams }: Props) {
       {isWa ? (
         <div className="mt-4 max-w-3xl sm:mt-5">
           <WashingtonCoverageBanner showFloridaLink={!q} />
+        </div>
+      ) : null}
+      {isLa ? (
+        <div className="mt-4 max-w-3xl sm:mt-5">
+          <LouisianaCoverageBanner showFloridaLink={!q} />
+        </div>
+      ) : null}
+      {isMs ? (
+        <div className="mt-4 max-w-3xl sm:mt-5">
+          <MississippiCoverageBanner showFloridaLink={!q} />
         </div>
       ) : null}
 

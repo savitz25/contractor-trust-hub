@@ -6,7 +6,7 @@
 import type { EvidenceState } from "./config";
 import { getStateBySlug } from "./config";
 
-export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or" | "wa" | "ca" | "az";
+export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or" | "wa" | "ca" | "az" | "la" | "ms";
 
 export function evidenceSlugFromHomeState(
   homeState: string | null | undefined,
@@ -19,12 +19,16 @@ export function evidenceSlugFromHomeState(
   if (hs === "WA") return "wa";
   if (hs === "CA") return "ca";
   if (hs === "AZ") return "az";
+  if (hs === "LA") return "la";
+  if (hs === "MS") return "ms";
   if (hs === "FL") return "fl";
   const p = (preferred || "").toLowerCase();
   if (p === "oregon") return "or";
   if (p === "california") return "ca";
   if (p === "arizona") return "az";
   if (p === "washington") return "wa";
+  if (p === "louisiana") return "la";
+  if (p === "mississippi") return "ms";
   if (
     p === "tx" ||
     p === "nj" ||
@@ -32,7 +36,9 @@ export function evidenceSlugFromHomeState(
     p === "or" ||
     p === "wa" ||
     p === "ca" ||
-    p === "az"
+    p === "az" ||
+    p === "la" ||
+    p === "ms"
   )
     return p;
   return "fl";
@@ -45,6 +51,8 @@ export function credentialNoun(slug: EvidenceStateSlug): string {
   if (slug === "ca") return "CSLB license";
   if (slug === "az") return "ROC license";
   if (slug === "wa") return "L&I license";
+  if (slug === "la") return "LSLBC license";
+  if (slug === "ms") return "MSBOC license";
   return "license";
 }
 
@@ -55,6 +63,8 @@ export function boardShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "wa") return "Washington L&I";
   if (slug === "ca") return "California CSLB";
   if (slug === "az") return "Arizona ROC";
+  if (slug === "la") return "Louisiana LSLBC";
+  if (slug === "ms") return "Mississippi MSBOC";
   return "Florida DBPR";
 }
 
@@ -65,6 +75,8 @@ export function entityRegistryShortLabel(slug: EvidenceStateSlug): string {
   if (slug === "wa") return "Washington SOS entity data (not yet linked)";
   if (slug === "ca") return "California SOS entity data (not yet linked)";
   if (slug === "az") return "Arizona ACC entity data (not yet linked)";
+  if (slug === "la") return "Louisiana SOS (not yet linked)";
+  if (slug === "ms") return "Mississippi SOS (not yet linked)";
   return "Florida Sunbiz";
 }
 
@@ -75,6 +87,8 @@ export function sourceExtractLabel(slug: EvidenceStateSlug): string {
   if (slug === "wa") return "Washington L&I contractor extract";
   if (slug === "ca") return "CSLB public list extract (high-impact counties)";
   if (slug === "az") return "Arizona ROC current active posting list";
+  if (slug === "la") return "Louisiana LSLBC public contractor roster";
+  if (slug === "ms") return "Mississippi MSBOC public contractor list";
   return "Florida DBPR extract";
 }
 
@@ -85,6 +99,8 @@ export function trustReportTitleSuffix(slug: EvidenceStateSlug): string {
   if (slug === "wa") return "Washington Contractor Trust Report";
   if (slug === "ca") return "California Contractor Trust Report";
   if (slug === "az") return "Arizona Contractor Trust Report";
+  if (slug === "la") return "Louisiana Contractor Trust Report";
+  if (slug === "ms") return "Mississippi Contractor Trust Report";
   return "Florida Contractor Trust Report";
 }
 
@@ -95,6 +111,8 @@ export function pilotBadge(slug: EvidenceStateSlug): string | null {
   if (slug === "wa") return "Washington L&I statewide";
   if (slug === "ca") return "California CSLB (high-impact counties)";
   if (slug === "az") return "Arizona ROC statewide (current active list)";
+  if (slug === "la") return "Louisiana LSLBC statewide";
+  if (slug === "ms") return "Mississippi MSBOC statewide";
   return null;
 }
 
@@ -149,6 +167,22 @@ export function checkedItems(slug: EvidenceStateSlug): string[] {
       "Bond and liability insurance fields as published (not a live COI)",
       "Workers’ comp Exempt/Nonexempt flag as published",
       "County / city when present",
+    ];
+  }
+  if (slug === "la") {
+    return [
+      "Louisiana LSLBC official public Request Roster (when linked)",
+      "Published credential type: commercial, residential, home improvement, or mold",
+      "Active status as published on the roster export",
+      "Parish / city / mailing location when present",
+    ];
+  }
+  if (slug === "ms") {
+    return [
+      "Mississippi MSBOC official public list (when linked)",
+      "Published type: commercial or residential",
+      "Official class suffix (MC / SC) when on the license number",
+      "Published status and city / mailing location when present",
     ];
   }
   return [
@@ -208,6 +242,26 @@ export function notCheckedItems(slug: EvidenceStateSlug): string[] {
       "Reviews, rankings, or “safe to hire” determinations",
     ];
   }
+  if (slug === "la") {
+    return [
+      "Expired / inactive archive (this official roster export is Active only)",
+      "Trade classifications and qualifying parties (not on the roster CSV)",
+      "Bond or insurance (not published on this export)",
+      "Complaints or board discipline (not in this extract)",
+      "Louisiana SOS entity linking",
+      "Reviews, rankings, or “safe to hire” determinations",
+    ];
+  }
+  if (slug === "ms") {
+    return [
+      "Full specialty classification list (only when published on the extract)",
+      "Qualifying party (only when published on the extract)",
+      "Bond or insurance (not published on the list view)",
+      "Complaints or board discipline (not in this extract)",
+      "Mississippi SOS entity linking",
+      "Reviews, rankings, or “safe to hire” determinations",
+    ];
+  }
   return [
     "Active insurance / COI validity (request & verify)",
     "Workers' comp policy status (use official portals)",
@@ -257,10 +311,10 @@ export function consumerNote(slug: EvidenceStateSlug, state?: EvidenceState | nu
       "Texas coverage is selected TDLR specialty trades plus TSBPE plumbing — not a statewide general contractor directory."
     );
   }
-  if (slug === "or") {
+  if (slug === "or" || slug === "wa" || slug === "ca" || slug === "az" || slug === "la" || slug === "ms") {
     return (
       s?.coverageNote ||
-      "Oregon CCB statewide contractor licensing from the official Active Licenses extract. Confirm on the official CCB site."
+      "Statewide contractor licensing from the official public extract. Confirm on the official board lookup."
     );
   }
   return "Educational research from Florida public records — not a marketplace or endorsement.";

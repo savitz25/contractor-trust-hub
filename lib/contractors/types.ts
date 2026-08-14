@@ -2,6 +2,10 @@ export type LicenseStatus =
   | "active"
   | "inactive"
   | "current"
+  | "expired"
+  | "suspended"
+  | "revoked"
+  | "unlicensed"
   | "other"
   | "unknown";
 

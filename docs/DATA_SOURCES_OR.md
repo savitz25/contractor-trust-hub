@@ -89,8 +89,13 @@ python scripts/load_or_ccb_to_postgres.py --staging-dir data/staging/or_ccb
 
 Sample (committed): `data/samples/or_ccb_active_sample.csv`
 
+## Explore (Full Journey v1)
+
+County browse uses official `county_name` / `county_code`. See [OREGON_FULL_JOURNEY_V1.md](./OREGON_FULL_JOURNEY_V1.md).
+
 ## Related
 
 - Index: [DATA_SOURCES.md](./DATA_SOURCES.md)
 - Product: [OREGON_VERIFY_V1.md](./OREGON_VERIFY_V1.md)
+- Explore: [OREGON_FULL_JOURNEY_V1.md](./OREGON_FULL_JOURNEY_V1.md)
 - Ingest conventions: [../ingest/README.md](../ingest/README.md)

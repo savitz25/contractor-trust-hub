@@ -31,6 +31,21 @@ import {
   txTradePlainLabel,
 } from "@/lib/states/tx-trades";
 import { getOrCcbTypeInfo, orCcbDisplayLabel, OR_CCB_SEARCH_URL } from "@/lib/states/or-ccb";
+import { getWaLniTypeInfo, waLniDisplayLabel, WA_LNI_VERIFY_URL } from "@/lib/states/wa-lni";
+import {
+  azRocCategoryFromSecondary,
+  azRocDisplayLabel,
+  getAzRocClassInfo,
+  AZ_ROC_SEARCH_URL,
+} from "@/lib/states/az-roc";
+import { getLaLslbcTypeInfo, laLslbcDisplayLabel, LA_LSLBC_SEARCH_URL } from "@/lib/states/la-lslbc";
+import {
+  getMsSbcTypeInfo,
+  msSbcDisplayLabel,
+  msSbcPublishedNumber,
+  msSbcSuffixCode,
+  MS_SBC_SEARCH_URL,
+} from "@/lib/states/ms-sbc";
 
 const toneRing: Record<EvidenceTone, string> = {
   good: "border-emerald-200 bg-emerald-50/80",
@@ -74,6 +89,14 @@ export function EvidenceSummary({ contractor }: { contractor: ContractorDetail }
               ? "Three checks from the TDLR specialty extract — not a score or ranking."
               : (contractor.homeState || "").toUpperCase() === "OR"
                 ? "Three checks from the Oregon CCB Active Licenses extract — not a score or ranking."
+                : (contractor.homeState || "").toUpperCase() === "WA"
+                  ? "Three checks from the Washington L&I contractor extract — not a score or ranking."
+                  : (contractor.homeState || "").toUpperCase() === "AZ"
+                    ? "Three checks from the Arizona ROC current posting list — not a score or ranking."
+                    : (contractor.homeState || "").toUpperCase() === "LA"
+                      ? "Three checks from the Louisiana LSLBC official public roster — not a score or ranking."
+                      : (contractor.homeState || "").toUpperCase() === "MS"
+                        ? "Three checks from the Mississippi MSBOC official public list — not a score or ranking."
               : "Three checks from official extracts — not a score or ranking."}
           </p>
         </div>
@@ -251,21 +274,40 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
         {licenses.map((lic) => {
           const src = (lic.sourceSystem || "").toLowerCase();
           const isTsbpe = src === "tx_tsbpe";
-          const isOr = src === "or_ccb" || lic.state === "OR";
+          const isWa = src === "wa_lni";
+          const isAz = src === "az_roc";
+          const isLa = src === "la_lslbc";
+          const isMs = src === "ms_sbc";
+          const isOr = src === "or_ccb" || (lic.state === "OR" && !isWa && !isAz && !isLa && !isMs);
           const isTx =
-            src === "tx_tdlr" || isTsbpe || lic.state === "TX";
+            src === "tx_tdlr" ||
+            isTsbpe ||
+            (lic.state === "TX" && !isWa && !isAz && !isLa && !isMs && src !== "or_ccb");
           const isNj =
-            (lic.sourceSystem || "").toLowerCase() === "nj_dca" || lic.state === "NJ";
+            src === "nj_dca" || (lic.state === "NJ" && !isWa && !isAz && !isLa && !isMs && src !== "or_ccb");
           const occ = getOccupationInfo(lic.occupationCode);
           const txTrade = isTx ? getTxTradeInfo(lic.occupationCode) : null;
           const njCred = isNj ? getNjCredentialInfo(lic.occupationCode) : null;
           const orType = isOr ? getOrCcbTypeInfo(lic.occupationCode) : null;
+          const waType = isWa ? getWaLniTypeInfo(lic.occupationCode) : null;
+          const azCat = isAz ? azRocCategoryFromSecondary(lic.secondaryStatus) : null;
+          const azClass = isAz ? getAzRocClassInfo(lic.occupationCode) : null;
+          const laType = isLa ? getLaLslbcTypeInfo(lic.occupationCode) : null;
+          const msType = isMs ? getMsSbcTypeInfo(lic.occupationCode) : null;
           const label = isTx
             ? txTradePlainLabel(lic.occupationCode)
             : isNj
               ? njCredentialPlainLabel(lic.occupationCode)
               : isOr
                 ? orCcbDisplayLabel(lic.occupationCode)
+                : isWa
+                  ? waLniDisplayLabel(lic.occupationCode)
+                  : isAz
+                    ? azRocDisplayLabel(lic.occupationCode)
+                    : isLa
+                      ? laLslbcDisplayLabel(lic.occupationCode)
+                      : isMs
+                        ? msSbcDisplayLabel(lic.occupationCode)
               : occ.label;
           const officialSuffix = isTx ? txTradeOfficialSuffix(lic.occupationCode) : null;
           return (
@@ -285,7 +327,9 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   ) : null}
                   <StatusBadge
                     status={lic.statusNormalized}
-                    label={`${isNj ? "Registration" : "License"}: ${statusLabel(lic.statusNormalized)}`}
+                    label={`${isNj ? "Registration" : "License"}: ${statusLabel(
+                      isWa || isAz || isLa || isMs ? lic.primaryStatus || lic.statusNormalized : lic.statusNormalized
+                    )}`}
                   />
                 </div>
               </div>
@@ -316,6 +360,42 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                   <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-950">
                     {orType.chip} · CCB
                   </span>
+                </div>
+              ) : null}
+              {isWa && waType ? (
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                  <span className="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-2 py-0.5 text-[11px] font-medium text-cyan-950">
+                    {waType.chip} · L&I
+                  </span>
+                </div>
+              ) : null}
+              {isAz && (azCat || azClass) ? (
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                  <span className="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-950">
+                    {azCat?.chip || azClass?.chip} · ROC
+                  </span>
+                </div>
+              ) : null}
+              {isLa && laType ? (
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                  <span className="inline-flex rounded-full border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-950">
+                    {laType.chip} · {laType.official}
+                  </span>
+                </div>
+              ) : null}
+              {isMs && msType ? (
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                  <span className="inline-flex rounded-full border border-sky-200 bg-sky-50 px-2 py-0.5 text-[11px] font-medium text-sky-950">
+                    {msType.family === "residential" ? "Residential" : "Commercial"}
+                    {msSbcSuffixCode(lic.licenseNumber) ? ` · ${msSbcSuffixCode(lic.licenseNumber)}` : ""}
+                  </span>
+                  {msSbcPublishedNumber(lic.licenseNumber || lic.externalKey) ? (
+                    <span className="font-mono text-[11px] text-[var(--muted)]">
+                      {msSbcPublishedNumber(lic.licenseNumber || lic.externalKey)}
+                    </span>
+                  ) : (
+                    <span className="text-[11px] text-[var(--muted)]">No license number published</span>
+                  )}
                 </div>
               ) : null}
               {isNj && njCred ? (
@@ -354,6 +434,121 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                       rel="noreferrer"
                     >
                       Official CCB search
+                    </a>
+                    .
+                  </p>
+                </div>
+              ) : isWa ? (
+                <div className="mt-3 rounded-lg border border-cyan-200/80 bg-cyan-50/60 px-3 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-cyan-900/70">
+                    Washington L&I — statewide contractor license
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">
+                    {waType?.scopeNote ??
+                      "Published L&I contractor license row. Confirm current status on the official L&I verify site."}
+                  </p>
+                  {lic.secondaryStatus ? (
+                    <p className="mt-2 text-sm leading-relaxed text-[var(--text)]">
+                      {lic.secondaryStatus}
+                    </p>
+                  ) : null}
+                  <p className="mt-2 border-t border-cyan-200/70 pt-2 text-sm leading-relaxed text-[var(--muted)]">
+                    <span className="font-medium text-[var(--text)]/90">Good to know: </span>
+                    This general extract does not publish bond or insurance.{" "}
+                    <a
+                      href={WA_LNI_VERIFY_URL}
+                      className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Official L&I verify
+                    </a>
+                    .
+                  </p>
+                </div>
+              ) : isAz ? (
+                <div className="mt-3 rounded-lg border border-amber-200/80 bg-amber-50/60 px-3 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-amber-900/70">
+                    Arizona ROC — statewide contractor license
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">
+                    {azCat?.scopeNote ||
+                      azClass?.scopeNote ||
+                      "Published ROC current posting-list row. Confirm current status on the official ROC search."}
+                  </p>
+                  {lic.secondaryStatus ? (
+                    <p className="mt-2 text-sm leading-relaxed text-[var(--text)]">
+                      {lic.secondaryStatus}
+                    </p>
+                  ) : null}
+                  <p className="mt-2 border-t border-amber-200/70 pt-2 text-sm leading-relaxed text-[var(--muted)]">
+                    <span className="font-medium text-[var(--text)]/90">Good to know: </span>
+                    This posting list does not publish bond, insurance, or full discipline.{" "}
+                    <a
+                      href={AZ_ROC_SEARCH_URL}
+                      className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Official ROC search
+                    </a>
+                    .
+                  </p>
+                </div>
+              ) : isLa ? (
+                <div className="mt-3 rounded-lg border border-indigo-200/80 bg-indigo-50/60 px-3 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-indigo-900/70">
+                    Louisiana LSLBC — statewide contractor license
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">
+                    {laType?.scopeNote ??
+                      "Published LSLBC public roster row. Confirm current status on the official LSLBC lookup."}
+                  </p>
+                  {lic.secondaryStatus ? (
+                    <p className="mt-2 text-sm leading-relaxed text-[var(--text)]">
+                      {lic.secondaryStatus}
+                    </p>
+                  ) : null}
+                  <p className="mt-2 border-t border-indigo-200/70 pt-2 text-sm leading-relaxed text-[var(--muted)]">
+                    <span className="font-medium text-[var(--text)]/90">Good to know: </span>
+                    This official roster is Active only and does not publish trade classifications,
+                    qualifying parties, bond, or insurance.{" "}
+                    <a
+                      href={LA_LSLBC_SEARCH_URL}
+                      className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Official LSLBC lookup
+                    </a>
+                    .
+                  </p>
+                </div>
+              ) : isMs ? (
+                <div className="mt-3 rounded-lg border border-sky-200/80 bg-sky-50/60 px-3 py-3">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-sky-900/70">
+                    Mississippi MSBOC — statewide contractor license
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--text)]">
+                    {msType?.scopeNote ??
+                      "Published MSBOC public list row. Confirm current status on the official board lookup."}
+                  </p>
+                  {lic.secondaryStatus ? (
+                    <p className="mt-2 text-sm leading-relaxed text-[var(--text)]">
+                      {lic.secondaryStatus}
+                    </p>
+                  ) : null}
+                  <p className="mt-2 border-t border-sky-200/70 pt-2 text-sm leading-relaxed text-[var(--muted)]">
+                    <span className="font-medium text-[var(--text)]/90">Good to know: </span>
+                    This official exported list does not publish bond, insurance, or discipline.
+                    A miss here is not proof someone is unlicensed.{" "}
+                    <a
+                      href={MS_SBC_SEARCH_URL}
+                      className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Official MSBOC lookup
                     </a>
                     .
                   </p>
@@ -408,6 +603,12 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                         ? "NJ DCA"
                         : isOr
                           ? "CCB"
+                          : isWa
+                            ? "L&I"
+                            : isAz
+                              ? "ROC"
+                              : isLa
+                                ? "LSLBC"
                           : isTsbpe
                             ? "TSBPE"
                             : isTx
@@ -430,6 +631,10 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                       ? "New Jersey registration extract"
                       : isOr
                         ? "Oregon CCB"
+                        : isWa
+                          ? "Washington L&I"
+                          : isAz
+                            ? "Arizona ROC"
                       : isTsbpe
                         ? "Texas TSBPE"
                         : isTx
@@ -600,7 +805,9 @@ export function DisciplineSection({
         >
           {hasActions
             ? `${recordWord} records identified (${discipline.length})`
-            : `No ${recordWord.toLowerCase()} records identified in current extracts`}
+            : slug === "az"
+              ? "No linked rows in the ROC discipline window"
+              : `No ${recordWord.toLowerCase()} records identified in current extracts`}
         </span>
       </div>
 
@@ -749,6 +956,10 @@ export function SourcesFooter({
   const isTx = state.slug === "tx" || hs === "TX";
   const isNj = state.slug === "nj" || hs === "NJ";
   const isOr = state.slug === "or" || hs === "OR";
+  const isWa = state.slug === "wa" || hs === "WA";
+  const isAz = state.slug === "az" || hs === "AZ";
+  const isLa = state.slug === "la" || hs === "LA";
+  const isMs = state.slug === "ms" || hs === "MS";
 
   return (
     <aside className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-elevated)]/50 px-4 py-5 text-sm leading-relaxed text-[var(--muted)] sm:px-5">
@@ -764,6 +975,14 @@ export function SourcesFooter({
               ? "Registration / credential (NJ extract)"
               : isOr
                 ? "License (Oregon CCB)"
+                : isWa
+                  ? "License (Washington L&I)"
+                  : isAz
+                    ? "License (Arizona ROC)"
+                    : isLa
+                      ? "License (Louisiana LSLBC)"
+                      : isMs
+                        ? "License (Mississippi MSBOC)"
               : isTx
                 ? "License (TDLR)"
                 : "License (DBPR)"}
@@ -777,7 +996,21 @@ export function SourcesFooter({
             Source system:{" "}
             {lic?.sourceSystem ||
               state.licenseSource ||
-              (isNj ? "nj_dca" : isOr ? "or_ccb" : isTx ? "tx_tdlr" : "fl_dbpr")}
+              (isNj
+                ? "nj_dca"
+                : isOr
+                  ? "or_ccb"
+                  : isWa
+                    ? "wa_lni"
+                    : isAz
+                      ? "az_roc"
+                      : isLa
+                        ? "la_lslbc"
+                        : isMs
+                          ? "ms_sbc"
+                      : isTx
+                        ? "tx_tdlr"
+                        : "fl_dbpr")}
             {lic?.lastVerifiedAt
               ? ` · in our data ${formatDateTime(lic.lastVerifiedAt)}`
               : " · timestamp not on file"}
@@ -789,6 +1022,36 @@ export function SourcesFooter({
             <br />
             Oregon CCB Active Licenses extract. Bond and insurance fields are as published — not a
             live certificate check. Confirm current status on the official CCB search.
+          </li>
+        ) : isWa ? (
+          <li>
+            <span className="font-medium text-[var(--text)]">Coverage note</span>
+            <br />
+            Washington L&I contractor license extract. No bond or insurance fields in this feed.
+            Confirm current status on the official L&I verify site.
+          </li>
+        ) : isAz ? (
+          <li>
+            <span className="font-medium text-[var(--text)]">Coverage note</span>
+            <br />
+            Arizona ROC All Current Contractors posting list. No bond, insurance, or full discipline
+            in this feed. Confirm current status on the official ROC search.
+          </li>
+        ) : isLa ? (
+          <li>
+            <span className="font-medium text-[var(--text)]">Coverage note</span>
+            <br />
+            Louisiana LSLBC official public Request Roster (Active). No trade classifications,
+            qualifying parties, bond, insurance, or discipline on this export. Confirm current
+            status on the official LSLBC lookup.
+          </li>
+        ) : isMs ? (
+          <li>
+            <span className="font-medium text-[var(--text)]">Coverage note</span>
+            <br />
+            Mississippi MSBOC official exported list used for this load. No bond, insurance, or
+            discipline on this extract. A miss is not proof someone is unlicensed. Confirm current
+            status on the official board lookup.
           </li>
         ) : isTx ? (
           <li>
@@ -835,6 +1098,14 @@ export function SourcesFooter({
       <p className="mt-4">
         {isOr
           ? "Always confirm current status on the official Oregon CCB search before hiring."
+          : isWa
+            ? "Always confirm current status on the official Washington L&I verify site before hiring."
+            : isAz
+              ? "Always confirm current status on the official Arizona ROC search before hiring."
+              : isLa
+                ? "Always confirm current status on the official LSLBC lookup before hiring."
+                : isMs
+                  ? "Always confirm current status on the official MSBOC lookup before hiring."
           : isTx
           ? "Always confirm current status on the official TDLR or TSBPE search before hiring."
           : isNj

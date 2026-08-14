@@ -98,7 +98,7 @@ Full documentation, columns, coverage limits, and ingest commands:
 
 Statewide contractor licensing through the Construction Contractors Board.
 
-→ **[DATA_SOURCES_OR.md](./DATA_SOURCES_OR.md)** · product: **[OREGON_VERIFY_V1.md](./OREGON_VERIFY_V1.md)**
+→ **[DATA_SOURCES_OR.md](./DATA_SOURCES_OR.md)** · product: **[OREGON_VERIFY_V1.md](./OREGON_VERIFY_V1.md)** · explore: **[OREGON_FULL_JOURNEY_V1.md](./OREGON_FULL_JOURNEY_V1.md)**
 
 | Resource | URL | Notes |
 |----------|-----|--------|
@@ -106,6 +106,60 @@ Statewide contractor licensing through the Construction Contractors Board.
 | CCB search | https://search.ccb.state.or.us/search/ | Interactive human verify |
 
 **Ingest:** `scripts/download_or_ccb.py` + `ingest/adapters/or_ccb.py` → `data/staging/or_ccb/`
+
+## Washington — L&I contractor licenses
+
+Statewide contractor licensing / registration through Labor & Industries.
+
+→ **[DATA_SOURCES_WA.md](./DATA_SOURCES_WA.md)** · product: **[WASHINGTON_VERIFY_V1.md](./WASHINGTON_VERIFY_V1.md)** · explore: **[WASHINGTON_FULL_JOURNEY_V1.md](./WASHINGTON_FULL_JOURNEY_V1.md)**
+
+| Resource | URL | Notes |
+|----------|-----|--------|
+| L&I Contractor License Data — General | https://data.wa.gov/Labor/L-I-Contractor-License-Data-General/m8qx-ubtq | Socrata `m8qx-ubtq` |
+| L&I verify | https://secure.lni.wa.gov/verify/ | Interactive human verify |
+
+**Ingest:** `scripts/download_wa_lni.py` + `ingest/adapters/wa_lni.py` → `data/staging/wa_lni/`
+
+## Arizona — ROC current contractors
+
+Statewide contractor licensing through the Registrar of Contractors.
+
+→ **[DATA_SOURCES_AZ.md](./DATA_SOURCES_AZ.md)** · product: **[ARIZONA_VERIFY_V1.md](./ARIZONA_VERIFY_V1.md)**
+
+| Resource | URL | Notes |
+|----------|-----|--------|
+| ROC posting list | https://roc.az.gov/posting-list | Official current-contractor CSVs |
+| ROC search | https://azroc.my.site.com/AZRoc/s/contractor-search | Interactive human verify |
+
+**Ingest:** `scripts/download_az_roc.py` + `ingest/adapters/az_roc.py` → `data/staging/az_roc/`
+
+## Louisiana — LSLBC contractor licenses
+
+Statewide contractor licensing through the Louisiana State Licensing Board for Contractors.
+
+→ **[DATA_SOURCES_LA.md](./DATA_SOURCES_LA.md)** · product: **[LOUISIANA_VERIFY_V1.md](./LOUISIANA_VERIFY_V1.md)**
+
+| Resource | URL | Notes |
+|----------|-----|--------|
+| Official Request Roster | https://arlspublic.lslbc.louisiana.gov/Public/RequestRoster | Free public CSV export; Active only |
+| LSLBC lookup | https://arlspublic.lslbc.louisiana.gov/Public/Search | Interactive human confirm |
+| Types of licenses | https://lslbc.gov/types-of-licenses/ | Commercial / residential / home improvement / mold |
+
+**Ingest:** `scripts/download_la_lslbc.py` + `ingest/adapters/la_lslbc.py` → `data/staging/la_lslbc/`
+
+## Mississippi — State Board of Contractors
+
+Statewide contractor licensing through the Mississippi State Board of Contractors.
+
+→ **[DATA_SOURCES_MS.md](./DATA_SOURCES_MS.md)** · product: **[MISSISSIPPI_VERIFY_V1.md](./MISSISSIPPI_VERIFY_V1.md)**
+
+| Resource | URL | Notes |
+|----------|-----|--------|
+| Official public search | http://search.msboc.us/ConsolidatedSearch.cfm | Interactive human confirm |
+| Official results / Excel | http://search.msboc.us/ConsolidatedResults.cfm | List view + View Results In Excel |
+| Classifications | https://www.msboc.us/classifications/ | Major vs specialty |
+
+**Ingest:** `scripts/download_ms_sbc.py` + `ingest/adapters/ms_sbc.py` → `data/staging/ms_sbc/`
 
 ## New Jersey — DCA (HIC + specialty boards)
 

@@ -28,6 +28,12 @@ export function EmptyResults({ query, mode, stateSlug = "fl" }: Props) {
   if (stateSlug === "wa") {
     return <WashingtonEmptyResults query={query} mode={mode} />;
   }
+  if (stateSlug === "la") {
+    return <LouisianaEmptyResults query={query} mode={mode} />;
+  }
+  if (stateSlug === "ms") {
+    return <MississippiEmptyResults query={query} mode={mode} />;
+  }
   return <FloridaEmptyResults query={query} mode={mode} />;
 }
 
@@ -492,6 +498,71 @@ function OregonEmptyResults({ query, mode }: { query: string; mode: "license" | 
           className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
         >
           Official CCB search
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function LouisianaEmptyResults({ query, mode }: { query: string; mode: "license" | "name" }) {
+  return (
+    <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-6 sm:px-8 sm:py-9">
+      <p className="text-base font-medium leading-snug text-[var(--text)]">
+        No Louisiana LSLBC licenses matched &ldquo;{query}&rdquo;
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+        {mode === "license"
+          ? "We searched LSLBC license numbers in the official public roster. A miss can mean a typo or an inactive credential not on this Active export."
+          : "We searched business names in the official LSLBC public Request Roster."}
+      </p>
+      <p className="mt-3 text-sm text-[var(--muted)]">
+        Missing here is not proof someone is unlicensed. Confirm on the official LSLBC lookup.
+      </p>
+      <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+        <Link
+          href="/verify?state=la"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+        >
+          Clear search
+        </Link>
+        <a
+          href="https://arlspublic.lslbc.louisiana.gov/Public/Search"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+        >
+          Official LSLBC lookup
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function MississippiEmptyResults({ query, mode }: { query: string; mode: "license" | "name" }) {
+  return (
+    <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-6 sm:px-8 sm:py-9">
+      <p className="text-base font-medium leading-snug text-[var(--text)]">
+        No Mississippi MSBOC licenses matched &ldquo;{query}&rdquo;
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+        {mode === "license"
+          ? "We searched MSBOC license numbers in the official exported list used for this load. A miss is not proof someone is unlicensed."
+          : "We searched business names in the official MSBOC exported list. A miss is not proof someone is unlicensed."}
+      </p>
+      <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+        <Link
+          href="/verify?state=ms"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+        >
+          Clear search
+        </Link>
+        <a
+          href="http://search.msboc.us/ConsolidatedSearch.cfm"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--text)] no-underline hover:bg-[var(--bg-elevated)]"
+        >
+          Official MSBOC lookup
         </a>
       </div>
     </div>

@@ -3,6 +3,8 @@ import { CompareToggle } from "@/components/compare/CompareToggle";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { displayStatusLabel, statusLabel, statusTone } from "@/lib/contractors/format";
 import { occupationLabel } from "@/lib/states/config";
+import { msSbcDisplayLabel, msSbcPublishedNumber } from "@/lib/states/ms-sbc";
+import { laLslbcDisplayLabel } from "@/lib/states/la-lslbc";
 import { azCategoryFromSecondary, azClassPlainLabel } from "@/lib/states/az-roc";
 import {
   caClassChipLabel,
@@ -65,6 +67,14 @@ function isWashingtonResult(result: SearchResult): boolean {
   return (result.state || "").toUpperCase() === "WA" || result.sourceSystem === "wa_lni";
 }
 
+function isLouisianaResult(result: SearchResult): boolean {
+  return (result.state || "").toUpperCase() === "LA" || result.sourceSystem === "la_lslbc";
+}
+
+function isMississippiResult(result: SearchResult): boolean {
+  return result.sourceSystem === "ms_sbc" || (result.state || "").toUpperCase() === "MS";
+}
+
 function displayLicenseKey(
   result: SearchResult,
   isTx: boolean,
@@ -93,6 +103,12 @@ function displayLicenseKey(
   if (key.startsWith("WA-LNI:")) {
     return key.split(":").pop() || key;
   }
+  if (key.startsWith("LA-LSLBC:")) {
+    return key.slice("LA-LSLBC:".length) || key;
+  }
+  if (key.startsWith("MS-SBC:")) {
+    return msSbcPublishedNumber(key);
+  }
   return key;
 }
 
@@ -110,12 +126,14 @@ export function ResultCard({
   const isCa = isCaliforniaResult(result);
   const isAz = isArizonaResult(result);
   const isWa = isWashingtonResult(result);
+  const isLa = isLouisianaResult(result);
+  const isMs = isMississippiResult(result);
   const location = [result.city, result.county, result.state].filter(Boolean).join(" · ");
   const licTone = signalTone("license", result);
   const entTone = signalTone("entity", result);
   const showEntity =
     Boolean(result.entityStatus) ||
-    !(hideEntityWhenMissing || isTx || isNj || isOr || isCa || isAz || isWa);
+    !(hideEntityWhenMissing || isTx || isNj || isOr || isCa || isAz || isWa || isLa || isMs);
   const trade = isTx ? getTxTradeInfo(result.occupationCode) : null;
   const njCred = isNj ? getNjCredentialInfo(result.occupationCode) : null;
   const orType = isOr ? getOrCcbTypeInfo(result.occupationCode) : null;
@@ -136,6 +154,10 @@ export function ResultCard({
               (result.occupationCode
                 ? `Class ${result.occupationCode}`
                 : "Arizona ROC contractor")
+            : isLa
+              ? laLslbcDisplayLabel(result.occupationCode)
+              : isMs
+                ? msSbcDisplayLabel(result.occupationCode)
             : occupationLabel(result.occupationCode);
   const officialSuffix = isTx ? txTradeOfficialSuffix(result.occupationCode) : null;
   const shortKey = displayLicenseKey(result, isTx, isNj);

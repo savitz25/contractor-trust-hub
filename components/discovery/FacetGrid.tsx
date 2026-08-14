@@ -6,17 +6,22 @@ export function FacetGrid({
   facets,
   hrefFor,
   emptyLabel = "No categories with records yet.",
+  subtitle,
 }: {
   title: string;
   facets: DiscoveryFacet[];
   hrefFor: (slug: string) => string;
   emptyLabel?: string;
+  subtitle?: string;
 }) {
   return (
     <section>
       <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
         {title}
       </h2>
+      {subtitle ? (
+        <p className="mt-1 text-xs leading-relaxed text-[var(--muted)] sm:text-sm">{subtitle}</p>
+      ) : null}
       {facets.length === 0 ? (
         <p className="mt-3 text-sm text-[var(--muted)]">{emptyLabel}</p>
       ) : (

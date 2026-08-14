@@ -6,6 +6,8 @@
  * California: CSLB top-county public list extracts — see docs/DATA_SOURCES_CA.md.
  * Arizona: ROC current active posting lists — see docs/DATA_SOURCES_AZ.md.
  * Washington: L&I contractor extract — Verify-first.
+ * Louisiana: LSLBC statewide contractor licenses — see docs/DATA_SOURCES_LA.md.
+ * Mississippi: MSBOC statewide contractor licenses — see docs/DATA_SOURCES_MS.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
 
@@ -16,8 +18,10 @@ import { isNjVerifyPilotEnabled } from "./feature-flags";
 import { njCredentialPlainLabel } from "./nj-credentials";
 import { orCcbPlainLabel } from "./or-ccb";
 import { waOccupationPlainLabel } from "./wa-lni";
+import { laLslbcPlainLabel } from "./la-lslbc";
+import { msSbcPlainLabel } from "./ms-sbc";
 
-export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ";
+export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS";
 
 export type EvidenceState = {
   code: StateCode;
@@ -156,12 +160,42 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     coverageNote:
       "Arizona licenses contractors statewide through the ROC. This search uses the official current active contractor posting list (residential, commercial, and dual) plus linked disciplinary actions when present. Always confirm on the official ROC contractor search.",
   },
+  la: {
+    code: "LA",
+    slug: "la",
+    name: "Louisiana",
+    shortName: "LA",
+    boardLabel: "Louisiana State Licensing Board for Contractors (LSLBC)",
+    boardUrl: "https://arlspublic.lslbc.louisiana.gov/Public/Search",
+    entityRegistryLabel: "Louisiana SOS business filings (not yet linked)",
+    entityRegistryUrl: "https://coraweb.sos.la.gov/commercialsearch/commercialsearch.aspx",
+    licenseSource: "la_lslbc",
+    entitySource: "la_sos",
+    live: true,
+    coverageNote:
+      "Louisiana licenses contractors statewide through LSLBC. This search uses the official public Request Roster (Active commercial, residential, home improvement, and mold credentials). Trade classifications and qualifying parties are not on this export. No bond, insurance, or discipline fields. Always confirm on the official LSLBC lookup.",
+  },
+  ms: {
+    code: "MS",
+    slug: "ms",
+    name: "Mississippi",
+    shortName: "MS",
+    boardLabel: "Mississippi State Board of Contractors (MSBOC)",
+    boardUrl: "http://search.msboc.us/ConsolidatedSearch.cfm",
+    entityRegistryLabel: "Mississippi SOS business filings (not yet linked)",
+    entityRegistryUrl: "https://www.sos.ms.gov/business-services",
+    licenseSource: "ms_sbc",
+    entitySource: "ms_sos",
+    live: true,
+    coverageNote:
+      "Mississippi licenses contractors statewide through the State Board of Contractors. This search uses official MSBOC public list-view credentials (commercial / residential type, status, location). Specialty class codes and qualifying parties only when published. No bond, insurance, or discipline fields. Always confirm on the official board lookup.",
+  },
 };
 
 export const DEFAULT_STATE_SLUG = "fl";
 
 /** Stable display order for homepage + Verify tabs */
-export const LIVE_STATE_ORDER = ["fl", "tx", "nj", "or", "wa", "ca", "az"] as const;
+export const LIVE_STATE_ORDER = ["fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms"] as const;
 
 export function getStateBySlug(slug: string): EvidenceState | null {
   const key = slug.toLowerCase();
@@ -174,7 +208,11 @@ export function getStateBySlug(slug: string): EvidenceState | null {
           ? "az"
           : key === "washington"
             ? "wa"
-            : key;
+            : key === "louisiana"
+              ? "la"
+              : key === "mississippi"
+                ? "ms"
+                : key;
   const s = EVIDENCE_STATES[mapped] ?? null;
   if (!s) return null;
   // NJ pilot can be disabled without removing config
@@ -265,6 +303,8 @@ export function occupationLabel(code: string | null | undefined): string {
     caClassPlainLabel(upper) ??
     orCcbPlainLabel(upper) ??
     waOccupationPlainLabel(upper) ??
+    laLslbcPlainLabel(upper) ??
+    msSbcPlainLabel(upper) ??
     njCredentialPlainLabel(upper) ??
     getOccupationInfo(upper).label
   );
@@ -316,5 +356,17 @@ export const STATE_SCOPE_UI: Record<
     summary:
       "Arizona ROC statewide active licenses plus linked disciplinary actions when present. Confirm on ROC contractor search.",
     verifyHint: "ROC statewide + discipline",
+  },
+  la: {
+    badge: "LSLBC statewide",
+    summary:
+      "Louisiana LSLBC official public roster — Active commercial, residential, home improvement, and mold. Confirm on the official lookup.",
+    verifyHint: "LSLBC statewide licenses",
+  },
+  ms: {
+    badge: "MSBOC statewide",
+    summary:
+      "Mississippi State Board of Contractors official exported list. Commercial / residential as published. Confirm on the official board lookup.",
+    verifyHint: "MSBOC statewide licenses",
   },
 };

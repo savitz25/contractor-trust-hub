@@ -237,12 +237,78 @@ python scripts/load_or_ccb_to_postgres.py --staging-dir data/staging/or_ccb
 
 Sample: `data/samples/or_ccb_active_sample.csv`. Keys: `OR-CCB:{number}:{type}`. `source_system = or_ccb`.
 
+---
+
+# Washington L&I contractor licenses → Postgres
+
+```bash
+python scripts/download_wa_lni.py
+python -m ingest.adapters.wa_lni --input data/raw/wa_lni/lni_contractor_licenses.csv --out-dir data/staging/wa_lni
+python scripts/load_wa_lni_to_postgres.py --staging-dir data/staging/wa_lni
+```
+
+Sample: `data/samples/wa_lni_contractor_sample.csv`. Keys: `WA-LNI:{ContractorLicenseNumber}`. `source_system = wa_lni`.
+
+**Production (2026-08-13):** 160,998 licenses loaded (0 skipped). Active 75,483 · Expired 61,333 · Suspended 9,820 · Re-licensed 9,405 · Out of business 4,708 · other published statuses 249. Types: CC 148,648 · EC 9,199 · PC 3,029 · LC 122. See [WASHINGTON_VERIFY_V1.md](./WASHINGTON_VERIFY_V1.md).
+
+---
+
+# Arizona ROC current contractors → Postgres
+
+```bash
+python scripts/download_az_roc.py
+python -m ingest.adapters.az_roc --input data/raw/az_roc/roc_all_current.csv --out-dir data/staging/az_roc
+python scripts/load_az_roc_to_postgres.py --staging-dir data/staging/az_roc
+```
+
+Sample: `data/samples/az_roc_current_sample.csv`. Keys: `AZ-ROC:{License No}`. `source_system = az_roc`. Use the All Current file only — do not union Commercial/Residential/Dual subsets.
+
+**Production (2026-08-13):** 58,408 `az_roc` licenses (58,199 Active · 142 Revoked · 67 Suspended). See [ARIZONA_VERIFY_V1.md](./ARIZONA_VERIFY_V1.md).
+
+---
+
+# Louisiana LSLBC official public roster → Postgres
+
+```bash
+python scripts/download_la_lslbc.py
+python -m ingest.adapters.la_lslbc --input data/raw/la_lslbc/lslbc_contractor_roster.csv --out-dir data/staging/la_lslbc
+python scripts/load_la_lslbc_to_postgres.py --staging-dir data/staging/la_lslbc
+```
+
+Sample: `data/samples/la_lslbc_contractor_sample.csv`. Keys: `LA-LSLBC:{LicenseNumber}`. `source_system = la_lslbc`. Official Request Roster is Active only.
+
+**Production (2026-08-14):** 26,298 `la_lslbc` licenses (all Active). Commercial 19,993 · Residential 4,579 · Home improvement 1,462 · Mold 264. See [LOUISIANA_VERIFY_V1.md](./LOUISIANA_VERIFY_V1.md).
+
+---
+
+# Mississippi MSBOC official public list → Postgres
+
+```bash
+python scripts/download_ms_sbc.py
+python -m ingest.adapters.ms_sbc --input data/raw/ms_sbc/msboc_contractor_list.csv --out-dir data/staging/ms_sbc
+python scripts/load_ms_sbc_to_postgres.py --staging-dir data/staging/ms_sbc
+```
+
+If Cloudflare blocks the download, save the official “View Results In Excel” file and run:
+
+```bash
+python scripts/download_ms_sbc.py --from-file path/to/official_export.xls
+```
+
+Sample: `data/samples/ms_sbc_contractor_sample.csv`. Keys: `MS-SBC:{COM|RES}:{LicenseNumber}`. `source_system = ms_sbc`. Official list view includes commercial / residential type, status, and location.
+
+**Production (2026-08-14):** official Excel `data/raw/msboc/msboc_results.xls` → **8,242** licenses. Licensed 3,425 · Expired 4,544 · Unlicensed 257 · Revoked 14 · Suspended 2. See [MISSISSIPPI_VERIFY_V1.md](./MISSISSIPPI_VERIFY_V1.md). The board search also advertises ~38,709 rows; this load is the saved official Excel, not every search page.
+
 ## Troubleshooting
 
 | Symptom | Fix |
 |---------|-----|
 | Missing staging CSV | Run download + `tx_tdlr` adapter |
 | Empty Texas search | Confirm load finished; check `SELECT COUNT(*) FROM licenses WHERE source_system = 'tx_tdlr'` |
+| Empty Washington search | Confirm load finished; check `SELECT COUNT(*) FROM licenses WHERE source_system = 'wa_lni'` |
+| Empty Arizona search | Confirm load finished; check `SELECT COUNT(*) FROM licenses WHERE source_system = 'az_roc'` |
+| Empty Louisiana search | Confirm load finished; check `SELECT COUNT(*) FROM licenses WHERE source_system = 'la_lslbc'` |
+| Empty Mississippi search | Confirm load finished; check `SELECT COUNT(*) FROM licenses WHERE source_system = 'ms_sbc'`. If download hit Cloudflare, use `--from-file` with the official Excel. |
 | Cosmetology / wrong trades | Re-download without `--all-types`; use default specialty filter |
 
 ---

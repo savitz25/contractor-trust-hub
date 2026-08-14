@@ -235,10 +235,12 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const isOr = stateSlug === "or";
   const isCa = stateSlug === "ca";
   const isAz = stateSlug === "az";
+  const isLa = stateSlug === "la";
+  const isMs = stateSlug === "ms";
   const isWa = stateSlug === "wa";
   /** TX/OR/CA/AZ/WA keep thin reports; NJ Stage 8A is fuller Verify depth. */
-  const isTxOnly = isTx || isOr || isCa || isAz || isWa;
-  const isFlFull = !isTx && !isNj && !isOr && !isCa && !isAz && !isWa;
+  const isTxOnly = isTx || isOr || isCa || isAz || isWa || isLa || isMs;
+  const isFlFull = !isTx && !isNj && !isOr && !isCa && !isAz && !isWa && !isLa && !isMs;
   const state = getStateBySlug(stateSlug) || getStateBySlug("fl")!;
   const verifyHref =
     stateSlug === "fl" ? "/verify" : `/verify?state=${stateSlug}`;
