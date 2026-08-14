@@ -8,6 +8,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Optional email sign-in to keep Contractor Trust Hub projects, watches, and Home Passport durable across devices.",
   path: "/account",
+  noIndex: true,
 });
 
 export default function AccountPage() {

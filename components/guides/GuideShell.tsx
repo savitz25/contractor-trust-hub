@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
+import { BreadcrumbJsonLd, FaqJsonLd, JsonLd } from "@/components/seo/JsonLd";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import type { GuideMeta } from "@/lib/guides/registry";
 import { listGuides } from "@/lib/guides/registry";
@@ -8,9 +8,11 @@ import { absoluteUrl } from "@/lib/site";
 export function GuideShell({
   guide,
   children,
+  faq,
 }: {
   guide: GuideMeta;
   children: React.ReactNode;
+  faq?: { question: string; answer: string }[];
 }) {
   const related = listGuides().filter((g) => g.slug !== guide.slug);
 
@@ -46,6 +48,7 @@ export function GuideShell({
           mainEntityOfPage: absoluteUrl(guide.path),
         }}
       />
+      {faq?.length ? <FaqJsonLd items={faq} /> : null}
 
       <nav className="text-xs font-medium text-[var(--muted)]">
         <Link href="/" className="no-underline hover:text-[var(--navy)]">

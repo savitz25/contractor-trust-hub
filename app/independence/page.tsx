@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { pageMetadata } from "@/lib/seo/page-meta";
 
@@ -13,6 +14,12 @@ export const metadata: Metadata = pageMetadata({
 export default function IndependencePage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-12">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Independence", path: "/independence" },
+        ]}
+      />
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
         Trust infrastructure
       </p>

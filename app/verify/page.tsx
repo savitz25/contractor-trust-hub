@@ -14,7 +14,8 @@ import { MississippiCoverageBanner } from "@/components/search/MississippiCovera
 import { KentuckyCoverageBanner } from "@/components/search/KentuckyCoverageBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { searchContractors } from "@/lib/contractors/queries";
-import { pageMetadata } from "@/lib/seo/page-meta";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { verifyMetadata } from "@/lib/seo/verify-meta";
 import { getLiveStates, getStateBySlug } from "@/lib/states/config";
 import { TX_COVERED_TRADES_PLAIN } from "@/lib/states/tx-trades";
 
@@ -32,84 +33,7 @@ function resolveVerifyState(raw: string | undefined) {
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const sp = await searchParams;
   const state = resolveVerifyState(sp.state);
-  if (state.slug === "tx") {
-    return pageMetadata({
-      title: "Verify a Texas specialty contractor (TDLR + TSBPE)",
-      description:
-        "Search Texas TDLR specialty trades and TSBPE plumbing licenses. Not a statewide general contractor directory. Evidence only — not a marketplace.",
-      path: "/verify?state=tx",
-    });
-  }
-  if (state.slug === "nj") {
-    return pageMetadata({
-      title: "Verify a New Jersey HIC or specialty contractor",
-      description:
-        "Search New Jersey Home Improvement Contractor (HIC) registrations and available specialty boards. No statewide general contractor license. Evidence only — not a marketplace.",
-      path: "/verify?state=nj",
-    });
-  }
-  if (state.slug === "or") {
-    return pageMetadata({
-      title: "Verify an Oregon contractor (CCB)",
-      description:
-        "Search Oregon Construction Contractors Board active licenses by number or business name. Bond and insurance fields as published. Evidence only — not a marketplace.",
-      path: "/verify?state=or",
-    });
-  }
-  if (state.slug === "ca") {
-    return pageMetadata({
-      title: "Verify a California contractor (CSLB)",
-      description:
-        "Search California CSLB licenses from official public list extracts for high-impact counties. Always confirm on CSLB Instant License Check. Evidence only — not a marketplace.",
-      path: "/verify?state=ca",
-    });
-  }
-  if (state.slug === "az") {
-    return pageMetadata({
-      title: "Verify an Arizona contractor (ROC)",
-      description:
-        "Search Arizona Registrar of Contractors licenses from the official current active posting list. Always confirm on ROC contractor search. Evidence only — not a marketplace.",
-      path: "/verify?state=az",
-    });
-  }
-  if (state.slug === "wa") {
-    return pageMetadata({
-      title: "Verify a Washington contractor (L&I)",
-      description:
-        "Search Washington L&I contractor licenses by number or business name. Always confirm on L&I Verify. Evidence only — not a marketplace.",
-      path: "/verify?state=wa",
-    });
-  }
-  if (state.slug === "la") {
-    return pageMetadata({
-      title: "Verify a Louisiana contractor (LSLBC)",
-      description:
-        "Search Louisiana State Licensing Board for Contractors licenses by number or business name. Official public roster. Evidence only — not a marketplace.",
-      path: "/verify?state=la",
-    });
-  }
-  if (state.slug === "ms") {
-    return pageMetadata({
-      title: "Verify a Mississippi contractor (MSBOC)",
-      description:
-        "Search Mississippi State Board of Contractors licenses by number or business name. Official public list. Evidence only — not a marketplace.",
-      path: "/verify?state=ms",
-    });
-  }
-  if (state.slug === "ky") {
-    return pageMetadata({
-      title: "Verify a Kentucky specialty contractor (DHBC)",
-      description:
-        "Search Kentucky DHBC electrical, HVAC, and plumbing contractor credentials. No statewide general contractor license. Evidence only — not a marketplace.",
-      path: "/verify?state=ky",
-    });
-  }
-  return pageMetadata({
-    title: "Verify a Florida contractor",
-    description:
-      "Search Florida contractor licenses by name or license number. Official DBPR status, Sunbiz entity links, and board discipline — free Trust Reports, not a marketplace.",
-    path: "/verify",
-  });
+  return verifyMetadata(state.slug, sp.q);
 }
 
 export default async function VerifyPage({ searchParams }: Props) {
@@ -365,6 +289,15 @@ export default async function VerifyPage({ searchParams }: Props) {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          {
+            name: heading,
+            path: state.slug === "fl" ? "/verify" : `/verify?state=${state.slug}`,
+          },
+        ]}
+      />
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--accent)] sm:text-xs">
         {kicker}
       </p>

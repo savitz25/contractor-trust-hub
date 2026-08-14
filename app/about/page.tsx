@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { pageMetadata } from "@/lib/seo/page-meta";
 
 export const metadata: Metadata = pageMetadata({
-  title: "How it works",
+  title: "How Contractor Trust Hub works",
   description:
-    "How Contractor Trust Hub verifies Florida contractors using official public records — DBPR licenses, high-confidence Sunbiz links, and board discipline.",
+    "How Contractor Trust Hub verifies contractors using official public records — licenses, high-confidence entity links when published, and board discipline when in our extract. Not a marketplace.",
   path: "/about",
 });
 
 export default function AboutPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-12">
+      <BreadcrumbJsonLd items={[{ name: "Home", path: "/" }, { name: "About", path: "/about" }]} />
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
         About
       </p>

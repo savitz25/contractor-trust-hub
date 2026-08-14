@@ -48,7 +48,13 @@ const checks = [
 
 export default function HowToVerifyFloridaPage() {
   return (
-    <GuideShell guide={guide}>
+    <GuideShell
+      guide={guide}
+      faq={checks.map((c) => ({
+        question: `What should I check for ${c.title.toLowerCase()}?`,
+        answer: c.body,
+      }))}
+    >
       <section>
         <p>
           If you already have a name, a truck, or a license number, start with evidence — not

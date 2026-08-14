@@ -29,10 +29,12 @@ type Props = {
   searchParams: Promise<{ page?: string }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { segment } = await params;
+  const sp = await searchParams;
+  const page = Math.max(1, Number(sp.page) || 1);
   const state = getDiscoveryState(PUBLIC);
-  if (!state) return { title: "Not found" };
+  if (!state) return { title: "Not found", robots: { index: false } };
   const resolved = resolveDiscoverySegment(state, segment);
   if (!resolved) return { title: "Not found", robots: { index: false } };
 
@@ -43,6 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       county,
       title: `${county.name} County FL Contractors — License Evidence`,
       description: `Browse construction contractors with Florida DBPR licenses linked to ${county.name} County. License status, Sunbiz entity, and discipline evidence — not a marketplace.`,
+      noIndex: page > 1,
     });
   }
 
@@ -52,6 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     trade,
     title: `Florida ${trade.title} — License Verification`,
     description: `Browse Florida ${trade.title.toLowerCase()} with official DBPR license evidence. ${trade.description} Independent research, not a lead board.`,
+    noIndex: page > 1,
   });
 }
 

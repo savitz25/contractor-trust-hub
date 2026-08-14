@@ -28,7 +28,7 @@ export function pageMetadata(input: PageMetaInput): Metadata {
     title: input.title,
     description: input.description,
     alternates: {
-      canonical: path === "/" ? "/" : path,
+      canonical: pageUrl,
     },
     openGraph: {
       title: input.title,

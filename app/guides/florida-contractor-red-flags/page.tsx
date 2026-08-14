@@ -48,7 +48,13 @@ const flags = [
 
 export default function FloridaRedFlagsPage() {
   return (
-    <GuideShell guide={guide}>
+    <GuideShell
+      guide={guide}
+      faq={flags.map((f) => ({
+        question: f.title,
+        answer: f.body,
+      }))}
+    >
       <section>
         <p>
           Most hiring problems show up in process, not in a star rating. This page lists practical

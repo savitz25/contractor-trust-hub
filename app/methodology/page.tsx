@@ -1,18 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { pageMetadata } from "@/lib/seo/page-meta";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Methodology",
+  title: "Methodology — how we collect contractor evidence",
   description:
-    "Transparent methodology for Florida contractor license and Sunbiz entity evidence, including high-confidence matching rules.",
+    "How Contractor Trust Hub collects and presents official license extracts, high-confidence entity links, and discipline rows. Matching rules and limits — not ratings.",
   path: "/methodology",
 });
 
 export default function MethodologyPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-12">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Methodology", path: "/methodology" },
+        ]}
+      />
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
         Transparency
       </p>

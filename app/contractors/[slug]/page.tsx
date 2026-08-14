@@ -34,13 +34,9 @@ import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { getContractorBySlug } from "@/lib/contractors/queries";
 import { matchConfidenceLine } from "@/lib/contractors/trust-report";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
-import { pageMetadata } from "@/lib/seo/page-meta";
-import { absoluteUrl } from "@/lib/site";
+import { trustReportJsonLd, trustReportMetadata } from "@/lib/seo/trust-report-seo";
 import { getStateBySlug } from "@/lib/states/config";
-import {
-  evidenceSlugFromHomeState,
-  trustReportTitleSuffix,
-} from "@/lib/states/evidence-copy";
+import { evidenceSlugFromHomeState } from "@/lib/states/evidence-copy";
 import { azClassPlainLabel } from "@/lib/states/az-roc";
 import { caClassPlainLabel } from "@/lib/states/ca-classifications";
 import { njCredentialPlainLabel } from "@/lib/states/nj-credentials";
@@ -66,67 +62,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       };
     }
 
-    const stateSlug = evidenceSlugFromHomeState(c.homeState);
-    const isTx = stateSlug === "tx";
-    const isNj = stateSlug === "nj";
-    const isOr = stateSlug === "or";
-    const lic = c.licenses[0];
-    const occ = lic
-      ? isTx
-        ? txTradePlainLabel(lic.occupationCode)
-        : isNj
-          ? njCredentialPlainLabel(lic.occupationCode)
-          : isOr
-            ? orCcbDisplayLabel(lic.occupationCode)
-          : getOccupationInfo(lic.occupationCode).label
-      : isTx
-        ? "Texas specialty contractor"
-        : isNj
-          ? "New Jersey contractor registration"
-          : isOr
-            ? "Oregon CCB contractor"
-          : "Florida contractor";
-    const status = lic ? statusLabel(lic.statusNormalized) : "status unknown";
-    const city = c.primaryCity ? ` in ${c.primaryCity}` : "";
-    const path = `/contractors/${encodeURIComponent(c.slug)}`;
-    const title = `${c.displayName} — ${trustReportTitleSuffix(stateSlug)}`;
-    const description = [
-      `Trust report for ${c.displayName}${city}.`,
-      lic ? `Credential ${lic.externalKey} (${occ}) — ${status}.` : null,
-      isTx
-        ? "TDLR specialty or TSBPE plumbing evidence — not a statewide general contractor directory."
-        : isOr
-          ? "Oregon CCB Active Licenses evidence. Bond/insurance as published — not a live COI."
-        : isNj
-          ? "New Jersey HIC / specialty evidence — no statewide general contractor license; coverage differs by state."
-          : c.entities[0]
-            ? `Sunbiz entity ${statusLabel(c.entities[0].status)}.`
-            : "No high-confidence Sunbiz link.",
-      c.discipline.length > 0
-        ? `${c.discipline.length} discipline action(s) linked.`
-        : "No discipline linked in our extract.",
-      isTx
-        ? "Official TDLR / TSBPE open-data evidence — not a marketplace."
-        : isOr
-          ? "Official Oregon CCB open-data evidence — not a marketplace."
-        : isNj
-          ? "Official NJ DCA extract evidence — not a marketplace."
-          : "Official DBPR and Sunbiz evidence — not a marketplace.",
-    ]
-      .filter(Boolean)
-      .join(" ");
-
-    return pageMetadata({
-      title,
-      description,
-      path,
-      ogType: "profile",
-    });
+    return trustReportMetadata(c);
   } catch {
     return {
       title: "Contractor Trust Report",
       description:
-        "Florida contractor license, Sunbiz entity, and discipline evidence from Contractor Trust Hub.",
+        "Contractor license evidence from official public records on Contractor Trust Hub.",
       robots: { index: false, follow: true },
     };
   }
@@ -139,55 +80,7 @@ function ContractorJsonLd({
   contractor: NonNullable<Awaited<ReturnType<typeof getContractorBySlug>>>;
   path: string;
 }) {
-  const lic = contractor.licenses[0];
-  const stateSlug = evidenceSlugFromHomeState(contractor.homeState);
-  const isTx = stateSlug === "tx";
-  const isNj = stateSlug === "nj";
-  // Honest ProfilePage + Organization — no ratings, reviews, or AggregateRating.
-  const data = {
-    "@context": "https://schema.org",
-    "@type": "ProfilePage",
-    name: `${contractor.displayName} — ${trustReportTitleSuffix(stateSlug)}`,
-    url: absoluteUrl(path),
-    mainEntity: {
-      "@type": "Organization",
-      name: contractor.displayName,
-      legalName: contractor.legalName || undefined,
-      address:
-        contractor.primaryCity || contractor.primaryCounty
-          ? {
-              "@type": "PostalAddress",
-              addressLocality: contractor.primaryCity || undefined,
-              addressRegion:
-                contractor.homeState || (isTx ? "TX" : isNj ? "NJ" : "FL"),
-              addressCountry: "US",
-            }
-          : undefined,
-      identifier: lic?.externalKey
-        ? {
-            "@type": "PropertyValue",
-            name: isTx
-              ? "Texas TDLR license"
-              : isNj
-                ? "New Jersey registration"
-                : "Florida DBPR license",
-            value: lic.externalKey,
-          }
-        : undefined,
-    },
-    description: isTx
-      ? `Independent Texas TDLR specialty or TSBPE plumbing evidence for ${contractor.displayName}. Not a statewide general contractor directory — not a ranking or endorsement.`
-      : isNj
-        ? `New Jersey verification pilot report for ${contractor.displayName}. Registration extract evidence — not a ranking or endorsement.`
-        : `Independent Florida contractor evidence report for ${contractor.displayName}. License and entity data from public records — not a ranking or endorsement.`,
-    isPartOf: {
-      "@type": "WebSite",
-      name: "Contractor Trust Hub",
-      url: absoluteUrl("/"),
-    },
-  };
-
-  return <JsonLd data={data} />;
+  return <JsonLd data={trustReportJsonLd(contractor, path)} />;
 }
 
 export default async function ContractorPage({ params, searchParams }: Props) {

@@ -27,10 +27,12 @@ type Props = {
   searchParams: Promise<{ page?: string }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { segment, trade: tradeSlug } = await params;
+  const sp = await searchParams;
+  const page = Math.max(1, Number(sp.page) || 1);
   const state = getDiscoveryState(PUBLIC);
-  if (!state) return { title: "Not found" };
+  if (!state) return { title: "Not found", robots: { index: false } };
   const county = getCounty(state, segment);
   const trade = getTrade(state, tradeSlug);
   if (!county || !trade) return { title: "Not found", robots: { index: false } };
@@ -41,6 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     trade,
     title: `${trade.title} in ${county.name} County FL — License Evidence`,
     description: `Florida ${trade.title.toLowerCase()} with DBPR licenses linked to ${county.name} County. Verify license status, Sunbiz entity, and discipline — independent research, not a marketplace.`,
+    noIndex: page > 1,
   });
 }
 

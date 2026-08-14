@@ -33,7 +33,7 @@ export function SitewideJsonLd() {
           url: absoluteUrl("/brand/contractor-trust-hub-logo.svg"),
         },
         description:
-          "Independent Florida contractor verification using official DBPR licenses, Sunbiz entities, and board discipline. Not a marketplace.",
+          "Independent contractor verification from official public records. Florida is the full journey; other states are Verify-first with honest board scope. Not a marketplace.",
         parentOrganization: {
           "@type": "Organization",
           name: "Ask Trust Hub",
@@ -46,7 +46,7 @@ export function SitewideJsonLd() {
         name: "Contractor Trust Hub",
         url: site,
         description:
-          "Before you hire, verify. Florida contractor license evidence from official public records.",
+          "Before you hire, verify. Contractor license evidence from official public records — not a marketplace or ranking.",
         publisher: { "@id": orgId },
         inLanguage: "en-US",
         potentialAction: {
@@ -87,4 +87,30 @@ export function BreadcrumbJsonLd({ items }: { items: BreadcrumbItem[] }) {
   };
 
   return <JsonLd data={data} />;
+}
+
+/** FAQPage from real on-page Q&A. Do not invent answers. */
+export function FaqJsonLd({
+  items,
+}: {
+  items: { question: string; answer: string }[];
+}) {
+  const cleaned = items.filter((i) => i.question.trim() && i.answer.trim());
+  if (cleaned.length === 0) return null;
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: cleaned.map((i) => ({
+          "@type": "Question",
+          name: i.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: i.answer,
+          },
+        })),
+      }}
+    />
+  );
 }
