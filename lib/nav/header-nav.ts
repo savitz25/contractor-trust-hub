@@ -43,7 +43,7 @@ export const TOOLS_GROUP: HeaderGroup = {
     { href: "/tools/contract-analyzer", label: "Contract Analyzer" },
     { href: "/compare", label: "Compare" },
     { href: "/property", label: "Property / permits" },
-    { href: "/tools/coverage", label: "Coverage (public)" },
+    { href: "/tools/coverage", label: "Where we cover" },
   ],
 };
 

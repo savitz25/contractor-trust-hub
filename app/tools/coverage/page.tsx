@@ -1,284 +1,276 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { coverageAnalyticsSnapshot } from "@/lib/property/coverage";
-import {
-  waveAOpsSnapshot,
-  waveBOpsSnapshot,
-  waveCOpsSnapshot,
-} from "@/lib/property/ops-health";
-import { loadDbOpsSnapshot } from "@/lib/property/ops-db";
-import { extractStats } from "@/lib/property/permits";
+import { allCoverageMatrix } from "@/lib/property/coverage";
 import { pageMetadata } from "@/lib/seo/page-meta";
-import { isNjVerifyPilotEnabled } from "@/lib/states/feature-flags";
-import { NJ_SOURCE_MATRIX } from "@/lib/states/nj-credentials";
+import {
+  getLiveStateCount,
+  getLiveStates,
+  liveStatesPlainList,
+  verifyPathFor,
+  type EvidenceState,
+} from "@/lib/states/config";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Permit coverage matrix — Florida jurisdictions",
+  title: "Where we have coverage",
   description:
-    "Which Florida counties have partial permit extract coverage on Contractor Trust Hub, production load status, freshness, and matching rules. NJ Verify pilot is separate.",
+    "Which states Contractor Trust Hub can search today, what each includes, and honest limits. Extracts can lag official boards — not a nationwide directory.",
   path: "/tools/coverage",
 });
 
-/** Soft DB probe at runtime only — avoid build-time pool contention. */
-export const dynamic = "force-dynamic";
+/** Static consumer page — no live DB ops probes. */
+export const dynamic = "force-static";
 
-function WaveOpsBlock({
-  title,
-  ops,
-}: {
-  title: string;
-  ops: ReturnType<typeof waveAOpsSnapshot>;
-}) {
-  return (
-    <section className="mt-6 rounded-3xl border border-[var(--accent)]/30 bg-[var(--accent-soft)] p-5 sm:p-6">
-      <h2 className="text-lg font-semibold text-[var(--text)]">{title}</h2>
-      <p className="mt-1 text-xs text-[var(--muted)]">
-        Freshness {ops.extract.freshness || "—"} · join rate proxy {ops.extract.joinRateProxyPercent}%
-      </p>
-      <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-        {Object.entries(ops.recordsByCounty).map(([county, n]) => (
-          <li
-            key={county}
-            className="rounded-xl border border-[var(--border)] bg-white px-3 py-2"
-          >
-            <span className="font-medium text-[var(--text)]">{county}</span>
-            <span className="text-[var(--muted)]"> · {n} sample/extract row(s)</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
+function depthExplainer(state: EvidenceState): { includes: string[]; doesNot: string[] } {
+  switch (state.depth) {
+    case "full_journey":
+      return {
+        includes: [
+          "License lookup by name or number",
+          "Trust Report with license, entity (when linked), and discipline in our extract",
+          "County / trade browse and project planning tools (Florida)",
+        ],
+        doesNot: [
+          "A complete list of every contractor who ever worked in the state",
+          "Live insurance certificates or a guarantee the official board has not changed",
+        ],
+      };
+    case "specialty_verify":
+      return {
+        includes: [
+          "Specialty or trade credentials we load from the official extract",
+          "Trust Report for records we have on file",
+        ],
+        doesNot: [
+          "A statewide general contractor license directory (this state does not issue one the way some states do)",
+          "Every local-only builder who never appears on the specialty board extract",
+        ],
+      };
+    case "pilot":
+      return {
+        includes: [
+          "Verify search and Trust Report depth for credentials in our current extract",
+        ],
+        doesNot: [
+          "Full Florida-style planning, permit history, and browse",
+          "Every board or registration that exists in the state",
+        ],
+      };
+    case "verify":
+    default:
+      return {
+        includes: [
+          "License or registration lookup from the official extract we load",
+          "Trust Report for published status and related fields when present",
+        ],
+        doesNot: [
+          "Every contractor who works in the state but is only licensed locally",
+          "Real-time board status the moment it changes (extracts can lag)",
+        ],
+      };
+  }
 }
 
-export default async function CoveragePage() {
-  const snap = coverageAnalyticsSnapshot();
-  const stats = extractStats();
-  const waveA = waveAOpsSnapshot();
-  const waveB = waveBOpsSnapshot();
-  const waveC = waveCOpsSnapshot();
-  const njPilot = isNjVerifyPilotEnabled();
-  const production = await loadDbOpsSnapshot();
-  const usingDb = production.available && production.wavePermits > 0;
+export default function CoveragePage() {
+  const live = getLiveStates();
+  const liveCount = getLiveStateCount();
+  const list = liveStatesPlainList();
+  const permitPartial = allCoverageMatrix().filter(
+    (m) => m.level === "partial" || m.level === "full"
+  );
+  const permitNotYet = allCoverageMatrix().filter(
+    (m) => m.level === "jurisdiction_unsupported"
+  );
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14">
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
-        Stage 8C — live data ops · coverage truthfulness
+    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+        Honest coverage
       </p>
-      <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--text)]">
-        Permit coverage matrix
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)] sm:text-4xl">
+        Where we have coverage
       </h1>
-      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
-        Progressive Florida coverage. Empty property results are common and do not prove a clean
-        permit history. High-confidence license joins only — never name-only auto-links.
+      <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--muted)] sm:text-base">
+        Contractor Trust Hub is independent research from official public records — not a
+        marketplace and not a ranking. Today you can Verify in{" "}
+        <strong className="font-semibold text-[var(--text)]">{liveCount} live states</strong> (
+        {list}). We do <strong className="font-semibold text-[var(--text)]">not</strong> cover all
+        contractors nationwide.
       </p>
 
-      <div
-        className={`mt-4 rounded-xl border px-4 py-3 text-sm ${
-          usingDb
-            ? "border-emerald-200 bg-emerald-50/80 text-emerald-950"
-            : "border-amber-200 bg-amber-50/80 text-amber-950"
-        }`}
-      >
-        {usingDb ? (
-          <p>
-            <strong>Production DB loaded.</strong> Wave permits: {production.wavePermits} ·
-            activity keys: {production.activityKeys} · permit freshness:{" "}
-            {production.permitFreshness || "—"}. Counts below prefer production when present.
-          </p>
-        ) : (
-          <p>
-            <strong>File / sample extract mode.</strong> Production wave permits not detected in DB
-            yet. Run <code className="text-xs">npm run load:permits</code> after migration 006/007.
-            Do not treat sample density as complete AHJ coverage.
-          </p>
-        )}
+      <ul className="mt-5 space-y-2 rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-4 text-sm leading-relaxed text-[var(--muted)]">
+        <li>
+          <strong className="text-[var(--text)]">Extracts can lag.</strong> Boards update daily;
+          our published extracts may be older. Always re-check the official board the day you hire.
+        </li>
+        <li>
+          <strong className="text-[var(--text)]">Absence is not clearance.</strong> Missing
+          discipline, entity, or permit rows means we do not have them in this extract — not that
+          the history is clean.
+        </li>
+        <li>
+          <strong className="text-[var(--text)]">No paid placement.</strong> Order and filters are
+          for browsing evidence, not “best contractor” scores.
+        </li>
+      </ul>
+
+      <div className="mt-6 flex flex-wrap gap-3">
+        <Link
+          href="/verify"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--navy)] px-4 text-sm font-semibold text-white no-underline hover:brightness-110"
+        >
+          Open Verify
+        </Link>
+        <Link
+          href="/methodology"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] bg-white px-4 text-sm font-semibold text-[var(--navy)] no-underline hover:border-[var(--navy)]/25"
+        >
+          How we collect evidence
+        </Link>
+        <Link
+          href="/#states"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl px-3 text-sm font-medium text-[var(--muted)] no-underline hover:text-[var(--text)]"
+        >
+          Homepage state tiles
+        </Link>
       </div>
 
-      <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3">
-          <p className="text-xs text-[var(--muted)]">Jurisdictions enabled</p>
-          <p className="text-2xl font-semibold text-[var(--navy)]">
-            {snap.jurisdictionsEnabled}
-          </p>
-        </div>
-        <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3">
-          <p className="text-xs text-[var(--muted)]">
-            {usingDb ? "Production wave rows" : "Shipped extract rows"}
-          </p>
-          <p className="text-2xl font-semibold text-[var(--navy)]">
-            {usingDb ? production.wavePermits : stats.permitRows}
-          </p>
-        </div>
-        <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3">
-          <p className="text-xs text-[var(--muted)]">License-bearing (file)</p>
-          <p className="text-2xl font-semibold text-[var(--navy)]">{stats.withLicenseKey}</p>
-        </div>
-        <div className="rounded-2xl border border-[var(--border)] bg-white px-4 py-3">
-          <p className="text-xs text-[var(--muted)]">Join rate proxy (file)</p>
-          <p className="text-2xl font-semibold text-[var(--navy)]">
-            {stats.joinRateProxy}%
-          </p>
-          <p className="text-[10px] text-[var(--muted)]">
-            activity keys ∩ permit keys / permit keys
-          </p>
-        </div>
-      </div>
-
-      {usingDb && production.jurisdictions.length > 0 ? (
-        <section className="mt-6 rounded-3xl border border-[var(--border)] bg-white p-5 sm:p-6">
-          <h2 className="text-lg font-semibold text-[var(--text)]">
-            Production jurisdiction counts
-          </h2>
-          <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-            {production.jurisdictions.map((j) => (
+      <section className="mt-10" aria-labelledby="live-states-heading">
+        <h2
+          id="live-states-heading"
+          className="text-lg font-semibold tracking-tight text-[var(--text)]"
+        >
+          Live states for Verify
+        </h2>
+        <p className="mt-1.5 text-sm text-[var(--muted)]">
+          Same list as Verify and the homepage — from our live product config, not a marketing
+          claim.
+        </p>
+        <ul className="mt-5 space-y-4">
+          {live.map((state) => {
+            const bits = depthExplainer(state);
+            return (
               <li
-                key={j.jurisdictionSlug}
-                className="rounded-xl border border-[var(--border)] px-3 py-2"
+                key={state.slug}
+                className="rounded-2xl border border-[var(--border)] bg-white px-4 py-4 sm:px-5"
               >
-                <span className="font-medium text-[var(--text)]">{j.jurisdictionSlug}</span>
-                <span className="text-[var(--muted)]">
-                  {" "}
-                  · {j.recordCount} rows · lic {j.withLicenseKey}
-                  {j.freshness ? ` · ${j.freshness}` : ""}
-                </span>
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                  <h3 className="text-base font-semibold text-[var(--text)]">{state.name}</h3>
+                  <span className="rounded-full border border-[var(--border)] bg-[var(--bg)] px-2 py-0.5 text-[11px] font-semibold text-[var(--muted)]">
+                    {state.badge}
+                  </span>
+                  <span className="text-xs text-[var(--muted)]">{state.boardShortLabel}</span>
+                </div>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                  {state.coverageNote}
+                </p>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                      What you can do here
+                    </p>
+                    <ul className="mt-1.5 list-inside list-disc space-y-1 text-sm text-[var(--text)]">
+                      {bits.includes.map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+                      What this is not
+                    </p>
+                    <ul className="mt-1.5 list-inside list-disc space-y-1 text-sm text-[var(--muted)]">
+                      {bits.doesNot.map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <p className="mt-3">
+                  <Link
+                    href={verifyPathFor(state)}
+                    className="text-sm font-semibold text-[var(--navy)] no-underline hover:underline"
+                  >
+                    Verify in {state.name} →
+                  </Link>
+                </p>
               </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+            );
+          })}
+        </ul>
+      </section>
 
-      <WaveOpsBlock title="Wave A ops snapshot (file extract)" ops={waveA} />
-      <WaveOpsBlock title="Wave B ops snapshot (file extract)" ops={waveB} />
-      <WaveOpsBlock title="Wave C ops snapshot (file extract)" ops={waveC} />
-
-      <section className="mt-6 rounded-3xl border border-[var(--border)] bg-white p-5 sm:p-6">
-        <h2 className="text-lg font-semibold text-[var(--text)]">Extract join health</h2>
-        <dl className="mt-3 grid gap-2 text-sm text-[var(--muted)] sm:grid-cols-2">
-          <div>
-            Unmatched license-bearing keys:{" "}
-            <strong className="text-[var(--text)]">{stats.unmatchedLicenseBearingRows}</strong>
-          </div>
-          <div>
-            Activity keys also on permits:{" "}
-            <strong className="text-[var(--text)]">{stats.activityKeysAlsoOnPermits}</strong>
-          </div>
-          <div>
-            Join rate proxy:{" "}
-            <strong className="text-[var(--text)]">{stats.joinRateProxy}%</strong>
-          </div>
-          <div>
-            Freshness: <strong className="text-[var(--text)]">{stats.freshness || "—"}</strong>
-          </div>
-        </dl>
-        <ul className="mt-3 space-y-1 text-xs text-[var(--muted)]">
-          {waveA.knownLimits.map((l) => (
-            <li key={l}>· {l}</li>
+      <section className="mt-10" aria-labelledby="permits-heading">
+        <h2
+          id="permits-heading"
+          className="text-lg font-semibold tracking-tight text-[var(--text)]"
+        >
+          Florida property / permit research
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+          Separate from multi-state Verify: looking up a Florida address for permit history is{" "}
+          <strong className="font-semibold text-[var(--text)]">progressive and incomplete</strong>.
+          Empty results are common and do <em>not</em> prove a clean permit history. Always confirm
+          with the local building department when it matters.
+        </p>
+        <p className="mt-3 text-sm text-[var(--muted)]">
+          Counties with <strong className="text-[var(--text)]">partial</strong> extracts today:
+        </p>
+        <ul className="mt-2 flex flex-wrap gap-2">
+          {permitPartial.map((m) => (
+            <li
+              key={m.countySlug}
+              className="rounded-full border border-[var(--border)] bg-white px-3 py-1 text-xs font-medium text-[var(--text)]"
+            >
+              {m.county}
+            </li>
           ))}
         </ul>
-      </section>
-
-      {njPilot ? (
-        <section className="mt-6 rounded-3xl border border-violet-200 bg-violet-50/50 p-5 sm:p-6">
-          <h2 className="text-lg font-semibold text-[var(--text)]">
-            New Jersey Verify depth (Stage 8A)
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-            Separate from Florida permit waves. NJ is Verify-first — registration search, Trust
-            Report depth, high-confidence entity and enforcement when available. Not permit history
-            or Florida full-journey parity.
-          </p>
-          <ul className="mt-4 space-y-2 text-sm">
-            {NJ_SOURCE_MATRIX.map((row) => (
-              <li
-                key={row.id}
-                className="rounded-xl border border-violet-200/80 bg-white px-3 py-2"
-              >
-                <p className="font-medium text-[var(--text)]">
-                  <span className="font-mono text-[11px] text-[var(--muted)]">{row.id}</span>
-                  {" · "}
-                  {row.label}
-                </p>
-                <p className="mt-1 text-xs text-[var(--muted)]">Includes: {row.includes}</p>
-                <p className="text-xs text-[var(--muted)]">Gaps: {row.gaps}</p>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-xs text-[var(--muted)]">
-            Florida-only: Plan, Studios, property/permit waves, payment legal trackers, full Home
-            Passport localization.
-          </p>
+        {permitNotYet.length > 0 ? (
+          <>
+            <p className="mt-4 text-sm text-[var(--muted)]">
+              Examples of counties <strong className="text-[var(--text)]">not yet connected</strong>{" "}
+              for address permit research (not a complete list of gaps):
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {permitNotYet.map((m) => (
+                <li
+                  key={m.countySlug}
+                  className="rounded-full border border-dashed border-[var(--border)] px-3 py-1 text-xs text-[var(--muted)]"
+                >
+                  {m.county}
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : null}
+        <p className="mt-4">
           <Link
-            href="/verify?state=nj"
-            className="mt-3 inline-flex text-sm font-semibold text-[var(--navy)]"
+            href="/property"
+            className="text-sm font-semibold text-[var(--navy)] no-underline hover:underline"
           >
-            Open NJ Verify →
+            Check a Florida address →
           </Link>
-        </section>
-      ) : null}
-
-      <section className="mt-8 rounded-3xl border border-[var(--border)] bg-white p-5 sm:p-6">
-        <h2 className="text-lg font-semibold text-[var(--text)]">Waves</h2>
-        <ul className="mt-3 space-y-2 text-sm">
-          <li>
-            <strong>Wave A:</strong> {snap.byWave.A.join(", ")}
-          </li>
-          <li>
-            <strong>Wave B:</strong> {snap.byWave.B.join(", ")}
-          </li>
-          <li>
-            <strong>Wave C:</strong> {snap.byWave.C.join(", ")}
-          </li>
-        </ul>
-      </section>
-
-      <section className="mt-6 overflow-x-auto rounded-3xl border border-[var(--border)] bg-white">
-        <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-          <thead>
-            <tr className="border-b border-[var(--border)] bg-[var(--bg)]">
-              <th className="px-4 py-3 font-semibold text-[var(--muted)]">County</th>
-              <th className="px-4 py-3 font-semibold text-[var(--muted)]">Level</th>
-              <th className="px-4 py-3 font-semibold text-[var(--muted)]">Wave</th>
-              <th className="px-4 py-3 font-semibold text-[var(--muted)]">Freshness</th>
-              <th className="px-4 py-3 font-semibold text-[var(--muted)]">Sample rows</th>
-            </tr>
-          </thead>
-          <tbody>
-            {snap.matrix.map((m) => (
-              <tr key={m.county} className="border-b border-[var(--border)]/70">
-                <td className="px-4 py-2.5 font-medium text-[var(--text)]">{m.county}</td>
-                <td className="px-4 py-2.5 text-[var(--muted)]">{m.level}</td>
-                <td className="px-4 py-2.5 text-[var(--muted)]">{m.wave}</td>
-                <td className="px-4 py-2.5 text-[var(--muted)]">{m.freshness || "—"}</td>
-                <td className="px-4 py-2.5 text-[var(--muted)]">{m.sampleRecordCount}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-
-      <section className="mt-6 rounded-3xl border border-[var(--border)] bg-white p-5">
-        <h2 className="text-lg font-semibold text-[var(--text)]">Matching rulebook</h2>
-        <ul className="mt-2 space-y-1 text-sm text-[var(--muted)]">
-          <li>· Preferred: exact license number</li>
-          <li>· Never: name-only auto-join or invented profile slugs</li>
-          <li>· UI discloses match method and confidence</li>
-          <li>· False joins refused when uncertain</li>
-        </ul>
-        <p className="mt-3 text-xs text-[var(--muted)]">
-          Extract address keys: {stats.addressKeys} · With license field: {stats.withLicenseKey} ·
-          Freshness: {stats.freshness || "—"}
         </p>
       </section>
 
-      <div className="mt-6 flex flex-wrap gap-3 text-sm font-semibold">
-        <Link href="/property" className="text-[var(--navy)]">
-          Check my address →
-        </Link>
-        <Link href="/tools" className="text-[var(--navy)]">
-          Tools hub →
-        </Link>
-      </div>
+      <section className="mt-10 rounded-2xl border border-[var(--border)] bg-white px-4 py-5 sm:px-5">
+        <h2 className="text-base font-semibold text-[var(--text)]">Before you hire</h2>
+        <ul className="mt-2 space-y-2 text-sm leading-relaxed text-[var(--muted)]">
+          <li>Use Verify to pull the evidence we have for a name or license number.</li>
+          <li>Open the Trust Report, then confirm status on the official board site.</li>
+          <li>
+            Read{" "}
+            <Link href="/methodology" className="font-medium text-[var(--navy)]">
+              how we collect and link evidence
+            </Link>
+            , and our{" "}
+            <Link href="/disclaimer" className="font-medium text-[var(--navy)]">
+              disclaimer
+            </Link>
+            .
+          </li>
+        </ul>
+      </section>
     </main>
   );
 }

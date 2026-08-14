@@ -23,7 +23,7 @@ const groups = [
     items: [
       { href: "/passport", label: "Home Passport" },
       { href: "/account", label: "Saved projects / account" },
-      { href: "/tools/coverage", label: "Permit coverage" },
+      { href: "/tools/coverage", label: "Where we cover" },
     ],
   },
 ] as const;

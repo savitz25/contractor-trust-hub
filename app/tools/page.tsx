@@ -43,8 +43,8 @@ const tools = [
   },
   {
     href: "/tools/coverage",
-    title: "Permit coverage matrix",
-    body: "Which Florida counties are connected, wave status, and matching rules.",
+    title: "Where we have coverage",
+    body: "Which states are live for Verify, what each includes, and honest limits — including Florida permit research.",
     step: "6",
   },
   {

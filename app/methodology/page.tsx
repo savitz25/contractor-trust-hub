@@ -27,20 +27,25 @@ export default function MethodologyPage() {
         Methodology
       </h1>
       <p className="mt-3 text-[15px] leading-relaxed text-[var(--muted)] sm:text-base">
-        How we collect, link, and present Florida contractor evidence. We publish this so anyone can
-        challenge our rules — and so we stay accountable to high-confidence standards.
+        How we collect, link, and present contractor license evidence from official public records.
+        We publish this so anyone can challenge our rules — and so we stay accountable to
+        high-confidence standards. For a short map of which states are live, see{" "}
+        <Link href="/tools/coverage" className="font-medium text-[var(--navy)]">
+          where we have coverage
+        </Link>
+        .
       </p>
 
       <div className="mt-8 space-y-8 text-sm leading-relaxed text-[var(--muted)]">
         <section>
           <h2 className="text-lg font-semibold text-[var(--text)]">1. License evidence</h2>
           <p className="mt-2">
-            We ingest official Florida DBPR Construction Industry public bulk extracts (licensees
-            and discipline). Stable keys prefer the published full license id (e.g.{" "}
-            <code className="text-[var(--accent)]">CBC015082</code>). Qualifying Business (QB) rows
-            without license numbers are never given invented IDs. Thin shells without a full
-            consumer-facing license record are excluded from search (
-            <code className="text-[var(--accent)]">is_thin_profile</code>).
+            We load official board extracts for each live state (for example, Florida DBPR
+            Construction Industry bulk files for licenses and discipline). We keep the published
+            license id when the board publishes one (e.g.{" "}
+            <span className="font-mono text-[var(--accent)]">CBC015082</span>). Rows without a real
+            consumer-facing license id are not shown as full Trust Reports. Incomplete shells are
+            kept out of search so you do not get empty fake profiles.
           </p>
           <p className="mt-2">
             <strong className="text-[var(--text)]">Source:</strong>{" "}
@@ -58,9 +63,10 @@ export default function MethodologyPage() {
         <section>
           <h2 className="text-lg font-semibold text-[var(--text)]">2. Entity evidence</h2>
           <p className="mt-2">
-            Sunbiz (Division of Corporations) corporate bulk files provide entity status, document
-            numbers, formation dates, and officers. We store these as{" "}
-            <code className="text-[var(--accent)]">fl_sunbiz</code> entities.
+            Where we auto-link business filings (notably Florida Sunbiz / Division of Corporations),
+            bulk corporate files supply entity status, document numbers, formation dates, and
+            officers when the match rules pass. Other states may show entity data only when a
+            high-confidence link exists — we do not invent company filings.
           </p>
           <p className="mt-2">
             <strong className="text-[var(--text)]">Source:</strong>{" "}
@@ -78,25 +84,18 @@ export default function MethodologyPage() {
         <section>
           <h2 className="text-lg font-semibold text-[var(--text)]">3. Linking standard (high confidence only)</h2>
           <p className="mt-2">
-            Contractor ↔ Sunbiz links use <strong className="text-[var(--text)]">exact matching
-            only</strong>. We surface a Sunbiz status on search results and Trust Reports only when:
+            Contractor ↔ entity links use <strong className="text-[var(--text)]">exact matching
+            only</strong> where we support auto-linking. We show an entity status on search results
+            and Trust Reports only when the match is high-confidence (we require a strong exact
+            match — roughly 90%+ confidence on our internal scale). Examples of strong matches:
           </p>
           <ul className="mt-2 list-disc space-y-1 pl-5">
-            <li>
-              Link role is <code className="text-[var(--accent)]">sunbiz_entity</code>
-            </li>
-            <li>
-              Confidence is at least <strong className="text-[var(--text)]">0.90</strong>
-            </li>
-          </ul>
-          <p className="mt-3 font-medium text-[var(--text)]">Match methods and confidence:</p>
-          <ul className="mt-2 list-disc space-y-1 pl-5">
-            <li>Exact normalized name + address + ZIP — 0.98</li>
-            <li>Exact normalized name + ZIP — 0.95</li>
-            <li>Exact normalized name + city — 0.92</li>
+            <li>Exact normalized name + address + ZIP</li>
+            <li>Exact normalized name + ZIP</li>
+            <li>Exact normalized name + city</li>
           </ul>
           <p className="mt-2">
-            Ambiguous ties (two different document numbers at the same top confidence) produce{" "}
+            Ambiguous ties (two different company records at the same top confidence) produce{" "}
             <strong className="text-[var(--text)]">no link</strong>. We prefer no profile over a
             wrong one. Name search for consumers is more forgiving (e.g. ignoring “LLC”); entity
             linking is not.

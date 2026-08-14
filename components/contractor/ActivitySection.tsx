@@ -30,7 +30,7 @@ export async function ActivitySection({
             Associated in available datasets only — never a quality rating. Exact license joins
             only.{" "}
             <Link href="/tools/coverage" className="font-medium text-[var(--navy)]">
-              Coverage matrix
+              Where we cover
             </Link>
             {" · "}
             <Link href="/property" className="font-medium text-[var(--navy)]">

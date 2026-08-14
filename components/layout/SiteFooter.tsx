@@ -33,7 +33,7 @@ export function SiteFooter() {
     ...verifyLinks,
     { href: "/florida", label: "Browse Florida" },
     { href: "/guides", label: "Homeowner guides" },
-    { href: "/tools/coverage", label: "Permit coverage" },
+    { href: "/tools/coverage", label: "Where we cover" },
     { href: "/methodology", label: "Trust standards" },
     { href: "/independence", label: "Independence" },
   ];

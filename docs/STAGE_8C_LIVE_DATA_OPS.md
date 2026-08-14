@@ -2,6 +2,8 @@
 
 Production extracts · load reliability · coverage reality.
 
+**Internal only.** Consumer-facing coverage lives at `/tools/coverage` (plain English, live Verify states from `getLiveStates()`). Do **not** surface migrations, npm load commands, join-rate proxies, wave stage codes, or DB ops banners on public marketing routes. Ops JSON at `GET /api/property/coverage` is for operators — not linked from the public page.
+
 Move from sample-assisted evidence toward **repeatable batch production operations** for Florida permit waves and New Jersey verify sources — without loosening matching or overclaiming completeness.
 
 ## Principles
