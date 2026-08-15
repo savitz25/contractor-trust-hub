@@ -236,8 +236,19 @@ export async function searchContractors(
   }
 
   if (q.length < 2 && workFilter) {
-    // $1 sources $2 state $3 limit $4 entitySource $5 conf — work filters from $6
-    const extra = workFilterSql(workFilter, 6);
+    // $1 sources $2 state $3 limit; optional $4/$5 entity; work from next index
+    const workStart = wantEntity ? 6 : 4;
+    const extra = workFilterSql(workFilter, workStart);
+    const workParams: unknown[] = [
+      licenseSourcesFor(state),
+      state.code,
+      limit,
+    ];
+    if (wantEntity) {
+      workParams.push(state.entitySource, MIN_SUNBIZ_CONFIDENCE);
+    }
+    workParams.push(...extra.params);
+
     const rows = await query<{
       id: string;
       slug: string;
@@ -316,14 +327,7 @@ export async function searchContractors(
       ORDER BY m.display_name
       LIMIT $3
       `,
-      [
-        licenseSourcesFor(state),
-        state.code,
-        limit,
-        state.entitySource,
-        MIN_SUNBIZ_CONFIDENCE,
-        ...extra.params,
-      ]
+      workParams
     );
     return { mode: "name", state, results: rows.map(mapSearchRow) };
   }
@@ -345,10 +349,29 @@ export async function searchContractors(
 
   // Cap candidate set early so short ILIKE tokens cannot pin the pool client.
   const candidateCap = Math.min(Math.max(limit * 8, 80), 200);
-  // Fixed $1–$13 then work filters from $14
+  // Fixed $1–$11; entity $12–$13 only when wantEntity; work filters after that.
+  const workStart = wantEntity ? 14 : 12;
   const workExtra = workFilter
-    ? workFilterSql(workFilter, 14)
+    ? workFilterSql(workFilter, workStart)
     : { sql: "", params: [] as unknown[] };
+
+  const baseParams: unknown[] = [
+    prepared.prefixStripped, // $1
+    prepared.likeStripped, // $2
+    licenseSourcesFor(state), // $3
+    state.code, // $4
+    prepared.likeOriginal, // $5
+    limit, // $6
+    tokenLikes[0], // $7
+    tokenLikes[1], // $8
+    tokenLikes[2], // $9
+    tokenLikes[3], // $10
+    candidateCap, // $11
+  ];
+  if (wantEntity) {
+    baseParams.push(state.entitySource, MIN_SUNBIZ_CONFIDENCE); // $12–$13
+  }
+  baseParams.push(...workExtra.params);
 
   const rows = await query<{
     id: string;
@@ -466,22 +489,7 @@ export async function searchContractors(
       m.display_name
     LIMIT $6
     `,
-    [
-      prepared.prefixStripped, // $1
-      prepared.likeStripped, // $2
-      licenseSourcesFor(state), // $3
-      state.code, // $4
-      prepared.likeOriginal, // $5
-      limit, // $6
-      tokenLikes[0], // $7
-      tokenLikes[1], // $8
-      tokenLikes[2], // $9
-      tokenLikes[3], // $10
-      candidateCap, // $11
-      state.entitySource, // $12
-      MIN_SUNBIZ_CONFIDENCE, // $13
-      ...workExtra.params, // $14+
-    ]
+    baseParams
   );
 
   return {
