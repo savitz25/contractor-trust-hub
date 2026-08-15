@@ -4,7 +4,7 @@
 
 | Variable | Required | Notes |
 |----------|----------|--------|
-| `DATABASE_URL` | **Yes** | Supabase **Session pooler** URI (`*.pooler.supabase.com:5432`, user `postgres.<ref>`) |
+| `DATABASE_URL` | **Yes** | Supabase **Session pooler** URI only: host `*.pooler.supabase.com`, **port 5432** (Session), user `postgres.<project-ref>`. **Not** Transaction pooler (`:6543`). **Not** direct `db.*.supabase.co` if the runtime is IPv4-only. Single Production value — no duplicate env keys. |
 | `NEXT_PUBLIC_SITE_URL` | **Required in production** | Must be `https://www.contractortrusthub.com` — see [SEO.md](./SEO.md) |
 | `NEXT_PUBLIC_CORRECTIONS_EMAIL` | Recommended | Mailto target for `/corrections` (default `corrections@contractortrusthub.com`) |
 | Stage 5 migration `005_stage5_accounts_passport.sql` | For durable accounts | Magic link, workspace, alerts |
@@ -57,6 +57,19 @@ See [STAGE_8C_LIVE_DATA_OPS.md](./STAGE_8C_LIVE_DATA_OPS.md) § Post-load UI smo
 - County pages use a single occupation group-by for trade facets (not N list queries).  
 - Combined county+trade pages are the lightest discovery lists.  
 - County matching uses board names **and** known `county_code` values when names are null.
+
+## Verify search reliability (Phase 11)
+
+| Topic | Rule |
+|-------|------|
+| Pool on Vercel | `lib/db.ts` uses **max 1** client per isolate (Session pooler safe) |
+| Connect timeout | ~8s; one safe retry on connect/capacity errors only |
+| Statement timeout | `SET LOCAL statement_timeout` per query (~8s) so one search cannot pin the pool |
+| Name search | Candidate set capped before entity/discipline joins; non-FL/NJ skip Sunbiz entity lateral |
+| Error copy | State-agnostic when DB is down — no “Florida Verify remains” on CA/TX/etc. |
+| Logs | `[db] kind=connect_timeout\|query_timeout\|capacity` plus `[verify] search failed state=…` |
+
+Symptoms of pooler saturation: many simultaneous `timeout exceeded when trying to connect` across states. Mitigation: confirm Session pooler URI, reduce long SSR work, check Supabase pooler client usage — do not raise serverless pool `max` above 1 without raising pooler capacity.
 
 ## Deferred
 

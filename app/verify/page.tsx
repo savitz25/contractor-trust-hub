@@ -64,10 +64,12 @@ export default async function VerifyPage({ searchParams }: Props) {
       results = res.results;
       mode = res.mode;
     } catch (e) {
-      error =
-        e instanceof Error
-          ? e.message
-          : "Search is temporarily unavailable. Check DATABASE_URL configuration.";
+      const { dbUserFacingError } = await import("@/lib/db");
+      error = dbUserFacingError(e);
+      console.error(
+        `[verify] search failed state=${state.slug} qLen=${q.length} work=${work || "-"}:`,
+        error
+      );
     }
   }
 
@@ -468,21 +470,25 @@ export default async function VerifyPage({ searchParams }: Props) {
             We could not reach the license database right now. Please try again in a few minutes.
           </p>
           <p className="mt-3 text-xs text-rose-800/80">
-            {isSpecialty ? (
-              <>
-                Florida Verify remains at{" "}
-                <Link href="/verify" className="font-medium underline">
-                  /verify
-                </Link>
-                .
-              </>
-            ) : (
+            {state.slug === "fl" ? (
               <>
                 You can still{" "}
                 <Link href="/#research" className="font-medium text-rose-950 underline">
-                  browse by county and trade
+                  browse Florida by county and trade
                 </Link>{" "}
-                or return later.
+                or try again shortly.
+              </>
+            ) : (
+              <>
+                Try again in a moment, or{" "}
+                <Link href="/tools/coverage" className="font-medium text-rose-950 underline">
+                  see where we cover
+                </Link>
+                .{" "}
+                <Link href="/verify" className="font-medium underline">
+                  Florida Verify
+                </Link>{" "}
+                is a separate path when your project is in Florida.
               </>
             )}{" "}
             <span className="opacity-70">(Technical: {error})</span>

@@ -6,18 +6,20 @@ import {
   licenseSourcesFor,
   type EvidenceState,
 } from "@/lib/states/config";
-import { asLicenseStatus } from "./format";
-import {
-  looksLikeLicenseKey,
-  normalizeLicenseKey,
-  prepareNameSearch,
-} from "./search-normalize";
+import { evidenceSlugFromHomeState } from "@/lib/states/evidence-copy";
 import {
   parseWorkIntent,
   resolveWorkIntent,
   workFilterIsEmpty,
   type WorkSearchFilter,
 } from "@/lib/verify/work-intents";
+import { asLicenseStatus } from "./format";
+import {
+  looksLikeLicenseKey,
+  normalizeLicenseKey,
+  prepareNameSearch,
+} from "./search-normalize";
+import { stateHasEntityLinking } from "./trust-report";
 import type {
   ContractorDetail,
   DisciplineDetail,
@@ -104,8 +106,13 @@ export async function searchContractors(
   const limit = options.limit ?? DEFAULT_LIMIT;
   const licenseMode = q.length >= 2 && looksLikeLicenseKey(q);
 
+  const wantEntity = stateHasEntityLinking(
+    evidenceSlugFromHomeState(state.code, state.slug)
+  );
+
   if (licenseMode) {
     const key = normalizeLicenseKey(q);
+    // Prefer exact/prefix license hits; avoid leading-wildcard scans when possible.
     const rows = await query<{
       id: string;
       slug: string;
@@ -118,79 +125,107 @@ export async function searchContractors(
       external_key: string | null;
       occupation_code: string | null;
       status_normalized: string | null;
+      primary_status: string | null;
       last_verified_at: Date | null;
+      source_system: string | null;
+      secondary_status: string | null;
       entity_status: string | null;
       entity_name: string | null;
       has_discipline: boolean;
     }>(
       `
+      WITH hits AS (
+        SELECT
+          c.id,
+          c.slug,
+          c.display_name,
+          c.legal_name,
+          c.dba_name,
+          c.primary_city,
+          c.primary_county,
+          c.home_state,
+          l.external_key,
+          l.occupation_code,
+          l.status_normalized,
+          l.primary_status,
+          l.last_verified_at,
+          l.source_system,
+          l.secondary_status,
+          CASE
+            WHEN UPPER(REPLACE(l.external_key, ' ', '')) = $1 THEN 0
+            WHEN UPPER(l.external_key) = $1 THEN 0
+            WHEN UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) = $1 THEN 1
+            WHEN UPPER(REPLACE(l.external_key, ' ', '')) LIKE $1 || '%' THEN 2
+            WHEN UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) LIKE $1 || '%' THEN 2
+            ELSE 3
+          END AS rank_score
+        FROM licenses l
+        JOIN contractors c ON c.id = l.contractor_id
+        WHERE l.source_system = ANY($2::text[])
+          AND c.is_thin_profile = FALSE
+          AND (c.home_state = $4 OR l.state = $4)
+          AND (
+            UPPER(REPLACE(l.external_key, ' ', '')) = $1
+            OR UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) = $1
+            OR UPPER(REPLACE(l.external_key, ' ', '')) LIKE $1 || '%'
+            OR UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) LIKE $1 || '%'
+            OR UPPER(REPLACE(l.external_key, '-', '')) = REPLACE($1, '-', '')
+            OR UPPER(l.external_key) = $1
+            OR (
+              LENGTH($1) >= 5 AND (
+                UPPER(REPLACE(l.external_key, ' ', '')) LIKE '%' || $1 || '%'
+                OR UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) LIKE '%' || $1 || '%'
+              )
+            )
+          )
+        ORDER BY rank_score,
+          CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
+          CASE l.occupation_code WHEN 'TRMP' THEN 0 WHEN 'TMP' THEN 1 ELSE 2 END,
+          c.display_name
+        LIMIT $3
+      )
       SELECT
-        c.id,
-        c.slug,
-        c.display_name,
-        c.legal_name,
-        c.dba_name,
-        c.primary_city,
-        c.primary_county,
-        c.home_state,
-        l.external_key,
-        l.occupation_code,
-        l.status_normalized,
-        l.primary_status,
-        l.last_verified_at,
-        l.source_system,
-        l.secondary_status,
-        e.status AS entity_status,
-        e.legal_name AS entity_name,
+        h.*,
+        ${
+          wantEntity
+            ? `e.status AS entity_status,
+        e.legal_name AS entity_name,`
+            : `NULL::text AS entity_status,
+        NULL::text AS entity_name,`
+        }
         EXISTS (
-          SELECT 1 FROM discipline_actions d
-          WHERE d.contractor_id = c.id
+          SELECT 1 FROM discipline_actions d WHERE d.contractor_id = h.id
         ) AS has_discipline
-      FROM licenses l
-      JOIN contractors c ON c.id = l.contractor_id
-      LEFT JOIN LATERAL (
+      FROM hits h
+      ${
+        wantEntity
+          ? `LEFT JOIN LATERAL (
         SELECT ent.status, ent.legal_name
         FROM contractor_entities ce
         JOIN entities ent ON ent.id = ce.entity_id
-        WHERE ce.contractor_id = c.id
+        WHERE ce.contractor_id = h.id
           AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
-          AND ent.source_system = $3
+          AND ent.source_system = $5
           AND ce.confidence IS NOT NULL
-          AND ce.confidence >= $5
+          AND ce.confidence >= $6
         ORDER BY ce.confidence DESC NULLS LAST
         LIMIT 1
-      ) e ON TRUE
-      WHERE l.source_system = ANY($2::text[])
-        AND c.is_thin_profile = FALSE
-        AND (c.home_state = $6 OR l.state = $6 OR $6 = '')
-        AND (
-          UPPER(REPLACE(l.external_key, ' ', '')) = $1
-          OR UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) = $1
-          OR UPPER(REPLACE(l.external_key, ' ', '')) LIKE '%' || $1 || '%'
-          OR UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) LIKE '%' || $1 || '%'
-          OR UPPER(REPLACE(l.external_key, '-', '')) = REPLACE($1, '-', '')
-          OR UPPER(l.external_key) = $1
-        )
-      ORDER BY
-        CASE
-          WHEN UPPER(REPLACE(l.external_key, ' ', '')) = $1 THEN 0
-          WHEN UPPER(l.external_key) = $1 THEN 0
-          WHEN UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) = $1 THEN 1
-          ELSE 2
-        END,
-        CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
-        CASE l.occupation_code WHEN 'TRMP' THEN 0 WHEN 'TMP' THEN 1 ELSE 2 END,
-        c.display_name
-      LIMIT $4
+      ) e ON TRUE`
+          : ""
+      }
+      ORDER BY h.rank_score, h.display_name
+      LIMIT $3
       `,
-      [
-        key,
-        licenseSourcesFor(state),
-        state.entitySource,
-        limit,
-        MIN_SUNBIZ_CONFIDENCE,
-        state.code,
-      ]
+      wantEntity
+        ? [
+            key,
+            licenseSourcesFor(state),
+            limit,
+            state.code,
+            state.entitySource,
+            MIN_SUNBIZ_CONFIDENCE,
+          ]
+        : [key, licenseSourcesFor(state), limit, state.code]
     );
 
     return {
@@ -201,6 +236,7 @@ export async function searchContractors(
   }
 
   if (q.length < 2 && workFilter) {
+    // $1 sources $2 state $3 limit $4 entitySource $5 conf — work filters from $6
     const extra = workFilterSql(workFilter, 6);
     const rows = await query<{
       id: string;
@@ -214,7 +250,10 @@ export async function searchContractors(
       external_key: string | null;
       occupation_code: string | null;
       status_normalized: string | null;
+      primary_status: string | null;
       last_verified_at: Date | null;
+      source_system: string | null;
+      secondary_status: string | null;
       entity_status: string | null;
       entity_name: string | null;
       has_discipline: boolean;
@@ -245,36 +284,43 @@ export async function searchContractors(
         ORDER BY c.id,
           CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
           l.updated_at DESC NULLS LAST
-        LIMIT $4
+        LIMIT $3
       )
       SELECT
         m.*,
-        e.status AS entity_status,
-        e.legal_name AS entity_name,
+        ${
+          wantEntity
+            ? `e.status AS entity_status, e.legal_name AS entity_name,`
+            : `NULL::text AS entity_status, NULL::text AS entity_name,`
+        }
         EXISTS (
           SELECT 1 FROM discipline_actions d WHERE d.contractor_id = m.id
         ) AS has_discipline
       FROM matched m
-      LEFT JOIN LATERAL (
+      ${
+        wantEntity
+          ? `LEFT JOIN LATERAL (
         SELECT ent.status, ent.legal_name
         FROM contractor_entities ce
         JOIN entities ent ON ent.id = ce.entity_id
         WHERE ce.contractor_id = m.id
           AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
-          AND ent.source_system = $3
+          AND ent.source_system = $4
           AND ce.confidence IS NOT NULL
           AND ce.confidence >= $5
         ORDER BY ce.confidence DESC NULLS LAST
         LIMIT 1
-      ) e ON TRUE
+      ) e ON TRUE`
+          : ""
+      }
       ORDER BY m.display_name
-      LIMIT $4
+      LIMIT $3
       `,
       [
         licenseSourcesFor(state),
         state.code,
-        state.entitySource,
         limit,
+        state.entitySource,
         MIN_SUNBIZ_CONFIDENCE,
         ...extra.params,
       ]
@@ -297,6 +343,13 @@ export async function searchContractors(
     COALESCE(l.dba_name_raw, '')
   )`;
 
+  // Cap candidate set early so short ILIKE tokens cannot pin the pool client.
+  const candidateCap = Math.min(Math.max(limit * 8, 80), 200);
+  // Fixed $1–$13 then work filters from $14
+  const workExtra = workFilter
+    ? workFilterSql(workFilter, 14)
+    : { sql: "", params: [] as unknown[] };
+
   const rows = await query<{
     id: string;
     slug: string;
@@ -309,13 +362,16 @@ export async function searchContractors(
     external_key: string | null;
     occupation_code: string | null;
     status_normalized: string | null;
+    primary_status: string | null;
     last_verified_at: Date | null;
+    source_system: string | null;
+    secondary_status: string | null;
     entity_status: string | null;
     entity_name: string | null;
     has_discipline: boolean;
   }>(
     `
-    WITH matched AS (
+    WITH per_contractor AS (
       SELECT DISTINCT ON (c.id)
         c.id,
         c.slug,
@@ -357,56 +413,74 @@ export async function searchContractors(
           OR l.licensee_name_raw ILIKE $2
           OR l.dba_name_raw ILIKE $2
           OR (
-            ${nameBlob} ILIKE $8
+            ${nameBlob} ILIKE $7
+            AND ${nameBlob} ILIKE $8
             AND ${nameBlob} ILIKE $9
             AND ${nameBlob} ILIKE $10
-            AND ${nameBlob} ILIKE $11
           )
         )
-        ${workFilter ? workFilterSql(workFilter, 13).sql : ""}
+        ${workExtra.sql}
       ORDER BY c.id,
         CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
         l.updated_at DESC NULLS LAST
+    ),
+    matched AS (
+      SELECT *
+      FROM per_contractor
+      ORDER BY rank_score,
+        CASE occupation_code WHEN 'TRMP' THEN 0 WHEN 'TMP' THEN 1 ELSE 2 END,
+        display_name
+      LIMIT $11
     )
     SELECT
       m.*,
-      e.status AS entity_status,
-      e.legal_name AS entity_name,
+      ${
+        wantEntity
+          ? `e.status AS entity_status,
+      e.legal_name AS entity_name,`
+          : `NULL::text AS entity_status,
+      NULL::text AS entity_name,`
+      }
       EXISTS (
         SELECT 1 FROM discipline_actions d WHERE d.contractor_id = m.id
       ) AS has_discipline
     FROM matched m
-    LEFT JOIN LATERAL (
+    ${
+      wantEntity
+        ? `LEFT JOIN LATERAL (
       SELECT ent.status, ent.legal_name
       FROM contractor_entities ce
       JOIN entities ent ON ent.id = ce.entity_id
       WHERE ce.contractor_id = m.id
         AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
-        AND ent.source_system = $6
+        AND ent.source_system = $12
         AND ce.confidence IS NOT NULL
-        AND ce.confidence >= $12
+        AND ce.confidence >= $13
       ORDER BY ce.confidence DESC NULLS LAST
       LIMIT 1
-    ) e ON TRUE
+    ) e ON TRUE`
+        : ""
+    }
     ORDER BY m.rank_score,
       CASE m.occupation_code WHEN 'TRMP' THEN 0 WHEN 'TMP' THEN 1 ELSE 2 END,
       m.display_name
-    LIMIT $7
+    LIMIT $6
     `,
     [
-      prepared.prefixStripped, // $1 rank prefix
-      prepared.likeStripped, // $2 stripped contains
+      prepared.prefixStripped, // $1
+      prepared.likeStripped, // $2
       licenseSourcesFor(state), // $3
       state.code, // $4
-      prepared.likeOriginal, // $5 original contains
-      state.entitySource, // $6
-      limit, // $7
-      tokenLikes[0], // $8
-      tokenLikes[1], // $9
-      tokenLikes[2], // $10
-      tokenLikes[3], // $11
-      MIN_SUNBIZ_CONFIDENCE, // $12
-      ...(workFilter ? workFilterSql(workFilter, 13).params : []),
+      prepared.likeOriginal, // $5
+      limit, // $6
+      tokenLikes[0], // $7
+      tokenLikes[1], // $8
+      tokenLikes[2], // $9
+      tokenLikes[3], // $10
+      candidateCap, // $11
+      state.entitySource, // $12
+      MIN_SUNBIZ_CONFIDENCE, // $13
+      ...workExtra.params, // $14+
     ]
   );
 
