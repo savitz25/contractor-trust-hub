@@ -12,9 +12,9 @@ export function IntentRouter() {
       id: "verify",
       href: "/#search",
       title: "I already have a name or license",
-      bestWhen: "Best when you know who you’re checking.",
+      bestWhen: "Best when you know who you're checking.",
       bullets: [
-        `${liveCount} live state${liveCount === 1 ? "" : "s"} — same list as Verify tabs`,
+        `${liveCount} live state${liveCount === 1 ? "" : "s"} - same list as Verify tabs`,
         "Open a Trust Report with honest coverage limits",
       ],
       cta: "Search contractors",
@@ -23,8 +23,8 @@ export function IntentRouter() {
     {
       id: "plan",
       href: "/plan/start",
-      title: "I’m planning a project",
-      bestWhen: "Best when you’re deciding where the work is and what tools apply.",
+      title: "I'm planning a project",
+      bestWhen: "Best when you're deciding where the work is and what tools apply.",
       bullets: [
         "Choose your state first",
         "Florida: plan + studios; other live states: Verify",
@@ -78,7 +78,7 @@ export function IntentRouter() {
               <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{card.bestWhen}</p>
               <ul className="mt-3 space-y-1 text-xs text-[var(--muted)]">
                 {card.bullets.map((b) => (
-                  <li key={b}>· {b}</li>
+                  <li key={b}>- {b}</li>
                 ))}
               </ul>
               <p className="mt-auto pt-4 text-sm font-semibold text-[var(--navy)] group-hover:underline">

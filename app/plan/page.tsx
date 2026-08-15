@@ -28,15 +28,16 @@ export default function PlanPage() {
             match active licensed contractors from official public records. Not nationwide
             planning.
           </p>
-          <p className="mt-2 text-sm text-[var(--muted)]">
-            Work outside Florida?{" "}
+          <p className="mt-4 max-w-2xl rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm text-[var(--muted)]">
+            This intake is Florida planning. Work outside Florida?{" "}
             <Link
               href="/plan/start"
-              className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+              className="font-semibold text-[var(--navy)] underline-offset-2 hover:underline"
             >
               Choose your state first
             </Link>
-            .
+            {" - "}
+            Verify is live in other states; we do not invent their cost tools.
           </p>
           <p className="mt-3 text-sm text-[var(--muted)]">
             Want a deeper cost walkthrough?{" "}
@@ -46,21 +47,21 @@ export default function PlanPage() {
             >
               Cost Studio
             </Link>
-            {" · "}
+            {" - "}
             <Link
               href="/studio/kitchen"
               className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
             >
               Kitchen calculator
             </Link>
-            {" · "}
+            {" - "}
             <Link
               href="/studio/bathroom"
               className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
             >
               Bathroom calculator
             </Link>
-            {" · "}
+            {" - "}
             <Link
               href="/studio/roofing"
               className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"

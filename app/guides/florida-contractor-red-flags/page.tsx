@@ -120,7 +120,7 @@ export default function FloridaRedFlagsPage() {
           items={[
             { href: "/verify", label: "Verify a contractor", primary: true },
             { href: "/guides/how-to-verify-florida-contractor", label: "How to verify (checklist)" },
-            { href: "/plan", label: "Plan a project" },
+            { href: "/plan/start", label: "Plan a project" },
             { href: "/tools/pre-hire-checklist", label: "Pre-hire checklist" },
           ]}
         />

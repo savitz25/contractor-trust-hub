@@ -5,9 +5,9 @@ import { pageMetadata } from "@/lib/seo/page-meta";
 import { getLiveStates } from "@/lib/states/config";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Plan a project — choose your state",
+  title: "Plan a project - choose your state",
   description:
-    "Start project planning by choosing where the work is. Florida has full plan and studio tools; other live states support Verify. Independent research — not a marketplace.",
+    "Start project planning by choosing where the work is. Florida has full plan and studio tools; other live states support Verify. Independent research - not a marketplace.",
   path: "/plan/start",
 });
 
@@ -47,7 +47,7 @@ export default function PlanStartPage() {
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--muted)] sm:text-base">
             Tell us where the work is. We route you to the tools that actually exist for that state
-            — we do not invent multi-state cost models or nationwide planning.
+            - we do not invent multi-state cost models or nationwide planning.
           </p>
           <p className="mt-3 text-sm text-[var(--muted)]">
             Prefer search by name or license?{" "}

@@ -129,7 +129,7 @@ export default function HowToVerifyFloridaPage() {
         </p>
         <GuideCtaRow
           items={[
-            { href: "/plan", label: "Plan a project" },
+            { href: "/plan/start", label: "Plan a project" },
             { href: "/studio/cost", label: "Cost Studio" },
             { href: "/studio/roofing", label: "Roofing calculator" },
             { href: "/studio/kitchen", label: "Kitchen calculator" },
