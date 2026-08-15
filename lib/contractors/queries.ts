@@ -245,6 +245,7 @@ export async function searchContractors(
         ORDER BY c.id,
           CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
           l.updated_at DESC NULLS LAST
+        LIMIT $4
       )
       SELECT
         m.*,
