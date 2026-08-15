@@ -153,11 +153,12 @@ function assistChip(
   filter: WorkSearchFilter,
   q?: string
 ): ResolvedWorkChip {
+  const assistQ = q?.trim() || ASSIST_TERMS[id][0];
   return {
     id,
     label: LABELS[id],
     mode: "assist",
-    href: verifyHref(stateSlug, id, q),
+    href: verifyHref(stateSlug, id, assistQ),
     honesty: ASSIST_HONESTY,
     filter,
   };
