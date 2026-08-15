@@ -265,8 +265,10 @@ export function resolveWorkIntent(
       general: ["construction", "general-construction"],
     };
     const trade = slugs[id] ? findTrade(WASHINGTON_TRADES, slugs[id]!) : null;
+    // Prefer published L&I type / specialty codes. Name ILIKE is a last resort
+    // (solar) — OR-ing it with EC/PC scans the whole extract and starves the pooler.
     const filter = trade
-      ? fromTrade(trade, ASSIST_TERMS[id])
+      ? fromTrade(trade)
       : { ...emptyFilter(), nameTerms: ASSIST_TERMS[id] };
     return assistChip(state.slug, id, filter, q);
   }
