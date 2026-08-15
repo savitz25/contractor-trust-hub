@@ -18,6 +18,8 @@ type SearchFormProps = {
   stateSlug?: string;
   /** Homepage: let the visitor choose FL vs TX before searching */
   showStatePicker?: boolean;
+  /** Active Verify work chip — preserved on submit */
+  workIntent?: string | null;
 };
 
 const PLACEHOLDERS = {
@@ -83,6 +85,7 @@ export function SearchForm({
   intent = null,
   stateSlug = "fl",
   showStatePicker = false,
+  workIntent = null,
 }: SearchFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -140,10 +143,13 @@ export function SearchForm({
         e.preventDefault();
         const fd = new FormData(e.currentTarget);
         const q = String(fd.get("q") || "").trim();
-        if (q.length < 2) return;
-        const params = new URLSearchParams({ q });
+        const work = String(fd.get("work") || workIntent || "").trim();
+        if (q.length < 2 && !work) return;
+        const params = new URLSearchParams();
+        if (q) params.set("q", q);
         if (intent) params.set("intent", intent);
         if (activeState && activeState !== "fl") params.set("state", activeState);
+        if (work) params.set("work", work);
         startTransition(() => {
           router.push(`/verify?${params.toString()}`);
         });
@@ -151,6 +157,7 @@ export function SearchForm({
       className="w-full"
     >
       {intent && <input type="hidden" name="intent" value={intent} />}
+      {workIntent ? <input type="hidden" name="work" value={workIntent} /> : null}
       {activeState && activeState !== "fl" ? (
         <input type="hidden" name="state" value={activeState} />
       ) : null}
@@ -202,8 +209,8 @@ export function SearchForm({
           id={inputId}
           name="q"
           type="search"
-          required
-          minLength={2}
+          required={!workIntent}
+          minLength={workIntent ? undefined : 2}
           defaultValue={defaultQuery}
           autoFocus={autoFocus}
           autoComplete="off"

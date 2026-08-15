@@ -13,14 +13,16 @@ import { LouisianaCoverageBanner } from "@/components/search/LouisianaCoverageBa
 import { MississippiCoverageBanner } from "@/components/search/MississippiCoverageBanner";
 import { KentuckyCoverageBanner } from "@/components/search/KentuckyCoverageBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
+import { VerifyWorkChips } from "@/components/verify/VerifyWorkChips";
 import { searchContractors } from "@/lib/contractors/queries";
 import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { verifyMetadata } from "@/lib/seo/verify-meta";
 import { getLiveStates, getStateBySlug } from "@/lib/states/config";
 import { TX_COVERED_TRADES_PLAIN } from "@/lib/states/tx-trades";
+import { parseWorkIntent, verifyPathWithWork } from "@/lib/verify/work-intents";
 
 type Props = {
-  searchParams: Promise<{ q?: string; intent?: string; state?: string }>;
+  searchParams: Promise<{ q?: string; intent?: string; state?: string; work?: string }>;
 };
 
 function resolveVerifyState(raw: string | undefined) {
@@ -33,7 +35,7 @@ function resolveVerifyState(raw: string | undefined) {
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const sp = await searchParams;
   const state = resolveVerifyState(sp.state);
-  return verifyMetadata(state.slug, sp.q);
+  return verifyMetadata(state.slug, sp.q, sp.work);
 }
 
 export default async function VerifyPage({ searchParams }: Props) {
@@ -51,13 +53,14 @@ export default async function VerifyPage({ searchParams }: Props) {
   const isSpecialty = isTx || isNj || isOr || isCa || isAz || isWa || isLa || isMs || isKy;
   const q = (sp.q || "").trim();
   const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
+  const work = parseWorkIntent(sp.work);
   let results: Awaited<ReturnType<typeof searchContractors>>["results"] = [];
   let mode: "license" | "name" = "name";
   let error: string | null = null;
 
-  if (q.length >= 2) {
+  if (q.length >= 2 || work) {
     try {
-      const res = await searchContractors(q, { stateSlug: state.slug });
+      const res = await searchContractors(q, { stateSlug: state.slug, work });
       results = res.results;
       mode = res.mode;
     } catch (e) {
@@ -319,14 +322,7 @@ export default async function VerifyPage({ searchParams }: Props) {
         >
           {liveStates.map((s) => {
             const active = s.slug === state.slug;
-            const href =
-              s.slug === "fl"
-                ? q
-                  ? `/verify?q=${encodeURIComponent(q)}`
-                  : "/verify"
-                : q
-                  ? `/verify?state=${s.slug}&q=${encodeURIComponent(q)}`
-                  : `/verify?state=${s.slug}`;
+            const href = verifyPathWithWork(s.slug, { q, work, intent });
             const subtitle =
               s.slug === "tx"
                 ? "Specialty trades"
@@ -422,11 +418,13 @@ export default async function VerifyPage({ searchParams }: Props) {
       ) : null}
 
       <div className="mt-5 max-w-3xl sm:mt-7">
+        <VerifyWorkChips stateSlug={state.slug} activeWork={work} q={q} intent={intent} />
         <SearchForm
           defaultQuery={q}
-          autoFocus={!q}
+          autoFocus={!q && !work}
           intent={intent}
           stateSlug={state.slug}
+          workIntent={work}
         />
         <p className="mt-2 text-xs leading-relaxed text-[var(--muted)] sm:mt-2.5">
           {isTx
@@ -498,7 +496,7 @@ export default async function VerifyPage({ searchParams }: Props) {
         </div>
       ) : null}
 
-      {q.length >= 2 && !error ? (
+      {(q.length >= 2 || work) && !error ? (
         <section className="mt-7 sm:mt-10" aria-live="polite">
           <div className="mb-3 flex flex-col gap-0.5 sm:mb-4 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-2">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
@@ -508,7 +506,7 @@ export default async function VerifyPage({ searchParams }: Props) {
               {results.length === 0
                 ? "No matches"
                 : `${results.length} match${results.length === 1 ? "" : "es"}`}
-              {mode === "license" ? " · license search" : " · name search"}
+              {mode === "license" ? " · license search" : work ? " · type-assisted search" : " · name search"}
               {isTx ? " · TDLR + TSBPE" : ""}
               {isNj ? " · NJ pilot" : ""}
               {isOr ? " · CCB" : ""}
@@ -523,7 +521,7 @@ export default async function VerifyPage({ searchParams }: Props) {
           </div>
 
           {results.length === 0 ? (
-            <EmptyResults query={q} mode={mode} stateSlug={state.slug} />
+            <EmptyResults query={q || work || ""} mode={mode} stateSlug={state.slug} />
           ) : (
             <div className="space-y-2.5 sm:space-y-3">
               {results.map((r) => (
@@ -585,7 +583,7 @@ export default async function VerifyPage({ searchParams }: Props) {
         </section>
       ) : null}
 
-      {!q ? (
+      {!q && !work ? (
         <section className="mt-8 grid gap-2.5 sm:mt-12 sm:grid-cols-3 sm:gap-4">
           {helpCards.map((card) => (
             <div

@@ -1,5 +1,11 @@
-import { PageLoading } from "@/components/ui/PageLoading";
+import { FloridaFacetFallback } from "@/components/discovery/FloridaFacetFallback";
+import { FloridaLandingChrome } from "@/components/discovery/FloridaLandingChrome";
 
+/** Instant curated browse — never a dead “Loading Florida discovery…” skeleton. */
 export default function FloridaLoading() {
-  return <PageLoading message="Loading Florida discovery…" variant="browse" />;
+  return (
+    <FloridaLandingChrome>
+      <FloridaFacetFallback reason="loading" />
+    </FloridaLandingChrome>
+  );
 }

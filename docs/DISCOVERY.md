@@ -9,6 +9,8 @@ Public paths use a full state name slug (SEO-friendly):
 | Pattern | Example | Purpose |
 |---------|---------|---------|
 | `/{state}` | `/florida` | State landing — stats, counties, trades, search CTA |
+
+Florida landing aggregations (`countCountiesBatch` / `countTradesBatch` / cheap stats) are cached for 30 minutes (`lib/discovery/landing-cache.ts`) with a 6s timeout. If counts fail or time out, the page still renders curated county and trade links — never an empty “No categories” grid or a hanging skeleton.
 | `/{state}/{county}` | `/florida/miami-dade` | County browse + trade facets |
 | `/{state}/{trade}` | `/florida/roofers` | Statewide trade browse + county facets |
 | `/{state}/{county}/{trade}` | `/florida/miami-dade/roofers` | Combined high-value SEO page |

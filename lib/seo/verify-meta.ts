@@ -64,14 +64,15 @@ const BY_SLUG: Record<string, { title: string; description: string; path: string
   },
 };
 
-/** Index the clean Verify URL. Search-query URLs are thin duplicates — noindex. */
-export function verifyMetadata(stateSlug: string, query?: string): Metadata {
+/** Index the clean Verify URL. Search-query and work-filter URLs are thin duplicates — noindex. */
+export function verifyMetadata(stateSlug: string, query?: string, work?: string): Metadata {
   const row = BY_SLUG[stateSlug] || BY_SLUG.fl;
   const q = (query || "").trim();
+  const w = (work || "").trim();
   return pageMetadata({
     title: row.title,
     description: row.description,
     path: row.path,
-    noIndex: q.length > 0,
+    noIndex: q.length > 0 || w.length > 0,
   });
 }

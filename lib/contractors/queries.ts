@@ -12,6 +12,12 @@ import {
   normalizeLicenseKey,
   prepareNameSearch,
 } from "./search-normalize";
+import {
+  parseWorkIntent,
+  resolveWorkIntent,
+  workFilterIsEmpty,
+  type WorkSearchFilter,
+} from "@/lib/verify/work-intents";
 import type {
   ContractorDetail,
   DisciplineDetail,
@@ -35,7 +41,46 @@ function normalizeSearchInput(q: string): string {
 export type SearchOptions = {
   stateSlug?: string;
   limit?: number;
+  /** Consumer work chip — published class codes and/or name/specialty text. */
+  work?: string | null;
 };
+
+function workFilterSql(
+  filter: WorkSearchFilter,
+  startIndex: number
+): { sql: string; params: unknown[] } {
+  const params: unknown[] = [];
+  const parts: string[] = [];
+  let i = startIndex;
+  if (filter.occupationCodes.length) {
+    params.push(filter.occupationCodes.map((c) => c.toUpperCase()));
+    parts.push(`UPPER(TRIM(COALESCE(l.occupation_code, ''))) = ANY($${i}::text[])`);
+    i += 1;
+  }
+  if (filter.classCodes.length) {
+    params.push(filter.classCodes.map((c) => c.toUpperCase()));
+    parts.push(`UPPER(TRIM(COALESCE(l.class_code, ''))) = ANY($${i}::text[])`);
+    i += 1;
+  }
+  if (filter.descriptionTerms.length) {
+    params.push(filter.descriptionTerms.map((s) => `%${s.toLowerCase()}%`));
+    parts.push(`LOWER(COALESCE(l.occupation_description, '')) LIKE ANY($${i}::text[])`);
+    i += 1;
+  }
+  if (filter.nameTerms.length) {
+    params.push(filter.nameTerms.map((s) => `%${s.toLowerCase()}%`));
+    parts.push(`(
+      LOWER(COALESCE(c.display_name, '')) LIKE ANY($${i}::text[])
+      OR LOWER(COALESCE(c.legal_name, '')) LIKE ANY($${i}::text[])
+      OR LOWER(COALESCE(c.dba_name, '')) LIKE ANY($${i}::text[])
+      OR LOWER(COALESCE(l.licensee_name_raw, '')) LIKE ANY($${i}::text[])
+      OR LOWER(COALESCE(l.dba_name_raw, '')) LIKE ANY($${i}::text[])
+      OR LOWER(COALESCE(l.occupation_description, '')) LIKE ANY($${i}::text[])
+    )`);
+  }
+  if (!parts.length) return { sql: "", params: [] };
+  return { sql: ` AND (${parts.join(" OR ")})`, params };
+}
 
 export async function searchContractors(
   rawQuery: string,
@@ -47,12 +92,17 @@ export async function searchContractors(
   }
 
   const q = normalizeSearchInput(rawQuery);
-  if (q.length < 2) {
+  const workId = parseWorkIntent(options.work || undefined);
+  const workChip = workId ? resolveWorkIntent(state.slug, workId) : null;
+  const workFilter =
+    workChip && !workFilterIsEmpty(workChip.filter) ? workChip.filter : null;
+
+  if (q.length < 2 && !workFilter) {
     return { results: [], state, mode: "name" };
   }
 
   const limit = options.limit ?? DEFAULT_LIMIT;
-  const licenseMode = looksLikeLicenseKey(q);
+  const licenseMode = q.length >= 2 && looksLikeLicenseKey(q);
 
   if (licenseMode) {
     const key = normalizeLicenseKey(q);
@@ -150,6 +200,87 @@ export async function searchContractors(
     };
   }
 
+  if (q.length < 2 && workFilter) {
+    const extra = workFilterSql(workFilter, 6);
+    const rows = await query<{
+      id: string;
+      slug: string;
+      display_name: string;
+      legal_name: string | null;
+      dba_name: string | null;
+      primary_city: string | null;
+      primary_county: string | null;
+      home_state: string | null;
+      external_key: string | null;
+      occupation_code: string | null;
+      status_normalized: string | null;
+      last_verified_at: Date | null;
+      entity_status: string | null;
+      entity_name: string | null;
+      has_discipline: boolean;
+    }>(
+      `
+      WITH matched AS (
+        SELECT DISTINCT ON (c.id)
+          c.id,
+          c.slug,
+          c.display_name,
+          c.legal_name,
+          c.dba_name,
+          c.primary_city,
+          c.primary_county,
+          c.home_state,
+          l.external_key,
+          l.occupation_code,
+          l.status_normalized,
+          l.primary_status,
+          l.last_verified_at,
+          l.source_system,
+          l.secondary_status
+        FROM contractors c
+        JOIN licenses l ON l.contractor_id = c.id AND l.source_system = ANY($1::text[])
+        WHERE c.is_thin_profile = FALSE
+          AND (c.home_state = $2 OR l.state = $2)
+          ${extra.sql}
+        ORDER BY c.id,
+          CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
+          l.updated_at DESC NULLS LAST
+      )
+      SELECT
+        m.*,
+        e.status AS entity_status,
+        e.legal_name AS entity_name,
+        EXISTS (
+          SELECT 1 FROM discipline_actions d WHERE d.contractor_id = m.id
+        ) AS has_discipline
+      FROM matched m
+      LEFT JOIN LATERAL (
+        SELECT ent.status, ent.legal_name
+        FROM contractor_entities ce
+        JOIN entities ent ON ent.id = ce.entity_id
+        WHERE ce.contractor_id = m.id
+          AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
+          AND ent.source_system = $3
+          AND ce.confidence IS NOT NULL
+          AND ce.confidence >= $5
+        ORDER BY ce.confidence DESC NULLS LAST
+        LIMIT 1
+      ) e ON TRUE
+      ORDER BY m.display_name
+      LIMIT $4
+      `,
+      [
+        licenseSourcesFor(state),
+        state.code,
+        state.entitySource,
+        limit,
+        MIN_SUNBIZ_CONFIDENCE,
+        ...extra.params,
+      ]
+    );
+    return { mode: "name", state, results: rows.map(mapSearchRow) };
+  }
+
   // Name search — forgiving on legal suffixes / multi-word tokens; entity links stay strict
   const prepared = prepareNameSearch(q);
   // Up to 4 significant tokens must all appear (AND). Pad with "%" so unused slots always match.
@@ -231,6 +362,7 @@ export async function searchContractors(
             AND ${nameBlob} ILIKE $11
           )
         )
+        ${workFilter ? workFilterSql(workFilter, 13).sql : ""}
       ORDER BY c.id,
         CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
         l.updated_at DESC NULLS LAST
@@ -273,6 +405,7 @@ export async function searchContractors(
       tokenLikes[2], // $10
       tokenLikes[3], // $11
       MIN_SUNBIZ_CONFIDENCE, // $12
+      ...(workFilter ? workFilterSql(workFilter, 13).params : []),
     ]
   );
 
