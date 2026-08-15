@@ -107,7 +107,7 @@ export function InsuranceGuidance({
             rel="noreferrer"
             className="mt-2 inline-flex text-[var(--accent)]"
           >
-            Open Proof of Coverage →
+            Open Proof of Coverage
           </a>
         </li>
         <li className="rounded-xl border border-[var(--border)] bg-[var(--bg)]/40 px-4 py-3">
@@ -121,7 +121,7 @@ export function InsuranceGuidance({
             rel="noreferrer"
             className="mt-2 inline-flex text-[var(--accent)]"
           >
-            Open Exemption search →
+            Open Exemption search
           </a>
         </li>
         <li className="rounded-xl border border-[var(--border)] bg-[var(--bg)]/40 px-4 py-3">
@@ -132,7 +132,7 @@ export function InsuranceGuidance({
             rel="noreferrer"
             className="mt-2 inline-flex text-[var(--accent)]"
           >
-            Division of Workers&apos; Compensation →
+            Division of Workers&apos; Compensation
           </a>
         </li>
       </ul>

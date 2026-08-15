@@ -55,7 +55,7 @@ export function ToolDiscovery() {
             href="/tools"
             className="text-sm font-semibold text-[var(--navy)] no-underline hover:underline"
           >
-            All tools →
+            All tools
           </Link>
         </div>
 

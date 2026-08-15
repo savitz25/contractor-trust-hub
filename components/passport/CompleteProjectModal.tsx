@@ -103,7 +103,7 @@ export function CompleteProjectModal({
               value={permitCloseout}
               onChange={(e) => setPermitCloseout(e.target.value)}
               className="mt-1 w-full rounded-xl border border-[var(--border)] px-3 py-2 text-sm"
-              placeholder="e.g. Finaled · permit BLD-…"
+              placeholder="e.g. Finaled · permit BLD-..."
             />
           </label>
           <label className="text-xs">

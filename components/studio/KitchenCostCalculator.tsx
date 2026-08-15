@@ -330,7 +330,7 @@ export function KitchenCostCalculator() {
               onClick={persistProjectContext}
               className="btn-primary inline-flex min-h-12 items-center justify-center px-5 text-sm no-underline"
             >
-              Find verified contractors →
+              Find verified contractors
             </Link>
             <Link
               href={studioHref}
@@ -406,7 +406,7 @@ export function KitchenCostCalculator() {
             onClick={persistProjectContext}
             className="btn-primary shrink-0 px-4 py-2.5 text-sm no-underline"
           >
-            Find contractors →
+            Find contractors
           </Link>
         </div>
       </div>

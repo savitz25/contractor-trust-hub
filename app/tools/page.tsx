@@ -95,7 +95,7 @@ export default function ToolsHubPage() {
         Plan clearly before you hire
       </h1>
       <p className="mt-3 max-w-2xl text-base leading-relaxed text-[var(--muted)]">
-        Plan → property → quotes → verify → contract → protect project. Evidence-first tools —
+        Plan, property, quotes, verify, contract, protect project. Evidence-first tools -
         not rankings, star scores, or a marketplace.
       </p>
 
@@ -115,7 +115,7 @@ export default function ToolsHubPage() {
             </p>
             <h2 className="mt-1 text-xl font-semibold text-[var(--navy)]">{t.title}</h2>
             <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{t.body}</p>
-            <p className="mt-3 text-sm font-semibold text-[var(--accent)]">Open tool →</p>
+            <p className="mt-3 text-sm font-semibold text-[var(--accent)]">Open tool</p>
           </Link>
         ))}
       </div>

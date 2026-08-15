@@ -34,7 +34,7 @@ export default function WatchPage() {
 
       <div className="mt-5 flex flex-wrap gap-3 text-sm">
         <Link href="/verify" className="font-semibold text-[var(--navy)] no-underline hover:underline">
-          Verify search →
+          Verify search
         </Link>
         <Link
           href="/projects"

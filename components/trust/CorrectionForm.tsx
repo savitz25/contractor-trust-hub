@@ -99,7 +99,7 @@ export function CorrectionForm({ defaultSlug = "", defaultLicense = "" }: Props)
 
         <div>
           <label htmlFor="corr-role" className="text-sm font-medium text-[var(--text)]">
-            I am a…
+            I am a...
           </label>
           <select
             id="corr-role"
@@ -134,7 +134,7 @@ export function CorrectionForm({ defaultSlug = "", defaultLicense = "" }: Props)
             <input
               id="corr-slug"
               className={fieldClass}
-              placeholder="e.g. contractors/… or full URL"
+              placeholder="e.g. contractors/... or full URL"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
             />
@@ -184,7 +184,7 @@ export function CorrectionForm({ defaultSlug = "", defaultLicense = "" }: Props)
             id="corr-source"
             type="url"
             className={fieldClass}
-            placeholder="https://…"
+            placeholder="https://..."
             value={sourceUrl}
             onChange={(e) => setSourceUrl(e.target.value)}
           />

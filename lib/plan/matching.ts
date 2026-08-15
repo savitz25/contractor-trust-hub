@@ -337,7 +337,7 @@ export async function matchContractorsForPlan(
       }
 
       if (cascadeSteps.length > 0) {
-        matchNotes.push(`Location cascade used: ${cascadeSteps.join(" → ")}.`);
+        matchNotes.push(`Location cascade used: ${cascadeSteps.join(" > ")}.`);
       }
 
       let localAll = localPrimary;

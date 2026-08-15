@@ -5,9 +5,9 @@ import { PlanFlow } from "@/components/plan/PlanFlow";
 import { pageMetadata } from "@/lib/seo/page-meta";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Florida plan — cost ranges & verified contractors",
+  title: "Florida plan - cost ranges and verified contractors",
   description:
-    "Describe a Florida home project, see conceptual planning cost ranges, and match verified licensed contractors. Planning only — not a bid. Full plan tools are Florida-first.",
+    "Describe a Florida home project, see conceptual planning cost ranges, and match verified licensed contractors. Planning only - not a bid. Full plan tools are Florida-first.",
   path: "/plan",
 });
 
@@ -17,13 +17,13 @@ export default function PlanPage() {
       <section className="border-b border-[var(--border)] bg-white/60">
         <div className="mx-auto max-w-6xl px-4 pb-8 pt-8 sm:px-6 sm:pb-12 sm:pt-14">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--navy)]">
-            Florida · Plan → verify → hire
+            Florida - Plan, verify, hire
           </p>
           <h1 className="mt-3 max-w-2xl text-2xl font-semibold leading-tight tracking-tight text-[var(--text)] sm:text-4xl">
             Plan your Florida project. See realistic ranges. Find verified contractors.
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--muted)] sm:mt-4 sm:text-base">
-            A short intake — not a design studio. Conceptual cost context for{" "}
+            A short intake - not a design studio. Conceptual cost context for{" "}
             <strong className="font-medium text-[var(--text)]">Florida</strong> project types, then
             match active licensed contractors from official public records. Not nationwide
             planning.
@@ -83,7 +83,7 @@ export default function PlanPage() {
         <Suspense
           fallback={
             <div className="mx-auto max-w-2xl rounded-3xl border border-[var(--border)] bg-white p-8 text-center text-sm text-[var(--muted)] shadow-[var(--shadow-md)]">
-              Loading plan…
+              Loading plan...
             </div>
           }
         >

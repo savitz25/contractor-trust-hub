@@ -44,9 +44,9 @@ export function formatUsd(n: number): string {
   }).format(n);
 }
 
-/** Span label e.g. "$48k–$125k" for scannable UI */
+/** Span label e.g. "$48k-$125k" for scannable UI */
 export function formatUsdRange(low: number, high: number): string {
-  return `${formatUsd(low)}–${formatUsd(high)}`;
+  return `${formatUsd(low)}-${formatUsd(high)}`;
 }
 
 function defaultBandHints(scaleLabel: string): CostBandHints {

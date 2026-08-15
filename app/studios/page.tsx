@@ -76,7 +76,7 @@ export default function StudiosHubPage() {
               </p>
               <h2 className="mt-2 text-lg font-semibold text-[var(--text)]">{s.name}</h2>
               <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{s.positioning}</p>
-              <p className="mt-4 text-sm font-medium text-[var(--navy)]">Open studio →</p>
+              <p className="mt-4 text-sm font-medium text-[var(--navy)]">Open studio</p>
             </Link>
           ))}
         </div>
@@ -87,7 +87,7 @@ export default function StudiosHubPage() {
             Use the general plan flow for additions, exterior, custom homes, and more.
           </p>
           <Link href="/plan" className="mt-3 inline-block text-sm font-semibold text-[var(--navy)]">
-            Open project planner →
+            Open project planner
           </Link>
         </div>
       </section>

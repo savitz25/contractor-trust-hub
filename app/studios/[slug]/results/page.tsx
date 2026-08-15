@@ -58,7 +58,7 @@ export default async function StudioResultsPage({ params, searchParams }: Props)
         <Suspense
           fallback={
             <div className="rounded-3xl border border-[var(--border)] bg-white p-8 text-center text-sm text-[var(--muted)]">
-              Loading studio results…
+              Loading studio results...
             </div>
           }
         >

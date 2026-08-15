@@ -45,7 +45,7 @@ export default function GuidesIndexPage() {
               </p>
               <h2 className="mt-1 text-lg font-semibold text-[var(--text)]">{g.title}</h2>
               <p className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">{g.intent}</p>
-              <p className="mt-3 text-sm font-medium text-[var(--navy)]">Read guide →</p>
+              <p className="mt-3 text-sm font-medium text-[var(--navy)]">Read guide</p>
             </Link>
           </li>
         ))}

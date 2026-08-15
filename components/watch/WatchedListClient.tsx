@@ -42,7 +42,7 @@ export function WatchedListClient() {
   if (!ready) {
     return (
       <p className="text-sm text-[var(--muted)]" aria-live="polite">
-        Loading watched list…
+        Loading watched list...
       </p>
     );
   }

@@ -91,7 +91,7 @@ export function NextBestAction({
           href={spec.continuity.href}
           className="font-semibold text-[var(--navy)] no-underline hover:underline"
         >
-          {spec.continuity.label} →
+          {spec.continuity.label}
         </Link>
         <span className="mx-1.5 text-[var(--border)]">·</span>
         Educational tools only — not a marketplace or endorsement.

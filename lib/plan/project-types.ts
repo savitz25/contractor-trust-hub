@@ -69,8 +69,8 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     occupationCodes: occupationCodesForProject("addition").all,
     scaleMode: "sqft",
     scaleLabels: {
-      small: "~200–400 sq ft",
-      medium: "~400–800 sq ft",
+      small: "~200-400 sq ft",
+      medium: "~400-800 sq ft",
       large: "Large or second story",
     },
     scaleHints: {
@@ -101,7 +101,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     id: "roofing",
     label: "Roofing",
     shortLabel: "Roof",
-    description: "Reroof, repair, or new roof system — Florida wind considerations apply.",
+    description: "Reroof, repair, or new roof system - Florida wind considerations apply.",
     occupationCodes: occupationCodesForProject("roofing").all,
     scaleMode: "scope",
     scaleLabels: {
@@ -165,7 +165,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     },
     scaleHints: {
       small: "Smaller footprint custom home",
-      medium: "Typical 3,000–4,500 sq ft",
+      medium: "Typical 3,000-4,500 sq ft",
       large: "Estate-scale build",
     },
   },
@@ -173,7 +173,7 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
     id: "general_contracting",
     label: "Other / General Contracting",
     shortLabel: "General",
-    description: "General contracting or multi-trade work that doesn’t fit a single specialty.",
+    description: "General contracting or multi-trade work that doesn't fit a single specialty.",
     occupationCodes: occupationCodesForProject("general_contracting").all,
     scaleMode: "scope",
     scaleLabels: {
@@ -191,8 +191,8 @@ export const PROJECT_TYPES: ProjectTypeDef[] = [
 
 export const BUDGET_BANDS: { id: BudgetBand; label: string }[] = [
   { id: "under_25k", label: "Under $25k" },
-  { id: "25_75k", label: "$25–75k" },
-  { id: "75_150k", label: "$75–150k" },
+  { id: "25_75k", label: "$25-75k" },
+  { id: "75_150k", label: "$75-150k" },
   { id: "150k_plus", label: "$150k+" },
   { id: "not_sure", label: "Not sure" },
 ];

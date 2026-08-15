@@ -13,7 +13,7 @@ export const metadata: Metadata = pageMetadata({
 export default function PermitPlannerPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-      <Suspense fallback={<p className="text-sm text-[var(--muted)]">Loading planner…</p>}>
+      <Suspense fallback={<p className="text-sm text-[var(--muted)]">Loading planner...</p>}>
         <PermitPlannerClient />
       </Suspense>
     </main>

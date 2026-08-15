@@ -30,7 +30,7 @@ export function EntityLineageSection({ lineage }: { lineage: EntityLineage }) {
           <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
             Public Sunbiz records as published in our extract.{" "}
             <strong className="font-semibold text-[var(--text)]">
-              Appears in public records as…
+              Appears in public records as...
             </strong>{" "}
             — not an accusation, ranking, or “phoenix score.” Confirm on official Sunbiz before
             you rely on this.
@@ -42,7 +42,7 @@ export function EntityLineageSection({ lineage }: { lineage: EntityLineage }) {
           rel="noopener noreferrer"
           className="shrink-0 text-xs font-semibold text-[var(--navy)] no-underline hover:underline"
         >
-          Official Sunbiz →
+          Official Sunbiz
         </a>
       </div>
 
@@ -193,7 +193,7 @@ export function EntityLineageSection({ lineage }: { lineage: EntityLineage }) {
                         rel="noopener noreferrer"
                         className="font-medium text-[var(--navy)] no-underline hover:underline"
                       >
-                        Confirm on Sunbiz →
+                        Confirm on Sunbiz
                       </a>
                     </p>
                   </li>

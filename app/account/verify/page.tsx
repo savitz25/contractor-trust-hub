@@ -21,7 +21,7 @@ export default function AccountVerifyFallbackPage() {
         Open the link from your email, or request a new one from your account page.
       </p>
       <Link href="/account" className="mt-6 inline-block text-sm font-semibold text-[var(--navy)]">
-        Back to account →
+        Back to account
       </Link>
     </main>
   );

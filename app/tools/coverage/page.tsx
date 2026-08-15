@@ -190,7 +190,7 @@ export default function CoveragePage() {
                     href={verifyPathFor(state)}
                     className="text-sm font-semibold text-[var(--navy)] no-underline hover:underline"
                   >
-                    Verify in {state.name} →
+                    Verify in {state.name}
                   </Link>
                 </p>
               </li>
@@ -248,7 +248,7 @@ export default function CoveragePage() {
             href="/property"
             className="text-sm font-semibold text-[var(--navy)] no-underline hover:underline"
           >
-            Check a Florida address →
+            Check a Florida address
           </Link>
         </p>
       </section>

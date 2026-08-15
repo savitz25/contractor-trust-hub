@@ -66,7 +66,7 @@ export function StudioHandoffBanner({
           href={backHref}
           className="rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--navy)] no-underline"
         >
-          ← Back to studio results
+          Back to studio results
         </Link>
         <Link
           href={introHref}

@@ -42,7 +42,7 @@ export default async function PropertyEntryPage({
       </p>
 
       <div className="mt-8 rounded-3xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)] sm:p-8">
-        <Suspense fallback={<p className="text-sm text-[var(--muted)]">Loading…</p>}>
+        <Suspense fallback={<p className="text-sm text-[var(--muted)]">Loading...</p>}>
           <FormFromQuery zip={sp.zip} city={sp.city} />
         </Suspense>
       </div>

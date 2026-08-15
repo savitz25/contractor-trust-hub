@@ -116,7 +116,7 @@ export function AddressLookupForm({
         disabled={busy}
         className="w-full rounded-xl bg-[var(--navy)] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60 sm:w-auto"
       >
-        {busy ? "Researching…" : "Check this address"}
+        {busy ? "Researching..." : "Check this address"}
       </button>
       <p className="text-[11px] leading-relaxed text-[var(--muted)]">
         Florida-first. Results depend on jurisdiction coverage — empty permit lists are common and

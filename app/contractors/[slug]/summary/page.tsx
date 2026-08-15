@@ -67,7 +67,7 @@ export default async function ContractorShareSummaryPage({
           href={`/contractors/${encodeURIComponent(slug)}`}
           className="mt-4 inline-flex text-sm font-semibold text-[var(--accent)]"
         >
-          Full Trust Report →
+          Full Trust Report
         </Link>
       </main>
     );
@@ -87,7 +87,7 @@ export default async function ContractorShareSummaryPage({
           href={model.fullReportPath}
           className="text-[var(--muted)] no-underline hover:text-[var(--text)]"
         >
-          ← Full Trust Report
+          Full Trust Report
         </Link>
         <span className="text-[var(--border)]" aria-hidden>
           ·

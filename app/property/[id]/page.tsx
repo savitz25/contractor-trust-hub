@@ -37,7 +37,7 @@ export default async function PropertyByIdPage({ params, searchParams }: Props) 
           Invalid property id. Enter the address again.
         </p>
         <Link href="/property" className="mt-4 inline-block text-sm font-semibold text-[var(--navy)]">
-          ← Check my address
+          Check my address
         </Link>
       </main>
     );
@@ -64,7 +64,7 @@ export default async function PropertyByIdPage({ params, searchParams }: Props) 
         href="/property"
         className="text-sm text-[var(--muted)] no-underline hover:text-[var(--text)]"
       >
-        ← New address
+        New address
       </Link>
       <div className="mt-4">
         <PropertyResultView result={result} />

@@ -279,7 +279,7 @@ export function ScopeBuilderClient() {
             onClick={save}
             className="inline-flex min-h-11 items-center rounded-xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-2.5 text-sm font-semibold text-[var(--navy)] no-underline"
           >
-            Use this scope in Quote Analyzer →
+            Use this scope in Quote Analyzer
           </Link>
           <button
             type="button"

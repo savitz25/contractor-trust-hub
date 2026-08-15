@@ -62,7 +62,7 @@ export function WashingtonExploreTeaser() {
       </div>
       <p className="mt-4">
         <Link href="/washington" className="text-sm font-semibold text-[var(--navy)]">
-          Open Washington explorer →
+          Open Washington explorer
         </Link>
       </p>
     </section>

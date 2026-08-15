@@ -36,7 +36,7 @@ export function PassportDetailClient({ passportId }: { passportId: string }) {
       <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
         <p className="font-semibold">Passport not found on this device</p>
         <Link href="/passport" className="mt-2 inline-block text-sm font-semibold">
-          ← All passports
+          All passports
         </Link>
       </div>
     );
@@ -102,7 +102,7 @@ export function PassportDetailClient({ passportId }: { passportId: string }) {
   return (
     <div className="space-y-6 pb-16">
       <Link href="/passport" className="text-sm text-[var(--muted)] no-underline">
-        ← All passports
+        All passports
       </Link>
 
       <header className="rounded-3xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)] sm:p-8">
@@ -142,7 +142,7 @@ export function PassportDetailClient({ passportId }: { passportId: string }) {
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
           className="mt-3 w-full rounded-xl border border-[var(--border)] px-3 py-2 text-sm"
-          placeholder="Notes about this property…"
+          placeholder="Notes about this property..."
         />
         <button
           type="button"
@@ -181,7 +181,7 @@ export function PassportDetailClient({ passportId }: { passportId: string }) {
                     href={`/contractors/${encodeURIComponent(i.contractorSlug)}`}
                     className="mt-1 inline-block text-xs font-semibold text-[var(--navy)]"
                   >
-                    Trust Report →
+                    Trust Report
                   </Link>
                 ) : null}
               </li>

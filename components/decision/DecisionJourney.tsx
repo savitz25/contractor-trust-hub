@@ -20,7 +20,7 @@ export function DecisionJourney({ current }: { current?: string }) {
           <span key={s.href} className="inline-flex items-center gap-1.5">
             {i > 0 ? (
               <span className="hidden text-[var(--muted)] sm:inline" aria-hidden>
-                →
+                /
               </span>
             ) : null}
             <Link

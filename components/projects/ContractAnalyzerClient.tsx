@@ -159,7 +159,7 @@ export function ContractAnalyzerClient() {
               value={rawText}
               onChange={(e) => setRawText(e.target.value)}
               rows={10}
-              placeholder="Paste contract language here…"
+              placeholder="Paste contract language here..."
               className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 font-mono text-xs sm:text-sm"
             />
           </label>
@@ -247,7 +247,7 @@ export function ContractAnalyzerClient() {
                       <p className="text-xs text-[var(--muted)]">{f.detail}</p>
                       {f.evidence ? (
                         <p className="mt-1 font-mono text-[11px] text-[var(--muted)]">
-                          “…{f.evidence}…”
+                          “...{f.evidence}...”
                         </p>
                       ) : null}
                     </div>
@@ -320,7 +320,7 @@ export function ContractAnalyzerClient() {
             </div>
             <p className="mt-3 text-xs">
               <Link href="/account" className="font-semibold text-[var(--navy)]">
-                Save / continue later →
+                Save / continue later
               </Link>
             </p>
             <p className="mt-3 text-[11px] leading-relaxed text-[var(--muted)]">

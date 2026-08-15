@@ -294,11 +294,11 @@ export function StudioFlow({ slug }: Props) {
                 }}
                 className="text-sm font-medium text-[var(--muted)]"
               >
-                ← Back
+                Back
               </button>
             ) : (
               <Link href="/studios" className="text-sm font-medium text-[var(--muted)] no-underline">
-                ← All studios
+                All studios
               </Link>
             )}
           </div>
@@ -307,7 +307,7 @@ export function StudioFlow({ slug }: Props) {
             onClick={goNext}
             className="btn-primary min-h-11 px-5 py-2.5 text-sm"
           >
-            {step < totalSteps - 1 ? "Continue →" : "See range & contractors →"}
+            {step < totalSteps - 1 ? "Continue" : "See range and contractors"}
           </button>
         </div>
       </div>

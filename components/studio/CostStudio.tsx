@@ -362,7 +362,7 @@ export function CostStudio() {
               onClick={persistProjectContext}
               className="btn-primary inline-flex min-h-12 items-center justify-center px-5 text-sm no-underline"
             >
-              Find verified contractors →
+              Find verified contractors
             </Link>
             <Link
               href={`/plan?type=${projectType}&scale=${scale}${zip ? `&zip=${zip}` : ""}${city ? `&city=${encodeURIComponent(city)}` : ""}`}
@@ -433,7 +433,7 @@ export function CostStudio() {
             onClick={persistProjectContext}
             className="btn-primary shrink-0 px-4 py-2.5 text-sm no-underline"
           >
-            Verify path →
+            Verify path
           </Link>
         </div>
       </div>

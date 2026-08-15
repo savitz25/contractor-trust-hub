@@ -43,7 +43,7 @@ export function OregonExploreTeaser() {
       </div>
       <p className="mt-4">
         <Link href="/oregon" className="text-sm font-semibold text-[var(--navy)]">
-          Open Oregon explorer →
+          Open Oregon explorer
         </Link>
       </p>
     </section>

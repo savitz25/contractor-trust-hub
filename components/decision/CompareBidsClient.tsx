@@ -334,7 +334,7 @@ export function CompareBidsClient() {
                       href={`/contractors/${b.contractorSlug}`}
                       className="mt-3 inline-block text-xs font-semibold text-[var(--navy)]"
                     >
-                      Trust Report →
+                      Trust Report
                     </Link>
                   ) : null}
                 </div>

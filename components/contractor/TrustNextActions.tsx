@@ -89,7 +89,7 @@ export function TrustNextActions({
         <p className="mt-3 text-xs text-[var(--muted)]">
           Project context from {handoff.studioName} is preserved in tool links.{" "}
           <a href={handoff.resultsPath} className="font-semibold text-[var(--navy)]">
-            Back to studio results →
+            Back to studio results
           </a>
         </p>
       ) : null}

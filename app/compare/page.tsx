@@ -154,7 +154,7 @@ export default async function ComparePage({ searchParams }: Props) {
                       href={`/contractors/${encodeURIComponent(c.slug)}`}
                       className="text-sm font-semibold text-[var(--accent)] no-underline"
                     >
-                      Open Trust Report →
+                      Open Trust Report
                     </Link>
                     <Link
                       href={`/tools/quote-analyzer?${toolsQs}`}

@@ -158,7 +158,7 @@ export function PlanFlow() {
         </div>
       ) : null}
 
-      {/* Progress ΓÇö horizontal scroll on tiny screens */}
+      {/* Progress - horizontal scroll on tiny screens */}
       <nav aria-label="Plan steps" className="mb-6 sm:mb-8">
         <ol className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:flex-wrap sm:gap-2">
           {STEPS.map((label, i) => {
@@ -191,7 +191,7 @@ export function PlanFlow() {
           })}
         </ol>
         <p className="mt-2 text-xs text-[var(--muted)]">
-          About 60ΓÇô90 seconds ┬╖ planning ranges + verified license matches
+          About 60-90 seconds - planning ranges + verified license matches
         </p>
       </nav>
 
@@ -234,7 +234,7 @@ export function PlanFlow() {
                 value={details}
                 onChange={(e) => setDetails(e.target.value.slice(0, 500))}
                 rows={3}
-                placeholder="e.g. 1990s kitchen, keep layout, want quartz and new cabinets…"
+                placeholder="e.g. 1990s kitchen, keep layout, want quartz and new cabinets..."
                 className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-base text-[var(--text)] outline-none focus:border-[var(--navy)]/40 sm:text-sm"
               />
             </label>
@@ -245,11 +245,11 @@ export function PlanFlow() {
                 </p>
                 <p className="mt-1 text-xs text-[var(--muted)]">
                   {linkedStudio.slug === "roofing"
-                    ? "Open the Roofing Studio for full replacement scope — material, tear-off, access, and licensed CCC/RR matches."
+                    ? "Open the Roofing Studio for full replacement scope - material, tear-off, access, and licensed CCC/RR matches."
                     : linkedStudio.slug === "kitchen"
-                      ? "Open the Kitchen Studio for remodel depth — cabinets, layout, plumbing/electrical, and licensed GC matches."
+                      ? "Open the Kitchen Studio for remodel depth - cabinets, layout, plumbing/electrical, and licensed GC matches."
                       : linkedStudio.slug === "bathroom"
-                        ? "Open the Bathroom Studio for remodel depth — wet-area work, waterproofing, plumbing, and licensed CFC/CRC/CBC matches."
+                        ? "Open the Bathroom Studio for remodel depth - wet-area work, waterproofing, plumbing, and licensed CFC/CRC/CBC matches."
                         : `The ${linkedStudio.name} asks a few more questions so cost drivers and matches fit your project better.`}
                 </p>
                 <Link
@@ -257,12 +257,12 @@ export function PlanFlow() {
                   className="mt-2 inline-block text-sm font-semibold text-[var(--navy)] no-underline hover:underline"
                 >
                   {linkedStudio.slug === "roofing"
-                    ? "Open Roofing Studio for replacement scope →"
+                    ? "Open Roofing Studio for replacement scope"
                     : linkedStudio.slug === "kitchen"
-                      ? "Open Kitchen Studio for remodel scope →"
+                      ? "Open Kitchen Studio for remodel scope"
                       : linkedStudio.slug === "bathroom"
-                        ? "Open Bathroom Studio for remodel scope →"
-                        : "Open detailed studio →"}
+                        ? "Open Bathroom Studio for remodel scope"
+                        : "Open detailed studio"}
                 </Link>
               </div>
             ) : null}
@@ -305,7 +305,9 @@ export function PlanFlow() {
               </label>
             </div>
             <p className="mt-3 text-xs text-[var(--muted)]">
-              State: <strong className="text-[var(--text)]">Florida</strong> ┬╖ more states later
+              State: <strong className="text-[var(--text)]">Florida</strong>
+              {" - "}
+              more states later
             </p>
           </section>
         ) : null}
@@ -316,7 +318,7 @@ export function PlanFlow() {
               Rough scale of the work
             </h2>
             <p className="mt-2 text-sm text-[var(--muted)]">
-              Keep it simple ΓÇö this only shapes planning ranges, not a formal bid.
+              Keep it simple - this only shapes planning ranges, not a formal bid.
             </p>
             <div className="mt-5 grid gap-2">
               {(["small", "medium", "large"] as ScaleBand[]).map((s) => {
@@ -383,7 +385,7 @@ export function PlanFlow() {
                 onClick={goBack}
                 className="rounded-xl px-3 py-2 text-sm font-medium text-[var(--muted)] hover:text-[var(--navy)]"
               >
-                ΓåÉ Back
+                Back
               </button>
             ) : (
               <Link
@@ -399,7 +401,7 @@ export function PlanFlow() {
             onClick={goNext}
             className="btn-primary inline-flex min-h-11 items-center px-5 py-2.5 text-sm"
           >
-            {step < 2 ? "Continue ΓåÆ" : "See cost ranges & contractors ΓåÆ"}
+            {step < 2 ? "Continue" : "See cost ranges and contractors"}
           </button>
         </div>
       </div>

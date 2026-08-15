@@ -367,7 +367,7 @@ function TexasEmptyResults({ query, mode }: { query: string; mode: "license" | "
         {mode === "license" ? (
           <>
             <li>Try the numeric TDLR license number alone (e.g. 10001).</li>
-            <li>Double-check digits; keys like TX-TDLR:… also work when you have the full id.</li>
+            <li>Double-check digits; keys like TX-TDLR:... also work when you have the full id.</li>
             <li>If you only have a company name, switch to a short distinctive name search.</li>
           </>
         ) : (

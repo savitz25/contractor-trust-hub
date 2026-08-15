@@ -45,7 +45,7 @@ export function HomeHero() {
           >
             I have a name or license
             <span className="ml-1.5 text-[11px] font-medium text-[var(--navy)]/70">
-              → Verify
+              Verify
             </span>
           </Link>
           <Link
@@ -55,7 +55,7 @@ export function HomeHero() {
           >
             I&apos;m planning a project
             <span className="ml-1.5 text-[11px] font-medium text-white/80">
-              → Choose state
+              Choose state
             </span>
           </Link>
         </div>
@@ -76,7 +76,7 @@ export function HomeHero() {
             href="/independence"
             className="underline-offset-2 hover:underline"
           >
-            Independent research — not a marketplace
+            Independent research - not a marketplace
           </Link>
         </p>
       </div>

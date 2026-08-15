@@ -209,7 +209,7 @@ export function QuoteAnalyzerClient() {
               value={rawText}
               onChange={(e) => setRawText(e.target.value)}
               rows={8}
-              placeholder="Paste the estimate text here…"
+              placeholder="Paste the estimate text here..."
               className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 font-mono text-xs sm:text-sm"
             />
           </label>

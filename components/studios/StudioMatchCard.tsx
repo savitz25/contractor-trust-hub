@@ -128,7 +128,7 @@ export function StudioMatchCard({
             onClick={openProfile}
             className="text-xs font-semibold text-[var(--navy)] no-underline hover:underline"
           >
-            Review Trust Report →
+            Review Trust Report
           </Link>
           {onRequestIntro ? (
             <button

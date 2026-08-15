@@ -53,7 +53,7 @@ export function ProjectFitBanner({
           href={handoff.resultsPath}
           className="mt-3 inline-block text-xs font-semibold text-[var(--navy)] no-underline hover:underline"
         >
-          ← Back to results
+          Back to results
         </Link>
       ) : null}
     </section>

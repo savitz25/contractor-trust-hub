@@ -205,7 +205,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           href={verifyHref}
           className="text-[var(--muted)] no-underline hover:text-[var(--text)]"
         >
-          ← Search
+          Search
         </Link>
         {isFlFull ? (
           <>

@@ -44,7 +44,7 @@ export default async function PropertyResultsPage({ searchParams }: Props) {
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
       <Link href="/property" className="text-sm text-[var(--muted)] no-underline">
-        ← New address
+        New address
       </Link>
       <div className="mt-4">
         <PropertyResultView result={result} />

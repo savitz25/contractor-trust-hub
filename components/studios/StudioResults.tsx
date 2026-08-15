@@ -227,7 +227,7 @@ export function StudioResults({
   if (loading) {
     return (
       <div className="rounded-3xl border border-[var(--border)] bg-white p-8 text-center">
-        <p className="font-semibold text-[var(--navy)]">Building your decision view…</p>
+        <p className="font-semibold text-[var(--navy)]">Building your decision view...</p>
         <p className="mt-2 text-sm text-[var(--muted)]">
           Scope-aware planning range and license matches for this studio.
         </p>
@@ -240,7 +240,7 @@ export function StudioResults({
       <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
         <p className="font-semibold text-amber-950">{error || "Could not load results"}</p>
         <Link href={`/studios/${studioSlug}`} className="mt-3 inline-block text-sm font-medium">
-          ← Adjust scope
+          Adjust scope
         </Link>
       </div>
     );
@@ -560,7 +560,7 @@ export function StudioResults({
                 onClick={() => void submitQuote()}
                 className="btn-primary min-h-11 flex-1 py-2 text-sm disabled:opacity-50"
               >
-                {quoteBusy ? "Sending…" : "Submit request"}
+                {quoteBusy ? "Sending..." : "Submit request"}
               </button>
               <button
                 type="button"

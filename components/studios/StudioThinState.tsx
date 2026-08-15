@@ -39,7 +39,7 @@ export function StudioThinState({ match, studioSlug }: Props) {
             : match.emptyReason ||
               "We did not find contractors with relevant active license classes for this project type and location in our current extract.",
       standard: isRoofing
-        ? "Roofing standard: active/current CCC or RR first; CGC only if primary is thin. Location ZIP → city → county → statewide."
+        ? "Roofing standard: active/current CCC or RR first; CGC only if primary is thin. Location ZIP, then city, then county, then statewide."
         : isKitchen
           ? "Kitchen standard: active/current CGC, CBC, or CRC first; CFC secondary when local primary is thin."
           : isBathroom

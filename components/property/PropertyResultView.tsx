@@ -316,14 +316,14 @@ export function PropertyResultView({ result }: { result: PropertyResearchResult 
                         href={`/contractors/${encodeURIComponent(p.contractorSlug)}`}
                         className="mt-1 inline-block text-xs font-semibold text-[var(--navy)]"
                       >
-                        Open Trust Report →
+                        Open Trust Report
                       </Link>
                     ) : p.contractorLicenseKey || p.contractorName ? (
                       <Link
                         href={`/verify?q=${encodeURIComponent(p.contractorLicenseKey || p.contractorName || "")}`}
                         className="mt-1 inline-block text-xs font-semibold text-[var(--navy)]"
                       >
-                        Verify this contractor →
+                        Verify this contractor
                       </Link>
                     ) : null}
                     {p.matchConfidence === "none" ? (
@@ -337,7 +337,7 @@ export function PropertyResultView({ result }: { result: PropertyResearchResult 
                   Source: {p.sourceLabel}
                   {p.retrievedAt ? ` · Freshness: ${p.retrievedAt}` : " · Freshness: not shown"}
                   {p.statusRaw && p.statusRaw !== p.status
-                    ? ` · Status raw: “${p.statusRaw}” → ${p.status}`
+                    ? ` · Status raw: "${p.statusRaw}" -> ${p.status}`
                     : ` · Status: ${p.status}`}
                 </p>
                 {p.joinAudit ? (

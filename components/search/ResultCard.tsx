@@ -83,7 +83,7 @@ function displayLicenseKey(
   const key = result.primaryLicenseKey;
   if (!key) return null;
   if (isTx) {
-    // Prefer short numeric id when product key is long TX-TDLR:…
+    // Prefer short numeric id when product key is long TX-TDLR:...
     const m = key.match(/:(\d+)(?::|$)/);
     if (m) return m[1];
   }
@@ -406,9 +406,6 @@ export function ResultCard({
             className="inline-flex min-h-10 items-center rounded-xl bg-[var(--navy)] px-3.5 text-xs font-semibold text-white no-underline sm:min-h-0 sm:bg-transparent sm:px-0 sm:font-medium sm:text-[var(--accent)] sm:hover:underline"
           >
             Open Trust Report
-            <span className="ml-1 sm:ml-0" aria-hidden>
-              →
-            </span>
           </Link>
           <CompareToggle slug={result.slug} compact />
         </div>

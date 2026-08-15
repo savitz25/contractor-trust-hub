@@ -317,10 +317,10 @@ export function AccountClient() {
         </ul>
         <div className="mt-4 flex flex-wrap gap-2">
           <Link href="/passport" className="text-sm font-semibold text-[var(--navy)]">
-            Home Passport →
+            Home Passport
           </Link>
           <Link href="/projects" className="text-sm font-semibold text-[var(--navy)]">
-            Projects →
+            Projects
           </Link>
         </div>
       </section>

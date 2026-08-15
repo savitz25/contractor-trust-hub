@@ -82,7 +82,7 @@ export function IntentRouter() {
                 ))}
               </ul>
               <p className="mt-auto pt-4 text-sm font-semibold text-[var(--navy)] group-hover:underline">
-                {card.cta} →
+                {card.cta}
               </p>
             </Link>
           ))}

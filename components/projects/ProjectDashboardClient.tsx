@@ -93,7 +93,7 @@ export function ProjectDashboardClient({ projectId }: { projectId: string }) {
       <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
         <p className="font-semibold text-amber-950">Project not found on this device</p>
         <Link href="/projects" className="mt-3 inline-block text-sm font-semibold">
-          ← All projects
+          All projects
         </Link>
       </div>
     );
@@ -116,7 +116,7 @@ export function ProjectDashboardClient({ projectId }: { projectId: string }) {
     <div className="space-y-6 pb-20">
       <div className="flex flex-wrap items-center gap-2 text-sm">
         <Link href="/projects" className="text-[var(--muted)] no-underline hover:text-[var(--text)]">
-          ← Projects
+          Projects
         </Link>
       </div>
 
@@ -225,7 +225,7 @@ export function ProjectDashboardClient({ projectId }: { projectId: string }) {
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 px-4 py-3 text-sm">
           <p className="font-semibold text-emerald-950">Project marked complete</p>
           <Link href="/passport" className="mt-1 inline-block font-semibold text-[var(--navy)]">
-            Open Home Passport →
+            Open Home Passport
           </Link>
         </div>
       )}
@@ -343,7 +343,7 @@ export function ProjectDashboardClient({ projectId }: { projectId: string }) {
                 href="/tools/contract-analyzer"
                 className="mt-2 inline-block text-xs font-semibold text-[var(--navy)]"
               >
-                Re-open analyzer →
+                Re-open analyzer
               </Link>
             </section>
           ) : null}

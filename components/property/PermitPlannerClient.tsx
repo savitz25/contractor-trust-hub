@@ -197,7 +197,7 @@ export function PermitPlannerClient() {
                 rel="noreferrer"
                 className="mt-3 inline-flex text-sm font-semibold text-[var(--navy)]"
               >
-                Open jurisdiction resources →
+                Open jurisdiction resources
               </a>
             ) : (
               <p className="mt-3 text-xs text-[var(--muted)]">

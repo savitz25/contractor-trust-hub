@@ -40,7 +40,7 @@ export function ArizonaExploreTeaser() {
       </div>
       <p className="mt-4">
         <Link href="/arizona" className="text-sm font-semibold text-[var(--navy)]">
-          Open Arizona explorer →
+          Open Arizona explorer
         </Link>
       </p>
     </section>

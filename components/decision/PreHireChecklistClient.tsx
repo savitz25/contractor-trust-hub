@@ -179,7 +179,7 @@ export function PreHireChecklistClient() {
                             className="text-xs font-semibold text-[var(--navy)] no-underline hover:underline"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            {h.label} →
+                            {h.label}
                           </Link>
                         ))}
                       </span>

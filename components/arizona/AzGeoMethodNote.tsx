@@ -19,7 +19,7 @@ export function AzGeoMethodNote({
     : "County browse is derived from mailing city. City pages match that city only.";
   const body = geo
     ? azGeoBody(geo)
-    : "The ROC current-contractor extract is strong on city and almost empty on official county. County totals roll up a maintained city → county map. That map is not an ROC field.";
+    : "The ROC current-contractor extract is strong on city and almost empty on official county. County totals roll up a maintained city-to-county map. That map is not an ROC field.";
   const caveats = geo
     ? azGeoCaveatsFor(geo)
     : [

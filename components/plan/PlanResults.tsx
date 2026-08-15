@@ -193,7 +193,7 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
   if (loading) {
     return (
       <div className="rounded-3xl border border-[var(--border)] bg-white p-8 text-center shadow-[var(--shadow-md)]">
-        <p className="text-sm font-semibold text-[var(--navy)]">Building your project context…</p>
+        <p className="text-sm font-semibold text-[var(--navy)]">Building your project context...</p>
         <p className="mt-2 text-sm text-[var(--muted)]">
           Loading planning ranges and matching active Florida licenses.
         </p>
@@ -369,7 +369,7 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
         <p className="mt-3 text-sm text-[var(--text)]">
           Typical planning span:{" "}
           <strong className="tabular-nums text-[var(--navy)]">
-            {formatUsd(cost.low)}–{formatUsd(cost.high)}
+            {formatUsd(cost.low)}-{formatUsd(cost.high)}
           </strong>
           <span className="text-[var(--muted)]"> (mid ~{formatUsd(cost.mid)})</span>
         </p>
@@ -697,7 +697,7 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
                     setForm((f) => ({ ...f, notes: e.target.value.slice(0, 1000) }))
                   }
                   rows={3}
-                  placeholder="Timing, access, preferred trade specialty…"
+                  placeholder="Timing, access, preferred trade specialty..."
                   className="mt-1 w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-base text-[var(--text)] sm:text-sm"
                 />
               </label>
@@ -721,7 +721,7 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
                 onClick={() => void submitQuote()}
                 className="btn-primary min-h-12 flex-1 px-4 text-sm disabled:opacity-50 sm:min-h-11"
               >
-                {quoteBusy ? "Sending…" : "Submit request"}
+                {quoteBusy ? "Sending..." : "Submit request"}
               </button>
             </div>
           </div>

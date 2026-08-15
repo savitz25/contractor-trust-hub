@@ -202,7 +202,7 @@ export function FloridaBrowseSection({
                   href={citiesHref}
                   className="inline-flex min-h-9 items-center rounded-full px-3 text-xs font-semibold text-[var(--accent)] no-underline hover:underline"
                 >
-                  All {cities.length} cities →
+                  All {cities.length} cities
                 </Link>
               </li>
             ) : null}

@@ -179,7 +179,7 @@ export function ResearchBrowse({ defaultExpanded = true }: Props) {
                 onChange={(e) => setTradeSlug(e.target.value)}
                 className="min-h-11 w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 text-sm text-[var(--text)] outline-none ring-[var(--accent)] focus:ring-2"
               >
-                <option value="">More trades…</option>
+                <option value="">More trades...</option>
                 {moreTrades.map((t) => (
                   <option key={t.slug} value={t.slug}>
                     {t.label}
@@ -212,7 +212,7 @@ export function ResearchBrowse({ defaultExpanded = true }: Props) {
           disabled={pending}
           className="order-1 min-h-12 w-full shrink-0 rounded-xl bg-[var(--accent)] px-6 text-sm font-semibold text-[var(--navy)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-70 sm:order-2 sm:w-auto"
         >
-          {pending ? "Opening…" : "Browse license records"}
+          {pending ? "Opening..." : "Browse license records"}
         </button>
       </div>
 

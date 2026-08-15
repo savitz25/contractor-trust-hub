@@ -19,7 +19,7 @@ export default async function ProjectDetailPage({ params }: Props) {
   const { id } = await params;
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-      <Suspense fallback={<p className="text-sm text-[var(--muted)]">Loading project…</p>}>
+      <Suspense fallback={<p className="text-sm text-[var(--muted)]">Loading project...</p>}>
         <ProjectDashboardClient projectId={id} />
       </Suspense>
     </main>

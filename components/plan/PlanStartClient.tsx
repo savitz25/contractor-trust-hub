@@ -59,7 +59,7 @@ export function PlanStartClient({ states }: { states: EvidenceState[] }) {
             onChange={(e) => setSlug(e.target.value)}
             className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-3 text-sm text-[var(--text)]"
           >
-            <option value="">Select a state…</option>
+            <option value="">Select a state...</option>
             {states.map((s) => (
               <option key={s.slug} value={s.slug}>
                 {s.name}

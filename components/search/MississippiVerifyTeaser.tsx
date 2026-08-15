@@ -37,7 +37,7 @@ export function MississippiVerifyTeaser() {
       </div>
       <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1">
         <Link href="/verify?state=ms" className="text-sm font-semibold text-[var(--navy)]">
-          Open Mississippi Verify →
+          Open Mississippi Verify
         </Link>
         <a
           href={MS_SBC_SEARCH_URL}

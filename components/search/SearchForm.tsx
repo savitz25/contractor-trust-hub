@@ -23,55 +23,55 @@ type SearchFormProps = {
 };
 
 const PLACEHOLDERS = {
-  hero: "License number (CBC015082) or company name…",
+  hero: "License number (CBC015082) or company name...",
   default: "License (CBC015082) or company name",
   compact: "License or company name",
 };
 
 const TX_PLACEHOLDERS = {
-  hero: "License # or business / owner name…",
+  hero: "License # or business / owner name...",
   default: "License # or business name",
   compact: "License or name",
 };
 
 const NJ_PLACEHOLDERS = {
-  hero: "Registration # or company name…",
+  hero: "Registration # or company name...",
   default: "Registration # or company name",
   compact: "Registration or name",
 };
 
 const OR_PLACEHOLDERS = {
-  hero: "CCB license number or company name…",
+  hero: "CCB license number or company name...",
   default: "CCB license # or company name",
   compact: "License or name",
 };
 
 const CA_PLACEHOLDERS = {
-  hero: "CSLB license number or business name…",
+  hero: "CSLB license number or business name...",
   default: "CSLB license # or business name",
   compact: "License or name",
 };
 
 const AZ_PLACEHOLDERS = {
-  hero: "ROC license number or business name…",
+  hero: "ROC license number or business name...",
   default: "ROC license # or business name",
   compact: "License or name",
 };
 
 const WA_PLACEHOLDERS = {
-  hero: "L&I license number or company name…",
+  hero: "L&I license number or company name...",
   default: "L&I license # or company name",
   compact: "License or name",
 };
 
 const LA_PLACEHOLDERS = {
-  hero: "LSLBC license number or company name…",
+  hero: "LSLBC license number or company name...",
   default: "LSLBC license # or company name",
   compact: "License or name",
 };
 
 const MS_PLACEHOLDERS = {
-  hero: "MSBOC license number or company name…",
+  hero: "MSBOC license number or company name...",
   default: "MSBOC license # or company name",
   compact: "License or name",
 };
@@ -220,7 +220,7 @@ export function SearchForm({
           className={inputClass}
         />
         <button type="submit" disabled={pending} className={buttonClass}>
-          {pending ? "Searching…" : "Verify"}
+          {pending ? "Searching..." : "Verify"}
         </button>
       </div>
     </form>

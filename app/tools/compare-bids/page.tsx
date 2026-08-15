@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function CompareBidsPage() {
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <Suspense fallback={<p className="text-sm text-[var(--muted)]">Loading compare bids…</p>}>
+      <Suspense fallback={<p className="text-sm text-[var(--muted)]">Loading compare bids...</p>}>
         <CompareBidsClient />
       </Suspense>
     </main>

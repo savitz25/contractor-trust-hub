@@ -114,14 +114,14 @@ export function browseHref(
 }
 
 export const SORT_LABELS: Record<BrowseSort, string> = {
-  name: "Name A–Z",
+  name: "Name A-Z",
   longest: "Longest licensed",
   updated: "Recently updated",
   entity: "Entity linked first",
 };
 
 export const SORT_DISCLOSURE =
-  "Browse order is for scanning this extract — not a quality ranking or paid placement.";
+  "Browse order is for scanning this extract - not a quality ranking or paid placement.";
 
 /** List results vs city-clustered navigation (no map — no lat/lng in extracts). */
 export type BrowseView = "list" | "cities";
@@ -159,7 +159,7 @@ const DISC_CHIP: Record<Exclude<BrowseDiscipline, "any">, string> = {
 
 const TENURE_CHIP: Record<Exclude<BrowseTenure, "any">, string> = {
   lt5: "Licensed < 5 years",
-  "5to15": "Licensed 5–15 years",
+  "5to15": "Licensed 5-15 years",
   gt15: "Licensed 15+ years",
 };
 

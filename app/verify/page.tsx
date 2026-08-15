@@ -167,7 +167,7 @@ export default async function VerifyPage({ searchParams }: Props) {
           },
           {
             t: "What you’ll see",
-            d: "Plain-language trade type (air conditioning, electrical, …), status, county when available — then a Trust Report.",
+            d: "Plain-language trade type (air conditioning, electrical, ...), status, county when available — then a Trust Report.",
           },
         ]
       : isOr
@@ -264,7 +264,7 @@ export default async function VerifyPage({ searchParams }: Props) {
                   ? [
                       {
                         t: "DHBC license number",
-                        d: "Electrical (CE…), HVAC (HM…), and plumbing (M…) numbers from cards or invoices are most precise.",
+                        d: "Electrical (CE...), HVAC (HM...), and plumbing (M...) numbers from cards or invoices are most precise.",
                       },
                       {
                         t: "Name or DBA",

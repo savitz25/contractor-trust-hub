@@ -127,4 +127,4 @@ export type QuoteRequestPayload = {
 };
 
 export const COST_DISCLAIMER =
-  "Conceptual planning ranges only — not a formal bid or guarantee. Actual costs depend on site conditions, materials, labor, and scope.";
+  "Conceptual planning ranges only - not a formal bid or guarantee. Actual costs depend on site conditions, materials, labor, and scope.";

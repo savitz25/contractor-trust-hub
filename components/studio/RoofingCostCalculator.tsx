@@ -341,7 +341,7 @@ export function RoofingCostCalculator() {
               onClick={persistProjectContext}
               className="btn-primary inline-flex min-h-12 items-center justify-center px-5 text-sm no-underline"
             >
-              Find verified roofers →
+              Find verified roofers
             </Link>
             <Link
               href={planFlowHref}
@@ -424,7 +424,7 @@ export function RoofingCostCalculator() {
             onClick={persistProjectContext}
             className="btn-primary shrink-0 px-4 py-2.5 text-sm no-underline"
           >
-            Find roofers →
+            Find roofers
           </Link>
         </div>
       </div>

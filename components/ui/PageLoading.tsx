@@ -5,7 +5,7 @@ type Props = {
 };
 
 export function PageLoading({
-  message = "Loading…",
+  message = "Loading...",
   variant = "search",
 }: Props) {
   return (

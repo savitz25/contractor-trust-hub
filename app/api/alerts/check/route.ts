@@ -52,7 +52,7 @@ export async function POST() {
         events.push({
           kind: "license_status",
           title: "License status change detected",
-          body: `License status change detected in current board extracts (${w.licenseStatus} → ${licStatus}) for ${w.name}.`,
+          body: `License status change detected in current board extracts (${w.licenseStatus} -> ${licStatus}) for ${w.name}.`,
         });
       }
       if (
@@ -64,7 +64,7 @@ export async function POST() {
         events.push({
           kind: "entity_status",
           title: "Entity status appears changed",
-          body: `Entity status appears changed in current extracts (${w.entityStatus} → ${entStatus}) for ${w.name}.`,
+          body: `Entity status appears changed in current extracts (${w.entityStatus} -> ${entStatus}) for ${w.name}.`,
         });
       }
       if (

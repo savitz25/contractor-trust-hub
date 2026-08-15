@@ -176,7 +176,7 @@ export function HomeContinuity() {
             href="/account"
             className="text-xs font-semibold text-[var(--navy)] no-underline hover:underline"
           >
-            Save my work →
+            Save my work
           </Link>
         </div>
 

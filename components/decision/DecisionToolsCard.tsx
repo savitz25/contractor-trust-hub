@@ -99,7 +99,7 @@ export function DecisionToolsLinks({
         Decision tools
       </p>
       <h2 className="mt-1 text-lg font-semibold text-[var(--text)]">
-        Property → permits → scope → quotes → verify → checklist
+        Property, permits, scope, quotes, verify, checklist
       </h2>
       <p className="mt-1 text-sm text-[var(--muted)]">
         Educational tools to prepare before you hire — not rankings or marketplace bids.
@@ -120,7 +120,7 @@ export function DecisionToolsLinks({
         href="/tools"
         className="mt-3 inline-block text-xs font-semibold text-[var(--navy)] no-underline hover:underline"
       >
-        All decision tools →
+        All decision tools
       </Link>
     </div>
   );

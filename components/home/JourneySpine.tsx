@@ -95,7 +95,7 @@ export function JourneySpine() {
                   href={step.href}
                   className="mt-2 inline-block text-xs font-semibold text-[var(--navy)] no-underline hover:underline"
                 >
-                  {step.linkLabel} →
+                  {step.linkLabel}
                 </Link>
               </div>
             </li>

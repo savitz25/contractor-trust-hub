@@ -239,7 +239,7 @@ export function projectDashboardActions(ctx: {
       body: "Preserve warranties, documents, and contractor history on the property timeline.",
       primary: {
         href: `#complete-passport`,
-        label: "Mark complete → Passport",
+        label: "Mark complete - Passport",
         event: "project_completed",
       },
       secondary: [
