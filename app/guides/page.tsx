@@ -59,7 +59,7 @@ export default function GuidesIndexPage() {
           Verify a contractor
         </Link>
         <Link
-          href="/plan"
+          href="/plan/start"
           className="inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] px-4 text-sm font-medium text-[var(--navy)] no-underline"
         >
           Plan a project

@@ -124,7 +124,7 @@ export function GuideShell({
             </p>
             <ul className="mt-2 space-y-1.5 text-sm">
               <li>
-                <Link href="/plan" className="text-[var(--navy)] hover:underline">
+                <Link href="/plan/start" className="text-[var(--navy)] hover:underline">
                   Plan a project
                 </Link>
               </li>

@@ -5,7 +5,7 @@ export const JOURNEY_STEPS = [
     n: 1,
     title: "Plan your scope",
     body: "Define the work and get planning ranges before you talk to contractors.",
-    href: "/plan",
+    href: "/plan/start",
     linkLabel: "Plan a project",
   },
   {

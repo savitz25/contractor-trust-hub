@@ -24,7 +24,7 @@ function pathsFor(s: EvidenceState): { href: string; label: string }[] {
   if (s.browseEnabled || s.depth === "full_journey") {
     return [
       { href: verifyHref, label: "Verify" },
-      { href: "/plan", label: "Plan" },
+      { href: "/plan/start", label: "Plan" },
       { href: "/florida", label: "Explore" },
     ];
   }

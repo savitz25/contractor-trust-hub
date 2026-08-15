@@ -5,9 +5,9 @@ import { PlanFlow } from "@/components/plan/PlanFlow";
 import { pageMetadata } from "@/lib/seo/page-meta";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Plan your project — cost ranges & verified contractors",
+  title: "Florida plan — cost ranges & verified contractors",
   description:
-    "Describe a Florida home project, see conceptual planning cost ranges, and match verified licensed contractors. Planning only — not a bid. Plan clearly. Verify thoroughly.",
+    "Describe a Florida home project, see conceptual planning cost ranges, and match verified licensed contractors. Planning only — not a bid. Full plan tools are Florida-first.",
   path: "/plan",
 });
 
@@ -17,14 +17,26 @@ export default function PlanPage() {
       <section className="border-b border-[var(--border)] bg-white/60">
         <div className="mx-auto max-w-6xl px-4 pb-8 pt-8 sm:px-6 sm:pb-12 sm:pt-14">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--navy)]">
-            Plan → verify → hire
+            Florida · Plan → verify → hire
           </p>
           <h1 className="mt-3 max-w-2xl text-2xl font-semibold leading-tight tracking-tight text-[var(--text)] sm:text-4xl">
-            Plan your project. See realistic ranges. Find verified contractors.
+            Plan your Florida project. See realistic ranges. Find verified contractors.
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--muted)] sm:mt-4 sm:text-base">
-            A short intake — not a design studio. Get conceptual cost context for Florida project
-            types, then match active licensed contractors from official public records.
+            A short intake — not a design studio. Conceptual cost context for{" "}
+            <strong className="font-medium text-[var(--text)]">Florida</strong> project types, then
+            match active licensed contractors from official public records. Not nationwide
+            planning.
+          </p>
+          <p className="mt-2 text-sm text-[var(--muted)]">
+            Work outside Florida?{" "}
+            <Link
+              href="/plan/start"
+              className="font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+            >
+              Choose your state first
+            </Link>
+            .
           </p>
           <p className="mt-3 text-sm text-[var(--muted)]">
             Want a deeper cost walkthrough?{" "}

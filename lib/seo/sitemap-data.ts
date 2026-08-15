@@ -90,6 +90,7 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/verify?state=az", priority: 0.9, changefreq: "weekly" },
     { path: "/verify?state=la", priority: 0.9, changefreq: "weekly" },
     { path: "/verify?state=ms", priority: 0.9, changefreq: "weekly" },
+    { path: "/plan/start", priority: 0.92, changefreq: "weekly" },
     { path: "/plan", priority: 0.9, changefreq: "weekly" },
     { path: "/studios", priority: 0.9, changefreq: "weekly" },
     { path: "/tools", priority: 0.92, changefreq: "weekly" },

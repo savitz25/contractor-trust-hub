@@ -22,10 +22,13 @@ export function IntentRouter() {
     },
     {
       id: "plan",
-      href: "/plan",
+      href: "/plan/start",
       title: "I’m planning a project",
-      bestWhen: "Best when you’re still deciding Florida scope and cost.",
-      bullets: ["Kitchen, bath, roofing calculators", "Florida planning tools — then verify"],
+      bestWhen: "Best when you’re deciding where the work is and what tools apply.",
+      bullets: [
+        "Choose your state first",
+        "Florida: plan + studios; other live states: Verify",
+      ],
       cta: "Start planning",
       accent: true,
     },

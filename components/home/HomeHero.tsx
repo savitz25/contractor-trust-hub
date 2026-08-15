@@ -49,13 +49,13 @@ export function HomeHero() {
             </span>
           </Link>
           <Link
-            href="/plan"
+            href="/plan/start"
             data-entry-path="plan"
             className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--navy)]/20 bg-[var(--navy)] px-6 py-3 text-center text-sm font-semibold text-white no-underline shadow-[var(--shadow-sm)] hover:brightness-110 sm:min-h-11"
           >
             I&apos;m planning a project
             <span className="ml-1.5 text-[11px] font-medium text-white/80">
-              → Plan (Florida)
+              → Choose state
             </span>
           </Link>
         </div>

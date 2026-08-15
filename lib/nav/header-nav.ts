@@ -26,7 +26,8 @@ export const PLAN_GROUP: HeaderGroup = {
   id: "plan",
   label: "Plan",
   links: [
-    { href: "/plan", label: "Plan a project" },
+    { href: "/plan/start", label: "Plan a project", hint: "Choose state first" },
+    { href: "/plan", label: "Florida plan intake", hint: "Full FL tools" },
     { href: "/studios", label: "Project Studios" },
     { href: "/studio/kitchen", label: "Kitchen calculator" },
     { href: "/studio/bathroom", label: "Bathroom calculator" },

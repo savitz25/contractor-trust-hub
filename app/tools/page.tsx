@@ -129,11 +129,11 @@ export default function ToolsHubPage() {
           <p className="mt-1 text-xs text-[var(--muted)]">Kitchen, bath, roofing scope first</p>
         </Link>
         <Link
-          href="/plan"
+          href="/plan/start"
           className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-sm no-underline"
         >
           <p className="font-semibold text-[var(--text)]">Plan a project</p>
-          <p className="mt-1 text-xs text-[var(--muted)]">Quick path to ranges + matches</p>
+          <p className="mt-1 text-xs text-[var(--muted)]">Choose state first — FL full plan tools</p>
         </Link>
         <Link
           href="/verify"

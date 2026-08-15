@@ -4,7 +4,8 @@ import { CONTRACTOR_NETWORK_LINKS } from "@/lib/network/network-links";
 import { getLiveVerifyNavLinks } from "@/lib/states/config";
 
 const planLinks = [
-  { href: "/plan", label: "Plan a project" },
+  { href: "/plan/start", label: "Plan a project" },
+  { href: "/plan", label: "Florida plan intake" },
   { href: "/studios", label: "Project Studios" },
   { href: "/studio/kitchen", label: "Kitchen calculator" },
   { href: "/studio/bathroom", label: "Bathroom calculator" },
