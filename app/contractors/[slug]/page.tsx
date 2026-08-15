@@ -227,7 +227,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
               ·
             </span>
             <Link href="/verify" className="text-[var(--muted)] no-underline hover:text-[var(--text)]">
-              Florida Verify
+              All states
             </Link>
             {isNj ? (
               <>
