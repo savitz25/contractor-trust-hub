@@ -17,11 +17,13 @@ import {
   LicensesSection,
   SourcesFooter,
 } from "@/components/contractor/TrustReport";
+import { EntityLineageSection } from "@/components/contractor/EntityLineageSection";
 import { TrustNextActions } from "@/components/contractor/TrustNextActions";
 import { TrustReportActions } from "@/components/contractor/TrustReportActions";
 import { TrustReportNav } from "@/components/contractor/TrustReportNav";
 import { WhatWeChecked } from "@/components/contractor/WhatWeChecked";
 import { NjNextActions } from "@/components/contractor/NjNextActions";
+import { loadFloridaEntityLineage } from "@/lib/contractors/entity-lineage";
 import { ArizonaCoverageBanner } from "@/components/search/ArizonaCoverageBanner";
 import { CaliforniaCoverageBanner } from "@/components/search/CaliforniaCoverageBanner";
 import { KentuckyCoverageBanner } from "@/components/search/KentuckyCoverageBanner";
@@ -176,6 +178,12 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const correctionHref = `/corrections?slug=${encodeURIComponent(contractor.slug)}${
     primary?.externalKey ? `&license=${encodeURIComponent(primary.externalKey)}` : ""
   }`;
+
+  // FL only: officer-name lineage from stored Sunbiz officers (no invented links)
+  const entityLineage =
+    isFlFull && contractor.entities.length > 0
+      ? await loadFloridaEntityLineage(contractor.entities)
+      : null;
 
   return (
     <main
@@ -516,6 +524,8 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           correctionHref={correctionHref}
           sticky
         />
+
+        {entityLineage ? <EntityLineageSection lineage={entityLineage} /> : null}
 
         {isFlFull ? (
           <ProjectFitBanner

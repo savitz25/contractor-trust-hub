@@ -2,6 +2,18 @@
 
 Official Florida Division of Corporations entity data via **public SFTP** — no third-party API.
 
+## Product display (Trust Report lineage)
+
+Trust Reports may show **Related entities & principals** for Florida profiles with a high-confidence contractor↔entity link:
+
+| Field | Use |
+|-------|-----|
+| `entities.officers` (JSONB) | Principals as published (title, name, address fields) |
+| Exact normalized officer name | Associate other `fl_sunbiz` entities that list the same principal |
+| `contractor_entities.confidence` / `match_method` | Why the primary entity is linked (unchanged thresholds, ≥ 0.90) |
+
+Not a fraud graph. No fuzzy person matching beyond exact name keys. See `docs/TRUST_REPORT.md` (Phase 7) and `lib/contractors/entity-lineage.ts`.
+
 Hub: [Data Downloads](https://dos.fl.gov/sunbiz/other-services/data-downloads/)  
 Definitions: [Corporate File Definitions](https://dos.sunbiz.org/data-definitions/cor.html)  
 Usage guide: [Data Usage Guide](https://dos.fl.gov/sunbiz/other-services/data-downloads/data-usage-guide/)

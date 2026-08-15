@@ -22,6 +22,29 @@ Above the fold, every Trust Report shows:
 
 Full dossier (license rows, discipline, entity detail, FL insurance/activity, tools) stays **below**.
 
+## Florida entity lineage (Phase 7)
+
+**Section id:** `#entity-lineage` — **Florida only**, only when a high-confidence Sunbiz link exists **and** there is something reliable to show (officers and/or related entities).
+
+| Shown | Source |
+|-------|--------|
+| Linked entity name, status, document number, formation, match method | `entities` + `contractor_entities` (confidence ≥ 0.90, role sunbiz/linked) |
+| Officers / principals | `entities.officers` JSONB as published |
+| Related entities | Other `fl_sunbiz` rows whose officers share an **exact** normalized principal name key |
+| Official confirm | Link to Sunbiz search (document number for homeowner confirmation) |
+
+**Rules**
+
+- Exact officer-name association only (normalize: upper, strip punctuation/suffixes, collapse spaces).  
+- Require multi-token names (length ≥ 8) — no single-token weak keys; skip corporate-looking agent strings.  
+- Do **not** invent links or lower DBPR↔Sunbiz match thresholds.  
+- No phoenix score, risk rating, or “avoid” language.  
+- **Hide the section entirely** when lineage is empty/weak (no empty scare block).  
+- Non-FL reports never render this block.
+
+Helper: `lib/contractors/entity-lineage.ts` (`loadFloridaEntityLineage`).  
+UI: `components/contractor/EntityLineageSection.tsx` (collapsible when dense).
+
 ## Shareable evidence summary (Phase 4B)
 
 **Route:** `/contractors/[slug]/summary` (always `noindex`)

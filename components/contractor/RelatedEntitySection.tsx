@@ -48,23 +48,8 @@ export function RelatedEntitySection({
   const signals: EntitySignal[] = buildRelatedEntitySignals(contractor);
   const [open, setOpen] = useState(signals.length > 0 && signals.length <= 2);
 
-  if (signals.length === 0) {
-    return (
-      <section
-        id="related-entity"
-        className="scroll-mt-28 rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-4 sm:p-6"
-      >
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
-          Related entity signals
-        </h2>
-        <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-          No multi-entity or principal-overlap observations met our thresholds on this profile.
-          Absence of a signal is not a clearance — only that current extracts did not surface a
-          pattern we flag.
-        </p>
-      </section>
-    );
-  }
+  // Hide entirely when empty — no scare / empty-state section
+  if (signals.length === 0) return null;
 
   return (
     <section
