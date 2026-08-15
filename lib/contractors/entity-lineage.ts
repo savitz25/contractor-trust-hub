@@ -189,12 +189,13 @@ export async function loadFloridaEntityLineage(
 
   let rows: RelatedRow[] = [];
   try {
-    // Exact officer name key match on stored JSONB officers (fl_sunbiz only).
+    // Exact officer name key match on fl_sunbiz entities that already have a
+    // high-confidence contractor link (indexed via contractor_entities).
+    // Avoids full-table JSONB scan of all Sunbiz rows on Trust Report SSR.
     // Normalization mirrors normalizeOfficerKey (upper, strip punct, collapse space).
-    // Cap results for Trust Report SSR.
     rows = await query<RelatedRow>(
       `
-      SELECT
+      SELECT DISTINCT ON (e.id, matched_key)
         e.id,
         e.external_key,
         e.legal_name,
@@ -203,19 +204,24 @@ export async function loadFloridaEntityLineage(
         e.formation_date,
         e.officers,
         e.last_verified_at,
-        upper(trim(regexp_replace(
+        matched_key
+      FROM contractor_entities ce
+      JOIN entities e ON e.id = ce.entity_id
+      CROSS JOIN LATERAL (
+        SELECT upper(trim(regexp_replace(
           regexp_replace(COALESCE(o->>'name', ''), '[.,''"/\\\\-]+', ' ', 'g'),
           '\\s+', ' ', 'g'
         ))) AS matched_key
-      FROM entities e
-      CROSS JOIN LATERAL jsonb_array_elements(COALESCE(e.officers, '[]'::jsonb)) AS o
+        FROM jsonb_array_elements(COALESCE(e.officers, '[]'::jsonb)) AS o
+      ) keys
       WHERE e.source_system = 'fl_sunbiz'
+        AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
+        AND ce.confidence IS NOT NULL
+        AND ce.confidence >= 0.90
         AND NOT (e.id = ANY($1::uuid[]))
-        AND upper(trim(regexp_replace(
-          regexp_replace(COALESCE(o->>'name', ''), '[.,''"/\\\\-]+', ' ', 'g'),
-          '\\s+', ' ', 'g'
-        ))) = ANY($2::text[])
-      LIMIT 60
+        AND keys.matched_key = ANY($2::text[])
+      ORDER BY e.id, matched_key
+      LIMIT 40
       `,
       [excludeIds, keys]
     );
@@ -309,7 +315,7 @@ export async function loadFloridaEntityLineage(
     related: relatedCapped,
     evidenceNote:
       relatedCapped.length > 0
-        ? "Related entities appear because they publish the same officer/principal name(s) in our Florida Sunbiz extract (exact name key after normalization). This is not an accusation of misconduct, and it is not a complete officer graph."
-        : "Principals shown as published on the high-confidence Sunbiz link. No other entities in our extract shared those exact principal names under our association rules.",
+        ? "Related entities appear because they publish the same officer/principal name(s) in our Florida Sunbiz extract (exact name key after normalization) and are already high-confidence linked to a contractor profile in our product. This is not an accusation of misconduct, and it is not a complete officer graph of every Sunbiz filing."
+        : "Principals shown as published on the high-confidence Sunbiz link. No other high-confidence-linked entities in our product shared those exact principal names under our association rules.",
   };
 }

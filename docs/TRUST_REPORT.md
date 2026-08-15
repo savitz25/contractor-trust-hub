@@ -30,18 +30,19 @@ Full dossier (license rows, discipline, entity detail, FL insurance/activity, to
 |-------|--------|
 | Linked entity name, status, document number, formation, match method | `entities` + `contractor_entities` (confidence ≥ 0.90, role sunbiz/linked) |
 | Officers / principals | `entities.officers` JSONB as published |
-| Related entities | Other `fl_sunbiz` rows whose officers share an **exact** normalized principal name key |
+| Related entities | Other high-confidence-linked `fl_sunbiz` entities whose officers share an **exact** normalized principal name key |
 | Official confirm | Link to Sunbiz search (document number for homeowner confirmation) |
 
 **Rules**
 
 - Exact officer-name association only (normalize: upper, strip punctuation/suffixes, collapse spaces).  
 - Require multi-token names (length ≥ 8) — no single-token weak keys; skip corporate-looking agent strings.  
+- Related scan is limited to entities already in `contractor_entities` at confidence ≥ 0.90 (SSR-safe; no full Sunbiz table scan).  
 - Do **not** invent links or lower DBPR↔Sunbiz match thresholds.  
 - No phoenix score, risk rating, or “avoid” language.  
 - **Hide the section entirely** when lineage is empty/weak (no empty scare block).  
-- Non-FL reports never render this block.
-
+- Non-FL reports never render this block.  
+- Residual: unlinked-only Sunbiz filings with the same principal (not high-confidence linked to any contractor in product) are not graph-expanded yet.
 Helper: `lib/contractors/entity-lineage.ts` (`loadFloridaEntityLineage`).  
 UI: `components/contractor/EntityLineageSection.tsx` (collapsible when dense).
 
