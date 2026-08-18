@@ -1,7 +1,18 @@
-import type { JourneyModule } from "@/lib/network/journey-handoff";
+"use client";
+
+import type { JourneyCta, JourneyModule } from "@/lib/network/journey-handoff";
+import { trackJourneyHandoff } from "@/lib/network/journey-analytics";
 
 export function JourneyNextStep({ module }: { module: JourneyModule | null }) {
   if (!module) return null;
+  const onClick = (cta: JourneyCta) => {
+    trackJourneyHandoff({
+      destination_hub: cta.destination_hub,
+      surface: module.surface,
+      journey_id: cta.journey_id,
+      context_type: cta.context_type,
+    });
+  };
   return (
     <aside
       className="mx-auto my-8 max-w-6xl rounded-2xl border border-[var(--border)] bg-white px-4 py-5 sm:px-6"
@@ -25,6 +36,7 @@ export function JourneyNextStep({ module }: { module: JourneyModule | null }) {
           href={module.primary.href}
           className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--accent)] px-4 text-sm font-semibold text-[var(--navy)] no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
           rel="noopener noreferrer"
+          onClick={() => onClick(module.primary)}
         >
           {module.primary.label}
         </a>
@@ -33,6 +45,7 @@ export function JourneyNextStep({ module }: { module: JourneyModule | null }) {
             href={module.secondary.href}
             className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--border)] px-4 text-sm font-semibold text-[var(--navy)] no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             rel="noopener noreferrer"
+            onClick={() => onClick(module.secondary!)}
           >
             {module.secondary.label}
           </a>

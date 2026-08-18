@@ -125,6 +125,9 @@ export function buildSafeHandoffUrl(
 export type JourneyCta = {
   href: string;
   label: string;
+  destination_hub: "insurance" | "move";
+  journey_id: string;
+  context_type: string;
 };
 
 export type JourneyModule = {
@@ -133,7 +136,19 @@ export type JourneyModule = {
   body: string;
   primary: JourneyCta;
   secondary?: JourneyCta;
+  surface:
+    | "contractor_plan_completion"
+    | "contractor_home_next_step"
+    | "contractor_trust_report_next_step";
 };
+
+function analyticsSurface(
+  surface: "home" | "plan" | "trust-report"
+): JourneyModule["surface"] {
+  if (surface === "plan") return "contractor_plan_completion";
+  if (surface === "trust-report") return "contractor_trust_report_next_step";
+  return "contractor_home_next_step";
+}
 
 export function resolveContractorJourneyModule(
   ctx: NetworkJourneyContext,
@@ -162,22 +177,42 @@ export function resolveContractorJourneyModule(
 
   if (moveRelevant && surface !== "trust-report") {
     return {
+      surface: analyticsSurface(surface),
       eyebrow: "Part of the Ask Trust Hub research network",
       heading: "Preparing a move around this project?",
       body: "Only when the work is pre-move, post-move, or move-in preparation. License verification stays the main task here.",
-      primary: { href: move, label: "Plan the move" },
+      primary: {
+        href: move,
+        label: "Plan the move",
+        destination_hub: "move",
+        journey_id: "relocate",
+        context_type: "home_project",
+      },
       secondary: coverageRelevant
-        ? { href: insurance, label: "Research insurance" }
+        ? {
+            href: insurance,
+            label: "Research insurance",
+            destination_hub: "insurance",
+            journey_id: "coverage",
+            context_type: "home_project",
+          }
         : undefined,
     };
   }
 
   if (coverageRelevant) {
     return {
+      surface: analyticsSurface(surface),
       eyebrow: "Part of the Ask Trust Hub research network",
       heading: "Check how your project may affect coverage",
       body: "Major property work can change homeowners or related coverage questions. This is educational research — not a claim decision and not a statement that anything is covered.",
-      primary: { href: insurance, label: "Research insurance" },
+      primary: {
+        href: insurance,
+        label: "Research insurance",
+        destination_hub: "insurance",
+        journey_id: "coverage",
+        context_type: "home_project",
+      },
     };
   }
 

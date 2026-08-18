@@ -27,6 +27,13 @@ assert(!src.includes("p.set('email'"), "does not forward email");
 assert(layout.includes("data-network-standard"), "version marker on body");
 assert(report.includes("JourneyNextStep"), "trust report mounts next-step after evidence");
 assert(report.includes("trust-report"), "trust report uses trust-report surface");
+const analytics = readFileSync(join(root, "lib/network/journey-analytics.ts"), "utf8");
+const nextStep = readFileSync(join(root, "components/network/JourneyNextStep.tsx"), "utf8");
+assert(analytics.includes("journey_handoff_click"), "contractor uses journey_handoff_click");
+assert(analytics.includes("FORBIDDEN"), "contractor forbids PII keys");
+assert(nextStep.includes("trackJourneyHandoff"), "JourneyNextStep fires analytics");
+assert(nextStep.includes("onClick"), "click handler present");
+assert(!analytics.includes("contractorName"), "no contractor name in analytics");
 
 if (failed) {
   console.error(`${failed} assertion(s) failed`);
