@@ -33,9 +33,10 @@ export function SitewideJsonLd() {
           url: absoluteUrl("/brand/contractor-trust-hub-logo.svg"),
         },
         description:
-          "Independent contractor verification from official public records. Florida is the full journey; other states are Verify-first with honest board scope. Not a marketplace.",
+          "Independent contractor license and registration research with official board evidence and state-specific depth. Not a marketplace.",
         parentOrganization: {
           "@type": "Organization",
+          "@id": "https://www.asktrusthub.com/#organization",
           name: "Ask Trust Hub",
           url: "https://www.asktrusthub.com",
         },

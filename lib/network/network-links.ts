@@ -33,6 +33,18 @@ export const NETWORK_BAR_HUBS = [
     proseName: "Contractor Trust Hub",
     href: "https://www.contractortrusthub.com",
   },
+  {
+    id: "senior" as const,
+    shortLabel: "Senior",
+    proseName: "SeniorTrustHub",
+    href: "https://www.seniortrusthub.com",
+  },
+  {
+    id: "investor" as const,
+    shortLabel: "Investor",
+    proseName: "InvestorTrustHub",
+    href: "https://www.investortrusthub.com",
+  },
 ] as const;
 
 export type NetworkBarHubId = (typeof NETWORK_BAR_HUBS)[number]["id"];
@@ -49,7 +61,7 @@ export const SWITCH_HUB_LINKS = [
     label: "Ask Trust Hub",
     shortLabel: "Ask",
     href: "https://www.asktrusthub.com",
-    blurb: "Parent knowledge & concierge layer",
+    blurb: "Parent research & standards layer",
     current: false,
   },
   {
@@ -81,8 +93,24 @@ export const SWITCH_HUB_LINKS = [
     label: "Contractor Trust Hub",
     shortLabel: "Contractor",
     href: "https://www.contractortrusthub.com",
-    blurb: "Florida license verification & project planning",
+    blurb: "State licensing-board contractor research",
     current: true,
+  },
+  {
+    id: "senior" as const,
+    label: "SeniorTrustHub",
+    shortLabel: "Senior",
+    href: "https://www.seniortrusthub.com",
+    blurb: "CMS / supported state senior-care research",
+    current: false,
+  },
+  {
+    id: "investor" as const,
+    label: "InvestorTrustHub",
+    shortLabel: "Investor",
+    href: "https://www.investortrusthub.com",
+    blurb: "SEC / IARD investment-firm research",
+    current: false,
   },
 ] as const;
 

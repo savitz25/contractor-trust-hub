@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s · Contractor Trust Hub",
   },
   description:
-    "Independent Florida contractor verification using official DBPR licenses, Sunbiz entities, and board discipline. Not a marketplace — research before you hire.",
+    "Independent contractor license and registration research with official board evidence and state-specific depth. Not a marketplace — research before you hire.",
   keywords: [
     "Florida contractor license",
     "verify contractor",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Contractor Trust Hub — Before you hire, verify",
     description:
-      "Independent Florida contractor verification using official DBPR licenses, Sunbiz entities, and board discipline.",
+      "Independent contractor license and registration research with official board evidence and state-specific depth.",
     type: "website",
     siteName: "Contractor Trust Hub",
     locale: "en_US",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Contractor Trust Hub — Before you hire, verify",
-    description: "Before you hire, verify. Florida contractor license evidence.",
+    description: "Before you hire, verify. Official license evidence with state-specific depth.",
     images: ["/brand/contractor-trust-hub-logo.svg"],
   },
   robots: {

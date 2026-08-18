@@ -4,9 +4,9 @@ import { useCallback, useEffect, useId, useState } from "react";
 import {
   ASK_TRUST_HUB,
   CURRENT_HUB_ID,
-  NETWORK_BAR_HUBS,
   SWITCH_HUB_LINKS,
 } from "@/lib/network/network-links";
+import { SwitchHubMenu } from "@/components/network/SwitchHubMenu";
 
 /**
  * Top network bar — matches Move / Lender / Insurance:
@@ -43,31 +43,14 @@ export function AskNetworkBar() {
           <span className="sm:hidden">Ask Trust Hub</span>
         </a>
 
-        <nav aria-label="Ask Trust Hub network" className="hidden items-center gap-1 sm:flex">
-          {NETWORK_BAR_HUBS.map((h) => {
-            const active = h.id === CURRENT_HUB_ID;
-            if (active) {
-              return (
-                <span
-                  key={h.id}
-                  className="rounded-md bg-white px-2.5 py-1.5 font-semibold text-[var(--navy)] shadow-[var(--shadow-sm)] ring-1 ring-[var(--border)]"
-                  aria-current="page"
-                >
-                  {h.shortLabel}
-                </span>
-              );
-            }
-            return (
-              <a
-                key={h.id}
-                href={h.href}
-                className="rounded-md px-2.5 py-1.5 font-medium text-[var(--muted)] no-underline hover:bg-white/80 hover:text-[var(--navy)]"
-                rel="noopener noreferrer"
-              >
-                {h.shortLabel}
-              </a>
-            );
-          })}
+        <div className="hidden items-center gap-2 sm:flex">
+          <span
+            className="rounded-md bg-white px-2.5 py-1.5 font-semibold text-[var(--navy)] shadow-[var(--shadow-sm)] ring-1 ring-[var(--border)]"
+            aria-current="page"
+          >
+            Contractor
+          </span>
+          <SwitchHubMenu />
           <a
             href={ASK_TRUST_HUB.standardsUrl}
             className="rounded-md px-2.5 py-1.5 font-medium text-[var(--muted)] no-underline hover:bg-white/80 hover:text-[var(--navy)]"
@@ -75,7 +58,7 @@ export function AskNetworkBar() {
           >
             Standards
           </a>
-        </nav>
+        </div>
 
         <div className="sm:hidden">
           <button
