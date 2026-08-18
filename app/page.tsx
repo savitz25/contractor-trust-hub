@@ -15,6 +15,11 @@ import {
   liveStatesPlainList,
 } from "@/lib/states/config";
 import { pageMetadata } from "@/lib/seo/page-meta";
+import { JourneyNextStep } from "@/components/network/JourneyNextStep";
+import {
+  parseNetworkJourney,
+  resolveContractorJourneyModule,
+} from "@/lib/network/journey-handoff";
 
 const liveCount = getLiveStateCount();
 
@@ -24,7 +29,13 @@ export const metadata: Metadata = pageMetadata({
   path: "/",
 });
 
-export default function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const sp = searchParams ? await searchParams : {};
+  const journeyModule = resolveContractorJourneyModule(parseNetworkJourney(sp), "home");
   return (
     <main>
       {/* Returning users: continue project / passport / property */}
@@ -114,6 +125,7 @@ export default function HomePage() {
           <ResearchBrowse />
         </div>
       </section>
+      <JourneyNextStep module={journeyModule} />
     </main>
   );
 }

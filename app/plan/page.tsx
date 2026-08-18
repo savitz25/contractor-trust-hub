@@ -3,6 +3,11 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { PlanFlow } from "@/components/plan/PlanFlow";
 import { pageMetadata } from "@/lib/seo/page-meta";
+import { JourneyNextStep } from "@/components/network/JourneyNextStep";
+import {
+  parseNetworkJourney,
+  resolveContractorJourneyModule,
+} from "@/lib/network/journey-handoff";
 
 export const metadata: Metadata = pageMetadata({
   title: "Florida plan - cost ranges and verified contractors",
@@ -11,7 +16,13 @@ export const metadata: Metadata = pageMetadata({
   path: "/plan",
 });
 
-export default function PlanPage() {
+export default async function PlanPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const sp = searchParams ? await searchParams : {};
+  const journeyModule = resolveContractorJourneyModule(parseNetworkJourney(sp), "plan");
   return (
     <main>
       <section className="border-b border-[var(--border)] bg-white/60">
@@ -91,6 +102,7 @@ export default function PlanPage() {
           <PlanFlow />
         </Suspense>
       </section>
+      <JourneyNextStep module={journeyModule} />
     </main>
   );
 }

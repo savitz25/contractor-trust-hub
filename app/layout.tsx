@@ -7,6 +7,7 @@ import { JourneyContextChip } from "@/components/funnel/JourneyContextChip";
 import { PropertyContextChip } from "@/components/property/PropertyContextChip";
 import { SitewideJsonLd } from "@/components/seo/JsonLd";
 import { getSiteUrl } from "@/lib/site";
+import { ASK_NETWORK_STANDARD_VERSION } from "@/lib/network/standard-version";
 import "./globals.css";
 
 const siteUrl = getSiteUrl();
@@ -71,7 +72,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex min-h-screen flex-col antialiased">
+      <body
+        className="flex min-h-screen flex-col antialiased"
+        data-network-standard={ASK_NETWORK_STANDARD_VERSION}
+      >
         <SitewideJsonLd />
         <div className="print:hidden">
           <SiteHeader />

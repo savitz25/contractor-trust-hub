@@ -35,6 +35,11 @@ import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
 import { WashingtonCoverageBanner } from "@/components/search/WashingtonCoverageBanner";
 import { StudioHandoffBanner } from "@/components/studios/StudioHandoffBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
+import { JourneyNextStep } from "@/components/network/JourneyNextStep";
+import {
+  parseNetworkJourney,
+  resolveContractorJourneyModule,
+} from "@/lib/network/journey-handoff";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { displayStatusLabel, formatDateTime, statusLabel } from "@/lib/contractors/format";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
@@ -99,6 +104,10 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const slug = decodeURIComponent(raw);
   const sp = await searchParams;
   const studioHandoff = parseHandoffQuery(sp);
+  const journeyModule = resolveContractorJourneyModule(
+    parseNetworkJourney(sp),
+    "trust-report"
+  );
 
   let contractor;
   try {
@@ -586,6 +595,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         <SourcesFooter contractor={contractor} state={state} />
 
         <LegalNotice />
+        <JourneyNextStep module={journeyModule} />
       </div>
     </main>
   );

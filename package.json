@@ -21,7 +21,8 @@
     "audit:joins": "node scripts/audit_permit_joins.mjs",
     "audit:production": "node scripts/audit_production_joins.mjs",
     "ops:snapshot": "node scripts/ops_snapshot.mjs",
-    "test:ops": "node scripts/test_ops_smoke.mjs"
+    "test:ops": "node scripts/test_ops_smoke.mjs",
+    "check:journey-v21": "node scripts/check-journey-v21.mjs"
   },
   "dependencies": {
     "next": "^15.5.23",
