@@ -49,3 +49,14 @@ export function resolveShareOrigin(): string {
 export function shareOgImageAbsoluteUrl(origin: string = SHARE_HUB.origin): string {
   return `${origin.replace(/\/$/, "")}${SHARE_HUB.ogImagePath}?v=${SHARE_HUB.ogImageVersion}`;
 }
+
+/** Stable contextual OG URL. Nested opengraph-image.tsx paths are hashed by Next and 404. */
+export function shareRouteOgImage(routePath: string, alt?: string) {
+  const path = (routePath.startsWith("/") ? routePath : `/${routePath}`).replace(/\/$/, "");
+  return {
+    url: `${SHARE_HUB.origin}${path}/share-og`,
+    width: SHARE_HUB.ogWidth,
+    height: SHARE_HUB.ogHeight,
+    alt: alt || SHARE_HUB.ogAlt,
+  };
+}

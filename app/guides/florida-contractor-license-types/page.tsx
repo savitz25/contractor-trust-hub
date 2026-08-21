@@ -4,14 +4,18 @@ import { GuideCtaRow, GuideH2, GuideShell } from "@/components/guides/GuideShell
 import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { getGuideBySlug } from "@/lib/guides/registry";
 import { pageMetadata } from "@/lib/seo/page-meta";
+import { shareRouteOgImage } from "@/lib/seo/share-hub";
 
 const guide = getGuideBySlug("florida-contractor-license-types")!;
+const og = shareRouteOgImage(guide.path, guide.title);
 
 export const metadata: Metadata = pageMetadata({
   title: guide.seoTitle,
   description: guide.description,
   path: guide.path,
   ogType: "article",
+  images: [og.url],
+  ogAlt: og.alt,
 });
 
 const FEATURED = ["CGC", "CBC", "CRC", "CCC", "RR", "CFC", "CAC", "CMC", "CPC", "SCC"] as const;

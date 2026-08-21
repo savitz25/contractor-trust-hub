@@ -14,6 +14,7 @@ export type PageMetaInput = {
   noIndex?: boolean;
   ogType?: "website" | "article" | "profile";
   images?: string[];
+  ogAlt?: string;
 };
 
 /**
@@ -24,6 +25,7 @@ export function pageMetadata(input: PageMetaInput): Metadata {
   const path = input.path.startsWith("/") ? input.path : `/${input.path}`;
   const images = input.images?.length ? input.images : [DEFAULT_OG_IMAGE];
   const pageUrl = absoluteUrl(path);
+  const ogAlt = input.ogAlt || SHARE_HUB.ogAlt;
 
   return {
     title: input.title,
@@ -42,14 +44,14 @@ export function pageMetadata(input: PageMetaInput): Metadata {
         url,
         width: SHARE_HUB.ogWidth,
         height: SHARE_HUB.ogHeight,
-        alt: SHARE_HUB.ogAlt,
+        alt: ogAlt,
       })),
     },
     twitter: {
       card: SHARE_HUB.twitterCard,
       title: input.title,
       description: input.description,
-      images: images.map((url) => ({ url, alt: SHARE_HUB.ogAlt })),
+      images: images.map((url) => ({ url, alt: ogAlt })),
     },
     robots: input.noIndex
       ? { index: false, follow: true }
