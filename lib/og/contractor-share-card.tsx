@@ -37,12 +37,42 @@ function Frame({ children, accent }: { children: ReactNode; accent: boolean }) {
           }}
         />
       ) : null}
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <span style={{ color: "#d4a017", fontSize: 28, fontWeight: 800, letterSpacing: 2 }}>
-            CONTRACTOR
-          </span>
-          <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: 3 }}>TRUST HUB</span>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+          {/* Canonical thin-bracket mark (stroke geometry — not legacy heavy fill) */}
+          <svg width="64" height="64" viewBox="0 0 36 36" fill="none">
+            <path
+              d="M9 5H5v26h4"
+              stroke="#F5C518"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M27 5h4v26h-4"
+              stroke="#F5C518"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <line x1="18" y1="11.2" x2="18" y2="18" stroke="#E8EEF9" strokeWidth="1.2" />
+            <line x1="12.2" y1="18" x2="18" y2="18" stroke="#E8EEF9" strokeWidth="1.2" />
+            <line x1="23.8" y1="18" x2="18" y2="18" stroke="#E8EEF9" strokeWidth="1.2" />
+            <line x1="18" y1="24.8" x2="18" y2="18" stroke="#E8EEF9" strokeWidth="1.2" />
+            <circle cx="18" cy="18" r="2.1" fill="#E8EEF9" />
+            <circle cx="18" cy="10.2" r="2.5" fill="#F28C28" />
+            <circle cx="11.2" cy="18" r="2.5" fill="#2F80ED" />
+            <circle cx="24.8" cy="18" r="2.5" fill="#2BBBAD" />
+            <circle cx="18" cy="25.8" r="2.5" fill="#8B5CF6" />
+          </svg>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span style={{ color: "#F5C518", fontSize: 28, fontWeight: 800, letterSpacing: 2 }}>
+              CONTRACTOR
+            </span>
+            <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: 3, color: "#E8EEF9" }}>
+              TRUST HUB
+            </span>
+          </div>
         </div>
         <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: 1, color: "#e8c547" }}>
           ASK TRUST HUB NETWORK

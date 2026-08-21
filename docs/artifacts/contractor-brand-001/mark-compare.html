@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Ask / Move / Contractor — canonical mark comparison</title>
+  <style>
+    body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #f8fafc; color: #0a2540; padding: 24px; }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    p { color: #1e293b; max-width: 720px; line-height: 1.45; }
+    .row { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 24px; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; text-align: center; width: 180px; }
+    .card h2 { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 12px; }
+    svg { display: block; margin: 0 auto; width: 96px; height: 96px; }
+    table { margin-top: 28px; border-collapse: collapse; font-size: 14px; }
+    th, td { border: 1px solid #e2e8f0; padding: 8px 12px; text-align: left; }
+    th { background: #f1f5f9; }
+  </style>
+</head>
+<body>
+  <h1>Canonical mark comparison @ 96px</h1>
+  <p>Identical geometry. Only accent (bracket color) and node palette tokens differ. Contractor must match Ask/Move stroke weight.</p>
+  <div class="row" id="board"></div>
+  <table>
+    <thead><tr><th>Spec</th><th>Ask</th><th>Move</th><th>Contractor NEW</th></tr></thead>
+    <tbody>
+      <tr><td>viewBox</td><td>0 0 36 36</td><td>0 0 36 36</td><td>0 0 36 36</td></tr>
+      <tr><td>bracket stroke</td><td>2.4</td><td>2.4</td><td>2.4</td></tr>
+      <tr><td>% of mark H</td><td>6.67%</td><td>6.67%</td><td>6.67%</td></tr>
+      <tr><td>outer dots r</td><td>2.5</td><td>2.5</td><td>2.5</td></tr>
+      <tr><td>center r</td><td>2.1</td><td>2.1</td><td>2.1</td></tr>
+      <tr><td>spacing</td><td>7.8</td><td>7.8</td><td>7.8</td></tr>
+      <tr><td>bracket accent</td><td>#0A2540 / Ask indigo in chrome</td><td>#FF5A1F family</td><td>#F5C518</td></tr>
+    </tbody>
+  </table>
+  <script>
+    function mark(bracket, nodes) {
+      const [t,l,r,b] = nodes;
+      return `<svg viewBox="0 0 36 36" fill="none">
+        <path d="M9 5H5v26h4" stroke="${bracket}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M27 5h4v26h-4" stroke="${bracket}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="18" y1="11.2" x2="18" y2="18" stroke="#0A2540" stroke-width="1.2"/>
+        <line x1="12.2" y1="18" x2="18" y2="18" stroke="#0A2540" stroke-width="1.2"/>
+        <line x1="23.8" y1="18" x2="18" y2="18" stroke="#0A2540" stroke-width="1.2"/>
+        <line x1="18" y1="24.8" x2="18" y2="18" stroke="#0A2540" stroke-width="1.2"/>
+        <circle cx="18" cy="18" r="2.1" fill="#0A2540"/>
+        <circle cx="18" cy="10.2" r="2.5" fill="${t}"/>
+        <circle cx="11.2" cy="18" r="2.5" fill="${l}"/>
+        <circle cx="24.8" cy="18" r="2.5" fill="${r}"/>
+        <circle cx="18" cy="25.8" r="2.5" fill="${b}"/>
+      </svg>`;
+    }
+    const hubs = [
+      { name: 'Ask', bracket: '#0A2540', nodes: ['#F86008','#3B82F6','#14B8A6','#8B5CF6'] },
+      { name: 'Move', bracket: '#FF5A1F', nodes: ['#F86008','#3B82F6','#14B8A6','#8B5CF6'] },
+      { name: 'Contractor NEW', bracket: '#F5C518', nodes: ['#F28C28','#2F80ED','#2BBBAD','#8B5CF6'] },
+    ];
+    const board = document.getElementById('board');
+    for (const h of hubs) {
+      const c = document.createElement('div');
+      c.className = 'card';
+      c.innerHTML = `<h2>${h.name}</h2>${mark(h.bracket, h.nodes)}`;
+      board.appendChild(c);
+    }
+  </script>
+</body>
+</html>

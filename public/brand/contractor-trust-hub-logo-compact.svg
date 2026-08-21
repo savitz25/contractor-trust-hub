@@ -1,12 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 88" fill="none" role="img" aria-label="Contractor Trust Hub">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 236 36" fill="none" role="img" aria-label="Contractor Trust Hub">
   <title>Contractor Trust Hub</title>
   <!--
-    FULL official lockup — CONTRACTOR-BRAND-001
-    Canonical TrustHub stroke brackets + four-point motif + slogan.
-    Slogan (locked): BEFORE YOU HIRE, VERIFY.
-    Compact header derivative: contractor-trust-hub-logo-compact.svg
+    COMPACT network-header lockup (36/33/30 optical slot).
+    Canonical thin brackets · no slogan (illegible at header size).
+    Full official lockup with slogan: contractor-trust-hub-logo.svg
   -->
-  <g transform="translate(4 10) scale(1.55)">
+  <g transform="translate(0 0)">
     <path d="M9 5H5v26h4" stroke="#F5C518" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M27 5h4v26h-4" stroke="#F5C518" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
     <line x1="18" y1="11.2" x2="18" y2="18" stroke="#0A2540" stroke-width="1.2"/>
@@ -20,8 +19,7 @@
     <circle cx="18" cy="25.8" r="2.5" fill="#8B5CF6"/>
   </g>
   <g font-family="Inter, system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-weight="800">
-    <text x="72" y="34" fill="#F5C518" font-size="26" letter-spacing="0.06em">CONTRACTOR</text>
-    <text x="72" y="58" fill="#0A2540" font-size="18" letter-spacing="0.14em">TRUST HUB</text>
-    <text x="72" y="78" fill="#F5C518" font-size="11" font-weight="700" letter-spacing="0.12em">BEFORE YOU HIRE, VERIFY.</text>
+    <text x="46" y="15" fill="#F5C518" font-size="13" letter-spacing="0.08em">CONTRACTOR</text>
+    <text x="46" y="29" fill="#0A2540" font-size="10" letter-spacing="0.16em">TRUST HUB</text>
   </g>
 </svg>

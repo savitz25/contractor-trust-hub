@@ -52,10 +52,10 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-6">
           <div className="sm:col-span-2 lg:col-span-2">
-            <BrandLogo height={32} surface="onLight" />
+            <BrandLogo height={56} surface="onLight" lockup="full" />
             <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
-              Before you hire, verify. Independent research using official public records — not a
-              marketplace, not paid rankings, not a lead board.
+              Independent research using official public records — not a marketplace, not paid
+              rankings, not a lead board.
             </p>
             <p className="mt-3 text-xs text-[var(--muted)]">
               Part of the{" "}
