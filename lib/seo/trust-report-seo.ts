@@ -9,6 +9,7 @@ import {
   trustReportTitleSuffix,
 } from "@/lib/states/evidence-copy";
 import { pageMetadata } from "@/lib/seo/page-meta";
+import { shareRouteOgImage } from "@/lib/seo/share-hub";
 import { absoluteUrl } from "@/lib/site";
 
 /** Unique title + description + OG for an indexable Trust Report. */
@@ -29,11 +30,18 @@ export function trustReportMetadata(c: ContractorDetail): Metadata {
     "Evidence from official public records — not a ranking, marketplace, or endorsement.",
   ].join(" ");
 
+  const og = shareRouteOgImage(
+    path,
+    `${c.displayName} — contractor license research on ContractorTrustHub`,
+  );
+
   return pageMetadata({
     title: `${c.displayName} — ${trustReportTitleSuffix(slug)}`,
     description,
     path,
     ogType: "profile",
+    images: [og.url],
+    ogAlt: og.alt,
   });
 }
 
