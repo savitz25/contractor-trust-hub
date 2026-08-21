@@ -7,6 +7,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "test": "node scripts/assert-share-002.mjs",
     "typecheck": "tsc --noEmit",
     "test:matcher": "node scripts/test_permit_matcher.mjs",
     "test:nj": "node scripts/test_nj_verify_smoke.mjs",

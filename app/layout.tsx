@@ -6,14 +6,17 @@ import { SaveWorkPrompt } from "@/components/account/SaveWorkPrompt";
 import { JourneyContextChip } from "@/components/funnel/JourneyContextChip";
 import { PropertyContextChip } from "@/components/property/PropertyContextChip";
 import { SitewideJsonLd } from "@/components/seo/JsonLd";
-import { getSiteUrl } from "@/lib/site";
 import { ASK_NETWORK_STANDARD_VERSION } from "@/lib/network/standard-version";
+import {
+  SHARE_HUB,
+  resolveShareOrigin,
+  shareOgImageAbsoluteUrl,
+} from "@/lib/seo/share-hub";
 import "./globals.css";
 
-const siteUrl = getSiteUrl();
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(resolveShareOrigin()),
+  alternates: { canonical: `${resolveShareOrigin()}/` },
   title: {
     default: "Contractor Trust Hub — Before you hire, verify",
     template: "%s · Contractor Trust Hub",
@@ -45,15 +48,23 @@ export const metadata: Metadata = {
     description:
       "Independent contractor license and registration research with official board evidence and state-specific depth.",
     type: "website",
-    siteName: "Contractor Trust Hub",
+    siteName: SHARE_HUB.brand,
+    url: resolveShareOrigin(),
     locale: "en_US",
-    images: [{ url: "/brand/contractor-trust-hub-logo.svg", alt: "Contractor Trust Hub" }],
+    images: [
+      {
+        url: shareOgImageAbsoluteUrl(),
+        width: SHARE_HUB.ogWidth,
+        height: SHARE_HUB.ogHeight,
+        alt: SHARE_HUB.ogAlt,
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: SHARE_HUB.twitterCard,
     title: "Contractor Trust Hub — Before you hire, verify",
     description: "Before you hire, verify. Official license evidence with state-specific depth.",
-    images: ["/brand/contractor-trust-hub-logo.svg"],
+    images: [{ url: shareOgImageAbsoluteUrl(), alt: SHARE_HUB.ogAlt }],
   },
   robots: {
     index: true,
