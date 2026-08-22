@@ -6,8 +6,13 @@ type BrandLogoProps = {
   /** Horizontal wordmark (default) or square mark only */
   variant?: "wordmark" | "mark";
   /**
-   * onLight (default): navy wordmark for light network UI.
-   * onDark: light mark for rare dark surfaces.
+   * compact: network header lockup (no slogan) — 36/33/30 optical slot.
+   * full: official lockup with BEFORE YOU HIRE, VERIFY.
+   */
+  lockup?: "compact" | "full";
+  /**
+   * onLight (default): navy TRUST HUB for light surfaces.
+   * onDark: lifted hub/text for dark surfaces.
    */
   surface?: "onDark" | "onLight";
   height?: number;
@@ -19,14 +24,20 @@ const transparent: CSSProperties = {
   display: "block",
 };
 
+/** Compact header aspect (viewBox 236×36). */
+const COMPACT_ASPECT = 236 / 36;
+/** Full official lockup aspect (viewBox 360×88). */
+const FULL_ASPECT = 360 / 88;
+
 /**
- * Official wordmark from the design mockup, white-plate keyed to true alpha.
- * Prefer PNG for visual fidelity; SVG mark for square/favicon use.
+ * Contractor Trust Hub brand mark / wordmark.
+ * Canonical thin TrustHub brackets (CONTRACTOR-BRAND-001). SVG preferred for chrome.
  */
 export function BrandLogo({
   className = "",
   priority = false,
   variant = "wordmark",
+  lockup = "compact",
   surface = "onLight",
   height = 40,
 }: BrandLogoProps) {
@@ -36,12 +47,14 @@ export function BrandLogo({
 
   if (variant === "mark") {
     return (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         src="/brand/contractor-trust-hub-mark.svg"
         alt="Contractor Trust Hub"
         width={height}
         height={height}
         data-brand-logo=""
+        data-brand-mark="canonical"
         className={sharedClass}
         style={{ ...transparent, height, width: height, maxWidth: "none" }}
         decoding="async"
@@ -50,21 +63,28 @@ export function BrandLogo({
     );
   }
 
-  // Prefer SVG for true transparency on dark UI chrome.
+  const isFull = lockup === "full";
   const src =
     surface === "onLight"
-      ? "/brand/contractor-trust-hub-logo.svg"
-      : "/brand/contractor-trust-hub-logo-on-dark.svg";
+      ? isFull
+        ? "/brand/contractor-trust-hub-logo.svg"
+        : "/brand/contractor-trust-hub-logo-compact.svg"
+      : isFull
+        ? "/brand/contractor-trust-hub-logo-on-dark.svg"
+        : "/brand/contractor-trust-hub-logo-compact-on-dark.svg";
 
-  const width = Math.round(height * (900 / 220));
+  const aspect = isFull ? FULL_ASPECT : COMPACT_ASPECT;
+  const width = Math.round(height * aspect);
 
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
       alt="Contractor Trust Hub"
       width={width}
       height={height}
       data-brand-logo=""
+      data-brand-lockup={lockup}
       className={sharedClass}
       style={{ ...transparent, height, width, maxWidth: "none" }}
       decoding="async"

@@ -15,7 +15,7 @@ export function SiteHeader() {
           className="shrink-0 no-underline"
           aria-label="Contractor Trust Hub home"
         >
-          <BrandLogo height={36} priority surface="onLight" />
+          <BrandLogo height={36} priority surface="onLight" lockup="compact" />
         </Link>
 
         <div className="flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-1.5">

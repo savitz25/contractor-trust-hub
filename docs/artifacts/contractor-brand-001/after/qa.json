@@ -1,0 +1,36 @@
+{
+  "desktop": {
+    "overflowX": false,
+    "headerH": 114,
+    "logo": {
+      "w": 236,
+      "h": 36,
+      "src": "/brand/contractor-trust-hub-logo-compact.svg"
+    },
+    "lockup": "compact"
+  },
+  "w1280": {
+    "overflowX": false,
+    "logoH": 36
+  },
+  "w1024": {
+    "overflowX": false,
+    "logoH": 36
+  },
+  "w768": {
+    "overflowX": false,
+    "logoH": 36
+  },
+  "w430": {
+    "overflowX": false,
+    "logoH": 36
+  },
+  "w390": {
+    "overflowX": false,
+    "logoH": 36
+  },
+  "w375": {
+    "overflowX": false,
+    "logoH": 36
+  }
+}
