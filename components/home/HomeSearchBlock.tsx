@@ -12,7 +12,7 @@ export function HomeSearchBlock() {
       aria-labelledby="search-heading"
       className="border-b border-[var(--border)]"
     >
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+      <div className="th-shell py-10 sm:py-12">
         <div className="rounded-3xl border border-[var(--border)] bg-white p-4 shadow-[var(--shadow-md)] sm:p-6 md:p-8">
           <h2
             id="search-heading"

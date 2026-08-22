@@ -14,7 +14,7 @@ export function HomeHero() {
 
   return (
     <section className="relative border-b border-[var(--border)]">
-      <div className="mx-auto max-w-6xl px-4 pb-8 pt-10 sm:px-6 sm:pb-10 sm:pt-14">
+      <div className="th-shell pb-8 pt-10 sm:pb-10 sm:pt-14">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
           Before you hire, verify
         </p>
@@ -41,7 +41,7 @@ export function HomeHero() {
           <Link
             href="/#search"
             data-entry-path="verify"
-            className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[var(--accent)] px-6 py-3 text-center text-sm font-semibold text-[var(--navy)] no-underline shadow-[var(--shadow-sm)] hover:brightness-105 sm:min-h-11"
+            className="th-btn-hero inline-flex items-center justify-center px-6 text-center no-underline"
           >
             I have a name or license
             <span className="ml-1.5 text-[11px] font-medium text-[var(--navy)]/70">
@@ -51,7 +51,7 @@ export function HomeHero() {
           <Link
             href="/plan/start"
             data-entry-path="plan"
-            className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--navy)]/20 bg-[var(--navy)] px-6 py-3 text-center text-sm font-semibold text-white no-underline shadow-[var(--shadow-sm)] hover:brightness-110 sm:min-h-11"
+            className="th-btn-navy inline-flex items-center justify-center px-6 text-center no-underline"
           >
             I&apos;m planning a project
             <span className="ml-1.5 text-[11px] font-medium text-white/80">

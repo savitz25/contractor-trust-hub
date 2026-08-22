@@ -1,0 +1,61 @@
+{
+  "origin": "http://127.0.0.1:3017",
+  "report": [
+    {
+      "id": "home",
+      "path": "/",
+      "status": 200,
+      "headerH": 69,
+      "overflowX": false
+    },
+    {
+      "id": "florida",
+      "path": "/florida",
+      "status": 200,
+      "headerH": 69,
+      "overflowX": false
+    },
+    {
+      "id": "verify",
+      "path": "/verify",
+      "status": 200,
+      "headerH": 69,
+      "overflowX": false
+    },
+    {
+      "id": "guides",
+      "path": "/guides",
+      "status": 200,
+      "headerH": 69,
+      "overflowX": false
+    },
+    {
+      "id": "kitchen",
+      "path": "/studio/kitchen",
+      "status": 200,
+      "headerH": 69,
+      "overflowX": false
+    },
+    {
+      "id": "compare",
+      "path": "/compare",
+      "status": 200,
+      "headerH": 69,
+      "overflowX": false
+    },
+    {
+      "id": "methodology",
+      "path": "/methodology",
+      "status": 200,
+      "headerH": 69,
+      "overflowX": false
+    },
+    {
+      "id": "florida-share",
+      "path": "/florida/share-og",
+      "status": 200,
+      "headerH": null,
+      "overflowX": false
+    }
+  ]
+}
