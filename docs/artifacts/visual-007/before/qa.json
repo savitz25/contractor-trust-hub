@@ -1,0 +1,81 @@
+{
+  "origin": "https://www.contractortrusthub.com",
+  "report": {
+    "desktop1440": {
+      "viewport": {
+        "w": 1440,
+        "h": 900
+      },
+      "overflowX": false,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 114
+      },
+      "networkBar": {
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 53
+      },
+      "logo": {
+        "x": 168,
+        "y": 65,
+        "w": 236,
+        "h": 36
+      },
+      "logoImg": {
+        "x": 168,
+        "y": 65,
+        "w": 236,
+        "h": 36
+      },
+      "switchHub": {
+        "x": 1072,
+        "y": 8,
+        "w": 118,
+        "h": 36
+      },
+      "stackedChrome": 167
+    },
+    "mobile390": {
+      "viewport": {
+        "w": 390,
+        "h": 844
+      },
+      "overflowX": false,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 110
+      },
+      "networkBar": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 53
+      },
+      "logo": {
+        "x": 12,
+        "y": 63,
+        "w": 236,
+        "h": 36
+      },
+      "logoImg": {
+        "x": 12,
+        "y": 63,
+        "w": 236,
+        "h": 36
+      },
+      "switchHub": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "stackedChrome": 163
+    }
+  }
+}

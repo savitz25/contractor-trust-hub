@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>VISUAL-007 — Six-Hub hop board</title>
+  <style>
+    :root { font-family: Inter, system-ui, sans-serif; color: #0A2540; background: #F8FAFC; }
+    body { margin: 24px; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 18px; margin: 32px 0 12px; }
+    .grid6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+    figure { margin: 0; background: #fff; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; }
+    figcaption { padding: 8px 10px; font-size: 11px; font-weight: 600; border-top: 1px solid #E2E8F0; }
+    img { display: block; width: 100%; }
+    table { border-collapse: collapse; background: #fff; }
+    th, td { padding: 8px 10px; border: 1px solid #E2E8F0; font-size: 13px; text-align: left; }
+    .ok { color: #0A2540; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <h1>Ask ↔ Investor ↔ Lender ↔ Insurance ↔ Move ↔ Contractor</h1>
+  <p>Same-scale proof. At 1440 the six shells share header 69, mark 36 @ (144,16), Switch Hub 44px right-aligned to the 1200+24 shell (right edge 1296).</p>
+  <table>
+    <tr><th></th><th>Ask</th><th>Investor</th><th>Lender</th><th>Insurance</th><th>Move</th><th>Contractor</th><th>Delta</th></tr>
+    <tr><td>Header</td><td>69</td><td>69</td><td>69</td><td>69</td><td>69</td><td>69</td><td class="ok">0</td></tr>
+    <tr><td>Mark</td><td>36@(144,16)</td><td>36@(144,16)</td><td>36@(144,16)</td><td>36@(144,16)</td><td>36@(144,16)</td><td>36@(144,16)</td><td class="ok">0</td></tr>
+    <tr><td>Switch Hub h</td><td>44</td><td>44</td><td>44</td><td>44</td><td>44</td><td>44</td><td class="ok">0</td></tr>
+    <tr><td>Mobile header</td><td>57</td><td>57</td><td>57</td><td>57</td><td>57</td><td>57</td><td class="ok">0</td></tr>
+  </table>
+  <h2>Desktop 1440 headers</h2>
+  <div class="grid6">
+    <figure><img src="ask-ref/header-desktop.png" alt="Ask" /><figcaption>ASK</figcaption></figure>
+    <figure><img src="investor-ref/header-desktop.png" alt="Investor" /><figcaption>INVESTOR</figcaption></figure>
+    <figure><img src="lender-ref/header-desktop.png" alt="Lender" /><figcaption>LENDER</figcaption></figure>
+    <figure><img src="insurance-ref/header-desktop.png" alt="Insurance" /><figcaption>INSURANCE</figcaption></figure>
+    <figure><img src="move-ref/header-desktop.png" alt="Move" /><figcaption>MOVE</figcaption></figure>
+    <figure><img src="after/header-desktop.png" alt="Contractor" /><figcaption>CONTRACTOR</figcaption></figure>
+  </div>
+  <h2>Desktop 1440 pages</h2>
+  <div class="grid6">
+    <figure><img src="ask-ref/desktop-1440.jpg" alt="Ask home" /><figcaption>ASK</figcaption></figure>
+    <figure><img src="investor-ref/desktop-1440.jpg" alt="Investor home" /><figcaption>INVESTOR</figcaption></figure>
+    <figure><img src="lender-ref/desktop-1440.jpg" alt="Lender home" /><figcaption>LENDER</figcaption></figure>
+    <figure><img src="insurance-ref/desktop-1440.jpg" alt="Insurance home" /><figcaption>INSURANCE</figcaption></figure>
+    <figure><img src="move-ref/desktop-1440.jpg" alt="Move home" /><figcaption>MOVE</figcaption></figure>
+    <figure><img src="after/desktop-1440.jpg" alt="Contractor home" /><figcaption>CONTRACTOR</figcaption></figure>
+  </div>
+  <h2>Mobile 390</h2>
+  <div class="grid6">
+    <figure><img src="ask-ref/mobile-390.jpg" alt="Ask mobile" /><figcaption>ASK · 57/30</figcaption></figure>
+    <figure><img src="investor-ref/mobile-390.jpg" alt="Investor mobile" /><figcaption>INVESTOR · 57/30</figcaption></figure>
+    <figure><img src="lender-ref/mobile-390.jpg" alt="Lender mobile" /><figcaption>LENDER · 57/30</figcaption></figure>
+    <figure><img src="insurance-ref/mobile-390.jpg" alt="Insurance mobile" /><figcaption>INSURANCE · 57/30</figcaption></figure>
+    <figure><img src="move-ref/mobile-390.jpg" alt="Move mobile" /><figcaption>MOVE · 57/30</figcaption></figure>
+    <figure><img src="after/mobile-390.jpg" alt="Contractor mobile" /><figcaption>CONTRACTOR · 57/30</figcaption></figure>
+  </div>
+</body>
+</html>

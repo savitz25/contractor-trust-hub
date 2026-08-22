@@ -57,6 +57,7 @@ export const GUIDES_GROUP: HeaderGroup = {
     { href: "/guides/how-to-verify-florida-contractor", label: "How to verify a Florida contractor" },
     { href: "/guides/florida-contractor-red-flags", label: "Red flags" },
     { href: "/guides/florida-contractor-license-types", label: "License types" },
+    { href: "/methodology", label: "Trust standards" },
   ],
 };
 

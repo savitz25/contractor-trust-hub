@@ -1,0 +1,275 @@
+{
+  "desktop1440": {
+    "viewport": {
+      "w": 1440,
+      "h": 900
+    },
+    "overflowX": false,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 69
+    },
+    "lock": {
+      "x": 144,
+      "y": 16,
+      "w": 236,
+      "h": 36
+    },
+    "mark": {
+      "x": 144,
+      "y": 16,
+      "w": 236,
+      "h": 36
+    },
+    "switchHub": {
+      "x": 1172,
+      "y": 12,
+      "w": 124,
+      "h": 44
+    },
+    "menu": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "stackedBarPresent": false,
+    "extraRows": 69
+  },
+  "w1280": {
+    "viewport": {
+      "w": 1280,
+      "h": 900
+    },
+    "overflowX": false,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 69
+    },
+    "lock": {
+      "x": 64,
+      "y": 16,
+      "w": 236,
+      "h": 36
+    },
+    "mark": {
+      "x": 64,
+      "y": 16,
+      "w": 236,
+      "h": 36
+    },
+    "switchHub": {
+      "x": 1092,
+      "y": 12,
+      "w": 124,
+      "h": 44
+    },
+    "menu": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "stackedBarPresent": false,
+    "extraRows": 69
+  },
+  "w1024": {
+    "viewport": {
+      "w": 1024,
+      "h": 900
+    },
+    "overflowX": false,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 1024,
+      "h": 69
+    },
+    "lock": {
+      "x": 24,
+      "y": 16,
+      "w": 236,
+      "h": 36
+    },
+    "mark": {
+      "x": 24,
+      "y": 16,
+      "w": 236,
+      "h": 36
+    },
+    "switchHub": {
+      "x": 876,
+      "y": 12,
+      "w": 124,
+      "h": 44
+    },
+    "menu": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "stackedBarPresent": false,
+    "extraRows": 69
+  },
+  "w768": {
+    "viewport": {
+      "w": 768,
+      "h": 900
+    },
+    "overflowX": false,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 768,
+      "h": 65
+    },
+    "lock": {
+      "x": 16,
+      "y": 16,
+      "w": 216,
+      "h": 33
+    },
+    "mark": {
+      "x": 16,
+      "y": 16,
+      "w": 216,
+      "h": 33
+    },
+    "switchHub": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "menu": {
+      "x": 708,
+      "y": 10,
+      "w": 44,
+      "h": 44
+    },
+    "stackedBarPresent": false,
+    "extraRows": 65
+  },
+  "w430": {
+    "viewport": {
+      "w": 430,
+      "h": 900
+    },
+    "overflowX": false,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 430,
+      "h": 57
+    },
+    "lock": {
+      "x": 16,
+      "y": 13,
+      "w": 197,
+      "h": 30
+    },
+    "mark": {
+      "x": 16,
+      "y": 13,
+      "w": 197,
+      "h": 30
+    },
+    "switchHub": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "menu": {
+      "x": 370,
+      "y": 6,
+      "w": 44,
+      "h": 44
+    },
+    "stackedBarPresent": false,
+    "extraRows": 57
+  },
+  "w375": {
+    "viewport": {
+      "w": 375,
+      "h": 900
+    },
+    "overflowX": false,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 57
+    },
+    "lock": {
+      "x": 16,
+      "y": 13,
+      "w": 197,
+      "h": 30
+    },
+    "mark": {
+      "x": 16,
+      "y": 13,
+      "w": 197,
+      "h": 30
+    },
+    "switchHub": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "menu": {
+      "x": 315,
+      "y": 6,
+      "w": 44,
+      "h": 44
+    },
+    "stackedBarPresent": false,
+    "extraRows": 57
+  },
+  "mobile390": {
+    "viewport": {
+      "w": 390,
+      "h": 844
+    },
+    "overflowX": false,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 57
+    },
+    "lock": {
+      "x": 16,
+      "y": 13,
+      "w": 197,
+      "h": 30
+    },
+    "mark": {
+      "x": 16,
+      "y": 13,
+      "w": 197,
+      "h": 30
+    },
+    "switchHub": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "menu": {
+      "x": 330,
+      "y": 6,
+      "w": 44,
+      "h": 44
+    },
+    "stackedBarPresent": false,
+    "extraRows": 57
+  }
+}

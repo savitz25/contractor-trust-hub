@@ -49,7 +49,7 @@ export function SiteFooter() {
 
   return (
     <footer className="mt-auto border-t border-[var(--border)] bg-[var(--bg-elevated)]">
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      <div className="th-shell py-10">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-6">
           <div className="sm:col-span-2 lg:col-span-2">
             <BrandLogo height={56} surface="onLight" lockup="full" />

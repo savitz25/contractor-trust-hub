@@ -235,7 +235,7 @@ export function PlanResults({ plan }: { plan: PlanInput }) {
   return (
     <div className="space-y-6 pb-24 sm:space-y-8 sm:pb-8">
       {/* Sticky project context */}
-      <div className="sticky top-[7.5rem] z-30 -mx-1 rounded-2xl border border-[var(--border)] bg-white/95 px-4 py-3 shadow-[var(--shadow-md)] backdrop-blur-md sm:static sm:mx-0 sm:bg-white sm:backdrop-blur-none">
+      <div className="sticky top-[var(--th-header-mobile)] z-30 -mx-1 rounded-2xl border border-[var(--border)] bg-white/95 px-4 py-3 shadow-[var(--shadow-md)] backdrop-blur-md sm:static sm:mx-0 sm:bg-white sm:backdrop-blur-none md:top-[var(--th-header-tablet)] lg:top-[var(--th-header-desktop)]">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--navy)]">

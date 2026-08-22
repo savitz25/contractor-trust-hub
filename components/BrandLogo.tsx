@@ -75,6 +75,7 @@ export function BrandLogo({
 
   const aspect = isFull ? FULL_ASPECT : COMPACT_ASPECT;
   const width = Math.round(height * aspect);
+  const headerSlot = sharedClass.split(/\s+/).includes("th-header-logo") && !isFull;
 
   return (
     // eslint-disable-next-line @next/next/no-img-element
@@ -86,7 +87,16 @@ export function BrandLogo({
       data-brand-logo=""
       data-brand-lockup={lockup}
       className={sharedClass}
-      style={{ ...transparent, height, width, maxWidth: "none" }}
+      style={
+        headerSlot
+          ? {
+              ...transparent,
+              height: "var(--th-logo-slot-height)",
+              width: "auto",
+              maxWidth: "none",
+            }
+          : { ...transparent, height, width, maxWidth: "none" }
+      }
       decoding="async"
       fetchPriority={priority ? "high" : "auto"}
     />
