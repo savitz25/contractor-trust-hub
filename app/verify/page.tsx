@@ -20,10 +20,17 @@ import { verifyMetadata } from "@/lib/seo/verify-meta";
 import { getLiveStates, getStateBySlug } from "@/lib/states/config";
 import { TX_COVERED_TRADES_PLAIN } from "@/lib/states/tx-trades";
 import { parseWorkIntent, verifyPathWithWork } from "@/lib/verify/work-intents";
+import { parseContractorAskHandoff } from "@/lib/ask-handoff/parse";
+import { AskSearchContextBanner } from "@/components/ask-handoff/AskSearchContextBanner";
 
 type Props = {
-  searchParams: Promise<{ q?: string; intent?: string; state?: string; work?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
+
+function firstParam(v: string | string[] | undefined): string | undefined {
+  if (Array.isArray(v)) return v[0];
+  return v;
+}
 
 function resolveVerifyState(raw: string | undefined) {
   const slug = (raw || "fl").toLowerCase();
@@ -34,13 +41,13 @@ function resolveVerifyState(raw: string | undefined) {
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const sp = await searchParams;
-  const state = resolveVerifyState(sp.state);
-  return verifyMetadata(state.slug, sp.q, sp.work);
+  const state = resolveVerifyState(firstParam(sp.state));
+  return verifyMetadata(state.slug, firstParam(sp.q), firstParam(sp.work));
 }
 
 export default async function VerifyPage({ searchParams }: Props) {
   const sp = await searchParams;
-  const state = resolveVerifyState(sp.state);
+  const state = resolveVerifyState(firstParam(sp.state));
   const isTx = state.slug === "tx";
   const isNj = state.slug === "nj";
   const isOr = state.slug === "or";
@@ -51,9 +58,10 @@ export default async function VerifyPage({ searchParams }: Props) {
   const isMs = state.slug === "ms";
   const isKy = state.slug === "ky";
   const isSpecialty = isTx || isNj || isOr || isCa || isAz || isWa || isLa || isMs || isKy;
-  const q = (sp.q || "").trim();
-  const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
-  const work = parseWorkIntent(sp.work);
+  const q = (firstParam(sp.q) || "").trim();
+  const intentRaw = firstParam(sp.intent);
+  const intent = intentRaw === "have" || intentRaw === "research" ? intentRaw : null;
+  const work = parseWorkIntent(firstParam(sp.work));
   let results: Awaited<ReturnType<typeof searchContractors>>["results"] = [];
   let mode: "license" | "name" = "name";
   let error: string | null = null;
@@ -303,6 +311,7 @@ export default async function VerifyPage({ searchParams }: Props) {
           },
         ]}
       />
+      <AskSearchContextBanner ctx={parseContractorAskHandoff(sp)} />
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--accent)] sm:text-xs">
         {kicker}
       </p>

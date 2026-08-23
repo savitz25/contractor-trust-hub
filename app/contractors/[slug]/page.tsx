@@ -59,15 +59,21 @@ import { njCredentialPlainLabel } from "@/lib/states/nj-credentials";
 import { orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { txTradePlainLabel } from "@/lib/states/tx-trades";
 import { parseHandoffQuery } from "@/lib/studios/handoff";
+import { Suspense } from "react";
+import { AskProfileBackLink } from "@/components/ask-handoff/AskProfileBackLink";
+import { AskSearchContextBanner } from "@/components/ask-handoff/AskSearchContextBanner";
+import { parseContractorAskHandoff } from "@/lib/ask-handoff/parse";
 
 type Props = {
   params: Promise<{ slug: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { slug: raw } = await params;
   const slug = decodeURIComponent(raw);
+  const sp = await searchParams;
+  const askNoIndex = Boolean(parseContractorAskHandoff(sp));
 
   try {
     const c = await getContractorBySlug(slug);
@@ -78,7 +84,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       };
     }
 
-    return trustReportMetadata(c);
+    const meta = trustReportMetadata(c);
+    if (!askNoIndex) return meta;
+    return { ...meta, robots: { index: false, follow: true } };
   } catch {
     return {
       title: "Contractor Trust Report",
@@ -201,6 +209,10 @@ export default async function ContractorPage({ params, searchParams }: Props) {
       }`}
     >
       <ContractorJsonLd contractor={contractor} path={path} />
+      <Suspense fallback={null}>
+        <AskProfileBackLink />
+      </Suspense>
+      <AskSearchContextBanner ctx={parseContractorAskHandoff(sp)} handoffType="entity" />
       <BreadcrumbJsonLd
         items={[
           { name: "Home", path: "/" },

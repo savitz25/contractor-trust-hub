@@ -17,7 +17,7 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: "/",
         // Personalized / utility surfaces — still crawlable via follow, low value to index
-        disallow: ["/api/", "/plan/results"],
+        disallow: ["/api/", "/plan/results", "/from-ask"],
       },
     ],
     sitemap: absoluteUrl("/sitemap.xml"),

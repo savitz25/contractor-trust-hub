@@ -17,6 +17,8 @@ import {
 } from "@/lib/discovery/config";
 import { listFloridaBrowse, listFloridaCities } from "@/lib/discovery/florida-list";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
+import { parseContractorAskHandoff } from "@/lib/ask-handoff/parse";
+import { AskSearchContextBanner } from "@/components/ask-handoff/AskSearchContextBanner";
 
 const PUBLIC = "florida";
 
@@ -46,7 +48,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     trade,
     title: `${trade.title} in ${county.name} County FL — License Evidence`,
     description: `Florida ${trade.title.toLowerCase()} with DBPR licenses linked to ${county.name} County. Filter by city, status, Sunbiz link, and discipline — independent research, not a marketplace.`,
-    noIndex: browseIsVariant(browse) || view === "cities",
+    noIndex: browseIsVariant(browse) || view === "cities" || Boolean(parseContractorAskHandoff(sp)),
   });
 }
 
@@ -105,6 +107,8 @@ export default async function FloridaCountyTradePage({ params, searchParams }: P
           </Link>
         </div>
       </header>
+
+      <AskSearchContextBanner ctx={parseContractorAskHandoff(sp)} />
 
       <FloridaBrowseSection
         state={state}

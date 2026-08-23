@@ -18,6 +18,8 @@ import {
 import { listFloridaBrowse, listFloridaCities } from "@/lib/discovery/florida-list";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
 import { countByTrade, countCountiesForTrade } from "@/lib/discovery/queries";
+import { parseContractorAskHandoff } from "@/lib/ask-handoff/parse";
+import { AskSearchContextBanner } from "@/components/ask-handoff/AskSearchContextBanner";
 
 const PUBLIC = "florida";
 
@@ -46,7 +48,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       county,
       title: `${county.name} County FL Contractors — License Evidence`,
       description: `Browse construction contractors with Florida DBPR licenses linked to ${county.name} County. Filter by city, status, Sunbiz link, and discipline — not a marketplace.`,
-      noIndex: browseIsVariant(browse),
+      noIndex: browseIsVariant(browse) || Boolean(parseContractorAskHandoff(sp)),
     });
   }
 
@@ -56,7 +58,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     trade,
     title: `Florida ${trade.title} — License Verification`,
     description: `Browse Florida ${trade.title.toLowerCase()} with official DBPR license evidence. ${trade.description} Independent research, not a lead board.`,
-    noIndex: browseIsVariant(browse),
+    noIndex: browseIsVariant(browse) || Boolean(parseContractorAskHandoff(sp)),
   });
 }
 
@@ -96,6 +98,8 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
             {county.name} County contractors
           </h1>
         </header>
+
+        <AskSearchContextBanner ctx={parseContractorAskHandoff(sp)} />
 
         <div className="mt-8">
           <FacetGrid
@@ -154,6 +158,8 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
           </Link>
         </p>
       </header>
+
+      <AskSearchContextBanner ctx={parseContractorAskHandoff(sp)} />
 
       <div className="mt-8">
         <FacetGrid
