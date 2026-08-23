@@ -1,0 +1,23 @@
+{
+  "authority": "https://www2.myfloridalicense.com/about-us/understanding-dbpr-codes/",
+  "board": "06",
+  "rule": "License Type plus License Nbr forms the proposed full credential; numeric core alone is prohibited.",
+  "mappings": [
+    {"source_value":"Certified Air Conditioning Contractor","occupation_code":"CAC","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Certified Building Contractor","occupation_code":"CBC","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Certified General Contractor","occupation_code":"CGC","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Certified Mechanical Contractor","occupation_code":"CMC","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Certified Plumbing Contractor","occupation_code":"CFC","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Certified Pool/Spa Contractor","occupation_code":"CPC","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Certified Residential Contractor","occupation_code":"CRC","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Certified Roofing Contractor","occupation_code":"CCC","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Certified Solar Contractor","occupation_code":"CVC","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Certified Specialty Contractor","occupation_code":"SCC","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Registered Pool/Spa Contractor","occupation_code":"RP","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Registered Residential Contractor","occupation_code":"RR","classification":"EXACT_OFFICIAL"},
+    {"source_value":"Construction Financial Officer","occupation_code":"FRO","classification":"DETERMINISTIC","note":"DBPR license-detail pages use this source label with FRO credentials; the code dictionary describes FRO as Financial Responsible Officer."}
+  ],
+  "one_to_many": [],
+  "ambiguous": [],
+  "unknown": []
+}

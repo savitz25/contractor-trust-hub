@@ -1,0 +1,15 @@
+{
+  "snapshot": {"git_sha":"013ac9b87913ab99c3d7037849a8d2cdf73e064a","database":"production","transaction":"REPEATABLE READ READ ONLY","statement_timeout":"30s","mutation_performed":false},
+  "current_rows": 1541,
+  "collision_exposed": 194,
+  "safely_disambiguated_by_official_license_type": 157,
+  "still_ambiguous": 37,
+  "current_link_type_consistent": 69,
+  "current_link_type_conflicts": 125,
+  "full_expected_external_key_present": 536,
+  "current_link_equals_expected_external_key": 468,
+  "deterministic_full-key_conflicts": 68,
+  "all_current_license_type_conflicts": 491,
+  "unattached": {"rows":554,"missing_license_number":0,"unparseable_license_number":0,"missing_license_type":0,"numeric_core_absent_from_current_license_table":554,"safe_exact_matches_now":0,"distinct_numeric_cores":70,"distinct_complaints":329},
+  "interpretation": "Counts are forensic classifications only. No production links were changed. Full-key conflicts establish that the current license_id does not equal the official type-plus-number credential; publication remains blocked pending safety remediation."
+}

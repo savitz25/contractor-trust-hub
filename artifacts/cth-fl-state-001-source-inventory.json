@@ -1,0 +1,63 @@
+{
+  "audit_id": "CTH-FL-STATE-001",
+  "accessed_utc": "2026-08-23",
+  "authority": "Florida Department of Business and Professional Regulation / Construction Industry Licensing Board",
+  "landing_page": "https://www2.myfloridalicense.com/construction-industry/public-records/",
+  "common_record_fields": [
+    "License Type", "Respondent Name", "Address Line 1", "Address Line 2",
+    "Address Line 3", "City", "State", "ZIP Code", "County",
+    "Classification", "Entered Date", "Disposition", "Disposition Date",
+    "Discipline Date - Description", "Violation Code"
+  ],
+  "families": [
+    {
+      "id": "contractor_disc_lic",
+      "name": "Licensed Contractor Discipline",
+      "identifier_fields": ["License Type", "License Nbr", "Complaint Nbr"],
+      "years": [
+        {"fiscal_year":"2021-22","rows":1109,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2122.csv","sha256_prefix":"ab67307147fb"},
+        {"fiscal_year":"2022-23","rows":1534,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2223.csv","sha256_prefix":"cd733ddce04d"},
+        {"fiscal_year":"2023-24","rows":1878,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2324.csv","sha256_prefix":"90a561929f6b"},
+        {"fiscal_year":"2024-25","rows":1541,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2425.csv","sha256_prefix":"189b0043984b"},
+        {"fiscal_year":"2025-26","rows":395,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2526.csv","sha256_prefix":"1cecf33f0b5a"}
+      ],
+      "total_rows": 6457,
+      "acquisition": "FREE BULK DOWNLOAD",
+      "difficulty": "LOW"
+    },
+    {
+      "id": "contractor_disc_ula",
+      "name": "ULA Contractor Discipline",
+      "identifier_fields": ["License Type", "Complaint Nbr"],
+      "years": [
+        {"fiscal_year":"2021-22","rows":2312,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2122.csv","sha256_prefix":"4f0ca3409686"},
+        {"fiscal_year":"2022-23","rows":2631,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2223.csv","sha256_prefix":"2c03c334e3bc"},
+        {"fiscal_year":"2023-24","rows":2568,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2324.csv","sha256_prefix":"a5036af5f02e"},
+        {"fiscal_year":"2024-25","rows":2338,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2425.csv","sha256_prefix":"06169ddf04e1"},
+        {"fiscal_year":"2025-26","rows":1842,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2526.csv","sha256_prefix":"3e9a92d8340f"}
+      ],
+      "total_rows": 11691,
+      "acquisition": "FREE BULK DOWNLOAD",
+      "difficulty": "LOW"
+    },
+    {
+      "id": "contractor_disc_rf",
+      "name": "Recovery Fund Contractor Discipline",
+      "identifier_fields": ["License Type", "License Nbr", "Claim Nbr"],
+      "years": [
+        {"fiscal_year":"2021-22","rows":548,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2122.csv","sha256_prefix":"ab863b07b1af"},
+        {"fiscal_year":"2022-23","rows":256,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2223.csv","sha256_prefix":"c7a6e73bc819"},
+        {"fiscal_year":"2023-24","rows":216,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2324.csv","sha256_prefix":"2594e81df06c"},
+        {"fiscal_year":"2024-25","rows":647,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2425.csv","sha256_prefix":"fed3e761246c"},
+        {"fiscal_year":"2025-26","rows":12,"url":"https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2526.csv","sha256_prefix":"297b4e87309c"}
+      ],
+      "total_rows": 1679,
+      "acquisition": "FREE BULK DOWNLOAD",
+      "difficulty": "LOW"
+    }
+  ],
+  "contact_fields": {
+    "email": [], "phone": [], "website": [], "named_contact": [], "role_title": [],
+    "address": ["Respondent Name", "Address Line 1", "Address Line 2", "Address Line 3", "City", "State", "ZIP Code", "County"]
+  }
+}
