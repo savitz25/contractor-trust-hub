@@ -182,8 +182,42 @@ CREATE TABLE IF NOT EXISTS discipline_actions (
   raw_payload            JSONB,
   ingest_batch_id        UUID REFERENCES ingest_batches (id),
   last_verified_at       TIMESTAMPTZ,
+  identity_state         TEXT NOT NULL DEFAULT 'UNRESOLVED'
+                           CHECK (identity_state IN ('EXACT', 'DETERMINISTIC', 'REVIEW_REQUIRED', 'UNRESOLVED')),
+  identity_method        TEXT,
+  resolver_version       TEXT,
+  resolved_license_external_key TEXT,
+  identity_evidence      JSONB NOT NULL DEFAULT '{}'::jsonb,
+  identity_evaluated_at  TIMESTAMPTZ,
+  review_reason          TEXT,
+  publication_state      TEXT NOT NULL DEFAULT 'INTERNAL'
+                           CHECK (publication_state IN ('INTERNAL', 'PUBLIC_ELIGIBLE', 'WITHHELD')),
+  publication_evidence   JSONB NOT NULL DEFAULT '{}'::jsonb,
+  publication_evaluated_at TIMESTAMPTZ,
+  withheld_reason        TEXT,
+  correction_hold        BOOLEAN NOT NULL DEFAULT FALSE,
+  retraction_hold        BOOLEAN NOT NULL DEFAULT FALSE,
   created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CONSTRAINT discipline_actions_public_eligibility_check CHECK (
+    publication_state <> 'PUBLIC_ELIGIBLE'
+    OR (
+      identity_state IN ('EXACT', 'DETERMINISTIC')
+      AND contractor_id IS NOT NULL AND license_id IS NOT NULL
+      AND ingest_batch_id IS NOT NULL AND last_verified_at IS NOT NULL
+      AND identity_evaluated_at IS NOT NULL
+      AND publication_evaluated_at IS NOT NULL
+      AND publication_evidence @> '{
+        "authoritative_source": true,
+        "valid_license_contractor_relationship": true,
+        "recognized_regulatory_semantics": true,
+        "provenance_complete": true,
+        "source_fresh": true,
+        "identifier_conflict": false
+      }'::jsonb
+      AND correction_hold = FALSE AND retraction_hold = FALSE
+    )
+  ),
   UNIQUE (source_system, external_key)
 );
 
@@ -193,6 +227,9 @@ CREATE INDEX IF NOT EXISTS discipline_respondent_idx
   ON discipline_actions (respondent_name);
 CREATE INDEX IF NOT EXISTS discipline_license_raw_idx
   ON discipline_actions (license_number_raw);
+CREATE INDEX IF NOT EXISTS discipline_publication_gate_idx
+  ON discipline_actions (contractor_id, publication_state, identity_state)
+  WHERE publication_state = 'PUBLIC_ELIGIBLE';
 
 -- ---------------------------------------------------------------------------
 -- Permits (placeholder for local open data)
