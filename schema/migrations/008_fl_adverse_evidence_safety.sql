@@ -1,6 +1,9 @@
 -- CTH-FL-SAFE-001 / SAFE-002A-R: additive, fail-closed Florida regulatory
 -- identity/publication state on the shared multi-state discipline table.
--- Apply before deploying application queries or the Florida DBPR loader in this commit.
+-- The deployed application is pre-migration compatible only while
+-- REGULATORY_PUBLICATION_GATE_V1 is OFF. Apply this migration before a Florida
+-- regulatory backfill, before running the safety-aware Florida DBPR loader in
+-- production, and before enabling REGULATORY_PUBLICATION_GATE_V1.
 -- This migration initializes safety state only for existing fl_dbpr rows. It
 -- does not relink or publish rows. NULL on a non-FL row means not evaluated
 -- under the Florida safety contract v1.

@@ -60,7 +60,9 @@ conventions do not prohibit revising an unapplied migration, and a corrective
 migration for a schema production never received would obscure the actual
 first-application contract.
 
-- Revised migration SHA-256: `89f312b880f449e7f1315fe29e73c094efa77c440583bd5f7f0adbb634d2a416`
+- Accepted scope-correction SHA-256: `89f312b880f449e7f1315fe29e73c094efa77c440583bd5f7f0adbb634d2a416`
+- Final migration SHA-256: `1b110240c4487bbb3dfe74ac2ef893aca3defbc93afaedd23aad3732133adeb8`
+- Final checksum change: deployment-order comment correction only; SQL behavior unchanged
 - Original applied to production: NO
 - Production migration state at revision: NOT APPLIED
 - Reason: `discipline_actions` is shared by Florida, Arizona, and New Jersey
@@ -71,6 +73,11 @@ level, then initializes only existing `source_system='fl_dbpr'` rows to
 require valid non-null states and holds for Florida rows and enforce the
 Florida public-eligibility contract. The partial publication index is also
 restricted to Florida.
+
+The application read path may be deployed before this migration only while
+`REGULATORY_PUBLICATION_GATE_V1` remains OFF. Migration 008 must precede any
+Florida regulatory backfill, any production run of the safety-aware Florida
+loader, and any activation of that publication feature gate.
 
 Non-Florida rows remain NULL in these columns, meaning **not evaluated under
 Florida safety contract v1**. The revised migration does not modify
