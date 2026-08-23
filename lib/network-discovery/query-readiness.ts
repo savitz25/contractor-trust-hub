@@ -162,6 +162,18 @@ function collect(
     .filter((x): x is QueryMatch => Boolean(x));
 }
 
+export function queryMatchCounts(entities: NetworkDiscoveryEntity[]): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const fixture of REQUIRED_QUERY_FIXTURES) {
+    if (fixture.expectUnsupported) {
+      out[fixture.label] = 0;
+      continue;
+    }
+    out[fixture.label] = collect(entities, fixture.match).length;
+  }
+  return out;
+}
+
 export function auditContractorQueryReadiness(entities: NetworkDiscoveryEntity[]) {
   const out: Record<string, unknown> = {};
   for (const fixture of REQUIRED_QUERY_FIXTURES) {
@@ -174,7 +186,8 @@ export function auditContractorQueryReadiness(entities: NetworkDiscoveryEntity[]
     const matches = collect(entities, fixture.match);
     const extra: Record<string, unknown> = { matches: matches.length, sample: matches.slice(0, 5) };
     if (fixture.label === "roofers Miami FL") {
-      extra.note = "Physical city/county only — not a fabricated Miami service area.";
+      extra.note =
+        "Observational. exact_physical_city only when city is Miami; Miami-Dade without that city is exact_physical_county, not fabricated exact-city or service coverage.";
     }
     if (fixture.label === "HVAC contractors Tampa FL") {
       extra.note = "CAC occupation only. City Tampa and/or Hillsborough County physical evidence.";

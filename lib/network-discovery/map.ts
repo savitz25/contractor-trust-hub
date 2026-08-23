@@ -3,6 +3,7 @@ import { FLORIDA_COUNTIES } from "@/lib/discovery/counties";
 import { FLORIDA_TRADES } from "@/lib/discovery/trades";
 import { categoriesFromOccupationCodes } from "./trades";
 import { uspsState } from "./geo";
+import { floridaBrowseTradeSlug } from "./florida-policy";
 import type { ContractorSourceRow, NetworkDiscoveryEntity } from "./types";
 
 export function buildContractorNetworkId(id: string): string {
@@ -25,12 +26,7 @@ function countySlugFromName(name: string | null | undefined): string | undefined
 }
 
 function flTradeSlug(category: string): string | undefined {
-  if (category === "roofing") return "roofers";
-  if (category === "plumbing") return "plumbing";
-  if (category === "hvac") return "air-conditioning";
-  if (category === "pool") return "pool-spa";
-  if (category === "general_contractor") return "general-contractors";
-  return undefined;
+  return floridaBrowseTradeSlug(category);
 }
 
 function regulatorySummary(row: ContractorSourceRow): string {

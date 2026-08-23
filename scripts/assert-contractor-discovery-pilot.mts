@@ -1,6 +1,9 @@
 /**
- * ASK-SEARCH-CONTRACTOR-001 focused tests (no live DB required for unit checks).
+ * ASK-SEARCH-CONTRACTOR-001 / 001.1 focused tests (no live DB required).
  */
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   categoriesFromOccupationCodes,
   isUnsupportedAskTrade,
@@ -10,10 +13,19 @@ import {
   buildContractorNetworkId,
   mapContractorToDiscovery,
 } from "../lib/network-discovery/map";
-import { selectContractorPilot, PILOT_TARGET } from "../lib/network-discovery/cohort";
+import { selectContractorPilot, PILOT_TARGET, stratumKey } from "../lib/network-discovery/cohort";
 import { contentFingerprint } from "../lib/network-discovery/fingerprint";
 import { validateDiscoveryEntity, validateDiscoveryExport } from "../lib/network-discovery/validate";
 import { auditContractorQueryReadiness } from "../lib/network-discovery/query-readiness";
+import {
+  FLORIDA_DISCOVERY_POLICY,
+  FLORIDA_OCCUPATION_LOCK,
+  FLORIDA_READY_CATEGORIES,
+  FORBIDDEN_MATCH_REASONS,
+  NEW_JERSEY_DISCOVERY_POLICY,
+  floridaBrowseTradeSlug,
+  isFloridaReadyDiscovery,
+} from "../lib/network-discovery/florida-policy";
 import type { ContractorSourceRow, NetworkDiscoveryEntity } from "../lib/network-discovery/types";
 
 let failed = 0;
@@ -24,13 +36,38 @@ function assert(cond: unknown, msg: string) {
   } else console.log("PASS:", msg);
 }
 
+const here = dirname(fileURLToPath(import.meta.url));
+const cohortSrc = readFileSync(join(here, "../lib/network-discovery/cohort.ts"), "utf8");
+const qaGeo = [
+  "miami",
+  "broward",
+  "palm beach",
+  "palmbeach",
+  "tampa",
+  "jacksonville",
+  "orlando",
+  "monmouth",
+  "bergen",
+  "middlesex",
+];
+assert(
+  qaGeo.every((g) => !cohortSrc.toLowerCase().includes(g)),
+  "cohort algorithm has no QA city/county geography"
+);
+assert(
+  !cohortSrc.includes("REQUIRED_QUERY_FIXTURES") && !cohortSrc.includes("matchesQuery"),
+  "cohort does not import or reserve query fixtures"
+);
+
 assert(categoriesFromOccupationCodes(["CCC", "RR"]).includes("roofing"), "CCC/RR → roofing");
 assert(categoriesFromOccupationCodes(["CFC"]).includes("plumbing"), "CFC → plumbing");
 assert(categoriesFromOccupationCodes(["CAC"]).includes("hvac"), "CAC → hvac");
 assert(!categoriesFromOccupationCodes(["CMC"]).includes("hvac"), "CMC mechanical is not auto-HVAC");
+assert(FLORIDA_OCCUPATION_LOCK.CMC === null, "policy lock: CMC not HVAC");
 assert(categoriesFromOccupationCodes(["CGC"]).includes("general_contractor"), "CGC → general_contractor");
 assert(!categoriesFromOccupationCodes(["CBC"]).length, "CBC not forced to general_contractor");
 assert(!categoriesFromOccupationCodes(["CRC"]).length, "CRC not forced to general_contractor");
+assert(FLORIDA_OCCUPATION_LOCK.CBC === null && FLORIDA_OCCUPATION_LOCK.CRC === null, "policy lock: CBC/CRC held");
 assert(categoriesFromOccupationCodes(["ELE"]).includes("electrical"), "NJ ELE → electrical");
 assert(categoriesFromOccupationCodes(["HIC"]).includes("general_contractor"), "NJ HIC → general_contractor");
 assert(!categoriesFromOccupationCodes(["HIC"]).includes("roofing"), "NJ HIC is not inferred roofing");
@@ -38,6 +75,21 @@ assert(!categoriesFromOccupationCodes(["SOLAR"]).length, "name-assist solar is n
 assert(isUnsupportedAskTrade("home inspector"), "home inspector unsupported");
 assert(isUnsupportedAskTrade("kitchen_remodeling"), "kitchen remodeling unsupported");
 assert(isUnsupportedAskTrade("painting"), "painting unsupported");
+assert(isUnsupportedAskTrade("flooring"), "flooring unsupported");
+assert(!floridaBrowseTradeSlug("electrical"), "no Florida browse route for electrical");
+assert(!floridaBrowseTradeSlug("solar"), "no Florida browse route for solar");
+assert(floridaBrowseTradeSlug("roofing") === "roofers", "FL roofing browse slug");
+
+assert(FLORIDA_DISCOVERY_POLICY.readiness === "READY", "Florida bounded policy READY");
+assert(FLORIDA_DISCOVERY_POLICY.service_geography === "UNSUPPORTED", "no FL service graph");
+assert(
+  (FLORIDA_READY_CATEGORIES as readonly string[]).join() ===
+    "roofing,plumbing,hvac,pool,general_contractor",
+  "frozen FL READY categories"
+);
+assert(NEW_JERSEY_DISCOVERY_POLICY.readiness === "SOFT", "NJ remains SOFT");
+assert(NEW_JERSEY_DISCOVERY_POLICY.trades.roofing === "UNSUPPORTED", "NJ roofing unsupported");
+assert(NEW_JERSEY_DISCOVERY_POLICY.county_browse === false, "NJ county browse not mature");
 
 assert(buildContractorNetworkId("abc-uuid") === "contractor:abc-uuid", "network id uses company UUID");
 assert(
@@ -74,6 +126,7 @@ assert(
   !ent.service_areas || ent.service_areas.length === 0,
   "physical office is not emitted as a service-area graph"
 );
+assert(isFloridaReadyDiscovery(ent), "Miami roofer satisfies frozen FL READY policy");
 assert(
   ent.canonical_search_url === "https://www.contractortrusthub.com/florida/miami-dade/roofers",
   "FL county/trade browse URL"
@@ -88,6 +141,34 @@ assert(!("review_count" in ent) && !("overall_rating" in ent) && !("paid_rank" i
 const inspectorQ = auditContractorQueryReadiness([ent]);
 assert((inspectorQ["home inspectors Miami"] as { count: number }).count === 0, "home inspectors Miami = 0");
 assert((inspectorQ["roofers Miami FL"] as { matches: number }).matches === 1, "roofers Miami matches sample");
+const miamiReasons = ((inspectorQ["roofers Miami FL"] as { sample: { reasons: string[] }[] }).sample[0]
+  ?.reasons || []) as string[];
+assert(miamiReasons.includes("exact_physical_city"), "city query uses exact_physical_city when city matches");
+assert(
+  FORBIDDEN_MATCH_REASONS.every((r) => !miamiReasons.includes(r)),
+  "no service-geography match reasons"
+);
+
+const homestead: ContractorSourceRow = {
+  ...sample,
+  id: "44444444-4444-4444-4444-444444444444",
+  slug: "homestead-roofing",
+  displayName: "Homestead Roofing",
+  primaryCity: "Homestead",
+  licenseCities: ["Homestead"],
+  primaryCounty: "Miami-Dade",
+  licenseCounties: ["Miami-Dade"],
+};
+const homesteadEnt = mapContractorToDiscovery(homestead)!;
+const homesteadQ = auditContractorQueryReadiness([homesteadEnt]);
+const hReasons = ((homesteadQ["roofers Miami FL"] as { sample: { reasons: string[] }[] }).sample[0]
+  ?.reasons || []) as string[];
+assert(
+  (homesteadQ["roofers Miami FL"] as { matches: number }).matches === 1,
+  "Miami-Dade non-Miami city still observationally matches the Miami query at county precision"
+);
+assert(!hReasons.includes("exact_physical_city"), "shared county is not labeled exact_physical_city");
+assert(hReasons.includes("exact_physical_county"), "county-only evidence uses exact_physical_county");
 
 const njPlumber: ContractorSourceRow = {
   ...sample,
@@ -110,6 +191,7 @@ assert(
   njEnt.canonical_search_url === "https://www.contractortrusthub.com/verify",
   "NJ has no county browse — Verify, no query string"
 );
+assert(!isFloridaReadyDiscovery(njEnt), "NJ entity is not Florida READY");
 assert(
   (auditContractorQueryReadiness([njEnt])["plumbers Bergen County NJ"] as { matches: number }).matches === 1,
   "Bergen plumbing query uses physical county"
@@ -153,6 +235,8 @@ for (let i = 0; i < 250; i++) {
     slug: `co-${i}`,
     displayName: `Co ${i}`,
     occupationCodes: i % 2 === 0 ? ["CCC"] : ["CFC"],
+    homeState: i % 3 === 0 ? "NJ" : "FL",
+    physicalState: i % 3 === 0 ? "NJ" : "FL",
   };
   many.push(mapContractorToDiscovery(row)!);
 }
@@ -164,6 +248,10 @@ assert(contentFingerprint(a) === contentFingerprint(b), "fingerprint stable");
 assert(validateDiscoveryExport(a).ok, "cohort export validates");
 const ids = new Set(a.map((e) => e.network_entity_id));
 assert(ids.size === a.length, "no identity collisions");
+assert(
+  new Set(a.map(stratumKey)).size > 1,
+  "natural strata include more than one state|trade bucket"
+);
 assert(
   !selectContractorPilot.toString().includes("premium") &&
     !selectContractorPilot.toString().includes("trust_score") &&
@@ -184,7 +272,7 @@ assert(
 );
 
 if (failed) {
-  console.error(`ASK-SEARCH-CONTRACTOR-001 FAILED (${failed})`);
+  console.error(`ASK-SEARCH-CONTRACTOR-001.1 FAILED (${failed})`);
   process.exit(1);
 }
-console.log("ASK-SEARCH-CONTRACTOR-001 unit assertions passed.");
+console.log("ASK-SEARCH-CONTRACTOR-001.1 unit assertions passed.");

@@ -3,7 +3,7 @@ import { mapContractorToDiscovery } from "./map";
 import { selectContractorPilot } from "./cohort";
 import { contentFingerprint } from "./fingerprint";
 import { validatePilotManifest } from "./validate";
-import { auditContractorQueryReadiness } from "./query-readiness";
+import { auditContractorQueryReadiness, queryMatchCounts } from "./query-readiness";
 import type { PilotExportManifest } from "./types";
 
 export const PILOT_ARTIFACT = "contractor-discovery-pilot.v1.json";
@@ -77,7 +77,9 @@ export async function publishContractorDiscoveryPilot(): Promise<{
     source_version: sourceVersion,
     source_path: "public.contractors + public.licenses",
     pilot_label: "PILOT / NOT YET CONSUMED BY ASK PRODUCTION",
-    amendment: "ASK-SEARCH-CONTRACTOR-001",
+    amendment: "ASK-SEARCH-CONTRACTOR-001.1",
+    cohort_algorithm:
+      "UUID-sorted round-robin by stratum `${state}|${first_category}`; queries do not choose membership",
     entity_count: pilot.length,
     fingerprint,
     content_fingerprint: fingerprint,
@@ -89,7 +91,16 @@ export async function publishContractorDiscoveryPilot(): Promise<{
     },
     category_breakdown,
     geography: { states, with_county, with_city },
-    query_readiness: auditContractorQueryReadiness(pilot),
+    query_readiness: {
+      mode: "observational",
+      note: "Queries evaluate the cohort; they do not choose the cohort.",
+      pilot: auditContractorQueryReadiness(pilot),
+      eligible_universe: auditContractorQueryReadiness(eligible),
+      counts: {
+        pilot: queryMatchCounts(pilot),
+        eligible_universe: queryMatchCounts(eligible),
+      },
+    },
     identity: {
       source_ids: considered,
       network_ids: ids.length,

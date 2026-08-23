@@ -55,7 +55,8 @@ export type PilotExportManifest = {
   source_version: string;
   source_path: string;
   pilot_label: "PILOT / NOT YET CONSUMED BY ASK PRODUCTION";
-  amendment: "ASK-SEARCH-CONTRACTOR-001";
+  amendment: "ASK-SEARCH-CONTRACTOR-001" | "ASK-SEARCH-CONTRACTOR-001.1";
+  cohort_algorithm?: string;
   entity_count: number;
   fingerprint: string;
   content_fingerprint: string;

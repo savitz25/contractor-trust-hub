@@ -1,6 +1,8 @@
-# ASK-SEARCH-CONTRACTOR-001 — Contractor discovery pilot
+# ASK-SEARCH-CONTRACTOR-001 / 001.1 — Contractor discovery pilot
 
 **Status:** PILOT / NOT YET CONSUMED BY ASK PRODUCTION
+
+**Amendment 001.1:** natural cohort closeout + frozen Florida discovery policy. Queries evaluate the cohort; they do not choose it.
 
 This Hub emits a read-only `ask-network-discovery-v1` feed from authoritative ContractorTrustHub Postgres. AskTrustHub is not modified and does not ingest this file in this task.
 
@@ -112,14 +114,37 @@ Fail closed. A company is eligible when all of:
 
 Not used: Premium, payment, advertising, review count, ratings, Trust Score, popularity, lead conversion.
 
-## Pilot selection
+## Pilot selection (001.1 — natural, query-independent)
 
-Target 200. Deterministic:
+Target 200. Queries, QA cities, and QA counties are **not** inputs.
 
-1. Reserve the UUID-smallest eligible match for each required query fixture that has any match (coverage, not ranking).
-2. Round-robin remaining entities by first Ask category, UUID order.
+Exact algorithm:
 
-Slices are equality filters (occupation + optional county_code / city / county_name) because catalog-wide `COUNT(DISTINCT)` and wide OR predicates exceed statement timeout.
+1. Sort eligible entities by `network_entity_id` (`contractor:{uuid}`).
+2. If eligible length ≤ 200, emit that sorted list.
+3. Stratify by `` `${state}|${first Ask category}` ``. State and trade are generic product dimensions. Strata are **not** Miami, Broward, Palm Beach, Tampa, Jacksonville, Orlando, Monmouth, Bergen, or Middlesex.
+4. Within each stratum, keep UUID order.
+5. Round-robin across strata (stratum keys sorted lexicographically) until 200.
+6. Sort the selected 200 by `network_entity_id`.
+
+Not consulted: Premium, payment, ratings, review counts, Trust Scores, query fixtures.
+
+001 membership used a query-reservation step. 001.1 membership is allowed to differ. Retained companies keep `contractor:{same uuid}`.
+
+The eligible *universe* still comes from the 001 occupation-code slices (not a query-targeted sample of 200). Slices use equality filters because catalog-wide `COUNT(DISTINCT)` and wide OR predicates exceed statement timeout.
+
+## Query readiness is observational
+
+Report **pilot matches** and **full eligible-slice matches** separately.
+
+A zero in the 200-entity pilot is acceptable. Do not add members because a query is empty.
+
+City vs county precision:
+
+- `exact_physical_city` only when the stored city matches.
+- A contractor elsewhere in the same county is `exact_physical_county`, never fake exact-city or service coverage.
+- `license_state` is not `physical_state`.
+- No `explicit_service_*` reasons — there is no service-territory graph.
 
 ## Query readiness (semantics)
 
@@ -175,19 +200,62 @@ Live catalog (2026-08-23, no new enrichment):
 | Thin-profile COUNT | timed out — not used for eligibility |
 | Sliced considered / eligible | 541 / 541 |
 | Pilot exported | 200 |
-| Fingerprint | `3ae1595ea980eac1201ebb528f3aa1ec82ba227e0d990f9f293dbc200cc41ec1` |
-| Membership/identity/content drift (two unchanged runs) | 0 |
+| 001 fingerprint | `3ae1595ea980eac1201ebb528f3aa1ec82ba227e0d990f9f293dbc200cc41ec1` |
+| 001.1 fingerprint | `2b8b2d5439bf182cfb0c45bc22af7bdc3678365f4b7c724542bbcffa01dafeab` |
+| 001 → 001.1 overlap / removed / added | 168 / 32 / 32 |
+| Unexpected ID remaps | 0 |
+| 001.1 membership/identity/content drift (two unchanged runs) | 0 |
 
-Pilot geography: FL 120, NJ 80. Categories: roofing 34, plumbing 34, HVAC 33, electrical 32, general_contractor 35, pool 32.
+Pilot geography (001.1 natural strata): FL 112, NJ 88. Categories: roofing 22, plumbing 44, HVAC 45, electrical 22, general_contractor 45, pool 22.
+
+Observational query counts (pilot / eligible universe):
+
+| Query | Pilot | Eligible slice |
+|---|---|---|
+| roofers Miami FL | 14 | 65 |
+| roofing contractors Broward County FL | 8 | 40 |
+| plumbers Palm Beach County FL | 15 | 40 |
+| HVAC contractors Tampa FL | 23 | 59 |
+| electricians Jacksonville FL | 0 | 0 |
+| general contractors Orlando FL | 23 | 57 |
+| roofers Monmouth County NJ | 0 | 0 |
+| plumbers Bergen County NJ | 2 | 5 |
+| contractors Middlesex County NJ | 1 | 2 |
+| general contractors New Jersey | 22 | 40 |
+| home inspectors Miami | 0 | 0 |
 
 External calls required: Google Places 0, LLM 0, geocoding 0, new enrichment 0.
 
+## Frozen Florida READY policy (001.1)
+
+Florida Ask discovery is READY only when all of:
+
+1. Canonical public contractor company (`contractors.id` / slug, not thin)
+2. Active/current mapped license observation
+3. Trade is one of: `roofing`, `plumbing`, `hvac` (CAC only), `pool`, `general_contractor` (CGC only)
+4. Canonical profile `https://www.contractortrusthub.com/contractors/{slug}`
+5. Structured physical geography (city and/or county)
+6. Requested geographic precision is supported by stored physical fields — not by inventing service area
+
+Browse route, only for those READY trades: `/florida/{county}/{trade}`  
+(`roofers`, `plumbing`, `air-conditioning`, `pool-spa`, `general-contractors`).
+
+Do **not** manufacture browse routes for electrical, solar, painting, flooring, remodeling, or home inspector.
+
+CBC, CRC, CMC, and Florida electrical stay out of this feed.
+
+Machine-readable lock: `lib/network-discovery/florida-policy.ts`.
+
+## New Jersey SOFT policy
+
+NJ plumbing / HVAC / electrical / HIC: **SOFT** (Verify, no county browse, no statewide GC).
+
+NJ roofing: **UNSUPPORTED**.
+
+Future Ask ingestion should activate the **Florida bounded subset first**. NJ only under a later bounded policy.
+
 ## Readiness for Ask ingestion
 
-A **bounded Florida subset** (roofing, plumbing, HVAC/CAC, pool, CGC + physical county/city) has real canonical profiles and occupation-backed categories. That subset is the only honest candidate to move a future Ask adapter from `soft_handoff` toward `ready`.
-
-Do not flip the Hub-wide adapter to READY in this task.
-
-New Jersey remains SOFT: Verify/specialty depth, no county browse, no statewide GC, no roofing occupation.
+The bounded Florida subset is the honest candidate for a future Ask adapter move from `soft_handoff` toward `ready`. This Hub does not change Ask in this task and does not import the feed.
 
 Unsupported Ask trades stay fail-closed.

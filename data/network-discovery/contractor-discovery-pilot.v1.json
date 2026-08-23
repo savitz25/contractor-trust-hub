@@ -1,14 +1,15 @@
 {
   "schema_version": "ask-network-discovery-v1",
   "hub": "contractor",
-  "generated_at": "2026-08-23T13:57:31.234Z",
+  "generated_at": "2026-08-23T14:13:04.435Z",
   "source_version": "contractors+licenses#discovery-pilot",
   "source_path": "public.contractors + public.licenses",
   "pilot_label": "PILOT / NOT YET CONSUMED BY ASK PRODUCTION",
-  "amendment": "ASK-SEARCH-CONTRACTOR-001",
+  "amendment": "ASK-SEARCH-CONTRACTOR-001.1",
+  "cohort_algorithm": "UUID-sorted round-robin by stratum `${state}|${first_category}`; queries do not choose membership",
   "entity_count": 200,
-  "fingerprint": "3ae1595ea980eac1201ebb528f3aa1ec82ba227e0d990f9f293dbc200cc41ec1",
-  "content_fingerprint": "3ae1595ea980eac1201ebb528f3aa1ec82ba227e0d990f9f293dbc200cc41ec1",
+  "fingerprint": "2b8b2d5439bf182cfb0c45bc22af7bdc3678365f4b7c724542bbcffa01dafeab",
+  "content_fingerprint": "2b8b2d5439bf182cfb0c45bc22af7bdc3678365f4b7c724542bbcffa01dafeab",
   "eligibility": {
     "considered": 541,
     "eligible": 541,
@@ -16,367 +17,780 @@
     "pilot_selected": 200
   },
   "category_breakdown": {
-    "pool": 32,
-    "general_contractor": 35,
-    "plumbing": 34,
-    "roofing": 34,
-    "hvac": 33,
-    "electrical": 32
+    "pool": 22,
+    "general_contractor": 45,
+    "plumbing": 44,
+    "roofing": 22,
+    "hvac": 45,
+    "electrical": 22
   },
   "geography": {
     "states": {
-      "FL": 120,
-      "NJ": 80
+      "FL": 112,
+      "NJ": 88
     },
     "with_county": 200,
     "with_city": 200
   },
   "query_readiness": {
-    "roofers Miami FL": {
-      "matches": 20,
-      "sample": [
-        {
-          "network_entity_id": "contractor:081f896c-bb4e-4858-bede-39d5f4f45600",
-          "display_name": "A K G INSPECTION SERVICES INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_city",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:1d89f551-3889-4704-8707-9de3aa80d473",
-          "display_name": "DENNIS DEVELOPMENT CORP",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:248f1476-d11d-4e10-864d-7395ab34cc02",
-          "display_name": "S R HORRUITINER ROOFING INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_city",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:27f05b4c-2a4f-4e1c-aa73-f0282567564a",
-          "display_name": "RODMAN ROOFING INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_city",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:2a4da63c-1179-4ea1-b0bb-31107d3c3a02",
-          "display_name": "TRANS-GLOBAL GROUP, INC.",
-          "reasons": [
-            "trade_match",
-            "exact_physical_city",
-            "exact_physical_county"
-          ]
-        }
-      ],
-      "note": "Physical city/county only — not a fabricated Miami service area."
-    },
-    "roofing contractors Broward County FL": {
-      "matches": 14,
-      "sample": [
-        {
-          "network_entity_id": "contractor:0270b3fb-70b0-439f-ae52-7d73ccdb4df0",
-          "display_name": "T & S ROOFING INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:1364ca26-bd0e-4c9d-942b-ed5d5455f14c",
-          "display_name": "ANCHOR CONSTRUCTION SERVICES INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:19ea4bec-257c-4d48-9c77-03c125e3d128",
-          "display_name": "HERON BAY ROOFING SERVICES INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:1a511fae-f4f2-4e27-b285-a6662e876376",
-          "display_name": "WHITE SEAL INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:1af11a10-6538-4c9d-b1a8-cc401a438778",
-          "display_name": "PACIFIC COAST ROOFING INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        }
-      ]
-    },
-    "plumbers Palm Beach County FL": {
-      "matches": 13,
-      "sample": [
-        {
-          "network_entity_id": "contractor:038a4874-e9ef-4b01-9404-b7a8d94ff72b",
-          "display_name": "COASTAL PLUMBING INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:068720ad-0857-40ea-9817-0b9aa1304113",
-          "display_name": "JONES & JIRIK PLUMBING",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:0e2ac2c9-cd1e-4c81-944b-f01ffad2d935",
-          "display_name": "HARRINGTON RESIDENTIAL SERVICES LLC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:0ecf508d-360a-4e98-8cb1-3e688ef24d2a",
-          "display_name": "BUCKEYE PLUMBING INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:15277792-34a1-415f-8254-a3f70a3d8a28",
-          "display_name": "STAN PARKER PLUMBING LLC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        }
-      ]
-    },
-    "HVAC contractors Tampa FL": {
-      "matches": 15,
-      "sample": [
-        {
-          "network_entity_id": "contractor:087251d7-ebf6-40ba-8f19-40367e3f72d2",
-          "display_name": "AIRPRO SYSTEMS INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_city",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:138e056f-d7f2-42c8-b30d-be59f061aac3",
-          "display_name": "J M HAYS INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:14bd9d66-e1f7-425b-9573-9ae2e87f2d13",
-          "display_name": "CLIMATE DESIGN SERVICES INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:15120215-0a6d-410c-809f-82804352aad8",
-          "display_name": "BART DEPURY AIR CONDITIONING INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_city",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:1db3ae04-5b46-4f37-a6b7-e1ecad712777",
-          "display_name": "ROMAN & SONS AC LLC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_city",
-            "exact_physical_county"
-          ]
-        }
-      ],
-      "note": "CAC occupation only. City Tampa and/or Hillsborough County physical evidence."
-    },
-    "electricians Jacksonville FL": {
-      "matches": 0,
-      "sample": [],
-      "note": "Florida electrical is not a CILB occupation page; expected 0 in this occupation-code feed."
-    },
-    "general contractors Orlando FL": {
-      "matches": 21,
-      "sample": [
-        {
-          "network_entity_id": "contractor:01785294-3a6d-4e99-a682-d4a873ef6d19",
-          "display_name": "A D ARNOLD CONSTRUCTION COMPANY",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:15d35882-2df9-4c6d-a88e-afb90d7ed60c",
-          "display_name": "ICON DESIGN GROUP INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:1c3f7fd1-3a52-497a-8ee2-bbd21a5b5bf9",
-          "display_name": "IMPERIAL BUILDERS & SUPPLY INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:1fcc7320-1520-4e53-ab29-bb2b4c6b8e6f",
-          "display_name": "WINDERMERE CONTRACTING INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_city",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:223b73e2-3af4-43ce-9a5c-48aa60efbeb8",
-          "display_name": "ALL STAR CONSTRUCTION INC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_city",
-            "exact_physical_county"
-          ]
-        }
-      ]
-    },
-    "roofers Monmouth County NJ": {
-      "matches": 0,
-      "sample": [],
-      "note": "NJ has no roofing occupation code; HIC is not inferred as roofing. Zero is fail-closed, not a gap to fill from names."
-    },
-    "plumbers Bergen County NJ": {
-      "matches": 2,
-      "sample": [
-        {
-          "network_entity_id": "contractor:2173567a-3805-477b-82e1-f8c96f38bf89",
-          "display_name": "MICHAEL J RUEL SR",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:332e0aa1-44da-4b22-aa1e-c1ff4b7f6491",
-          "display_name": "PAUL G BURY",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        }
-      ]
-    },
-    "contractors Middlesex County NJ": {
-      "matches": 1,
-      "sample": [
-        {
-          "network_entity_id": "contractor:55c6c040-bf84-45bb-9b7f-bca4cd8ee44d",
-          "display_name": "JASSIN LLC",
-          "reasons": [
-            "trade_match",
-            "exact_physical_county"
-          ]
-        }
-      ]
-    },
-    "general contractors New Jersey": {
-      "matches": 14,
-      "sample": [
-        {
-          "network_entity_id": "contractor:085b687b-bb6c-4541-adab-eebe0b0a2312",
-          "display_name": "C.C. 2010 LLC",
-          "reasons": [
-            "trade_match",
-            "physical_state"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:0a6e5cb3-a51f-4917-aad6-49b79183cc8f",
-          "display_name": "UNITED DEMO LLC",
-          "reasons": [
-            "trade_match",
-            "physical_state"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:13c975c0-0c26-4612-ad18-808ccd9760a9",
-          "display_name": "WOOD FLOORING NJ LLC",
-          "reasons": [
-            "trade_match",
-            "physical_state"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:1673fe7f-67d0-4e67-818d-40ba221e1e06",
-          "display_name": "TAMES TREE SERVICE LLC",
-          "reasons": [
-            "trade_match",
-            "physical_state"
-          ]
-        },
-        {
-          "network_entity_id": "contractor:248bd6f6-be7c-4686-9c75-eecae21e8c0d",
-          "display_name": "EVERSPRING LLC",
-          "reasons": [
-            "trade_match",
-            "physical_state"
-          ]
-        }
-      ]
-    },
-    "home inspectors Miami": {
-      "count": 0,
-      "note": "home_inspector is not in the accepted Contractor taxonomy — fail closed."
-    },
-    "city_county_aliases": {
-      "miami": {
-        "county": "miami-dade",
-        "state": "FL"
+    "mode": "observational",
+    "note": "Queries evaluate the cohort; they do not choose the cohort.",
+    "pilot": {
+      "roofers Miami FL": {
+        "matches": 14,
+        "sample": [
+          {
+            "network_entity_id": "contractor:081f896c-bb4e-4858-bede-39d5f4f45600",
+            "display_name": "A K G INSPECTION SERVICES INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1d89f551-3889-4704-8707-9de3aa80d473",
+            "display_name": "DENNIS DEVELOPMENT CORP",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:248f1476-d11d-4e10-864d-7395ab34cc02",
+            "display_name": "S R HORRUITINER ROOFING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:27f05b4c-2a4f-4e1c-aa73-f0282567564a",
+            "display_name": "RODMAN ROOFING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:2a4da63c-1179-4ea1-b0bb-31107d3c3a02",
+            "display_name": "TRANS-GLOBAL GROUP, INC.",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          }
+        ],
+        "note": "Observational. exact_physical_city only when city is Miami; Miami-Dade without that city is exact_physical_county, not fabricated exact-city or service coverage."
       },
-      "tampa": {
-        "county": "hillsborough",
-        "state": "FL"
+      "roofing contractors Broward County FL": {
+        "matches": 8,
+        "sample": [
+          {
+            "network_entity_id": "contractor:0270b3fb-70b0-439f-ae52-7d73ccdb4df0",
+            "display_name": "T & S ROOFING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1364ca26-bd0e-4c9d-942b-ed5d5455f14c",
+            "display_name": "ANCHOR CONSTRUCTION SERVICES INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:19ea4bec-257c-4d48-9c77-03c125e3d128",
+            "display_name": "HERON BAY ROOFING SERVICES INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1a511fae-f4f2-4e27-b285-a6662e876376",
+            "display_name": "WHITE SEAL INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1af11a10-6538-4c9d-b1a8-cc401a438778",
+            "display_name": "PACIFIC COAST ROOFING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          }
+        ]
       },
-      "jacksonville": {
-        "county": "duval",
-        "state": "FL"
+      "plumbers Palm Beach County FL": {
+        "matches": 15,
+        "sample": [
+          {
+            "network_entity_id": "contractor:038a4874-e9ef-4b01-9404-b7a8d94ff72b",
+            "display_name": "COASTAL PLUMBING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:068720ad-0857-40ea-9817-0b9aa1304113",
+            "display_name": "JONES & JIRIK PLUMBING",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:0e2ac2c9-cd1e-4c81-944b-f01ffad2d935",
+            "display_name": "HARRINGTON RESIDENTIAL SERVICES LLC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:0ecf508d-360a-4e98-8cb1-3e688ef24d2a",
+            "display_name": "BUCKEYE PLUMBING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:15277792-34a1-415f-8254-a3f70a3d8a28",
+            "display_name": "STAN PARKER PLUMBING LLC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          }
+        ]
       },
-      "orlando": {
-        "county": "orange",
-        "state": "FL"
+      "HVAC contractors Tampa FL": {
+        "matches": 23,
+        "sample": [
+          {
+            "network_entity_id": "contractor:087251d7-ebf6-40ba-8f19-40367e3f72d2",
+            "display_name": "AIRPRO SYSTEMS INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:138e056f-d7f2-42c8-b30d-be59f061aac3",
+            "display_name": "J M HAYS INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:14bd9d66-e1f7-425b-9573-9ae2e87f2d13",
+            "display_name": "CLIMATE DESIGN SERVICES INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:15120215-0a6d-410c-809f-82804352aad8",
+            "display_name": "BART DEPURY AIR CONDITIONING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1db3ae04-5b46-4f37-a6b7-e1ecad712777",
+            "display_name": "ROMAN & SONS AC LLC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          }
+        ],
+        "note": "CAC occupation only. City Tampa and/or Hillsborough County physical evidence."
+      },
+      "electricians Jacksonville FL": {
+        "matches": 0,
+        "sample": [],
+        "note": "Florida electrical is not a CILB occupation page; expected 0 in this occupation-code feed."
+      },
+      "general contractors Orlando FL": {
+        "matches": 23,
+        "sample": [
+          {
+            "network_entity_id": "contractor:01785294-3a6d-4e99-a682-d4a873ef6d19",
+            "display_name": "A D ARNOLD CONSTRUCTION COMPANY",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:15d35882-2df9-4c6d-a88e-afb90d7ed60c",
+            "display_name": "ICON DESIGN GROUP INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1c3f7fd1-3a52-497a-8ee2-bbd21a5b5bf9",
+            "display_name": "IMPERIAL BUILDERS & SUPPLY INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1fcc7320-1520-4e53-ab29-bb2b4c6b8e6f",
+            "display_name": "WINDERMERE CONTRACTING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:223b73e2-3af4-43ce-9a5c-48aa60efbeb8",
+            "display_name": "ALL STAR CONSTRUCTION INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          }
+        ]
+      },
+      "roofers Monmouth County NJ": {
+        "matches": 0,
+        "sample": [],
+        "note": "NJ has no roofing occupation code; HIC is not inferred as roofing. Zero is fail-closed, not a gap to fill from names."
+      },
+      "plumbers Bergen County NJ": {
+        "matches": 2,
+        "sample": [
+          {
+            "network_entity_id": "contractor:2173567a-3805-477b-82e1-f8c96f38bf89",
+            "display_name": "MICHAEL J RUEL SR",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:332e0aa1-44da-4b22-aa1e-c1ff4b7f6491",
+            "display_name": "PAUL G BURY",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          }
+        ]
+      },
+      "contractors Middlesex County NJ": {
+        "matches": 1,
+        "sample": [
+          {
+            "network_entity_id": "contractor:55c6c040-bf84-45bb-9b7f-bca4cd8ee44d",
+            "display_name": "JASSIN LLC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          }
+        ]
+      },
+      "general contractors New Jersey": {
+        "matches": 22,
+        "sample": [
+          {
+            "network_entity_id": "contractor:085b687b-bb6c-4541-adab-eebe0b0a2312",
+            "display_name": "C.C. 2010 LLC",
+            "reasons": [
+              "trade_match",
+              "physical_state"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:0a6e5cb3-a51f-4917-aad6-49b79183cc8f",
+            "display_name": "UNITED DEMO LLC",
+            "reasons": [
+              "trade_match",
+              "physical_state"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:13c975c0-0c26-4612-ad18-808ccd9760a9",
+            "display_name": "WOOD FLOORING NJ LLC",
+            "reasons": [
+              "trade_match",
+              "physical_state"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1673fe7f-67d0-4e67-818d-40ba221e1e06",
+            "display_name": "TAMES TREE SERVICE LLC",
+            "reasons": [
+              "trade_match",
+              "physical_state"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:248bd6f6-be7c-4686-9c75-eecae21e8c0d",
+            "display_name": "EVERSPRING LLC",
+            "reasons": [
+              "trade_match",
+              "physical_state"
+            ]
+          }
+        ]
+      },
+      "home inspectors Miami": {
+        "count": 0,
+        "note": "home_inspector is not in the accepted Contractor taxonomy — fail closed."
+      },
+      "city_county_aliases": {
+        "miami": {
+          "county": "miami-dade",
+          "state": "FL"
+        },
+        "tampa": {
+          "county": "hillsborough",
+          "state": "FL"
+        },
+        "jacksonville": {
+          "county": "duval",
+          "state": "FL"
+        },
+        "orlando": {
+          "county": "orange",
+          "state": "FL"
+        }
+      }
+    },
+    "eligible_universe": {
+      "roofers Miami FL": {
+        "matches": 65,
+        "sample": [
+          {
+            "network_entity_id": "contractor:081f896c-bb4e-4858-bede-39d5f4f45600",
+            "display_name": "A K G INSPECTION SERVICES INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1d89f551-3889-4704-8707-9de3aa80d473",
+            "display_name": "DENNIS DEVELOPMENT CORP",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:248f1476-d11d-4e10-864d-7395ab34cc02",
+            "display_name": "S R HORRUITINER ROOFING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:27f05b4c-2a4f-4e1c-aa73-f0282567564a",
+            "display_name": "RODMAN ROOFING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:2a4da63c-1179-4ea1-b0bb-31107d3c3a02",
+            "display_name": "TRANS-GLOBAL GROUP, INC.",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          }
+        ],
+        "note": "Observational. exact_physical_city only when city is Miami; Miami-Dade without that city is exact_physical_county, not fabricated exact-city or service coverage."
+      },
+      "roofing contractors Broward County FL": {
+        "matches": 40,
+        "sample": [
+          {
+            "network_entity_id": "contractor:0270b3fb-70b0-439f-ae52-7d73ccdb4df0",
+            "display_name": "T & S ROOFING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1364ca26-bd0e-4c9d-942b-ed5d5455f14c",
+            "display_name": "ANCHOR CONSTRUCTION SERVICES INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:19ea4bec-257c-4d48-9c77-03c125e3d128",
+            "display_name": "HERON BAY ROOFING SERVICES INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1a511fae-f4f2-4e27-b285-a6662e876376",
+            "display_name": "WHITE SEAL INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1af11a10-6538-4c9d-b1a8-cc401a438778",
+            "display_name": "PACIFIC COAST ROOFING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          }
+        ]
+      },
+      "plumbers Palm Beach County FL": {
+        "matches": 40,
+        "sample": [
+          {
+            "network_entity_id": "contractor:038a4874-e9ef-4b01-9404-b7a8d94ff72b",
+            "display_name": "COASTAL PLUMBING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:068720ad-0857-40ea-9817-0b9aa1304113",
+            "display_name": "JONES & JIRIK PLUMBING",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:0e2ac2c9-cd1e-4c81-944b-f01ffad2d935",
+            "display_name": "HARRINGTON RESIDENTIAL SERVICES LLC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:0ecf508d-360a-4e98-8cb1-3e688ef24d2a",
+            "display_name": "BUCKEYE PLUMBING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:15277792-34a1-415f-8254-a3f70a3d8a28",
+            "display_name": "STAN PARKER PLUMBING LLC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          }
+        ]
+      },
+      "HVAC contractors Tampa FL": {
+        "matches": 59,
+        "sample": [
+          {
+            "network_entity_id": "contractor:087251d7-ebf6-40ba-8f19-40367e3f72d2",
+            "display_name": "AIRPRO SYSTEMS INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:138e056f-d7f2-42c8-b30d-be59f061aac3",
+            "display_name": "J M HAYS INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:14bd9d66-e1f7-425b-9573-9ae2e87f2d13",
+            "display_name": "CLIMATE DESIGN SERVICES INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:15120215-0a6d-410c-809f-82804352aad8",
+            "display_name": "BART DEPURY AIR CONDITIONING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1db3ae04-5b46-4f37-a6b7-e1ecad712777",
+            "display_name": "ROMAN & SONS AC LLC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          }
+        ],
+        "note": "CAC occupation only. City Tampa and/or Hillsborough County physical evidence."
+      },
+      "electricians Jacksonville FL": {
+        "matches": 0,
+        "sample": [],
+        "note": "Florida electrical is not a CILB occupation page; expected 0 in this occupation-code feed."
+      },
+      "general contractors Orlando FL": {
+        "matches": 57,
+        "sample": [
+          {
+            "network_entity_id": "contractor:01785294-3a6d-4e99-a682-d4a873ef6d19",
+            "display_name": "A D ARNOLD CONSTRUCTION COMPANY",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:15d35882-2df9-4c6d-a88e-afb90d7ed60c",
+            "display_name": "ICON DESIGN GROUP INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1c3f7fd1-3a52-497a-8ee2-bbd21a5b5bf9",
+            "display_name": "IMPERIAL BUILDERS & SUPPLY INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1fcc7320-1520-4e53-ab29-bb2b4c6b8e6f",
+            "display_name": "WINDERMERE CONTRACTING INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:223b73e2-3af4-43ce-9a5c-48aa60efbeb8",
+            "display_name": "ALL STAR CONSTRUCTION INC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_city",
+              "exact_physical_county"
+            ]
+          }
+        ]
+      },
+      "roofers Monmouth County NJ": {
+        "matches": 0,
+        "sample": [],
+        "note": "NJ has no roofing occupation code; HIC is not inferred as roofing. Zero is fail-closed, not a gap to fill from names."
+      },
+      "plumbers Bergen County NJ": {
+        "matches": 5,
+        "sample": [
+          {
+            "network_entity_id": "contractor:2173567a-3805-477b-82e1-f8c96f38bf89",
+            "display_name": "MICHAEL J RUEL SR",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:332e0aa1-44da-4b22-aa1e-c1ff4b7f6491",
+            "display_name": "PAUL G BURY",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:de8e4ffd-e099-4254-a38c-7947b1adf4f1",
+            "display_name": "PAUL J MONTON",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:dfb70fc9-58f7-44a5-98fc-0d4c931e3cb5",
+            "display_name": "PATRICK S LEE",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:f9a17223-aa07-42d6-822e-1194e6d7ac21",
+            "display_name": "FRANKO DUMICIC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          }
+        ]
+      },
+      "contractors Middlesex County NJ": {
+        "matches": 2,
+        "sample": [
+          {
+            "network_entity_id": "contractor:55c6c040-bf84-45bb-9b7f-bca4cd8ee44d",
+            "display_name": "JASSIN LLC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:f01bf173-e059-4daf-9f96-94fe11c0f0d6",
+            "display_name": "MR FIXABLE LLC",
+            "reasons": [
+              "trade_match",
+              "exact_physical_county"
+            ]
+          }
+        ]
+      },
+      "general contractors New Jersey": {
+        "matches": 40,
+        "sample": [
+          {
+            "network_entity_id": "contractor:085b687b-bb6c-4541-adab-eebe0b0a2312",
+            "display_name": "C.C. 2010 LLC",
+            "reasons": [
+              "trade_match",
+              "physical_state"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:0a6e5cb3-a51f-4917-aad6-49b79183cc8f",
+            "display_name": "UNITED DEMO LLC",
+            "reasons": [
+              "trade_match",
+              "physical_state"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:13c975c0-0c26-4612-ad18-808ccd9760a9",
+            "display_name": "WOOD FLOORING NJ LLC",
+            "reasons": [
+              "trade_match",
+              "physical_state"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:1673fe7f-67d0-4e67-818d-40ba221e1e06",
+            "display_name": "TAMES TREE SERVICE LLC",
+            "reasons": [
+              "trade_match",
+              "physical_state"
+            ]
+          },
+          {
+            "network_entity_id": "contractor:248bd6f6-be7c-4686-9c75-eecae21e8c0d",
+            "display_name": "EVERSPRING LLC",
+            "reasons": [
+              "trade_match",
+              "physical_state"
+            ]
+          }
+        ]
+      },
+      "home inspectors Miami": {
+        "count": 0,
+        "note": "home_inspector is not in the accepted Contractor taxonomy — fail closed."
+      },
+      "city_county_aliases": {
+        "miami": {
+          "county": "miami-dade",
+          "state": "FL"
+        },
+        "tampa": {
+          "county": "hillsborough",
+          "state": "FL"
+        },
+        "jacksonville": {
+          "county": "duval",
+          "state": "FL"
+        },
+        "orlando": {
+          "county": "orange",
+          "state": "FL"
+        }
+      }
+    },
+    "counts": {
+      "pilot": {
+        "roofers Miami FL": 14,
+        "roofing contractors Broward County FL": 8,
+        "plumbers Palm Beach County FL": 15,
+        "HVAC contractors Tampa FL": 23,
+        "electricians Jacksonville FL": 0,
+        "general contractors Orlando FL": 23,
+        "roofers Monmouth County NJ": 0,
+        "plumbers Bergen County NJ": 2,
+        "contractors Middlesex County NJ": 1,
+        "general contractors New Jersey": 22,
+        "home inspectors Miami": 0
+      },
+      "eligible_universe": {
+        "roofers Miami FL": 65,
+        "roofing contractors Broward County FL": 40,
+        "plumbers Palm Beach County FL": 40,
+        "HVAC contractors Tampa FL": 59,
+        "electricians Jacksonville FL": 0,
+        "general contractors Orlando FL": 57,
+        "roofers Monmouth County NJ": 0,
+        "plumbers Bergen County NJ": 5,
+        "contractors Middlesex County NJ": 2,
+        "general contractors New Jersey": 40,
+        "home inspectors Miami": 0
       }
     }
   },
@@ -384,7 +798,7 @@
     "source_ids": 541,
     "network_ids": 200,
     "duplicate_network_ids": 0,
-    "multi_license_companies": 20,
+    "multi_license_companies": 22,
     "identity_collisions": 0
   },
   "entities": [
@@ -416,7 +830,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "CALDERON, GERMAN"
     },
     {
@@ -447,7 +861,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ARNOLD, ALTON D JR"
     },
     {
@@ -478,7 +892,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "HERNANDEZ, RAFAEL"
     },
     {
@@ -509,7 +923,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "TUCKISH, DONALD A JR"
     },
     {
@@ -540,7 +954,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "THIBAULT, MARC D"
     },
     {
@@ -571,7 +985,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MURPHY, GREGORY J"
     },
     {
@@ -601,7 +1015,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ROBERT HYNDMAN"
     },
     {
@@ -632,7 +1046,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "HOWE, JOHN J"
     },
     {
@@ -663,7 +1077,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "HERNANDEZ, JOSE ANTONIO"
     },
     {
@@ -694,7 +1108,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "C.C. 2010 LLC"
     },
     {
@@ -725,7 +1139,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SWAIN, PHILLIP LENWOOD"
     },
     {
@@ -756,7 +1170,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "UNITED DEMO LLC"
     },
     {
@@ -787,7 +1201,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "PEREZ, ADOLFO"
     },
     {
@@ -818,7 +1232,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "CONDELL, CONDELL CONDELL"
     },
     {
@@ -848,7 +1262,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "WILLIAM C. BARHAM"
     },
     {
@@ -879,7 +1293,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "LA FOY, ALAN RAY"
     },
     {
@@ -910,7 +1324,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "GILLUM, KEVIN LEE"
     },
     {
@@ -940,7 +1354,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "WARREN ALAN YOUNG"
     },
     {
@@ -971,7 +1385,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "VALDEON, DANIEL RYAN"
     },
     {
@@ -1002,7 +1416,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "GO PRO ELECTRIC LLC"
     },
     {
@@ -1033,7 +1447,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ESSIG, DANIEL ROSS"
     },
     {
@@ -1064,7 +1478,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "JULIO C CRUZ"
     },
     {
@@ -1095,7 +1509,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "STANLEY H COHEN"
     },
     {
@@ -1125,7 +1539,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "DOMINIC D DEMICO JR"
     },
     {
@@ -1156,7 +1570,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "BEST ELECTRIC INC"
     },
     {
@@ -1187,7 +1601,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MARK A RIZZO"
     },
     {
@@ -1218,7 +1632,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ENGSKOW, STEPHEN MICHAEL"
     },
     {
@@ -1249,7 +1663,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "HAYS, JAMES MICHAEL"
     },
     {
@@ -1280,7 +1694,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "WOOD FLOORING NJ LLC"
     },
     {
@@ -1310,7 +1724,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "JOSEPH G PIGNATELLI"
     },
     {
@@ -1341,7 +1755,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "STAPLETON, JIMMY EDGAR"
     },
     {
@@ -1372,7 +1786,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ROBERT B ROGAN"
     },
     {
@@ -1403,7 +1817,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "DEPURY, CHARLES BARTLETT"
     },
     {
@@ -1434,7 +1848,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "STEVEN C JAMISON"
     },
     {
@@ -1465,7 +1879,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "PARKER, STANLEY P"
     },
     {
@@ -1496,7 +1910,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ECHOLS, RENZA W"
     },
     {
@@ -1527,7 +1941,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "RAMUDO, ALBERTO"
     },
     {
@@ -1558,7 +1972,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "FREDERICK G KOPP"
     },
     {
@@ -1589,7 +2003,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "CHAPLES, HARVEY WALLACE"
     },
     {
@@ -1620,7 +2034,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "TAMES TREE SERVICE LLC"
     },
     {
@@ -1651,7 +2065,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "METCALF, JOHN T"
     },
     {
@@ -1682,7 +2096,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ETHRIDGE, ROBERT FONTANA"
     },
     {
@@ -1713,7 +2127,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "TITUS, JOE E"
     },
     {
@@ -1744,7 +2158,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SANCHEZ, FELIPE"
     },
     {
@@ -1775,7 +2189,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MGK   ELECTRIC LLC"
     },
     {
@@ -1806,7 +2220,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "RIGBY, MICHAEL DEAN"
     },
     {
@@ -1837,7 +2251,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "JAMES L FAVILLA"
     },
     {
@@ -1868,7 +2282,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "GRANDEY, MIKE E"
     },
     {
@@ -1899,7 +2313,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "PYRIG, MIKHAYLO"
     },
     {
@@ -1929,7 +2343,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MICHAEL R MASTROPIERO"
     },
     {
@@ -1960,7 +2374,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "R J ELECTRIC"
     },
     {
@@ -1991,7 +2405,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "DENNIS, WAYNE E"
     },
     {
@@ -2022,7 +2436,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ROMAN, JOHN A"
     },
     {
@@ -2053,7 +2467,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "WAYNE E DEAN"
     },
     {
@@ -2084,7 +2498,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "EDGARDO OLIVO"
     },
     {
@@ -2115,7 +2529,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "HOLLABAUGH, JAMES ROBERT"
     },
     {
@@ -2146,7 +2560,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SAUNDERS, ROBERT LEROY III"
     },
     {
@@ -2177,7 +2591,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MINCHENER, DAVID G"
     },
     {
@@ -2208,7 +2622,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "WORLEY, JACK WINSTON II"
     },
     {
@@ -2239,7 +2653,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "YZQUIERDO, JOSE JAVIER"
     },
     {
@@ -2270,7 +2684,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SAMMET, JOHN CHARLES JR"
     },
     {
@@ -2301,7 +2715,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "BURCH, CHRISTOPHER TRAY"
     },
     {
@@ -2332,7 +2746,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MICHAEL J RUEL SR"
     },
     {
@@ -2363,7 +2777,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "STENCEL, JERRY I"
     },
     {
@@ -2394,7 +2808,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "STUART, JEFFREY E"
     },
     {
@@ -2425,7 +2839,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "PEARMAN, LAURA L"
     },
     {
@@ -2456,7 +2870,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MAKULA, SCOTT"
     },
     {
@@ -2487,7 +2901,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MERTENS, THOMAS A"
     },
     {
@@ -2518,7 +2932,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ROBERT A BARDI"
     },
     {
@@ -2549,7 +2963,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "EVERSPRING LLC"
     },
     {
@@ -2580,7 +2994,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "HORRUITINER, SERAFIN ROBERTO"
     },
     {
@@ -2611,7 +3025,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "VAN KIRK, ROBERT PAUL JR"
     },
     {
@@ -2642,7 +3056,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "TRUE POWER ELECTRIC LLC"
     },
     {
@@ -2673,7 +3087,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "RODMAN, KAREN S"
     },
     {
@@ -2704,7 +3118,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "BRYSON, STUART"
     },
     {
@@ -2735,7 +3149,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "BEST ELECTRIC LLC"
     },
     {
@@ -2766,7 +3180,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "RIBAS, ALBERTO G"
     },
     {
@@ -2797,7 +3211,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SANCHEZ, MARIO JR"
     },
     {
@@ -2828,7 +3242,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ROCA, EDUARDO"
     },
     {
@@ -2859,7 +3273,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "TMC GROUP, LLC"
     },
     {
@@ -2890,7 +3304,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "CURRY, SAMUEL DEVAL III"
     },
     {
@@ -2920,7 +3334,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "PAUL JOHN MITCHELL"
     },
     {
@@ -2951,7 +3365,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MASCARENHAS, EDUARDO ANDRADE"
     },
     {
@@ -2982,7 +3396,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ROBERTSON, JOE O"
     },
     {
@@ -3013,7 +3427,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "JAMES J MICHELS"
     },
     {
@@ -3044,7 +3458,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "GLEASON ELECTRIC LLC"
     },
     {
@@ -3075,7 +3489,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ZEDICK, THOMAS W"
     },
     {
@@ -3106,7 +3520,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "CUBOTA, ROBERTO"
     },
     {
@@ -3137,7 +3551,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "KIRKLAND, JAMES L JR"
     },
     {
@@ -3168,7 +3582,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "GAY, EDDIE A"
     },
     {
@@ -3199,7 +3613,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "RODRIGUEZ, MARIA C"
     },
     {
@@ -3230,7 +3644,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "THEODORE S SIWCZAK"
     },
     {
@@ -3261,7 +3675,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "FLORES, PETER ANTHONY JR"
     },
     {
@@ -3292,7 +3706,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "BOB JOSEPH INC."
     },
     {
@@ -3323,7 +3737,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SEPTER, HEATHER CHRISTINE"
     },
     {
@@ -3354,7 +3768,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "DEL SOL, DANIEL"
     },
     {
@@ -3385,7 +3799,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "PAUL G BURY"
     },
     {
@@ -3416,7 +3830,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "HARB, A TOM"
     },
     {
@@ -3446,7 +3860,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ALAN ROBERT BORUSOVIC JR"
     },
     {
@@ -3477,7 +3891,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "JORDANO ELECTRIC INC"
     },
     {
@@ -3508,7 +3922,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "CASTELLON, GIRALDO"
     },
     {
@@ -3539,7 +3953,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SUNPURITY, LLC"
     },
     {
@@ -3570,7 +3984,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ROMANEK, FRED ALAN"
     },
     {
@@ -3601,7 +4015,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "BUSTA, JOHN ROBERT"
     },
     {
@@ -3632,7 +4046,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "BEATO, JOSE LUIS"
     },
     {
@@ -3663,7 +4077,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "CASTON, KENNETH BRUCE"
     },
     {
@@ -3694,7 +4108,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "VALENTINE, TRACY ALLAN"
     },
     {
@@ -3724,7 +4138,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "KEVIN M O'CONNELL"
     },
     {
@@ -3755,7 +4169,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ALFONSO, STEVEN"
     },
     {
@@ -3786,7 +4200,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "GUTHRIE, BERNARD FRANCIS JR"
     },
     {
@@ -3817,7 +4231,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "CRUZAT, GONZALO ALBERTO"
     },
     {
@@ -3848,7 +4262,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "RASHID, ISMAILIA AZALI"
     },
     {
@@ -3879,7 +4293,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SHIVER, BOBBY WAYNE"
     },
     {
@@ -3910,7 +4324,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "LECCESE, SALVADOR F"
     },
     {
@@ -3941,7 +4355,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "DIAZ, JUAN MANUEL"
     },
     {
@@ -3972,7 +4386,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "DANIEL MURPHY"
     },
     {
@@ -4003,7 +4417,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "CHAVEZ, RICARDO"
     },
     {
@@ -4034,7 +4448,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "CHAPMAN, BRIAN KEITH"
     },
     {
@@ -4065,39 +4479,8 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "GONZALEZ, JORGE ANTONIO"
-    },
-    {
-      "network_entity_id": "contractor:3dbea818-8cd2-4db6-b8f1-07300b11735c",
-      "hub": "contractor",
-      "source_entity_id": "cpc052527-tuttle-s-pool-co-inc",
-      "entity_type": "contractor",
-      "display_name": "TUTTLE'S POOL CO INC",
-      "city": "MIAMI",
-      "county": "Miami-Dade",
-      "state": "FL",
-      "zip": "33176",
-      "categories": [
-        "pool"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cpc052527-tuttle-s-pool-co-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/pool-spa",
-      "search_terms": [
-        "tuttle's pool co inc",
-        "cpc052527 tuttle s pool co inc",
-        "pool",
-        "miami",
-        "miami-dade",
-        "fl",
-        "cpc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "TUTTLE, RAYMOND MARK"
     },
     {
       "network_entity_id": "contractor:3dc0a69d-a668-4703-aea5-8ae881f4e694",
@@ -4127,7 +4510,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "TERKIEL, LESLIE S"
     },
     {
@@ -4158,7 +4541,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MCCARLEY, GERALD W"
     },
     {
@@ -4189,39 +4572,8 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SUBERMAN, ALEC J"
-    },
-    {
-      "network_entity_id": "contractor:3e845b2b-8c33-4ef8-9475-ce208b11414c",
-      "hub": "contractor",
-      "source_entity_id": "cpc1456525-amofsouthflorida-llc",
-      "entity_type": "contractor",
-      "display_name": "AMOFSOUTHFLORIDA LLC",
-      "city": "COCONUT CREEK",
-      "county": "Broward",
-      "state": "FL",
-      "zip": "33073",
-      "categories": [
-        "pool"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cpc1456525-amofsouthflorida-llc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/broward/pool-spa",
-      "search_terms": [
-        "amofsouthflorida llc",
-        "cpc1456525 amofsouthflorida llc",
-        "pool",
-        "coconut creek",
-        "broward",
-        "fl",
-        "cpc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "RUBIN, NEIL"
     },
     {
       "network_entity_id": "contractor:3e884815-5f53-4fff-b252-97b065337be3",
@@ -4250,7 +4602,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "STANLEY V ARENT JR"
     },
     {
@@ -4280,7 +4632,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "DANIEL G DANKO, JR"
     },
     {
@@ -4311,70 +4663,8 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "KRS  SERVICES INC"
-    },
-    {
-      "network_entity_id": "contractor:3eef285c-9357-4531-8dbe-70286a3777cd",
-      "hub": "contractor",
-      "source_entity_id": "ccc039774-south-land-roofing-corporation",
-      "entity_type": "contractor",
-      "display_name": "SOUTH LAND ROOFING CORPORATION",
-      "city": "TAMARAC",
-      "county": "Broward",
-      "state": "FL",
-      "zip": "33321",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc039774-south-land-roofing-corporation",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/broward/roofers",
-      "search_terms": [
-        "south land roofing corporation",
-        "ccc039774 south land roofing corporation",
-        "roofing",
-        "tamarac",
-        "broward",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "FLORIO, THOMAS J"
-    },
-    {
-      "network_entity_id": "contractor:3efecf52-dd78-4b4d-8022-12f49704f48a",
-      "hub": "contractor",
-      "source_entity_id": "cpc049405-village-spa-pools-inc",
-      "entity_type": "contractor",
-      "display_name": "VILLAGE SPA & POOLS INC",
-      "city": "MIAMI",
-      "county": "Miami-Dade",
-      "state": "FL",
-      "zip": "33186",
-      "categories": [
-        "pool"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cpc049405-village-spa-pools-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/pool-spa",
-      "search_terms": [
-        "village spa & pools inc",
-        "cpc049405 village spa pools inc",
-        "pool",
-        "miami",
-        "miami-dade",
-        "fl",
-        "cpc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "GORALNICK, BERNARD"
     },
     {
       "network_entity_id": "contractor:3f32f5da-e12c-43d3-9bf4-733764e3d0e1",
@@ -4403,39 +4693,8 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "PETER I VOROS"
-    },
-    {
-      "network_entity_id": "contractor:3f88a6cd-8301-4e11-a998-5a740a25b101",
-      "hub": "contractor",
-      "source_entity_id": "cpc12577-matrix-z-llc",
-      "entity_type": "contractor",
-      "display_name": "MATRIX Z LLC",
-      "city": "FT LAUDERDALE",
-      "county": "Broward",
-      "state": "FL",
-      "zip": "33303",
-      "categories": [
-        "pool"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cpc12577-matrix-z-llc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/broward/pool-spa",
-      "search_terms": [
-        "matrix z llc",
-        "cpc12577 matrix z llc",
-        "pool",
-        "ft lauderdale",
-        "broward",
-        "fl",
-        "cpc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "ZIGANN, RICHARD A"
     },
     {
       "network_entity_id": "contractor:3fb8e07f-e3a8-4707-8ade-9003abaf4485",
@@ -4465,7 +4724,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MCCRORY, RONALD PAUL"
     },
     {
@@ -4496,7 +4755,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "PR BRENNAN LLC"
     },
     {
@@ -4527,39 +4786,8 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ROLLAN, SELIN LLAMIL"
-    },
-    {
-      "network_entity_id": "contractor:41d6749e-c5f0-4045-acbc-c5d2fbdcabf5",
-      "hub": "contractor",
-      "source_entity_id": "ccc039782-allan-j-inc",
-      "entity_type": "contractor",
-      "display_name": "ALLAN J INC",
-      "city": "DAVIE",
-      "county": "Broward",
-      "state": "FL",
-      "zip": "33324",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc039782-allan-j-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/broward/roofers",
-      "search_terms": [
-        "allan j inc",
-        "ccc039782 allan j inc",
-        "roofing",
-        "davie",
-        "broward",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "WEBSTER, ALLAN J"
     },
     {
       "network_entity_id": "contractor:4200ce54-54c4-4003-9fae-fa6cbc511f00",
@@ -4589,7 +4817,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "RODBERG, MARK ORVILLE"
     },
     {
@@ -4620,7 +4848,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "BECKWITH, KERMIT WYATT JR"
     },
     {
@@ -4651,7 +4879,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ART HOME GROUP LLC"
     },
     {
@@ -4681,39 +4909,8 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "FRANCIS GAGLIARDI"
-    },
-    {
-      "network_entity_id": "contractor:42e4071c-fb57-4753-82f0-d52aedb55614",
-      "hub": "contractor",
-      "source_entity_id": "ccc055594-pinnacle-a-roofing-company",
-      "entity_type": "contractor",
-      "display_name": "PINNACLE A ROOFING COMPANY",
-      "city": "MIAMI",
-      "county": "Miami-Dade",
-      "state": "FL",
-      "zip": "33147",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc055594-pinnacle-a-roofing-company",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/roofers",
-      "search_terms": [
-        "pinnacle a roofing company",
-        "ccc055594 pinnacle a roofing company",
-        "roofing",
-        "miami",
-        "miami-dade",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "THOMAS, ROBERT TODD"
     },
     {
       "network_entity_id": "contractor:42e7dd40-cf8a-4108-b606-a996362b446d",
@@ -4743,7 +4940,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "PALS HOME IMPROVEMENTS LLC"
     },
     {
@@ -4774,7 +4971,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "JENNINGS, JOHN C III"
     },
     {
@@ -4805,7 +5002,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MONICA N ANDERSON"
     },
     {
@@ -4836,7 +5033,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "B&L PAINTING LLC"
     },
     {
@@ -4867,7 +5064,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SCHNAPER, LARRY BRUCE"
     },
     {
@@ -4898,7 +5095,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "GILLESPIE, WILLIAM VINCENT"
     },
     {
@@ -4929,7 +5126,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SODON ELECTRIC, LLC"
     },
     {
@@ -4959,101 +5156,8 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "GEORGE A SIDHOM"
-    },
-    {
-      "network_entity_id": "contractor:49a5b747-2ff6-4a67-a500-e3005ffe9549",
-      "hub": "contractor",
-      "source_entity_id": "cpc057334-calypso-pool-company",
-      "entity_type": "contractor",
-      "display_name": "CALYPSO POOL COMPANY",
-      "city": "HIALEAH GARDENS",
-      "county": "Miami-Dade",
-      "state": "FL",
-      "zip": "33018",
-      "categories": [
-        "pool"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cpc057334-calypso-pool-company",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/pool-spa",
-      "search_terms": [
-        "calypso pool company",
-        "cpc057334 calypso pool company",
-        "pool",
-        "hialeah gardens",
-        "miami-dade",
-        "fl",
-        "cpc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "GONZALEZ, CARLOS"
-    },
-    {
-      "network_entity_id": "contractor:49ac807c-c072-47be-a8e6-84d7ca25f5aa",
-      "hub": "contractor",
-      "source_entity_id": "ccc032466-aztec-south-inc",
-      "entity_type": "contractor",
-      "display_name": "AZTEC SOUTH INC",
-      "city": "MIAMI",
-      "county": "Miami-Dade",
-      "state": "FL",
-      "zip": "33177",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc032466-aztec-south-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/roofers",
-      "search_terms": [
-        "aztec south inc",
-        "ccc032466 aztec south inc",
-        "roofing",
-        "miami",
-        "miami-dade",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "POROBIC, NORA"
-    },
-    {
-      "network_entity_id": "contractor:4a26dbff-ece1-4aa1-8e54-45fe6ff3ef8e",
-      "hub": "contractor",
-      "source_entity_id": "cpc057184-gables-pool-spa-inc",
-      "entity_type": "contractor",
-      "display_name": "GABLES POOL & SPA INC",
-      "city": "MIAMI",
-      "county": "Miami-Dade",
-      "state": "FL",
-      "zip": "33265",
-      "categories": [
-        "pool"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cpc057184-gables-pool-spa-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/pool-spa",
-      "search_terms": [
-        "gables pool & spa inc",
-        "cpc057184 gables pool spa inc",
-        "pool",
-        "miami",
-        "miami-dade",
-        "fl",
-        "cpc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "SANCHEZ, ENRIQUE"
     },
     {
       "network_entity_id": "contractor:4a6df201-8839-4279-9af1-9b3eeec26c11",
@@ -5083,132 +5187,8 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SCHOFIELD ELECTRIC"
-    },
-    {
-      "network_entity_id": "contractor:4b2ae45b-456f-4679-a6aa-ae350ab5bbf3",
-      "hub": "contractor",
-      "source_entity_id": "ccc036998-q-n-x-corp",
-      "entity_type": "contractor",
-      "display_name": "Q N ' X CORP",
-      "city": "DAVIE",
-      "county": "Broward",
-      "state": "FL",
-      "zip": "33331",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc036998-q-n-x-corp",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/broward/roofers",
-      "search_terms": [
-        "q n ' x corp",
-        "ccc036998 q n x corp",
-        "roofing",
-        "davie",
-        "broward",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "FERTITTA, NICHOLAS J"
-    },
-    {
-      "network_entity_id": "contractor:4b9eaf82-6bda-47e5-90e1-48d7cc5cf43d",
-      "hub": "contractor",
-      "source_entity_id": "ccc036963-roofing-concepts-unlimited-florida-inc",
-      "entity_type": "contractor",
-      "display_name": "ROOFING CONCEPTS UNLIMITED/FLORIDA INC",
-      "city": "CORAL SPRINGS",
-      "county": "Broward",
-      "state": "FL",
-      "zip": "33065",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc036963-roofing-concepts-unlimited-florida-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/broward/roofers",
-      "search_terms": [
-        "roofing concepts unlimited/florida inc",
-        "ccc036963 roofing concepts unlimited florida inc",
-        "roofing",
-        "coral springs",
-        "broward",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "JACOBAZZI, MICHAEL J"
-    },
-    {
-      "network_entity_id": "contractor:4bdb9ebd-61ae-4dbb-ac14-53cc896fe689",
-      "hub": "contractor",
-      "source_entity_id": "ccc057560-jsm-construction-services-inc",
-      "entity_type": "contractor",
-      "display_name": "JSM CONSTRUCTION SERVICES INC",
-      "city": "MIAMI",
-      "county": "Miami-Dade",
-      "state": "FL",
-      "zip": "33155",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc057560-jsm-construction-services-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/roofers",
-      "search_terms": [
-        "jsm construction services inc",
-        "ccc057560 jsm construction services inc",
-        "roofing",
-        "miami",
-        "miami-dade",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "SUAREZ-MURIAS, JORGE A"
-    },
-    {
-      "network_entity_id": "contractor:4c47b4c3-7b60-4b8e-bf4d-dcfca76b0516",
-      "hub": "contractor",
-      "source_entity_id": "ccc053854-emerald-roofing-inc",
-      "entity_type": "contractor",
-      "display_name": "EMERALD ROOFING INC",
-      "city": "MIAMI",
-      "county": "Miami-Dade",
-      "state": "FL",
-      "zip": "33142",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc053854-emerald-roofing-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/roofers",
-      "search_terms": [
-        "emerald roofing inc",
-        "ccc053854 emerald roofing inc",
-        "roofing",
-        "miami",
-        "miami-dade",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "PEREZ, JOSUE"
     },
     {
       "network_entity_id": "contractor:4c7f2369-42ce-40df-ba64-6d8304b5aa79",
@@ -5238,7 +5218,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "FINLEY, RICHARD ARLEN"
     },
     {
@@ -5268,8 +5248,39 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "RAY A REGEP"
+    },
+    {
+      "network_entity_id": "contractor:4dacfab3-8901-42be-bb0a-3527132db5fa",
+      "hub": "contractor",
+      "source_entity_id": "cfc052664-douglas-orr-plumbing-inc",
+      "entity_type": "contractor",
+      "display_name": "DOUGLAS ORR PLUMBING INC",
+      "city": "MIAMI SPRINGS",
+      "county": "Miami-Dade",
+      "state": "FL",
+      "zip": "33166",
+      "categories": [
+        "plumbing"
+      ],
+      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cfc052664-douglas-orr-plumbing-inc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/plumbing",
+      "search_terms": [
+        "douglas orr plumbing inc",
+        "cfc052664 douglas orr plumbing inc",
+        "plumbing",
+        "miami springs",
+        "miami-dade",
+        "fl",
+        "cfc"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "ORR, WAYNE MACNIVEN"
     },
     {
       "network_entity_id": "contractor:4e5af503-45b6-43bb-8b32-d95505d48926",
@@ -5299,70 +5310,8 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SABETI, MANSOUR"
-    },
-    {
-      "network_entity_id": "contractor:4f290749-0e4a-4c9e-88b7-9eb78926280c",
-      "hub": "contractor",
-      "source_entity_id": "ccc056371-miami-fireplace-and-bbq",
-      "entity_type": "contractor",
-      "display_name": "MIAMI FIREPLACE AND BBQ",
-      "city": "PINECREST",
-      "county": "Miami-Dade",
-      "state": "FL",
-      "zip": "33156",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc056371-miami-fireplace-and-bbq",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/roofers",
-      "search_terms": [
-        "miami fireplace and bbq",
-        "ccc056371 miami fireplace and bbq",
-        "roofing",
-        "pinecrest",
-        "miami-dade",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "ZISMAN, DAVID ALAN"
-    },
-    {
-      "network_entity_id": "contractor:4f3ab54c-dbff-427c-afa4-d39255de1875",
-      "hub": "contractor",
-      "source_entity_id": "ccc024413-advanced-roofing-inc",
-      "entity_type": "contractor",
-      "display_name": "ADVANCED ROOFING INC",
-      "city": "FORT LAUDERDALE",
-      "county": "Broward",
-      "state": "FL",
-      "zip": "33311",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc024413-advanced-roofing-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/broward/roofers",
-      "search_terms": [
-        "advanced roofing inc",
-        "ccc024413 advanced roofing inc",
-        "roofing",
-        "fort lauderdale",
-        "broward",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "KORNAHRENS, ROBERT P"
     },
     {
       "network_entity_id": "contractor:4fc931fc-80f5-41b4-83b5-2da5425b5f6f",
@@ -5391,8 +5340,70 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "JOHN H. PURCELL"
+    },
+    {
+      "network_entity_id": "contractor:4fe8c609-2bdf-482e-98da-b584eb332380",
+      "hub": "contractor",
+      "source_entity_id": "cfc041673-bradford-plumbing-llc",
+      "entity_type": "contractor",
+      "display_name": "BRADFORD PLUMBING LLC",
+      "city": "VIRGINIA GARDENS",
+      "county": "Miami-Dade",
+      "state": "FL",
+      "zip": "33166",
+      "categories": [
+        "plumbing"
+      ],
+      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cfc041673-bradford-plumbing-llc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/plumbing",
+      "search_terms": [
+        "bradford plumbing llc",
+        "cfc041673 bradford plumbing llc",
+        "plumbing",
+        "virginia gardens",
+        "miami-dade",
+        "fl",
+        "cfc"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "BRADFORD, DAVID RUSSELL"
+    },
+    {
+      "network_entity_id": "contractor:4fed3bcf-b14d-4264-8a6b-bd563607af05",
+      "hub": "contractor",
+      "source_entity_id": "cfc026538-a-contractor-s-solution-llc",
+      "entity_type": "contractor",
+      "display_name": "A CONTRACTOR'S SOLUTION LLC",
+      "city": "JUPITER",
+      "county": "Palm Beach",
+      "state": "FL",
+      "zip": "33478",
+      "categories": [
+        "plumbing"
+      ],
+      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cfc026538-a-contractor-s-solution-llc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/palm-beach/plumbing",
+      "search_terms": [
+        "a contractor's solution llc",
+        "cfc026538 a contractor s solution llc",
+        "plumbing",
+        "jupiter",
+        "palm beach",
+        "fl",
+        "cfc"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "ALVAREZ, CARLOS ALBERTO"
     },
     {
       "network_entity_id": "contractor:5063dfb6-2b50-4eb7-bcda-d047859370d0",
@@ -5422,39 +5433,8 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ROWE ELECTRIC, INC."
-    },
-    {
-      "network_entity_id": "contractor:509f6bef-6310-4970-9429-a1d7272dce8d",
-      "hub": "contractor",
-      "source_entity_id": "ccc011043-morton-roofing-inc",
-      "entity_type": "contractor",
-      "display_name": "MORTON ROOFING INC",
-      "city": "POMPANO BEACH",
-      "county": "Broward",
-      "state": "FL",
-      "zip": "33069",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc011043-morton-roofing-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/broward/roofers",
-      "search_terms": [
-        "morton roofing inc",
-        "ccc011043 morton roofing inc",
-        "roofing",
-        "pompano beach",
-        "broward",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "MORTON, JOHN B III"
     },
     {
       "network_entity_id": "contractor:50e93dc5-1b77-4782-807e-23637fbcc74f",
@@ -5484,8 +5464,39 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "CALDEVILLA, RICHARD STEVEN"
+    },
+    {
+      "network_entity_id": "contractor:511c826a-eee4-49f8-a95e-2d2d7bae1de2",
+      "hub": "contractor",
+      "source_entity_id": "cfc029715-deemaria-plumbing-inc",
+      "entity_type": "contractor",
+      "display_name": "DEEMARIA PLUMBING INC",
+      "city": "WEST PALM BCH",
+      "county": "Palm Beach",
+      "state": "FL",
+      "zip": "33405",
+      "categories": [
+        "plumbing"
+      ],
+      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cfc029715-deemaria-plumbing-inc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/palm-beach/plumbing",
+      "search_terms": [
+        "deemaria plumbing inc",
+        "cfc029715 deemaria plumbing inc",
+        "plumbing",
+        "west palm bch",
+        "palm beach",
+        "fl",
+        "cfc"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "DI MARIA, JOSEPH"
     },
     {
       "network_entity_id": "contractor:51e34b14-b956-457f-aa6c-73ef1e1706e9",
@@ -5515,7 +5526,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "BARTLETT, JAMES RICHARD"
     },
     {
@@ -5546,7 +5557,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "PASCALE ELECTRIC INC"
     },
     {
@@ -5577,39 +5588,8 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "DURA-ELECTRIC SERVICE"
-    },
-    {
-      "network_entity_id": "contractor:52c5ab9a-457e-4250-9598-3b2f62d99046",
-      "hub": "contractor",
-      "source_entity_id": "ccc054749-high-dry-group-inc",
-      "entity_type": "contractor",
-      "display_name": "HIGH & DRY GROUP INC",
-      "city": "NORTH MIAMI",
-      "county": "Miami-Dade",
-      "state": "FL",
-      "zip": "33161",
-      "categories": [
-        "roofing"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/ccc054749-high-dry-group-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/roofers",
-      "search_terms": [
-        "high & dry group inc",
-        "ccc054749 high dry group inc",
-        "roofing",
-        "north miami",
-        "miami-dade",
-        "fl",
-        "ccc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "PEREZ, JORGE FELIX"
     },
     {
       "network_entity_id": "contractor:53424e9a-0ba9-4eea-a2f5-2869a0666677",
@@ -5638,7 +5618,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "DONNELL K. SANDERS"
     },
     {
@@ -5668,39 +5648,39 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "RICHARD J BIELINSKI"
     },
     {
-      "network_entity_id": "contractor:5546b84a-7605-4cc4-a968-1ded6bb012ce",
+      "network_entity_id": "contractor:549166ad-7e39-4715-b019-9426ec181ac2",
       "hub": "contractor",
-      "source_entity_id": "cpc055614-southern-pools-incorporated",
+      "source_entity_id": "cac026425-air-stream-air-conditioning-heating-inc",
       "entity_type": "contractor",
-      "display_name": "SOUTHERN POOLS INCORPORATED",
-      "city": "DAVIE",
-      "county": "Broward",
+      "display_name": "AIR STREAM AIR CONDITIONING & HEATING INC",
+      "city": "TAMPA",
+      "county": "Hillsborough",
       "state": "FL",
-      "zip": "33330",
+      "zip": "33612",
       "categories": [
-        "pool"
+        "hvac"
       ],
       "regulatory_status_summary": "Florida DBPR construction license on file (active)",
       "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cpc055614-southern-pools-incorporated",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/broward/pool-spa",
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cac026425-air-stream-air-conditioning-heating-inc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/hillsborough/air-conditioning",
       "search_terms": [
-        "southern pools incorporated",
-        "cpc055614 southern pools incorporated",
-        "pool",
-        "davie",
-        "broward",
+        "air stream air conditioning & heating inc",
+        "cac026425 air stream air conditioning heating inc",
+        "hvac",
+        "tampa",
+        "hillsborough",
         "fl",
-        "cpc"
+        "cac"
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "KOPONEN, DON ERIK"
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "LAVALLEE, CELIA C"
     },
     {
       "network_entity_id": "contractor:55c6c040-bf84-45bb-9b7f-bca4cd8ee44d",
@@ -5730,8 +5710,69 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "JASSIN LLC"
+    },
+    {
+      "network_entity_id": "contractor:55f0b506-4a21-4dff-aa84-2b3451a58a44",
+      "hub": "contractor",
+      "source_entity_id": "cac035500-bay-area-electric-and-refrigeration-inc",
+      "entity_type": "contractor",
+      "display_name": "BAY AREA ELECTRIC AND REFRIGERATION INC",
+      "city": "TAMPA",
+      "county": "Hillsborough",
+      "state": "FL",
+      "zip": "33614",
+      "categories": [
+        "hvac"
+      ],
+      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cac035500-bay-area-electric-and-refrigeration-inc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/hillsborough/air-conditioning",
+      "search_terms": [
+        "bay area electric and refrigeration inc",
+        "cac035500 bay area electric and refrigeration inc",
+        "hvac",
+        "tampa",
+        "hillsborough",
+        "fl",
+        "cac"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "FOWLER, JIMMY D"
+    },
+    {
+      "network_entity_id": "contractor:566feca5-7e01-45fc-b4b7-3d5714d65ce2",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-hvac-19hc00071400-joseph-dominick-marino",
+      "entity_type": "contractor",
+      "display_name": "JOSEPH DOMINICK MARINO",
+      "city": "Saddle Brook",
+      "county": "Bergen",
+      "state": "NJ",
+      "zip": "07663",
+      "categories": [
+        "hvac"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hvac-19hc00071400-joseph-dominick-marino",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "joseph dominick marino",
+        "nj nj hvac 19hc00071400 joseph dominick marino",
+        "hvac",
+        "saddle brook",
+        "bergen",
+        "nj"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "JOSEPH DOMINICK MARINO"
     },
     {
       "network_entity_id": "contractor:56fed16a-5004-48a6-9a2b-2679cbff4bbe",
@@ -5761,7 +5802,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "SF&W HOMES LLC"
     },
     {
@@ -5792,8 +5833,38 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ADVANCED HOME CONTROL SYST INC"
+    },
+    {
+      "network_entity_id": "contractor:5ab361c5-fb8d-45e6-a063-696e1526f7d2",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-hvac-19hc00012800-robert-k-defeis",
+      "entity_type": "contractor",
+      "display_name": "ROBERT K. DEFEIS",
+      "city": "North Haledon",
+      "county": "Passaic",
+      "state": "NJ",
+      "zip": "07508",
+      "categories": [
+        "hvac"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hvac-19hc00012800-robert-k-defeis",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "robert k. defeis",
+        "nj nj hvac 19hc00012800 robert k defeis",
+        "hvac",
+        "north haledon",
+        "passaic",
+        "nj"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "ROBERT K. DEFEIS"
     },
     {
       "network_entity_id": "contractor:5dbb6c99-f1a3-4712-977a-1c89b6c03f7f",
@@ -5823,8 +5894,38 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "WALKER, RICHARD L"
+    },
+    {
+      "network_entity_id": "contractor:5ee48787-0d64-4bd0-8636-e75713957f97",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-hvac-19hc00013100-theodore-m-borowicki",
+      "entity_type": "contractor",
+      "display_name": "THEODORE M BOROWICKI",
+      "city": "BRICK",
+      "county": "Ocean",
+      "state": "NJ",
+      "zip": "08723",
+      "categories": [
+        "hvac"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hvac-19hc00013100-theodore-m-borowicki",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "theodore m borowicki",
+        "nj nj hvac 19hc00013100 theodore m borowicki",
+        "hvac",
+        "brick",
+        "ocean",
+        "nj"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "THEODORE M BOROWICKI"
     },
     {
       "network_entity_id": "contractor:5ff6852e-5e76-44bb-b39f-6ca39f136ac7",
@@ -5854,7 +5955,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "LAMM, DAVID ROTH"
     },
     {
@@ -5885,7 +5986,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "LINOL BUILDERS INC"
     },
     {
@@ -5916,7 +6017,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "K & R EL CONTRS INC"
     },
     {
@@ -5947,7 +6048,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "URGILES CONTRACTOR LLC"
     },
     {
@@ -5978,70 +6079,39 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "EHRLICH, GARY PAUL"
     },
     {
-      "network_entity_id": "contractor:628055f0-bdf4-4e39-92e6-99c866048ac7",
+      "network_entity_id": "contractor:6391ea51-50e9-40f1-8738-47a135221ab7",
       "hub": "contractor",
-      "source_entity_id": "cpc1461393-a-z-pools-llc",
+      "source_entity_id": "cac055010-air-patton-inc",
       "entity_type": "contractor",
-      "display_name": "A.Z. POOLS LLC",
-      "city": "HIALEAH",
-      "county": "Miami-Dade",
+      "display_name": "AIR PATTON, INC",
+      "city": "LUTZ",
+      "county": "Hillsborough",
       "state": "FL",
-      "zip": "33012",
+      "zip": "33548",
       "categories": [
-        "pool"
+        "hvac"
       ],
       "regulatory_status_summary": "Florida DBPR construction license on file (active)",
       "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cpc1461393-a-z-pools-llc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/miami-dade/pool-spa",
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cac055010-air-patton-inc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/hillsborough/air-conditioning",
       "search_terms": [
-        "a.z. pools llc",
-        "cpc1461393 a z pools llc",
-        "pool",
-        "hialeah",
-        "miami-dade",
+        "air patton, inc",
+        "cac055010 air patton inc",
+        "hvac",
+        "lutz",
+        "hillsborough",
         "fl",
-        "cpc"
+        "cac"
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "ALVAREZ, JOSE DE JESUS"
-    },
-    {
-      "network_entity_id": "contractor:635aae2e-2476-4dc7-92f9-04c1217d7849",
-      "hub": "contractor",
-      "source_entity_id": "cpc057031-dream-design-pools-inc",
-      "entity_type": "contractor",
-      "display_name": "DREAM DESIGN POOLS INC",
-      "city": "PEMBROKE PINES",
-      "county": "Broward",
-      "state": "FL",
-      "zip": "33027",
-      "categories": [
-        "pool"
-      ],
-      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cpc057031-dream-design-pools-inc",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/broward/pool-spa",
-      "search_terms": [
-        "dream design pools inc",
-        "cpc057031 dream design pools inc",
-        "pool",
-        "pembroke pines",
-        "broward",
-        "fl",
-        "cpc"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "PELLERANO, RAFAEL A"
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "PATTON, MICHAEL THOMAS"
     },
     {
       "network_entity_id": "contractor:63b02f02-7980-444d-a551-859b94aa7a43",
@@ -6071,8 +6141,39 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "PERASUS LLC"
+    },
+    {
+      "network_entity_id": "contractor:641f6332-3e7e-45cb-b397-94f7da6520e4",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-plb-36bi00882500-john-o-mainero",
+      "entity_type": "contractor",
+      "display_name": "JOHN O MAINERO",
+      "city": "BRIELLE",
+      "county": "Monmouth",
+      "state": "NJ",
+      "zip": "08730",
+      "categories": [
+        "plumbing"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-plb-36bi00882500-john-o-mainero",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "john o mainero",
+        "nj nj plb 36bi00882500 john o mainero",
+        "plumbing",
+        "brielle",
+        "monmouth",
+        "nj",
+        "plb"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "JOHN O MAINERO"
     },
     {
       "network_entity_id": "contractor:66579aed-eba5-46b0-8ecf-5afc24854f3b",
@@ -6102,39 +6203,100 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "MC CULLY, WALTER A"
     },
     {
-      "network_entity_id": "contractor:69bffca3-c64b-4921-8de0-4544b4d5088d",
+      "network_entity_id": "contractor:6a192a7a-9701-4106-bed0-b7aa45a036c7",
       "hub": "contractor",
-      "source_entity_id": "cpc1456640-ross-services",
+      "source_entity_id": "cac058245-l-valdes-a-c-llc",
       "entity_type": "contractor",
-      "display_name": "ROSS SERVICES",
-      "city": "COCONUT CREEK",
-      "county": "Broward",
+      "display_name": "L VALDES A/C LLC",
+      "city": "TAMPA",
+      "county": "Hillsborough",
       "state": "FL",
-      "zip": "33073",
+      "zip": "33619",
       "categories": [
-        "pool"
+        "hvac"
       ],
       "regulatory_status_summary": "Florida DBPR construction license on file (active)",
       "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cpc1456640-ross-services",
-      "canonical_search_url": "https://www.contractortrusthub.com/florida/broward/pool-spa",
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cac058245-l-valdes-a-c-llc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/hillsborough/air-conditioning",
       "search_terms": [
-        "ross services",
-        "cpc1456640 ross services",
-        "pool",
-        "coconut creek",
-        "broward",
+        "l valdes a/c llc",
+        "cac058245 l valdes a c llc",
+        "hvac",
+        "tampa",
+        "hillsborough",
         "fl",
-        "cpc"
+        "cac"
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "THOMAS, RICKY DEAN"
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "VALDES, LEANDRO"
+    },
+    {
+      "network_entity_id": "contractor:6ac16bd1-f112-467a-b608-4df870a5f96e",
+      "hub": "contractor",
+      "source_entity_id": "cac042730-action-airconditioning-inc",
+      "entity_type": "contractor",
+      "display_name": "ACTION AIRCONDITIONING INC",
+      "city": "TAMPA",
+      "county": "Hillsborough",
+      "state": "FL",
+      "zip": "33604",
+      "categories": [
+        "hvac"
+      ],
+      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cac042730-action-airconditioning-inc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/hillsborough/air-conditioning",
+      "search_terms": [
+        "action airconditioning inc",
+        "cac042730 action airconditioning inc",
+        "hvac",
+        "tampa",
+        "hillsborough",
+        "fl",
+        "cac"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "RUSSELL, DAVID CARL"
+    },
+    {
+      "network_entity_id": "contractor:6b13c622-0501-47b6-90cb-980bd92e8a56",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-hvac-19hc00322800-jason-weber",
+      "entity_type": "contractor",
+      "display_name": "JASON WEBER",
+      "city": "Clark",
+      "county": "Union",
+      "state": "NJ",
+      "zip": "07066",
+      "categories": [
+        "hvac"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hvac-19hc00322800-jason-weber",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "jason weber",
+        "nj nj hvac 19hc00322800 jason weber",
+        "hvac",
+        "clark",
+        "union",
+        "nj"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "JASON WEBER"
     },
     {
       "network_entity_id": "contractor:6c3c25ea-c69d-46bb-8b0d-e5bac22488cf",
@@ -6164,8 +6326,225 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "DAVIS, DANIEL HUGH"
+    },
+    {
+      "network_entity_id": "contractor:6fa61007-9566-4fb1-a11d-8e704faf0aa6",
+      "hub": "contractor",
+      "source_entity_id": "cgc017066-john-puder-llc",
+      "entity_type": "contractor",
+      "display_name": "JOHN PUDER, LLC",
+      "city": "ORLANDO",
+      "county": "Orange",
+      "state": "FL",
+      "zip": "32806",
+      "categories": [
+        "general_contractor"
+      ],
+      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cgc017066-john-puder-llc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/orange/general-contractors",
+      "search_terms": [
+        "john puder, llc",
+        "cgc017066 john puder llc",
+        "general_contractor",
+        "orlando",
+        "orange",
+        "fl",
+        "cgc"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "PUDER, JOHN NELSON"
+    },
+    {
+      "network_entity_id": "contractor:747f31ce-a276-400e-9646-120fb56e656c",
+      "hub": "contractor",
+      "source_entity_id": "cgc012890-brandon-structures-inc",
+      "entity_type": "contractor",
+      "display_name": "BRANDON STRUCTURES INC",
+      "city": "ORLANDO",
+      "county": "Orange",
+      "state": "FL",
+      "zip": "32803",
+      "categories": [
+        "general_contractor"
+      ],
+      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cgc012890-brandon-structures-inc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/orange/general-contractors",
+      "search_terms": [
+        "brandon structures inc",
+        "cgc012890 brandon structures inc",
+        "general_contractor",
+        "orlando",
+        "orange",
+        "fl",
+        "cgc"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "BRANDON, STEPHEN E"
+    },
+    {
+      "network_entity_id": "contractor:74a02021-b695-4a46-9aaa-1f0b9d48f6c8",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-hic-13vh08327200-chambers-design-llc",
+      "entity_type": "contractor",
+      "display_name": "CHAMBERS DESIGN LLC",
+      "city": "South Orange",
+      "county": "Essex",
+      "state": "NJ",
+      "zip": "07079",
+      "categories": [
+        "general_contractor"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hic-13vh08327200-chambers-design-llc",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "chambers design llc",
+        "nj nj hic 13vh08327200 chambers design llc",
+        "general_contractor",
+        "south orange",
+        "essex",
+        "nj",
+        "hic"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "CHAMBERS DESIGN LLC"
+    },
+    {
+      "network_entity_id": "contractor:76dcf4fa-c367-4129-aa6e-9a0be668071e",
+      "hub": "contractor",
+      "source_entity_id": "caca57421-ken-barrett-air-conditioning-inc",
+      "entity_type": "contractor",
+      "display_name": "KEN BARRETT AIR CONDITIONING INC",
+      "city": "TAMPA",
+      "county": "Hillsborough",
+      "state": "FL",
+      "zip": "33618",
+      "categories": [
+        "hvac"
+      ],
+      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/caca57421-ken-barrett-air-conditioning-inc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/hillsborough/air-conditioning",
+      "search_terms": [
+        "ken barrett air conditioning inc",
+        "caca57421 ken barrett air conditioning inc",
+        "hvac",
+        "tampa",
+        "hillsborough",
+        "fl",
+        "cac"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "BARRETT, KENNETH JAMES"
+    },
+    {
+      "network_entity_id": "contractor:775db26c-986e-4de3-803a-83fe461cdd73",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-hic-13vh11298000-wayne-oakley",
+      "entity_type": "contractor",
+      "display_name": "WAYNE OAKLEY",
+      "city": "Pequannock",
+      "county": "Morris",
+      "state": "NJ",
+      "zip": "07440",
+      "categories": [
+        "general_contractor"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hic-13vh11298000-wayne-oakley",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "wayne oakley",
+        "nj nj hic 13vh11298000 wayne oakley",
+        "general_contractor",
+        "pequannock",
+        "morris",
+        "nj",
+        "hic"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "WAYNE OAKLEY"
+    },
+    {
+      "network_entity_id": "contractor:780df61a-47b0-485e-83a8-1ad147f5fe2c",
+      "hub": "contractor",
+      "source_entity_id": "cac036826-gulfcoast-air-systems-inc",
+      "entity_type": "contractor",
+      "display_name": "GULFCOAST AIR SYSTEMS INC",
+      "city": "BRANDON",
+      "county": "Hillsborough",
+      "state": "FL",
+      "zip": "33511",
+      "categories": [
+        "hvac"
+      ],
+      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cac036826-gulfcoast-air-systems-inc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/hillsborough/air-conditioning",
+      "search_terms": [
+        "gulfcoast air systems inc",
+        "cac036826 gulfcoast air systems inc",
+        "hvac",
+        "brandon",
+        "hillsborough",
+        "fl",
+        "cac"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "COCHELL, ROBERT DALE"
+    },
+    {
+      "network_entity_id": "contractor:7a0eb30f-ba6e-40d5-a8ae-ef6acca1cb7e",
+      "hub": "contractor",
+      "source_entity_id": "cac039672-alltemp-air-systems-inc",
+      "entity_type": "contractor",
+      "display_name": "ALLTEMP AIR SYSTEMS, INC.",
+      "city": "BRANDON",
+      "county": "Hillsborough",
+      "state": "FL",
+      "zip": "33508",
+      "categories": [
+        "hvac"
+      ],
+      "regulatory_status_summary": "Florida DBPR construction license on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/cac039672-alltemp-air-systems-inc",
+      "canonical_search_url": "https://www.contractortrusthub.com/florida/hillsborough/air-conditioning",
+      "search_terms": [
+        "alltemp air systems, inc.",
+        "cac039672 alltemp air systems inc",
+        "hvac",
+        "brandon",
+        "hillsborough",
+        "fl",
+        "cac"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "RHOADS, ROGER M"
     },
     {
       "network_entity_id": "contractor:7a8ce9b6-d305-4cc1-8a70-b9e571a8f40f",
@@ -6195,7 +6574,7 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "VIKING ELECTRIC"
     },
     {
@@ -6226,8 +6605,70 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "ARAHILL ELECTRIC"
+    },
+    {
+      "network_entity_id": "contractor:7c772abe-a454-4a92-9b3e-adc3591dd6a3",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-hic-13vh10896400-your-residence-llc",
+      "entity_type": "contractor",
+      "display_name": "YOUR RESIDENCE LLC",
+      "city": "Garfield",
+      "county": "Bergen",
+      "state": "NJ",
+      "zip": "07026",
+      "categories": [
+        "general_contractor"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hic-13vh10896400-your-residence-llc",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "your residence llc",
+        "nj nj hic 13vh10896400 your residence llc",
+        "general_contractor",
+        "garfield",
+        "bergen",
+        "nj",
+        "hic"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "YOUR RESIDENCE LLC"
+    },
+    {
+      "network_entity_id": "contractor:7ef8f349-8350-40e7-a43b-93b7133e888b",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-hic-13vh11124300-excel-pro-construction-llc",
+      "entity_type": "contractor",
+      "display_name": "EXCEL PRO CONSTRUCTION LLC",
+      "city": "Newton",
+      "county": "Sussex",
+      "state": "NJ",
+      "zip": "07860",
+      "categories": [
+        "general_contractor"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hic-13vh11124300-excel-pro-construction-llc",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "excel pro construction llc",
+        "nj nj hic 13vh11124300 excel pro construction llc",
+        "general_contractor",
+        "newton",
+        "sussex",
+        "nj",
+        "hic"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "EXCEL PRO CONSTRUCTION LLC"
     },
     {
       "network_entity_id": "contractor:85f72049-dc9a-4b36-b7c8-599a46f751fe",
@@ -6257,318 +6698,286 @@
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
+      "updated_at": "2026-08-23T14:13:04.435Z",
       "legal_name": "BRAUN ELECTRIC CO"
     },
     {
-      "network_entity_id": "contractor:9189be9a-12b1-4006-b9e1-348be09993dd",
+      "network_entity_id": "contractor:87966744-5a71-4eca-96a6-9549620885a9",
       "hub": "contractor",
-      "source_entity_id": "nj-nj-ele-34eb00632200-cmac-electric-corp",
+      "source_entity_id": "nj-nj-hic-13vh11044100-heaven-earth-llc",
       "entity_type": "contractor",
-      "display_name": "CMAC ELECTRIC CORP.",
-      "city": "Barnegat",
-      "county": "Ocean",
+      "display_name": "HEAVEN & EARTH LLC",
+      "city": "Denville",
+      "county": "Morris",
       "state": "NJ",
-      "zip": "08005",
+      "zip": "07834",
       "categories": [
-        "electrical"
+        "general_contractor"
       ],
       "regulatory_status_summary": "New Jersey contractor credential on file (active)",
       "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-ele-34eb00632200-cmac-electric-corp",
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hic-13vh11044100-heaven-earth-llc",
       "canonical_search_url": "https://www.contractortrusthub.com/verify",
       "search_terms": [
-        "cmac electric corp.",
-        "nj nj ele 34eb00632200 cmac electric corp",
-        "electrical",
-        "barnegat",
-        "ocean",
+        "heaven & earth llc",
+        "nj nj hic 13vh11044100 heaven earth llc",
+        "general_contractor",
+        "denville",
+        "morris",
         "nj",
-        "ele"
+        "hic"
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "CMAC ELECTRIC CORP."
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "HEAVEN & EARTH LLC"
     },
     {
-      "network_entity_id": "contractor:939e24da-e482-4691-a5a9-a7eed5091b18",
+      "network_entity_id": "contractor:8f2993c8-8d0d-44e0-bf73-efb53a1ab177",
       "hub": "contractor",
-      "source_entity_id": "nj-nj-ele-34eb01320900-tlc-electric",
+      "source_entity_id": "nj-nj-plb-36bi00527200-leroy-g-lloyd",
       "entity_type": "contractor",
-      "display_name": "TLC ELECTRIC",
-      "city": "Wildwood",
-      "county": "Cape May",
-      "state": "NJ",
-      "zip": "08260",
-      "categories": [
-        "electrical"
-      ],
-      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-ele-34eb01320900-tlc-electric",
-      "canonical_search_url": "https://www.contractortrusthub.com/verify",
-      "search_terms": [
-        "tlc electric",
-        "nj nj ele 34eb01320900 tlc electric",
-        "electrical",
-        "wildwood",
-        "cape may",
-        "nj",
-        "ele"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "TLC ELECTRIC"
-    },
-    {
-      "network_entity_id": "contractor:9a5bea8a-d461-4416-bb93-84a4126274ee",
-      "hub": "contractor",
-      "source_entity_id": "nj-nj-ele-34eb00924800-peter-p-faccas-sons",
-      "entity_type": "contractor",
-      "display_name": "PETER P FACCAS & SONS",
-      "city": "Keansburg",
-      "county": "Monmouth",
-      "state": "NJ",
-      "zip": "07734",
-      "categories": [
-        "electrical"
-      ],
-      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-ele-34eb00924800-peter-p-faccas-sons",
-      "canonical_search_url": "https://www.contractortrusthub.com/verify",
-      "search_terms": [
-        "peter p faccas & sons",
-        "nj nj ele 34eb00924800 peter p faccas sons",
-        "electrical",
-        "keansburg",
-        "monmouth",
-        "nj",
-        "ele"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "PETER P FACCAS & SONS"
-    },
-    {
-      "network_entity_id": "contractor:9f03914f-2080-428e-8d50-27516c8209c5",
-      "hub": "contractor",
-      "source_entity_id": "nj-nj-ele-34eb01275300-tfb-electric",
-      "entity_type": "contractor",
-      "display_name": "TFB ELECTRIC",
-      "city": "RUMSON",
-      "county": "Monmouth",
-      "state": "NJ",
-      "zip": "07760",
-      "categories": [
-        "electrical"
-      ],
-      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-ele-34eb01275300-tfb-electric",
-      "canonical_search_url": "https://www.contractortrusthub.com/verify",
-      "search_terms": [
-        "tfb electric",
-        "nj nj ele 34eb01275300 tfb electric",
-        "electrical",
-        "rumson",
-        "monmouth",
-        "nj",
-        "ele"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "TFB ELECTRIC"
-    },
-    {
-      "network_entity_id": "contractor:a005a910-e806-4f79-bbe6-7603542ba3c7",
-      "hub": "contractor",
-      "source_entity_id": "nj-nj-ele-34eb01516300-rds-electric",
-      "entity_type": "contractor",
-      "display_name": "RDS ELECTRIC",
-      "city": "Milford",
-      "county": "Hunterdon",
-      "state": "NJ",
-      "zip": "08848",
-      "categories": [
-        "electrical"
-      ],
-      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-ele-34eb01516300-rds-electric",
-      "canonical_search_url": "https://www.contractortrusthub.com/verify",
-      "search_terms": [
-        "rds electric",
-        "nj nj ele 34eb01516300 rds electric",
-        "electrical",
-        "milford",
-        "hunterdon",
-        "nj",
-        "ele"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "RDS ELECTRIC"
-    },
-    {
-      "network_entity_id": "contractor:a0801f57-fea5-4761-b842-1fb1d26e305d",
-      "hub": "contractor",
-      "source_entity_id": "nj-nj-ele-34eb01376600-e-m-electrical-contractors",
-      "entity_type": "contractor",
-      "display_name": "E M ELECTRICAL CONTRACTORS",
-      "city": "Sparta",
-      "county": "Sussex",
-      "state": "NJ",
-      "zip": "07871",
-      "categories": [
-        "electrical"
-      ],
-      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-ele-34eb01376600-e-m-electrical-contractors",
-      "canonical_search_url": "https://www.contractortrusthub.com/verify",
-      "search_terms": [
-        "e m electrical contractors",
-        "nj nj ele 34eb01376600 e m electrical contractors",
-        "electrical",
-        "sparta",
-        "sussex",
-        "nj",
-        "ele"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "E M ELECTRICAL CONTRACTORS"
-    },
-    {
-      "network_entity_id": "contractor:a34c04b9-09c9-4f25-9e3f-82328d702b66",
-      "hub": "contractor",
-      "source_entity_id": "nj-nj-ele-34eb01322100-thomas-electric-llc",
-      "entity_type": "contractor",
-      "display_name": "THOMAS ELECTRIC LLC",
-      "city": "EDISON",
-      "county": "Middlesex",
-      "state": "NJ",
-      "zip": "08817",
-      "categories": [
-        "electrical"
-      ],
-      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-ele-34eb01322100-thomas-electric-llc",
-      "canonical_search_url": "https://www.contractortrusthub.com/verify",
-      "search_terms": [
-        "thomas electric llc",
-        "nj nj ele 34eb01322100 thomas electric llc",
-        "electrical",
-        "edison",
-        "middlesex",
-        "nj",
-        "ele"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "THOMAS ELECTRIC LLC"
-    },
-    {
-      "network_entity_id": "contractor:a9f49130-15be-47ed-93d0-1c63aef89731",
-      "hub": "contractor",
-      "source_entity_id": "nj-nj-ele-34eb01208100-manor-electric",
-      "entity_type": "contractor",
-      "display_name": "MANOR ELECTRIC",
-      "city": "Kearny",
-      "county": "Hudson",
-      "state": "NJ",
-      "zip": "07032",
-      "categories": [
-        "electrical"
-      ],
-      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-ele-34eb01208100-manor-electric",
-      "canonical_search_url": "https://www.contractortrusthub.com/verify",
-      "search_terms": [
-        "manor electric",
-        "nj nj ele 34eb01208100 manor electric",
-        "electrical",
-        "kearny",
-        "hudson",
-        "nj",
-        "ele"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "MANOR ELECTRIC"
-    },
-    {
-      "network_entity_id": "contractor:b0e4cadf-cf37-4ad0-b0c2-342bc10e9cb9",
-      "hub": "contractor",
-      "source_entity_id": "nj-nj-ele-34eb01407000-gaine-electric",
-      "entity_type": "contractor",
-      "display_name": "GAINE ELECTRIC",
-      "city": "Belford",
-      "county": "Monmouth",
-      "state": "NJ",
-      "zip": "07718",
-      "categories": [
-        "electrical"
-      ],
-      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
-      "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-ele-34eb01407000-gaine-electric",
-      "canonical_search_url": "https://www.contractortrusthub.com/verify",
-      "search_terms": [
-        "gaine electric",
-        "nj nj ele 34eb01407000 gaine electric",
-        "electrical",
-        "belford",
-        "monmouth",
-        "nj",
-        "ele"
-      ],
-      "discovery_status": "active",
-      "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "GAINE ELECTRIC"
-    },
-    {
-      "network_entity_id": "contractor:c25817d6-bed9-46e0-b738-8ccb17173cb2",
-      "hub": "contractor",
-      "source_entity_id": "nj-nj-ele-34eb01284300-ark-electric-llc",
-      "entity_type": "contractor",
-      "display_name": "ARK ELECTRIC LLC",
-      "city": "Berlin",
+      "display_name": "LEROY G LLOYD",
+      "city": "CAMDEN",
       "county": "Camden",
       "state": "NJ",
-      "zip": "08009",
+      "zip": "08103",
       "categories": [
-        "electrical"
+        "plumbing"
       ],
       "regulatory_status_summary": "New Jersey contractor credential on file (active)",
       "trust_report_available": true,
-      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-ele-34eb01284300-ark-electric-llc",
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-plb-36bi00527200-leroy-g-lloyd",
       "canonical_search_url": "https://www.contractortrusthub.com/verify",
       "search_terms": [
-        "ark electric llc",
-        "nj nj ele 34eb01284300 ark electric llc",
-        "electrical",
-        "berlin",
+        "leroy g lloyd",
+        "nj nj plb 36bi00527200 leroy g lloyd",
+        "plumbing",
         "camden",
         "nj",
-        "ele"
+        "plb"
       ],
       "discovery_status": "active",
       "source_version": "contractors+licenses#discovery-pilot",
-      "updated_at": "2026-08-23T13:57:31.234Z",
-      "legal_name": "ARK ELECTRIC LLC"
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "LEROY G LLOYD"
+    },
+    {
+      "network_entity_id": "contractor:9076c71d-c9a1-423c-8778-54b3170b3dcf",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-plb-36bi00936600-gary-s-bury",
+      "entity_type": "contractor",
+      "display_name": "GARY S BURY",
+      "city": "Gillette",
+      "county": "Morris",
+      "state": "NJ",
+      "zip": "07933",
+      "categories": [
+        "plumbing"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-plb-36bi00936600-gary-s-bury",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "gary s bury",
+        "nj nj plb 36bi00936600 gary s bury",
+        "plumbing",
+        "gillette",
+        "morris",
+        "nj",
+        "plb"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "GARY S BURY"
+    },
+    {
+      "network_entity_id": "contractor:93e7a241-8303-40c2-88b8-b2f67b243599",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-plb-36bi00060000-victor-r-lobozzo",
+      "entity_type": "contractor",
+      "display_name": "VICTOR R LOBOZZO",
+      "city": "Warren",
+      "county": "Somerset",
+      "state": "NJ",
+      "zip": "07059",
+      "categories": [
+        "plumbing"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-plb-36bi00060000-victor-r-lobozzo",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "victor r lobozzo",
+        "nj nj plb 36bi00060000 victor r lobozzo",
+        "plumbing",
+        "warren",
+        "somerset",
+        "nj",
+        "plb"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "VICTOR R LOBOZZO"
+    },
+    {
+      "network_entity_id": "contractor:9599e38d-fe5d-4c4c-85d0-63f442466171",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-plb-36bi00953200-john-j-izzo-jr",
+      "entity_type": "contractor",
+      "display_name": "JOHN J IZZO JR",
+      "city": "BRICK",
+      "county": "Ocean",
+      "state": "NJ",
+      "zip": "08723",
+      "categories": [
+        "plumbing"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-plb-36bi00953200-john-j-izzo-jr",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "john j izzo jr",
+        "nj nj plb 36bi00953200 john j izzo jr",
+        "plumbing",
+        "brick",
+        "ocean",
+        "nj",
+        "plb"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "JOHN J IZZO JR"
+    },
+    {
+      "network_entity_id": "contractor:96e884b1-4212-43f6-be40-a9df422d0967",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-hic-13vh08589800-j-gard-llc",
+      "entity_type": "contractor",
+      "display_name": "J GARD LLC",
+      "city": "Hillsborough",
+      "county": "Somerset",
+      "state": "NJ",
+      "zip": "08844",
+      "categories": [
+        "general_contractor"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hic-13vh08589800-j-gard-llc",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "j gard llc",
+        "nj nj hic 13vh08589800 j gard llc",
+        "general_contractor",
+        "hillsborough",
+        "somerset",
+        "nj",
+        "hic"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "J GARD LLC"
+    },
+    {
+      "network_entity_id": "contractor:a03dee6a-7c4b-4474-80e3-08e84748d5da",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-hic-13vh08157300-tk-landscape-llc",
+      "entity_type": "contractor",
+      "display_name": "TK LANDSCAPE LLC",
+      "city": "Ringwood",
+      "county": "passaic",
+      "state": "NJ",
+      "zip": "07456",
+      "categories": [
+        "general_contractor"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hic-13vh08157300-tk-landscape-llc",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "tk landscape llc",
+        "nj nj hic 13vh08157300 tk landscape llc",
+        "general_contractor",
+        "ringwood",
+        "passaic",
+        "nj",
+        "hic"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "TK LANDSCAPE LLC"
+    },
+    {
+      "network_entity_id": "contractor:a223ad0d-e65d-4a95-9e11-4e690482acce",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-hic-13vh11299100-905-junk-llc",
+      "entity_type": "contractor",
+      "display_name": "905 JUNK LLC",
+      "city": "Toms river",
+      "county": "Ocean",
+      "state": "NJ",
+      "zip": "08755",
+      "categories": [
+        "general_contractor"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-hic-13vh11299100-905-junk-llc",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "905 junk llc",
+        "nj nj hic 13vh11299100 905 junk llc",
+        "general_contractor",
+        "toms river",
+        "ocean",
+        "nj",
+        "hic"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "905 JUNK LLC"
+    },
+    {
+      "network_entity_id": "contractor:a5d57df4-d459-4d0b-abb5-d60836041b3e",
+      "hub": "contractor",
+      "source_entity_id": "nj-nj-plb-36bi00947000-john-c-bennett",
+      "entity_type": "contractor",
+      "display_name": "JOHN C BENNETT",
+      "city": "Manahawkin",
+      "county": "Ocean",
+      "state": "NJ",
+      "zip": "08050",
+      "categories": [
+        "plumbing"
+      ],
+      "regulatory_status_summary": "New Jersey contractor credential on file (active)",
+      "trust_report_available": true,
+      "canonical_profile_url": "https://www.contractortrusthub.com/contractors/nj-nj-plb-36bi00947000-john-c-bennett",
+      "canonical_search_url": "https://www.contractortrusthub.com/verify",
+      "search_terms": [
+        "john c bennett",
+        "nj nj plb 36bi00947000 john c bennett",
+        "plumbing",
+        "manahawkin",
+        "ocean",
+        "nj",
+        "plb"
+      ],
+      "discovery_status": "active",
+      "source_version": "contractors+licenses#discovery-pilot",
+      "updated_at": "2026-08-23T14:13:04.435Z",
+      "legal_name": "JOHN C BENNETT"
     }
   ]
 }

@@ -1,54 +1,54 @@
 import type { NetworkDiscoveryEntity } from "./types";
-import { matchesQuery, REQUIRED_QUERY_FIXTURES } from "./query-readiness";
 
 export const PILOT_TARGET = 200;
 
 /**
- * Deterministic stratified sample.
+ * Natural deterministic cohort. Queries do not choose membership.
  *
- * 1. Reserve one UUID-smallest entity for each required query fixture that
- *    has at least one eligible match. Coverage only — not ranking.
- * 2. Group remaining by first Ask category (UUID-sorted).
- * 3. Round-robin across groups until PILOT_TARGET.
+ * Algorithm:
+ * 1. Sort eligible entities by network_entity_id (contractor UUID).
+ * 2. If eligible length <= 200, return that sorted list.
+ * 3. Stratify by `${state}|${first Ask category}` — generic product dimensions,
+ *    not QA cities/counties.
+ * 4. Within each stratum, keep UUID order.
+ * 5. Round-robin across strata in sorted stratum-key order until 200.
+ * 6. Sort the selected 200 by network_entity_id.
  *
- * Premium, payment, ratings, review counts, and Trust Scores are not consulted.
+ * Premium, payment, ratings, review counts, Trust Scores, and query fixtures
+ * are not consulted.
  */
+export function stratumKey(e: NetworkDiscoveryEntity): string {
+  const state = e.state || "unknown";
+  const cat = (e.categories && e.categories[0]) || "contractor";
+  return `${state}|${cat}`;
+}
+
 export function selectContractorPilot(eligible: NetworkDiscoveryEntity[]): NetworkDiscoveryEntity[] {
   const sorted = [...eligible].sort((a, b) =>
     a.network_entity_id.localeCompare(b.network_entity_id)
   );
   if (sorted.length <= PILOT_TARGET) return sorted;
 
+  const byStratum = new Map<string, NetworkDiscoveryEntity[]>();
+  for (const e of sorted) {
+    const key = stratumKey(e);
+    const list = byStratum.get(key) ?? [];
+    list.push(e);
+    byStratum.set(key, list);
+  }
+  const keys = [...byStratum.keys()].sort();
+  const idx: Record<string, number> = Object.fromEntries(keys.map((k) => [k, 0]));
   const selected: NetworkDiscoveryEntity[] = [];
   const seen = new Set<string>();
 
-  for (const fixture of REQUIRED_QUERY_FIXTURES) {
-    if (selected.length >= PILOT_TARGET) break;
-    const match = sorted.find((e) => !seen.has(e.network_entity_id) && matchesQuery(e, fixture));
-    if (!match) continue;
-    seen.add(match.network_entity_id);
-    selected.push(match);
-  }
-
-  const byCat = new Map<string, NetworkDiscoveryEntity[]>();
-  for (const e of sorted) {
-    if (seen.has(e.network_entity_id)) continue;
-    const key = (e.categories && e.categories[0]) || "contractor";
-    const list = byCat.get(key) ?? [];
-    list.push(e);
-    byCat.set(key, list);
-  }
-  const cats = [...byCat.keys()].sort();
-  const idx: Record<string, number> = Object.fromEntries(cats.map((c) => [c, 0]));
-
   while (selected.length < PILOT_TARGET) {
     let progressed = false;
-    for (const c of cats) {
+    for (const key of keys) {
       if (selected.length >= PILOT_TARGET) break;
-      const list = byCat.get(c)!;
-      const i = idx[c];
+      const list = byStratum.get(key)!;
+      const i = idx[key];
       if (i >= list.length) continue;
-      idx[c] = i + 1;
+      idx[key] = i + 1;
       const ent = list[i]!;
       if (seen.has(ent.network_entity_id)) continue;
       seen.add(ent.network_entity_id);
