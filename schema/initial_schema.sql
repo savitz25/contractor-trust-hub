@@ -161,8 +161,8 @@ CREATE TABLE IF NOT EXISTS discipline_actions (
   id                     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   contractor_id          UUID REFERENCES contractors (id) ON DELETE SET NULL,
   license_id             UUID REFERENCES licenses (id) ON DELETE SET NULL,
-  source_system          TEXT NOT NULL,       -- fl_dbpr
-  source_dataset         TEXT NOT NULL,       -- contractor_disc_lic | ula | rf
+  source_system          TEXT NOT NULL,       -- shared: fl_dbpr | az_roc | nj_enforcement | future sources
+  source_dataset         TEXT NOT NULL,
   external_key           TEXT NOT NULL,       -- deterministic row key for upserts
   complaint_number       TEXT,
   license_type           TEXT,
@@ -182,40 +182,57 @@ CREATE TABLE IF NOT EXISTS discipline_actions (
   raw_payload            JSONB,
   ingest_batch_id        UUID REFERENCES ingest_batches (id),
   last_verified_at       TIMESTAMPTZ,
-  identity_state         TEXT NOT NULL DEFAULT 'UNRESOLVED'
-                           CHECK (identity_state IN ('EXACT', 'DETERMINISTIC', 'REVIEW_REQUIRED', 'UNRESOLVED')),
+  identity_state         TEXT,
   identity_method        TEXT,
   resolver_version       TEXT,
   resolved_license_external_key TEXT,
-  identity_evidence      JSONB NOT NULL DEFAULT '{}'::jsonb,
+  identity_evidence      JSONB,
   identity_evaluated_at  TIMESTAMPTZ,
   review_reason          TEXT,
-  publication_state      TEXT NOT NULL DEFAULT 'INTERNAL'
-                           CHECK (publication_state IN ('INTERNAL', 'PUBLIC_ELIGIBLE', 'WITHHELD')),
-  publication_evidence   JSONB NOT NULL DEFAULT '{}'::jsonb,
+  publication_state      TEXT,
+  publication_evidence   JSONB,
   publication_evaluated_at TIMESTAMPTZ,
   withheld_reason        TEXT,
-  correction_hold        BOOLEAN NOT NULL DEFAULT FALSE,
-  retraction_hold        BOOLEAN NOT NULL DEFAULT FALSE,
+  correction_hold        BOOLEAN,
+  retraction_hold        BOOLEAN,
   created_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CONSTRAINT discipline_actions_identity_state_check CHECK (
+    source_system <> 'fl_dbpr'
+    OR (
+      identity_state IS NOT NULL
+      AND identity_state IN ('EXACT', 'DETERMINISTIC', 'REVIEW_REQUIRED', 'UNRESOLVED')
+    )
+  ),
+  CONSTRAINT discipline_actions_publication_state_check CHECK (
+    source_system <> 'fl_dbpr'
+    OR (
+      publication_state IS NOT NULL
+      AND publication_state IN ('INTERNAL', 'PUBLIC_ELIGIBLE', 'WITHHELD')
+    )
+  ),
+  CONSTRAINT discipline_actions_fl_hold_state_check CHECK (
+    source_system <> 'fl_dbpr'
+    OR (correction_hold IS NOT NULL AND retraction_hold IS NOT NULL)
+  ),
   CONSTRAINT discipline_actions_public_eligibility_check CHECK (
-    publication_state <> 'PUBLIC_ELIGIBLE'
+    source_system <> 'fl_dbpr'
+    OR publication_state <> 'PUBLIC_ELIGIBLE'
     OR (
       identity_state IN ('EXACT', 'DETERMINISTIC')
       AND contractor_id IS NOT NULL AND license_id IS NOT NULL
       AND ingest_batch_id IS NOT NULL AND last_verified_at IS NOT NULL
       AND identity_evaluated_at IS NOT NULL
       AND publication_evaluated_at IS NOT NULL
-      AND publication_evidence @> '{
+      AND (publication_evidence @> '{
         "authoritative_source": true,
         "valid_license_contractor_relationship": true,
         "recognized_regulatory_semantics": true,
         "provenance_complete": true,
         "source_fresh": true,
         "identifier_conflict": false
-      }'::jsonb
-      AND correction_hold = FALSE AND retraction_hold = FALSE
+      }'::jsonb) IS TRUE
+      AND correction_hold IS FALSE AND retraction_hold IS FALSE
     )
   ),
   UNIQUE (source_system, external_key)
@@ -229,7 +246,7 @@ CREATE INDEX IF NOT EXISTS discipline_license_raw_idx
   ON discipline_actions (license_number_raw);
 CREATE INDEX IF NOT EXISTS discipline_publication_gate_idx
   ON discipline_actions (contractor_id, publication_state, identity_state)
-  WHERE publication_state = 'PUBLIC_ELIGIBLE';
+  WHERE source_system = 'fl_dbpr' AND publication_state = 'PUBLIC_ELIGIBLE';
 
 -- ---------------------------------------------------------------------------
 -- Permits (placeholder for local open data)

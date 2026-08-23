@@ -48,7 +48,29 @@ class ResolverTests(unittest.TestCase):
         self.assertIn("publication_state = 'INTERNAL'", source)
         discipline_section = source.split("def load_discipline(", 1)[1]
         discipline_sql = discipline_section.split('    sql = """', 1)[1].split('    """', 1)[0]
-        self.assertEqual(discipline_sql.count("%s"), 32)
+        self.assertEqual(discipline_sql.count("%s"), 34)
+        self.assertIn("correction_hold, retraction_hold", discipline_sql)
+        self.assertIn("correction_hold = FALSE", discipline_sql)
+        self.assertIn("retraction_hold = FALSE", discipline_sql)
+
+    def test_migration_is_scoped_to_florida_on_shared_table(self):
+        source = Path("schema/migrations/008_fl_adverse_evidence_safety.sql").read_text(encoding="utf-8")
+        self.assertNotIn("identity_state TEXT NOT NULL DEFAULT", source)
+        self.assertNotIn("publication_state TEXT NOT NULL DEFAULT", source)
+        self.assertIn("WHERE source_system = 'fl_dbpr';", source)
+        self.assertGreaterEqual(source.count("source_system <> 'fl_dbpr'"), 4)
+        self.assertIn("identity_state IS NOT NULL", source)
+        self.assertIn("publication_state IS NOT NULL", source)
+        self.assertIn("WHERE source_system = 'fl_dbpr'\n    AND publication_state = 'PUBLIC_ELIGIBLE'", source)
+        self.assertNotIn("UPDATE discipline_actions\nSET license_id", source)
+        self.assertNotIn("UPDATE discipline_actions\nSET contractor_id", source)
+
+    def test_initial_schema_preserves_nullable_non_florida_safety_state(self):
+        source = Path("schema/initial_schema.sql").read_text(encoding="utf-8")
+        self.assertIn("identity_state         TEXT,", source)
+        self.assertIn("publication_state      TEXT,", source)
+        self.assertIn("source_system <> 'fl_dbpr'", source)
+        self.assertIn("WHERE source_system = 'fl_dbpr' AND publication_state = 'PUBLIC_ELIGIBLE'", source)
 
     def test_public_read_paths_use_gate_without_filtering_licenses(self):
         expected = {
