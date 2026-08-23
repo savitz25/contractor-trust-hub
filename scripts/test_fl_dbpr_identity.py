@@ -56,13 +56,13 @@ class ResolverTests(unittest.TestCase):
             "lib/discovery/florida-list.ts": 3,
             "lib/discovery/queries.ts": 1,
             "lib/plan/matching.ts": 1,
-            "lib/arizona/stats.ts": 1,
         }
         for filename, count in expected.items():
             source = Path(filename).read_text(encoding="utf-8")
             self.assertEqual(source.count("${PUBLIC_REGULATORY_SQL}"), count, filename)
         contractor_queries = Path("lib/contractors/queries.ts").read_text(encoding="utf-8")
         self.assertNotIn("FROM licenses\n    WHERE contractor_id = $1\n      AND ${PUBLIC_REGULATORY_SQL}", contractor_queries)
+        self.assertNotIn("PUBLIC_REGULATORY_SQL", Path("lib/arizona/stats.ts").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

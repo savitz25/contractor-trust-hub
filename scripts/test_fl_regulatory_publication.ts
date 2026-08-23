@@ -41,6 +41,6 @@ assert.equal(evaluatePublicationEligibility({ ...eligibility, sourceFresh: false
 assert.equal(evaluatePublicationEligibility({ ...eligibility, identifierConflict: true }), "INTERNAL");
 assert.equal(evaluatePublicationEligibility({ ...eligibility, retractionHold: true }), "WITHHELD");
 assert.equal(REGULATORY_PUBLICATION_GATE_ACTIVE, false);
-assert.equal(PUBLIC_REGULATORY_SQL, "FALSE");
+assert.equal(PUBLIC_REGULATORY_SQL, "d.source_system <> 'fl_dbpr'");
 
 console.log("Florida regulatory publication invariants: PASS");

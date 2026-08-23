@@ -50,7 +50,7 @@ The database constraint rejects `PUBLIC_ELIGIBLE` unless identity is exact/deter
 - no identifier conflict
 - no correction/retraction hold
 
-Application detail, search, discovery, Florida browse, planning, and Arizona discipline-stat paths now require explicit `PUBLIC_ELIGIBLE`, safe identity, both IDs, and no hold. A non-null `contractor_id` alone is insufficient. Until `REGULATORY_PUBLICATION_GATE_V1=1` is deliberately enabled after migration/backfill, the shared SQL predicate is literal `FALSE`; this preserves compatibility with the current schema and guarantees zero exposure.
+Application detail, search, discovery, Florida browse, and planning paths now require Florida DBPR rows to have explicit `PUBLIC_ELIGIBLE`, safe identity, both IDs, and no hold. A non-null `contractor_id` alone is insufficient. Until `REGULATORY_PUBLICATION_GATE_V1=1` is deliberately enabled after migration/backfill, the shared SQL predicate excludes `fl_dbpr` rows without referencing new columns. This preserves compatibility with the current schema, guarantees zero Florida exposure, and leaves non-Florida regulatory behavior unchanged.
 
 Complaint, classification, disposition, discipline description, final order, ULA, and Recovery Fund claim remain distinct concepts. A complaint number or blank disposition cannot independently pass the semantics gate. ULA remains respondent evidence without an authoritative identity anchor.
 

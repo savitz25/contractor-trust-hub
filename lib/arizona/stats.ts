@@ -1,5 +1,4 @@
 import { queryOne } from "@/lib/db";
-import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
 
 export async function getArizonaDiscoveryStats(): Promise<{
   contractors: number;
@@ -28,7 +27,6 @@ export async function getArizonaDiscoveryStats(): Promise<{
          FROM discipline_actions d
          JOIN licenses l ON l.contractor_id = d.contractor_id
          WHERE l.source_system = 'az_roc'
-           AND ${PUBLIC_REGULATORY_SQL}
         ) AS discipline
       `
     );

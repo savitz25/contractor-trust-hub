@@ -67,14 +67,20 @@ export const REGULATORY_PUBLICATION_GATE_ACTIVE =
 
 /**
  * SQL fragment for discipline_actions aliased as `d`.
- * Before migration/backfill activation the predicate is literal FALSE, which is
- * compatible with the old schema and guarantees zero adverse exposure.
+ * Before migration/backfill activation, Florida rows are excluded without
+ * referencing new columns. Non-Florida regulatory behavior is unchanged.
  */
 export const PUBLIC_REGULATORY_SQL = REGULATORY_PUBLICATION_GATE_ACTIVE ? `
-  d.publication_state = 'PUBLIC_ELIGIBLE'
-  AND d.identity_state IN ('EXACT', 'DETERMINISTIC')
-  AND d.contractor_id IS NOT NULL
-  AND d.license_id IS NOT NULL
-  AND d.correction_hold = FALSE
-  AND d.retraction_hold = FALSE
-` : "FALSE";
+  (
+    d.source_system <> 'fl_dbpr'
+    OR (
+      d.source_system = 'fl_dbpr'
+      AND d.publication_state = 'PUBLIC_ELIGIBLE'
+      AND d.identity_state IN ('EXACT', 'DETERMINISTIC')
+      AND d.contractor_id IS NOT NULL
+      AND d.license_id IS NOT NULL
+      AND d.correction_hold = FALSE
+      AND d.retraction_hold = FALSE
+    )
+  )
+` : "d.source_system <> 'fl_dbpr'";
