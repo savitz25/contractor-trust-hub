@@ -62,15 +62,25 @@ export function isRegulatoryEvidencePublic(record: RegulatoryPublicationRecord):
   );
 }
 
-export const REGULATORY_PUBLICATION_GATE_ACTIVE =
-  process.env.REGULATORY_PUBLICATION_GATE_V1 === "1";
+/** Shared-table visibility contract used by tests and non-SQL consumers. */
+export function isRegulatoryEvidenceReachable(
+  sourceSystem: string,
+  record: RegulatoryPublicationRecord,
+  gateActive: boolean
+): boolean {
+  if (sourceSystem !== "fl_dbpr") return true;
+  return gateActive && isRegulatoryEvidencePublic(record);
+}
 
 /**
- * SQL fragment for discipline_actions aliased as `d`.
+ * SQL fragment for the shared discipline_actions table aliased as `d`.
+ * This feature gate controls only fl_dbpr rows. Arizona, New Jersey, and future
+ * non-FL sources retain their existing visibility behavior in both gate states.
  * Before migration/backfill activation, Florida rows are excluded without
- * referencing new columns. Non-Florida regulatory behavior is unchanged.
+ * referencing the Florida-v1 columns.
  */
-export const PUBLIC_REGULATORY_SQL = REGULATORY_PUBLICATION_GATE_ACTIVE ? `
+export function publicRegulatorySqlForGate(active: boolean): string {
+  return active ? `
   (
     d.source_system <> 'fl_dbpr'
     OR (
@@ -84,3 +94,11 @@ export const PUBLIC_REGULATORY_SQL = REGULATORY_PUBLICATION_GATE_ACTIVE ? `
     )
   )
 ` : "d.source_system <> 'fl_dbpr'";
+}
+
+export const REGULATORY_PUBLICATION_GATE_ACTIVE =
+  process.env.REGULATORY_PUBLICATION_GATE_V1 === "1";
+
+export const PUBLIC_REGULATORY_SQL = publicRegulatorySqlForGate(
+  REGULATORY_PUBLICATION_GATE_ACTIVE
+);

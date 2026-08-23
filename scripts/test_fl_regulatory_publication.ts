@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import {
   evaluatePublicationEligibility,
   isRegulatoryEvidencePublic,
+  isRegulatoryEvidenceReachable,
   PUBLIC_REGULATORY_SQL,
   REGULATORY_PUBLICATION_GATE_ACTIVE,
+  publicRegulatorySqlForGate,
 } from "../lib/regulatory/publication.ts";
 
 const base = {
@@ -42,5 +44,36 @@ assert.equal(evaluatePublicationEligibility({ ...eligibility, identifierConflict
 assert.equal(evaluatePublicationEligibility({ ...eligibility, retractionHold: true }), "WITHHELD");
 assert.equal(REGULATORY_PUBLICATION_GATE_ACTIVE, false);
 assert.equal(PUBLIC_REGULATORY_SQL, "d.source_system <> 'fl_dbpr'");
+
+const gateOffSql = publicRegulatorySqlForGate(false);
+const gateOnSql = publicRegulatorySqlForGate(true);
+assert.equal(gateOffSql, "d.source_system <> 'fl_dbpr'");
+assert.match(gateOnSql, /d\.source_system <> 'fl_dbpr'/);
+assert.match(gateOnSql, /d\.source_system = 'fl_dbpr'/);
+assert.match(gateOnSql, /d\.publication_state = 'PUBLIC_ELIGIBLE'/);
+assert.match(gateOnSql, /d\.identity_state IN \('EXACT', 'DETERMINISTIC'\)/);
+for (const nonFloridaSource of ["az_roc", "nj_enforcement"]) {
+  assert.notEqual(nonFloridaSource, "fl_dbpr");
+  assert.equal(gateOffSql.includes("source_system <> 'fl_dbpr'"), true);
+  assert.equal(gateOnSql.includes("source_system <> 'fl_dbpr'"), true);
+  const legacyNonFloridaRow = {
+    ...base,
+    identityState: "UNRESOLVED" as const,
+    publicationState: "INTERNAL" as const,
+  };
+  assert.equal(isRegulatoryEvidenceReachable(nonFloridaSource, legacyNonFloridaRow, false), true);
+  assert.equal(isRegulatoryEvidenceReachable(nonFloridaSource, legacyNonFloridaRow, true), true);
+}
+
+const floridaContractorOnly = {
+  ...base,
+  licenseId: null,
+  identityState: "UNRESOLVED" as const,
+  publicationState: "INTERNAL" as const,
+};
+assert.equal(isRegulatoryEvidenceReachable("fl_dbpr", floridaContractorOnly, false), false);
+assert.equal(isRegulatoryEvidenceReachable("fl_dbpr", floridaContractorOnly, true), false);
+assert.equal(isRegulatoryEvidenceReachable("fl_dbpr", base, false), false);
+assert.equal(isRegulatoryEvidenceReachable("fl_dbpr", base, true), true);
 
 console.log("Florida regulatory publication invariants: PASS");

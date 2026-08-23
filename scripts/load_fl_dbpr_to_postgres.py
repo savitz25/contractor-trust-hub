@@ -560,7 +560,8 @@ def load_discipline(
           postal_code, county_name, raw_payload, ingest_batch_id,
           last_verified_at, updated_at, identity_state, identity_method,
           resolver_version, resolved_license_external_key, identity_evidence,
-          identity_evaluated_at, review_reason, publication_state
+          identity_evaluated_at, review_reason, publication_state,
+          correction_hold, retraction_hold
         ) VALUES (
           %s, %s, %s, %s, %s,
           %s, %s, %s, %s,
@@ -569,7 +570,7 @@ def load_discipline(
           %s, %s, %s, %s,
           %s, %s, %s, %s,
           %s, %s, %s,
-          %s, %s, %s
+          %s, %s, %s, %s, %s
         )
         ON CONFLICT (source_system, external_key) DO UPDATE SET
           contractor_id = NULL,
@@ -600,6 +601,8 @@ def load_discipline(
           identity_evaluated_at = EXCLUDED.identity_evaluated_at,
           review_reason = EXCLUDED.review_reason,
           publication_state = 'INTERNAL',
+          correction_hold = FALSE,
+          retraction_hold = FALSE,
           updated_at = EXCLUDED.updated_at
     """
 
@@ -642,7 +645,7 @@ def load_discipline(
                 (
                     contractor_id,
                     license_id,
-                    row.get("source_system") or SOURCE_SYSTEM,
+                    SOURCE_SYSTEM,
                     row.get("source_dataset") or "contractor_disc_lic",
                     ext,
                     row.get("complaint_number") or None,
@@ -680,6 +683,8 @@ def load_discipline(
                     if resolution.identity_state in {"REVIEW_REQUIRED", "UNRESOLVED"}
                     else None,
                     "INTERNAL",
+                    False,
+                    False,
                 ),
             )
             stats["actions_upserted"] += 1
