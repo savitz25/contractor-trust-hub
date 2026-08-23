@@ -7,6 +7,7 @@ import { query, queryOne } from "@/lib/db";
 import { asLicenseStatus } from "@/lib/contractors/format";
 import type { SearchResult } from "@/lib/contractors/types";
 import { getStateBySlug } from "@/lib/states/config";
+import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
 import {
   CITY_INDEX_MIN,
   cityLabelFromSlug,
@@ -81,9 +82,9 @@ function appendBrowseFilters(
   if (browse.entity === "unlinked") w += ` AND NOT ${entitySql}`;
 
   if (browse.discipline === "present") {
-    w += ` AND EXISTS (SELECT 1 FROM discipline_actions d WHERE d.contractor_id = c.id)`;
+    w += ` AND EXISTS (SELECT 1 FROM discipline_actions d WHERE d.contractor_id = c.id AND ${PUBLIC_REGULATORY_SQL})`;
   } else if (browse.discipline === "none") {
-    w += ` AND NOT EXISTS (SELECT 1 FROM discipline_actions d WHERE d.contractor_id = c.id)`;
+    w += ` AND NOT EXISTS (SELECT 1 FROM discipline_actions d WHERE d.contractor_id = c.id AND ${PUBLIC_REGULATORY_SQL})`;
   }
   return w;
 }
@@ -170,7 +171,8 @@ export async function listFloridaBrowse(opts: {
           ent.legal_name AS entity_name,
           ent.status AS entity_status,
           EXISTS (
-            SELECT 1 FROM discipline_actions d WHERE d.contractor_id = c.id
+            SELECT 1 FROM discipline_actions d
+            WHERE d.contractor_id = c.id AND ${PUBLIC_REGULATORY_SQL}
           ) AS has_discipline
         FROM contractors c
         JOIN licenses l ON l.contractor_id = c.id

@@ -2,6 +2,7 @@ import { query, queryOne } from "@/lib/db";
 import { asLicenseStatus } from "@/lib/contractors/format";
 import type { SearchResult } from "@/lib/contractors/types";
 import { getStateBySlug } from "@/lib/states/config";
+import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
 import {
   getCounty,
   getDiscoveryState,
@@ -297,7 +298,8 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
       e.status AS entity_status,
       e.legal_name AS entity_name,
       EXISTS (
-        SELECT 1 FROM discipline_actions d WHERE d.contractor_id = p.id
+        SELECT 1 FROM discipline_actions d
+        WHERE d.contractor_id = p.id AND ${PUBLIC_REGULATORY_SQL}
       ) AS has_discipline
     FROM picked p
     LEFT JOIN LATERAL (
