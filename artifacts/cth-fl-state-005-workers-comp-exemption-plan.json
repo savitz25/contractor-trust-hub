@@ -1,0 +1,246 @@
+{
+  "access_limitation": {
+    "alternate_strategy": "Request current and historical machine-readable POC and exemption extracts, data dictionaries, stable record identifiers, and update semantics from DFS Public Records/Bureau of Compliance.",
+    "bulk_reproducible_acquisition_available_now": false,
+    "reason": "Coverage is segmented/CAPTCHA-protected and exemption access is search-driven; displayed exports omit the authoritative FEIN/certificate identity needed for controlled linkage."
+  },
+  "contact_inventory": {
+    "coverage": {
+      "emails": false,
+      "employer_addresses": 1,
+      "employer_phone": true,
+      "websites": false
+    },
+    "exemptions": {
+      "emails": false,
+      "employer_address": true,
+      "holder_name": true,
+      "phones": false,
+      "websites": false
+    },
+    "policy": "retain provenance-bearing business observations; never promote exemption-holder personal data to business contact without independent authoritative classification"
+  },
+  "coverage": {
+    "batch_access": "segmented Excel export by employer initial, effective-date range, and county; CAPTCHA/UI; no documented API",
+    "exported_identifiers": [
+      "Policy Number"
+    ],
+    "fields": [
+      "Policy Number",
+      "Policy Effective Date",
+      "Policy Cancellation Date",
+      "Policy Expiration Date",
+      "Named Insured",
+      "Governing Class Code",
+      "Agency Name",
+      "Agency City",
+      "Agency State",
+      "Carrier Name",
+      "Wrap-Up Indicator",
+      "PEO Client",
+      "Employer Name",
+      "Employer Address Street",
+      "Employer Address Street2",
+      "Employer Address City",
+      "Employer Address State",
+      "Employer Address Zip",
+      "Employer Address County",
+      "Employer Phone Number",
+      "NAICS"
+    ],
+    "grain": "employer/carrier/policy period as reported by carrier; PEO client caveat applies",
+    "historical_range": "reported policies within the past five years",
+    "owner": "Florida DFS Division of Workers' Compensation",
+    "regulator_or_entity_id_exported": false,
+    "rows_obtained": null,
+    "schema_fingerprint": "sha256:37d12766ce17ac3783a6337bf8f9f2619dd34532d8196d94dcc9675df3b1c3fe",
+    "search_only_identifiers": [
+      "Federal Employer ID Number"
+    ]
+  },
+  "exemptions": {
+    "access": "interactive downloadable result search; CAPTCHA/UI; no documented bulk API",
+    "certificate_identifier_exported": false,
+    "fields": [
+      "Last Name",
+      "First Name",
+      "Middle Inital",
+      "Suffix",
+      "Effective Date",
+      "Expiration Date",
+      "Employer Name",
+      "Employer Address",
+      "Exemption Type",
+      "Scope of Business"
+    ],
+    "grain": "individual corporate officer/LLC member exemption for an employer and period",
+    "historical_available": true,
+    "owner": "Florida DFS Division of Workers' Compensation",
+    "rows_obtained": null,
+    "schema_fingerprint": "sha256:fad776ab2e605572d771f78b722d6ec56070b458bf2d1fac4840ec4f675b44e5",
+    "search_only_identifiers": [
+      "Federal Employer ID Number"
+    ],
+    "status_field_exported": false
+  },
+  "generated_at_utc": "2026-08-24T19:37:03.530634+00:00",
+  "identity": {
+    "automatic_name_address_linking": false,
+    "dbpr_credential_exported": false,
+    "deterministic": null,
+    "exact": null,
+    "partition_status": "NOT COMPUTABLE WITHOUT OFFICIAL BULK EXTRACT",
+    "prohibited": [
+      "name-only",
+      "address-only",
+      "phone-only",
+      "fuzzy",
+      "substring",
+      "numeric-core similarity"
+    ],
+    "review_required": null,
+    "sunbiz_fei_opportunity": "potential only if DFS supplies FEIN/FEI in authorized extract",
+    "unresolved": null
+  },
+  "mode": "READ_ONLY_PLANNING",
+  "official_sources": {
+    "coverage_download": {
+      "acquired_at_utc": "2026-08-24T19:35:43.138194+00:00",
+      "content_type": "text/html",
+      "http_status": 200,
+      "response_bytes": 50490,
+      "url": "https://dwcdataportal.fldfs.com/DigitalDownload.aspx"
+    },
+    "coverage_instructions": {
+      "acquired_at_utc": "2026-08-24T19:35:43.329905+00:00",
+      "content_type": "text/html",
+      "http_status": 200,
+      "response_bytes": 25789,
+      "url": "https://dwcdataportal.fldfs.com/ProofOfCoverageSearchPageInstructions.aspx"
+    },
+    "coverage_search": {
+      "acquired_at_utc": "2026-08-24T19:35:42.882911+00:00",
+      "content_type": "text/html",
+      "http_status": 200,
+      "response_bytes": 124163,
+      "url": "https://dwcdataportal.fldfs.com/ProofOfCoverage.aspx"
+    },
+    "exemption_search": {
+      "acquired_at_utc": "2026-08-24T19:35:43.531641+00:00",
+      "content_type": "text/html",
+      "http_status": 200,
+      "response_bytes": 47545,
+      "url": "https://dwcdataportal.fldfs.com/Exemption.aspx"
+    },
+    "portal": {
+      "acquired_at_utc": "2026-08-24T19:35:42.525475+00:00",
+      "content_type": "text/html",
+      "http_status": 200,
+      "response_bytes": 37853,
+      "url": "https://dwcdataportal.fldfs.com/POCData.aspx"
+    },
+    "public_records": {
+      "acquired_at_utc": "2026-08-24T19:35:44.025529+00:00",
+      "content_type": "text/html",
+      "http_status": 200,
+      "response_bytes": 24316,
+      "url": "https://myfloridacfo.com/publicrecords"
+    }
+  },
+  "production_reconciliation": {
+    "arizona": 459,
+    "available": true,
+    "batches": 61,
+    "contractor_entities": 281255,
+    "contractors": 1392730,
+    "entities": 6487585,
+    "fl_licensed": 6457,
+    "fl_recovery_fund": 1679,
+    "fl_total": 19827,
+    "fl_ula": 11691,
+    "isolation": "repeatable read",
+    "licenses": 1266214,
+    "mutations": 0,
+    "new_jersey": 1134,
+    "observations": 19827,
+    "occurrences": 19827,
+    "postgresql_version": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+    "public_eligible": 0,
+    "read_only": "on",
+    "recovery_fund_identity": {
+      "DETERMINISTIC": 29,
+      "EXACT": 75,
+      "REVIEW_REQUIRED": 342,
+      "UNRESOLVED": 1233
+    },
+    "recovery_fund_links": {
+      "contractor_linked": 0,
+      "license_linked": 104,
+      "unique_license_targets": 49
+    },
+    "whole_discipline_actions": 21420
+  },
+  "profile_value": {
+    "business_contacts": "LOW",
+    "carrier": "MEDIUM",
+    "coverage_dates": "HIGH",
+    "current_coverage": "HIGH",
+    "exemption_expiration": "HIGH",
+    "exemption_indicator": "HIGH",
+    "history": "MEDIUM",
+    "official_identifiers": "HIGH"
+  },
+  "publication": {
+    "PUBLIC_ELIGIBLE": 0,
+    "prohibited_wording": [
+      "safe",
+      "insured",
+      "uninsured",
+      "compliant",
+      "violation"
+    ],
+    "safe_future_wording": [
+      "Workers' compensation coverage listed by Florida DFS",
+      "Workers' compensation exemption listed by Florida DFS"
+    ],
+    "scoring_impact": 0
+  },
+  "recommendation": "READY FOR CTH-FL-STATE-005A WORKERS COMP / EXEMPTION DATA MODEL ARCHITECTURE",
+  "refresh": {
+    "coverage": "weekly after an approved stable bulk extract; otherwise monthly public-record snapshots",
+    "exemptions": "weekly after an approved stable bulk extract; otherwise monthly public-record snapshots",
+    "material_change": "new immutable observation plus revision review",
+    "missing_record": "retain history; never delete; review source semantics",
+    "same_observation_new_snapshot": "new occurrence only",
+    "unchanged_checksum": "no-op"
+  },
+  "scope": {
+    "county_city_work": 0,
+    "google_calls": 0,
+    "production_mutations": 0,
+    "publication_changes": 0,
+    "scoring_changes": 0,
+    "stop_work_ingested": 0
+  },
+  "semantics": {
+    "absence": "no matching record returned by the selected DFS search criteria; not proof of uninsured or illegal status",
+    "coverage": "carrier-reported policy/coverage fact, not a universal compliance determination",
+    "exemption": "officer/member election excluding that person from employee status/benefits, not wrongdoing",
+    "expired": "a source period/date fact only; do not infer a present violation or coverage gap",
+    "stop_work": "separate enforcement dataset reserved for STATE-006"
+  },
+  "storage_architecture": {
+    "discipline_actions_appropriate": false,
+    "migration_009_direct_reuse": false,
+    "narrow_migration": "generalize observation ownership with a typed regulatory subject/evidence reference, or add dedicated immutable observation tables/FKs for coverage and exemption records while preserving existing discipline provenance",
+    "reason": "regulatory_source_observations.discipline_action_id is NOT NULL and coverage/exemption facts are not discipline actions",
+    "recommended_tables": [
+      "workers_comp_coverage",
+      "workers_comp_exemptions",
+      "regulatory_source_observations_generalized",
+      "regulatory_source_occurrences"
+    ],
+    "schema_prerequisite": true
+  },
+  "task": "CTH-FL-STATE-005-PLAN"
+}
