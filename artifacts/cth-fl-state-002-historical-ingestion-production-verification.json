@@ -1,0 +1,79 @@
+{
+  "task": "CTH-FL-STATE-002-PROD",
+  "canonical_main_sha": "734fd04d39094f9740eedd4b63c203dcb2437ea3",
+  "postgresql_version": "17.6",
+  "source": {
+    "schema_columns": 17,
+    "schema_fingerprint": "sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345",
+    "files": {
+      "2021-22": {"rows": 1109, "sha256": "ab67307147fb2007b4751900d105773d7cf2cee83dece8b9ac6dca42096500d0", "downloaded_at": "2026-08-24T13:48:50.020731+00:00"},
+      "2022-23": {"rows": 1534, "sha256": "cd733ddce04de63d76c5f123b1004990ddfd03f2260f32ccf9e26bd817c81884", "downloaded_at": "2026-08-24T13:48:50.599132+00:00"},
+      "2023-24": {"rows": 1878, "sha256": "90a561929f6bf2821900ab0cb1b54177bcff43bd4f8b411fe608a9928b641de4", "downloaded_at": "2026-08-24T13:48:51.018741+00:00"},
+      "2024-25": {"rows": 1541, "sha256": "189b0043984b25876bdbf6c814b5c6539db9374e3cd01e5c8e94e7777442c7ef", "downloaded_at": "2026-08-24T13:48:51.471505+00:00"},
+      "2025-26": {"rows": 395, "sha256": "1cecf33f0b5a5e329527dd2df723cb3ec658e60027d81805c765b639a55155f7", "downloaded_at": "2026-08-24T13:48:51.809255+00:00"}
+    }
+  },
+  "manifests": {
+    "execution": "sha256:d09a6c1ff1ffc1b92db998025e310401be045ed8910a9b255b20eb38e659c9fa",
+    "reverse": "sha256:f7efd16afa5c57533e364604b795d6c9c137fc9ca6ff8c2e3fa3a9164509bcac",
+    "automatic_post_commit_rollback_authorized": false
+  },
+  "execution": {
+    "initial_invocation": {"result": "REJECTED_BEFORE_WRITE_TRANSACTION", "reason": "shell JSON argument encoding", "mutations": 0},
+    "transaction_started_utc": "2026-08-24T13:50:53.747950+00:00",
+    "commit_confirmed_utc": "2026-08-24T13:51:01.2261037+00:00",
+    "commit_timestamp_note": "PostgreSQL track_commit_timestamp is disabled; commit confirmation is the executor completion timestamp.",
+    "isolation": "REPEATABLE READ",
+    "lock_timeout": "5s",
+    "statement_timeout": "180s",
+    "legacy_rows_locked": 1541,
+    "safe_licenses_locked": 1388,
+    "inserted": {"ingest_batches": 4, "discipline_actions": 4916, "observations": 4916, "occurrences": 4916, "total": 14752},
+    "committed": true
+  },
+  "batch_ids": [
+    "ab2725a6-d295-517a-8f4b-f50423d37730",
+    "a61cd195-b737-5f08-9a80-be936a6f400c",
+    "d6e4d46b-ba19-5dff-b842-793da3a6dfca",
+    "0f3ca6ec-1255-5e28-a356-68569b1c7d79"
+  ],
+  "pre": {"discipline_actions": 3134, "florida": 1541, "observations": 1541, "occurrences": 1541, "ingest_batches": 47},
+  "post": {
+    "discipline_actions": 8050,
+    "florida": 6457,
+    "arizona": 459,
+    "new_jersey": 1134,
+    "observations": 6457,
+    "occurrences": 6457,
+    "ingest_batches": 51,
+    "identity": {"EXACT": 1736, "DETERMINISTIC": 236, "REVIEW_REQUIRED": 1411, "UNRESOLVED": 3074},
+    "relationships": {"license_linked": 2375, "contractor_linked": 0, "neither": 4082},
+    "holds": {"correction_true": 403, "correction_false": 6054, "retraction_true": 0, "retraction_false": 6457},
+    "publication": {"INTERNAL": 6457, "PUBLIC_ELIGIBLE": 0, "gate": "ABSENT_OFF"},
+    "resolver": {"safe_links_agree": 1972, "safe_links_total": 1972, "correctable": 0}
+  },
+  "provenance": {
+    "CURRENT": 6457,
+    "REVISION_REVIEW_REQUIRED": 0,
+    "SUPERSEDED": 0,
+    "actions_represented": 6457,
+    "payload_hash_valid": 6457,
+    "observation_key_valid": 6457,
+    "occurrence_collisions": 0,
+    "by_fiscal_year": {"2021-22": 1109, "2022-23": 1534, "2023-24": 1878, "2024-25": 1541, "2025-26": 395}
+  },
+  "fingerprints": {
+    "whole": {"actual": "sha256:078f0d84f76ecd5dc4b1b4fc717a3ffca5f88e18182b17510ebc8c1e4d9805fe", "predicted": "sha256:078f0d84f76ecd5dc4b1b4fc717a3ffca5f88e18182b17510ebc8c1e4d9805fe", "match": true},
+    "florida": {"actual": "sha256:c25f931b7c8d5371dc2d75497f0ef270487f4fbc46028bc87fd1da0ab73632ce", "predicted": "sha256:c25f931b7c8d5371dc2d75497f0ef270487f4fbc46028bc87fd1da0ab73632ce", "match": true},
+    "arizona": {"actual": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3", "predicted": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3", "match": true},
+    "new_jersey": {"actual": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3", "predicted": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3", "match": true},
+    "florida_safety": {"actual": "sha256:d990ba40a4e75d1651a16c0fc4e42f1b361a509348ab5f027af435e8e35609ef", "predicted": "sha256:d990ba40a4e75d1651a16c0fc4e42f1b361a509348ab5f027af435e8e35609ef", "match": true},
+    "new_actions": {"actual": "sha256:62846d7bba278b2e64fd1df8447710e43e0ced3505c77c111ac2d449eb11be6e", "predicted": "sha256:62846d7bba278b2e64fd1df8447710e43e0ced3505c77c111ac2d449eb11be6e", "match": true},
+    "provenance": {"actual": "sha256:2da5e9b0670b826e3635b7ebb8d7f8eef9064f8e9c2e5a161c41162725076952", "predicted": "sha256:2da5e9b0670b826e3635b7ebb8d7f8eef9064f8e9c2e5a161c41162725076952", "match": true},
+    "batches": {"actual": "sha256:8cd44ce63fe68371b7160b59016d67a21b0d22bf6374351312ae22211b26b863", "predicted": "sha256:8cd44ce63fe68371b7160b59016d67a21b0d22bf6374351312ae22211b26b863", "match": true}
+  },
+  "legacy_immutability": {"discipline_updates": 0, "observation_updates": 0, "occurrence_updates": 0, "batch_changes": 0, "license_changes": 0, "identity_changes": 0, "hold_changes": 0},
+  "non_fl": {"arizona_mutations": 0, "new_jersey_mutations": 0, "provenance_rows": 0},
+  "site_health": {"homepage": 200, "florida": 200, "florida_profiles": [200, 200, 200], "arizona": 200, "arizona_profile": 200, "new_jersey_profile": 200, "database_query_errors": "NONE_OBSERVED", "manual_deployment": false},
+  "scope": {"ula": 0, "recovery_fund": 0, "workers_comp": 0, "publication_enabled": false, "google_calls": 0, "county_work": 0, "contact_promotions": 0, "canonical_contractor_address_mutations": 0}
+}
