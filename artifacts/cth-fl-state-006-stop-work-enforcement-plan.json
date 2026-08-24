@@ -1,0 +1,258 @@
+{
+  "absence_semantics": "No matching row in a historical, search-limited representative database dating to 2004; not proof of compliance, coverage, or no enforcement history.",
+  "contacts": {
+    "business_location_fields": ["County", "City"],
+    "contact_names": 0,
+    "emails": 0,
+    "extensions": 0,
+    "phones": 0,
+    "pii_policy": "do not promote names/locations or acquire personal contact data as contractor contacts",
+    "roles": 0,
+    "street_addresses": 0,
+    "websites": 0
+  },
+  "generated_at_utc": "2026-08-24T19:55:27.215694+00:00",
+  "identifiers": {
+    "DBPR_credential": 0,
+    "DOAH_case_id": 0,
+    "FEIN_displayed": 0,
+    "FEIN_searchable": true,
+    "Sunbiz_id": 0,
+    "case_id": 0,
+    "employer_id": 0,
+    "final_order_id": 0,
+    "order_id": 0,
+    "penalty_order_id": 0
+  },
+  "identity": {
+    "DETERMINISTIC": 0,
+    "EXACT": 0,
+    "REVIEW_REQUIRED": 0,
+    "UNRESOLVED": 48254,
+    "entity_path": "prefer FEIN -> entity -> separately proven contractor/license relationships if DFS supplies FEIN in an official extract",
+    "initial_policy": "all standalone/unresolved because the result does not expose authoritative identity identifiers",
+    "prohibited": [
+      "name-only",
+      "address-only",
+      "phone-only",
+      "fuzzy",
+      "substring",
+      "numeric-core-only"
+    ]
+  },
+  "mode": "READ_ONLY_PLANNING",
+  "official_sources": {
+    "final_orders": {
+      "deterministic_links": 0,
+      "post_2015": "https://www.doah.state.fl.us/FLAIO/",
+      "pre_2015": "https://finalorders.fldfs.com/ExternalWebAccess.aspx"
+    },
+    "portal": {
+      "boundary": "coverage/exemption are STATE-005; stop-work is STATE-006",
+      "url": "https://dwcdataportal.fldfs.com/POCData.aspx"
+    },
+    "public_records": {
+      "purpose": "request authoritative order/case IDs, FEIN and penalty/order detail extract",
+      "url": "https://myfloridacfo.com/publicrecords"
+    },
+    "stop_work_search": {
+      "access": "unauthenticated HTML search/report",
+      "authentication": "none",
+      "automation": "practical but large (~80 MB)",
+      "bytes": 79848352,
+      "content_type": "text/html",
+      "database_last_updated_raw": null,
+      "dataset": "Compliance Stop-Work Order Database",
+      "history_start": "2004-01-01",
+      "http_status": 200,
+      "pagination": "none observed; all-employer report available",
+      "refresh": "daily by 08:00, sometimes later",
+      "regulator": "Florida DFS Division of Workers' Compensation",
+      "retrieved_at_utc": "2026-08-24T19:54:34.442896+00:00",
+      "search_url": "https://dwcdataportal.fldfs.com/SWOquery.aspx",
+      "sha256": "de8dd572927382652075da878ffd1dd55d3d93b61757d619b3d18d8d2ac1700b",
+      "url": "https://dwcdataportal.fldfs.com/Emp_List.aspx?vEmployerName=&vddSortBy=1"
+    }
+  },
+  "penalties": {
+    "amount_fields": 0,
+    "assessed_amount": 0,
+    "balance": 0,
+    "paid_amount": 0,
+    "proposed_amount": 0,
+    "semantics": "the public row has no monetary fields; Date Ended footnote may reflect compliance plus payment agreement or payment in full, without distinguishing them"
+  },
+  "production_reconciliation": {
+    "arizona": 459,
+    "available": true,
+    "batches": 61,
+    "florida_all": 19827,
+    "isolation": "repeatable read",
+    "licensed": 6457,
+    "mutations": 0,
+    "new_jersey": 1134,
+    "observations": 19827,
+    "occurrences": 19827,
+    "postgresql_version": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+    "public_eligible": 0,
+    "read_only": "on",
+    "recovery_fund": 1679,
+    "recovery_fund_identity": {
+      "DETERMINISTIC": 29,
+      "EXACT": 75,
+      "REVIEW_REQUIRED": 342,
+      "UNRESOLVED": 1233
+    },
+    "recovery_fund_links": {
+      "contractor_linked": 0,
+      "license_linked": 104,
+      "public": 0,
+      "target_licenses": 49
+    },
+    "ula": 11691,
+    "whole_discipline_actions": 21420
+  },
+  "publication": {
+    "PUBLIC_ELIGIBLE": 0,
+    "prohibited": [
+      "currently active based only on historical issue",
+      "fully compliant",
+      "uninsured",
+      "fraud",
+      "unsafe"
+    ],
+    "safe_future_wording": [
+      "Florida DFS issued a stop-work order on [date]",
+      "Florida DFS lists the order as ended on [date]"
+    ],
+    "scoring_future": "DEFERRED \u2014 SEPARATE POLICY REVIEW",
+    "scoring_impact": 0
+  },
+  "recommendation": "READY FOR CTH-FL-STATE-006 STOP-WORK CONTROLLED INGESTION ARCHITECTURE",
+  "record_grain": {
+    "blank_counts": {
+      "City": 0,
+      "County": 0,
+      "Date Ended*": 0,
+      "Date Reinstated**": 0,
+      "Date Served": 0,
+      "Employer Name": 0,
+      "Reason": 0
+    },
+    "complaint_or_order_number_present": false,
+    "date_ended_shape": {
+      "DATED": 48260
+    },
+    "date_reinstated_shape": {
+      "DATED": 7165,
+      "NOT_REINSTATED": 41095
+    },
+    "distinct_employer_names": 46207,
+    "duplicate_policy": "preserve row occurrences; exact-content dedupe only after DFS confirms whether indistinguishable rows are duplicate display records",
+    "employers_with_multiple_rows": 1886,
+    "exact_duplicate_occurrences": 6,
+    "fields": [
+      "Employer Name",
+      "County",
+      "City",
+      "Date Served",
+      "Date Ended*",
+      "Date Reinstated**",
+      "Reason"
+    ],
+    "interpretation": "one displayed stop-work order history row for employer/location/served date/reason, including end and possible reinstatement state",
+    "logical_review_fields": [
+      "Employer Name",
+      "County",
+      "City",
+      "Date Served",
+      "Reason"
+    ],
+    "maximum_rows_per_employer_name": 5,
+    "reason_distribution": {
+      "FAIL PRODUCE DOCS 10 DAYS": 1048,
+      "FAIL PRODUCE DOCS 21 DAYS": 413,
+      "FAIL PRODUCE DOCS 3 DAYS": 3,
+      "FAIL PRODUCE DOCS 5 DAYS": 1087,
+      "FAILURE TO OBTAIN COVERAGE": 45003,
+      "MISREP. OR CONCEAL EE DUTIES": 98,
+      "MISREP. OR CONCEAL INFO. E-MOD": 7,
+      "SITE SPECIFIC": 288,
+      "UNDERSTATE OR CONCEAL PAYROLL": 313
+    },
+    "rows": 48260,
+    "schema_fingerprint": "sha256:4e8562917ef7568b6b48f1978bd0c6c11015186b3da4bc05011f53a1e1dca6fa",
+    "unique_exact_observations": 48254
+  },
+  "refresh": {
+    "active_status_recomputed": false,
+    "cadence": "daily after DFS update window",
+    "material_change": "new observation and revision review",
+    "missing_prior_row": "retain history and review; no deletion",
+    "same_observation_new_snapshot": "new occurrence only",
+    "unchanged_snapshot_checksum": "no-op"
+  },
+  "scope": {
+    "county_city_work": 0,
+    "coverage_or_exemption_ingestion": 0,
+    "google_calls": 0,
+    "production_mutations": 0,
+    "publication_changes": 0,
+    "scoring_changes": 0,
+    "stop_work_ingestion": 0
+  },
+  "semantics": {
+    "active": "only supportable when the current daily source explicitly shows not ended; historical issue alone is not active status",
+    "appeal": "employers may request an administrative hearing within 21 days, but appeal status is absent",
+    "closed": "not a raw source status; do not manufacture",
+    "ended": "Date Ended indicates the order ended after compliance/payment-plan or penalty-payment conditions described by DFS",
+    "issued": "Date Served records service of a DFS stop-work order",
+    "raw_values_preserved": true,
+    "reasons": {
+      "FAIL PRODUCE DOCS 10 DAYS": 1048,
+      "FAIL PRODUCE DOCS 21 DAYS": 413,
+      "FAIL PRODUCE DOCS 3 DAYS": 3,
+      "FAIL PRODUCE DOCS 5 DAYS": 1087,
+      "FAILURE TO OBTAIN COVERAGE": 45003,
+      "MISREP. OR CONCEAL EE DUTIES": 98,
+      "MISREP. OR CONCEAL INFO. E-MOD": 7,
+      "SITE SPECIFIC": 288,
+      "UNDERSTATE OR CONCEAL PAYROLL": 313
+    },
+    "reinstated": "Date Reinstated indicates reinstatement after default under a periodic payment agreement"
+  },
+  "storage": {
+    "conditions": [
+      "source_dataset=fl_dfs_workers_comp_stop_work",
+      "one action per approved exact observation",
+      "all initial identity UNRESOLVED",
+      "contractor_id/license_id NULL",
+      "INTERNAL only",
+      "dataset-specific status semantics and public exclusions",
+      "raw seven-field payload preserved"
+    ],
+    "discipline_actions_appropriate": "CONDITIONAL",
+    "logical_fields": [
+      "Employer Name",
+      "County",
+      "City",
+      "Date Served",
+      "Reason"
+    ],
+    "logical_key": "logical-matter-detail-key-v1 over employer/county/city/date-served/reason; review only",
+    "migration_009_reusable": true,
+    "migration_prerequisite": false,
+    "schema_prerequisite": false,
+    "source_fields": [
+      "Employer Name",
+      "County",
+      "City",
+      "Date Served",
+      "Date Ended*",
+      "Date Reinstated**",
+      "Reason"
+    ],
+    "source_key": "source-observation-key-v2 over ordered seven-field contract"
+  },
+  "task": "CTH-FL-STATE-006-PLAN"
+}

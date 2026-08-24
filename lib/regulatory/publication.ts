@@ -66,23 +66,29 @@ export function isRegulatoryEvidencePublic(record: RegulatoryPublicationRecord):
 export function isRegulatoryEvidenceReachable(
   sourceSystem: string,
   record: RegulatoryPublicationRecord,
-  gateActive: boolean
+  gateActive: boolean,
+  sourceDataset?: string
 ): boolean {
+  // DFS datasets have no public policy yet. Fail closed even when a caller
+  // omits sourceDataset; a future DFS publication task must add an explicit,
+  // reviewed allowlist before any DFS evidence can become reachable.
+  if (sourceSystem === "fl_dfs") return false;
   if (sourceSystem !== "fl_dbpr") return true;
   return gateActive && isRegulatoryEvidencePublic(record);
 }
 
 /**
  * SQL fragment for the shared discipline_actions table aliased as `d`.
- * This feature gate controls only fl_dbpr rows. Arizona, New Jersey, and future
- * non-FL sources retain their existing visibility behavior in both gate states.
+ * This feature gate controls Florida DBPR and DFS rows. Arizona, New Jersey,
+ * and future non-FL sources retain their existing visibility behavior.
+ * Stop-work evidence is dataset-excluded until separately approved.
  * Before migration/backfill activation, Florida rows are excluded without
  * referencing the Florida-v1 columns.
  */
 export function publicRegulatorySqlForGate(active: boolean): string {
   return active ? `
   (
-    d.source_system <> 'fl_dbpr'
+    d.source_system NOT IN ('fl_dbpr', 'fl_dfs')
     OR (
       d.source_system = 'fl_dbpr'
       AND d.publication_state = 'PUBLIC_ELIGIBLE'
@@ -93,7 +99,7 @@ export function publicRegulatorySqlForGate(active: boolean): string {
       AND d.retraction_hold = FALSE
     )
   )
-` : "d.source_system <> 'fl_dbpr'";
+` : "d.source_system NOT IN ('fl_dbpr', 'fl_dfs')";
 }
 
 export const REGULATORY_PUBLICATION_GATE_ACTIVE =

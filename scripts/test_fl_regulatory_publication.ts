@@ -43,19 +43,20 @@ assert.equal(evaluatePublicationEligibility({ ...eligibility, sourceFresh: false
 assert.equal(evaluatePublicationEligibility({ ...eligibility, identifierConflict: true }), "INTERNAL");
 assert.equal(evaluatePublicationEligibility({ ...eligibility, retractionHold: true }), "WITHHELD");
 assert.equal(REGULATORY_PUBLICATION_GATE_ACTIVE, false);
-assert.equal(PUBLIC_REGULATORY_SQL, "d.source_system <> 'fl_dbpr'");
+assert.equal(PUBLIC_REGULATORY_SQL, "d.source_system NOT IN ('fl_dbpr', 'fl_dfs')");
 
 const gateOffSql = publicRegulatorySqlForGate(false);
 const gateOnSql = publicRegulatorySqlForGate(true);
-assert.equal(gateOffSql, "d.source_system <> 'fl_dbpr'");
-assert.match(gateOnSql, /d\.source_system <> 'fl_dbpr'/);
+assert.equal(gateOffSql, "d.source_system NOT IN ('fl_dbpr', 'fl_dfs')");
+assert.match(gateOnSql, /d\.source_system NOT IN \('fl_dbpr', 'fl_dfs'\)/);
 assert.match(gateOnSql, /d\.source_system = 'fl_dbpr'/);
+assert.doesNotMatch(gateOnSql, /d\.source_system = 'fl_dfs'/);
 assert.match(gateOnSql, /d\.publication_state = 'PUBLIC_ELIGIBLE'/);
 assert.match(gateOnSql, /d\.identity_state IN \('EXACT', 'DETERMINISTIC'\)/);
 for (const nonFloridaSource of ["az_roc", "nj_enforcement"]) {
   assert.notEqual(nonFloridaSource, "fl_dbpr");
-  assert.equal(gateOffSql.includes("source_system <> 'fl_dbpr'"), true);
-  assert.equal(gateOnSql.includes("source_system <> 'fl_dbpr'"), true);
+  assert.equal(gateOffSql.includes("source_system NOT IN ('fl_dbpr', 'fl_dfs')"), true);
+  assert.equal(gateOnSql.includes("source_system NOT IN ('fl_dbpr', 'fl_dfs')"), true);
   const legacyNonFloridaRow = {
     ...base,
     identityState: "UNRESOLVED" as const,
@@ -75,5 +76,17 @@ assert.equal(isRegulatoryEvidenceReachable("fl_dbpr", floridaContractorOnly, fal
 assert.equal(isRegulatoryEvidenceReachable("fl_dbpr", floridaContractorOnly, true), false);
 assert.equal(isRegulatoryEvidenceReachable("fl_dbpr", base, false), false);
 assert.equal(isRegulatoryEvidenceReachable("fl_dbpr", base, true), true);
+
+const stopWork = {
+  ...base,
+  contractorId: null,
+  licenseId: null,
+  identityState: "UNRESOLVED" as const,
+  publicationState: "INTERNAL" as const,
+};
+assert.equal(isRegulatoryEvidenceReachable("fl_dfs", stopWork, false, "fl_dfs_workers_comp_stop_work"), false);
+assert.equal(isRegulatoryEvidenceReachable("fl_dfs", stopWork, true, "fl_dfs_workers_comp_stop_work"), false);
+assert.equal(isRegulatoryEvidenceReachable("fl_dfs", base, true, "fl_dfs_workers_comp_stop_work"), false);
+assert.equal(isRegulatoryEvidenceReachable("fl_dfs", base, true), false);
 
 console.log("Florida regulatory publication invariants: PASS");
