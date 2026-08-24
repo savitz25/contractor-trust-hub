@@ -1,0 +1,28 @@
+{
+  "dictionary_id": "fl-dbpr-construction-license-types",
+  "version": "2026-08-23.v1",
+  "board": "06",
+  "reviewed_at": "2026-08-23",
+  "source": "https://www2.myfloridalicense.com/about-us/understanding-dbpr-codes/",
+  "unknown_policy": "REVIEW_REQUIRED",
+  "mappings": [
+    {"source_label":"Certified Air Conditioning Contractor","credential_prefix":"CAC","classification":"EXACT_OFFICIAL"},
+    {"source_label":"Certified Building Contractor","credential_prefix":"CBC","classification":"EXACT_OFFICIAL"},
+    {"source_label":"Certified General Contractor","credential_prefix":"CGC","classification":"EXACT_OFFICIAL"},
+    {"source_label":"Certified Mechanical Contractor","credential_prefix":"CMC","classification":"EXACT_OFFICIAL"},
+    {"source_label":"Certified Plumbing Contractor","credential_prefix":"CFC","classification":"EXACT_OFFICIAL"},
+    {"source_label":"Certified Pool/Spa Contractor","credential_prefix":"CPC","classification":"EXACT_OFFICIAL"},
+    {"source_label":"Certified Residential Contractor","credential_prefix":"CRC","classification":"EXACT_OFFICIAL"},
+    {"source_label":"Certified Roofing Contractor","credential_prefix":"CCC","classification":"EXACT_OFFICIAL"},
+    {"source_label":"Certified Solar Contractor","credential_prefix":"CVC","classification":"EXACT_OFFICIAL"},
+    {"source_label":"Certified Specialty Contractor","credential_prefix":"SCC","classification":"EXACT_OFFICIAL"},
+    {"source_label":"Registered Pool/Spa Contractor","credential_prefix":"RP","classification":"EXACT_OFFICIAL"},
+    {"source_label":"Registered Residential Contractor","credential_prefix":"RR","classification":"EXACT_OFFICIAL"},
+    {
+      "source_label":"Construction Financial Officer",
+      "credential_prefix":"FRO",
+      "classification":"DETERMINISTIC",
+      "reference":"DBPR credential detail pages label FRO credentials as Construction Financial Officer; the code dictionary calls FRO Financial Responsible Officer."
+    }
+  ]
+}

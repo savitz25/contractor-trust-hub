@@ -40,6 +40,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from ingest.env import load_dotenv_files, normalize_database_url  # noqa: E402
+from ingest.regulatory.fl_dbpr_identity import (  # noqa: E402
+    FloridaDbprCredentialResolver,
+    LicenseCredential,
+)
 
 SOURCE_SYSTEM = "fl_dbpr"
 SOURCE_URL_LICENSEES = (
@@ -525,26 +529,27 @@ def load_discipline(
         "skipped": 0,
     }
 
-    # Preload license number → id for high-confidence numeric core matches only
-    license_by_number: dict[str, UUID] = {}
+    # Preload the full credential inventory for the fail-closed resolver.
+    license_inventory: list[LicenseCredential] = []
     with conn.cursor() as cur:
         cur.execute(
             """
-            SELECT id, license_number, external_key
+            SELECT id, external_key, occupation_code, license_number,
+                   source_board, contractor_id
             FROM licenses
-            WHERE source_system = %s AND license_number IS NOT NULL
+            WHERE source_system = %s
             """,
             (SOURCE_SYSTEM,),
         )
-        for lid, num, ext in cur.fetchall():
-            if num:
-                license_by_number[num.lstrip("0") or num] = lid
-                license_by_number[num] = lid
-            if ext:
-                # strip alpha prefix for numeric tail match when pure digits remain
-                tail = re.sub(r"^[A-Z]+", "", ext)
-                if tail.isdigit():
-                    license_by_number[tail.lstrip("0") or tail] = lid
+        for lid, ext, occupation, num, board, contractor in cur.fetchall():
+            license_inventory.append(
+                LicenseCredential(
+                    id=str(lid), external_key=ext, occupation_code=occupation,
+                    license_number=num, source_board=board,
+                    contractor_id=str(contractor) if contractor else None,
+                )
+            )
+    resolver = FloridaDbprCredentialResolver(license_inventory)
 
     sql = """
         INSERT INTO discipline_actions (
@@ -553,17 +558,23 @@ def load_discipline(
           classification, entered_date, disposition, disposition_date,
           discipline_description, violation_code, address_line_1, city, state,
           postal_code, county_name, raw_payload, ingest_batch_id,
-          last_verified_at, updated_at
+          last_verified_at, updated_at, identity_state, identity_method,
+          resolver_version, resolved_license_external_key, identity_evidence,
+          identity_evaluated_at, review_reason, publication_state,
+          correction_hold, retraction_hold
         ) VALUES (
           %s, %s, %s, %s, %s,
           %s, %s, %s, %s,
           %s, %s, %s, %s,
           %s, %s, %s, %s, %s,
           %s, %s, %s, %s,
-          %s, %s
+          %s, %s, %s, %s,
+          %s, %s, %s,
+          %s, %s, %s, %s, %s
         )
         ON CONFLICT (source_system, external_key) DO UPDATE SET
-          license_id = COALESCE(EXCLUDED.license_id, discipline_actions.license_id),
+          contractor_id = NULL,
+          license_id = EXCLUDED.license_id,
           complaint_number = EXCLUDED.complaint_number,
           license_type = EXCLUDED.license_type,
           license_number_raw = EXCLUDED.license_number_raw,
@@ -582,6 +593,16 @@ def load_discipline(
           raw_payload = EXCLUDED.raw_payload,
           ingest_batch_id = EXCLUDED.ingest_batch_id,
           last_verified_at = EXCLUDED.last_verified_at,
+          identity_state = EXCLUDED.identity_state,
+          identity_method = EXCLUDED.identity_method,
+          resolver_version = EXCLUDED.resolver_version,
+          resolved_license_external_key = EXCLUDED.resolved_license_external_key,
+          identity_evidence = EXCLUDED.identity_evidence,
+          identity_evaluated_at = EXCLUDED.identity_evaluated_at,
+          review_reason = EXCLUDED.review_reason,
+          publication_state = 'INTERNAL',
+          correction_hold = FALSE,
+          retraction_hold = FALSE,
           updated_at = EXCLUDED.updated_at
     """
 
@@ -597,22 +618,23 @@ def load_discipline(
                 continue
 
             raw_num = row.get("license_number_raw", "")
-            license_id = None
-            if raw_num:
-                license_id = license_by_number.get(raw_num) or license_by_number.get(
-                    raw_num.lstrip("0") or raw_num
-                )
-                if license_id:
-                    stats["license_links"] += 1
-
-            contractor_id = None
+            resolution = resolver.resolve(
+                source_dataset=row.get("source_dataset") or "contractor_disc_lic",
+                license_type=row.get("license_type"),
+                license_number=raw_num,
+                respondent_name=respondent,
+            )
+            license_id = (
+                UUID(resolution.proposed_license_id)
+                if resolution.identity_state in {"EXACT", "DETERMINISTIC"}
+                and resolution.proposed_license_id
+                else None
+            )
             if license_id:
-                cur.execute(
-                    "SELECT contractor_id FROM licenses WHERE id = %s", (license_id,)
-                )
-                r = cur.fetchone()
-                if r:
-                    contractor_id = r[0]
+                stats["license_links"] += 1
+
+            # License linkage is not contractor linkage and never publishes a row.
+            contractor_id = None
 
             payload = parse_json(row.get("raw_payload_json"))
             ext = discipline_external_key(row)
@@ -623,7 +645,7 @@ def load_discipline(
                 (
                     contractor_id,
                     license_id,
-                    row.get("source_system") or SOURCE_SYSTEM,
+                    SOURCE_SYSTEM,
                     row.get("source_dataset") or "contractor_disc_lic",
                     ext,
                     row.get("complaint_number") or None,
@@ -645,6 +667,24 @@ def load_discipline(
                     batch_id,
                     now,
                     now,
+                    resolution.identity_state,
+                    resolution.identity_method,
+                    resolution.resolver_version,
+                    resolution.resolved_external_key,
+                    Jsonb(
+                        {
+                            "expected_external_key": resolution.expected_external_key,
+                            "candidate_count": resolution.candidate_count,
+                            "reason": resolution.reason,
+                        }
+                    ),
+                    now,
+                    resolution.reason
+                    if resolution.identity_state in {"REVIEW_REQUIRED", "UNRESOLVED"}
+                    else None,
+                    "INTERNAL",
+                    False,
+                    False,
                 ),
             )
             stats["actions_upserted"] += 1

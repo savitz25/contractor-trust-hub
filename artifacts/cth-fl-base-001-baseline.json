@@ -1,0 +1,2249 @@
+{
+  "address_coverage": {
+    "city": 140928,
+    "county": 138081,
+    "dbpr_license_address": 140935,
+    "state": 143516,
+    "sunbiz_principal_address": 74258,
+    "zip": 140920
+  },
+  "assertions": [
+    {
+      "left": 143516,
+      "name": "FL licenses = attached + unattached",
+      "pass": true,
+      "right": 143516
+    },
+    {
+      "left": 143516,
+      "name": "regulated shells = one-license + multi-license",
+      "pass": true,
+      "right": 143516
+    },
+    {
+      "left": 143516,
+      "name": "regulated shells = non-thin + thin",
+      "pass": true,
+      "right": 143516
+    },
+    {
+      "left": 1541,
+      "name": "discipline datasets reconcile",
+      "pass": true,
+      "right": 1541
+    },
+    {
+      "left": 1541,
+      "name": "discipline contractor linkage reconciles",
+      "pass": true,
+      "right": 1541
+    },
+    {
+      "left": 143516,
+      "name": "Sunbiz coverage reconciles",
+      "pass": true,
+      "right": 143516
+    },
+    {
+      "left": 143516,
+      "name": "canonical contact groups reconcile",
+      "pass": true,
+      "right": 143516
+    },
+    {
+      "left": 143516,
+      "name": "external keys unique",
+      "pass": true,
+      "right": 143516
+    },
+    {
+      "left": false,
+      "name": "mutation count",
+      "pass": true,
+      "right": false
+    }
+  ],
+  "audit": {
+    "branch": "cth-fl-base-001",
+    "environment": "PRODUCTION",
+    "git_sha": "10c58dde712923c5994533ae1e886c07b2c21a21",
+    "id": "CTH-FL-BASE-001",
+    "mutation_performed": false,
+    "postgres_version": "17.6",
+    "reconciliation_assertions": "PASS",
+    "statement_timeout": "2min",
+    "tables": {
+      "contractor_entities": true,
+      "contractors": true,
+      "discipline_actions": true,
+      "entities": true,
+      "ingest_batches": true,
+      "licenses": true
+    },
+    "timestamp_utc": "2026-08-23T21:32:18.753169+00:00",
+    "transaction_isolation": "repeatable read",
+    "transaction_read_only": "on"
+  },
+  "canonical_contacts_public": {
+    "neither": 143516,
+    "phone": 0,
+    "phone_and_website": 0,
+    "website": 0
+  },
+  "canonical_contacts_regulated": {
+    "neither": 143516,
+    "phone": 0,
+    "phone_and_website": 0,
+    "website": 0
+  },
+  "collision_combinations": [
+    {
+      "collision_cores": 5862,
+      "license_rows": 11724,
+      "occupation_combination": "CCC+CRC"
+    },
+    {
+      "collision_cores": 4145,
+      "license_rows": 8290,
+      "occupation_combination": "CRS1+FRO"
+    },
+    {
+      "collision_cores": 964,
+      "license_rows": 1928,
+      "occupation_combination": "CGC+FRO"
+    },
+    {
+      "collision_cores": 935,
+      "license_rows": 1870,
+      "occupation_combination": "CBC+CMC"
+    },
+    {
+      "collision_cores": 556,
+      "license_rows": 1112,
+      "occupation_combination": "CBC+CGC"
+    },
+    {
+      "collision_cores": 455,
+      "license_rows": 1365,
+      "occupation_combination": "CGC+CRS1+FRO"
+    },
+    {
+      "collision_cores": 275,
+      "license_rows": 550,
+      "occupation_combination": "FRO+PVDR"
+    },
+    {
+      "collision_cores": 196,
+      "license_rows": 392,
+      "occupation_combination": "CBC+FRO"
+    },
+    {
+      "collision_cores": 138,
+      "license_rows": 276,
+      "occupation_combination": "CBC+PCC"
+    },
+    {
+      "collision_cores": 97,
+      "license_rows": 194,
+      "occupation_combination": "CAC+FRO"
+    },
+    {
+      "collision_cores": 97,
+      "license_rows": 194,
+      "occupation_combination": "CRC+FRO"
+    },
+    {
+      "collision_cores": 82,
+      "license_rows": 164,
+      "occupation_combination": "CAC+CGC"
+    },
+    {
+      "collision_cores": 68,
+      "license_rows": 204,
+      "occupation_combination": "CBC+CRS1+FRO"
+    },
+    {
+      "collision_cores": 56,
+      "license_rows": 168,
+      "occupation_combination": "CAC+CBC+CGC"
+    },
+    {
+      "collision_cores": 44,
+      "license_rows": 88,
+      "occupation_combination": "CAC+CBC"
+    },
+    {
+      "collision_cores": 40,
+      "license_rows": 80,
+      "occupation_combination": "CFC+FRO"
+    },
+    {
+      "collision_cores": 40,
+      "license_rows": 120,
+      "occupation_combination": "CRC+CRS1+FRO"
+    },
+    {
+      "collision_cores": 38,
+      "license_rows": 114,
+      "occupation_combination": "CAC+CCC+CGC"
+    },
+    {
+      "collision_cores": 37,
+      "license_rows": 111,
+      "occupation_combination": "CAC+CRS1+FRO"
+    },
+    {
+      "collision_cores": 37,
+      "license_rows": 74,
+      "occupation_combination": "CCC+FRO"
+    },
+    {
+      "collision_cores": 33,
+      "license_rows": 99,
+      "occupation_combination": "CAC+CGC+CRC"
+    },
+    {
+      "collision_cores": 31,
+      "license_rows": 62,
+      "occupation_combination": "CAC+CRC"
+    },
+    {
+      "collision_cores": 29,
+      "license_rows": 116,
+      "occupation_combination": "CAC+CBC+CCC+CGC"
+    },
+    {
+      "collision_cores": 26,
+      "license_rows": 52,
+      "occupation_combination": "CGC+CRC"
+    },
+    {
+      "collision_cores": 24,
+      "license_rows": 72,
+      "occupation_combination": "CAC+CBC+CCC"
+    },
+    {
+      "collision_cores": 24,
+      "license_rows": 96,
+      "occupation_combination": "CAC+CBC+CGC+CRC"
+    },
+    {
+      "collision_cores": 24,
+      "license_rows": 72,
+      "occupation_combination": "CAC+CBC+CRC"
+    },
+    {
+      "collision_cores": 24,
+      "license_rows": 72,
+      "occupation_combination": "CBC+CGC+CRC"
+    },
+    {
+      "collision_cores": 24,
+      "license_rows": 48,
+      "occupation_combination": "CCC+CGC"
+    },
+    {
+      "collision_cores": 23,
+      "license_rows": 46,
+      "occupation_combination": "CAC+CCC"
+    },
+    {
+      "collision_cores": 22,
+      "license_rows": 88,
+      "occupation_combination": "CAC+CCC+CFC+CGC"
+    },
+    {
+      "collision_cores": 21,
+      "license_rows": 42,
+      "occupation_combination": "CAC+CFC"
+    },
+    {
+      "collision_cores": 20,
+      "license_rows": 60,
+      "occupation_combination": "CAC+CFC+CGC"
+    },
+    {
+      "collision_cores": 18,
+      "license_rows": 90,
+      "occupation_combination": "CAC+CBC+CCC+CGC+CRC"
+    },
+    {
+      "collision_cores": 18,
+      "license_rows": 36,
+      "occupation_combination": "CBC+CCC"
+    },
+    {
+      "collision_cores": 17,
+      "license_rows": 51,
+      "occupation_combination": "CAC+CCC+CFC"
+    },
+    {
+      "collision_cores": 17,
+      "license_rows": 51,
+      "occupation_combination": "CBC+CCC+CGC"
+    },
+    {
+      "collision_cores": 17,
+      "license_rows": 51,
+      "occupation_combination": "CCC+CGC+CRC"
+    },
+    {
+      "collision_cores": 17,
+      "license_rows": 34,
+      "occupation_combination": "CFC+CRC"
+    },
+    {
+      "collision_cores": 17,
+      "license_rows": 34,
+      "occupation_combination": "CGC+RR"
+    },
+    {
+      "collision_cores": 16,
+      "license_rows": 64,
+      "occupation_combination": "CAC+CBC+CCC+CFC"
+    },
+    {
+      "collision_cores": 16,
+      "license_rows": 64,
+      "occupation_combination": "CAC+CCC+CGC+CRC"
+    },
+    {
+      "collision_cores": 16,
+      "license_rows": 48,
+      "occupation_combination": "CCC+CRS1+FRO"
+    },
+    {
+      "collision_cores": 16,
+      "license_rows": 32,
+      "occupation_combination": "CFC+CGC"
+    },
+    {
+      "collision_cores": 16,
+      "license_rows": 32,
+      "occupation_combination": "CMC+FRO"
+    },
+    {
+      "collision_cores": 16,
+      "license_rows": 32,
+      "occupation_combination": "FRO+RG"
+    },
+    {
+      "collision_cores": 15,
+      "license_rows": 60,
+      "occupation_combination": "CAC+CBC+CCC+CRC"
+    },
+    {
+      "collision_cores": 15,
+      "license_rows": 45,
+      "occupation_combination": "CAC+CCC+CRC"
+    },
+    {
+      "collision_cores": 15,
+      "license_rows": 30,
+      "occupation_combination": "CCC+CFC"
+    },
+    {
+      "collision_cores": 14,
+      "license_rows": 28,
+      "occupation_combination": "CBC+CFC"
+    },
+    {
+      "collision_cores": 14,
+      "license_rows": 42,
+      "occupation_combination": "CBC+CFC+CGC"
+    },
+    {
+      "collision_cores": 14,
+      "license_rows": 28,
+      "occupation_combination": "CBC+CRC"
+    },
+    {
+      "collision_cores": 14,
+      "license_rows": 42,
+      "occupation_combination": "CCC+CFC+CGC"
+    },
+    {
+      "collision_cores": 14,
+      "license_rows": 28,
+      "occupation_combination": "CGC+RA"
+    },
+    {
+      "collision_cores": 14,
+      "license_rows": 42,
+      "occupation_combination": "CMC+CRS1+FRO"
+    },
+    {
+      "collision_cores": 12,
+      "license_rows": 60,
+      "occupation_combination": "CAC+CBC+CCC+CFC+CGC"
+    },
+    {
+      "collision_cores": 12,
+      "license_rows": 60,
+      "occupation_combination": "CAC+CCC+CFC+CGC+CRC"
+    },
+    {
+      "collision_cores": 11,
+      "license_rows": 44,
+      "occupation_combination": "CBC+CCC+CFC+CGC"
+    },
+    {
+      "collision_cores": 11,
+      "license_rows": 22,
+      "occupation_combination": "CGC+RG"
+    },
+    {
+      "collision_cores": 10,
+      "license_rows": 30,
+      "occupation_combination": "CBC+CCC+CFC"
+    },
+    {
+      "collision_cores": 10,
+      "license_rows": 20,
+      "occupation_combination": "CGC+RC"
+    },
+    {
+      "collision_cores": 10,
+      "license_rows": 20,
+      "occupation_combination": "CGC+RX"
+    },
+    {
+      "collision_cores": 9,
+      "license_rows": 36,
+      "occupation_combination": "CAC+CBC+CFC+CGC"
+    },
+    {
+      "collision_cores": 9,
+      "license_rows": 27,
+      "occupation_combination": "CAC+CFC+CRC"
+    },
+    {
+      "collision_cores": 9,
+      "license_rows": 27,
+      "occupation_combination": "CFC+CGC+CRC"
+    },
+    {
+      "collision_cores": 9,
+      "license_rows": 18,
+      "occupation_combination": "CGC+CRS1"
+    },
+    {
+      "collision_cores": 9,
+      "license_rows": 27,
+      "occupation_combination": "CPC+CRS1+FRO"
+    },
+    {
+      "collision_cores": 8,
+      "license_rows": 40,
+      "occupation_combination": "CAC+CBC+CCC+CFC+CRC"
+    },
+    {
+      "collision_cores": 8,
+      "license_rows": 24,
+      "occupation_combination": "CAC+CBC+CFC"
+    },
+    {
+      "collision_cores": 8,
+      "license_rows": 32,
+      "occupation_combination": "CBC+CCC+CGC+CRC"
+    },
+    {
+      "collision_cores": 8,
+      "license_rows": 24,
+      "occupation_combination": "CBC+CFC+CRC"
+    },
+    {
+      "collision_cores": 8,
+      "license_rows": 16,
+      "occupation_combination": "CPC+FRO"
+    },
+    {
+      "collision_cores": 8,
+      "license_rows": 24,
+      "occupation_combination": "CRS1+FRO+PVDR"
+    },
+    {
+      "collision_cores": 8,
+      "license_rows": 16,
+      "occupation_combination": "FRO+RA"
+    },
+    {
+      "collision_cores": 7,
+      "license_rows": 35,
+      "occupation_combination": "CAC+CBC+CFC+CGC+CRC"
+    },
+    {
+      "collision_cores": 7,
+      "license_rows": 28,
+      "occupation_combination": "CAC+CCC+CFC+CRC"
+    },
+    {
+      "collision_cores": 7,
+      "license_rows": 14,
+      "occupation_combination": "CBC+RP"
+    },
+    {
+      "collision_cores": 7,
+      "license_rows": 14,
+      "occupation_combination": "CBC+RX"
+    },
+    {
+      "collision_cores": 7,
+      "license_rows": 35,
+      "occupation_combination": "CFC+CGC+CPC+CUC+CVC"
+    },
+    {
+      "collision_cores": 7,
+      "license_rows": 14,
+      "occupation_combination": "CGC+RP"
+    },
+    {
+      "collision_cores": 6,
+      "license_rows": 24,
+      "occupation_combination": "CAC+CFC+CGC+CRC"
+    },
+    {
+      "collision_cores": 6,
+      "license_rows": 18,
+      "occupation_combination": "CAC+CFC+CUC"
+    },
+    {
+      "collision_cores": 6,
+      "license_rows": 18,
+      "occupation_combination": "CAC+CFC+CVC"
+    },
+    {
+      "collision_cores": 6,
+      "license_rows": 12,
+      "occupation_combination": "CBC+RF"
+    },
+    {
+      "collision_cores": 6,
+      "license_rows": 30,
+      "occupation_combination": "CCC+CFC+CGC+CUC+CVC"
+    },
+    {
+      "collision_cores": 6,
+      "license_rows": 12,
+      "occupation_combination": "CFC+CVC"
+    },
+    {
+      "collision_cores": 6,
+      "license_rows": 18,
+      "occupation_combination": "CGC+FRO+PVDR"
+    },
+    {
+      "collision_cores": 6,
+      "license_rows": 12,
+      "occupation_combination": "FRO+RM"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 20,
+      "occupation_combination": "CAC+CBC+CFC+CRC"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 25,
+      "occupation_combination": "CAC+CBC+CFC+CUC+CVC"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 25,
+      "occupation_combination": "CBC+CCC+CFC+CGC+CRC"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 20,
+      "occupation_combination": "CBC+CCC+CFC+CRC"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 15,
+      "occupation_combination": "CBC+CCC+CRC"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 15,
+      "occupation_combination": "CBC+CGC+RX"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 10,
+      "occupation_combination": "CBC+RM"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 20,
+      "occupation_combination": "CCC+CFC+CGC+CRC"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 15,
+      "occupation_combination": "CCC+CFC+CRC"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 15,
+      "occupation_combination": "CCC+CFC+CVC"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 15,
+      "occupation_combination": "CGC+CUC+CVC"
+    },
+    {
+      "collision_cores": 5,
+      "license_rows": 10,
+      "occupation_combination": "CGC+RF"
+    }
+  ],
+  "collision_samples": [
+    {
+      "contractor_shells": 9,
+      "core": "56687",
+      "external_keys": 9,
+      "license_rows": 9,
+      "occupation_codes": 9,
+      "occupation_combination": "CAC+CBC+CCC+CFC+CMC+CSC+CVC+PCC+SCC"
+    },
+    {
+      "contractor_shells": 9,
+      "core": "56779",
+      "external_keys": 9,
+      "license_rows": 9,
+      "occupation_codes": 9,
+      "occupation_combination": "CAC+CBC+CFC+CMC+CPC+CRC+CUC+CVC+PCC"
+    },
+    {
+      "contractor_shells": 9,
+      "core": "56828",
+      "external_keys": 9,
+      "license_rows": 9,
+      "occupation_codes": 9,
+      "occupation_combination": "CAC+CCC+CFC+CGC+CMC+CPC+CUC+CVC+PCC"
+    },
+    {
+      "contractor_shells": 9,
+      "core": "57100",
+      "external_keys": 9,
+      "license_rows": 9,
+      "occupation_codes": 9,
+      "occupation_combination": "CAC+CBC+CCC+CFC+CGC+CMC+CPC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 9,
+      "core": "57129",
+      "external_keys": 9,
+      "license_rows": 9,
+      "occupation_codes": 9,
+      "occupation_combination": "CAC+CCC+CFC+CGC+CMC+CPC+CRC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 9,
+      "core": "57325",
+      "external_keys": 9,
+      "license_rows": 9,
+      "occupation_codes": 9,
+      "occupation_combination": "CAC+CBC+CCC+CFC+CGC+CPC+CRC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "56844",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CCC+CFC+CMC+CPC+CRC+CUC+CVC+PCC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "56904",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CAC+CBC+CFC+CGC+CMC+CPC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "56961",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CAC+CBC+CCC+CFC+CMC+CPC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "57009",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CAC+CBC+CFC+CGC+CMC+CRC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "57034",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CAC+CBC+CFC+CGC+CMC+CRC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "57036",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CAC+CBC+CCC+CFC+CGC+CMC+CPC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "57082",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CCC+CFC+CGC+CMC+CPC+CRC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "57091",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CAC+CCC+CFC+CGC+CMC+CPC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "57152",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CBC+CCC+CFC+CGC+CMC+CRC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "57170",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CAC+CBC+CGC+CMC+CPC+CRC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "57200",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CAC+CBC+CFC+CGC+CMC+CPC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "57214",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CAC+CBC+CCC+CGC+CMC+CPC+CRC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "57244",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CAC+CBC+CCC+CFC+CGC+CPC+CUC+CVC"
+    },
+    {
+      "contractor_shells": 8,
+      "core": "57246",
+      "external_keys": 8,
+      "license_rows": 8,
+      "occupation_codes": 8,
+      "occupation_combination": "CBC+CCC+CFC+CGC+CPC+CRC+CUC+CVC"
+    }
+  ],
+  "contractors": {
+    "contractors_without_any_license": 126516,
+    "home_state_fl": 127314,
+    "home_state_not_fl": 16202,
+    "home_state_unknown": 0,
+    "max_licenses_per_shell": 1,
+    "multi_license_shells": 0,
+    "non_thin_shells": 143516,
+    "one_license_shells": 143516,
+    "public_searchable_profiles": 143516,
+    "regulated_shells": 143516,
+    "thin_shells": 0
+  },
+  "discipline_by_dataset": [
+    {
+      "distinct_complaints": 760,
+      "distinct_external_keys": 1541,
+      "earliest_date": "2024-07-01",
+      "latest_date": "2026-07-07",
+      "source_dataset": "contractor_disc_lic",
+      "total": 1541,
+      "unique_contractors": 0,
+      "unique_licenses": 245,
+      "with_both": 0,
+      "with_contractor_id": 0,
+      "with_license_id": 987,
+      "with_neither": 554
+    }
+  ],
+  "discipline_collision_by_dataset": [
+    {
+      "contractor_linked": 0,
+      "license_linked": 194,
+      "source_dataset": "contractor_disc_lic",
+      "total": 194,
+      "with_neither": 0
+    }
+  ],
+  "discipline_collision_exposure": {
+    "currently_linked": 0,
+    "currently_unlinked": 194,
+    "total": 194,
+    "unique_complaints": 67,
+    "unique_contractor_ids": 0,
+    "unique_license_ids": 56,
+    "with_any_link": 194,
+    "with_contractor_id": 0,
+    "with_license_id": 194,
+    "with_neither": 0
+  },
+  "discipline_distributions": {
+    "classification": [
+      {
+        "total": 1540,
+        "value": "Licensed Activity"
+      },
+      {
+        "total": 1,
+        "value": "Licensed Activity Audit"
+      }
+    ],
+    "discipline_description": [
+      {
+        "total": 48,
+        "value": "07/17/2025 - Consolidated"
+      },
+      {
+        "total": 37,
+        "value": "12/08/2025 - Consolidated"
+      },
+      {
+        "total": 34,
+        "value": "12/10/2024 - Consolidated"
+      },
+      {
+        "total": 30,
+        "value": "06/11/2025 - Cost"
+      },
+      {
+        "total": 29,
+        "value": "06/11/2025 - Consolidated"
+      },
+      {
+        "total": 27,
+        "value": "02/21/2025 - Consolidated"
+      },
+      {
+        "total": 25,
+        "value": "09/16/2025 - Consolidated"
+      },
+      {
+        "total": 24,
+        "value": "06/11/2025 - Fine"
+      },
+      {
+        "total": 24,
+        "value": "09/11/2025 - Consolidated"
+      },
+      {
+        "total": 21,
+        "value": "09/24/2025 - Consolidated"
+      },
+      {
+        "total": 21,
+        "value": "12/08/2025 - COSTS"
+      },
+      {
+        "total": 18,
+        "value": "03/27/2025 - Consolidated"
+      },
+      {
+        "total": 17,
+        "value": "09/11/2025 - COSTS"
+      },
+      {
+        "total": 17,
+        "value": "09/15/2025 - COSTS"
+      },
+      {
+        "total": 17,
+        "value": "09/26/2025 - Fine"
+      },
+      {
+        "total": 17,
+        "value": "12/08/2025 - Fine"
+      },
+      {
+        "total": 16,
+        "value": "05/06/2025 - Consolidated"
+      },
+      {
+        "total": 16,
+        "value": "09/11/2025 - Fine"
+      },
+      {
+        "total": 16,
+        "value": "09/23/2025 - Consolidated"
+      },
+      {
+        "total": 16,
+        "value": "09/26/2025 - COSTS"
+      },
+      {
+        "total": 15,
+        "value": "04/06/2026 - COSTS"
+      },
+      {
+        "total": 15,
+        "value": "04/06/2026 - Fine"
+      },
+      {
+        "total": 14,
+        "value": "04/07/2026 - COSTS"
+      },
+      {
+        "total": 14,
+        "value": "06/11/2025 - Restitution"
+      },
+      {
+        "total": 14,
+        "value": "09/15/2025 - Fine"
+      },
+      {
+        "total": 13,
+        "value": "06/11/2025 - Revoke License"
+      },
+      {
+        "total": 13,
+        "value": "07/15/2025 - Cost"
+      },
+      {
+        "total": 13,
+        "value": "09/11/2025 - Restitution"
+      },
+      {
+        "total": 13,
+        "value": "10/30/2025 - Consolidated"
+      },
+      {
+        "total": 13,
+        "value": "12/08/2025 - Education"
+      },
+      {
+        "total": 12,
+        "value": "10/30/2025 - COSTS"
+      },
+      {
+        "total": 12,
+        "value": "10/31/2025 - COSTS"
+      },
+      {
+        "total": 12,
+        "value": "12/08/2025 - Restitution"
+      },
+      {
+        "total": 11,
+        "value": "02/10/2026 - COSTS"
+      },
+      {
+        "total": 11,
+        "value": "02/10/2026 - Fine"
+      },
+      {
+        "total": 11,
+        "value": "04/07/2026 - Education"
+      },
+      {
+        "total": 11,
+        "value": "04/07/2026 - Fine"
+      },
+      {
+        "total": 11,
+        "value": "07/15/2025 - Consolidated"
+      },
+      {
+        "total": 11,
+        "value": "07/15/2025 - Fine"
+      },
+      {
+        "total": 11,
+        "value": "09/26/2025 - Restitution"
+      },
+      {
+        "total": 11,
+        "value": "10/30/2025 - Fine"
+      },
+      {
+        "total": 11,
+        "value": "10/31/2025 - Consolidated"
+      },
+      {
+        "total": 10,
+        "value": "03/07/2025 - Consolidated"
+      },
+      {
+        "total": 10,
+        "value": "05/06/2025 - Cost"
+      },
+      {
+        "total": 10,
+        "value": "06/11/2025 - Education"
+      },
+      {
+        "total": 10,
+        "value": "07/15/2025 - Revoke License"
+      },
+      {
+        "total": 10,
+        "value": "10/31/2025 - Fine"
+      },
+      {
+        "total": 9,
+        "value": "05/06/2025 - Fine"
+      },
+      {
+        "total": 9,
+        "value": "10/02/2025 - Consolidated"
+      },
+      {
+        "total": 9,
+        "value": "12/08/2025 - Probation"
+      },
+      {
+        "total": 8,
+        "value": "04/06/2026 - Education"
+      },
+      {
+        "total": 8,
+        "value": "05/06/2025 - Restitution"
+      },
+      {
+        "total": 8,
+        "value": "07/24/2025 - Cost"
+      },
+      {
+        "total": 8,
+        "value": "09/15/2025 - Consolidated"
+      },
+      {
+        "total": 8,
+        "value": "09/15/2025 - Education"
+      },
+      {
+        "total": 8,
+        "value": "09/15/2025 - Probation"
+      },
+      {
+        "total": 8,
+        "value": "09/15/2025 - Revoke License"
+      },
+      {
+        "total": 7,
+        "value": "03/06/2026 - Consolidated"
+      },
+      {
+        "total": 7,
+        "value": "04/06/2026 - Restitution"
+      },
+      {
+        "total": 7,
+        "value": "06/18/2026 - Suspend License"
+      },
+      {
+        "total": 7,
+        "value": "07/07/2026 - COSTS"
+      },
+      {
+        "total": 7,
+        "value": "07/15/2025 - Restitution"
+      },
+      {
+        "total": 7,
+        "value": "07/16/2025 - Consolidated"
+      },
+      {
+        "total": 7,
+        "value": "07/24/2025 - Fine"
+      },
+      {
+        "total": 7,
+        "value": "07/24/2025 - Revoke License"
+      },
+      {
+        "total": 7,
+        "value": "07/25/2025 - Cost"
+      },
+      {
+        "total": 7,
+        "value": "09/11/2025 - Voluntary Relinquishment"
+      },
+      {
+        "total": 7,
+        "value": "09/15/2025 - Restitution"
+      },
+      {
+        "total": 7,
+        "value": "09/26/2025 - Education"
+      },
+      {
+        "total": 7,
+        "value": "10/30/2025 - Education"
+      },
+      {
+        "total": 7,
+        "value": "10/31/2025 - Restitution"
+      },
+      {
+        "total": 7,
+        "value": "10/31/2025 - Revoke License"
+      },
+      {
+        "total": 6,
+        "value": "02/05/2025 - Consolidated"
+      },
+      {
+        "total": 6,
+        "value": "02/05/2025 - Cost"
+      },
+      {
+        "total": 6,
+        "value": "02/05/2025 - Fine"
+      },
+      {
+        "total": 6,
+        "value": "02/05/2025 - Restitution"
+      },
+      {
+        "total": 6,
+        "value": "02/09/2026 - Suspend License"
+      },
+      {
+        "total": 6,
+        "value": "03/27/2025 - Cost"
+      },
+      {
+        "total": 6,
+        "value": "03/27/2025 - Fine"
+      },
+      {
+        "total": 6,
+        "value": "04/06/2026 - Revoke License"
+      },
+      {
+        "total": 6,
+        "value": "06/11/2025 - Voluntary Relinquishment"
+      },
+      {
+        "total": 6,
+        "value": "07/07/2026 - Fine"
+      },
+      {
+        "total": 6,
+        "value": "07/16/2025 - Cost"
+      },
+      {
+        "total": 6,
+        "value": "07/16/2025 - Education"
+      },
+      {
+        "total": 6,
+        "value": "07/16/2025 - Fine"
+      },
+      {
+        "total": 6,
+        "value": "07/24/2025 - Consolidated"
+      },
+      {
+        "total": 6,
+        "value": "07/24/2025 - Restitution"
+      },
+      {
+        "total": 6,
+        "value": "09/26/2025 - Consolidated"
+      },
+      {
+        "total": 6,
+        "value": "09/26/2025 - Voluntary Relinquishment"
+      },
+      {
+        "total": 6,
+        "value": "10/30/2025 - Probation"
+      },
+      {
+        "total": 5,
+        "value": "02/10/2026 - Restitution"
+      },
+      {
+        "total": 5,
+        "value": "02/10/2026 - Revoke License"
+      },
+      {
+        "total": 5,
+        "value": "04/06/2026 - Probation"
+      },
+      {
+        "total": 5,
+        "value": "05/06/2025 - Revoke License"
+      },
+      {
+        "total": 5,
+        "value": "06/11/2025 - Probation"
+      },
+      {
+        "total": 5,
+        "value": "06/11/2025 - Satisfaction of Civil Judgment"
+      },
+      {
+        "total": 5,
+        "value": "07/25/2025 - Consolidated"
+      },
+      {
+        "total": 5,
+        "value": "07/25/2025 - Fine"
+      },
+      {
+        "total": 5,
+        "value": "07/25/2025 - Restitution"
+      },
+      {
+        "total": 5,
+        "value": "07/30/2025 - Suspend License"
+      }
+    ],
+    "disposition": [
+      {
+        "total": 1438,
+        "value": "Final Order"
+      },
+      {
+        "total": 76,
+        "value": "Citation filed"
+      },
+      {
+        "total": 16,
+        "value": "(null)"
+      },
+      {
+        "total": 10,
+        "value": "Dismissed"
+      },
+      {
+        "total": 1,
+        "value": "NNC Closed"
+      }
+    ],
+    "license_type": [
+      {
+        "total": 434,
+        "value": "Certified General Contractor"
+      },
+      {
+        "total": 268,
+        "value": "Construction Financial Officer"
+      },
+      {
+        "total": 245,
+        "value": "Certified Roofing Contractor"
+      },
+      {
+        "total": 195,
+        "value": "Certified Building Contractor"
+      },
+      {
+        "total": 162,
+        "value": "Certified Pool/Spa Contractor"
+      },
+      {
+        "total": 89,
+        "value": "Certified Residential Contractor"
+      },
+      {
+        "total": 79,
+        "value": "Certified Air Conditioning Contractor"
+      },
+      {
+        "total": 28,
+        "value": "Certified Specialty Contractor"
+      },
+      {
+        "total": 24,
+        "value": "Certified Plumbing Contractor"
+      },
+      {
+        "total": 8,
+        "value": "Registered Pool/Spa Contractor"
+      },
+      {
+        "total": 4,
+        "value": "Certified Solar Contractor"
+      },
+      {
+        "total": 3,
+        "value": "Certified Mechanical Contractor"
+      },
+      {
+        "total": 2,
+        "value": "Registered Residential Contractor"
+      }
+    ],
+    "violation_code": [
+      {
+        "total": 1466,
+        "value": "(null)"
+      },
+      {
+        "total": 25,
+        "value": "CB36"
+      },
+      {
+        "total": 17,
+        "value": "CB15"
+      },
+      {
+        "total": 16,
+        "value": "CB28"
+      },
+      {
+        "total": 4,
+        "value": "CB08"
+      },
+      {
+        "total": 3,
+        "value": "CB01"
+      },
+      {
+        "total": 3,
+        "value": "CB02"
+      },
+      {
+        "total": 2,
+        "value": "CB03"
+      },
+      {
+        "total": 2,
+        "value": "RG10"
+      },
+      {
+        "total": 1,
+        "value": "CB07"
+      },
+      {
+        "total": 1,
+        "value": "CB21"
+      },
+      {
+        "total": 1,
+        "value": "CB35"
+      }
+    ]
+  },
+  "discipline_link_consistency": {
+    "consistent": 0,
+    "discipline_null_contractor": 987,
+    "license_null_contractor": 0,
+    "mismatch": 0
+  },
+  "discipline_total": {
+    "total": 1541,
+    "with_contractor_id": 0,
+    "with_license_id": 987,
+    "with_neither": 554,
+    "without_contractor_id": 1541,
+    "without_license_id": 554
+  },
+  "discipline_type_agreement": {
+    "agreement": 0,
+    "disagreement": 0,
+    "missing": 0,
+    "not_comparable": 987
+  },
+  "ingest_batches": [
+    {
+      "checksum_prefix": "cc3d637c1d3d",
+      "extracted_at": "2026-08-10T22:49:58.584081+00:00",
+      "row_count": null,
+      "source_dataset": "construction_licensees",
+      "source_file": "data/staging/fl_dbpr_full/licenses_normalized.csv",
+      "source_system": "fl_dbpr",
+      "source_url": "https://www2.myfloridalicense.com/sto/file_download/extracts//CONSTRUCTIONLICENSE_1.csv"
+    },
+    {
+      "checksum_prefix": "323c25221bd2",
+      "extracted_at": "2026-08-11T07:15:51.183624+00:00",
+      "row_count": null,
+      "source_dataset": "contractor_disc_lic",
+      "source_file": "data/staging/fl_dbpr_full/discipline_normalized.csv",
+      "source_system": "fl_dbpr",
+      "source_url": null
+    },
+    {
+      "checksum_prefix": "9eff844228bf",
+      "extracted_at": "2026-08-11T02:27:55.066239+00:00",
+      "row_count": null,
+      "source_dataset": "qualifying_businesses",
+      "source_file": "data/staging/fl_dbpr_full/qualifying_businesses_normalized.csv",
+      "source_system": "fl_dbpr",
+      "source_url": "https://www2.myfloridalicense.com/sto/file_download/extracts//CONSTRUCTIONLICENSE_1.csv"
+    },
+    {
+      "checksum_prefix": "name-filtere",
+      "extracted_at": "2026-08-12T05:02:45.518674+00:00",
+      "row_count": null,
+      "source_dataset": "corporate_entities",
+      "source_file": "data/raw/sunbiz/quarterly/cordata.zip#name-filtered",
+      "source_system": "fl_sunbiz",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/"
+    }
+  ],
+  "kpis_before": {
+    "Active licenses": 104444,
+    "Discipline rows collision-exposed": 194,
+    "Exemptions": 0,
+    "Florida DBPR licenses": 143516,
+    "Florida-regulated canonical contractor shells": 143516,
+    "Inactive licenses": 14786,
+    "Licensed DBPR regulatory matters": 1541,
+    "Numeric license-core collision groups": 16088,
+    "Profiles with Sunbiz entity": 74259,
+    "Profiles with canonical phone": 0,
+    "Profiles with canonical website": 0,
+    "Profiles with regulator-source email observation": 0,
+    "Proven wrong-company links": 0,
+    "Public/searchable Florida profiles": 143516,
+    "Qualifying-business relationships": 126486,
+    "Recovery Fund records": 0,
+    "Stop-work/compliance actions": 0,
+    "Suspected wrong-company links": 0,
+    "Unattached discipline records": 1541,
+    "Unlicensed activity records": 0,
+    "Workers' comp observations": 0
+  },
+  "license_classes": [
+    {
+      "active": 33056,
+      "attached_shells": 38923,
+      "current": 0,
+      "inactive": 5866,
+      "occupation_code": "CGC",
+      "occupation_description": null,
+      "other_unknown": 1,
+      "total": 38923,
+      "unique_numeric_cores": 38923
+    },
+    {
+      "active": 17242,
+      "attached_shells": 19722,
+      "current": 0,
+      "inactive": 2479,
+      "occupation_code": "CBC",
+      "occupation_description": null,
+      "other_unknown": 1,
+      "total": 19722,
+      "unique_numeric_cores": 19722
+    },
+    {
+      "active": 3,
+      "attached_shells": 19087,
+      "current": 19018,
+      "inactive": 0,
+      "occupation_code": "FRO",
+      "occupation_description": null,
+      "other_unknown": 66,
+      "total": 19087,
+      "unique_numeric_cores": 19087
+    },
+    {
+      "active": 11125,
+      "attached_shells": 12378,
+      "current": 0,
+      "inactive": 1253,
+      "occupation_code": "CAC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 12378,
+      "unique_numeric_cores": 12378
+    },
+    {
+      "active": 10093,
+      "attached_shells": 11275,
+      "current": 0,
+      "inactive": 1182,
+      "occupation_code": "CCC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 11275,
+      "unique_numeric_cores": 11275
+    },
+    {
+      "active": 8440,
+      "attached_shells": 9310,
+      "current": 0,
+      "inactive": 870,
+      "occupation_code": "CFC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 9310,
+      "unique_numeric_cores": 9310
+    },
+    {
+      "active": 7283,
+      "attached_shells": 8556,
+      "current": 0,
+      "inactive": 1273,
+      "occupation_code": "CRC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 8556,
+      "unique_numeric_cores": 8556
+    },
+    {
+      "active": 0,
+      "attached_shells": 4895,
+      "current": 4895,
+      "inactive": 0,
+      "occupation_code": "CRS1",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 4895,
+      "unique_numeric_cores": 4895
+    },
+    {
+      "active": 4260,
+      "attached_shells": 4621,
+      "current": 0,
+      "inactive": 361,
+      "occupation_code": "CPC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 4621,
+      "unique_numeric_cores": 4621
+    },
+    {
+      "active": 3631,
+      "attached_shells": 3845,
+      "current": 0,
+      "inactive": 214,
+      "occupation_code": "SCC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 3845,
+      "unique_numeric_cores": 3845
+    },
+    {
+      "active": 2633,
+      "attached_shells": 3004,
+      "current": 0,
+      "inactive": 371,
+      "occupation_code": "CUC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 3004,
+      "unique_numeric_cores": 3004
+    },
+    {
+      "active": 2412,
+      "attached_shells": 2776,
+      "current": 0,
+      "inactive": 364,
+      "occupation_code": "CMC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 2776,
+      "unique_numeric_cores": 2776
+    },
+    {
+      "active": 588,
+      "attached_shells": 672,
+      "current": 0,
+      "inactive": 84,
+      "occupation_code": "RR",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 672,
+      "unique_numeric_cores": 672
+    },
+    {
+      "active": 533,
+      "attached_shells": 589,
+      "current": 0,
+      "inactive": 56,
+      "occupation_code": "RF",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 589,
+      "unique_numeric_cores": 589
+    },
+    {
+      "active": 466,
+      "attached_shells": 519,
+      "current": 1,
+      "inactive": 52,
+      "occupation_code": "RC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 519,
+      "unique_numeric_cores": 519
+    },
+    {
+      "active": 437,
+      "attached_shells": 513,
+      "current": 0,
+      "inactive": 76,
+      "occupation_code": "CVC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 513,
+      "unique_numeric_cores": 513
+    },
+    {
+      "active": 453,
+      "attached_shells": 479,
+      "current": 0,
+      "inactive": 26,
+      "occupation_code": "RP",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 479,
+      "unique_numeric_cores": 479
+    },
+    {
+      "active": 385,
+      "attached_shells": 427,
+      "current": 0,
+      "inactive": 42,
+      "occupation_code": "RB",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 427,
+      "unique_numeric_cores": 427
+    },
+    {
+      "active": 379,
+      "attached_shells": 423,
+      "current": 0,
+      "inactive": 43,
+      "occupation_code": "RG",
+      "occupation_description": null,
+      "other_unknown": 1,
+      "total": 423,
+      "unique_numeric_cores": 423
+    },
+    {
+      "active": 290,
+      "attached_shells": 376,
+      "current": 0,
+      "inactive": 86,
+      "occupation_code": "PCC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 376,
+      "unique_numeric_cores": 376
+    },
+    {
+      "active": 285,
+      "attached_shells": 325,
+      "current": 0,
+      "inactive": 40,
+      "occupation_code": "RA",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 325,
+      "unique_numeric_cores": 325
+    },
+    {
+      "active": 0,
+      "attached_shells": 303,
+      "current": 303,
+      "inactive": 0,
+      "occupation_code": "PVDR",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 303,
+      "unique_numeric_cores": 303
+    },
+    {
+      "active": 207,
+      "attached_shells": 216,
+      "current": 0,
+      "inactive": 9,
+      "occupation_code": "RX",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 216,
+      "unique_numeric_cores": 216
+    },
+    {
+      "active": 78,
+      "attached_shells": 97,
+      "current": 0,
+      "inactive": 19,
+      "occupation_code": "CSC",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 97,
+      "unique_numeric_cores": 97
+    },
+    {
+      "active": 71,
+      "attached_shells": 83,
+      "current": 0,
+      "inactive": 12,
+      "occupation_code": "RM",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 83,
+      "unique_numeric_cores": 83
+    },
+    {
+      "active": 57,
+      "attached_shells": 65,
+      "current": 0,
+      "inactive": 8,
+      "occupation_code": "RU",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 65,
+      "unique_numeric_cores": 65
+    },
+    {
+      "active": 28,
+      "attached_shells": 28,
+      "current": 0,
+      "inactive": 0,
+      "occupation_code": "RQ",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 28,
+      "unique_numeric_cores": 28
+    },
+    {
+      "active": 9,
+      "attached_shells": 9,
+      "current": 0,
+      "inactive": 0,
+      "occupation_code": "RS",
+      "occupation_description": null,
+      "other_unknown": 0,
+      "total": 9,
+      "unique_numeric_cores": 9
+    }
+  ],
+  "license_primary_status": [
+    {
+      "status": "C",
+      "total": 143042
+    },
+    {
+      "status": "S",
+      "total": 256
+    },
+    {
+      "status": "P",
+      "total": 218
+    }
+  ],
+  "license_secondary_status": [
+    {
+      "status": "A",
+      "total": 104444
+    },
+    {
+      "status": "(null)",
+      "total": 24286
+    },
+    {
+      "status": "I",
+      "total": 14786
+    }
+  ],
+  "license_status_normalized": [
+    {
+      "status": "active",
+      "total": 104444
+    },
+    {
+      "status": "current",
+      "total": 24217
+    },
+    {
+      "status": "inactive",
+      "total": 14786
+    },
+    {
+      "status": "other",
+      "total": 69
+    }
+  ],
+  "licenses": {
+    "attached": 143516,
+    "distinct_external_keys": 143516,
+    "distinct_numeric_license_numbers": 123780,
+    "duplicate_external_key_rows": 0,
+    "earliest_expiration_date": "2002-04-14",
+    "latest_expiration_date": "9999-08-31",
+    "newest_original_licensure_date": "2026-08-09",
+    "null_numeric_license_numbers": 0,
+    "oldest_original_licensure_date": "1920-02-16",
+    "total": 143516,
+    "unattached": 0,
+    "with_ingest_batch": 143516,
+    "with_last_verified_at": 143516,
+    "with_raw_payload": 143516
+  },
+  "manual_samples": {
+    "active_straightforward": {
+      "display_name": "BENTZ AIR CONDITIONING",
+      "license_external_key": "CAC008033",
+      "occupation_code": "CAC",
+      "slug": "cac008033-bentz-air-conditioning",
+      "status_normalized": "active"
+    },
+    "inactive": {
+      "display_name": "L C I BUILDING SYSTEMS",
+      "license_external_key": "CAC008025",
+      "occupation_code": "CAC",
+      "slug": "cac008025-l-c-i-building-systems",
+      "status_normalized": "inactive"
+    },
+    "multi_license_shell": null,
+    "qualifying_business_shell": {
+      "display_name": "GAPAL CONSTRUCTION INC.",
+      "entity_external_key": "QB-ENTITY:0000641fdcddd1ad",
+      "slug": "qb-entity-0000641fdcddd1ad-gapal-construction-inc",
+      "status": "current"
+    },
+    "unattached_discipline": {
+      "complaint_number": "2024071092",
+      "discipline_external_key": "000416868cad37969c47fba3e72db2a1",
+      "license_number_raw": "1533136",
+      "source_dataset": "contractor_disc_lic"
+    },
+    "with_discipline": null,
+    "with_sunbiz": null,
+    "without_identified_discipline": null
+  },
+  "numeric_core_collisions": {
+    "collision_cores": 16088,
+    "distinct_contractor_shells_exposed": 35824,
+    "licenses_inside": 35824,
+    "shell_exposures": 35824
+  },
+  "potential_duplicate_samples": [
+    {
+      "bounded_names": [
+        "VECTOR SOLUTIONS",
+        "VECTOR SOLUTIONS",
+        "VECTOR SOLUTIONS",
+        "VECTOR SOLUTIONS",
+        "VECTOR SOLUTIONS"
+      ],
+      "normalized_key": "VECTORSOLUTIONS",
+      "shells": 519
+    },
+    {
+      "bounded_names": [
+        "FLORIDA POOL & SPA ASSOCIATION DBA FLORIDA SWIMMING POOL ASSOC.",
+        "FLORIDA POOL & SPA ASSOCIATION DBA FLORIDA SWIMMING POOL ASSOC.",
+        "FLORIDA POOL & SPA ASSOCIATION DBA FLORIDA SWIMMING POOL ASSOC.",
+        "FLORIDA POOL & SPA ASSOCIATION DBA FLORIDA SWIMMING POOL ASSOC.",
+        "FLORIDA POOL & SPA ASSOCIATION DBA FLORIDA SWIMMING POOL ASSOC."
+      ],
+      "normalized_key": "FLORIDAPOOLSPAASSOCIATIONDBAFLORIDASWIMMINGPOOLASSOC",
+      "shells": 503
+    },
+    {
+      "bounded_names": [
+        "JC CODE & CONSTRUCTION CONSULTANTS, INC.",
+        "JC CODE & CONSTRUCTION CONSULTANTS, INC.",
+        "JC CODE & CONSTRUCTION CONSULTANTS, INC.",
+        "JC CODE & CONSTRUCTION CONSULTANTS, INC.",
+        "JC CODE & CONSTRUCTION CONSULTANTS, INC."
+      ],
+      "normalized_key": "JCCODECONSTRUCTIONCONSULTANTSINC",
+      "shells": 300
+    },
+    {
+      "bounded_names": [
+        "FLORIDA HOME BUILDERS ASSOCIATION",
+        "FLORIDA HOME BUILDERS ASSOCIATION",
+        "FLORIDA HOME BUILDERS ASSOCIATION",
+        "FLORIDA HOME BUILDERS ASSOCIATION",
+        "FLORIDA HOME BUILDERS ASSOCIATION"
+      ],
+      "normalized_key": "FLORIDAHOMEBUILDERSASSOCIATION",
+      "shells": 160
+    },
+    {
+      "bounded_names": [
+        "KONING ENTERPRISES INC. DBA CONTRACTORS INSTITUTE",
+        "KONING ENTERPRISES INC. DBA CONTRACTORS INSTITUTE",
+        "KONING ENTERPRISES INC. DBA CONTRACTORS INSTITUTE",
+        "KONING ENTERPRISES INC. DBA CONTRACTORS INSTITUTE",
+        "KONING ENTERPRISES INC. DBA CONTRACTORS INSTITUTE"
+      ],
+      "normalized_key": "KONINGENTERPRISESINCDBACONTRACTORSINSTITUTE",
+      "shells": 154
+    },
+    {
+      "bounded_names": [
+        "FRSA EDUCATIONAL AND RESEARCH FOUNDATION",
+        "FRSA EDUCATIONAL AND RESEARCH FOUNDATION",
+        "FRSA EDUCATIONAL AND RESEARCH FOUNDATION",
+        "FRSA EDUCATIONAL AND RESEARCH FOUNDATION",
+        "FRSA EDUCATIONAL AND RESEARCH FOUNDATION"
+      ],
+      "normalized_key": "FRSAEDUCATIONALANDRESEARCHFOUNDATION",
+      "shells": 132
+    },
+    {
+      "bounded_names": [
+        "AAA CONSTRUCTION SCHOOL, INC.",
+        "AAA CONSTRUCTION SCHOOL, INC.",
+        "AAA CONSTRUCTION SCHOOL, INC.",
+        "AAA CONSTRUCTION SCHOOL, INC.",
+        "AAA CONSTRUCTION SCHOOL, INC."
+      ],
+      "normalized_key": "AAACONSTRUCTIONSCHOOLINC",
+      "shells": 126
+    },
+    {
+      "bounded_names": [
+        "INTERNATIONAL CODE COUNCIL",
+        "INTERNATIONAL CODE COUNCIL",
+        "INTERNATIONAL CODE COUNCIL",
+        "INTERNATIONAL CODE COUNCIL",
+        "INTERNATIONAL CODE COUNCIL"
+      ],
+      "normalized_key": "INTERNATIONALCODECOUNCIL",
+      "shells": 120
+    },
+    {
+      "bounded_names": [
+        "PACEPDH.COM DBA OF THE MEDIA FACTORY, INC.",
+        "PACEPDH.COM DBA OF THE MEDIA FACTORY, INC.",
+        "PACEPDH.COM DBA OF THE MEDIA FACTORY, INC.",
+        "PACEPDH.COM DBA OF THE MEDIA FACTORY, INC.",
+        "PACEPDH.COM DBA OF THE MEDIA FACTORY, INC."
+      ],
+      "normalized_key": "PACEPDHCOMDBAOFTHEMEDIAFACTORYINC",
+      "shells": 119
+    },
+    {
+      "bounded_names": [
+        "GOLD COAST SCHOOL OF CONSTRUCTION DBA OF GOLD COAST PROFESSIONAL",
+        "GOLD COAST SCHOOL OF CONSTRUCTION DBA OF GOLD COAST PROFESSIONAL",
+        "GOLD COAST SCHOOL OF CONSTRUCTION DBA OF GOLD COAST PROFESSIONAL",
+        "GOLD COAST SCHOOL OF CONSTRUCTION DBA OF GOLD COAST PROFESSIONAL",
+        "GOLD COAST SCHOOL OF CONSTRUCTION DBA OF GOLD COAST PROFESSIONAL"
+      ],
+      "normalized_key": "GOLDCOASTSCHOOLOFCONSTRUCTIONDBAOFGOLDCOASTPROFESSIONAL",
+      "shells": 111
+    }
+  ],
+  "potential_duplicates": {
+    "exact_name_address_groups": 20730,
+    "normalized_display_name_groups": 22771,
+    "normalized_legal_name_groups": 23592,
+    "potential_duplicate_shell_groups": 23592,
+    "shared_sunbiz_entity_groups": 9506
+  },
+  "proven_wrong_samples": [],
+  "provenance": {
+    "discipline": {
+      "missing_source_dataset": 0,
+      "total": 1541,
+      "with_ingest_batch": 1541,
+      "with_last_verified_at": 1541,
+      "with_raw_payload": 1541
+    },
+    "licenses": {
+      "total": 143516,
+      "with_ingest_batch": 143516,
+      "with_last_verified_at": 143516,
+      "with_raw_payload": 143516
+    },
+    "sunbiz_entities": {
+      "total": 6360919,
+      "with_ingest_batch": 6360919,
+      "with_last_verified_at": 6360919,
+      "with_raw_payload": 6360919
+    }
+  },
+  "public_internal_matrix": [
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "Florida licenses",
+      "linked": 143516,
+      "publicly_reachable": 143516,
+      "total": 143516,
+      "unlinked_held": 0
+    },
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "DBPR qualifying-business relationships",
+      "linked": 126486,
+      "publicly_reachable": 0,
+      "total": 126486,
+      "unlinked_held": 126486
+    },
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "Sunbiz links",
+      "linked": 74259,
+      "publicly_reachable": 74259,
+      "total": 74259,
+      "unlinked_held": 0
+    },
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "Canonical phone",
+      "linked": 0,
+      "publicly_reachable": 0,
+      "total": 0,
+      "unlinked_held": 0
+    },
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "Canonical website",
+      "linked": 0,
+      "publicly_reachable": 0,
+      "total": 0,
+      "unlinked_held": 0
+    },
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "Source email observations",
+      "linked": 0,
+      "publicly_reachable": 0,
+      "total": 0,
+      "unlinked_held": 0
+    },
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "Licensed discipline",
+      "linked": 0,
+      "publicly_reachable": 0,
+      "total": 1541,
+      "unlinked_held": 1541
+    },
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "ULA",
+      "linked": 0,
+      "publicly_reachable": 0,
+      "total": 0,
+      "unlinked_held": 0
+    },
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "Recovery Fund",
+      "linked": 0,
+      "publicly_reachable": 0,
+      "total": 0,
+      "unlinked_held": 0
+    },
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "Workers comp",
+      "linked": 0,
+      "publicly_reachable": 0,
+      "total": 0,
+      "unlinked_held": 0
+    },
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "Exemptions",
+      "linked": 0,
+      "publicly_reachable": 0,
+      "total": 0,
+      "unlinked_held": 0
+    },
+    {
+      "ambiguous_review": 0,
+      "evidence_type": "Stop-work/compliance",
+      "linked": 0,
+      "publicly_reachable": 0,
+      "total": 0,
+      "unlinked_held": 0
+    }
+  ],
+  "publication_exposure": {
+    "collision_exposed_with_contractor_id": 0,
+    "discipline_with_contractor_id": 0,
+    "discipline_with_license_id": 987,
+    "suspect_reachable_by_profile_logic": 0
+  },
+  "qualifying_business": {
+    "contractors_covered": 126486,
+    "contractors_multiple_entities": 0,
+    "dbpr_entity_rows": 126666,
+    "entities_linked": 126486,
+    "entities_multiple_contractors": 0,
+    "orphan_entities": 180,
+    "qualifying_business_entities": 126666,
+    "relationships": 126486
+  },
+  "qualifying_confidence": [
+    {
+      "confidence": "1.000",
+      "total": 126486
+    }
+  ],
+  "qualifying_match_method": [
+    {
+      "match_method": "(null)",
+      "total": 126486
+    }
+  ],
+  "raw_payload_keys": {
+    "fl_dbpr_license": [
+      {
+        "key": "address_line_1",
+        "rows_with_key": 1000
+      },
+      {
+        "key": "address_line_2",
+        "rows_with_key": 1000
+      },
+      {
+        "key": "address_line_3",
+        "rows_with_key": 1000
+      }
+    ],
+    "fl_discipline": [
+      {
+        "key": "Address Line 1",
+        "rows_with_key": 1000
+      },
+      {
+        "key": "Address Line 2",
+        "rows_with_key": 1000
+      },
+      {
+        "key": "Address Line 3",
+        "rows_with_key": 1000
+      }
+    ],
+    "fl_sunbiz_entity": [
+      {
+        "key": "address_1",
+        "rows_with_key": 2
+      },
+      {
+        "key": "address_2",
+        "rows_with_key": 2
+      },
+      {
+        "key": "mail_address_1",
+        "rows_with_key": 2
+      },
+      {
+        "key": "mail_address_2",
+        "rows_with_key": 2
+      },
+      {
+        "key": "registered_agent_address",
+        "rows_with_key": 2
+      }
+    ]
+  },
+  "source_contact_observations": {
+    "email": {
+      "conflicting_shells": 0,
+      "contractor_shells": 0,
+      "distinct_observations": 0,
+      "observation_rows": 0,
+      "source": "licenses.raw_payload / fl_dbpr"
+    },
+    "phone": {
+      "conflicting_shells": 0,
+      "contractor_shells": 0,
+      "distinct_observations": 0,
+      "observation_rows": 0,
+      "source": "licenses.raw_payload / fl_dbpr"
+    },
+    "website": {
+      "conflicting_shells": 0,
+      "contractor_shells": 0,
+      "distinct_observations": 0,
+      "observation_rows": 0,
+      "source": "licenses.raw_payload / fl_dbpr"
+    }
+  },
+  "sunbiz": {
+    "below_public_threshold_links": 0,
+    "contractors_multiple_sunbiz": 0,
+    "contractors_with_link": 74259,
+    "contractors_without_link": 69257,
+    "coverage_percent": 51.74,
+    "entities_shared_by_contractors": 9506,
+    "exact_duplicate_relationships": 0,
+    "high_confidence_public_safe_links": 74259,
+    "total_entities": 6360919
+  },
+  "sunbiz_confidence": [
+    {
+      "confidence": "0.980",
+      "total": 42969
+    },
+    {
+      "confidence": "0.950",
+      "total": 21894
+    },
+    {
+      "confidence": "0.920",
+      "total": 9396
+    }
+  ],
+  "sunbiz_fields": {
+    "fei": 4132346,
+    "formation_date": 6359935,
+    "officers": 6105200,
+    "principal_address": 6270623,
+    "registered_agent": 6194988
+  },
+  "sunbiz_match_method": [
+    {
+      "match_method": "exact_name_address",
+      "total": 42969
+    },
+    {
+      "match_method": "exact_name_zip5",
+      "total": 21894
+    },
+    {
+      "match_method": "exact_name_city",
+      "total": 9396
+    }
+  ],
+  "sunbiz_status_actual": [
+    {
+      "status": "inactive",
+      "total": 4288358
+    },
+    {
+      "status": "active",
+      "total": 2072561
+    }
+  ],
+  "wrong_company_assessment": {
+    "ambiguous_collision_exposed": 194,
+    "proven_consistent": 0,
+    "proven_wrong": 0,
+    "suspect_identifier_type_conflict": 0,
+    "unresolved": 1541
+  }
+}

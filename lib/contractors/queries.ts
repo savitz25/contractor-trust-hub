@@ -20,6 +20,7 @@ import {
   prepareNameSearch,
 } from "./search-normalize";
 import { stateHasEntityLinking } from "./trust-report";
+import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
 import type {
   ContractorDetail,
   DisciplineDetail,
@@ -194,7 +195,8 @@ export async function searchContractors(
         NULL::text AS entity_name,`
         }
         EXISTS (
-          SELECT 1 FROM discipline_actions d WHERE d.contractor_id = h.id
+          SELECT 1 FROM discipline_actions d
+          WHERE d.contractor_id = h.id AND ${PUBLIC_REGULATORY_SQL}
         ) AS has_discipline
       FROM hits h
       ${
@@ -305,7 +307,8 @@ export async function searchContractors(
             : `NULL::text AS entity_status, NULL::text AS entity_name,`
         }
         EXISTS (
-          SELECT 1 FROM discipline_actions d WHERE d.contractor_id = m.id
+          SELECT 1 FROM discipline_actions d
+          WHERE d.contractor_id = m.id AND ${PUBLIC_REGULATORY_SQL}
         ) AS has_discipline
       FROM matched m
       ${
@@ -465,7 +468,8 @@ export async function searchContractors(
       NULL::text AS entity_name,`
       }
       EXISTS (
-        SELECT 1 FROM discipline_actions d WHERE d.contractor_id = m.id
+        SELECT 1 FROM discipline_actions d
+        WHERE d.contractor_id = m.id AND ${PUBLIC_REGULATORY_SQL}
       ) AS has_discipline
     FROM matched m
     ${
@@ -682,8 +686,9 @@ async function getContractorBySlugUncached(
     SELECT id, complaint_number, license_type, classification, disposition,
            disposition_date, discipline_description, violation_code, entered_date,
            source_dataset, last_verified_at
-    FROM discipline_actions
-    WHERE contractor_id = $1
+    FROM discipline_actions d
+    WHERE d.contractor_id = $1
+      AND ${PUBLIC_REGULATORY_SQL}
     ORDER BY disposition_date DESC NULLS LAST, entered_date DESC NULLS LAST
     LIMIT 50
     `,
