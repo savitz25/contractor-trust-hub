@@ -1,0 +1,30 @@
+{
+  "task": "CTH-FL-STATE-006C",
+  "execution_timestamp_utc": "2026-08-24T20:41:37.748719Z",
+  "approved_main_sha": "e20d8078341a67f38e3d10e44dc71748313547cb",
+  "execution_manifest_fingerprint": "sha256:b8f056563eafc45b8e6b4d8f0e5fe67f92029dd274b8730b461f601a0516f6d1",
+  "reverse_manifest_fingerprint": "sha256:a424f14ce7fbf720fd5e9a54e126139f035805762488e5d038ec2a6e3937563a",
+  "batch_id": "9e453cdf-2f0d-5a44-9bf2-90aa9a73b59c",
+  "transaction": {"result": "COMMITTED_AND_INDEPENDENTLY_VERIFIED", "ambiguous": false, "isolation": "REPEATABLE READ", "advisory_lock": "fl_dfs:workers_comp_stop_work", "lock_timeout": "5s", "statement_timeout": "180s"},
+  "inserts": {"ingest_batches": 1, "discipline_actions": 48254, "regulatory_source_observations": 48254, "regulatory_source_occurrences": 48260, "total": 144769, "updates": 0, "deletes": 0},
+  "post_counts": {"whole": 69674, "florida": 68081, "licensed": 6457, "ula": 11691, "recovery_fund": 1679, "stop_work": 48254, "observations": 68081, "occurrences": 68087, "batches": 62, "arizona": 459, "new_jersey": 1134},
+  "florida_identity": {"EXACT": 1811, "DETERMINISTIC": 265, "REVIEW_REQUIRED": 1753, "UNRESOLVED": 64252},
+  "stop_work_identity": {"EXACT": 0, "DETERMINISTIC": 0, "REVIEW_REQUIRED": 0, "UNRESOLVED": 48254, "license_links": 0, "contractor_links": 0, "entity_links": 0},
+  "relationships": {"license_linked": 2479, "contractor_linked": 0, "neither": 65602, "correction_hold_true": 403, "correction_hold_false": 67678, "retraction_hold_true": 0, "retraction_hold_false": 68081},
+  "publication": {"INTERNAL": 68081, "PUBLIC_ELIGIBLE": 0, "stop_work_public": 0, "profile_leakage": 0, "discovery_leakage": 0, "generic_adverse_history_leakage": 0, "gate_off_leakage": 0, "gate_on_leakage": 0, "trust_score_inclusion": false, "ranking_inclusion": false, "badge_warning_filter_inclusion": false},
+  "provenance": {"actions_represented": 48254, "observations": 48254, "occurrences": 48260, "duplicate_extra_appearances": 6, "payload_hashes_valid": 48254, "source_keys_valid": 48254, "occurrence_collisions": 0},
+  "fingerprints": {
+    "whole": {"actual": "sha256:7aafb5fc16662ccd03200a7a942df9d1d1d2faeb90016882d16a75b461a2f961", "expected": "sha256:7aafb5fc16662ccd03200a7a942df9d1d1d2faeb90016882d16a75b461a2f961", "match": true},
+    "florida": {"actual": "sha256:abe3c12054f5e95338d3d3018d5413816f65d0eb6633146bc6e6c756755d1fa5", "expected": "sha256:abe3c12054f5e95338d3d3018d5413816f65d0eb6633146bc6e6c756755d1fa5", "match": true},
+    "florida_safety": {"actual": "sha256:7d7dd6664180a3fec4617fed647c6a6247f4dbf81ff38fb79952c9fa28009fbd", "expected": "sha256:7d7dd6664180a3fec4617fed647c6a6247f4dbf81ff38fb79952c9fa28009fbd", "match": true},
+    "arizona": {"actual": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3", "expected": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3", "match": true},
+    "new_jersey": {"actual": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3", "expected": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3", "match": true},
+    "stop_work_cohort": {"actual": "sha256:0a9e4f96dc679eea3b7e892866a622093591dd725854948b0ffd03eb9644e0af", "expected": "sha256:0a9e4f96dc679eea3b7e892866a622093591dd725854948b0ffd03eb9644e0af", "match": true},
+    "stop_work_provenance": {"actual": "sha256:c876fe2d0ac0b9409b06406866f25f6a87ccd40d2dd931cb0bb5912c0234c00a", "expected": "sha256:c876fe2d0ac0b9409b06406866f25f6a87ccd40d2dd931cb0bb5912c0234c00a", "match": true},
+    "batch_snapshot": {"actual": "sha256:be74a2be2948b3fafdedfe61ab075f4dd185c31f1b608ef9da2bcb3cd02b49bd", "expected": "sha256:be74a2be2948b3fafdedfe61ab075f4dd185c31f1b608ef9da2bcb3cd02b49bd", "match": true}
+  },
+  "existing_cohort_regression": {"licensed_rows": 6457, "licensed_provenance": 6457, "licensed_safe_links": 1972, "licensed_correctable": 0, "ula_rows": 11691, "ula_provenance": 11691, "ula_license_links": 0, "ula_contractor_links": 0, "ula_public": 0, "recovery_fund_rows": 1679, "recovery_fund_license_links": 104, "recovery_fund_target_licenses": 49, "recovery_fund_contractor_links": 0, "recovery_fund_public": 0, "arizona_mutations": 0, "new_jersey_mutations": 0},
+  "unauthorized_mutations": {"contractors": 0, "licenses": 0, "entities": 0, "contractor_entities": 0, "contacts": 0, "canonical_addresses": 0, "publication": 0, "scoring": 0, "ranking": 0},
+  "automatic_rollback_authorized": false,
+  "contains_pii": false
+}
