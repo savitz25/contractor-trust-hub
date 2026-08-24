@@ -64,3 +64,11 @@ Recovery Fund rows remain `INTERNAL`, null-contractor, and absent from profiles,
 An unchanged file/checksum produces no batch or occurrence. An exact observation in a genuinely new snapshot produces an occurrence only. A material change in the same logical group produces a new `REVISION_REVIEW_REQUIRED` observation while preserving old evidence, with no identity escalation or automatic supersession. A missing prior row is retained and investigated; automatic deletion is prohibited.
 
 The prospective rollback order, only if separately authorized after future execution, is occurrences, observations, new Recovery Fund actions, then five Recovery Fund batches. It never targets licensed, ULA, Arizona, or New Jersey evidence.
+
+## Production execution — 2026-08-24
+
+The approved controlled ingestion executed from merged main `3fa275d5937fc48cd63390da93e76b31c0516f68` in one transaction from `2026-08-24T19:07:02.9063447Z` through `2026-08-24T19:07:26.1794151Z`. It inserted exactly 5,042 rows: five batches, 1,679 Recovery Fund details, 1,679 source observations, and 1,679 source occurrences.
+
+The committed execution manifest `sha256:b706e61f7fedbf1f9af91ac55c207d3b5eb51f9a0417bf40e90bfc00fefa7b02` remained authoritative. Fresh execution-day retrieval timestamps were recorded separately and did not replace the approved provenance snapshot timestamps. The resulting cohort has 104 safe license links across 49 licenses, zero contractor links, zero `PUBLIC_ELIGIBLE` rows, and zero scoring impact.
+
+Independent post-commit verification matched all eight approved fingerprints and confirmed licensed, ULA, Arizona, New Jersey, contractor, license, entity, contact, and canonical-address data remained unchanged. Automatic rollback remains unauthorized; the reverse manifest is retained only for separately authorized emergency reconciliation.
