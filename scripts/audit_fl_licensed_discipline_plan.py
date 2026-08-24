@@ -29,15 +29,16 @@ from ingest.regulatory.fl_dbpr_identity import (  # noqa: E402
     FloridaDbprCredentialResolver,
     LicenseCredential,
 )
+from ingest.regulatory.source_observation import (  # noqa: E402
+    FL_DISCIPLINE_FIELDS,
+    canonical_source_row,
+    logical_matter_detail_key_v1,
+    row_fingerprint_sha256,
+    source_observation_key_v2,
+)
 from scripts.load_fl_dbpr_to_postgres import discipline_external_key  # noqa: E402
 
-HEADERS = [
-    "License Type", "License Nbr", "Respondent Name", "Address Line 1",
-    "Address Line 2", "Address Line 3", "City", "State", "ZIP Code",
-    "County", "Complaint Nbr", "Classification", "Entered Date",
-    "Disposition", "Disposition Date", "Discipline Date - Description",
-    "Violation Code",
-]
+HEADERS = list(FL_DISCIPLINE_FIELDS)
 FILES = {
     "2021-22": ("contractor_disc_lic_2122.csv", "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2122.csv"),
     "2022-23": ("contractor_disc_lic_2223.csv", "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2223.csv"),
@@ -52,22 +53,19 @@ def sha256_bytes(value: bytes) -> str:
 
 
 def normalized(row: dict[str, Any]) -> dict[str, str]:
-    return {key: str(row.get(key) or "").strip() for key in HEADERS}
+    return canonical_source_row(row)
 
 
 def row_fingerprint(row: dict[str, Any]) -> str:
-    payload = json.dumps(normalized(row), sort_keys=True, separators=(",", ":"))
-    return sha256_bytes(payload.encode())
+    return row_fingerprint_sha256(row)
 
 
-def matter_key(row: dict[str, Any]) -> tuple[str, ...]:
+def matter_key(row: dict[str, Any]) -> str:
     """Conservative cross-file grouping, never an automatic dedupe key."""
-    r = normalized(row)
-    return (
-        r["Complaint Nbr"].upper(), r["License Type"].casefold(),
-        r["License Nbr"].upper(), r["Respondent Name"].casefold(),
-        r["Classification"].casefold(), r["Entered Date"],
-        r["Violation Code"].casefold(),
+    return logical_matter_detail_key_v1(
+        source_system="fl_dbpr",
+        source_dataset="contractor_disc_lic",
+        row=row,
     )
 
 
@@ -122,13 +120,14 @@ def inspect_files(raw_dir: Path) -> tuple[list[dict[str, Any]], list[dict[str, A
             reader = csv.DictReader(handle)
             headers = reader.fieldnames or []
             rows = []
-            for row in reader:
+            for source_record_number, row in enumerate(reader, start=1):
                 if None in row or set(row) != set(HEADERS):
                     malformed += 1
                     continue
                 clean = normalized(row)
                 clean["_fiscal_year"] = fy
                 clean["_source_filename"] = filename
+                clean["_source_record_locator"] = f"csv-record:{source_record_number}"
                 clean["_row_fingerprint"] = row_fingerprint(clean)
                 rows.append(clean)
                 all_rows.append(clean)
@@ -193,7 +192,7 @@ def production_snapshot(cur: Any) -> dict[str, Any]:
 def analyze(inventories: list[dict[str, Any]], rows: list[dict[str, Any]], prod: dict[str, Any]) -> dict[str, Any]:
     resolver = FloridaDbprCredentialResolver(prod["licenses"])
     fp_locations: dict[str, list[str]] = defaultdict(list)
-    matter_groups: dict[tuple[str, ...], list[dict[str, Any]]] = defaultdict(list)
+    matter_groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
         fp_locations[row["_row_fingerprint"]].append(row["_fiscal_year"])
         matter_groups[matter_key(row)].append(row)
@@ -216,13 +215,13 @@ def analyze(inventories: list[dict[str, Any]], rows: list[dict[str, Any]], prod:
     prod_exact = sum(min(count, source_by_fp.get(fp, 0)) for fp, count in prod_by_fp.items())
 
     # Conservative update pairing: same matter key, changed full payload, one-to-one only.
-    prod_by_matter: dict[tuple[str, ...], list[dict[str, Any]]] = defaultdict(list)
+    prod_by_matter: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in prod["discipline"]:
         prod_by_matter[matter_key(row["raw_payload"])].append(row)
     source_unique_rows = {fp: next(r for r in rows if r["_row_fingerprint"] == fp) for fp in source_by_fp}
     unmatched_source = [r for fp, r in source_unique_rows.items() if prod_by_fp.get(fp, 0) == 0]
     unmatched_prod = [r for r in prod["discipline"] if source_by_fp.get(row_fingerprint(r["raw_payload"]), 0) == 0]
-    prod_unmatched_by_matter = defaultdict(list)
+    prod_unmatched_by_matter: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in unmatched_prod:
         prod_unmatched_by_matter[matter_key(row["raw_payload"])].append(row)
     updates = [r for r in unmatched_source if len(prod_unmatched_by_matter.get(matter_key(r), [])) == 1]
@@ -262,6 +261,12 @@ def analyze(inventories: list[dict[str, Any]], rows: list[dict[str, Any]], prod:
     source_missing = len(unmatched_prod) - source_updated
     duplicate_prod = sum(count - 1 for count in prod_by_fp.values() if count > 1)
     current_external_key_collisions = Counter(discipline_external_key(staging_row(r)) for r in rows)
+    observation_keys = Counter(
+        source_observation_key_v2(
+            source_system="fl_dbpr", source_dataset="contractor_disc_lic", row=row
+        )
+        for row in rows
+    )
 
     assertions = {
         "source_rows_reconcile": sum(i["raw_rows"] for i in inventories) == len(rows),
@@ -305,6 +310,7 @@ def analyze(inventories: list[dict[str, Any]], rows: list[dict[str, Any]], prod:
             "material_revision_groups_across_files": revised_groups,
             "legitimate_multiline_matter_groups_within_file": legitimate_multiline_groups,
             "current_external_key_collision_groups": sum(v > 1 for v in current_external_key_collisions.values()),
+            "v2_key_collision_groups": sum(v > 1 for v in observation_keys.values()),
         },
         "ingestion_delta": {
             "already_represented_unchanged": represented,

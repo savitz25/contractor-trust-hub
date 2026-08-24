@@ -52,6 +52,11 @@ class ResolverTests(unittest.TestCase):
         self.assertIn("correction_hold, retraction_hold", discipline_sql)
         self.assertIn("correction_hold = FALSE", discipline_sql)
         self.assertIn("retraction_hold = FALSE", discipline_sql)
+        self.assertIn("source_observation_key_v2", source)
+        self.assertIn("regulatory_source_observations", source)
+        self.assertIn("regulatory_source_occurrences", source)
+        self.assertIn("revision_review_required", source)
+        self.assertIn("contractor_id = NULL", discipline_section)
 
     def test_migration_is_scoped_to_florida_on_shared_table(self):
         source = Path("schema/migrations/008_fl_adverse_evidence_safety.sql").read_text(encoding="utf-8")

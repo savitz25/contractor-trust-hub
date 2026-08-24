@@ -44,6 +44,13 @@ from ingest.regulatory.fl_dbpr_identity import (  # noqa: E402
     FloridaDbprCredentialResolver,
     LicenseCredential,
 )
+from ingest.regulatory.source_observation import (  # noqa: E402
+    LOGICAL_MATTER_ALGORITHM,
+    SOURCE_OBSERVATION_ALGORITHM,
+    logical_matter_detail_key_v1,
+    row_fingerprint_sha256,
+    source_observation_key_v2,
+)
 
 SOURCE_SYSTEM = "fl_dbpr"
 SOURCE_URL_LICENSEES = (
@@ -519,6 +526,10 @@ def load_discipline(
     batch_id: UUID,
     limit: int | None,
     batch_size: int,
+    fiscal_year: str,
+    source_file_checksum: str,
+    source_file: str,
+    source_url: str,
     Jsonb,
 ) -> dict[str, int]:
     now = datetime.now(timezone.utc)
@@ -526,6 +537,10 @@ def load_discipline(
         "rows_read": 0,
         "actions_upserted": 0,
         "license_links": 0,
+        "observations_inserted": 0,
+        "occurrences_inserted": 0,
+        "exact_reobservations": 0,
+        "revision_review_required": 0,
         "skipped": 0,
     }
 
@@ -604,12 +619,38 @@ def load_discipline(
           correction_hold = FALSE,
           retraction_hold = FALSE,
           updated_at = EXCLUDED.updated_at
+        RETURNING id
+    """
+
+    observation_insert_sql = """
+        INSERT INTO regulatory_source_observations (
+          discipline_action_id, source_system, source_dataset,
+          source_observation_key, source_observation_algorithm,
+          logical_matter_detail_key, logical_matter_algorithm,
+          row_fingerprint_sha256, source_payload, revision_state,
+          first_observed_at
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ON CONFLICT (source_system, source_dataset, source_observation_key)
+        DO NOTHING
+        RETURNING id
+    """
+    occurrence_insert_sql = """
+        INSERT INTO regulatory_source_occurrences (
+          source_observation_id, ingest_batch_id, fiscal_year,
+          source_file_checksum_sha256, source_record_locator,
+          source_file, source_url, observed_at
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        ON CONFLICT (
+          source_observation_id, ingest_batch_id, fiscal_year,
+          source_file_checksum_sha256, source_record_locator
+        ) DO NOTHING
+        RETURNING id
     """
 
     with conn.cursor() as cur:
         for row in iter_csv(path):
             stats["rows_read"] += 1
-            if limit is not None and stats["actions_upserted"] >= limit:
+            if limit is not None and stats["rows_read"] > limit:
                 break
 
             respondent = row.get("respondent_name", "")
@@ -630,19 +671,73 @@ def load_discipline(
                 and resolution.proposed_license_id
                 else None
             )
-            if license_id:
-                stats["license_links"] += 1
-
             # License linkage is not contractor linkage and never publishes a row.
             contractor_id = None
 
             payload = parse_json(row.get("raw_payload_json"))
-            ext = discipline_external_key(row)
+            if payload is None:
+                raise RuntimeError("Florida regulatory source payload is required")
+            source_record_locator = row.get("source_record_locator")
+            if not source_record_locator:
+                raise RuntimeError("Florida regulatory source record locator is required")
+            source_dataset = row.get("source_dataset") or "contractor_disc_lic"
+            observation_key = source_observation_key_v2(
+                source_system=SOURCE_SYSTEM, source_dataset=source_dataset, row=payload
+            )
+            logical_key = logical_matter_detail_key_v1(
+                source_system=SOURCE_SYSTEM, source_dataset=source_dataset, row=payload
+            )
+            fingerprint = row_fingerprint_sha256(payload)
+            ext = observation_key
             state = (row.get("state") or "")[:2].upper() or None
 
+            # Exact source identity is idempotent. A new file/batch sighting is
+            # retained as an occurrence without rewriting evidence.
             cur.execute(
-                sql,
-                (
+                """SELECT id FROM regulatory_source_observations
+                    WHERE source_system=%s AND source_dataset=%s
+                      AND source_observation_key=%s""",
+                (SOURCE_SYSTEM, source_dataset, observation_key),
+            )
+            exact_observation = cur.fetchone()
+            if exact_observation:
+                cur.execute(
+                    occurrence_insert_sql,
+                    (exact_observation[0], batch_id, fiscal_year, source_file_checksum,
+                     source_record_locator, source_file, source_url, now),
+                )
+                stats["occurrences_inserted"] += int(cur.fetchone() is not None)
+                stats["exact_reobservations"] += 1
+                continue
+
+            # A logical collision from a prior batch is only a revision review
+            # candidate. It never overwrites evidence or creates a second event.
+            cur.execute(
+                """SELECT o.discipline_action_id
+                     FROM regulatory_source_observations o
+                    WHERE o.source_system=%s AND o.source_dataset=%s
+                      AND o.logical_matter_detail_key=%s
+                      AND NOT EXISTS (
+                        SELECT 1 FROM regulatory_source_occurrences x
+                         WHERE x.source_observation_id=o.id AND x.ingest_batch_id=%s
+                      )
+                    ORDER BY o.created_at, o.id LIMIT 1""",
+                (SOURCE_SYSTEM, source_dataset, logical_key, batch_id),
+            )
+            prior_logical = cur.fetchone()
+            if prior_logical:
+                discipline_action_id = prior_logical[0]
+                revision_state = "REVISION_REVIEW_REQUIRED"
+                stats["revision_review_required"] += 1
+            else:
+                revision_state = "CURRENT"
+
+            if not prior_logical:
+                if license_id:
+                    stats["license_links"] += 1
+                cur.execute(
+                    sql,
+                    (
                     contractor_id,
                     license_id,
                     SOURCE_SYSTEM,
@@ -663,7 +758,7 @@ def load_discipline(
                     state,
                     row.get("postal_code") or None,
                     row.get("county_name") or None,
-                    Jsonb(payload) if payload is not None else None,
+                    Jsonb(payload),
                     batch_id,
                     now,
                     now,
@@ -685,13 +780,34 @@ def load_discipline(
                     "INTERNAL",
                     False,
                     False,
-                ),
-            )
-            stats["actions_upserted"] += 1
+                    ),
+                )
+                discipline_action_id = cur.fetchone()[0]
+                stats["actions_upserted"] += 1
 
-            if stats["actions_upserted"] % batch_size == 0:
+            cur.execute(
+                observation_insert_sql,
+                (discipline_action_id, SOURCE_SYSTEM, source_dataset, observation_key,
+                 SOURCE_OBSERVATION_ALGORITHM, logical_key, LOGICAL_MATTER_ALGORITHM,
+                 fingerprint, Jsonb(payload), revision_state, now),
+            )
+            observation_row = cur.fetchone()
+            if not observation_row:
+                raise RuntimeError("Source observation insert lost an identity race")
+            observation_id = observation_row[0]
+            stats["observations_inserted"] += 1
+            cur.execute(
+                occurrence_insert_sql,
+                (observation_id, batch_id, fiscal_year, source_file_checksum,
+                 source_record_locator, source_file, source_url, now),
+            )
+            if not cur.fetchone():
+                raise RuntimeError("Source occurrence insert failed")
+            stats["occurrences_inserted"] += 1
+
+            if stats["rows_read"] % batch_size == 0:
                 conn.commit()
-                log.info("  discipline progress: %s", stats["actions_upserted"])
+                log.info("  discipline progress: %s source rows", stats["rows_read"])
 
     conn.commit()
     return stats
@@ -769,6 +885,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--skip-discipline", action="store_true")
     parser.add_argument("--limit", type=int, default=None, help="Per-dataset row cap (testing)")
     parser.add_argument("--batch-size", type=int, default=1000)
+    parser.add_argument("--discipline-fiscal-year")
+    parser.add_argument("--discipline-source-file")
+    parser.add_argument("--discipline-source-url")
+    parser.add_argument("--discipline-source-checksum")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args(argv)
 
@@ -855,15 +975,24 @@ def main(argv: list[str] | None = None) -> int:
                 if not disc_path or not disc_path.exists():
                     log.warning("Missing discipline file: %s", disc_path)
                 else:
-                    checksum = file_sha256(disc_path)
+                    if not all((args.discipline_fiscal_year, args.discipline_source_file,
+                                args.discipline_source_url, args.discipline_source_checksum)):
+                        raise RuntimeError(
+                            "Discipline load requires --discipline-fiscal-year, "
+                            "--discipline-source-file, --discipline-source-url, "
+                            "and --discipline-source-checksum"
+                        )
+                    if not re.fullmatch(r"[0-9a-f]{64}", args.discipline_source_checksum):
+                        raise RuntimeError("Discipline source checksum must be lowercase SHA-256")
                     batch_id = create_batch(
                         conn,
                         source_dataset="contractor_disc_lic",
-                        source_file=str(disc_path).replace("\\", "/"),
-                        source_url=None,
+                        source_file=args.discipline_source_file,
+                        source_url=args.discipline_source_url,
                         row_count=None,
-                        checksum=checksum,
-                        notes="load_fl_dbpr_to_postgres discipline",
+                        checksum=args.discipline_source_checksum,
+                        notes=("load_fl_dbpr_to_postgres discipline; normalized staging="
+                               + str(disc_path).replace("\\", "/")),
                         Jsonb=Jsonb,
                     )
                     log.info("Loading discipline from %s (batch %s)", disc_path, batch_id)
@@ -873,6 +1002,10 @@ def main(argv: list[str] | None = None) -> int:
                         batch_id=batch_id,
                         limit=args.limit,
                         batch_size=args.batch_size,
+                        fiscal_year=args.discipline_fiscal_year,
+                        source_file_checksum=args.discipline_source_checksum,
+                        source_file=args.discipline_source_file,
+                        source_url=args.discipline_source_url,
                         Jsonb=Jsonb,
                     )
                     summary["discipline"] = stats

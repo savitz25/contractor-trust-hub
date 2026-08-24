@@ -452,6 +452,7 @@ DISCIPLINE_OUT_FIELDS = [
     "postal_code",
     "county_name",
     "raw_payload_json",
+    "source_record_locator",
 ]
 
 
@@ -514,6 +515,7 @@ def run_discipline(
                     "postal_code": _pick(row, "ZIP Code", "zip", "postal_code"),
                     "county_name": _pick(row, "County", "county_name"),
                     "raw_payload_json": json.dumps(payload, ensure_ascii=False),
+                    "source_record_locator": f"csv-record:{total_in}",
                 }
             )
             kept += 1
