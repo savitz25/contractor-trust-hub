@@ -22,7 +22,7 @@ try {
     try {
       await client.query("BEGIN");
       await client.query("SET LOCAL lock_timeout = '2s'");
-      await client.query("SET LOCAL statement_timeout = '60s'");
+      await client.query("SET LOCAL statement_timeout = '180s'");
       const ids = await client.query<{ id: string }>(
         `SELECT DISTINCT e.id
          FROM entities e
