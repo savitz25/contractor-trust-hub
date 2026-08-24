@@ -1,0 +1,347 @@
+{
+  "audit_id": "CTH-FL-STATE-002-PLAN",
+  "generated_at": "2026-08-24T03:22:43.093116+00:00",
+  "git_sha": "fc31ed04f130e42fc48e2141dffc0af6c67b567e",
+  "database": "PRODUCTION",
+  "postgresql_version": "17.6",
+  "transaction": {
+    "read_only": true,
+    "isolation": "repeatable read",
+    "statement_timeout": "30s"
+  },
+  "mutation_performed": false,
+  "source_files": [
+    {
+      "fiscal_year": "2021-22",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2122.csv",
+      "source_filename": "contractor_disc_lic_2122.csv",
+      "downloaded_at": "2026-08-24T03:06:54.453842+00:00",
+      "http_status": 200,
+      "byte_size": 250488,
+      "sha256": "ab67307147fb2007b4751900d105773d7cf2cee83dece8b9ac6dca42096500d0",
+      "header_schema_fingerprint": "sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345",
+      "headers_match": true,
+      "raw_rows": 1109,
+      "parseable_rows": 1109,
+      "malformed_rows": 0,
+      "exact_duplicate_rows_within_file": 0,
+      "blank_critical_identifiers": {
+        "complaint_number": 0,
+        "license_type": 0,
+        "license_number": 0,
+        "respondent": 0
+      },
+      "license_types": {
+        "Certified Air Conditioning Contractor": 41,
+        "Certified Building Contractor": 77,
+        "Certified General Contractor": 169,
+        "Certified Mechanical Contractor": 3,
+        "Certified Plumbing Contractor": 16,
+        "Certified Pool/Spa Contractor": 323,
+        "Certified Residential Contractor": 86,
+        "Certified Roofing Contractor": 127,
+        "Certified Solar Contractor": 9,
+        "Certified Specialty Contractor": 25,
+        "Construction Financial Officer": 220,
+        "Registered Plumbing Contractor": 1,
+        "Registered Pool/Spa Contractor": 4,
+        "Registered Residential Contractor": 7,
+        "Registered Specialty Contractor": 1
+      },
+      "dispositions": {
+        "(blank)": 7,
+        "Citation filed": 128,
+        "Civil Matter - No Jurisdiction": 1,
+        "Closed after legal review": 3,
+        "Final Order": 956,
+        "Insufficient Evidence": 1,
+        "No jurisdiction": 1,
+        "Violation found - corrected": 12
+      }
+    },
+    {
+      "fiscal_year": "2022-23",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2223.csv",
+      "source_filename": "contractor_disc_lic_2223.csv",
+      "downloaded_at": "2026-08-24T03:06:54.927226+00:00",
+      "http_status": 200,
+      "byte_size": 348335,
+      "sha256": "cd733ddce04de63d76c5f123b1004990ddfd03f2260f32ccf9e26bd817c81884",
+      "header_schema_fingerprint": "sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345",
+      "headers_match": true,
+      "raw_rows": 1534,
+      "parseable_rows": 1534,
+      "malformed_rows": 0,
+      "exact_duplicate_rows_within_file": 0,
+      "blank_critical_identifiers": {
+        "complaint_number": 0,
+        "license_type": 0,
+        "license_number": 0,
+        "respondent": 0
+      },
+      "license_types": {
+        "Certified Air Conditioning Contractor": 68,
+        "Certified Building Contractor": 146,
+        "Certified General Contractor": 354,
+        "Certified Mechanical Contractor": 8,
+        "Certified Plumbing Contractor": 8,
+        "Certified Pool/Spa Contractor": 316,
+        "Certified Residential Contractor": 125,
+        "Certified Roofing Contractor": 255,
+        "Certified Solar Contractor": 3,
+        "Certified Specialty Contractor": 112,
+        "Certified Underground Utility and Excavation Contractor": 4,
+        "Construction Financial Officer": 125,
+        "Registered Building Contractor": 1,
+        "Registered General Contractor": 2,
+        "Registered Residential Contractor": 6,
+        "Registered Roofing Contractor": 1
+      },
+      "dispositions": {
+        "(blank)": 8,
+        "Citation filed": 150,
+        "Final Order": 1345,
+        "Final Order of Local Discipline": 6,
+        "Violation found - corrected": 25
+      }
+    },
+    {
+      "fiscal_year": "2023-24",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2324.csv",
+      "source_filename": "contractor_disc_lic_2324.csv",
+      "downloaded_at": "2026-08-24T03:06:55.204746+00:00",
+      "http_status": 200,
+      "byte_size": 422411,
+      "sha256": "90a561929f6bf2821900ab0cb1b54177bcff43bd4f8b411fe608a9928b641de4",
+      "header_schema_fingerprint": "sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345",
+      "headers_match": true,
+      "raw_rows": 1878,
+      "parseable_rows": 1878,
+      "malformed_rows": 0,
+      "exact_duplicate_rows_within_file": 0,
+      "blank_critical_identifiers": {
+        "complaint_number": 0,
+        "license_type": 0,
+        "license_number": 0,
+        "respondent": 0
+      },
+      "license_types": {
+        "Certified Air Conditioning Contractor": 72,
+        "Certified Building Contractor": 246,
+        "Certified General Contractor": 426,
+        "Certified Mechanical Contractor": 9,
+        "Certified Plumbing Contractor": 19,
+        "Certified Pool/Spa Contractor": 329,
+        "Certified Residential Contractor": 70,
+        "Certified Roofing Contractor": 302,
+        "Certified Solar Contractor": 3,
+        "Certified Specialty Contractor": 45,
+        "Construction Financial Officer": 347,
+        "Registered Plumbing Contractor": 1,
+        "Registered Residential Contractor": 1,
+        "Registered Roofing Contractor": 8
+      },
+      "dispositions": {
+        "Citation filed": 149,
+        "Dismissed": 6,
+        "Final Order": 1716,
+        "Final Order of Local Discipline": 1,
+        "Mandate": 4,
+        "No violation found": 1,
+        "Violation found - corrected": 1
+      }
+    },
+    {
+      "fiscal_year": "2024-25",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2425.csv",
+      "source_filename": "contractor_disc_lic_2425.csv",
+      "downloaded_at": "2026-08-24T03:06:55.475188+00:00",
+      "http_status": 200,
+      "byte_size": 347204,
+      "sha256": "189b0043984b25876bdbf6c814b5c6539db9374e3cd01e5c8e94e7777442c7ef",
+      "header_schema_fingerprint": "sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345",
+      "headers_match": true,
+      "raw_rows": 1541,
+      "parseable_rows": 1541,
+      "malformed_rows": 0,
+      "exact_duplicate_rows_within_file": 0,
+      "blank_critical_identifiers": {
+        "complaint_number": 0,
+        "license_type": 0,
+        "license_number": 0,
+        "respondent": 0
+      },
+      "license_types": {
+        "Certified Air Conditioning Contractor": 79,
+        "Certified Building Contractor": 195,
+        "Certified General Contractor": 434,
+        "Certified Mechanical Contractor": 3,
+        "Certified Plumbing Contractor": 24,
+        "Certified Pool/Spa Contractor": 162,
+        "Certified Residential Contractor": 89,
+        "Certified Roofing Contractor": 245,
+        "Certified Solar Contractor": 4,
+        "Certified Specialty Contractor": 28,
+        "Construction Financial Officer": 268,
+        "Registered Pool/Spa Contractor": 8,
+        "Registered Residential Contractor": 2
+      },
+      "dispositions": {
+        "(blank)": 16,
+        "Citation filed": 76,
+        "Dismissed": 10,
+        "Final Order": 1438,
+        "NNC Closed": 1
+      }
+    },
+    {
+      "fiscal_year": "2025-26",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2526.csv",
+      "source_filename": "contractor_disc_lic_2526.csv",
+      "downloaded_at": "2026-08-24T03:06:55.977295+00:00",
+      "http_status": 200,
+      "byte_size": 88641,
+      "sha256": "1cecf33f0b5a5e329527dd2df723cb3ec658e60027d81805c765b639a55155f7",
+      "header_schema_fingerprint": "sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345",
+      "headers_match": true,
+      "raw_rows": 395,
+      "parseable_rows": 395,
+      "malformed_rows": 0,
+      "exact_duplicate_rows_within_file": 0,
+      "blank_critical_identifiers": {
+        "complaint_number": 0,
+        "license_type": 0,
+        "license_number": 0,
+        "respondent": 0
+      },
+      "license_types": {
+        "Certified Air Conditioning Contractor": 25,
+        "Certified Building Contractor": 42,
+        "Certified General Contractor": 110,
+        "Certified Mechanical Contractor": 4,
+        "Certified Plumbing Contractor": 11,
+        "Certified Pool/Spa Contractor": 36,
+        "Certified Residential Contractor": 16,
+        "Certified Roofing Contractor": 84,
+        "Certified Specialty Contractor": 8,
+        "Construction Financial Officer": 58,
+        "Registered Roofing Contractor": 1
+      },
+      "dispositions": {
+        "(blank)": 22,
+        "Citation filed": 51,
+        "Final Order": 320,
+        "Final Order of Local Discipline": 1,
+        "Violation found - corrected": 1
+      }
+    }
+  ],
+  "source_totals": {
+    "raw_rows": 6457,
+    "parseable_rows": 6457,
+    "malformed_rows": 0,
+    "previous_expected_rows": 6457
+  },
+  "production_reconciliation": {
+    "current_rows": 1541,
+    "exact_current_source_matches": 1541,
+    "source_row_updated": 0,
+    "source_row_no_longer_present": 0,
+    "duplicate_current_rows": 0,
+    "other_review_required": 0
+  },
+  "cross_fiscal": {
+    "exact_duplicate_occurrences": 0,
+    "exact_rows_repeated_across_files": 0,
+    "repeated_matter_groups_across_files": 0,
+    "material_revision_groups_across_files": 0,
+    "legitimate_multiline_matter_groups_within_file": 1140,
+    "current_external_key_collision_groups": 0
+  },
+  "ingestion_delta": {
+    "already_represented_unchanged": 1541,
+    "source_updates": 0,
+    "true_net_new": 4916,
+    "exact_duplicate_occurrences_suppressed": 0,
+    "revision_history_rows_retained": 0,
+    "malformed_review_required": 0,
+    "proposed_observations": 4916
+  },
+  "candidate_identity_resolution": {
+    "DETERMINISTIC": 175,
+    "EXACT": 1213,
+    "REVIEW_REQUIRED": 1035,
+    "UNRESOLVED": 2493
+  },
+  "current_safety_check": {
+    "identity": {
+      "EXACT": 523,
+      "UNRESOLVED": 581,
+      "REVIEW_REQUIRED": 376,
+      "DETERMINISTIC": 61
+    },
+    "correctable_remaining": 0,
+    "verified_relationships": 584,
+    "stored_public_eligible": 0
+  },
+  "semantics": {
+    "normalized_categories": {
+      "blank_unknown": 53,
+      "citation": 554,
+      "closure_other_disposition": 47,
+      "complaint_matter_only": 3,
+      "dismissed": 16,
+      "final_order": 5783,
+      "insufficient_evidence": 1
+    },
+    "official_dispositions": {
+      "(blank)": 53,
+      "Citation filed": 554,
+      "Civil Matter - No Jurisdiction": 1,
+      "Closed after legal review": 3,
+      "Dismissed": 16,
+      "Final Order": 5775,
+      "Final Order of Local Discipline": 8,
+      "Insufficient Evidence": 1,
+      "Mandate": 4,
+      "NNC Closed": 1,
+      "No jurisdiction": 1,
+      "No violation found": 1,
+      "Violation found - corrected": 39
+    },
+    "official_classifications": {
+      "Licensed Activity": 6451,
+      "Licensed Activity Audit": 2,
+      "Licensed Activity Investigations": 4
+    },
+    "final_order_candidates": 5783
+  },
+  "contact_observations": {
+    "email_fields": 0,
+    "phone_fields": 0,
+    "website_fields": 0,
+    "named_contact_fields_beyond_respondent": 0,
+    "rows_with_address_line_1": 6457,
+    "rows_with_any_address_component": 6457
+  },
+  "proposed_load": {
+    "inserts": 4916,
+    "source_updates": 0,
+    "identity_linked": 1388,
+    "review_held": 1035,
+    "unresolved": 2493,
+    "contractor_id_mutations": 0,
+    "public_eligible": 0,
+    "ingest_batches": 5
+  },
+  "assertions": {
+    "source_rows_reconcile": true,
+    "all_rows_parseable": true,
+    "production_total_1541": true,
+    "current_resolution_baseline": true,
+    "current_correctable_zero": true,
+    "verified_relationships_584": true,
+    "public_eligible_zero": true,
+    "contractor_linked_zero": true
+  }
+}
