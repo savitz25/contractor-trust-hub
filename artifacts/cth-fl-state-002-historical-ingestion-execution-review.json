@@ -1,0 +1,270 @@
+{
+  "collision_checks": {
+    "action": 0,
+    "batch": 0,
+    "external_key": 0,
+    "observation": 0,
+    "occurrence": 0
+  },
+  "current_fingerprints": {
+    "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+    "discipline_control": "sha256:a643ee09be97d4c1fe6b05a832b492f114a5b13e376b799a3210cc843c9935d5",
+    "florida": "sha256:d2fb06f2f7d16a94f2981057b2a7f29a89e94c7cb9d7cc7c9cb0fea1783eab4c",
+    "florida_safety": "sha256:c96193c37fd8a9759f3574122e4a451590e27ff59514d0b9f8352a7b9e213199",
+    "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+    "whole": "sha256:5f5af54a2384cfcf228a742751650df543f2dc25a217c92b2af1950046b2b6c3"
+  },
+  "delta": {
+    "duplicate_source_observations": 0,
+    "existing_exact": 1541,
+    "new_by_year": {
+      "2021-22": 1109,
+      "2022-23": 1534,
+      "2023-24": 1878,
+      "2024-25": 0,
+      "2025-26": 395
+    },
+    "new_exact": 4916,
+    "other_review_required": 0,
+    "resolver_by_year": {
+      "2021-22": {
+        "DETERMINISTIC": 34,
+        "EXACT": 238,
+        "REVIEW_REQUIRED": 174,
+        "UNRESOLVED": 663
+      },
+      "2022-23": {
+        "DETERMINISTIC": 52,
+        "EXACT": 400,
+        "REVIEW_REQUIRED": 306,
+        "UNRESOLVED": 776
+      },
+      "2023-24": {
+        "DETERMINISTIC": 63,
+        "EXACT": 471,
+        "REVIEW_REQUIRED": 449,
+        "UNRESOLVED": 895
+      },
+      "2024-25": {},
+      "2025-26": {
+        "DETERMINISTIC": 26,
+        "EXACT": 104,
+        "REVIEW_REQUIRED": 106,
+        "UNRESOLVED": 159
+      }
+    },
+    "resolver_total": {
+      "DETERMINISTIC": 175,
+      "EXACT": 1213,
+      "REVIEW_REQUIRED": 1035,
+      "UNRESOLVED": 2493
+    },
+    "revision_candidates": 0,
+    "v2_collisions": 0
+  },
+  "existing_provenance": {
+    "CURRENT": 1541,
+    "REVISION_REVIEW_REQUIRED": 0,
+    "SUPERSEDED": 0,
+    "checksum": 1541,
+    "distinct_actions": 1541,
+    "distinct_occurrence_observations": 1541,
+    "fiscal_year": 1541,
+    "logical_algorithm": 1541,
+    "non_fl_observations": 0,
+    "non_fl_occurrences": 0,
+    "observation_total": 1541,
+    "occurrence_total": 1541,
+    "payload_hash_valid": 1541,
+    "source_algorithm": 1541,
+    "unique_locators": 1541
+  },
+  "generated_at": "2026-08-24T13:09:37.155945+00:00",
+  "license_target_validation": {
+    "fail_closed_without_target": 3528,
+    "safe_targets_valid": 1388
+  },
+  "main_sha": "ef1caef6bf84b948c4e8b59ffb587167e8e2c94c",
+  "manifest": {
+    "batch_ids": {
+      "2021-22": "ab2725a6-d295-517a-8f4b-f50423d37730",
+      "2022-23": "a61cd195-b737-5f08-9a80-be936a6f400c",
+      "2023-24": "d6e4d46b-ba19-5dff-b842-793da3a6dfca",
+      "2025-26": "0f3ca6ec-1255-5e28-a356-68569b1c7d79"
+    },
+    "entries": 4916,
+    "fingerprint": "sha256:d09a6c1ff1ffc1b92db998025e310401be045ed8910a9b255b20eb38e659c9fa",
+    "independent_generation_match": true
+  },
+  "predicted_post_counts": {
+    "contractor_linked": 0,
+    "correction_hold": {
+      "false": 6054,
+      "true": 403
+    },
+    "florida_discipline_actions": 6457,
+    "identity": {
+      "DETERMINISTIC": 236,
+      "EXACT": 1736,
+      "REVIEW_REQUIRED": 1411,
+      "UNRESOLVED": 3074
+    },
+    "ingest_batches": 51,
+    "license_linked": 2375,
+    "neither": 4082,
+    "observations": 6457,
+    "occurrences": 6457,
+    "publication": {
+      "INTERNAL": 6457,
+      "PUBLIC_ELIGIBLE": 0
+    },
+    "retraction_hold": {
+      "false": 6457,
+      "true": 0
+    },
+    "whole_discipline_actions": 8050
+  },
+  "predicted_post_fingerprints": {
+    "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+    "batches": "sha256:8cd44ce63fe68371b7160b59016d67a21b0d22bf6374351312ae22211b26b863",
+    "florida": "sha256:c25f931b7c8d5371dc2d75497f0ef270487f4fbc46028bc87fd1da0ab73632ce",
+    "florida_safety": "sha256:d990ba40a4e75d1651a16c0fc4e42f1b361a509348ab5f027af435e8e35609ef",
+    "new_actions": "sha256:62846d7bba278b2e64fd1df8447710e43e0ced3505c77c111ac2d449eb11be6e",
+    "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+    "provenance": "sha256:2da5e9b0670b826e3635b7ebb8d7f8eef9064f8e9c2e5a161c41162725076952",
+    "whole": "sha256:078f0d84f76ecd5dc4b1b4fc717a3ffca5f88e18182b17510ebc8c1e4d9805fe"
+  },
+  "production_baseline": {
+    "contractor_linked": 0,
+    "correction_holds": {
+      "false": 1138,
+      "true": 403
+    },
+    "discipline_total": 3134,
+    "florida_total": 1541,
+    "identity": {
+      "DETERMINISTIC": 61,
+      "EXACT": 523,
+      "REVIEW_REQUIRED": 376,
+      "UNRESOLVED": 581
+    },
+    "ingest_batches": 47,
+    "license_linked": 987,
+    "neither": 554,
+    "observations": 1541,
+    "occurrences": 1541,
+    "publication": {
+      "INTERNAL": 1541
+    },
+    "retraction_holds": {
+      "false": 1541
+    }
+  },
+  "production_transaction": {
+    "isolation": "repeatable read",
+    "mutations": 0,
+    "read_only": true,
+    "statement_timeout": "30s"
+  },
+  "publication": {
+    "contractor_id_mutations": 0,
+    "gate": "ABSENT_OFF",
+    "predicted_public_eligible": 0
+  },
+  "reverse_manifest": {
+    "automatic_rollback_authorized": false,
+    "fingerprint": "sha256:f7efd16afa5c57533e364604b795d6c9c137fc9ca6ff8c2e3fa3a9164509bcac"
+  },
+  "scope": {
+    "county_work": 0,
+    "google_calls": 0,
+    "historical_ingestion": 0,
+    "production_mutations": 0,
+    "recovery_fund": 0,
+    "ula": 0
+  },
+  "source_files": [
+    {
+      "byte_size": 250488,
+      "downloaded_at": "2026-08-24T12:58:25.435405+00:00",
+      "filename": "contractor_disc_lic_2122.csv",
+      "fiscal_year": "2021-22",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2122.csv",
+      "rows": 1109,
+      "schema_columns": 17,
+      "schema_fingerprint": "sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345",
+      "sha256": "ab67307147fb2007b4751900d105773d7cf2cee83dece8b9ac6dca42096500d0"
+    },
+    {
+      "byte_size": 348335,
+      "downloaded_at": "2026-08-24T12:58:25.984659+00:00",
+      "filename": "contractor_disc_lic_2223.csv",
+      "fiscal_year": "2022-23",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2223.csv",
+      "rows": 1534,
+      "schema_columns": 17,
+      "schema_fingerprint": "sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345",
+      "sha256": "cd733ddce04de63d76c5f123b1004990ddfd03f2260f32ccf9e26bd817c81884"
+    },
+    {
+      "byte_size": 422411,
+      "downloaded_at": "2026-08-24T12:58:26.436362+00:00",
+      "filename": "contractor_disc_lic_2324.csv",
+      "fiscal_year": "2023-24",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2324.csv",
+      "rows": 1878,
+      "schema_columns": 17,
+      "schema_fingerprint": "sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345",
+      "sha256": "90a561929f6bf2821900ab0cb1b54177bcff43bd4f8b411fe608a9928b641de4"
+    },
+    {
+      "byte_size": 347204,
+      "downloaded_at": "2026-08-24T12:58:26.793584+00:00",
+      "filename": "contractor_disc_lic_2425.csv",
+      "fiscal_year": "2024-25",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2425.csv",
+      "rows": 1541,
+      "schema_columns": 17,
+      "schema_fingerprint": "sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345",
+      "sha256": "189b0043984b25876bdbf6c814b5c6539db9374e3cd01e5c8e94e7777442c7ef"
+    },
+    {
+      "byte_size": 88641,
+      "downloaded_at": "2026-08-24T12:58:27.272901+00:00",
+      "filename": "contractor_disc_lic_2526.csv",
+      "fiscal_year": "2025-26",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2526.csv",
+      "rows": 395,
+      "schema_columns": 17,
+      "schema_fingerprint": "sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345",
+      "sha256": "1cecf33f0b5a5e329527dd2df723cb3ec658e60027d81805c765b639a55155f7"
+    }
+  ],
+  "task": "CTH-FL-STATE-002-EXEC-REVIEW",
+  "transaction_design": {
+    "execution_method": "pipelined executemany with exact rowcount assertions",
+    "expected_inserts": {
+      "discipline_actions": 4916,
+      "ingest_batches": 4,
+      "observations": 4916,
+      "occurrences": 4916,
+      "total": 14752
+    },
+    "insert_phases": [
+      "ingest_batches",
+      "discipline_actions",
+      "regulatory_source_observations",
+      "regulatory_source_occurrences"
+    ],
+    "isolation": "repeatable read",
+    "lock_timeout": "5s",
+    "mode": "one explicit insert-only transaction",
+    "periodic_commits": false,
+    "statement_timeout": "180s"
+  }
+}
