@@ -1,0 +1,81 @@
+{
+  "audit_id": "CTH-FL-STATE-002A",
+  "generated_at": "2026-08-24T04:11:20.343670+00:00",
+  "git_sha": "2f6f390343632cc907561a8b00d0d9bfe04f3b14",
+  "database": "PRODUCTION",
+  "transaction": {
+    "read_only": true,
+    "isolation": "repeatable read",
+    "statement_timeout": "30s"
+  },
+  "algorithm_versions": {
+    "source_observation": "source-observation-key-v2",
+    "logical_matter_detail": "logical-matter-detail-key-v1"
+  },
+  "schema_design": {
+    "observation_table": "regulatory_source_observations",
+    "occurrence_table": "regulatory_source_occurrences",
+    "occurrence_locator": "source_record_locator (occurrence provenance only)",
+    "discipline_relationship": "regulatory_source_observations.discipline_action_id",
+    "migration": "009_regulatory_source_observations.sql",
+    "migration_sha256": "5bff76bb440d77aa2f118d63db1737f5bfe680257dd6339e532f88a36041a481"
+  },
+  "legacy_backfill": {
+    "production_rows": 1541,
+    "official_fy24_checksum": "189b0043984b25876bdbf6c814b5c6539db9374e3cd01e5c8e94e7777442c7ef",
+    "exact_source_reconciliations": 1541,
+    "proposed_observations": 1541,
+    "proposed_occurrences": 1541,
+    "ambiguous_mappings": 0,
+    "orphan_production_rows": 0,
+    "duplicate_v2_keys": 0,
+    "revision_candidates": 0
+  },
+  "future_simulation": {
+    "all_file_rows": 6457,
+    "existing_exact_observations": 1541,
+    "new_observations": 4916,
+    "new_occurrences": 4916,
+    "exact_duplicate_current_observations": 0,
+    "revision_review_candidates": 0,
+    "v2_key_collisions": 0,
+    "occurrence_collisions": 0,
+    "logical_group_count": 3160,
+    "multi_observation_logical_groups": 1140,
+    "resolver_partition": {
+      "DETERMINISTIC": 175,
+      "EXACT": 1213,
+      "REVIEW_REQUIRED": 1035,
+      "UNRESOLVED": 2493
+    }
+  },
+  "safety": {
+    "production_mutations": 0,
+    "license_id_changes": 0,
+    "contractor_id_changes": 0,
+    "publication_changes": 0,
+    "public_eligible": 0,
+    "non_fl_rows_touched": 0
+  },
+  "synthetic_contract": {
+    "exact_reobservation": "same observation; new unique occurrence allowed; no new discipline action",
+    "material_change_same_logical_group": "new observation retained as REVISION_REVIEW_REQUIRED; existing discipline action reused pending review",
+    "legitimate_multiline_same_file": "distinct observation and discipline detail; complaint-level collapse prohibited",
+    "automatic_supersession": false,
+    "automatic_duplicate_discipline_event": false
+  },
+  "assertions": {
+    "legacy_exact_1541": true,
+    "legacy_ambiguous_zero": true,
+    "legacy_orphan_zero": true,
+    "legacy_v2_collisions_zero": true,
+    "future_new_4916": true,
+    "existing_exact_1541": true,
+    "all_v2_collisions_zero": true,
+    "revision_candidates_zero": true,
+    "occurrence_collisions_zero": true,
+    "resolver_partition": true,
+    "current_safety_unchanged": true,
+    "public_eligible_zero": true
+  }
+}

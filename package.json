@@ -25,7 +25,7 @@
     "audit:production": "node scripts/audit_production_joins.mjs",
     "ops:snapshot": "node scripts/ops_snapshot.mjs",
     "test:ops": "node scripts/test_ops_smoke.mjs",
-    "test:fl-safety": "python -m unittest scripts.test_fl_dbpr_identity && node --experimental-strip-types scripts/test_fl_regulatory_publication.ts",
+    "test:fl-safety": "python -m unittest scripts.test_fl_dbpr_identity scripts.test_regulatory_source_observation scripts.test_regulatory_source_migration && node --experimental-strip-types scripts/test_fl_regulatory_publication.ts",
     "check:journey-v21": "node scripts/check-journey-v21.mjs"
   },
   "dependencies": {
