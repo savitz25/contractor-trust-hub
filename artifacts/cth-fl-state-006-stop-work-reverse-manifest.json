@@ -1,0 +1,26 @@
+{
+  "automatic_rollback_authorized": false,
+  "batch_id": "9e453cdf-2f0d-5a44-9bf2-90aa9a73b59c",
+  "counts": {
+    "actions": 48254,
+    "batches": 1,
+    "observations": 48254,
+    "occurrences": 48260
+  },
+  "execution_manifest_fingerprint": "sha256:b8f056563eafc45b8e6b4d8f0e5fe67f92029dd274b8730b461f601a0516f6d1",
+  "id_derivation": "UUIDv5 cth-fl-state-006 namespace + kind + source key/batch/ordinal",
+  "id_fingerprints": {
+    "actions": "sha256:8165638b3ad312672fcfd4890e1dc865e9671e52f3899d28a6dd788e5ca7e469",
+    "observations": "sha256:1e3bc18c4b2e968db900d9c5b7febc8f20b5d223d13d7fe7dfa4381691aadc6e",
+    "occurrences": "sha256:931861e157891ffda74d26549820cbd925d0a5cb89fb8c3ea71c04f80c4a6d9f"
+  },
+  "normalized_snapshot_fingerprint": "sha256:393817d6bff052e461d1eddb0bd5df50a2f34f3d231a2c970882661d568c6e68",
+  "reverse_manifest_fingerprint": "sha256:a424f14ce7fbf720fd5e9a54e126139f035805762488e5d038ec2a6e3937563a",
+  "rollback_order": [
+    "occurrences",
+    "observations",
+    "discipline_actions",
+    "ingest_batches"
+  ],
+  "version": "cth-fl-state-006-stop-work-reverse-v1"
+}

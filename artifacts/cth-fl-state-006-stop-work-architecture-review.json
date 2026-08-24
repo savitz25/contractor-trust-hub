@@ -1,0 +1,187 @@
+{
+  "baseline": {
+    "arizona": 459,
+    "batches": 61,
+    "florida": 19827,
+    "licensed": 6457,
+    "new_jersey": 1134,
+    "observations": 19827,
+    "occurrences": 19827,
+    "public_eligible": 0,
+    "recovery_fund": 1679,
+    "stop_work": 0,
+    "ula": 11691,
+    "whole": 21420
+  },
+  "canonical_main_sha": "0deac805f81a83be8d4fa59ce93c9926146f5102",
+  "collisions": {
+    "actions": 0,
+    "batches": 0,
+    "external_keys": 0,
+    "observations": 0,
+    "occurrences": 0,
+    "source_keys": 0
+  },
+  "current_fingerprints": {
+    "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+    "florida": "sha256:aeec5f86ac1f55c3f75c1c1a34b664dc02aeb3b7b9f847ec062562533919c813",
+    "florida_safety": "sha256:15266e1ef2a3e3e256207997a07db62d26de2177295d501154843292621eba73",
+    "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+    "whole": "sha256:b276b929dab3c37ee7670ec244283a109c8479dd3711f484ef286fa9afc0c67e"
+  },
+  "field_contract": [
+    "Employer Name",
+    "County",
+    "City",
+    "Date Served",
+    "Date Ended*",
+    "Date Reinstated**",
+    "Reason"
+  ],
+  "identity": {
+    "DETERMINISTIC": 0,
+    "EXACT": 0,
+    "REVIEW_REQUIRED": 0,
+    "UNRESOLVED": 48254,
+    "contractor_links": 0,
+    "entity_links": 0,
+    "license_links": 0,
+    "method": "NO_OFFICIAL_IDENTITY_IDENTIFIER",
+    "resolver_version": "fl-dfs-stop-work-identity-v1"
+  },
+  "logical_review_fields": [
+    "Employer Name",
+    "County",
+    "City",
+    "Date Served",
+    "Reason"
+  ],
+  "manifest": {
+    "batch_id": "9e453cdf-2f0d-5a44-9bf2-90aa9a73b59c",
+    "fingerprint": "sha256:b8f056563eafc45b8e6b4d8f0e5fe67f92029dd274b8730b461f601a0516f6d1",
+    "format": "compact source-key/multiplicity",
+    "independent_reproduction": true,
+    "source_key_count": 48254
+  },
+  "migration": {
+    "migration_009_reused": true,
+    "required": false
+  },
+  "mode": "DRY_RUN",
+  "predicted_fingerprints": {
+    "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+    "batch_snapshot": "sha256:be74a2be2948b3fafdedfe61ab075f4dd185c31f1b608ef9da2bcb3cd02b49bd",
+    "florida": "sha256:abe3c12054f5e95338d3d3018d5413816f65d0eb6633146bc6e6c756755d1fa5",
+    "florida_safety": "sha256:7d7dd6664180a3fec4617fed647c6a6247f4dbf81ff38fb79952c9fa28009fbd",
+    "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+    "provenance": "sha256:c876fe2d0ac0b9409b06406866f25f6a87ccd40d2dd931cb0bb5912c0234c00a",
+    "stop_work_cohort": "sha256:0a9e4f96dc679eea3b7e892866a622093591dd725854948b0ffd03eb9644e0af",
+    "whole": "sha256:7aafb5fc16662ccd03200a7a942df9d1d1d2faeb90016882d16a75b461a2f961"
+  },
+  "predicted_post": {
+    "arizona": 459,
+    "batches": 62,
+    "correction": {
+      "false": 67678,
+      "true": 403
+    },
+    "florida": 68081,
+    "identity": {
+      "DETERMINISTIC": 265,
+      "EXACT": 1811,
+      "REVIEW_REQUIRED": 1753,
+      "UNRESOLVED": 64252
+    },
+    "licensed": 6457,
+    "new_jersey": 1134,
+    "observations": 68081,
+    "occurrences": 68087,
+    "publication": {
+      "INTERNAL": 68081,
+      "PUBLIC_ELIGIBLE": 0
+    },
+    "recovery_fund": 1679,
+    "relationships": {
+      "contractor_linked": 0,
+      "license_linked": 2479,
+      "neither": 65602
+    },
+    "retraction": {
+      "false": 68081,
+      "true": 0
+    },
+    "stop_work": 48254,
+    "ula": 11691,
+    "whole": 69674
+  },
+  "production_mutations": 0,
+  "public_and_scoring": {
+    "PUBLIC_ELIGIBLE": 0,
+    "discovery_leakage": false,
+    "gate_on_leakage": false,
+    "generic_adverse_leakage": false,
+    "profile_leakage": false,
+    "ranking": 0,
+    "trust_score": 0
+  },
+  "reverse_manifest": {
+    "automatic_rollback_authorized": false,
+    "fingerprint": "sha256:a424f14ce7fbf720fd5e9a54e126139f035805762488e5d038ec2a6e3937563a"
+  },
+  "semantics": {
+    "compliance_inferred": false,
+    "current_active_inferred": false,
+    "date_ended_dated": 48260,
+    "date_reinstated_dated": 7165,
+    "fraud_inferred": false,
+    "not_reinstated": 41095,
+    "penalty_paid_inferred": false,
+    "raw_values_preserved": true,
+    "reason_counts": {
+      "FAIL PRODUCE DOCS 10 DAYS": 1048,
+      "FAIL PRODUCE DOCS 21 DAYS": 413,
+      "FAIL PRODUCE DOCS 3 DAYS": 3,
+      "FAIL PRODUCE DOCS 5 DAYS": 1087,
+      "FAILURE TO OBTAIN COVERAGE": 45003,
+      "MISREP. OR CONCEAL EE DUTIES": 98,
+      "MISREP. OR CONCEAL INFO. E-MOD": 7,
+      "SITE SPECIFIC": 288,
+      "UNDERSTATE OR CONCEAL PAYROLL": 313
+    }
+  },
+  "source": {
+    "bytes": 79848352,
+    "duplicate_appearances": 6,
+    "normalized_snapshot_fingerprint": "sha256:393817d6bff052e461d1eddb0bd5df50a2f34f3d231a2c970882661d568c6e68",
+    "raw_rows": 48260,
+    "raw_sha256": "sha256:fa40871e338dd97e0c8ca2b14bf13b61e3c1b6751a2d582bc25ba8585014d13b",
+    "retrieved_at_utc": "2026-08-24T20:09:45.980409Z",
+    "schema_fingerprint": "sha256:4e8562917ef7568b6b48f1978bd0c6c11015186b3da4bc05011f53a1e1dca6fa",
+    "unique_observations": 48254
+  },
+  "source_delta": {
+    "classification": "EXPECTED_DAILY_DATA_DELTA",
+    "parsed_counts_equal_planning": true,
+    "planning_raw_sha256": "sha256:de8dd572927382652075da878ffd1dd55d3d93b61757d619b3d18d8d2ac1700b",
+    "semantic_drift": false,
+    "structural_drift": false
+  },
+  "task": "CTH-FL-STATE-006A",
+  "transaction": {
+    "advisory_lock": "fl_dfs:workers_comp_stop_work",
+    "deletes": 0,
+    "expected_inserts": {
+      "actions": 48254,
+      "batches": 1,
+      "observations": 48254,
+      "occurrences": 48260,
+      "total": 144769
+    },
+    "insert_only": true,
+    "isolation": "REPEATABLE READ",
+    "lock_timeout": "5s",
+    "single_transaction": true,
+    "statement_timeout": "180s",
+    "updates": 0
+  }
+}
