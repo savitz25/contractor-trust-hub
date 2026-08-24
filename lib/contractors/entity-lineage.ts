@@ -46,6 +46,7 @@ export type EntityLineage = {
   /** Principals used for association (from primary entity officers) */
   principals: LineageOfficer[];
   related: LineageRelatedEntity[];
+  relatedLookupStatus: "available" | "unavailable";
   evidenceNote: string;
 };
 
@@ -56,6 +57,16 @@ export function normalizeOfficerKey(raw: string | null | undefined): string {
     .toUpperCase()
     .replace(/[.,'"/\\-]/g, " ")
     .replace(/\b(JR|SR|II|III|IV|MR|MRS|MS|DR)\b/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Candidate-side normalization used by the historical SQL lineage lookup. */
+export function normalizeOfficerLookupKey(raw: string | null | undefined): string {
+  if (!raw) return "";
+  return raw
+    .toUpperCase()
+    .replace(/[.,'"/\\-]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -178,6 +189,7 @@ export async function loadFloridaEntityLineage(
         matchedOfficerNames: [],
         sunbizSearchHref: sunbizDocumentSearchHref(e.externalKey),
       })),
+      relatedLookupStatus: "available",
       evidenceNote:
         "Officers shown as published on the high-confidence Sunbiz link for this contractor. No additional entities shared those principal names in our extract under exact-name association.",
     };
@@ -188,14 +200,13 @@ export async function loadFloridaEntityLineage(
   const keyToName = new Map(principals.map((p) => [p.key, p.name]));
 
   let rows: RelatedRow[] = [];
+  let relatedLookupStatus: EntityLineage["relatedLookupStatus"] = "available";
   try {
-    // Exact officer name key match on fl_sunbiz entities that already have a
-    // high-confidence contractor link (indexed via contractor_entities).
-    // Avoids full-table JSONB scan of all Sunbiz rows on Trust Report SSR.
-    // Normalization mirrors normalizeOfficerKey (upper, strip punct, collapse space).
+    // Indexed exact officer-name lookup. entities.officers remains authoritative;
+    // migration 009 keeps this derived structure synchronized.
     rows = await query<RelatedRow>(
       `
-      SELECT DISTINCT ON (e.id, matched_key)
+      SELECT DISTINCT ON (e.id, lookup.officer_name_normalized)
         e.id,
         e.external_key,
         e.legal_name,
@@ -204,23 +215,17 @@ export async function loadFloridaEntityLineage(
         e.formation_date,
         e.officers,
         e.last_verified_at,
-        matched_key
-      FROM contractor_entities ce
-      JOIN entities e ON e.id = ce.entity_id
-      CROSS JOIN LATERAL (
-        SELECT upper(trim(regexp_replace(
-          regexp_replace(COALESCE(o->>'name', ''), '[.,''"/\\\\-]+', ' ', 'g'),
-          '\\s+', ' ', 'g'
-        ))) AS matched_key
-        FROM jsonb_array_elements(COALESCE(e.officers, '[]'::jsonb)) AS o
-      ) keys
+        lookup.officer_name_normalized AS matched_key
+      FROM entity_officer_lookup lookup
+      JOIN entities e ON e.id = lookup.entity_id
+      JOIN contractor_entities ce ON ce.entity_id = e.id
       WHERE e.source_system = 'fl_sunbiz'
         AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
         AND ce.confidence IS NOT NULL
         AND ce.confidence >= 0.90
         AND NOT (e.id = ANY($1::uuid[]))
-        AND keys.matched_key = ANY($2::text[])
-      ORDER BY e.id, matched_key
+        AND lookup.officer_name_normalized = ANY($2::text[])
+      ORDER BY e.id, lookup.officer_name_normalized
       LIMIT 40
       `,
       [excludeIds, keys]
@@ -230,7 +235,7 @@ export async function loadFloridaEntityLineage(
       "[entity-lineage] related query failed:",
       err instanceof Error ? err.message : err
     );
-    rows = [];
+    relatedLookupStatus = "unavailable";
   }
 
   // Group by entity; collect matched officer keys
@@ -313,8 +318,11 @@ export async function loadFloridaEntityLineage(
     },
     principals,
     related: relatedCapped,
+    relatedLookupStatus,
     evidenceNote:
-      relatedCapped.length > 0
+      relatedLookupStatus === "unavailable"
+        ? "Related-entity evidence is temporarily unavailable. Existing entity and officer evidence above remains sourced from the authoritative Sunbiz extract."
+        : relatedCapped.length > 0
         ? "Related entities appear because they publish the same officer/principal name(s) in our Florida Sunbiz extract (exact name key after normalization) and are already high-confidence linked to a contractor profile in our product. This is not an accusation of misconduct, and it is not a complete officer graph of every Sunbiz filing."
         : "Principals shown as published on the high-confidence Sunbiz link. No other high-confidence-linked entities in our product shared those exact principal names under our association rules.",
   };

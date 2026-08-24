@@ -141,7 +141,15 @@ export function EntityLineageSection({ lineage }: { lineage: EntityLineage }) {
           </article>
 
           {/* Related entities */}
-          {lineage.related.length > 0 ? (
+          {lineage.relatedLookupStatus === "unavailable" ? (
+            <div
+              className="mt-5 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950"
+              data-lineage-state="temporarily-unavailable"
+            >
+              Related-entity evidence is temporarily unavailable. This is not evidence that no
+              related entities exist.
+            </div>
+          ) : lineage.related.length > 0 ? (
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
                 Other entities sharing principal names in our extract
