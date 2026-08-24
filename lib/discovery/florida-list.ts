@@ -356,7 +356,7 @@ export async function listFloridaBrowse(opts: {
       "[discovery] listFloridaBrowse failed:",
       err instanceof Error ? err.message : err
     );
-    return empty;
+    throw err;
   }
 }
 
@@ -411,6 +411,6 @@ export async function listFloridaCities(
       "[discovery] listFloridaCities failed:",
       err instanceof Error ? err.message : err
     );
-    return [];
+    throw err;
   }
 }

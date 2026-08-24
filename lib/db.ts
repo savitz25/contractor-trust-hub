@@ -3,9 +3,9 @@ import { Pool, type PoolClient, type QueryResultRow } from "pg";
 /**
  * Server-only Postgres pool.
  *
- * Production (Vercel): use Supabase **Session pooler** URI:
+ * Production (Vercel): use Supabase **Transaction pooler** URI:
  *   host:  *.pooler.supabase.com
- *   port:  5432  (Session — not Transaction :6543)
+ *   port:  6543
  *   user:  postgres.<project-ref>
  * Do not use the direct db.*.supabase.co host if the runtime lacks IPv6.
  *
@@ -14,8 +14,8 @@ import { Pool, type PoolClient, type QueryResultRow } from "pg";
 
 let pool: Pool | null = null;
 
-/** Connect wait — keep under typical serverless function patience. */
-const CONNECT_TIMEOUT_MS = 8_000;
+/** Allow bounded queueing behind the isolate's single client under request bursts. */
+const CONNECT_TIMEOUT_MS = 60_000;
 /** Cap runaway Verify/list SQL so one search cannot pin the only pool client. */
 const DEFAULT_STATEMENT_TIMEOUT_MS = 8_000;
 
@@ -24,7 +24,7 @@ function getPool(): Pool {
   const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
   if (!connectionString) {
     throw new Error(
-      "DATABASE_URL is not set. Add Supabase Session pooler URI (*.pooler.supabase.com:5432) to Vercel Production."
+      "DATABASE_URL is not set. Add the authorized Supabase Transaction pooler URI (*.pooler.supabase.com:6543) to Vercel Production."
     );
   }
 
@@ -35,7 +35,7 @@ function getPool(): Pool {
     !connectionString.includes("postgres")
   ) {
     throw new Error(
-      "DATABASE_URL is missing or invalid. Use Supabase Session pooler (port 5432), not a placeholder."
+      "DATABASE_URL is missing or invalid. Use the authorized Supabase Transaction pooler (port 6543), not a placeholder."
     );
   }
 
@@ -48,7 +48,7 @@ function getPool(): Pool {
     process.env.PGSSLMODE === "require" ||
     process.env.VERCEL === "1";
 
-  // Session pooler caps clients per mode. Serverless: one client per isolate.
+  // Serverless: one application client per isolate. Supavisor handles backend reuse.
   const isBuild =
     process.env.NEXT_PHASE === "phase-production-build" ||
     process.env.npm_lifecycle_event === "build";
@@ -57,7 +57,7 @@ function getPool(): Pool {
   pool = new Pool({
     connectionString,
     max,
-    idleTimeoutMillis: isBuild ? 1_000 : 10_000,
+    idleTimeoutMillis: isBuild || process.env.VERCEL ? 1_000 : 10_000,
     connectionTimeoutMillis: CONNECT_TIMEOUT_MS,
     allowExitOnIdle: true,
     ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
@@ -135,7 +135,7 @@ async function queryOnce<T extends QueryResultRow>(
   try {
     client = await p.connect();
     await client.query("BEGIN");
-    // LOCAL so it resets on COMMIT/ROLLBACK — safe on Session pooler.
+    // LOCAL is scoped to this explicit transaction and is safe with transaction pooling.
     await client.query(`SET LOCAL statement_timeout = ${Math.max(1000, statementTimeoutMs)}`);
     const res = await client.query<T>(text, params);
     await client.query("COMMIT");
@@ -155,8 +155,9 @@ async function queryOnce<T extends QueryResultRow>(
 }
 
 /**
- * Run SQL with statement timeout. Retries once only on connect/capacity errors
- * (not on query timeouts or application errors).
+ * Run SQL with a statement timeout. Connection/capacity failures are not retried:
+ * Supavisor and the one-client application pool already queue bounded work, and a
+ * reconnect here would amplify a concurrent burst.
  */
 export async function query<T extends QueryResultRow = QueryResultRow>(
   text: string,
@@ -168,16 +169,6 @@ export async function query<T extends QueryResultRow = QueryResultRow>(
     return await queryOnce<T>(text, params, statementTimeoutMs);
   } catch (err) {
     logDbError("query", err, text);
-    if (isDbConnectTimeout(err) || isDbCapacityError(err)) {
-      try {
-        // Brief backoff then one reconnect attempt.
-        await new Promise((r) => setTimeout(r, 150));
-        return await queryOnce<T>(text, params, statementTimeoutMs);
-      } catch (err2) {
-        logDbError("query_retry", err2, text);
-        throw err2;
-      }
-    }
     throw err;
   }
 }
