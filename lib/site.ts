@@ -7,6 +7,7 @@
 
 /** Production custom domain (www is canonical). */
 export const PRODUCTION_SITE_URL = "https://www.contractortrusthub.com";
+export const PUBLIC_CONTACT_EMAIL = "hello@asktrusthub.com";
 
 export function getSiteUrl(): string {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim();

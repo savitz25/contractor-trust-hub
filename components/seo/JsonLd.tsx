@@ -1,4 +1,4 @@
-import { absoluteUrl, getSiteUrl } from "@/lib/site";
+import { absoluteUrl, getSiteUrl, PUBLIC_CONTACT_EMAIL } from "@/lib/site";
 
 /** Serialize JSON-LD without breaking out of the script tag. */
 function safeJson(data: unknown): string {
@@ -28,6 +28,7 @@ export function SitewideJsonLd() {
         "@id": orgId,
         name: "Contractor Trust Hub",
         url: site,
+        email: PUBLIC_CONTACT_EMAIL,
         logo: {
           "@type": "ImageObject",
           url: absoluteUrl("/brand/contractor-trust-hub-logo.svg"),
