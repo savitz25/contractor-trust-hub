@@ -66,6 +66,24 @@ EXPECTED_SEMANTICS = {
     "OTHER": 0,
     "UNKNOWN": 0,
 }
+EXPECTED_PRE_FINGERPRINTS = {
+    "whole": "sha256:078f0d84f76ecd5dc4b1b4fc717a3ffca5f88e18182b17510ebc8c1e4d9805fe",
+    "florida": "sha256:c25f931b7c8d5371dc2d75497f0ef270487f4fbc46028bc87fd1da0ab73632ce",
+    "florida_safety": "sha256:d990ba40a4e75d1651a16c0fc4e42f1b361a509348ab5f027af435e8e35609ef",
+    "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+    "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+}
+EXPECTED_POST_FINGERPRINTS = {
+    "whole": "sha256:5bee9a5963aadb8ab58c7d16e6e9c508e320eecc1fe0a17b14ece673df80c940",
+    "florida": "sha256:3474cf0b86c6f9e816163244cdb1f9c86daa6479f7d703cea87b9dd4c02b7614",
+    "florida_safety": "sha256:d1a721ab16a24ee862b85056867f9bb75cfa0e100ae67caeb71eed0a7940721f",
+    "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+    "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+    "ula_cohort": "sha256:6df200e2451bbcc2cc331476e5754399acb4b9f6481c321f18f35089a2835092",
+    "provenance": "sha256:52a9a11013a5c65f6ae2f90a2ce23ca20d5803c37150a75b2970308649c4d793",
+    "batches": "sha256:627aa32acced612818234e11b361c0cd518f1087fff2563fbe60726415cf5bcb",
+}
+DATASET_ADVISORY_LOCK = "fl_dbpr:contractor_disc_ula"
 
 
 def canonical_json(value: Any) -> bytes:
@@ -269,6 +287,25 @@ def relationship_rows(cur, predicate: str) -> list[tuple[Any, ...]]:
     return cur.fetchall()
 
 
+def current_fingerprints(cur) -> dict[str, str]:
+    """Fingerprint only rows actually present in the current transaction."""
+
+    groups = {
+        "whole": relationship_rows(cur, "TRUE"),
+        "florida": relationship_rows(cur, "source_system='fl_dbpr'"),
+        "arizona": relationship_rows(cur, "source_system='az_roc'"),
+        "new_jersey": relationship_rows(cur, "source_system='nj_enforcement'"),
+    }
+    cur.execute("""SELECT id,identity_state,identity_method,resolved_license_external_key,
+        publication_state,correction_hold,retraction_hold,license_id,contractor_id
+        FROM discipline_actions WHERE source_system='fl_dbpr'""")
+    groups["florida_safety"] = cur.fetchall()
+    return {
+        key: legacy.relationship_digest(sorted(rows, key=lambda row: str(row[0])))
+        for key, rows in groups.items()
+    }
+
+
 def predicted_fingerprints(cur, manifest: dict[str, Any]) -> dict[str, str]:
     new = [(item["discipline_action_id"], SOURCE_SYSTEM, None, None) for item in manifest["entries"]]
     whole = relationship_rows(cur, "TRUE") + new
@@ -355,6 +392,196 @@ def licensed_provenance_regression(cur) -> dict[str, int]:
     if result != {"rows": 6457, "observation_keys_valid": 6457, "row_fingerprints_valid": 6457, "logical_keys_valid": 6457, "changed": 0}:
         raise RuntimeError(f"LICENSED_REGRESSION {result}")
     return result
+
+
+def post_state_counts(cur) -> dict[str, Any]:
+    """Read the actual combined and ULA-only state before commit."""
+
+    cur.execute("SELECT count(*)::int FROM discipline_actions")
+    whole = cur.fetchone()[0]
+    cur.execute("SELECT source_dataset,count(*)::int FROM discipline_actions WHERE source_system='fl_dbpr' GROUP BY source_dataset")
+    florida = dict(cur.fetchall())
+    cur.execute("SELECT count(*)::int FROM regulatory_source_observations")
+    observations = cur.fetchone()[0]
+    cur.execute("SELECT count(*)::int FROM regulatory_source_occurrences")
+    occurrences = cur.fetchone()[0]
+    cur.execute("SELECT count(*)::int FROM ingest_batches")
+    batches = cur.fetchone()[0]
+    cur.execute("SELECT source_system,count(*)::int FROM discipline_actions GROUP BY source_system")
+    states = dict(cur.fetchall())
+    cur.execute("""SELECT identity_state,count(*)::int FROM discipline_actions
+        WHERE source_system='fl_dbpr' GROUP BY identity_state""")
+    identity = dict(cur.fetchall())
+    cur.execute("""SELECT
+        count(*) FILTER (WHERE license_id IS NOT NULL)::int,
+        count(*) FILTER (WHERE contractor_id IS NOT NULL)::int,
+        count(*) FILTER (WHERE license_id IS NULL AND contractor_id IS NULL)::int,
+        count(*) FILTER (WHERE correction_hold)::int,
+        count(*) FILTER (WHERE NOT correction_hold)::int,
+        count(*) FILTER (WHERE retraction_hold)::int,
+        count(*) FILTER (WHERE NOT retraction_hold)::int,
+        count(*) FILTER (WHERE publication_state='INTERNAL')::int,
+        count(*) FILTER (WHERE publication_state='PUBLIC_ELIGIBLE')::int
+        FROM discipline_actions WHERE source_system='fl_dbpr'""")
+    relationship = cur.fetchone()
+    return {
+        "whole_discipline_actions": whole,
+        "florida_licensed_discipline": florida.get("contractor_disc_lic", 0),
+        "florida_ula": florida.get(SOURCE_DATASET, 0),
+        "florida_all": sum(florida.values()),
+        "observations": observations, "occurrences": occurrences, "ingest_batches": batches,
+        "arizona": states.get("az_roc", 0), "new_jersey": states.get("nj_enforcement", 0),
+        "identity": identity,
+        "relationships": {"license_linked": relationship[0], "contractor_linked": relationship[1], "neither": relationship[2]},
+        "correction_holds": {"true": relationship[3], "false": relationship[4]},
+        "retraction_holds": {"true": relationship[5], "false": relationship[6]},
+        "publication": {"INTERNAL": relationship[7], "PUBLIC_ELIGIBLE": relationship[8]},
+    }
+
+
+def ula_cohort_invariants(cur) -> dict[str, int]:
+    cur.execute("""SELECT
+        count(*)::int,
+        count(*) FILTER (WHERE identity_state='UNRESOLVED')::int,
+        count(*) FILTER (WHERE identity_state='REVIEW_REQUIRED')::int,
+        count(*) FILTER (WHERE identity_state='EXACT')::int,
+        count(*) FILTER (WHERE identity_state='DETERMINISTIC')::int,
+        count(*) FILTER (WHERE license_id IS NOT NULL)::int,
+        count(*) FILTER (WHERE contractor_id IS NOT NULL)::int,
+        count(*) FILTER (WHERE resolved_license_external_key IS NOT NULL)::int,
+        count(*) FILTER (WHERE publication_state='INTERNAL')::int,
+        count(*) FILTER (WHERE publication_state='PUBLIC_ELIGIBLE')::int,
+        count(*) FILTER (WHERE correction_hold)::int,
+        count(*) FILTER (WHERE retraction_hold)::int,
+        count(*) FILTER (WHERE identity_method<>%s OR identity_method IS NULL)::int,
+        count(*) FILTER (WHERE resolver_version<>%s OR resolver_version IS NULL)::int
+        FROM discipline_actions WHERE source_system=%s AND source_dataset=%s""",
+        (IDENTITY_METHOD, RESOLVER_VERSION, SOURCE_SYSTEM, SOURCE_DATASET))
+    row = cur.fetchone()
+    keys = ("rows", "UNRESOLVED", "REVIEW_REQUIRED", "EXACT", "DETERMINISTIC",
+        "license_linked", "contractor_linked", "resolved_external_key", "INTERNAL",
+        "PUBLIC_ELIGIBLE", "correction_hold_true", "retraction_hold_true",
+        "wrong_identity_method", "wrong_resolver_version")
+    return dict(zip(keys, row))
+
+
+def ula_provenance_invariants(cur) -> dict[str, Any]:
+    cur.execute("""SELECT o.discipline_action_id,o.source_observation_key,
+        o.row_fingerprint_sha256,o.source_payload,o.revision_state
+        FROM regulatory_source_observations o
+        JOIN discipline_actions d ON d.id=o.discipline_action_id
+        WHERE d.source_system=%s AND d.source_dataset=%s""", (SOURCE_SYSTEM, SOURCE_DATASET))
+    rows = cur.fetchall()
+    valid_payload = valid_key = 0
+    states: Counter[str] = Counter()
+    action_ids: set[str] = set()
+    for action_id, stored_key, stored_fingerprint, payload, revision_state in rows:
+        action_ids.add(str(action_id))
+        states[revision_state] += 1
+        if row_fingerprint_sha256(payload, FL_ULA_FIELDS) == stored_fingerprint:
+            valid_payload += 1
+        if observation_key(payload) == stored_key:
+            valid_key += 1
+    cur.execute("""SELECT count(*)::int,count(DISTINCT o.id)::int,
+        count(*)-count(DISTINCT (o.source_observation_id,o.ingest_batch_id,o.fiscal_year,
+          o.source_file_checksum_sha256,o.source_record_locator))::int
+        FROM regulatory_source_occurrences o
+        JOIN regulatory_source_observations s ON s.id=o.source_observation_id
+        JOIN discipline_actions d ON d.id=s.discipline_action_id
+        WHERE d.source_system=%s AND d.source_dataset=%s""", (SOURCE_SYSTEM, SOURCE_DATASET))
+    occurrence_total, distinct_occurrences, collisions = cur.fetchone()
+    cur.execute("""SELECT o.fiscal_year,count(*)::int
+        FROM regulatory_source_occurrences o
+        JOIN regulatory_source_observations s ON s.id=o.source_observation_id
+        JOIN discipline_actions d ON d.id=s.discipline_action_id
+        WHERE d.source_system=%s AND d.source_dataset=%s GROUP BY o.fiscal_year""", (SOURCE_SYSTEM, SOURCE_DATASET))
+    fiscal = dict(cur.fetchall())
+    return {
+        "observations": len(rows), "distinct_actions": len(action_ids),
+        "CURRENT": states["CURRENT"], "REVISION_REVIEW_REQUIRED": states["REVISION_REVIEW_REQUIRED"],
+        "SUPERSEDED": states["SUPERSEDED"], "payload_hash_valid": valid_payload,
+        "source_key_valid": valid_key, "occurrences": occurrence_total,
+        "distinct_occurrences": distinct_occurrences, "occurrence_collisions": collisions,
+        "fiscal_years": fiscal,
+    }
+
+
+def actual_post_fingerprints(cur, manifest: dict[str, Any]) -> dict[str, str]:
+    """Fingerprint actual rows present; never add the predicted cohort."""
+
+    result = current_fingerprints(cur)
+    ula = relationship_rows(cur, "source_system='fl_dbpr' AND source_dataset='contractor_disc_ula'")
+    result["ula_cohort"] = legacy.relationship_digest(sorted(ula, key=lambda row: str(row[0])))
+    cur.execute("""SELECT d.id,o.id,c.id,o.source_observation_key
+        FROM discipline_actions d
+        JOIN regulatory_source_observations o ON o.discipline_action_id=d.id
+        JOIN regulatory_source_occurrences c ON c.source_observation_id=o.id
+        WHERE d.source_system=%s AND d.source_dataset=%s""", (SOURCE_SYSTEM, SOURCE_DATASET))
+    provenance_by_action = {str(row[0]): tuple(str(value) for value in row) for row in cur.fetchall()}
+    provenance = [provenance_by_action[item["discipline_action_id"]] for item in manifest["entries"]]
+    result["provenance"] = digest(provenance)
+    batch_ids = [item["ingest_batch_id"] for item in manifest["batches"]]
+    cur.execute("""SELECT id,source_system,source_dataset,source_url,source_file,
+        extracted_at,row_count,checksum_sha256 FROM ingest_batches WHERE id=ANY(%s::uuid[])""", (batch_ids,))
+    actual_batches = {str(row[0]): row for row in cur.fetchall()}
+    batches = []
+    for expected in manifest["batches"]:
+        row = actual_batches[expected["ingest_batch_id"]]
+        batches.append({
+            "fiscal_year": expected["fiscal_year"], "ingest_batch_id": str(row[0]),
+            "source_system": row[1], "source_dataset": row[2], "source_url": row[3],
+            "source_file": row[4], "row_count": row[6], "checksum_sha256": row[7],
+            "downloaded_at": row[5].isoformat(),
+        })
+    result["batches"] = digest(batches)
+    return result
+
+
+def validate_post_commit_gate(cur, manifest: dict[str, Any]) -> dict[str, Any]:
+    expected_counts = {
+        "whole_discipline_actions": 19741, "florida_licensed_discipline": 6457,
+        "florida_ula": 11691, "florida_all": 18148, "observations": 18148,
+        "occurrences": 18148, "ingest_batches": 56, "arizona": 459, "new_jersey": 1134,
+        "identity": {"EXACT": 1736, "DETERMINISTIC": 236, "REVIEW_REQUIRED": 1411, "UNRESOLVED": 14765},
+        "relationships": {"license_linked": 2375, "contractor_linked": 0, "neither": 15773},
+        "correction_holds": {"true": 403, "false": 17745},
+        "retraction_holds": {"true": 0, "false": 18148},
+        "publication": {"INTERNAL": 18148, "PUBLIC_ELIGIBLE": 0},
+    }
+    counts = post_state_counts(cur)
+    if counts != expected_counts:
+        raise RuntimeError(f"PRE_COMMIT_INVARIANT counts {counts}")
+    cohort = ula_cohort_invariants(cur)
+    expected_cohort = {"rows": 11691, "UNRESOLVED": 11691, "REVIEW_REQUIRED": 0,
+        "EXACT": 0, "DETERMINISTIC": 0, "license_linked": 0, "contractor_linked": 0,
+        "resolved_external_key": 0, "INTERNAL": 11691, "PUBLIC_ELIGIBLE": 0,
+        "correction_hold_true": 0, "retraction_hold_true": 0,
+        "wrong_identity_method": 0, "wrong_resolver_version": 0}
+    if cohort != expected_cohort:
+        raise RuntimeError(f"PRE_COMMIT_INVARIANT ULA cohort {cohort}")
+    provenance = ula_provenance_invariants(cur)
+    expected_provenance = {"observations": 11691, "distinct_actions": 11691,
+        "CURRENT": 11691, "REVISION_REVIEW_REQUIRED": 0, "SUPERSEDED": 0,
+        "payload_hash_valid": 11691, "source_key_valid": 11691, "occurrences": 11691,
+        "distinct_occurrences": 11691, "occurrence_collisions": 0,
+        "fiscal_years": {"2021-22": 2312, "2022-23": 2631, "2023-24": 2568, "2024-25": 2338, "2025-26": 1842}}
+    if provenance != expected_provenance:
+        raise RuntimeError(f"PRE_COMMIT_INVARIANT provenance {provenance}")
+    fingerprints = actual_post_fingerprints(cur, manifest)
+    if fingerprints != EXPECTED_POST_FINGERPRINTS:
+        raise RuntimeError(f"PRE_COMMIT_INVARIANT fingerprints {fingerprints}")
+    return {"counts": counts, "cohort": cohort, "provenance": provenance, "fingerprints": fingerprints}
+
+
+def commit_or_rollback(conn, operation) -> None:
+    """Commit exactly once after every supplied invariant passes."""
+
+    try:
+        operation()
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
 
 
 def normalized_action(payload: dict[str, str]) -> dict[str, Any]:
@@ -485,6 +712,9 @@ def main() -> int:
         with conn.cursor() as cur:
             baseline = production_baseline(cur)
             licensed_regression = licensed_provenance_regression(cur)
+            pre_fingerprints = current_fingerprints(cur)
+            if pre_fingerprints != EXPECTED_PRE_FINGERPRINTS:
+                raise RuntimeError(f"PRODUCTION_DRIFT fingerprints {pre_fingerprints}")
             collisions = validate_ids(cur, manifest)
             fingerprints = predicted_fingerprints(cur, manifest)
         conn.rollback()
@@ -506,7 +736,8 @@ def main() -> int:
         "identity_policy": {**{key: value for key, value in IDENTITY_EVIDENCE.items()}, "identity_state": IDENTITY_STATE, "identity_method": IDENTITY_METHOD, "resolver_version": RESOLVER_VERSION, "review_opportunities_excluded": {"matters": 113, "rows": 246, "candidate_ids_persisted": 0}},
         "manifest": {"entries": len(manifest["entries"]), "fingerprint": manifest["manifest_fingerprint"], "batch_ids": [item["ingest_batch_id"] for item in manifest["batches"]]},
         "reverse_manifest_fingerprint": reverse["reverse_manifest_fingerprint"], "collision_checks": collisions,
-        "production_baseline": baseline, "licensed_discipline_regression": licensed_regression,
+        "production_baseline": baseline, "pre_state_fingerprints": pre_fingerprints,
+        "licensed_discipline_regression": licensed_regression,
         "predicted_post": predicted, "predicted_fingerprints": fingerprints,
         "transaction_design": {"isolation": "REPEATABLE READ", "lock_timeout": "5s", "statement_timeout": "180s", "single_transaction": True, "inserts": 35078, "updates": 0, "deletes": 0},
         "publication": {
@@ -532,16 +763,17 @@ def main() -> int:
         conn.execute("BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ")
         conn.execute("SET LOCAL lock_timeout = '5s'")
         conn.execute("SET LOCAL statement_timeout = '180s'")
-        try:
+        def transaction_operation() -> None:
             with conn.cursor() as cur:
-                if production_baseline(cur)["florida_ula"] != 0:
-                    raise RuntimeError("PRODUCTION_DRIFT ULA no longer empty")
+                cur.execute("SELECT pg_advisory_xact_lock(hashtext(%s))", (DATASET_ADVISORY_LOCK,))
+                production_baseline(cur)
+                pre_fingerprints = current_fingerprints(cur)
+                if pre_fingerprints != EXPECTED_PRE_FINGERPRINTS:
+                    raise RuntimeError(f"PRODUCTION_DRIFT fingerprints {pre_fingerprints}")
                 validate_ids(cur, manifest)
                 execute(cur, manifest, source_by_key, Jsonb)
-            conn.commit()
-        except Exception:
-            conn.rollback()
-            raise
+                validate_post_commit_gate(cur, manifest)
+        commit_or_rollback(conn, transaction_operation)
     return 0
 
 

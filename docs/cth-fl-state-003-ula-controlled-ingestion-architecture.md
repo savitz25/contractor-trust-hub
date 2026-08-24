@@ -72,3 +72,11 @@ An unattached, unresolved INTERNAL ULA row fails the shared public SQL contract:
 An exact row observed in a genuinely new snapshot reuses its observation and evidence action and creates only a new occurrence. An unchanged checksum rerun is a no-op with no batch or occurrence. A materially changed row in the same logical grouping creates a retained immutable observation in `REVISION_REVIEW_REQUIRED`; it is not automatically superseded, attached, or published. Missing rows are retained for review, never automatically deleted. Check the open fiscal year monthly and historical files quarterly; transition FY25-26 only after a checksum/delta review.
 
 Official addresses remain evidence payload/provenance only. No canonical address, respondent contact, phone, email, website, entity, or Sunbiz link is created. Recovery Fund, workers compensation, exemptions, stop-work orders, county/city data, Google APIs, and DOAH document enrichment remain outside this task.
+
+## Production commit-gate hardening
+
+Before any future insert, the single write transaction takes a transaction-scoped PostgreSQL advisory lock keyed to `fl_dbpr:contractor_disc_ula`. Inside that same transaction it revalidates the approved 8,050-row pre-state, all five pre-state relationship/safety fingerprints, and the absence of every manifest ID, external key, and source-observation key.
+
+After the unchanged 35,078-row insert sequence, but before commit, the executor queries actual database rows and requires the approved combined counts, all-UNRESOLVED ULA cohort policy, fiscal occurrence partition, immutable provenance coverage, payload hashes, observation keys, and zero occurrence collisions. A separate actual-state fingerprint helper reads rows present in the transaction; it does not add the manifest cohort as the prediction helper does. All eight actual fingerprints must equal the approved post-state fingerprints above.
+
+Commit is reachable only after every check passes. Any SQL, Python, count, cohort, provenance, or fingerprint failure rolls back the entire transaction. Tests inject an incorrect actual fingerprint and prove commit is not reached and rollback is called. This is pre-commit protection only; automatic post-commit rollback remains unauthorized. The execution and reverse manifests are unchanged.

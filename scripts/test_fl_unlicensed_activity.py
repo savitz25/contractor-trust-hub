@@ -4,6 +4,7 @@ import json
 import unittest
 from collections import Counter
 from pathlib import Path
+from unittest.mock import patch
 
 from ingest.regulatory.fl_dbpr_ula import (
     IDENTITY_METHOD, IDENTITY_STATE, RESOLVER_VERSION, identity_policy,
@@ -96,6 +97,81 @@ class FloridaUnlicensedActivityTests(unittest.TestCase):
         self.assertNotIn("FloridaDbprCredentialResolver", source)
         self.assertNotIn("FROM licenses", source)
         self.assertNotIn("FROM contractors", source)
+        self.assertIn("pg_advisory_xact_lock(hashtext(%s))", source)
+        self.assertIn("validate_post_commit_gate(cur, manifest)", source)
+        write_path = source[source.index("def main()") :]
+        self.assertLess(write_path.index("pg_advisory_xact_lock"), write_path.index("execute(cur, manifest"))
+        self.assertLess(write_path.index("validate_post_commit_gate(cur, manifest)"), write_path.index("commit_or_rollback(conn"))
+
+    def test_pre_and_post_fingerprint_contracts(self) -> None:
+        self.assertEqual({
+            "whole": "sha256:078f0d84f76ecd5dc4b1b4fc717a3ffca5f88e18182b17510ebc8c1e4d9805fe",
+            "florida": "sha256:c25f931b7c8d5371dc2d75497f0ef270487f4fbc46028bc87fd1da0ab73632ce",
+            "florida_safety": "sha256:d990ba40a4e75d1651a16c0fc4e42f1b361a509348ab5f027af435e8e35609ef",
+            "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+            "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+        }, executor.EXPECTED_PRE_FINGERPRINTS)
+        self.assertEqual(self.review["predicted_fingerprints"], executor.EXPECTED_POST_FINGERPRINTS)
+
+    def test_failed_post_invariant_rolls_back_without_commit(self) -> None:
+        class FakeConnection:
+            commits = 0
+            rollbacks = 0
+            def commit(self) -> None:
+                self.commits += 1
+            def rollback(self) -> None:
+                self.rollbacks += 1
+
+        connection = FakeConnection()
+        def forced_bad_post_state() -> None:
+            raise RuntimeError("forced incorrect post fingerprint")
+        with self.assertRaisesRegex(RuntimeError, "forced incorrect post fingerprint"):
+            executor.commit_or_rollback(connection, forced_bad_post_state)
+        self.assertEqual(0, connection.commits)
+        self.assertEqual(1, connection.rollbacks)
+
+    def test_post_gate_covers_counts_cohort_provenance_and_actual_fingerprints(self) -> None:
+        source = Path(executor.__file__).read_text(encoding="utf-8")
+        for required in ("post_state_counts(cur)", "ula_cohort_invariants(cur)",
+                         "ula_provenance_invariants(cur)", "actual_post_fingerprints(cur, manifest)"):
+            self.assertIn(required, source)
+        self.assertNotIn("predicted_fingerprints(cur, manifest)\n    if fingerprints", source)
+
+    def test_forced_actual_fingerprint_mismatch_rolls_back(self) -> None:
+        counts = {
+            "whole_discipline_actions": 19741, "florida_licensed_discipline": 6457,
+            "florida_ula": 11691, "florida_all": 18148, "observations": 18148,
+            "occurrences": 18148, "ingest_batches": 56, "arizona": 459, "new_jersey": 1134,
+            "identity": {"EXACT": 1736, "DETERMINISTIC": 236, "REVIEW_REQUIRED": 1411, "UNRESOLVED": 14765},
+            "relationships": {"license_linked": 2375, "contractor_linked": 0, "neither": 15773},
+            "correction_holds": {"true": 403, "false": 17745},
+            "retraction_holds": {"true": 0, "false": 18148},
+            "publication": {"INTERNAL": 18148, "PUBLIC_ELIGIBLE": 0},
+        }
+        cohort = {"rows": 11691, "UNRESOLVED": 11691, "REVIEW_REQUIRED": 0, "EXACT": 0,
+            "DETERMINISTIC": 0, "license_linked": 0, "contractor_linked": 0,
+            "resolved_external_key": 0, "INTERNAL": 11691, "PUBLIC_ELIGIBLE": 0,
+            "correction_hold_true": 0, "retraction_hold_true": 0,
+            "wrong_identity_method": 0, "wrong_resolver_version": 0}
+        provenance = {"observations": 11691, "distinct_actions": 11691, "CURRENT": 11691,
+            "REVISION_REVIEW_REQUIRED": 0, "SUPERSEDED": 0, "payload_hash_valid": 11691,
+            "source_key_valid": 11691, "occurrences": 11691, "distinct_occurrences": 11691,
+            "occurrence_collisions": 0, "fiscal_years": {"2021-22": 2312, "2022-23": 2631,
+                "2023-24": 2568, "2024-25": 2338, "2025-26": 1842}}
+        class FakeConnection:
+            commits = 0
+            rollbacks = 0
+            def commit(self) -> None: self.commits += 1
+            def rollback(self) -> None: self.rollbacks += 1
+        connection = FakeConnection()
+        with patch.object(executor, "post_state_counts", return_value=counts), \
+             patch.object(executor, "ula_cohort_invariants", return_value=cohort), \
+             patch.object(executor, "ula_provenance_invariants", return_value=provenance), \
+             patch.object(executor, "actual_post_fingerprints", return_value={**executor.EXPECTED_POST_FINGERPRINTS, "whole": "sha256:wrong"}):
+            with self.assertRaisesRegex(RuntimeError, "PRE_COMMIT_INVARIANT fingerprints"):
+                executor.commit_or_rollback(connection, lambda: executor.validate_post_commit_gate(object(), self.manifest))
+        self.assertEqual(0, connection.commits)
+        self.assertEqual(1, connection.rollbacks)
 
     def test_public_read_paths_fail_closed(self) -> None:
         publication = (executor.ROOT / "lib/regulatory/publication.ts").read_text(encoding="utf-8")
