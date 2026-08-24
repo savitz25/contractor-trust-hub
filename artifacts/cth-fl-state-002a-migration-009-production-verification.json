@@ -1,0 +1,170 @@
+{
+  "after": {
+    "correction_holds": {
+      "false": 1138,
+      "true": 403
+    },
+    "discipline_total": 3134,
+    "fingerprints": {
+      "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+      "florida": "sha256:d2fb06f2f7d16a94f2981057b2a7f29a89e94c7cb9d7cc7c9cb0fea1783eab4c",
+      "florida_safety": "sha256:c96193c37fd8a9759f3574122e4a451590e27ff59514d0b9f8352a7b9e213199",
+      "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+      "whole": "sha256:5f5af54a2384cfcf228a742751650df543f2dc25a217c92b2af1950046b2b6c3"
+    },
+    "identity": {
+      "DETERMINISTIC": 61,
+      "EXACT": 523,
+      "REVIEW_REQUIRED": 376,
+      "UNRESOLVED": 581
+    },
+    "ingest_batches": 46,
+    "populations": [
+      {
+        "both": 459,
+        "contractor_linked": 459,
+        "license_linked": 459,
+        "neither": 0,
+        "source_dataset": "roc_disciplinary_actions",
+        "source_system": "az_roc",
+        "total": 459
+      },
+      {
+        "both": 0,
+        "contractor_linked": 0,
+        "license_linked": 987,
+        "neither": 554,
+        "source_dataset": "contractor_disc_lic",
+        "source_system": "fl_dbpr",
+        "total": 1541
+      },
+      {
+        "both": 0,
+        "contractor_linked": 1134,
+        "license_linked": 0,
+        "neither": 0,
+        "source_dataset": "dca_standard_files_discipline_flag",
+        "source_system": "nj_enforcement",
+        "total": 1134
+      }
+    ],
+    "publication": {
+      "INTERNAL": 1541
+    },
+    "retraction_holds": {
+      "false": 1541
+    }
+  },
+  "before": {
+    "correction_holds": {
+      "false": 1138,
+      "true": 403
+    },
+    "discipline_total": 3134,
+    "fingerprints": {
+      "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+      "florida": "sha256:d2fb06f2f7d16a94f2981057b2a7f29a89e94c7cb9d7cc7c9cb0fea1783eab4c",
+      "florida_safety": "sha256:c96193c37fd8a9759f3574122e4a451590e27ff59514d0b9f8352a7b9e213199",
+      "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+      "whole": "sha256:5f5af54a2384cfcf228a742751650df543f2dc25a217c92b2af1950046b2b6c3"
+    },
+    "identity": {
+      "DETERMINISTIC": 61,
+      "EXACT": 523,
+      "REVIEW_REQUIRED": 376,
+      "UNRESOLVED": 581
+    },
+    "ingest_batches": 46,
+    "populations": [
+      {
+        "both": 459,
+        "contractor_linked": 459,
+        "license_linked": 459,
+        "neither": 0,
+        "source_dataset": "roc_disciplinary_actions",
+        "source_system": "az_roc",
+        "total": 459
+      },
+      {
+        "both": 0,
+        "contractor_linked": 0,
+        "license_linked": 987,
+        "neither": 554,
+        "source_dataset": "contractor_disc_lic",
+        "source_system": "fl_dbpr",
+        "total": 1541
+      },
+      {
+        "both": 0,
+        "contractor_linked": 1134,
+        "license_linked": 0,
+        "neither": 0,
+        "source_dataset": "dca_standard_files_discipline_flag",
+        "source_system": "nj_enforcement",
+        "total": 1134
+      }
+    ],
+    "publication": {
+      "INTERNAL": 1541
+    },
+    "retraction_holds": {
+      "false": 1541
+    }
+  },
+  "fingerprint_matches": {
+    "arizona": true,
+    "florida": true,
+    "florida_safety": true,
+    "new_jersey": true,
+    "whole": true
+  },
+  "lock_timeout": "5s",
+  "main_sha": "6aea360e4072d5c96d3044eb5b1c5808dfb7c0b9",
+  "migration_008_checksum": "1b110240c4487bbb3dfe74ac2ef893aca3defbc93afaedd23aad3732133adeb8",
+  "migration_009_checksum": "5bff76bb440d77aa2f118d63db1737f5bfe680257dd6339e532f88a36041a481",
+  "migration_state_before": "NOT_APPLIED",
+  "postgresql_version": "17.6",
+  "production_mutations": {
+    "backfill": 0,
+    "contractor_ids": 0,
+    "discipline_rows": 0,
+    "holds": 0,
+    "identity": 0,
+    "ingest_batches": 0,
+    "ingestion": 0,
+    "license_ids": 0,
+    "migration_009_structure": 1,
+    "publication": 0
+  },
+  "provenance": {
+    "observations_after": 0,
+    "observations_before": 0,
+    "occurrences_after": 0,
+    "occurrences_before": 0
+  },
+  "publication_gate": "ABSENT_OFF",
+  "schema": {
+    "constraints": [
+      "regulatory_source_observations_fingerprint_check",
+      "regulatory_source_observations_identity_unique",
+      "regulatory_source_observations_not_self_superseded_check",
+      "regulatory_source_observations_revision_state_check",
+      "regulatory_source_observations_supersession_check",
+      "regulatory_source_occurrences_checksum_check",
+      "regulatory_source_occurrences_identity_unique"
+    ],
+    "function_present": true,
+    "indexes": [
+      "regulatory_source_observations_discipline_idx",
+      "regulatory_source_observations_logical_review_idx",
+      "regulatory_source_occurrences_batch_idx",
+      "regulatory_source_occurrences_file_idx"
+    ],
+    "restrictive_fk_count": 4,
+    "trigger_enabled": "O"
+  },
+  "statement_timeout": "60s",
+  "task": "CTH-FL-STATE-002A-PROD",
+  "transaction_committed_utc": "2026-08-24T04:39:23.640478+00:00",
+  "transaction_started_utc": "2026-08-24T04:39:21.263798+00:00"
+}

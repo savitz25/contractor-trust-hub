@@ -157,3 +157,33 @@ The backfill transaction must lock only the Florida target set, verify the FY24 
 ## Safety boundary
 
 This implementation performs no production mutation, migration application, ingestion, publication evaluation, contractor linkage, license correction, Google call, or county work. All future imported evidence remains `INTERNAL`, and the publication feature flag remains OFF.
+
+## Production migration 009 application
+
+Migration 009 was applied to production as a structure-only change from main SHA `6aea360e4072d5c96d3044eb5b1c5808dfb7c0b9`. The exact applied SHA-256 was `5bff76bb440d77aa2f118d63db1737f5bfe680257dd6339e532f88a36041a481`; migration 008 remained unchanged at `1b110240c4487bbb3dfe74ac2ef893aca3defbc93afaedd23aad3732133adeb8`. Migration 009 is immutable after this application.
+
+- PostgreSQL: 17.6
+- State before application: `NOT_APPLIED`
+- Transaction start: 2026-08-24T04:39:21.263798+00:00
+- Transaction commit: 2026-08-24T04:39:23.640478+00:00
+- Lock timeout: 5 seconds
+- Statement timeout: 60 seconds
+- Result: committed; rollback required: no
+
+The first transaction attempt rolled back before commit because the local catalog validator expected three restrictive foreign keys and omitted the accepted self-referential supersession foreign key. Production remained `NOT_APPLIED`. The ignored validator was corrected to require all four restrictive foreign keys, and the exact unchanged migration was then applied successfully. No ad-hoc SQL or partial repair was performed.
+
+Post-commit catalog verification confirmed both tables, all required columns and constraints, four restrictive foreign keys, four named secondary indexes, the immutability function, and the enabled `BEFORE UPDATE FOR EACH ROW` trigger. `regulatory_source_observations` and `regulatory_source_occurrences` each contained zero rows before and after. No legacy provenance backfill or historical ingestion occurred.
+
+Shared regulatory populations remained unchanged: Florida 1,541 rows (987 license-linked, zero contractor-linked, 554 neither), Arizona 459 rows, and New Jersey 1,134 rows; whole-table total 3,134. Florida remained `EXACT` 523, `DETERMINISTIC` 61, `REVIEW_REQUIRED` 376, `UNRESOLVED` 581, `INTERNAL` 1,541, `PUBLIC_ELIGIBLE` zero, correction holds true 403, and retraction holds true zero. A fresh resolver audit confirmed all 584 safely resolved relationships agree and `CORRECTABLE` remains zero.
+
+Pre/post non-PII fingerprints matched exactly:
+
+- whole relationships: `sha256:5f5af54a2384cfcf228a742751650df543f2dc25a217c92b2af1950046b2b6c3`
+- Florida relationships: `sha256:d2fb06f2f7d16a94f2981057b2a7f29a89e94c7cb9d7cc7c9cb0fea1783eab4c`
+- Arizona relationships: `sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3`
+- New Jersey relationships: `sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3`
+- Florida safety: `sha256:c96193c37fd8a9759f3574122e4a451590e27ff59514d0b9f8352a7b9e213199`
+
+The `ingest_batches` count remained 46. License IDs, contractor IDs, identity state, publication state, holds, discipline rows, and ingest batches had zero changes. Arizona and New Jersey received no provenance rows or Florida safety initialization. `REGULATORY_PUBLICATION_GATE_V1` remained absent/OFF.
+
+Before and after application, the homepage, Florida and Arizona landing pages, and bounded Florida, Arizona, and New Jersey contractor profiles returned HTTP 200. No database/query errors were observed and no manual deployment occurred. Production work was limited to migration 009 structures: legacy backfill zero, licensed-discipline ingestion zero, ULA zero, Recovery Fund zero, Google calls zero, and county work zero.
