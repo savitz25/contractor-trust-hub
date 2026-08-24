@@ -1,0 +1,478 @@
+{
+  "architecture": {
+    "code_prerequisite": true,
+    "conditions": [
+      "dataset-specific Recovery Fund policy and semantic crosswalk",
+      "one action per exact official detail row, never one per claim",
+      "INTERNAL and excluded from public/adverse/scoring read paths",
+      "safe license_id allowed; contractor_id remains null",
+      "raw source terminology preserved"
+    ],
+    "discipline_actions_semantically_safe": true,
+    "migration_prerequisite": false,
+    "public_read_path": {
+      "currently_fail_closed": true,
+      "dataset_aware_presentation_required_before_any_future_publication": true,
+      "gate_off_excludes_all_fl_dbpr": true,
+      "internal_and_null_contractor_excluded_when_gate_on": true
+    },
+    "separate_claim_table_recommended": false
+  },
+  "claim_grain": {
+    "blank_claim_ids": 0,
+    "claims_with_multiple_credentials": 0,
+    "claims_with_multiple_dispositions": 0,
+    "claims_with_multiple_financial_values": 0,
+    "claims_with_multiple_respondents": 0,
+    "cross_fiscal_claims": 0,
+    "distinct_claims": 841,
+    "maximum_rows_per_claim": 2,
+    "multi_line_claims": 838,
+    "rows_in_multi_line_claims": 1676,
+    "rows_per_claim_distribution": {
+      "1": 3,
+      "2": 838
+    },
+    "single_line_claims": 3
+  },
+  "claimant_pii": {
+    "claimant_address_fields": false,
+    "claimant_email": false,
+    "claimant_name_field": false,
+    "claimant_phone": false,
+    "financial_or_bank_fields": false,
+    "proposed_excluded": "any future claimant name, street address, phone, email, bank/payment details unless separately justified",
+    "proposed_retained": "official contractor/respondent identity and address only as internal source evidence/provenance",
+    "respondent_address_rows": 1679,
+    "respondent_business_identity_rows": 1679
+  },
+  "corpus": {
+    "cross_file_exact_duplicates": 0,
+    "exact_duplicate_rows": 0,
+    "fresh_rows": 1679,
+    "malformed_rows": 0,
+    "parseable_rows": 1679,
+    "prior_expected_rows": 1679,
+    "production_external_key_conflicts": 0,
+    "production_observation_key_conflicts": 0,
+    "raw_rows": 1679,
+    "revision_candidates": 0,
+    "source_drift": false,
+    "true_net_new": 1679,
+    "unique_exact_observations": 1679,
+    "within_file_exact_duplicates": 0
+  },
+  "field_inventory": {
+    "purposes": {
+      "Address Line 1": "ADDRESS",
+      "Address Line 2": "ADDRESS",
+      "Address Line 3": "ADDRESS",
+      "City": "ADDRESS",
+      "Claim Nbr": "CLAIM_IDENTITY",
+      "Classification": "CLAIM_STAGE",
+      "County": "ADDRESS",
+      "Discipline Date - Description": "ORDER/DETAIL",
+      "Disposition": "CLAIM_STATUS",
+      "Disposition Date": "DATE",
+      "Entered Date": "DATE",
+      "License Nbr": "LICENSE_IDENTITY",
+      "License Type": "LICENSE_IDENTITY",
+      "Respondent Name": "CONTRACTOR",
+      "State": "ADDRESS",
+      "Violation Code": "OTHER",
+      "ZIP Code": "ADDRESS"
+    },
+    "statistics": {
+      "Address Line 1": {
+        "distinct_values": 260,
+        "populated_rows": 1679
+      },
+      "Address Line 2": {
+        "distinct_values": 26,
+        "populated_rows": 124
+      },
+      "Address Line 3": {
+        "distinct_values": 1,
+        "populated_rows": 8
+      },
+      "City": {
+        "distinct_values": 131,
+        "populated_rows": 1669
+      },
+      "Claim Nbr": {
+        "distinct_values": 841,
+        "populated_rows": 1679
+      },
+      "Classification": {
+        "distinct_values": 1,
+        "populated_rows": 1679
+      },
+      "County": {
+        "distinct_values": 43,
+        "populated_rows": 1659
+      },
+      "Discipline Date - Description": {
+        "distinct_values": 263,
+        "populated_rows": 1679
+      },
+      "Disposition": {
+        "distinct_values": 2,
+        "populated_rows": 1677
+      },
+      "Disposition Date": {
+        "distinct_values": 92,
+        "populated_rows": 1679
+      },
+      "Entered Date": {
+        "distinct_values": 379,
+        "populated_rows": 1679
+      },
+      "License Nbr": {
+        "distinct_values": 288,
+        "populated_rows": 1679
+      },
+      "License Type": {
+        "distinct_values": 14,
+        "populated_rows": 1679
+      },
+      "Respondent Name": {
+        "distinct_values": 262,
+        "populated_rows": 1679
+      },
+      "State": {
+        "distinct_values": 7,
+        "populated_rows": 1669
+      },
+      "Violation Code": {
+        "distinct_values": 0,
+        "populated_rows": 0
+      },
+      "ZIP Code": {
+        "distinct_values": 211,
+        "populated_rows": 1669
+      }
+    }
+  },
+  "financial": {
+    "fields_present": [],
+    "note": "No claim, award, payment, reimbursement, bank, or loss amount column exists; RF Reimbursement is source description text, not an amount.",
+    "publication_recommendation": "withhold; no amounts exist in this corpus",
+    "rows_with_financial_values": 0
+  },
+  "future_ingest": {
+    "contractor_linked": 0,
+    "exact_duplicates_suppressed": 0,
+    "net_new_actions": 1679,
+    "net_new_observations": 1679,
+    "net_new_occurrences": 1679,
+    "public_eligible": 0,
+    "revision_review": 0,
+    "safe_license_linked_candidates": 104,
+    "scoring_impact": 0
+  },
+  "generated_at": "2026-08-24T16:37:03.617159+00:00",
+  "identifiers": {
+    "claim_number_rows": 1679,
+    "complaint_or_case_id_rows": 0,
+    "distinct_claim_numbers": 841,
+    "doah_id_rows": 0,
+    "entity_id_rows": 0,
+    "fei_sunbiz_rows": 0,
+    "final_or_order_id_rows": 0,
+    "license_number_rows": 1679,
+    "license_type_rows": 1679,
+    "other_official_id_rows": 0
+  },
+  "identity": {
+    "claim_level": {
+      "DETERMINISTIC": 15,
+      "EXACT": 38,
+      "REVIEW_REQUIRED": 171,
+      "UNRESOLVED": 617
+    },
+    "collision_exposed_rows": 334,
+    "credentials_not_present_rows": 1233,
+    "current_inventory_candidate_rows": 438,
+    "name_only_used": false,
+    "numeric_core_only_used": false,
+    "proposed_contractor_links": 0,
+    "resolution_reasons": {
+      "No corresponding credential exists in the current DBPR license inventory": 1233,
+      "Numeric candidates exist but none agrees with the official type": 334,
+      "Official DBPR license type is missing or not in the versioned dictionary": 8,
+      "Unique authoritative full credential": 95,
+      "Unique type/board/number credential; external-key representation differs": 9
+    },
+    "row_level": {
+      "DETERMINISTIC": 29,
+      "EXACT": 75,
+      "REVIEW_REQUIRED": 342,
+      "UNRESOLVED": 1233
+    },
+    "safe_license_linkable_rows": 104,
+    "safe_unique_license_targets": 49,
+    "unknown_credential_types": {
+      "Registered General Contractor": 6,
+      "Registered Roofing Contractor": 2
+    }
+  },
+  "main_sha": "050db67ef7761477c005696e5e0674fdfa572cd3",
+  "postgresql_version": "17.6",
+  "production": {
+    "arizona": 459,
+    "florida_licensed": 6457,
+    "florida_recovery_fund": 0,
+    "florida_total": 18148,
+    "florida_ula": 11691,
+    "ingest_batches": 56,
+    "licensed_correctable": 0,
+    "licensed_provenance": 6457,
+    "licensed_safe_links": 1972,
+    "new_jersey": 1134,
+    "observations": 18148,
+    "occurrences": 18148,
+    "production_mutations": 0,
+    "public_eligible": 0,
+    "publication_gate": "ABSENT/OFF",
+    "recovery_external_key_conflicts": 0,
+    "recovery_observation_key_conflicts": 0,
+    "ula_contractor_links": 0,
+    "ula_license_links": 0,
+    "ula_provenance": 11691,
+    "ula_public": 0,
+    "whole_discipline_actions": 19741
+  },
+  "provenance": {
+    "duplicate_policy": "suppress only identical exact observation; genuinely new snapshot creates occurrence only",
+    "exact_fields": [
+      "License Type",
+      "License Nbr",
+      "Respondent Name",
+      "Address Line 1",
+      "Address Line 2",
+      "Address Line 3",
+      "City",
+      "State",
+      "ZIP Code",
+      "County",
+      "Claim Nbr",
+      "Classification",
+      "Entered Date",
+      "Disposition",
+      "Disposition Date",
+      "Discipline Date - Description",
+      "Violation Code"
+    ],
+    "logical_algorithm": "logical-matter-detail-key-v1",
+    "logical_fields": [
+      "Claim Nbr",
+      "License Type",
+      "License Nbr",
+      "Respondent Name",
+      "Classification",
+      "Entered Date",
+      "Violation Code"
+    ],
+    "logical_key_authority": "review/grouping only",
+    "migration_009_reusable": true,
+    "revision_policy": "new observation with REVISION_REVIEW_REQUIRED; preserve old; no automatic supersession/deletion",
+    "source_observation_algorithm": "source-observation-key-v2"
+  },
+  "refresh": {
+    "changed_row": "revision review",
+    "historical_files": "quarterly checksum review",
+    "missing_row": "retain and investigate; never delete",
+    "open_fiscal_year": "monthly",
+    "reobserved_exact_row_new_snapshot": "new occurrence only",
+    "unchanged_file": "no batch or occurrence"
+  },
+  "scope": {
+    "county_work": 0,
+    "google_calls": 0,
+    "production_mutations": 0
+  },
+  "semantics": {
+    "claim_is_not_wrongdoing_finding": true,
+    "contractor_wrongdoing_established": "PARTIAL: source records an explicit license suspension detail for 837 rows, but claim/reimbursement existence alone is not a generalized finding of wrongdoing or liability",
+    "normalized_claim_stages": {
+      "CLAIM_APPROVED": 1671,
+      "CLAIM_CLOSED": 6,
+      "UNKNOWN": 2
+    },
+    "normalized_detail_types": {
+      "LICENSE_SUSPENSION_RECORDED": 837,
+      "OTHER_DETAIL": 2,
+      "REIMBURSEMENT_RECORDED": 840
+    },
+    "raw_classifications": {
+      "Recovery Fund": 1679
+    },
+    "raw_dispositions": {
+      "": 2,
+      "RF Claim Closed": 6,
+      "RF Claim Granted": 1671
+    },
+    "scoring_impact": 0,
+    "source_supports_specific_license_suspension_and_reimbursement_details": true
+  },
+  "source_dataset": "contractor_disc_rf",
+  "source_inventory": [
+    {
+      "byte_size": 126713,
+      "columns": 17,
+      "downloaded_at": "2026-08-24T16:30:09.742418+00:00",
+      "filename": "contractor_disc_rf_2122.csv",
+      "fiscal_year": "2021-22",
+      "http_status": 200,
+      "ordered_header": [
+        "License Type",
+        "License Nbr",
+        "Respondent Name",
+        "Address Line 1",
+        "Address Line 2",
+        "Address Line 3",
+        "City",
+        "State",
+        "ZIP Code",
+        "County",
+        "Claim Nbr",
+        "Classification",
+        "Entered Date",
+        "Disposition",
+        "Disposition Date",
+        "Discipline Date - Description",
+        "Violation Code"
+      ],
+      "rows": 548,
+      "schema_fingerprint": "sha256:6bf9b84582f037e9d604290c43ab490ac790a72fe9dbaf59a7dc0160afffe575",
+      "sha256": "ab863b07b1af6893af9fb419a4992270d430bec96d400a28c41ecb46eda55182",
+      "url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2122.csv"
+    },
+    {
+      "byte_size": 59938,
+      "columns": 17,
+      "downloaded_at": "2026-08-24T16:30:10.065776+00:00",
+      "filename": "contractor_disc_rf_2223.csv",
+      "fiscal_year": "2022-23",
+      "http_status": 200,
+      "ordered_header": [
+        "License Type",
+        "License Nbr",
+        "Respondent Name",
+        "Address Line 1",
+        "Address Line 2",
+        "Address Line 3",
+        "City",
+        "State",
+        "ZIP Code",
+        "County",
+        "Claim Nbr",
+        "Classification",
+        "Entered Date",
+        "Disposition",
+        "Disposition Date",
+        "Discipline Date - Description",
+        "Violation Code"
+      ],
+      "rows": 256,
+      "schema_fingerprint": "sha256:6bf9b84582f037e9d604290c43ab490ac790a72fe9dbaf59a7dc0160afffe575",
+      "sha256": "c7a6e73bc819aa8940af09e1a1885873eecb336e3ccb2eef88c3ebce57e8b3cc",
+      "url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2223.csv"
+    },
+    {
+      "byte_size": 50136,
+      "columns": 17,
+      "downloaded_at": "2026-08-24T16:30:10.268689+00:00",
+      "filename": "contractor_disc_rf_2324.csv",
+      "fiscal_year": "2023-24",
+      "http_status": 200,
+      "ordered_header": [
+        "License Type",
+        "License Nbr",
+        "Respondent Name",
+        "Address Line 1",
+        "Address Line 2",
+        "Address Line 3",
+        "City",
+        "State",
+        "ZIP Code",
+        "County",
+        "Claim Nbr",
+        "Classification",
+        "Entered Date",
+        "Disposition",
+        "Disposition Date",
+        "Discipline Date - Description",
+        "Violation Code"
+      ],
+      "rows": 216,
+      "schema_fingerprint": "sha256:6bf9b84582f037e9d604290c43ab490ac790a72fe9dbaf59a7dc0160afffe575",
+      "sha256": "2594e81df06c21778edca9e7683ba329b29d3b282e79375f69e3906f69d28c01",
+      "url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2324.csv"
+    },
+    {
+      "byte_size": 150097,
+      "columns": 17,
+      "downloaded_at": "2026-08-24T16:30:10.556688+00:00",
+      "filename": "contractor_disc_rf_2425.csv",
+      "fiscal_year": "2024-25",
+      "http_status": 200,
+      "ordered_header": [
+        "License Type",
+        "License Nbr",
+        "Respondent Name",
+        "Address Line 1",
+        "Address Line 2",
+        "Address Line 3",
+        "City",
+        "State",
+        "ZIP Code",
+        "County",
+        "Claim Nbr",
+        "Classification",
+        "Entered Date",
+        "Disposition",
+        "Disposition Date",
+        "Discipline Date - Description",
+        "Violation Code"
+      ],
+      "rows": 647,
+      "schema_fingerprint": "sha256:6bf9b84582f037e9d604290c43ab490ac790a72fe9dbaf59a7dc0160afffe575",
+      "sha256": "fed3e761246c936ca87f2067367f30d64665b8914c9e71fd966008464b18b1fa",
+      "url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2425.csv"
+    },
+    {
+      "byte_size": 3050,
+      "columns": 17,
+      "downloaded_at": "2026-08-24T16:30:10.686038+00:00",
+      "filename": "contractor_disc_rf_2526.csv",
+      "fiscal_year": "2025-26",
+      "http_status": 200,
+      "ordered_header": [
+        "License Type",
+        "License Nbr",
+        "Respondent Name",
+        "Address Line 1",
+        "Address Line 2",
+        "Address Line 3",
+        "City",
+        "State",
+        "ZIP Code",
+        "County",
+        "Claim Nbr",
+        "Classification",
+        "Entered Date",
+        "Disposition",
+        "Disposition Date",
+        "Discipline Date - Description",
+        "Violation Code"
+      ],
+      "rows": 12,
+      "schema_fingerprint": "sha256:6bf9b84582f037e9d604290c43ab490ac790a72fe9dbaf59a7dc0160afffe575",
+      "sha256": "297b4e87309c23b9a313f995700d9117cfafbf7ffd719e7477ac1ac7778bc475",
+      "url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2526.csv"
+    }
+  ],
+  "source_system": "fl_dbpr",
+  "task": "CTH-FL-STATE-004-PLAN"
+}
