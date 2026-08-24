@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import json, unittest
+import copy, json, unittest
 from collections import Counter
 from pathlib import Path
 from unittest.mock import patch
@@ -49,6 +49,33 @@ class FloridaRecoveryFundTests(unittest.TestCase):
         self.assertEqual(executor.digest(core),self.reverse['reverse_manifest_fingerprint'])
         self.assertEqual([5,1679,1679,1679],[len(self.reverse[k]) for k in ('batch_ids','discipline_action_ids','observation_ids','occurrence_ids')])
         self.assertFalse(self.reverse['automatic_rollback_authorized'])
+
+    def test_timestamp_only_drift_binds_approved_manifest_before_prediction(self):
+        generated=copy.deepcopy(self.manifest)
+        for item in generated['source_files']:
+            item['downloaded_at']='2099-01-01T00:00:00+00:00'
+        for item in generated['batches']:
+            item['downloaded_at']='2099-01-01T00:00:00+00:00'
+        generated_core={k:generated[k] for k in ('manifest_version','source_system','source_dataset','source_files','batches','entries')}
+        generated['manifest_fingerprint']=executor.digest(generated_core)
+        bound=executor.bind_approved_manifest(generated,self.manifest)
+        self.assertIs(bound,self.manifest)
+        self.assertEqual(executor.EXPECTED_POST_FINGERPRINTS['batches'],executor.digest(bound['batches']))
+        self.assertEqual(self.reverse,executor.reverse_manifest(bound))
+        source=Path(executor.__file__).read_text(encoding='utf-8')
+        main=source[source.index('def main():'):]
+        self.assertLess(main.index('manifest=bind_approved_manifest'),main.index('collisions=validate_ids'))
+        self.assertLess(main.index('manifest=bind_approved_manifest'),main.index('predicted=predicted_fingerprints'))
+
+    def test_approved_scope_rejects_real_source_drift(self):
+        changed=copy.deepcopy(self.manifest)
+        changed['source_files'][0]['sha256']='0'*64
+        with self.assertRaisesRegex(RuntimeError,'MANIFEST_DRIFT approved execution scope differs'):
+            executor.bind_approved_manifest(changed,self.manifest)
+        changed=copy.deepcopy(self.manifest)
+        changed['source_files'][0]['schema_fingerprint']='sha256:'+'0'*64
+        with self.assertRaisesRegex(RuntimeError,'MANIFEST_DRIFT approved execution scope differs'):
+            executor.bind_approved_manifest(changed,self.manifest)
 
     def test_semantic_fixtures_and_no_inference(self):
         self.assertEqual('CLAIM_APPROVED',claim_stage('RF Claim Granted'))

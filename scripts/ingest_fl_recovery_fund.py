@@ -122,6 +122,42 @@ def reverse_manifest(manifest):
     core={'execution_manifest_fingerprint':manifest['manifest_fingerprint'],'source_checksums':{x['fiscal_year']:x['sha256'] for x in manifest['source_files']},'batch_ids':[x['ingest_batch_id'] for x in manifest['batches']],'discipline_action_ids':[x['discipline_action_id'] for x in manifest['entries']],'observation_ids':[x['observation_id'] for x in manifest['entries']],'occurrence_ids':[x['occurrence_id'] for x in manifest['entries']]}
     return core|{'reverse_manifest_fingerprint':digest(core),'rollback_order':['occurrences','observations','discipline_actions','ingest_batches'],'automatic_rollback_authorized':False}
 
+def _without_downloaded_at(items):
+    """Return execution scope metadata without local retrieval timestamps."""
+    return [{k:v for k,v in item.items() if k!='downloaded_at'} for item in items]
+
+def bind_approved_manifest(generated,approved):
+    """Validate and bind an immutable approved execution contract.
+
+    Fresh source bytes, schema, payload-derived entries, and resolver results must
+    reproduce the approved scope.  A local filesystem mtime is audit metadata,
+    however, and cannot redefine the approved provenance snapshot timestamp.
+    """
+    core={k:approved[k] for k in ('manifest_version','source_system','source_dataset','source_files','batches','entries')}
+    if digest(core)!=approved.get('manifest_fingerprint'):
+        raise RuntimeError('MANIFEST_DRIFT invalid approved fingerprint')
+    generated_scope={
+        'manifest_version':generated.get('manifest_version'),
+        'source_system':generated.get('source_system'),
+        'source_dataset':generated.get('source_dataset'),
+        'entry_count':generated.get('entry_count'),
+        'source_files':_without_downloaded_at(generated.get('source_files',[])),
+        'batches':_without_downloaded_at(generated.get('batches',[])),
+        'entries':generated.get('entries'),
+    }
+    approved_scope={
+        'manifest_version':approved.get('manifest_version'),
+        'source_system':approved.get('source_system'),
+        'source_dataset':approved.get('source_dataset'),
+        'entry_count':approved.get('entry_count'),
+        'source_files':_without_downloaded_at(approved.get('source_files',[])),
+        'batches':_without_downloaded_at(approved.get('batches',[])),
+        'entries':approved.get('entries'),
+    }
+    if generated_scope!=approved_scope:
+        raise RuntimeError('MANIFEST_DRIFT approved execution scope differs')
+    return approved
+
 def relationship_rows(cur,predicate):
     cur.execute(f"SELECT id,source_system,license_id,contractor_id FROM discipline_actions WHERE {predicate}"); return cur.fetchall()
 
@@ -219,13 +255,11 @@ def main():
             baseline=production_baseline(cur); pre=current_fingerprints(cur)
             if pre!=EXPECTED_PRE_FINGERPRINTS: raise RuntimeError(f"PRODUCTION_DRIFT fingerprints {pre}")
             resolver=load_resolver(cur); manifest,analysis=build_manifest(inventory,rows,resolver)
+            if args.manifest_input:
+                approved=json.loads(args.manifest_input.read_text(encoding='utf-8'))
+                manifest=bind_approved_manifest(manifest,approved)
             collisions=validate_ids(cur,manifest); targets=validate_targets(cur,manifest); predicted=predicted_fingerprints(cur,manifest)
         conn.rollback()
-    if args.manifest_input:
-        approved=json.loads(args.manifest_input.read_text(encoding='utf-8')); core={k:approved[k] for k in ('manifest_version','source_system','source_dataset','source_files','batches','entries')}
-        if digest(core)!=approved.get('manifest_fingerprint'): raise RuntimeError('MANIFEST_DRIFT invalid approved fingerprint')
-        if {'entries':manifest['entries'],'batch_ids':[x['ingest_batch_id'] for x in manifest['batches']]}!={'entries':approved['entries'],'batch_ids':[x['ingest_batch_id'] for x in approved['batches']]}: raise RuntimeError('MANIFEST_DRIFT approved set differs')
-        manifest=approved
     reverse=reverse_manifest(manifest); review={'task':'CTH-FL-STATE-004-ARCH','canonical_main_sha':'9e6e1f84525b1adc6bab46302547a3fa2e575524','source_inventory':inventory,'delta':analysis,'field_contract':list(FL_RECOVERY_FUND_FIELDS),'logical_contract':list(FL_RECOVERY_FUND_LOGICAL_FIELDS),'algorithms':{'source':SOURCE_OBSERVATION_ALGORITHM,'logical':LOGICAL_MATTER_ALGORITHM},'semantic_assertions':semantic_assertions(),'manifest':{'entries':1679,'fingerprint':manifest['manifest_fingerprint'],'batch_ids':[x['ingest_batch_id'] for x in manifest['batches']]},'reverse_manifest_fingerprint':reverse['reverse_manifest_fingerprint'],'collision_checks':collisions,'target_validation':targets,'production_baseline':baseline,'pre_fingerprints':pre,'predicted_post':{'whole':21420,'florida_all':19827,'licensed':6457,'ula':11691,'recovery_fund':1679,'observations':19827,'occurrences':19827,'batches':61,'identity':{'EXACT':1811,'DETERMINISTIC':265,'REVIEW_REQUIRED':1753,'UNRESOLVED':15998},'relationships':{'license_linked':2479,'contractor_linked':0,'neither':17348},'correction':{'true':403,'false':19424},'retraction':{'true':0,'false':19827},'publication':{'INTERNAL':19827,'PUBLIC_ELIGIBLE':0}},'predicted_fingerprints':predicted,'transaction':{'isolation':'REPEATABLE READ','advisory_lock':DATASET_ADVISORY_LOCK,'target_license_locks':49,'lock_timeout':'5s','statement_timeout':'120s','single_transaction':True,'inserts':5042,'updates':0,'deletes':0},'publication_and_scoring':{'public_rows':0,'profile_leakage':False,'discovery_leakage':False,'adverse_history_leakage':False,'gate_on_leakage':False,'scoring_inclusion':False,'ranking_inclusion':False},'production_mutations':0}
     write_json(args.manifest_output,manifest); write_json(args.reverse_output,reverse); write_json(args.review_output,review)
     if not args.execute: return 0
