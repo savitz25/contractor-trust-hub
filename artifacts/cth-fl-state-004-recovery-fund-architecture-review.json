@@ -1,0 +1,268 @@
+{
+  "algorithms": {
+    "logical": "logical-matter-detail-key-v1",
+    "source": "source-observation-key-v2"
+  },
+  "canonical_main_sha": "9e6e1f84525b1adc6bab46302547a3fa2e575524",
+  "collision_checks": {
+    "action": 0,
+    "batch": 0,
+    "external_key": 0,
+    "observation": 0,
+    "occurrence": 0,
+    "source_key": 0
+  },
+  "delta": {
+    "claim_grain": {
+      "claims": 841,
+      "max_rows": 2,
+      "multi_line": 838,
+      "rows_in_multi_line": 1676,
+      "single_line": 3
+    },
+    "claim_stage_counts": {
+      "CLAIM_APPROVED": 1671,
+      "CLAIM_CLOSED": 6,
+      "UNKNOWN": 2
+    },
+    "collision_exposure": 334,
+    "detail_type_counts": {
+      "LICENSE_SUSPENSION_RECORDED": 837,
+      "OTHER_DETAIL": 2,
+      "REIMBURSEMENT_RECORDED": 840
+    },
+    "duplicate_source_observations": 0,
+    "identity_partition": {
+      "DETERMINISTIC": 29,
+      "EXACT": 75,
+      "REVIEW_REQUIRED": 342,
+      "UNRESOLVED": 1233
+    },
+    "new_by_year": {
+      "2021-22": 548,
+      "2022-23": 256,
+      "2023-24": 216,
+      "2024-25": 647,
+      "2025-26": 12
+    },
+    "new_exact": 1679,
+    "resolution_reasons": {
+      "No corresponding credential exists in the current DBPR license inventory": 1233,
+      "Numeric candidates exist but none agrees with the official type": 334,
+      "Official DBPR license type is missing or not in the versioned dictionary": 8,
+      "Unique authoritative full credential": 95,
+      "Unique type/board/number credential; external-key representation differs": 9
+    },
+    "revision_candidates": 0,
+    "safe_license_rows": 104,
+    "safe_unique_target_licenses": 49,
+    "unknown_types": {
+      "Registered General Contractor": 6,
+      "Registered Roofing Contractor": 2
+    }
+  },
+  "field_contract": [
+    "License Type",
+    "License Nbr",
+    "Respondent Name",
+    "Address Line 1",
+    "Address Line 2",
+    "Address Line 3",
+    "City",
+    "State",
+    "ZIP Code",
+    "County",
+    "Claim Nbr",
+    "Classification",
+    "Entered Date",
+    "Disposition",
+    "Disposition Date",
+    "Discipline Date - Description",
+    "Violation Code"
+  ],
+  "logical_contract": [
+    "Claim Nbr",
+    "License Type",
+    "License Nbr",
+    "Respondent Name",
+    "Classification",
+    "Entered Date",
+    "Violation Code"
+  ],
+  "manifest": {
+    "batch_ids": [
+      "36c8f4ab-818b-5ef3-ad77-835b4c375405",
+      "5dfee91d-ad3e-5c63-b52a-461dad9be002",
+      "4857f76a-b3ae-5cd5-9bfc-435e94bcce44",
+      "32839b2f-448c-5a6a-aa31-f35b8cb76098",
+      "31940c6b-076a-5323-a94e-f4b9a16c3e4d"
+    ],
+    "entries": 1679,
+    "fingerprint": "sha256:b706e61f7fedbf1f9af91ac55c207d3b5eb51f9a0417bf40e90bfc00fefa7b02"
+  },
+  "pre_fingerprints": {
+    "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+    "florida": "sha256:3474cf0b86c6f9e816163244cdb1f9c86daa6479f7d703cea87b9dd4c02b7614",
+    "florida_safety": "sha256:d1a721ab16a24ee862b85056867f9bb75cfa0e100ae67caeb71eed0a7940721f",
+    "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+    "whole": "sha256:5bee9a5963aadb8ab58c7d16e6e9c508e320eecc1fe0a17b14ece673df80c940"
+  },
+  "predicted_fingerprints": {
+    "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+    "batches": "sha256:6949a6af5e099f294f4a1044c2f9be27c93071a918e6a63902e908831b600645",
+    "florida": "sha256:aeec5f86ac1f55c3f75c1c1a34b664dc02aeb3b7b9f847ec062562533919c813",
+    "florida_safety": "sha256:15266e1ef2a3e3e256207997a07db62d26de2177295d501154843292621eba73",
+    "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+    "provenance": "sha256:2dfc1c162a1e0d115ff86484d26c3da30db089d8745ebcfacec2f38685379596",
+    "recovery_fund_cohort": "sha256:b471e74ed85eb4ae681687c3ef4a9b484f5e8fda8c478b6850fa196c1eba1557",
+    "whole": "sha256:b276b929dab3c37ee7670ec244283a109c8479dd3711f484ef286fa9afc0c67e"
+  },
+  "predicted_post": {
+    "batches": 61,
+    "correction": {
+      "false": 19424,
+      "true": 403
+    },
+    "florida_all": 19827,
+    "identity": {
+      "DETERMINISTIC": 265,
+      "EXACT": 1811,
+      "REVIEW_REQUIRED": 1753,
+      "UNRESOLVED": 15998
+    },
+    "licensed": 6457,
+    "observations": 19827,
+    "occurrences": 19827,
+    "publication": {
+      "INTERNAL": 19827,
+      "PUBLIC_ELIGIBLE": 0
+    },
+    "recovery_fund": 1679,
+    "relationships": {
+      "contractor_linked": 0,
+      "license_linked": 2479,
+      "neither": 17348
+    },
+    "retraction": {
+      "false": 19827,
+      "true": 0
+    },
+    "ula": 11691,
+    "whole": 21420
+  },
+  "production_baseline": {
+    "arizona": 459,
+    "batches": 56,
+    "florida_all": 18148,
+    "licensed": 6457,
+    "new_jersey": 1134,
+    "observations": 18148,
+    "occurrences": 18148,
+    "public_eligible": 0,
+    "recovery_fund": 0,
+    "ula": 11691,
+    "whole": 19741
+  },
+  "production_mutations": 0,
+  "publication_and_scoring": {
+    "adverse_history_leakage": false,
+    "discovery_leakage": false,
+    "gate_on_leakage": false,
+    "profile_leakage": false,
+    "public_rows": 0,
+    "ranking_inclusion": false,
+    "scoring_inclusion": false
+  },
+  "reverse_manifest_fingerprint": "sha256:dbbbecf8004ece1bd6d0605caa37f32b30f525754bc3fc66de6b6b24fa5b475a",
+  "semantic_assertions": {
+    "consumer_loss_inferred": false,
+    "generalized_wrongdoing": false,
+    "liability_inferred": false,
+    "payment_or_amount_inferred": false,
+    "scoring_impact": 0
+  },
+  "source_inventory": [
+    {
+      "byte_size": 126713,
+      "downloaded_at": "2026-08-24T17:05:16.234442+00:00",
+      "filename": "contractor_disc_rf_2122.csv",
+      "fiscal_year": "2021-22",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2122.csv",
+      "rows": 548,
+      "schema_columns": 17,
+      "schema_fingerprint": "sha256:6bf9b84582f037e9d604290c43ab490ac790a72fe9dbaf59a7dc0160afffe575",
+      "sha256": "ab863b07b1af6893af9fb419a4992270d430bec96d400a28c41ecb46eda55182"
+    },
+    {
+      "byte_size": 59938,
+      "downloaded_at": "2026-08-24T17:05:16.612015+00:00",
+      "filename": "contractor_disc_rf_2223.csv",
+      "fiscal_year": "2022-23",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2223.csv",
+      "rows": 256,
+      "schema_columns": 17,
+      "schema_fingerprint": "sha256:6bf9b84582f037e9d604290c43ab490ac790a72fe9dbaf59a7dc0160afffe575",
+      "sha256": "c7a6e73bc819aa8940af09e1a1885873eecb336e3ccb2eef88c3ebce57e8b3cc"
+    },
+    {
+      "byte_size": 50136,
+      "downloaded_at": "2026-08-24T17:05:16.873880+00:00",
+      "filename": "contractor_disc_rf_2324.csv",
+      "fiscal_year": "2023-24",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2324.csv",
+      "rows": 216,
+      "schema_columns": 17,
+      "schema_fingerprint": "sha256:6bf9b84582f037e9d604290c43ab490ac790a72fe9dbaf59a7dc0160afffe575",
+      "sha256": "2594e81df06c21778edca9e7683ba329b29d3b282e79375f69e3906f69d28c01"
+    },
+    {
+      "byte_size": 150097,
+      "downloaded_at": "2026-08-24T17:05:17.323131+00:00",
+      "filename": "contractor_disc_rf_2425.csv",
+      "fiscal_year": "2024-25",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2425.csv",
+      "rows": 647,
+      "schema_columns": 17,
+      "schema_fingerprint": "sha256:6bf9b84582f037e9d604290c43ab490ac790a72fe9dbaf59a7dc0160afffe575",
+      "sha256": "fed3e761246c936ca87f2067367f30d64665b8914c9e71fd966008464b18b1fa"
+    },
+    {
+      "byte_size": 3050,
+      "downloaded_at": "2026-08-24T17:05:17.527478+00:00",
+      "filename": "contractor_disc_rf_2526.csv",
+      "fiscal_year": "2025-26",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2526.csv",
+      "rows": 12,
+      "schema_columns": 17,
+      "schema_fingerprint": "sha256:6bf9b84582f037e9d604290c43ab490ac790a72fe9dbaf59a7dc0160afffe575",
+      "sha256": "297b4e87309c23b9a313f995700d9117cfafbf7ffd719e7477ac1ac7778bc475"
+    }
+  ],
+  "approved_manifest_execution_binding": {
+    "approved_manifest_binding_before_prediction": true,
+    "checksum_and_content_drift_still_fail_closed": true,
+    "fresh_download_timestamp_is_audit_only": true
+  },
+  "target_validation": {
+    "locked": false,
+    "safe_rows": 104,
+    "unique_targets": 49
+  },
+  "task": "CTH-FL-STATE-004-ARCH",
+  "transaction": {
+    "advisory_lock": "fl_dbpr:contractor_disc_rf",
+    "deletes": 0,
+    "inserts": 5042,
+    "isolation": "REPEATABLE READ",
+    "lock_timeout": "5s",
+    "single_transaction": true,
+    "statement_timeout": "120s",
+    "target_license_locks": 49,
+    "updates": 0
+  }
+}
