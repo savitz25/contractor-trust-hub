@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CONTRACTOR_NETWORK_LINKS } from "@/lib/network/network-links";
 import { getLiveVerifyNavLinks } from "@/lib/states/config";
+import { PUBLIC_CONTACT_EMAIL } from "@/lib/site";
 
 const planLinks = [
   { href: "/plan/start", label: "Plan a project" },
@@ -70,6 +71,11 @@ export function SiteFooter() {
               network.
             </p>
             <ul className="mt-4 space-y-1.5 text-xs text-[var(--muted)]">
+              <li>
+                <a href={`mailto:${PUBLIC_CONTACT_EMAIL}`} className="hover:underline">
+                  {PUBLIC_CONTACT_EMAIL}
+                </a>
+              </li>
               <li>
                 <Link href="/disclaimer" className="hover:underline">
                   Disclaimer
