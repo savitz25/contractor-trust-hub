@@ -29,25 +29,20 @@ from ingest.env import load_dotenv_files, normalize_database_url
 from ingest.normalize import normalize_address_line, normalize_entity_name, zip5
 from ingest.regulatory.fl_dbpr_identity import FloridaDbprCredentialResolver, LicenseCredential
 from ingest.regulatory.source_observation import (
+    FL_ULA_FIELDS,
+    FL_ULA_LOGICAL_MATTER_FIELDS,
     LOGICAL_MATTER_ALGORITHM,
     SOURCE_OBSERVATION_ALGORITHM,
     canonical_source_row,
     logical_matter_detail_key_v1,
     source_observation_key_v2,
 )
+from ingest.regulatory.fl_dbpr_ula import semantic_category
 
 SOURCE_SYSTEM = "fl_dbpr"
 SOURCE_DATASET = "contractor_disc_ula"
-ULA_FIELDS = (
-    "License Type", "Respondent Name", "Address Line 1", "Address Line 2",
-    "Address Line 3", "City", "State", "ZIP Code", "County",
-    "Complaint Nbr", "Classification", "Entered Date", "Disposition",
-    "Disposition Date", "Discipline Date - Description", "Violation Code",
-)
-ULA_LOGICAL_FIELDS = (
-    "Complaint Nbr", "License Type", "Respondent Name", "Classification",
-    "Entered Date", "Violation Code",
-)
+ULA_FIELDS = FL_ULA_FIELDS
+ULA_LOGICAL_FIELDS = FL_ULA_LOGICAL_MATTER_FIELDS
 FILES = {
     "2021-22": ("2122", 2312, "4f0ca3409686d5a1fe960e7ecf2c0cf0416d62e216d29c4bc371432846d07d1c"),
     "2022-23": ("2223", 2631, "2c03c334e3bcda679d689494c397f7166c205aa60d3d43c05c8cf875ee84cc7b"),
@@ -101,24 +96,6 @@ def load_files(raw_dir: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]
         rows.extend({"fiscal_year": year, "source_record_locator": f"csv-record:{i}", "payload": row}
                     for i, row in enumerate(parsed, start=1))
     return inventory, rows
-
-
-def semantic_category(disposition: str) -> str:
-    mapping = {
-        "Final Order": "FINAL_ORDER",
-        "Citation filed": "CITATION",
-        "Notice to Cease & Desist Issued": "ORDER",
-        "Mandate": "ORDER",
-        "Dismissed": "DISMISSED",
-        "No violation found": "DISMISSED",
-        "Closed after legal review": "CLOSED_ADMINISTRATIVE",
-        "Duplicate Complaint": "CLOSED_ADMINISTRATIVE",
-        "Civil Matter - No Jurisdiction": "CLOSED_ADMINISTRATIVE",
-        "Insufficient Evidence to Prosecute": "INSUFFICIENT_EVIDENCE",
-        "Insufficient Evidence": "INSUFFICIENT_EVIDENCE",
-        "": "COMPLAINT_INVESTIGATION",
-    }
-    return mapping.get(disposition, "OTHER")
 
 
 def candidate_analysis(cur, matter_rows: list[dict[str, str]]) -> dict[str, Any]:
