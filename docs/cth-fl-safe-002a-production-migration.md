@@ -118,3 +118,101 @@ Merge and review this corrected design before retrying SAFE-002A. The next
 production attempt must verify every shared-table relationship remains
 unchanged, initialize only the then-current `fl_dbpr` population, and verify
 non-Florida rows retain NULL Florida-v1 metadata.
+
+---
+
+## SUCCESSFUL PRODUCTION MIGRATION
+
+Migration 008 was applied successfully to the verified ContractorTrustHub
+production database on 2026-08-24 UTC.
+
+### Execution identity and controls
+
+- Git SHA: `824435b30fec1dbdd9f15a23feaa8c2f21b45502`
+- Migration SHA-256: `1b110240c4487bbb3dfe74ac2ef893aca3defbc93afaedd23aad3732133adeb8`
+- PostgreSQL version: 17.6
+- Transaction started: `2026-08-24T00:00:06.832455+00:00`
+- Transaction committed: `2026-08-24T00:00:08.289344+00:00`
+- Independent verification completed: `2026-08-24T00:00:09.824795+00:00`
+- Lock timeout: 5 seconds
+- Migration statement timeout: 60 seconds
+- Pre/post verification statement timeout: 30 seconds
+- Migration state before: NOT APPLIED
+- Migration state after: APPLIED AND VERIFIED
+- Rollback required: NO
+
+### Shared-table population
+
+All row and linkage counts were identical before and after migration.
+
+| Source | Dataset | Total | License-linked | Contractor-linked | Both | Neither |
+|---|---|---:|---:|---:|---:|---:|
+| `az_roc` | `roc_disciplinary_actions` | 459 | 459 | 459 | 459 | 0 |
+| `fl_dbpr` | `contractor_disc_lic` | 1,541 | 987 | 0 | 0 | 554 |
+| `nj_enforcement` | `dca_standard_files_discipline_flag` | 1,134 | 0 | 1,134 | 0 | 0 |
+| **Whole table** | — | **3,134** | **1,446** | **1,593** | **459** | **554** |
+
+### Relationship fingerprints
+
+Fingerprints use only stable `id`, `source_system`, `license_id`, and
+`contractor_id` values in deterministic order. Every pre/post pair matched.
+
+| Scope | Pre/post SHA-256 fingerprint |
+|---|---|
+| Whole table | `sha256:9cc3d5aa52819feaa35c86a083071e1e860e65d29e705905358b4eb36f20e0c4` |
+| Florida | `sha256:d698f6c4a1887decf3f3dfb128f2020f7d1804394c8e58ec3c05174325422475` |
+| Arizona | `sha256:f7316a640891009e8a6f671fb0c9088c18308ae7212ca1d0c20c543266b58b02` |
+| New Jersey | `sha256:a319948c6760227eb9c1180ee2e4adce3025b901b2b562df71904d6c55af3dbf` |
+
+### Florida initialization
+
+Exactly 1,541 `fl_dbpr` rows received Florida-v1 safety metadata:
+
+- `identity_state='UNRESOLVED'`: 1,541
+- `publication_state='INTERNAL'`: 1,541
+- `publication_state='PUBLIC_ELIGIBLE'`: 0
+- `publication_state='WITHHELD'`: 0
+- `correction_hold=FALSE`: 1,541; true: 0
+- `retraction_hold=FALSE`: 1,541; true: 0
+
+Florida `license_id` and `contractor_id` values were unchanged. Florida
+contractor-linked rows and publicly reachable adverse rows remain zero.
+
+### Non-Florida isolation
+
+- Arizona rows with any of the four state/hold fields non-null: 0 of 459
+- New Jersey rows with any of the four state/hold fields non-null: 0 of 1,134
+- Other non-Florida source systems discovered: none
+
+NULL continues to mean that a non-Florida row was not evaluated under Florida
+safety contract v1.
+
+### Schema verification
+
+All 13 safety columns exist. The following constraints exist and are validated:
+
+- `discipline_actions_identity_state_check`
+- `discipline_actions_publication_state_check`
+- `discipline_actions_fl_hold_state_check`
+- `discipline_actions_public_eligibility_check`
+
+`discipline_publication_gate_idx` exists and is restricted to
+`source_system='fl_dbpr'` and `publication_state='PUBLIC_ELIGIBLE'`.
+
+Migration 008 is now immutable. Any later schema adjustment requires a new
+numbered migration.
+
+### Publication and production health
+
+- `REGULATORY_PUBLICATION_GATE_V1`: absent/OFF
+- Florida public eligible rows: 0
+- Florida publicly reachable adverse rows: 0
+- Production deployment SHA: `824435b30fec1dbdd9f15a23feaa8c2f21b45502`
+- Homepage, Florida landing/discovery, two Florida profiles, Arizona landing,
+  two Arizona profiles, Verify, and two New Jersey profiles: HTTP 200
+- Database/schema-query errors observed: none
+- Arizona behavior regression: none observed
+- New Jersey behavior regression: none observed
+- Manual deployment: NO
+- Regulatory ingestion: 0
+- Identity/link corrections: 0
