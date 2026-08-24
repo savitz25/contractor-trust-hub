@@ -187,3 +187,23 @@ Pre/post non-PII fingerprints matched exactly:
 The `ingest_batches` count remained 46. License IDs, contractor IDs, identity state, publication state, holds, discipline rows, and ingest batches had zero changes. Arizona and New Jersey received no provenance rows or Florida safety initialization. `REGULATORY_PUBLICATION_GATE_V1` remained absent/OFF.
 
 Before and after application, the homepage, Florida and Arizona landing pages, and bounded Florida, Arizona, and New Jersey contractor profiles returned HTTP 200. No database/query errors were observed and no manual deployment occurred. Production work was limited to migration 009 structures: legacy backfill zero, licensed-discipline ingestion zero, ULA zero, Recovery Fund zero, Google calls zero, and county work zero.
+
+## Legacy 1,541-row production provenance backfill
+
+The separately authorized legacy backfill was committed on 2026-08-24 from main SHA `f838bdc8f01fdc34dc5680cd54fc98b9c99094af`. It used a fresh HTTP 200 download of the official FY 2024-25 `contractor_disc_lic_2425.csv` snapshot at `2026-08-24T05:08:22.625922+00:00`. The file contained 1,541 rows and 17 expected columns and exactly matched SHA-256 `189b0043984b25876bdbf6c814b5c6539db9374e3cd01e5c8e94e7777442c7ef`; its ordered-header schema fingerprint was `sha256:b373171b1916c0b5e0e48a7e96ac6334fd01255fd0b8a3a69435a224bcf36345`.
+
+Exact canonical 17-field fingerprints reconciled 1,541/1,541 official source rows to the existing unchanged Florida actions. Two independent mapping runs produced zero ambiguity, orphans, duplicate source rows, or v2 key collisions and the same mapping fingerprint: `sha256:9b9a8c2ae66328660dcabbc716880fdf7a6262d57e5dd0aeef694bc403762a30`. No name, numeric-core, or fuzzy matching was used.
+
+One repeatable-read production transaction ran from `2026-08-24T12:28:42.410673+00:00` through commit at `2026-08-24T12:31:53.685756+00:00`, with a 5-second lock timeout and 120-second per-statement timeout. It locked only the 1,541 target Florida actions, reverified the mapping under lock, and inserted exactly:
+
+- one dedicated source-snapshot ingest batch: `73590ef9-518e-4bf0-9e40-5a60a569bbe2`
+- 1,541 immutable `CURRENT` observations
+- 1,541 occurrences for fiscal year `2024-25` and the accepted source checksum
+
+All 1,541 observations use `source-observation-key-v2` and `logical-matter-detail-key-v1`; all 1,541 distinct legacy actions have exactly one observation and each observation has exactly one occurrence. `REVISION_REVIEW_REQUIRED` and `SUPERSEDED` counts are zero. Stored lossless official payloads recomputed to their stored row fingerprint and observation key for 1,541/1,541 rows. The earliest reliable TrustHub timestamp came from the legacy ingest batch for all 1,541 observations; the `discipline_actions.created_at` fallback count was zero.
+
+The execution fingerprint is `sha256:11ed8c7ebc73040c13eb37571990f2f0c66f99d4ca07c8c3e71e1c87e0414cb7`; the reverse-manifest fingerprint is `sha256:c9595bc84409995bc7f4b5c10afd5fea5780c7116bc9b59f4b18b2ae5422e578`. The reverse manifest is evidence for a separately approved rollback only; no automatic post-commit rollback is authorized.
+
+Independent post-commit verification confirmed ingest batches increased only from 46 to 47 and provenance increased only from zero to 1,541 observations and 1,541 occurrences. `discipline_actions` remained 3,134 overall and 1,541 for Florida. License IDs, contractor IDs, external keys, discipline ingest-batch IDs, identity state, holds, publication state, and evidence row counts were unchanged. The canonical whole, Florida, Arizona, New Jersey, and Florida-safety fingerprints all remained exact matches. Arizona and New Jersey received zero provenance rows.
+
+Florida remains `EXACT` 523, `DETERMINISTIC` 61, `REVIEW_REQUIRED` 376, and `UNRESOLVED` 581; all 584 safely resolved links agree, `CORRECTABLE` is zero, `PUBLIC_ELIGIBLE` is zero, and the publication gate remains absent/OFF. Homepage, Florida, Arizona, and bounded state profile checks returned HTTP 200 with no database/query errors observed. No manual deployment, historical 4,916-row ingestion, ULA, Recovery Fund, Google call, county work, contact promotion, or canonical address change occurred.
