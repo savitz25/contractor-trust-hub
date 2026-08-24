@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { parseContractorAskHandoff } from "@/lib/ask-handoff/parse";
@@ -13,24 +12,11 @@ function safeInternalPath(href: string): boolean {
 
 export function AskProfileBackLink() {
   const searchParams = useSearchParams();
-  const [href, setHref] = useState<string | null>(null);
-  const [label, setLabel] = useState<string | null>(null);
+  const ctx = parseContractorAskHandoff(searchParams) || readContractorAskHandoff();
+  const destination = ctx ? resolveContractorAskHandoff(ctx) : null;
+  const href = destination && safeInternalPath(destination.href) ? destination.href : null;
 
-  useEffect(() => {
-    const fromUrl = parseContractorAskHandoff(searchParams);
-    const ctx = fromUrl || readContractorAskHandoff();
-    if (!ctx) {
-      setHref(null);
-      setLabel(null);
-      return;
-    }
-    const dest = resolveContractorAskHandoff(ctx);
-    if (!safeInternalPath(dest.href)) return;
-    setHref(dest.href);
-    setLabel(dest.backLabel.startsWith("Back") ? dest.backLabel : `← ${dest.backLabel}`);
-  }, [searchParams]);
-
-  if (!href || !label) return null;
+  if (!href || !destination) return null;
 
   return (
     <p className="mb-3">
@@ -39,7 +25,7 @@ export function AskProfileBackLink() {
         className="text-sm font-medium text-[var(--accent)] no-underline hover:underline"
         data-ask-handoff-back="1"
       >
-        {label.startsWith("←") ? label : `← ${label}`}
+        ← {destination.backLabel}
       </Link>
     </p>
   );

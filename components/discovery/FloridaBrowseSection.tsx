@@ -29,6 +29,7 @@ export function FloridaBrowseSection({
   stats,
   cities,
   view = "list",
+  profileQuery,
 }: {
   state: DiscoveryStateConfig;
   county?: CountyDef | null;
@@ -40,6 +41,7 @@ export function FloridaBrowseSection({
   stats: FloridaBrowseStats;
   cities: DiscoveryFacet[];
   view?: BrowseView;
+  profileQuery?: string;
 }) {
   const cityLabel = pathCitySlug ? cityLabelFromSlug(pathCitySlug) : null;
   const basePath = discoveryPath(state, {
@@ -233,6 +235,7 @@ export function FloridaBrowseSection({
             clearFiltersHref={clearHref}
             browseHref={discoveryPath(state)}
             browseLabel="Back to Florida browse"
+            profileQuery={profileQuery}
           />
         </div>
       )}

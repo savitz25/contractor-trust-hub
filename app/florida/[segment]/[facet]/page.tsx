@@ -17,7 +17,7 @@ import {
 } from "@/lib/discovery/config";
 import { listFloridaBrowse, listFloridaCities } from "@/lib/discovery/florida-list";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
-import { parseContractorAskHandoff } from "@/lib/ask-handoff/parse";
+import { parseContractorAskHandoff, serializeContractorAskHandoff } from "@/lib/ask-handoff/parse";
 import { AskSearchContextBanner } from "@/components/ask-handoff/AskSearchContextBanner";
 
 const PUBLIC = "florida";
@@ -57,6 +57,7 @@ export default async function FloridaCountyTradePage({ params, searchParams }: P
   const sp = await searchParams;
   const browse = parseBrowseParams(sp);
   const view = parseBrowseView(sp);
+  const askCtx = parseContractorAskHandoff(sp);
   const state = getDiscoveryState(PUBLIC);
   if (!state) notFound();
 
@@ -108,7 +109,7 @@ export default async function FloridaCountyTradePage({ params, searchParams }: P
         </div>
       </header>
 
-      <AskSearchContextBanner ctx={parseContractorAskHandoff(sp)} />
+      <AskSearchContextBanner ctx={askCtx} />
 
       <FloridaBrowseSection
         state={state}
@@ -120,6 +121,7 @@ export default async function FloridaCountyTradePage({ params, searchParams }: P
         stats={stats}
         cities={cities}
         view={view}
+        profileQuery={askCtx ? serializeContractorAskHandoff(askCtx) : undefined}
       />
 
       <div className="mt-10">
