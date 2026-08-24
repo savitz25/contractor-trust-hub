@@ -47,3 +47,9 @@ All rows remain `INTERNAL`; `PUBLIC_ELIGIBLE`, Trust Score, ranking, profile, di
 The separate unsent public-records request asks for stable order/case/employer identifiers, FEIN, penalty semantics, DOAH/final-order references, status history, documents, and a data dictionary. Any returned identifiers require a separately reviewed deterministic enrichment. Existing evidence IDs remain stable; identity improvement attaches authoritative evidence rather than replacing source facts.
 
 No migration is required. Migrations 008 and 009 remain immutable.
+
+## Production closeout — 2026-08-24
+
+The approved snapshot was executed successfully from main SHA `e20d8078341a67f38e3d10e44dc71748313547cb` in one controlled transaction. Production received exactly 144,769 inserts: one batch, 48,254 actions, 48,254 immutable observations, and 48,260 occurrences. Independent post-commit verification reproduced every approved count and all eight fingerprints.
+
+All Stop-Work identity remains UNRESOLVED with zero license, contractor, or entity links. Every row remains INTERNAL; publication, profile/discovery visibility, Trust Score, ranking, badges, warnings, and filters remain disabled. Existing licensed, ULA, Recovery Fund, Arizona, and New Jersey cohorts remained unchanged. The DFS enrichment request remains pending and unsent. Automatic rollback remains unauthorized.
