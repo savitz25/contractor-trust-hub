@@ -69,8 +69,11 @@ export function isRegulatoryEvidenceReachable(
   gateActive: boolean,
   sourceDataset?: string
 ): boolean {
-  if (sourceDataset === "fl_dfs_workers_comp_stop_work") return false;
-  if (sourceSystem !== "fl_dbpr" && sourceSystem !== "fl_dfs") return true;
+  // DFS datasets have no public policy yet. Fail closed even when a caller
+  // omits sourceDataset; a future DFS publication task must add an explicit,
+  // reviewed allowlist before any DFS evidence can become reachable.
+  if (sourceSystem === "fl_dfs") return false;
+  if (sourceSystem !== "fl_dbpr") return true;
   return gateActive && isRegulatoryEvidencePublic(record);
 }
 
@@ -87,8 +90,7 @@ export function publicRegulatorySqlForGate(active: boolean): string {
   (
     d.source_system NOT IN ('fl_dbpr', 'fl_dfs')
     OR (
-      d.source_system IN ('fl_dbpr', 'fl_dfs')
-      AND d.source_dataset <> 'fl_dfs_workers_comp_stop_work'
+      d.source_system = 'fl_dbpr'
       AND d.publication_state = 'PUBLIC_ELIGIBLE'
       AND d.identity_state IN ('EXACT', 'DETERMINISTIC')
       AND d.contractor_id IS NOT NULL

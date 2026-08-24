@@ -49,8 +49,8 @@ const gateOffSql = publicRegulatorySqlForGate(false);
 const gateOnSql = publicRegulatorySqlForGate(true);
 assert.equal(gateOffSql, "d.source_system NOT IN ('fl_dbpr', 'fl_dfs')");
 assert.match(gateOnSql, /d\.source_system NOT IN \('fl_dbpr', 'fl_dfs'\)/);
-assert.match(gateOnSql, /d\.source_system IN \('fl_dbpr', 'fl_dfs'\)/);
-assert.match(gateOnSql, /d\.source_dataset <> 'fl_dfs_workers_comp_stop_work'/);
+assert.match(gateOnSql, /d\.source_system = 'fl_dbpr'/);
+assert.doesNotMatch(gateOnSql, /d\.source_system = 'fl_dfs'/);
 assert.match(gateOnSql, /d\.publication_state = 'PUBLIC_ELIGIBLE'/);
 assert.match(gateOnSql, /d\.identity_state IN \('EXACT', 'DETERMINISTIC'\)/);
 for (const nonFloridaSource of ["az_roc", "nj_enforcement"]) {
@@ -87,5 +87,6 @@ const stopWork = {
 assert.equal(isRegulatoryEvidenceReachable("fl_dfs", stopWork, false, "fl_dfs_workers_comp_stop_work"), false);
 assert.equal(isRegulatoryEvidenceReachable("fl_dfs", stopWork, true, "fl_dfs_workers_comp_stop_work"), false);
 assert.equal(isRegulatoryEvidenceReachable("fl_dfs", base, true, "fl_dfs_workers_comp_stop_work"), false);
+assert.equal(isRegulatoryEvidenceReachable("fl_dfs", base, true), false);
 
 console.log("Florida regulatory publication invariants: PASS");
