@@ -1,0 +1,449 @@
+{
+  "audit_id": "CTH-FL-SAFE-002B-REVERSE",
+  "source_system": "fl_dbpr",
+  "count": 88,
+  "fingerprint": "sha256:ac285218213e1012ba7e9a1a03442f55e4d6dbe4cb957772ebe489f83e4b94fd",
+  "entries": [
+    {
+      "discipline_id": "015c20a1-953a-480f-bd24-3b37850f8533",
+      "old_license_id": "811d2de9-607c-483c-8da7-52916b80588d",
+      "new_license_id": "302d90d8-a46b-4646-bc2a-f47e56b0190d"
+    },
+    {
+      "discipline_id": "06d567aa-cd9b-496e-be1f-65b3e3cf5e92",
+      "old_license_id": "c239d97d-09c6-419f-9995-71d3267bfe4e",
+      "new_license_id": "b6621d72-6966-4269-873a-1458d6f0ac7c"
+    },
+    {
+      "discipline_id": "08b40bdf-83a4-4dff-97fd-2c6d8bcebeb8",
+      "old_license_id": "adca1208-fc35-4d36-befc-5294da82d49a",
+      "new_license_id": "1a6ee0c2-f010-4b6a-b809-7282593859dd"
+    },
+    {
+      "discipline_id": "08daec78-70e2-4165-b160-ce02af312060",
+      "old_license_id": "05773ab1-5dc3-4805-b284-5fd07fec60ff",
+      "new_license_id": "39b9af20-cf5c-4b8b-b9e8-214631da69fc"
+    },
+    {
+      "discipline_id": "08ece8b2-dd32-46b2-825c-c04e4173cd81",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "0a719e26-1525-4fae-8def-646ac3493778",
+      "old_license_id": "8998fe4a-859b-4580-8084-41b52dd3ec12",
+      "new_license_id": "891ee232-768c-4e5a-a58d-cef7c5285cff"
+    },
+    {
+      "discipline_id": "0ca5e2c1-7cb2-407e-b14d-a2ed81bc3b2e",
+      "old_license_id": "eb230c3f-b740-4517-b426-bfe698187124",
+      "new_license_id": "90f6a763-bc3e-48a8-8008-6067bc69c18c"
+    },
+    {
+      "discipline_id": "0fda9d82-2138-46ac-a91f-65a260f3a5cc",
+      "old_license_id": "16aa0351-5ff7-44df-bcfe-38ec38047a6c",
+      "new_license_id": "73680566-fead-48bf-823f-8653e00d41d0"
+    },
+    {
+      "discipline_id": "12cd9a7b-b79e-4be6-9f78-da89ff5784de",
+      "old_license_id": "e44d6888-d476-4f05-bf54-e91893c61403",
+      "new_license_id": "e855a088-7d41-435a-bad6-efde31027dfc"
+    },
+    {
+      "discipline_id": "18037cc4-7bbf-48b3-abe0-3ea366cd2375",
+      "old_license_id": "47e31855-ac84-4913-967a-d0892e7424e9",
+      "new_license_id": "60f7ed82-8986-4259-adb2-4683f9375a52"
+    },
+    {
+      "discipline_id": "191032b9-2b13-4c4d-8bfd-6b716b8a314c",
+      "old_license_id": "50d1f181-0e45-4756-8270-c1cf3fb0ec20",
+      "new_license_id": "8d6f9d67-8cdc-4cff-a1ea-7fd752e3be7c"
+    },
+    {
+      "discipline_id": "1a38b912-65cc-4fad-9387-668cee77a740",
+      "old_license_id": "c239d97d-09c6-419f-9995-71d3267bfe4e",
+      "new_license_id": "b6621d72-6966-4269-873a-1458d6f0ac7c"
+    },
+    {
+      "discipline_id": "1c650e50-d6d6-491a-982f-99838a97d064",
+      "old_license_id": "a0f54a23-46b3-4ab1-a8af-ab8ccbe7b6e2",
+      "new_license_id": "9b26d3e6-7b4f-4500-92ff-c4e37dd8b6ad"
+    },
+    {
+      "discipline_id": "1da1bead-73de-4cf7-89a1-1578c4594d2d",
+      "old_license_id": "05773ab1-5dc3-4805-b284-5fd07fec60ff",
+      "new_license_id": "39b9af20-cf5c-4b8b-b9e8-214631da69fc"
+    },
+    {
+      "discipline_id": "245b0ef0-05db-453f-84ce-95f253b4e52a",
+      "old_license_id": "05773ab1-5dc3-4805-b284-5fd07fec60ff",
+      "new_license_id": "39b9af20-cf5c-4b8b-b9e8-214631da69fc"
+    },
+    {
+      "discipline_id": "285b7fc3-06eb-4949-895d-ea4991059eb3",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "2d6fef9a-f9e2-4b2f-aba7-3def6f7651e5",
+      "old_license_id": "ab2ef60a-a2d1-4ad6-ae67-f956254bd576",
+      "new_license_id": "30711bf8-97df-4af5-b713-93d845eb5a1d"
+    },
+    {
+      "discipline_id": "2f0e9329-fee1-4721-a0ef-6b7c0a0f523c",
+      "old_license_id": "e2ab94b2-025d-4df2-ad95-75439296a86c",
+      "new_license_id": "7fa77671-55d5-48f7-946d-07b9488327a2"
+    },
+    {
+      "discipline_id": "2f77e6cd-0210-498a-8f9b-5d5f3aac446c",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "2fa25eac-5472-4d26-b184-99499cf39c29",
+      "old_license_id": "50d1f181-0e45-4756-8270-c1cf3fb0ec20",
+      "new_license_id": "8d6f9d67-8cdc-4cff-a1ea-7fd752e3be7c"
+    },
+    {
+      "discipline_id": "34b57946-f49d-461d-b495-cc8b793b39b0",
+      "old_license_id": "16aa0351-5ff7-44df-bcfe-38ec38047a6c",
+      "new_license_id": "73680566-fead-48bf-823f-8653e00d41d0"
+    },
+    {
+      "discipline_id": "35d8b06c-41e1-4849-91cb-fea0ddfd3a44",
+      "old_license_id": "e44d6888-d476-4f05-bf54-e91893c61403",
+      "new_license_id": "e855a088-7d41-435a-bad6-efde31027dfc"
+    },
+    {
+      "discipline_id": "3af9c1c0-f517-40f9-9e64-765ac18f3a0f",
+      "old_license_id": "50d1f181-0e45-4756-8270-c1cf3fb0ec20",
+      "new_license_id": "8d6f9d67-8cdc-4cff-a1ea-7fd752e3be7c"
+    },
+    {
+      "discipline_id": "42c4fba3-ca18-4287-a1c7-e181bfe8a207",
+      "old_license_id": "c239d97d-09c6-419f-9995-71d3267bfe4e",
+      "new_license_id": "b6621d72-6966-4269-873a-1458d6f0ac7c"
+    },
+    {
+      "discipline_id": "45015865-45b7-4369-843e-06d9158ff7fb",
+      "old_license_id": "47e31855-ac84-4913-967a-d0892e7424e9",
+      "new_license_id": "60f7ed82-8986-4259-adb2-4683f9375a52"
+    },
+    {
+      "discipline_id": "5248119e-554e-4001-af74-10c96f420e15",
+      "old_license_id": "ab2ef60a-a2d1-4ad6-ae67-f956254bd576",
+      "new_license_id": "30711bf8-97df-4af5-b713-93d845eb5a1d"
+    },
+    {
+      "discipline_id": "559a60ef-9b8c-40e4-8304-0596933fff6e",
+      "old_license_id": "eb230c3f-b740-4517-b426-bfe698187124",
+      "new_license_id": "90f6a763-bc3e-48a8-8008-6067bc69c18c"
+    },
+    {
+      "discipline_id": "56ad1394-d0fd-496d-909e-852ae15eef73",
+      "old_license_id": "47e31855-ac84-4913-967a-d0892e7424e9",
+      "new_license_id": "60f7ed82-8986-4259-adb2-4683f9375a52"
+    },
+    {
+      "discipline_id": "579c5da5-e934-495a-8416-90cb59680941",
+      "old_license_id": "b12ec5d4-ab71-4641-830b-a5a8ecb5cd36",
+      "new_license_id": "ba6e0809-e951-4756-bca5-a9fd1ef73c05"
+    },
+    {
+      "discipline_id": "579dfcd6-2706-4647-9bc7-8f71edba8fd8",
+      "old_license_id": "eb230c3f-b740-4517-b426-bfe698187124",
+      "new_license_id": "90f6a763-bc3e-48a8-8008-6067bc69c18c"
+    },
+    {
+      "discipline_id": "582ba8ad-5665-4795-a7ac-934fdce316e9",
+      "old_license_id": "e2ab94b2-025d-4df2-ad95-75439296a86c",
+      "new_license_id": "7fa77671-55d5-48f7-946d-07b9488327a2"
+    },
+    {
+      "discipline_id": "5893830d-5acd-45ad-882e-208e41287efa",
+      "old_license_id": "adca1208-fc35-4d36-befc-5294da82d49a",
+      "new_license_id": "1a6ee0c2-f010-4b6a-b809-7282593859dd"
+    },
+    {
+      "discipline_id": "5d04c855-5705-490a-b06d-f904d97ea9aa",
+      "old_license_id": "47e31855-ac84-4913-967a-d0892e7424e9",
+      "new_license_id": "60f7ed82-8986-4259-adb2-4683f9375a52"
+    },
+    {
+      "discipline_id": "5efa8b38-1726-40e0-8304-92d0044e89f8",
+      "old_license_id": "e44d6888-d476-4f05-bf54-e91893c61403",
+      "new_license_id": "e855a088-7d41-435a-bad6-efde31027dfc"
+    },
+    {
+      "discipline_id": "6352b4b0-3b1e-4d7b-babf-4e1165d392f7",
+      "old_license_id": "ab2ef60a-a2d1-4ad6-ae67-f956254bd576",
+      "new_license_id": "30711bf8-97df-4af5-b713-93d845eb5a1d"
+    },
+    {
+      "discipline_id": "645519de-8acd-4261-ae7f-26af279c2cbe",
+      "old_license_id": "8998fe4a-859b-4580-8084-41b52dd3ec12",
+      "new_license_id": "891ee232-768c-4e5a-a58d-cef7c5285cff"
+    },
+    {
+      "discipline_id": "66cca8db-230e-4e7b-b70a-aab744524c6f",
+      "old_license_id": "8998fe4a-859b-4580-8084-41b52dd3ec12",
+      "new_license_id": "891ee232-768c-4e5a-a58d-cef7c5285cff"
+    },
+    {
+      "discipline_id": "68183d65-40f0-4df7-88ca-15b0a6963ae0",
+      "old_license_id": "c239d97d-09c6-419f-9995-71d3267bfe4e",
+      "new_license_id": "b6621d72-6966-4269-873a-1458d6f0ac7c"
+    },
+    {
+      "discipline_id": "691cc86b-0b8f-4a60-9bf1-68ed1cfbf61b",
+      "old_license_id": "108a0696-f3e4-43ea-9dc4-fef32b1a0187",
+      "new_license_id": "58b2be4d-fc0f-4ad2-9602-a71f2f996551"
+    },
+    {
+      "discipline_id": "6c45bbce-891c-46e0-b46b-9bf4885563ae",
+      "old_license_id": "2214c090-6d78-4bfb-90e2-b990f6b68398",
+      "new_license_id": "8688f27a-4701-4cfc-bfce-d0e4a14163fe"
+    },
+    {
+      "discipline_id": "70b5fa39-05b1-49e8-83f0-948a419ea9cd",
+      "old_license_id": "b12ec5d4-ab71-4641-830b-a5a8ecb5cd36",
+      "new_license_id": "ba6e0809-e951-4756-bca5-a9fd1ef73c05"
+    },
+    {
+      "discipline_id": "737651e6-dc36-4126-8418-9d064c225911",
+      "old_license_id": "c239d97d-09c6-419f-9995-71d3267bfe4e",
+      "new_license_id": "b6621d72-6966-4269-873a-1458d6f0ac7c"
+    },
+    {
+      "discipline_id": "791d85b7-5649-4a5c-9385-ad66f856c307",
+      "old_license_id": "ab2ef60a-a2d1-4ad6-ae67-f956254bd576",
+      "new_license_id": "30711bf8-97df-4af5-b713-93d845eb5a1d"
+    },
+    {
+      "discipline_id": "7bc4831d-525b-4f7b-9508-52e8678a916a",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "7c8c4a7a-108d-42aa-95d6-dc227ff2b3a0",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "7d1188c9-632e-4c7b-9c60-4d674a827728",
+      "old_license_id": "c9a3363c-a285-4c24-bfc6-d63a4e95fece",
+      "new_license_id": "4b25694c-d322-4e5c-b0ed-860e99c10f85"
+    },
+    {
+      "discipline_id": "7e7af3e2-6736-4b8c-9ab3-6167719508fa",
+      "old_license_id": "47e31855-ac84-4913-967a-d0892e7424e9",
+      "new_license_id": "60f7ed82-8986-4259-adb2-4683f9375a52"
+    },
+    {
+      "discipline_id": "7e7ccb4e-5ffc-4db8-8c9c-90c9561d07eb",
+      "old_license_id": "e44d6888-d476-4f05-bf54-e91893c61403",
+      "new_license_id": "e855a088-7d41-435a-bad6-efde31027dfc"
+    },
+    {
+      "discipline_id": "80363f9e-79ec-4681-a70f-ebfcb8b45dcf",
+      "old_license_id": "a0f54a23-46b3-4ab1-a8af-ab8ccbe7b6e2",
+      "new_license_id": "9b26d3e6-7b4f-4500-92ff-c4e37dd8b6ad"
+    },
+    {
+      "discipline_id": "80402afb-fc1a-4192-b07f-53e6aaec5ad3",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "81ce5d4c-62d1-4205-9b92-15fb4d9c28c7",
+      "old_license_id": "7e6bf927-36fb-4853-9433-53034ec8d368",
+      "new_license_id": "6e99dd8c-5ee7-4de7-8ece-a2635d40705b"
+    },
+    {
+      "discipline_id": "84d723b0-d3e0-4ca3-8896-2be82fe4445b",
+      "old_license_id": "e44d6888-d476-4f05-bf54-e91893c61403",
+      "new_license_id": "e855a088-7d41-435a-bad6-efde31027dfc"
+    },
+    {
+      "discipline_id": "9dde2ad7-fcab-4b7e-ab95-ef4ed9961bcc",
+      "old_license_id": "e2ab94b2-025d-4df2-ad95-75439296a86c",
+      "new_license_id": "7fa77671-55d5-48f7-946d-07b9488327a2"
+    },
+    {
+      "discipline_id": "ab419169-0d8f-4ab1-b621-c18bc2fe6092",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "ac793286-906d-41c9-9f44-82ba70587ea5",
+      "old_license_id": "a0f54a23-46b3-4ab1-a8af-ab8ccbe7b6e2",
+      "new_license_id": "9b26d3e6-7b4f-4500-92ff-c4e37dd8b6ad"
+    },
+    {
+      "discipline_id": "adda3e86-5ff1-4461-8500-534a1a3e0435",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "b0d35115-3faf-426c-8c0b-bad4aef8eb67",
+      "old_license_id": "b12ec5d4-ab71-4641-830b-a5a8ecb5cd36",
+      "new_license_id": "ba6e0809-e951-4756-bca5-a9fd1ef73c05"
+    },
+    {
+      "discipline_id": "b1952631-7605-4ae7-af8b-39cc727254fa",
+      "old_license_id": "10cd1e8c-8b49-4f01-b7a4-b73862e49047",
+      "new_license_id": "51958439-9b41-41e7-b372-1e769716f7fb"
+    },
+    {
+      "discipline_id": "b20778a3-6f0d-44bf-ad59-c3be6b1c1f66",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "b283d07f-748c-4cef-8542-9b7d3b5ba21d",
+      "old_license_id": "adca1208-fc35-4d36-befc-5294da82d49a",
+      "new_license_id": "1a6ee0c2-f010-4b6a-b809-7282593859dd"
+    },
+    {
+      "discipline_id": "b3a2380c-dba9-4032-a145-10debeeb1c19",
+      "old_license_id": "bbaf4bdc-1ab3-43b2-bb34-e95d4b7c3643",
+      "new_license_id": "6469ce41-ee11-4183-b16f-5914b8dc6907"
+    },
+    {
+      "discipline_id": "b6a92bfd-e3ea-4071-bb7a-bb866a8e9c4a",
+      "old_license_id": "e2ab94b2-025d-4df2-ad95-75439296a86c",
+      "new_license_id": "7fa77671-55d5-48f7-946d-07b9488327a2"
+    },
+    {
+      "discipline_id": "b9d29fe1-396a-4f62-9ccd-8277abfb388a",
+      "old_license_id": "10cd1e8c-8b49-4f01-b7a4-b73862e49047",
+      "new_license_id": "51958439-9b41-41e7-b372-1e769716f7fb"
+    },
+    {
+      "discipline_id": "bc2b130d-b23f-4ff7-ba52-218aab3c6a57",
+      "old_license_id": "e9e2563f-e367-41f2-870b-186a3b293d38",
+      "new_license_id": "0696c499-9e89-43a6-878b-df77e649d9ea"
+    },
+    {
+      "discipline_id": "c0fda76b-9b6c-4004-ac42-9407092dd51f",
+      "old_license_id": "194947ae-9315-4eb4-9555-c8fd4656e9da",
+      "new_license_id": "03d1e658-a6de-4a0e-9719-619f27eceb36"
+    },
+    {
+      "discipline_id": "c26554bb-b595-4fc3-811e-fea75cb2a4ff",
+      "old_license_id": "47e31855-ac84-4913-967a-d0892e7424e9",
+      "new_license_id": "60f7ed82-8986-4259-adb2-4683f9375a52"
+    },
+    {
+      "discipline_id": "c5139103-319f-48dc-abf5-01206930e3bc",
+      "old_license_id": "e2ab94b2-025d-4df2-ad95-75439296a86c",
+      "new_license_id": "7fa77671-55d5-48f7-946d-07b9488327a2"
+    },
+    {
+      "discipline_id": "c541b108-09a5-46c1-9ee6-5c4933d49b18",
+      "old_license_id": "adca1208-fc35-4d36-befc-5294da82d49a",
+      "new_license_id": "1a6ee0c2-f010-4b6a-b809-7282593859dd"
+    },
+    {
+      "discipline_id": "c7ed861f-efff-46b2-89e4-32e89b561b13",
+      "old_license_id": "e2ab94b2-025d-4df2-ad95-75439296a86c",
+      "new_license_id": "7fa77671-55d5-48f7-946d-07b9488327a2"
+    },
+    {
+      "discipline_id": "c8b06c08-7d1c-4a8a-a4a2-6c21cbfd65a3",
+      "old_license_id": "adca1208-fc35-4d36-befc-5294da82d49a",
+      "new_license_id": "1a6ee0c2-f010-4b6a-b809-7282593859dd"
+    },
+    {
+      "discipline_id": "c98077b4-032b-4a15-a389-37d4fa1640f3",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "d07eb260-1db4-44f0-88ad-6cb31573fc8f",
+      "old_license_id": "a0f54a23-46b3-4ab1-a8af-ab8ccbe7b6e2",
+      "new_license_id": "9b26d3e6-7b4f-4500-92ff-c4e37dd8b6ad"
+    },
+    {
+      "discipline_id": "d3088a38-b39a-4a80-8301-fd3c7d97e541",
+      "old_license_id": "7e6bf927-36fb-4853-9433-53034ec8d368",
+      "new_license_id": "6e99dd8c-5ee7-4de7-8ece-a2635d40705b"
+    },
+    {
+      "discipline_id": "d627f8c3-7869-416c-ac13-30f5c0c8f48b",
+      "old_license_id": "50d1f181-0e45-4756-8270-c1cf3fb0ec20",
+      "new_license_id": "8d6f9d67-8cdc-4cff-a1ea-7fd752e3be7c"
+    },
+    {
+      "discipline_id": "dde72e86-cf29-486f-8df2-b8bdea2de277",
+      "old_license_id": "7e6bf927-36fb-4853-9433-53034ec8d368",
+      "new_license_id": "6e99dd8c-5ee7-4de7-8ece-a2635d40705b"
+    },
+    {
+      "discipline_id": "de8ca92d-cee7-4cb8-8b8a-d8ec8f7c8c56",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "dfa86a5b-5468-4110-8e81-1a386e92575f",
+      "old_license_id": "e44d6888-d476-4f05-bf54-e91893c61403",
+      "new_license_id": "e855a088-7d41-435a-bad6-efde31027dfc"
+    },
+    {
+      "discipline_id": "e10f8584-e56e-4355-9534-3233a0f41b2a",
+      "old_license_id": "adca1208-fc35-4d36-befc-5294da82d49a",
+      "new_license_id": "1a6ee0c2-f010-4b6a-b809-7282593859dd"
+    },
+    {
+      "discipline_id": "e335babc-ce23-4023-ba52-8721a970c79b",
+      "old_license_id": "c239d97d-09c6-419f-9995-71d3267bfe4e",
+      "new_license_id": "b6621d72-6966-4269-873a-1458d6f0ac7c"
+    },
+    {
+      "discipline_id": "e5423f6c-04d2-434a-9682-0c58cc37ae78",
+      "old_license_id": "b12ec5d4-ab71-4641-830b-a5a8ecb5cd36",
+      "new_license_id": "ba6e0809-e951-4756-bca5-a9fd1ef73c05"
+    },
+    {
+      "discipline_id": "ea7249b0-32f5-4c0f-ad59-79f114616990",
+      "old_license_id": "05773ab1-5dc3-4805-b284-5fd07fec60ff",
+      "new_license_id": "39b9af20-cf5c-4b8b-b9e8-214631da69fc"
+    },
+    {
+      "discipline_id": "ebe9989d-8b7b-4d47-b4ae-b53dedb84908",
+      "old_license_id": "e44d6888-d476-4f05-bf54-e91893c61403",
+      "new_license_id": "e855a088-7d41-435a-bad6-efde31027dfc"
+    },
+    {
+      "discipline_id": "ef4c709b-cd18-4e49-902f-51719fa1a92a",
+      "old_license_id": "50d1f181-0e45-4756-8270-c1cf3fb0ec20",
+      "new_license_id": "8d6f9d67-8cdc-4cff-a1ea-7fd752e3be7c"
+    },
+    {
+      "discipline_id": "f0a4efa6-1964-4534-97b6-271719c52a85",
+      "old_license_id": "49a238fd-55f1-48f4-993e-608a4dfe7f22",
+      "new_license_id": "23bbd0f8-508f-49a9-92ee-7cc221b73ee4"
+    },
+    {
+      "discipline_id": "f259584b-cf71-40af-a0ba-cd9c196e9114",
+      "old_license_id": "7e6bf927-36fb-4853-9433-53034ec8d368",
+      "new_license_id": "6e99dd8c-5ee7-4de7-8ece-a2635d40705b"
+    },
+    {
+      "discipline_id": "fa58895a-76de-4cfd-9197-6c076168b178",
+      "old_license_id": "b12ec5d4-ab71-4641-830b-a5a8ecb5cd36",
+      "new_license_id": "ba6e0809-e951-4756-bca5-a9fd1ef73c05"
+    },
+    {
+      "discipline_id": "fd90ba19-b54a-47cf-8ad4-722ca63544ef",
+      "old_license_id": "de9e7303-ee00-43db-9ab6-802971347514",
+      "new_license_id": "f100f25c-bec1-4895-a356-6e6ebd074a72"
+    },
+    {
+      "discipline_id": "fec81e84-aefe-4e83-a3dc-5736f1364bfa",
+      "old_license_id": "e44d6888-d476-4f05-bf54-e91893c61403",
+      "new_license_id": "e855a088-7d41-435a-bad6-efde31027dfc"
+    }
+  ],
+  "automatic_rollback_authorized": false
+}

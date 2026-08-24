@@ -1,0 +1,168 @@
+{
+  "audit_id": "CTH-FL-SAFE-002B-PROD",
+  "git_sha": "25a5d998ccb46aed7fac4bf878dec91e1522dc0d",
+  "manifest_fingerprint": "sha256:be4ff31eac2c732d2207ee7a6cb7601c7bd62f9905e72e156526a2af378812bd",
+  "mutation_scope": "fl_dbpr only",
+  "contractor_id_mutations": 0,
+  "publication_enabled": false,
+  "ingestion_performed": false,
+  "started_at": "2026-08-24T02:40:27.411402+00:00",
+  "postgresql_version": "17.6",
+  "pre_relationship_fingerprints": {
+    "whole": "sha256:9cc3d5aa52819feaa35c86a083071e1e860e65d29e705905358b4eb36f20e0c4",
+    "florida": "sha256:d698f6c4a1887decf3f3dfb128f2020f7d1804394c8e58ec3c05174325422475",
+    "arizona": "sha256:f7316a640891009e8a6f671fb0c9088c18308ae7212ca1d0c20c543266b58b02",
+    "new_jersey": "sha256:a319948c6760227eb9c1180ee2e4adce3025b901b2b562df71904d6c55af3dbf"
+  },
+  "pre_safety_fingerprint": "sha256:28033b95817ca7ac4b2a4d7cd17c3466ca0a79bff7998da182f41e9fe75fd766",
+  "pre_stored_state": {
+    "identity": {
+      "UNRESOLVED": 1541
+    },
+    "publication": {
+      "INTERNAL": 1541
+    },
+    "holds": {
+      "correction_true": 0,
+      "correction_false": 1541,
+      "retraction_true": 0,
+      "retraction_false": 1541
+    },
+    "relationships": {
+      "license_linked": 987,
+      "contractor_linked": 0,
+      "neither": 554
+    }
+  },
+  "pre_shared_sources": [
+    {
+      "source_system": "az_roc",
+      "rows": 459,
+      "identity_nonnull": 0,
+      "publication_nonnull": 0,
+      "correction_nonnull": 0,
+      "retraction_nonnull": 0
+    },
+    {
+      "source_system": "fl_dbpr",
+      "rows": 1541,
+      "identity_nonnull": 1541,
+      "publication_nonnull": 1541,
+      "correction_nonnull": 1541,
+      "retraction_nonnull": 1541
+    },
+    {
+      "source_system": "nj_enforcement",
+      "rows": 1134,
+      "identity_nonnull": 0,
+      "publication_nonnull": 0,
+      "correction_nonnull": 0,
+      "retraction_nonnull": 0
+    }
+  ],
+  "predicted_post_relationship_fingerprints": {
+    "whole": "sha256:88ebcbe5cb68cba50c928cafb79628181e0cff95cc227298f6f0ae709f6e626f",
+    "florida": "sha256:23e83fd0b09dab19fda11ef9ebf5beef23c2fd333ce3522389eda4f15e21ecd8",
+    "arizona": "sha256:f7316a640891009e8a6f671fb0c9088c18308ae7212ca1d0c20c543266b58b02",
+    "new_jersey": "sha256:a319948c6760227eb9c1180ee2e4adce3025b901b2b562df71904d6c55af3dbf"
+  },
+  "reverse_manifest_fingerprint": "sha256:ac285218213e1012ba7e9a1a03442f55e4d6dbe4cb957772ebe489f83e4b94fd",
+  "transaction_started_at": "2026-08-24T02:40:33.662349+00:00",
+  "florida_rows_locked": 1541,
+  "manifest_reverified_inside_transaction": true,
+  "updated_rows": {
+    "SAFE_KEEP": 496,
+    "CORRECTABLE": 88,
+    "REVIEW_REQUIRED": 376,
+    "LINKED_UNRESOLVED": 27,
+    "UNATTACHED_UNRESOLVED": 554
+  },
+  "precommit_relationship_fingerprints": {
+    "whole": "sha256:88ebcbe5cb68cba50c928cafb79628181e0cff95cc227298f6f0ae709f6e626f",
+    "florida": "sha256:23e83fd0b09dab19fda11ef9ebf5beef23c2fd333ce3522389eda4f15e21ecd8",
+    "arizona": "sha256:f7316a640891009e8a6f671fb0c9088c18308ae7212ca1d0c20c543266b58b02",
+    "new_jersey": "sha256:a319948c6760227eb9c1180ee2e4adce3025b901b2b562df71904d6c55af3dbf"
+  },
+  "license_relationship_changes": 88,
+  "precommit_stored_state": {
+    "identity": {
+      "DETERMINISTIC": 61,
+      "EXACT": 523,
+      "REVIEW_REQUIRED": 376,
+      "UNRESOLVED": 581
+    },
+    "publication": {
+      "INTERNAL": 1541
+    },
+    "holds": {
+      "correction_true": 403,
+      "correction_false": 1138,
+      "retraction_true": 0,
+      "retraction_false": 1541
+    },
+    "relationships": {
+      "license_linked": 987,
+      "contractor_linked": 0,
+      "neither": 554
+    }
+  },
+  "commit_successful": true,
+  "committed_at": "2026-08-24T02:42:06.542590+00:00",
+  "post_relationship_fingerprints": {
+    "whole": "sha256:88ebcbe5cb68cba50c928cafb79628181e0cff95cc227298f6f0ae709f6e626f",
+    "florida": "sha256:23e83fd0b09dab19fda11ef9ebf5beef23c2fd333ce3522389eda4f15e21ecd8",
+    "arizona": "sha256:f7316a640891009e8a6f671fb0c9088c18308ae7212ca1d0c20c543266b58b02",
+    "new_jersey": "sha256:a319948c6760227eb9c1180ee2e4adce3025b901b2b562df71904d6c55af3dbf"
+  },
+  "post_safety_fingerprint": "sha256:d97a22486fa72911cd8f5482a7fedca17c66eb8ed0a820ab1f2818c3b5f90625",
+  "post_stored_state": {
+    "identity": {
+      "DETERMINISTIC": 61,
+      "EXACT": 523,
+      "REVIEW_REQUIRED": 376,
+      "UNRESOLVED": 581
+    },
+    "publication": {
+      "INTERNAL": 1541
+    },
+    "holds": {
+      "correction_true": 403,
+      "correction_false": 1138,
+      "retraction_true": 0,
+      "retraction_false": 1541
+    },
+    "relationships": {
+      "license_linked": 987,
+      "contractor_linked": 0,
+      "neither": 554
+    }
+  },
+  "correctable_remaining": 0,
+  "post_resolver_states": {
+    "EXACT": 523,
+    "UNRESOLVED": 581,
+    "REVIEW_REQUIRED": 376,
+    "DETERMINISTIC": 61
+  },
+  "post_verified_at": "2026-08-24T02:42:11.486044+00:00",
+  "post_commit_verification": true,
+  "completed_at": "2026-08-24T02:42:11.537455+00:00",
+  "production_mutation": "SAFE-002B metadata backfill plus 88 canonical license corrections only",
+  "publication_gate_state": "ABSENT_OFF",
+  "publicly_reachable_florida_adverse_rows": 0,
+  "site_health": {
+    "homepage": 200,
+    "florida_landing": 200,
+    "florida_discovery": 200,
+    "florida_profile_samples": 200,
+    "arizona_landing": 200,
+    "arizona_profile_sample": 200,
+    "new_jersey_verify": 200,
+    "new_jersey_profile_sample": 200,
+    "database_query_errors_observed": 0
+  },
+  "manual_deployment": false,
+  "google_calls": 0,
+  "county_work": 0,
+  "migration_008_changed": false
+}
