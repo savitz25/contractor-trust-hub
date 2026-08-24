@@ -117,3 +117,14 @@ TrustHub severity score or publication adjudication. Source addresses remain
 source payload observations and are not promoted to canonical contractor or
 contact data. ULA, Recovery Fund, workers compensation, exemptions, stop-work,
 county, and Google work remain outside scope.
+## PRODUCTION HISTORICAL INGESTION EXECUTION
+
+CTH-FL-STATE-002-PROD executed from canonical main `734fd04d39094f9740eedd4b63c203dcb2437ea3` on 2026-08-24. All five official DBPR files matched the approved checksums and 17-column schema. The canonical execution and reverse-manifest fingerprints remained `sha256:d09a6c1ff1ffc1b92db998025e310401be045ed8910a9b255b20eb38e659c9fa` and `sha256:f7efd16afa5c57533e364604b795d6c9c137fc9ca6ff8c2e3fa3a9164509bcac`.
+
+An initial invocation was rejected before any write transaction because the shell stripped JSON quoting from an explicit gate. No database mutation occurred. The unchanged executor was rerun with corrected shell encoding. Its single `REPEATABLE READ` transaction began at `2026-08-24T13:50:53.747950+00:00`, used `lock_timeout=5s` and `statement_timeout=180s`, and committed successfully (confirmed by executor completion at `2026-08-24T13:51:01.2261037+00:00`; PostgreSQL commit-timestamp tracking is disabled).
+
+The transaction inserted exactly four source batches, 4,916 discipline actions, 4,916 immutable source observations, and 4,916 occurrences: 14,752 rows total. It performed no updates or deletes. The resulting Florida population is 6,457, with identity counts EXACT 1,736, DETERMINISTIC 236, REVIEW_REQUIRED 1,411, and UNRESOLVED 3,074. All 1,972 safely resolved links agree with the authoritative resolver; correctable remaining is zero. Contractor links remain zero, all 6,457 rows remain INTERNAL, PUBLIC_ELIGIBLE remains zero, and the publication gate remains absent/off.
+
+Independent post-commit verification found 6,457 CURRENT observations and occurrences, 6,457/6,457 valid payload hashes and observation keys, no revision-review or superseded observations, and the exact approved occurrence totals for all five fiscal years. Actual whole, Florida, Arizona, New Jersey, Florida-safety, new-action, provenance, and batch fingerprints all match their predictions. The legacy 1,541-row cohort and its provenance/batch remained unchanged; Arizona and New Jersey were unaffected. Production health checks passed without observed database/query errors.
+
+The canonical reverse manifest is preserved as historical rollback evidence. Automatic post-commit rollback is not authorized. ULA, Recovery Fund, workers compensation, county data, contacts, contractor addresses, and publication remain out of scope and unchanged.
