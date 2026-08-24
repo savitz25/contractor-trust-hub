@@ -44,6 +44,34 @@ FL_LOGICAL_MATTER_FIELDS: tuple[str, ...] = (
     "Violation Code",
 )
 
+FL_ULA_FIELDS: tuple[str, ...] = (
+    "License Type",
+    "Respondent Name",
+    "Address Line 1",
+    "Address Line 2",
+    "Address Line 3",
+    "City",
+    "State",
+    "ZIP Code",
+    "County",
+    "Complaint Nbr",
+    "Classification",
+    "Entered Date",
+    "Disposition",
+    "Disposition Date",
+    "Discipline Date - Description",
+    "Violation Code",
+)
+
+FL_ULA_LOGICAL_MATTER_FIELDS: tuple[str, ...] = (
+    "Complaint Nbr",
+    "License Type",
+    "Respondent Name",
+    "Classification",
+    "Entered Date",
+    "Violation Code",
+)
+
 
 def canonical_source_value(value: Any) -> str:
     """Apply intentionally narrow parsing normalization.

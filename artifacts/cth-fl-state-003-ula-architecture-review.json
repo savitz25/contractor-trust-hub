@@ -1,0 +1,245 @@
+{
+  "algorithms": {
+    "logical_matter": "logical-matter-detail-key-v1",
+    "source_observation": "source-observation-key-v2"
+  },
+  "canonical_main_sha": "1910d623b222a351dc3b1bc511a31c0f2c37469b",
+  "collision_checks": {
+    "action": 0,
+    "batch": 0,
+    "external_key": 0,
+    "observation": 0,
+    "occurrence": 0,
+    "source_observation_key": 0
+  },
+  "delta": {
+    "duplicate_source_observations": 0,
+    "identity_partition": {
+      "REVIEW_REQUIRED": 0,
+      "UNRESOLVED": 11691
+    },
+    "new_by_year": {
+      "2021-22": 2312,
+      "2022-23": 2631,
+      "2023-24": 2568,
+      "2024-25": 2338,
+      "2025-26": 1842
+    },
+    "new_exact": 11691,
+    "revision_candidates": 0,
+    "semantic_counts": {
+      "CITATION": 3162,
+      "CLOSED_ADMINISTRATIVE": 15,
+      "COMPLAINT_INVESTIGATION": 614,
+      "DISMISSED": 12,
+      "FINAL_ORDER": 7852,
+      "INSUFFICIENT_EVIDENCE": 12,
+      "ORDER": 24,
+      "OTHER": 0,
+      "UNKNOWN": 0
+    }
+  },
+  "field_contract": [
+    "License Type",
+    "Respondent Name",
+    "Address Line 1",
+    "Address Line 2",
+    "Address Line 3",
+    "City",
+    "State",
+    "ZIP Code",
+    "County",
+    "Complaint Nbr",
+    "Classification",
+    "Entered Date",
+    "Disposition",
+    "Disposition Date",
+    "Discipline Date - Description",
+    "Violation Code"
+  ],
+  "identity_policy": {
+    "authoritative_respondent_identifier_present": false,
+    "automatic_name_address_linkage_prohibited": true,
+    "complaint_number_is_matter_identifier_only": true,
+    "identity_method": "NO_OFFICIAL_IDENTITY_IDENTIFIER",
+    "identity_state": "UNRESOLVED",
+    "resolver_version": "fl-dbpr-ula-identity-v1",
+    "review_opportunities_excluded": {
+      "candidate_ids_persisted": 0,
+      "matters": 113,
+      "rows": 246
+    }
+  },
+  "licensed_discipline_regression": {
+    "changed": 0,
+    "logical_keys_valid": 6457,
+    "observation_keys_valid": 6457,
+    "row_fingerprints_valid": 6457,
+    "rows": 6457
+  },
+  "logical_matter_contract": [
+    "Complaint Nbr",
+    "License Type",
+    "Respondent Name",
+    "Classification",
+    "Entered Date",
+    "Violation Code"
+  ],
+  "manifest": {
+    "batch_ids": [
+      "ac0975a8-e58d-5e57-9037-a94dd18a8034",
+      "fdb6cf53-3279-5ea3-a921-6fa94160ee08",
+      "2a2962b6-0982-5ece-8e18-5597f602ea53",
+      "a18295a4-7a5f-5ad5-a825-c4f36fb80523",
+      "82a99065-ce86-5548-8cc0-86eb67321a83"
+    ],
+    "entries": 11691,
+    "fingerprint": "sha256:149f259afa14a5fb9d653128017bb8c3148f7628f0076b6b2c1c1d0f01ca0d73"
+  },
+  "predicted_fingerprints": {
+    "arizona": "sha256:d5c456b2d6d60accef4f892ce2b95b1b23ca6a792cea0d8f0e2ee92f2bf8f6c3",
+    "batches": "sha256:627aa32acced612818234e11b361c0cd518f1087fff2563fbe60726415cf5bcb",
+    "florida": "sha256:3474cf0b86c6f9e816163244cdb1f9c86daa6479f7d703cea87b9dd4c02b7614",
+    "florida_safety": "sha256:d1a721ab16a24ee862b85056867f9bb75cfa0e100ae67caeb71eed0a7940721f",
+    "new_jersey": "sha256:6aae90e88c656e664717442a32009e7010b71c378838690651242de3e37f43c3",
+    "provenance": "sha256:52a9a11013a5c65f6ae2f90a2ce23ca20d5803c37150a75b2970308649c4d793",
+    "ula_cohort": "sha256:6df200e2451bbcc2cc331476e5754399acb4b9f6481c321f18f35089a2835092",
+    "whole": "sha256:5bee9a5963aadb8ab58c7d16e6e9c508e320eecc1fe0a17b14ece673df80c940"
+  },
+  "predicted_post": {
+    "correction_holds": {
+      "false": 17745,
+      "true": 403
+    },
+    "florida_all_discipline_actions": 18148,
+    "florida_ula": 11691,
+    "identity": {
+      "DETERMINISTIC": 236,
+      "EXACT": 1736,
+      "REVIEW_REQUIRED": 1411,
+      "UNRESOLVED": 14765
+    },
+    "ingest_batches": 56,
+    "observations": 18148,
+    "occurrences": 18148,
+    "publication": {
+      "INTERNAL": 18148,
+      "PUBLIC_ELIGIBLE": 0
+    },
+    "relationships": {
+      "contractor_linked": 0,
+      "license_linked": 2375,
+      "neither": 15773
+    },
+    "retraction_holds": {
+      "false": 18148,
+      "true": 0
+    },
+    "whole_discipline_actions": 19741
+  },
+  "production_baseline": {
+    "arizona": 459,
+    "correctable_remaining": 0,
+    "florida_licensed_discipline": 6457,
+    "florida_ula": 0,
+    "ingest_batches": 51,
+    "licensed_identity": {
+      "DETERMINISTIC": 236,
+      "EXACT": 1736,
+      "REVIEW_REQUIRED": 1411,
+      "UNRESOLVED": 3074
+    },
+    "licensed_safe_links_agreeing": 1972,
+    "new_jersey": 1134,
+    "observations": 6457,
+    "occurrences": 6457,
+    "public_eligible": 0,
+    "whole_discipline_actions": 8050
+  },
+  "production_mutations": 0,
+  "publication": {
+    "contractor_linked": 0,
+    "gate": "ABSENT/OFF",
+    "license_linked": 0,
+    "public_eligible": 0,
+    "public_read_fail_closed": {
+      "contractor_discovery": true,
+      "contractor_profile": true,
+      "expected_ula_public_rows": 0,
+      "plan_and_regulatory_queries": true
+    }
+  },
+  "reverse_manifest_fingerprint": "sha256:12e45eb92796c989ea499a2c983a81ce1523510e4413eebc02bb865a9d1be2a1",
+  "source_inventory": [
+    {
+      "byte_size": 535623,
+      "downloaded_at": "2026-08-24T15:03:56.941313+00:00",
+      "filename": "contractor_disc_ula_2122.csv",
+      "fiscal_year": "2021-22",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2122.csv",
+      "rows": 2312,
+      "schema_columns": 16,
+      "schema_fingerprint": "sha256:b1eb7f0fca26ee6dfd36125a5d1a2b49b2d06177c8b1480a39135ffdc1549690",
+      "sha256": "4f0ca3409686d5a1fe960e7ecf2c0cf0416d62e216d29c4bc371432846d07d1c"
+    },
+    {
+      "byte_size": 610659,
+      "downloaded_at": "2026-08-24T15:03:57.747356+00:00",
+      "filename": "contractor_disc_ula_2223.csv",
+      "fiscal_year": "2022-23",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2223.csv",
+      "rows": 2631,
+      "schema_columns": 16,
+      "schema_fingerprint": "sha256:b1eb7f0fca26ee6dfd36125a5d1a2b49b2d06177c8b1480a39135ffdc1549690",
+      "sha256": "2c03c334e3bcda679d689494c397f7166c205aa60d3d43c05c8cf875ee84cc7b"
+    },
+    {
+      "byte_size": 615368,
+      "downloaded_at": "2026-08-24T15:03:58.312721+00:00",
+      "filename": "contractor_disc_ula_2324.csv",
+      "fiscal_year": "2023-24",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2324.csv",
+      "rows": 2568,
+      "schema_columns": 16,
+      "schema_fingerprint": "sha256:b1eb7f0fca26ee6dfd36125a5d1a2b49b2d06177c8b1480a39135ffdc1549690",
+      "sha256": "a5036af5f02e85d12b9af3252d17368b71b4c7cd9fa5c6b9a57fafcd4d2dcddc"
+    },
+    {
+      "byte_size": 570568,
+      "downloaded_at": "2026-08-24T15:03:58.904557+00:00",
+      "filename": "contractor_disc_ula_2425.csv",
+      "fiscal_year": "2024-25",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2425.csv",
+      "rows": 2338,
+      "schema_columns": 16,
+      "schema_fingerprint": "sha256:b1eb7f0fca26ee6dfd36125a5d1a2b49b2d06177c8b1480a39135ffdc1549690",
+      "sha256": "06169ddf04e1911fc6414977924c3eea28d872899a5499f6d86c766813f22b15"
+    },
+    {
+      "byte_size": 448562,
+      "downloaded_at": "2026-08-24T15:03:59.371156+00:00",
+      "filename": "contractor_disc_ula_2526.csv",
+      "fiscal_year": "2025-26",
+      "http_status": 200,
+      "official_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2526.csv",
+      "rows": 1842,
+      "schema_columns": 16,
+      "schema_fingerprint": "sha256:b1eb7f0fca26ee6dfd36125a5d1a2b49b2d06177c8b1480a39135ffdc1549690",
+      "sha256": "3e9a92d8340f2c0975e4204d31b6d83cbc5bf8a7eef36a85da11b30218e87c9a"
+    }
+  ],
+  "task_id": "CTH-FL-STATE-003-ARCH",
+  "transaction_design": {
+    "deletes": 0,
+    "inserts": 35078,
+    "isolation": "REPEATABLE READ",
+    "lock_timeout": "5s",
+    "single_transaction": true,
+    "statement_timeout": "180s",
+    "updates": 0
+  }
+}
