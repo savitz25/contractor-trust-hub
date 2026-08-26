@@ -9,5 +9,6 @@
 | Publication matrix | [INTEL-002-publication-matrix.md](./INTEL-002-publication-matrix.md) · `lib/intelligence/publication-matrix.ts` |
 | Live REST snapshot | [baseline-snapshot.json](./baseline-snapshot.json) |
 | Tests | `python scripts/assert_florida_intelligence_foundation.py` · `python scripts/assert_florida_p0_remediation.py` |
+| Enhanced county foundation (Prompt 7) | [enhanced-county/README.md](./enhanced-county/README.md) — Broward/Palm Beach source map; coverage stays Statewide Research until ingest |
 
-**Status:** Prompt 2 P0 remediation — see Builder 1 Prompt 2 report. State Intelligence is not authorized until GO/NO-GO is YES.
+**Status:** Statewide Intelligence is production on `/florida`. Broward/Palm Beach Enhanced Local Research is **not** enabled.

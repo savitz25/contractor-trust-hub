@@ -12,3 +12,5 @@ export * from "./coverage";
 export * from "./education";
 export * from "./source-catalog";
 export * from "./payload-types";
+export * from "./enhanced-county-identity";
+export * from "./enhanced-county-jurisdiction";
