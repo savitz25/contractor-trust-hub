@@ -1,33 +1,35 @@
 {
   "asOf": "2026-08-26",
-  "submission_blocker": "SUBMISSION BLOCKED — REQUESTOR CONTACT REQUIRED",
+  "anonymous_policy_tested": true,
   "requests": [
     {
       "id": "PRR-BROWARD-PERMITS-001",
       "county": "broward",
-      "department": "Building Code Division",
+      "department": "Permitting and Licensing / Building Code Division",
       "title": "Existing electronic building-permit metadata extract",
-      "channel": "https://browardcounty.govqa.us/WEBAPP/_rs/",
-      "status": "DRAFTED",
+      "channel": "https://browardcounty.govqa.us/WEBAPP/_rs/RequestSelect.aspx",
+      "status": "PORTAL_ACCOUNT_REQUIRED",
       "submitted": false,
+      "anonymous": false,
       "request_id": null,
-      "timestamp": "2026-08-26T20:00:00Z",
+      "timestamp": "2026-08-26T21:00:00Z",
       "fee": null,
       "acknowledgment": null,
+      "precise_blocker": "GovQA category Select did not open a completable anonymous form without Login / My Request Center. Policy still allows anonymous via phone/written/in-person; portal tracking is by reference number.",
       "package": "docs/intelligence/enhanced-county/pra-broward-permits.md"
     },
     {
       "id": "PRR-BROWARD-CERTS-001",
       "county": "broward",
-      "department": "Building Code Division / Contractor Licensing / CEB",
+      "department": "Permitting and Licensing / Building Code / CEB",
       "title": "Existing electronic contractor certification extract",
-      "channel": "https://browardcounty.govqa.us/WEBAPP/_rs/",
-      "status": "DRAFTED",
+      "channel": "https://browardcounty.govqa.us/WEBAPP/_rs/RequestSelect.aspx",
+      "status": "PORTAL_ACCOUNT_REQUIRED",
       "submitted": false,
+      "anonymous": false,
       "request_id": null,
-      "timestamp": "2026-08-26T20:00:00Z",
+      "timestamp": "2026-08-26T21:00:00Z",
       "fee": null,
-      "acknowledgment": null,
       "package": "docs/intelligence/enhanced-county/pra-broward-certification.md"
     },
     {
@@ -36,12 +38,13 @@
       "department": "PZB Building Records",
       "title": "County-system permit metadata extract (principally unincorporated)",
       "channel": "https://pbc.gov/eprr/pzb",
-      "status": "DRAFTED",
+      "status": "DELIVERY_CONTACT_REQUIRED",
       "submitted": false,
+      "anonymous": "checkbox_available_name_not_required",
       "request_id": null,
-      "timestamp": "2026-08-26T20:00:00Z",
+      "timestamp": "2026-08-26T21:00:00Z",
       "fee": null,
-      "acknowledgment": null,
+      "precise_blocker": "Anonymous electronic delivery still requires EmailAddress (jQuery required:true when receive method is Email). Pickup requires PhoneNumber. US Mail disables Anonymous.",
       "package": "docs/intelligence/enhanced-county/pra-pbc-permits.md"
     },
     {
@@ -50,12 +53,12 @@
       "department": "PZB Contractor Regulations",
       "title": "Certification / enrollment / installer extract",
       "channel": "https://pbc.gov/eprr/pzb",
-      "status": "DRAFTED",
+      "status": "DELIVERY_CONTACT_REQUIRED",
       "submitted": false,
+      "anonymous": "checkbox_available_name_not_required",
       "request_id": null,
-      "timestamp": "2026-08-26T20:00:00Z",
+      "timestamp": "2026-08-26T21:00:00Z",
       "fee": null,
-      "acknowledgment": null,
       "package": "docs/intelligence/enhanced-county/pra-pbc-certification.md"
     }
   ]

@@ -67,6 +67,32 @@ def main() -> int:
     assert_(data["filename"].startswith("TEST_ONLY"), "CLI test_only name")
     assert_("inferred_field_mappings" in data, "mappings present")
 
+    csv_path = fixture
+    tsv = ROOT / "docs/intelligence/enhanced-county/fixtures/TEST_ONLY_broward_permits.tsv"
+    js = ROOT / "docs/intelligence/enhanced-county/fixtures/TEST_ONLY_broward_permits.json"
+    xlsx = ROOT / "docs/intelligence/enhanced-county/fixtures/TEST_ONLY_broward_permits.xlsx"
+    import csv as csvlib
+    rows = list(csvlib.DictReader(csv_path.open(encoding="utf-8")))
+    with tsv.open("w", encoding="utf-8", newline="") as f:
+        w = csvlib.DictWriter(f, fieldnames=rows[0].keys(), delimiter="\t")
+        w.writeheader()
+        w.writerows(rows)
+    js.write_text(json.dumps(rows), encoding="utf-8")
+    from openpyxl import Workbook
+
+    wb = Workbook()
+    ws = wb.active
+    headers = list(rows[0].keys())
+    ws.append(headers)
+    for r in rows:
+        ws.append([r[h] for h in headers])
+    wb.save(xlsx)
+    for fmt, path in [("tsv", tsv), ("json", js), ("xlsx", xlsx)]:
+        r = run_discovery(path, "broward-permits")
+        assert_(r["raw_rows"] == 4, f"{fmt} four rows")
+        assert_(r["unique_records"] == 4, f"{fmt} distinct keys")
+        assert_(r["test_only"] is True, f"{fmt} test_only")
+
     proc_e = subprocess.run(
         [
             sys.executable,
