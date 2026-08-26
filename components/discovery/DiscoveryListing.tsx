@@ -107,7 +107,7 @@ export function DiscoveryListing({
           </p>
         </div>
         <p className="text-sm tabular-nums text-[var(--muted)]">
-          {total.toLocaleString()} firm{total === 1 ? "" : "s"}
+          {total.toLocaleString()} profile{total === 1 ? "" : "s"}
           {total > DISCOVERY_PAGE_SIZE ? ` · page ${safePage} of ${totalPages}` : null}
         </p>
       </div>

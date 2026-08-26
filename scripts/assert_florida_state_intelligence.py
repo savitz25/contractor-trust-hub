@@ -86,6 +86,9 @@ def main() -> int:
     assert_("CCC / RR" not in browse, "ResearchBrowse no CCC/RR")
     ctx = read("components/discovery/DiscoveryContext.tsx")
     assert_("Firms in this view" not in ctx, "browse stats not labeled firms")
+    listing = read("components/discovery/DiscoveryListing.tsx")
+    assert_(" firm" not in listing.lower() or "profile" in listing, "listing count not labeled firms")
+    assert_('profile{total === 1 ? "" : "s"}' in listing, "listing count labeled profiles")
     assert_("License profiles" in ctx or "not a distinct-business" in ctx, "profiles disclosed as not businesses")
     assert_("HQ/base" in ctx or "mailing county" in ctx, "county HQ/base wording")
 
