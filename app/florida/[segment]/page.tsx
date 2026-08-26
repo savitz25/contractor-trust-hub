@@ -77,12 +77,14 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
     const { county } = resolved;
     const view = parseBrowseView(sp);
     const countyIntel = isFloridaCountyIntelSlug(county.slug);
-    const [{ results, total, stats }, trades, cities, intelPayload] = await Promise.all([
+    const [{ results, total, stats }, trades, cities] = await Promise.all([
       listFloridaBrowse({ county, browse }),
       countByTrade(PUBLIC, county),
       listFloridaCities(county),
-      countyIntel ? getFloridaCountyIntelligenceSnapshot(county.slug) : Promise.resolve(null),
     ]);
+    const intelPayload = countyIntel
+      ? await getFloridaCountyIntelligenceSnapshot(county.slug)
+      : null;
 
     return (
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">

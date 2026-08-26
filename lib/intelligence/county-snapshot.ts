@@ -18,7 +18,7 @@ export type { CountyMoveLikePayload } from "./county-payload";
 export { CTH_FL_COUNTY_INTEL_VERSION, publicCountyMetrics } from "./county-payload";
 
 const REVALIDATE_SEC = 1_800;
-const TIMEOUT_MS = 6_000;
+const TIMEOUT_MS = 12_000;
 
 function iso(d: Date | string | null | undefined): string | null {
   if (!d) return null;
@@ -32,15 +32,14 @@ async function loadLive(slug: FloridaCountyIntelSlug): Promise<CountyMoveLikePay
   const catalog = FLORIDA_COUNTY_INTEL_CATALOG[slug];
   const code = catalog.dbprCountyCode;
 
-  const [stats, occRows, jurisRows, permitN, localN, fileN] = await Promise.all([
-    queryOne<{
-      tracked: string;
-      active: string;
-      trade_tracked: string;
-      trade_active: string;
-      last_verified_at: Date | string | null;
-    }>(
-      `
+  const stats = await queryOne<{
+    tracked: string;
+    active: string;
+    trade_tracked: string;
+    trade_active: string;
+    last_verified_at: Date | string | null;
+  }>(
+    `
       SELECT
         COUNT(*)::text AS tracked,
         COUNT(*) FILTER (WHERE status_normalized = 'active')::text AS active,
@@ -56,10 +55,10 @@ async function loadLive(slug: FloridaCountyIntelSlug): Promise<CountyMoveLikePay
       WHERE source_system = 'fl_dbpr'
         AND TRIM(COALESCE(county_code, '')) = $1
       `,
-      [code]
-    ),
-    query<{ occupation_code: string; tracked: string; active: string }>(
-      `
+    [code]
+  );
+  const occRows = await query<{ occupation_code: string; tracked: string; active: string }>(
+    `
       SELECT UPPER(COALESCE(occupation_code, '')) AS occupation_code,
              COUNT(*)::text AS tracked,
              COUNT(*) FILTER (WHERE status_normalized = 'active')::text AS active
@@ -69,30 +68,17 @@ async function loadLive(slug: FloridaCountyIntelSlug): Promise<CountyMoveLikePay
         AND UPPER(COALESCE(occupation_code, '')) NOT IN ('FRO', 'CRS1', 'PVDR')
       GROUP BY 1
       `,
-      [code]
-    ),
-    query<{ kind: string; n: string }>(
-      `
+    [code]
+  );
+  const jurisRows = await query<{ kind: string; n: string }>(
+    `
       SELECT kind, COUNT(*)::text AS n
       FROM enhanced_jurisdictions
       WHERE county_slug = $1
       GROUP BY kind
       `,
-      [slug]
-    ).catch(() => null),
-    queryOne<{ n: string }>(
-      `SELECT COUNT(*)::text AS n FROM permit_source_records WHERE county_slug = $1`,
-      [slug]
-    ).catch(() => null),
-    queryOne<{ n: string }>(
-      `SELECT COUNT(*)::text AS n FROM local_credentials WHERE county_slug = $1`,
-      [slug]
-    ).catch(() => null),
-    queryOne<{ n: string }>(
-      `SELECT COUNT(*)::text AS n FROM enhanced_source_files WHERE county_slug = $1`,
-      [slug]
-    ).catch(() => null),
-  ]);
+    [slug]
+  ).catch(() => null);
 
   const counts: CountyLiveCounts = {
     tracked: stats?.tracked != null ? Number(stats.tracked) : null,
@@ -108,10 +94,10 @@ async function loadLive(slug: FloridaCountyIntelSlug): Promise<CountyMoveLikePay
     jurisdictionRows: jurisRows
       ? jurisRows.map((r) => ({ kind: r.kind, n: Number(r.n) || 0 }))
       : null,
-    permitRows: permitN?.n != null ? Number(permitN.n) : null,
-    localCredentialRows: localN?.n != null ? Number(localN.n) : null,
+    permitRows: 0,
+    localCredentialRows: 0,
     contactRows: null,
-    sourceFileRows: fileN?.n != null ? Number(fileN.n) : null,
+    sourceFileRows: 0,
   };
 
   return buildCountyIntelligencePayload({
@@ -122,25 +108,13 @@ async function loadLive(slug: FloridaCountyIntelSlug): Promise<CountyMoveLikePay
   });
 }
 
-async function loadWithTimeout(slug: FloridaCountyIntelSlug): Promise<CountyMoveLikePayload> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  try {
-    const timed = new Promise<CountyMoveLikePayload>((resolve) => {
-      timer = setTimeout(() => {
-        resolve(
-          buildCountyIntelligencePayload({
-            countySlug: slug,
-            generatedAt: new Date().toISOString(),
-            timedOut: true,
-            counts: null,
-          })
-        );
-      }, TIMEOUT_MS);
-    });
-    return await Promise.race([loadLive(slug), timed]);
-  } finally {
-    if (timer) clearTimeout(timer);
-  }
+function emptyTimedOut(slug: FloridaCountyIntelSlug): CountyMoveLikePayload {
+  return buildCountyIntelligencePayload({
+    countySlug: slug,
+    generatedAt: new Date().toISOString(),
+    timedOut: true,
+    counts: null,
+  });
 }
 
 export async function getFloridaCountyIntelligenceSnapshot(
@@ -149,12 +123,23 @@ export async function getFloridaCountyIntelligenceSnapshot(
   if (!isFloridaCountyIntelSlug(countySlug)) {
     throw new Error(`County Intelligence is only defined for Broward and Palm Beach: ${countySlug}`);
   }
-  return unstable_cache(
-    () => loadWithTimeout(countySlug),
-    ["cth-fl-county-intel-v1", countySlug],
+  const cached = unstable_cache(
+    () => loadLive(countySlug),
+    ["cth-fl-county-intel-v1b", countySlug],
     {
       revalidate: REVALIDATE_SEC,
       tags: ["florida-county-intelligence", `florida-county-intelligence-${countySlug}`],
     }
-  )();
+  );
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const timed = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error("county-intel-timeout")), TIMEOUT_MS);
+    });
+    return await Promise.race([cached(), timed]);
+  } catch {
+    return emptyTimedOut(countySlug);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
