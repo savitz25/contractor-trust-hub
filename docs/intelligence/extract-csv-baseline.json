@@ -1,0 +1,478 @@
+{
+  "source_file": "C:\\Users\\Michael.Savitsky\\contractor-trust-hub\\data\\staging\\fl_dbpr_full\\licenses_normalized.csv",
+  "license_rows": 143516,
+  "distinct_external_keys": 143516,
+  "status": {
+    "active": 104444,
+    "current": 24217,
+    "inactive": 14786,
+    "other": 69
+  },
+  "primary_status": {
+    "C": 143042,
+    "S": 256,
+    "P": 218
+  },
+  "secondary_status": {
+    "A": 104444,
+    "(blank)": 24286,
+    "I": 14786
+  },
+  "occupations": {
+    "CGC": {
+      "n": 38923,
+      "by_status": {
+        "active": 33056,
+        "inactive": 5866,
+        "other": 1
+      }
+    },
+    "CBC": {
+      "n": 19722,
+      "by_status": {
+        "active": 17242,
+        "inactive": 2479,
+        "other": 1
+      }
+    },
+    "FRO": {
+      "n": 19087,
+      "by_status": {
+        "current": 19018,
+        "other": 66,
+        "active": 3
+      }
+    },
+    "CAC": {
+      "n": 12378,
+      "by_status": {
+        "active": 11125,
+        "inactive": 1253
+      }
+    },
+    "CCC": {
+      "n": 11275,
+      "by_status": {
+        "inactive": 1182,
+        "active": 10093
+      }
+    },
+    "CFC": {
+      "n": 9310,
+      "by_status": {
+        "active": 8440,
+        "inactive": 870
+      }
+    },
+    "CRC": {
+      "n": 8556,
+      "by_status": {
+        "active": 7283,
+        "inactive": 1273
+      }
+    },
+    "CRS1": {
+      "n": 4895,
+      "by_status": {
+        "current": 4895
+      }
+    },
+    "CPC": {
+      "n": 4621,
+      "by_status": {
+        "active": 4260,
+        "inactive": 361
+      }
+    },
+    "SCC": {
+      "n": 3845,
+      "by_status": {
+        "active": 3631,
+        "inactive": 214
+      }
+    },
+    "CUC": {
+      "n": 3004,
+      "by_status": {
+        "active": 2633,
+        "inactive": 371
+      }
+    },
+    "CMC": {
+      "n": 2776,
+      "by_status": {
+        "inactive": 364,
+        "active": 2412
+      }
+    },
+    "RR": {
+      "n": 672,
+      "by_status": {
+        "active": 588,
+        "inactive": 84
+      }
+    },
+    "RF": {
+      "n": 589,
+      "by_status": {
+        "active": 533,
+        "inactive": 56
+      }
+    },
+    "RC": {
+      "n": 519,
+      "by_status": {
+        "inactive": 52,
+        "active": 466,
+        "current": 1
+      }
+    },
+    "CVC": {
+      "n": 513,
+      "by_status": {
+        "inactive": 76,
+        "active": 437
+      }
+    },
+    "RP": {
+      "n": 479,
+      "by_status": {
+        "active": 453,
+        "inactive": 26
+      }
+    },
+    "RB": {
+      "n": 427,
+      "by_status": {
+        "inactive": 42,
+        "active": 385
+      }
+    },
+    "RG": {
+      "n": 423,
+      "by_status": {
+        "active": 379,
+        "inactive": 43,
+        "other": 1
+      }
+    },
+    "PCC": {
+      "n": 376,
+      "by_status": {
+        "active": 290,
+        "inactive": 86
+      }
+    },
+    "RA": {
+      "n": 325,
+      "by_status": {
+        "active": 285,
+        "inactive": 40
+      }
+    },
+    "PVDR": {
+      "n": 303,
+      "by_status": {
+        "current": 303
+      }
+    },
+    "RX": {
+      "n": 216,
+      "by_status": {
+        "active": 207,
+        "inactive": 9
+      }
+    },
+    "CSC": {
+      "n": 97,
+      "by_status": {
+        "inactive": 19,
+        "active": 78
+      }
+    },
+    "RM": {
+      "n": 83,
+      "by_status": {
+        "active": 71,
+        "inactive": 12
+      }
+    },
+    "RU": {
+      "n": 65,
+      "by_status": {
+        "active": 57,
+        "inactive": 8
+      }
+    },
+    "RQ": {
+      "n": 28,
+      "by_status": {
+        "active": 28
+      }
+    },
+    "RS": {
+      "n": 9,
+      "by_status": {
+        "active": 9
+      }
+    }
+  },
+  "states": {
+    "FL": 124727,
+    "(blank)": 2587,
+    "GA": 2493,
+    "TX": 1618,
+    "AL": 1080,
+    "NC": 1036,
+    "TN": 785,
+    "IL": 633,
+    "OH": 601,
+    "NY": 581,
+    "CA": 564,
+    "MI": 512,
+    "LA": 449,
+    "SC": 447,
+    "PA": 447,
+    "NJ": 446,
+    "VA": 385,
+    "MO": 340,
+    "IN": 326,
+    "MA": 310,
+    "CO": 269,
+    "MN": 268,
+    "MD": 246,
+    "MS": 237,
+    "WI": 227,
+    "KY": 213,
+    "AZ": 212,
+    "CT": 143,
+    "OK": 137,
+    "KS": 136,
+    "AR": 112,
+    "UT": 102,
+    "WA": 93,
+    "NE": 84,
+    "IA": 83,
+    "NV": 66,
+    "NH": 58,
+    "ID": 51,
+    "OR": 40,
+    "PR": 38,
+    "WV": 36,
+    "SD": 35,
+    "MT": 33,
+    "ME": 31,
+    "DE": 29,
+    "NM": 26,
+    "RI": 24,
+    "HI": 16,
+    "ND": 16,
+    "VT": 16,
+    "WY": 14,
+    "ON": 13,
+    "99": 8,
+    "QC": 7,
+    "AK": 5,
+    "DC": 5,
+    "BC": 4,
+    "VI": 4,
+    "-": 3,
+    "AB": 2,
+    "AA": 2,
+    "MB": 2,
+    "AP": 1,
+    "FP": 1,
+    "AE": 1
+  },
+  "with_address": 140935,
+  "with_dba": 121495,
+  "with_county_code": 138081,
+  "with_county_name": 83338,
+  "expiration_present": 124420,
+  "distinct_licensee_names": 103867,
+  "distinct_comma_licensee_names": 103558,
+  "comma_names_with_multiple_credentials": 23380,
+  "distinct_dba_names": 91257,
+  "dba_names_with_multiple_credentials": 19987,
+  "numeric_cores_colliding": 16088,
+  "rows_on_colliding_numeric_cores": 35824,
+  "county_codes": {
+    "23": 14579,
+    "16": 11568,
+    "60": 9325,
+    "39": 8297,
+    "46": 7571,
+    "58": 6197,
+    "62": 6017,
+    "26": 4409,
+    "68": 4298,
+    "21": 3797,
+    "74": 3190,
+    "61": 3158,
+    "15": 3142,
+    "69": 2702,
+    "63": 2512,
+    "51": 2388,
+    "45": 2145,
+    "710": 2107,
+    "66": 1998,
+    "65": 1864,
+    "18": 1754,
+    "52": 1734,
+    "53": 1525,
+    "744": 1401,
+    "37": 1330,
+    "47": 1319,
+    "27": 1296,
+    "13": 1269,
+    "11": 1266,
+    "41": 1165,
+    "59": 1136,
+    "67": 1121,
+    "56": 1044,
+    "20": 998,
+    "54": 942,
+    "701": 875,
+    "19": 845,
+    "733": 839,
+    "76": 837,
+    "28": 733,
+    "743": 655,
+    "55": 574,
+    "38": 534,
+    "736": 478,
+    "732": 464,
+    "705": 464,
+    "713": 441,
+    "722": 410,
+    "718": 398,
+    "741": 362,
+    "739": 355,
+    "70": 353,
+    "730": 353,
+    "747": 324,
+    "64": 323,
+    "22": 302,
+    "725": 280,
+    "714": 271,
+    "57": 248,
+    "36": 222,
+    "723": 215,
+    "24": 209,
+    "75": 208,
+    "48": 207,
+    "30": 206,
+    "721": 203,
+    "706": 201,
+    "720": 200,
+    "99": 194,
+    "750": 191,
+    "724": 190,
+    "71": 180,
+    "703": 178,
+    "12": 178,
+    "717": 174,
+    "42": 168,
+    "77": 164,
+    "33": 146,
+    "31": 116,
+    "707": 116,
+    "737": 115,
+    "35": 114,
+    "716": 109,
+    "14": 107,
+    "704": 83,
+    "745": 82,
+    "727": 79,
+    "40": 79,
+    "43": 75,
+    "29": 71,
+    "25": 69,
+    "748": 68,
+    "715": 66,
+    "73": 63,
+    "728": 58,
+    "72": 57,
+    "17": 49,
+    "50": 47,
+    "32": 47,
+    "712": 44,
+    "729": 42,
+    "34": 38,
+    "44": 36,
+    "49": 32,
+    "749": 31,
+    "742": 30,
+    "738": 30,
+    "726": 28,
+    "708": 27,
+    "719": 23,
+    "731": 21,
+    "740": 21,
+    "752": 20,
+    "711": 14,
+    "734": 13,
+    "751": 12,
+    "746": 11,
+    "702": 4,
+    "804": 3,
+    "709": 3,
+    "801": 2,
+    "761": 2,
+    "816": 2,
+    "812": 2,
+    "760": 1,
+    "735": 1,
+    "759": 1,
+    "802": 1
+  },
+  "county_names": {
+    "Miami-Dade": 14579,
+    "Broward": 11568,
+    "Palm Beach": 9325,
+    "Hillsborough": 8297,
+    "Lee": 7571,
+    "Orange": 6197,
+    "Pinellas": 6017,
+    "Duval": 4409,
+    "Sarasota": 4298,
+    "Collier": 3797,
+    "Pasco": 3158,
+    "Manatee": 2388,
+    "Marion": 1734
+  },
+  "code_to_name": {
+    "23|Miami-Dade": 14579,
+    "16|Broward": 11568,
+    "60|Palm Beach": 9325,
+    "39|Hillsborough": 8297,
+    "46|Lee": 7571,
+    "58|Orange": 6197,
+    "62|Pinellas": 6017,
+    "26|Duval": 4409,
+    "68|Sarasota": 4298,
+    "21|Collier": 3797,
+    "61|Pasco": 3158,
+    "51|Manatee": 2388,
+    "52|Marion": 1734
+  },
+  "qb_rows": 126666,
+  "qb_status": {
+    "current": 116899,
+    "active": 9746,
+    "other": 21
+  },
+  "legacy_discipline_staging_rows": 1541,
+  "legacy_discipline_with_license_nbr": 1541,
+  "legacy_discipline_disposition": {
+    "Final Order": 1438,
+    "Citation filed": 76,
+    "(blank)": 16,
+    "Dismissed": 10,
+    "NNC Closed": 1
+  },
+  "legacy_discipline_classification": {
+    "Licensed Activity": 1540,
+    "Licensed Activity Audit": 1
+  }
+}

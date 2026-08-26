@@ -245,10 +245,10 @@ export function emptyFilterHints(browse: DiscoveryBrowse, pathCitySlug?: string 
   const hints: string[] = [];
   if (browse.status === "active") hints.push("allow any published license status");
   if (browse.status === "inactive") hints.push("include active licenses");
-  if (browse.entity === "linked") hints.push("include firms without a high-confidence Sunbiz link");
-  if (browse.entity === "unlinked") hints.push("include Sunbiz-linked firms");
-  if (browse.discipline === "present") hints.push("include firms with no discipline in the extract");
-  if (browse.discipline === "none") hints.push("include firms with a linked discipline action");
+  if (browse.entity === "linked") hints.push("include profiles without a high-confidence Sunbiz link");
+  if (browse.entity === "unlinked") hints.push("include high-confidence Sunbiz-linked profiles");
+  if (browse.discipline === "present") hints.push("include profiles with no discipline in the extract");
+  if (browse.discipline === "none") hints.push("include profiles with a linked discipline action");
   if (browse.tenure !== "any") hints.push("clear the license-tenure band");
   if (browse.citySlug && !pathCitySlug) hints.push("clear the city filter");
   if (pathCitySlug) hints.push("step up to the full county + trade list");

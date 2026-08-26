@@ -180,7 +180,7 @@ export function RoofingCostCalculator() {
           </h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
             ZIP or city does not invent local prices — it improves matching to verified Florida
-            roofing licenses (CCC / RR).
+            roofing licenses (CCC / RC).
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <label className="block">
@@ -331,7 +331,7 @@ export function RoofingCostCalculator() {
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
             Matching uses Florida DBPR{" "}
-            <strong className="text-[var(--text)]">certified (CCC) and registered (RR)</strong>{" "}
+            <strong className="text-[var(--text)]">certified (CCC) and registered (RC)</strong>{" "}
             roofing licenses only — not general contractors as roofing substitutes. Evidence only,
             no rankings.
           </p>

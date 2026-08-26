@@ -45,7 +45,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       state,
       county,
       title: `${county.name} County FL Contractors — License Evidence`,
-      description: `Browse construction contractors with Florida DBPR licenses linked to ${county.name} County. Filter by city, status, Sunbiz link, and discipline — not a marketplace.`,
+      description: `Browse Florida DBPR construction license profiles whose HQ/base mailing county is ${county.name}. Not a list of who operates only in this county, and not a marketplace.`,
       noIndex: browseIsVariant(browse),
     });
   }

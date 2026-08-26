@@ -9,9 +9,9 @@ export function FloridaLandingChrome({
   stats,
 }: {
   children: ReactNode;
-  stats?: { contractors: number; licenses: number; sunbizLinks: number };
+  stats?: { credentials: number; activeCredentials: number; sunbizLinks: number };
 }) {
-  const values = stats ?? { contractors: 0, licenses: 0, sunbizLinks: 0 };
+  const values = stats ?? { credentials: 0, activeCredentials: 0, sunbizLinks: 0 };
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
       <Breadcrumbs
@@ -36,8 +36,8 @@ export function FloridaLandingChrome({
 
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
           {[
-            { label: "Searchable contractors", value: values.contractors },
-            { label: "Board licenses", value: values.licenses },
+            { label: "Florida contractor credentials tracked", value: values.credentials },
+            { label: "Active credentials", value: values.activeCredentials },
             { label: "High-confidence Sunbiz links", value: values.sunbizLinks },
           ].map((s) => (
             <div
@@ -51,6 +51,12 @@ export function FloridaLandingChrome({
             </div>
           ))}
         </div>
+        <p className="mt-3 max-w-2xl text-xs leading-relaxed text-[var(--muted)]">
+          Credentials are board license records, not distinct businesses. Active means DBPR
+          secondary status Active. Financially responsible officer and course/provider rows are
+          excluded from these two counts. Sunbiz links are unique name+address or name+ZIP matches
+          (city-only links are not shown here).
+        </p>
 
         <div className="mt-6 max-w-2xl rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4">
           <p className="mb-3 text-sm font-medium text-[var(--text)]">

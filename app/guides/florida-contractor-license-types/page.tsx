@@ -18,7 +18,7 @@ export const metadata: Metadata = pageMetadata({
   ogAlt: og.alt,
 });
 
-const FEATURED = ["CGC", "CBC", "CRC", "CCC", "RR", "CFC", "CAC", "CMC", "CPC", "SCC"] as const;
+const FEATURED = ["CGC", "CBC", "CRC", "CCC", "RC", "RR", "CFC", "CAC", "CMC", "CPC", "SCC"] as const;
 
 const browse = [
   { href: "/florida/roofers", label: "Florida roofers" },

@@ -7,7 +7,7 @@ import { pageMetadata } from "@/lib/seo/page-meta";
 export const metadata: Metadata = pageMetadata({
   title: "Roofing Cost Calculator — Florida planning ranges",
   description:
-    "Interactive Florida roof replacement planning calculator. Adjust size, material, stories, and complexity — then find verified CCC/RR roofing contractors. Planning only, not a bid.",
+    "Interactive Florida roof replacement planning calculator. Adjust size, material, stories, and complexity — then find licensed CCC/RC roofing contractors. Planning only, not a bid.",
   path: "/studio/roofing",
 });
 

@@ -111,19 +111,42 @@ const INFO: Record<string, OccupationInfo> = {
   },
   RR: {
     code: "RR",
+    label: "Registered Residential Contractor",
+    allows:
+      "A registered residential contractor is limited compared with a certified residential or general contractor, often with local jurisdiction conditions under Florida’s registered vs certified framework.",
+    notes:
+      "RR is not a roofing license. Registered roofing is RC. Confirm where the registration is valid.",
+  },
+  RC: {
+    code: "RC",
     label: "Registered Roofing Contractor",
     allows:
       "A registered (as opposed to certified) roofing contractor may have more limited geographic or scope conditions under Florida’s registered vs certified framework.",
     notes:
-      "Confirm where the registration is valid and whether your project location and work type are covered.",
+      "Confirm where the registration is valid and whether your project location and work type are covered. Certified roofing is CCC.",
   },
   RF: {
     code: "RF",
-    label: "Registered Specialty Contractor",
+    label: "Registered Plumbing Contractor",
     allows:
-      "Registered specialty classifications cover specific trade work under Florida’s registered contractor framework, often with local jurisdiction considerations.",
+      "A registered plumbing contractor covers plumbing work under Florida’s registered contractor framework, often with local jurisdiction considerations.",
     notes:
-      "Verify the specialty type and that the registration applies where the work will be performed.",
+      "Verify that the registration applies where the work will be performed. Certified plumbing is CFC.",
+  },
+  CVC: {
+    code: "CVC",
+    label: "Certified Solar Contractor",
+    allows:
+      "Typically may contract for solar installation work within the certified solar contractor classification.",
+    notes:
+      "CVC is solar, not sheet metal (CSC). Confirm system type, permits, and whether electrical work is performed by a licensed electrical contractor.",
+  },
+  CSC: {
+    code: "CSC",
+    label: "Certified Sheet Metal Contractor",
+    allows:
+      "Typically may contract for sheet metal work within the certified sheet metal classification.",
+    notes: "CSC is not a solar license. Certified solar is CVC.",
   },
 };
 

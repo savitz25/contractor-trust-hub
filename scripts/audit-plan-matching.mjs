@@ -19,7 +19,7 @@ function loadEnv() {
 }
 
 const FOCUS = {
-  roofing: { primary: ["CCC", "RR"], secondary: ["CGC"] },
+  roofing: { primary: ["CCC", "RC"], secondary: ["CGC"] },
   kitchen_remodel: { primary: ["CGC", "CBC", "CRC"], secondary: ["CFC"] },
   bathroom_remodel: { primary: ["CFC", "CRC", "CBC"], secondary: ["CGC"] },
   general_contracting: { primary: ["CGC", "CBC", "CRC"], secondary: [] },
@@ -134,13 +134,13 @@ async function main() {
         AND l.occupation_code = ANY($1::text[])
       GROUP BY 1 ORDER BY n DESC
       `,
-      [["CCC", "RR", "CGC", "CBC", "CRC", "CFC"]]
+      [["CCC", "RC", "CGC", "CBC", "CRC", "CFC"]]
     );
     console.log("\n=== statewide active non-thin ===");
     console.log(statewide.rows);
 
     // County fill rates
-    for (const code of ["CCC", "RR", "CFC", "CGC", "CRC"]) {
+    for (const code of ["CCC", "RC", "CFC", "CGC", "CRC"]) {
       const fill = await pool.query(
         `
         SELECT
@@ -229,7 +229,7 @@ async function main() {
             ROW_NUMBER() OVER (
               PARTITION BY c.id ORDER BY
                 CASE WHEN LEFT(TRIM(COALESCE(l.postal_code,'')),5)=$2 THEN 0 ELSE 1 END,
-                CASE l.occupation_code WHEN 'CCC' THEN 0 WHEN 'RR' THEN 1 WHEN 'CGC' THEN 2 ELSE 9 END
+                CASE l.occupation_code WHEN 'CCC' THEN 0 WHEN 'RC' THEN 1 WHEN 'CGC' THEN 2 ELSE 9 END
             ) AS rn
           FROM licenses l
           JOIN contractors c ON c.id = l.contractor_id
@@ -246,7 +246,7 @@ async function main() {
         GROUP BY 1 ORDER BY n DESC
         LIMIT 5
         `,
-        [["CCC", "RR", "CGC"], loc.zip, loc.expectCounty]
+        [["CCC", "RC", "CGC"], loc.zip, loc.expectCounty]
       );
       console.log(loc.zip, r.rows);
     }

@@ -1,0 +1,1583 @@
+{
+  "meta": {
+    "generated_at": "2026-08-26T14:41:43.074771+00:00",
+    "as_of": "2026-08-26",
+    "method": "supabase_postgrest_count_exact",
+    "script": "scripts/audit_florida_intelligence_rest.py",
+    "note": "Pooler password auth failed; counts are live Content-Range totals."
+  },
+  "ingest_batches": [
+    {
+      "source_system": "fl_dfs",
+      "source_dataset": "fl_dfs_workers_comp_stop_work",
+      "source_url": "https://dwcdataportal.fldfs.com/Emp_List.aspx?vEmployerName=&vddSortBy=1",
+      "source_file": "Emp_List.aspx",
+      "extracted_at": "2026-08-24T20:09:45.980409+00:00",
+      "row_count": 48260,
+      "checksum_sha256": "fa40871e338dd97e0c8ca2b14bf13b61e3c1b6751a2d582bc25ba8585014d13b",
+      "notes": "{\"normalized_snapshot_fingerprint\":\"sha256:393817d6bff052e461d1eddb0bd5df50a2f34f3d231a2c970882661d568c6e68\",\"raw_rows\":48260,\"schema_fingerprint\":\"sha256:4e8562917ef7568b6b48f1978bd0c6c11015186b3da4bc05011f53a1e1dca6fa\",\"task\":\"CTH-FL-STATE-006A\",\"unique_observations\":48254}",
+      "created_at": "2026-08-24T20:41:37.748719+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_rf",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2526.csv",
+      "source_file": "contractor_disc_rf_2526.csv",
+      "extracted_at": "2026-08-24T17:05:17.527478+00:00",
+      "row_count": 12,
+      "checksum_sha256": "297b4e87309c23b9a313f995700d9117cfafbf7ffd719e7477ac1ac7778bc475",
+      "notes": "CTH-FL-STATE-004 Recovery Fund 2025-26",
+      "created_at": "2026-08-24T19:07:17.883+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_rf",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2425.csv",
+      "source_file": "contractor_disc_rf_2425.csv",
+      "extracted_at": "2026-08-24T17:05:17.323131+00:00",
+      "row_count": 647,
+      "checksum_sha256": "fed3e761246c936ca87f2067367f30d64665b8914c9e71fd966008464b18b1fa",
+      "notes": "CTH-FL-STATE-004 Recovery Fund 2024-25",
+      "created_at": "2026-08-24T19:07:17.883+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_rf",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2324.csv",
+      "source_file": "contractor_disc_rf_2324.csv",
+      "extracted_at": "2026-08-24T17:05:16.87388+00:00",
+      "row_count": 216,
+      "checksum_sha256": "2594e81df06c21778edca9e7683ba329b29d3b282e79375f69e3906f69d28c01",
+      "notes": "CTH-FL-STATE-004 Recovery Fund 2023-24",
+      "created_at": "2026-08-24T19:07:17.883+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_rf",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2223.csv",
+      "source_file": "contractor_disc_rf_2223.csv",
+      "extracted_at": "2026-08-24T17:05:16.612015+00:00",
+      "row_count": 256,
+      "checksum_sha256": "c7a6e73bc819aa8940af09e1a1885873eecb336e3ccb2eef88c3ebce57e8b3cc",
+      "notes": "CTH-FL-STATE-004 Recovery Fund 2022-23",
+      "created_at": "2026-08-24T19:07:17.883+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_rf",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_rf_2122.csv",
+      "source_file": "contractor_disc_rf_2122.csv",
+      "extracted_at": "2026-08-24T17:05:16.234442+00:00",
+      "row_count": 548,
+      "checksum_sha256": "ab863b07b1af6893af9fb419a4992270d430bec96d400a28c41ecb46eda55182",
+      "notes": "CTH-FL-STATE-004 Recovery Fund 2021-22",
+      "created_at": "2026-08-24T19:07:17.883+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_ula",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2526.csv",
+      "source_file": "contractor_disc_ula_2526.csv",
+      "extracted_at": "2026-08-24T15:03:59.371156+00:00",
+      "row_count": 1842,
+      "checksum_sha256": "3e9a92d8340f2c0975e4204d31b6d83cbc5bf8a7eef36a85da11b30218e87c9a",
+      "notes": "CTH-FL-STATE-003 controlled ULA ingestion 2025-26",
+      "created_at": "2026-08-24T15:59:13.847359+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_ula",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2425.csv",
+      "source_file": "contractor_disc_ula_2425.csv",
+      "extracted_at": "2026-08-24T15:03:58.904557+00:00",
+      "row_count": 2338,
+      "checksum_sha256": "06169ddf04e1911fc6414977924c3eea28d872899a5499f6d86c766813f22b15",
+      "notes": "CTH-FL-STATE-003 controlled ULA ingestion 2024-25",
+      "created_at": "2026-08-24T15:59:13.847359+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_ula",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2324.csv",
+      "source_file": "contractor_disc_ula_2324.csv",
+      "extracted_at": "2026-08-24T15:03:58.312721+00:00",
+      "row_count": 2568,
+      "checksum_sha256": "a5036af5f02e85d12b9af3252d17368b71b4c7cd9fa5c6b9a57fafcd4d2dcddc",
+      "notes": "CTH-FL-STATE-003 controlled ULA ingestion 2023-24",
+      "created_at": "2026-08-24T15:59:13.847359+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_ula",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2223.csv",
+      "source_file": "contractor_disc_ula_2223.csv",
+      "extracted_at": "2026-08-24T15:03:57.747356+00:00",
+      "row_count": 2631,
+      "checksum_sha256": "2c03c334e3bcda679d689494c397f7166c205aa60d3d43c05c8cf875ee84cc7b",
+      "notes": "CTH-FL-STATE-003 controlled ULA ingestion 2022-23",
+      "created_at": "2026-08-24T15:59:13.847359+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_ula",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_ula_2122.csv",
+      "source_file": "contractor_disc_ula_2122.csv",
+      "extracted_at": "2026-08-24T15:03:56.941313+00:00",
+      "row_count": 2312,
+      "checksum_sha256": "4f0ca3409686d5a1fe960e7ecf2c0cf0416d62e216d29c4bc371432846d07d1c",
+      "notes": "CTH-FL-STATE-003 controlled ULA ingestion 2021-22",
+      "created_at": "2026-08-24T15:59:13.847359+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2526.csv",
+      "source_file": "contractor_disc_lic_2526.csv",
+      "extracted_at": "2026-08-24T12:58:27.272901+00:00",
+      "row_count": 395,
+      "checksum_sha256": "1cecf33f0b5a5e329527dd2df723cb3ec658e60027d81805c765b639a55155f7",
+      "notes": "CTH-FL-STATE-002 controlled historical licensed-discipline ingestion 2025-26",
+      "created_at": "2026-08-24T13:50:53.74795+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2324.csv",
+      "source_file": "contractor_disc_lic_2324.csv",
+      "extracted_at": "2026-08-24T12:58:26.436362+00:00",
+      "row_count": 1878,
+      "checksum_sha256": "90a561929f6bf2821900ab0cb1b54177bcff43bd4f8b411fe608a9928b641de4",
+      "notes": "CTH-FL-STATE-002 controlled historical licensed-discipline ingestion 2023-24",
+      "created_at": "2026-08-24T13:50:53.74795+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2223.csv",
+      "source_file": "contractor_disc_lic_2223.csv",
+      "extracted_at": "2026-08-24T12:58:25.984659+00:00",
+      "row_count": 1534,
+      "checksum_sha256": "cd733ddce04de63d76c5f123b1004990ddfd03f2260f32ccf9e26bd817c81884",
+      "notes": "CTH-FL-STATE-002 controlled historical licensed-discipline ingestion 2022-23",
+      "created_at": "2026-08-24T13:50:53.74795+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2122.csv",
+      "source_file": "contractor_disc_lic_2122.csv",
+      "extracted_at": "2026-08-24T12:58:25.435405+00:00",
+      "row_count": 1109,
+      "checksum_sha256": "ab67307147fb2007b4751900d105773d7cf2cee83dece8b9ac6dca42096500d0",
+      "notes": "CTH-FL-STATE-002 controlled historical licensed-discipline ingestion 2021-22",
+      "created_at": "2026-08-24T13:50:53.74795+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "source_url": "https://www2.myfloridalicense.com/pro/cilb/reports/contractor_disc_lic_2425.csv",
+      "source_file": "contractor_disc_lic_2425.csv",
+      "extracted_at": "2026-08-24T05:08:22.625922+00:00",
+      "row_count": 1541,
+      "checksum_sha256": "189b0043984b25876bdbf6c814b5c6539db9374e3cd01e5c8e94e7777442c7ef",
+      "notes": "CTH-FL-STATE-002A legacy provenance backfill source-snapshot verification; not new adverse-evidence ingestion",
+      "created_at": "2026-08-24T12:28:43.515374+00:00"
+    },
+    {
+      "source_system": "ky_dhbc",
+      "source_dataset": "ky_dhbc_licensee_search",
+      "source_url": "https://dhbc.ky.gov/Search/HBC_List_Licensees.aspx",
+      "source_file": "data/staging/ky_dhbc/licenses_normalized.csv",
+      "extracted_at": "2026-08-14T19:22:48.183453+00:00",
+      "row_count": 8360,
+      "checksum_sha256": null,
+      "notes": "Kentucky DHBC specialty trades only \u2014 no statewide GC. No official bulk CSV; samples from polite paginated search harvest. Prefer contractor-level types for firm-oriented Verify. Confirm on official DHBC licensee search.",
+      "created_at": "2026-08-14T19:22:57.683424+00:00"
+    },
+    {
+      "source_system": "ok_cib",
+      "source_dataset": "ok_cib_specialty_trades",
+      "source_url": "https://oklahoma.gov/cib.html",
+      "source_file": "data/staging/ok_cib/licenses_normalized.csv",
+      "extracted_at": "2026-08-14T18:21:34.545327+00:00",
+      "row_count": 5415,
+      "checksum_sha256": null,
+      "notes": "Oklahoma CIB specialty trades only \u2014 no statewide GC license. Roofing path uses official public JSON API. Electrical/plumbing/mechanical/inspector require GLSuite search harvest for full coverage. Confirm on official CIB lookup. Published insurance dates are not live COI verification. Citation flag is not full disciplinary narrative.",
+      "created_at": "2026-08-14T18:22:05.466453+00:00"
+    },
+    {
+      "source_system": "ms_sbc",
+      "source_dataset": "msboc_contractor_list",
+      "source_url": "http://search.msboc.us/ConsolidatedResults.cfm",
+      "source_file": "data/staging/ms_sbc/licenses_normalized.csv",
+      "extracted_at": "2026-08-14T18:05:06.563373+00:00",
+      "row_count": null,
+      "checksum_sha256": "4d6704d4af7fe435fe87dc66ea75443909362c4eafb11600f49be9c42b846e81",
+      "notes": "load_ms_sbc_to_postgres \u2014 Mississippi MSBOC official public list",
+      "created_at": "2026-08-14T18:05:06.612707+00:00"
+    },
+    {
+      "source_system": "tn_blc",
+      "source_dataset": "tn_blc_contractor_qa_dashboard",
+      "source_url": "https://www.tn.gov/commerce/regboards/contractors/consumer/verify-qa.html",
+      "source_file": "data/staging/tn_blc/licenses_normalized.csv",
+      "extracted_at": "2026-08-14T17:36:50.499014+00:00",
+      "row_count": 28852,
+      "checksum_sha256": null,
+      "notes": "TN BLC contractor licenses from official Tableau public dashboard CSV. Multi-QA rows collapsed per license number; QAs stored in secondary_status and raw_payload. AGLM aggregate monetary limit parsed when present. Confirm on official TN verify lookup. No invented discipline.",
+      "created_at": "2026-08-14T17:37:07.453448+00:00"
+    },
+    {
+      "source_system": "ms_sbc",
+      "source_dataset": "msboc_contractor_list",
+      "source_url": "http://search.msboc.us/ConsolidatedResults.cfm",
+      "source_file": "data/staging/ms_sbc/licenses_normalized.csv",
+      "extracted_at": "2026-08-14T16:51:27.827886+00:00",
+      "row_count": null,
+      "checksum_sha256": "4d6704d4af7fe435fe87dc66ea75443909362c4eafb11600f49be9c42b846e81",
+      "notes": "load_ms_sbc_to_postgres \u2014 Mississippi MSBOC official public list",
+      "created_at": "2026-08-14T16:51:27.876384+00:00"
+    },
+    {
+      "source_system": "ms_sbc",
+      "source_dataset": "msboc_contractor_list",
+      "source_url": "http://search.msboc.us/ConsolidatedResults.cfm",
+      "source_file": "data/staging/ms_sbc/licenses_normalized.csv",
+      "extracted_at": "2026-08-14T16:37:13.647581+00:00",
+      "row_count": null,
+      "checksum_sha256": "4d6704d4af7fe435fe87dc66ea75443909362c4eafb11600f49be9c42b846e81",
+      "notes": "load_ms_sbc_to_postgres \u2014 Mississippi MSBOC official public list",
+      "created_at": "2026-08-14T16:37:13.69885+00:00"
+    },
+    {
+      "source_system": "ms_sbc",
+      "source_dataset": "msboc_contractor_list",
+      "source_url": "http://search.msboc.us/ConsolidatedResults.cfm",
+      "source_file": "data/staging/ms_sbc/licenses_normalized.csv",
+      "extracted_at": "2026-08-14T16:16:09.170149+00:00",
+      "row_count": null,
+      "checksum_sha256": "2fd1edb6458b66b383ca0da586ba6385ab2fff77cd76b6e238a8d45a954df8fb",
+      "notes": "load_ms_sbc_to_postgres \u2014 Mississippi MSBOC official public list",
+      "created_at": "2026-08-14T16:16:09.220111+00:00"
+    },
+    {
+      "source_system": "id_dopl",
+      "source_dataset": "id_dopl_public_list",
+      "source_url": "https://edopl.idaho.gov/OnlineServices/?link=PubListSearch",
+      "source_file": "data/staging/id_dopl/licenses_normalized.csv",
+      "extracted_at": "2026-08-14T15:23:03.343919+00:00",
+      "row_count": 72644,
+      "checksum_sha256": null,
+      "notes": "Idaho DOPL public license list. Contractors Board rows are registrations (not competency GC licenses). Trade boards (electrical/plumbing/HVAC) and public works are licenses. Confirm on official eDOPL lookup. Discipline is a Yes/No flag only \u2014 no case narrative invented.",
+      "created_at": "2026-08-14T15:23:17.180991+00:00"
+    },
+    {
+      "source_system": "la_lslbc",
+      "source_dataset": "lslbc_contractor_roster",
+      "source_url": "https://arlspublic.lslbc.louisiana.gov/Public/RequestRoster",
+      "source_file": "data/staging/la_lslbc/licenses_normalized.csv",
+      "extracted_at": "2026-08-14T15:01:13.321832+00:00",
+      "row_count": null,
+      "checksum_sha256": "d5501a8899a8c3c7dfb9c8e2cb8d8f08bbb4ecfb9bd753a766e0267d9e0d5f7a",
+      "notes": "load_la_lslbc_to_postgres \u2014 Louisiana LSLBC official public roster",
+      "created_at": "2026-08-14T15:01:13.358536+00:00"
+    },
+    {
+      "source_system": "mn_dli",
+      "source_dataset": "mn_dli_ccld_export",
+      "source_url": "https://www.dli.mn.gov/license-and-registration-lookup",
+      "source_file": "data/staging/mn_dli/licenses_normalized.csv",
+      "extracted_at": "2026-08-14T13:57:15.014388+00:00",
+      "row_count": 276793,
+      "checksum_sha256": null,
+      "notes": "MN DLI CCLD bulk export + contractor registrations. Active status is Issued/Licensed. Confirm on official DLI lookup.",
+      "created_at": "2026-08-14T13:57:37.149024+00:00"
+    },
+    {
+      "source_system": "va_dpor",
+      "source_dataset": "va_dpor_contractors_regulant",
+      "source_url": "https://www.dpor.virginia.gov/node/10230",
+      "source_file": "data/staging/va_dpor/licenses_normalized.csv",
+      "extracted_at": "2026-08-14T13:15:20.117993+00:00",
+      "row_count": 84106,
+      "checksum_sha256": null,
+      "notes": "VA DPOR Board for Contractors regulant lists (current). Confirm on official DPOR lookup.",
+      "created_at": "2026-08-14T13:15:28.160441+00:00"
+    },
+    {
+      "source_system": "ct_dcp",
+      "source_dataset": "ct_hic_5r9m-qgni",
+      "source_url": "https://data.ct.gov/Business/Home-Improvement-Contractor-Licenses-Includes-Acti/5r9m-qgni",
+      "source_file": "data/staging/ct_dcp/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T22:31:22.62773+00:00",
+      "row_count": 134863,
+      "checksum_sha256": "5d22bed81db23e47f273da3fdf66e9a4d98789f533b6986e68a84421a534bcb2",
+      "notes": "CT DCP HIC open data (active + inactive) from data.ct.gov",
+      "created_at": "2026-08-13T22:32:40.497389+00:00"
+    },
+    {
+      "source_system": "az_roc",
+      "source_dataset": "roc_all_current",
+      "source_url": "https://roc.az.gov/posting-list",
+      "source_file": "data/staging/az_roc_sample/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T22:28:32.204464+00:00",
+      "row_count": null,
+      "checksum_sha256": "1141330b31eb413def206e2a55f5a8304a4b89366f1bec1a2439bd992e075290",
+      "notes": "load_az_roc_to_postgres \u2014 Arizona ROC current contractors",
+      "created_at": "2026-08-13T22:28:32.275032+00:00"
+    },
+    {
+      "source_system": "nv_nscb",
+      "source_dataset": "nscb_active_directory",
+      "source_url": "https://app.nvcontractorsboard.com/Clients/nvscb/Public/ContractorListing/ListingSearch.aspx",
+      "source_file": "data/staging/nv_nscb/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T22:03:39.300816+00:00",
+      "row_count": 19120,
+      "checksum_sha256": null,
+      "notes": "Nevada NSCB Active Directory of Licensed Contractors from official listing search. Dedupe by license number (NV-NSCB:{n}). Always confirm on NSCB License Search.",
+      "created_at": "2026-08-13T22:08:10.968666+00:00"
+    },
+    {
+      "source_system": "az_roc",
+      "source_dataset": "roc_disciplinary_actions",
+      "source_url": "https://roc.az.gov/posting-list",
+      "source_file": "data/staging/az_roc/discipline_normalized.csv",
+      "extracted_at": "2026-08-13T21:35:31.726744+00:00",
+      "row_count": 459,
+      "checksum_sha256": "d1f2bd94adb75d2d561c372687fbf264cef4626dec50b173b73b7f4a24d145fb",
+      "notes": "Official ROC Disciplinary Actions posting-list CSV. Soft-link to active az_roc licenses by exact license number only. Many rows are Revoked and may not appear on the current active list. Absence of a row is not a clean history certificate.",
+      "created_at": "2026-08-13T21:38:30.694625+00:00"
+    },
+    {
+      "source_system": "az_roc",
+      "source_dataset": "roc_current_active_contractors",
+      "source_url": "https://roc.az.gov/posting-list",
+      "source_file": "data/staging/az_roc/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T21:08:21.47791+00:00",
+      "row_count": 58199,
+      "checksum_sha256": null,
+      "notes": "Arizona ROC official current active contractor posting list. Dedupe by license number (AZ-ROC:{LicenseNo}). Always confirm on ROC contractor search. Discipline not loaded from this extract.",
+      "created_at": "2026-08-13T21:08:38.918521+00:00"
+    },
+    {
+      "source_system": "ca_cslb",
+      "source_dataset": "cslb_public_data_portal_county_lists",
+      "source_url": "https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx",
+      "source_file": "data/staging/ca_cslb/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T20:46:37.258385+00:00",
+      "row_count": 43779,
+      "checksum_sha256": null,
+      "notes": "CSLB Public Data Portal county/classification Excel extracts. Deduped by license number. Coverage is limited to counties present in the download set. Always confirm on CSLB Instant License Check.",
+      "created_at": "2026-08-13T20:46:45.511387+00:00"
+    },
+    {
+      "source_system": "ca_cslb",
+      "source_dataset": "cslb_public_data_portal_county_lists",
+      "source_url": "https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx",
+      "source_file": "data/staging/ca_cslb/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T20:00:22.673685+00:00",
+      "row_count": 41670,
+      "checksum_sha256": null,
+      "notes": "CSLB Public Data Portal county/classification Excel extracts. Deduped by license number. Coverage is limited to counties present in the download set. Always confirm on CSLB Instant License Check.",
+      "created_at": "2026-08-13T20:00:54.270036+00:00"
+    },
+    {
+      "source_system": "ca_cslb",
+      "source_dataset": "cslb_public_data_portal_county_lists",
+      "source_url": "https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx",
+      "source_file": "data/staging/ca_cslb/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T18:46:29.598847+00:00",
+      "row_count": 36665,
+      "checksum_sha256": null,
+      "notes": "CSLB Public Data Portal county/classification Excel extracts. Deduped by license number. Coverage is limited to counties present in the download set. Always confirm on CSLB Instant License Check.",
+      "created_at": "2026-08-13T18:51:11.624779+00:00"
+    },
+    {
+      "source_system": "wa_lni",
+      "source_dataset": "lni_contractor_licenses",
+      "source_url": "https://data.wa.gov/Labor/L-I-Contractor-License-Data-General/m8qx-ubtq",
+      "source_file": "data/staging/wa_lni/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T18:08:47.229091+00:00",
+      "row_count": 160998,
+      "checksum_sha256": "040d7826657777c44121dfa24a54b840ea1f01dbf80562cc8e306e12cdf68fa6",
+      "notes": "load_wa_lni_to_postgres \u2014 Washington L&I contractor licenses",
+      "created_at": "2026-08-13T18:08:47.279134+00:00"
+    },
+    {
+      "source_system": "wa_lni",
+      "source_dataset": "lni_contractor_licenses",
+      "source_url": "https://data.wa.gov/Labor/L-I-Contractor-License-Data-General/m8qx-ubtq",
+      "source_file": "data/staging/wa_lni_sample/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T18:08:17.978794+00:00",
+      "row_count": null,
+      "checksum_sha256": "7d1f5f1995c596ac39abfce9321f9e122361883fb46c2ea3adaee7b951f4f3ef",
+      "notes": "load_wa_lni_to_postgres \u2014 Washington L&I contractor licenses",
+      "created_at": "2026-08-13T18:08:18.027956+00:00"
+    },
+    {
+      "source_system": "nj_enforcement",
+      "source_dataset": "contractor_hic_registration",
+      "source_url": "https://www.njconsumeraffairs.gov/",
+      "source_file": "data/staging/nj_dca/enforcement_normalized.csv",
+      "extracted_at": "2026-08-13T17:09:39.870789+00:00",
+      "row_count": null,
+      "checksum_sha256": "c57935474ea252ebccd0cbecb0516a5f42fc3a7d0575362248ff8ea054c36e81",
+      "notes": "NJ DCA HIC + specialty boards \u2014 no statewide GC. Registration + optional high-confidence entity/enforcement.",
+      "created_at": "2026-08-13T18:04:07.465596+00:00"
+    },
+    {
+      "source_system": "nj_dca",
+      "source_dataset": "contractor_hic_registration",
+      "source_url": "https://www.njconsumeraffairs.gov/",
+      "source_file": "data/staging/nj_dca/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T17:09:39.870789+00:00",
+      "row_count": 87355,
+      "checksum_sha256": "c57935474ea252ebccd0cbecb0516a5f42fc3a7d0575362248ff8ea054c36e81",
+      "notes": "NJ DCA HIC + specialty boards \u2014 no statewide GC. Registration + optional high-confidence entity/enforcement.",
+      "created_at": "2026-08-13T17:10:23.212304+00:00"
+    },
+    {
+      "source_system": "nj_dca",
+      "source_dataset": "contractor_hic_registration",
+      "source_url": "https://www.njconsumeraffairs.gov/",
+      "source_file": "data/staging/nj_dca/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T16:49:33.48577+00:00",
+      "row_count": 31258,
+      "checksum_sha256": "b5156696ad994c48aecb522e8b3d83ed5a7ab2ac405954514e967d8f3a0fac21",
+      "notes": "NJ DCA HIC + specialty boards \u2014 no statewide GC. Registration + optional high-confidence entity/enforcement.",
+      "created_at": "2026-08-13T16:55:12.437181+00:00"
+    },
+    {
+      "source_system": "nj_dca",
+      "source_dataset": "contractor_hic_registration",
+      "source_url": "https://www.njconsumeraffairs.gov/",
+      "source_file": "data/staging/nj_dca/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T16:49:33.48577+00:00",
+      "row_count": 50,
+      "checksum_sha256": "b5156696ad994c48aecb522e8b3d83ed5a7ab2ac405954514e967d8f3a0fac21",
+      "notes": "NJ DCA HIC + specialty boards \u2014 no statewide GC. Registration + optional high-confidence entity/enforcement.",
+      "created_at": "2026-08-13T16:55:04.286087+00:00"
+    },
+    {
+      "source_system": "or_ccb",
+      "source_dataset": "ccb_active_licenses",
+      "source_url": "https://data.oregon.gov/Business/CCB-Active-Licenses/g77e-6bhs",
+      "source_file": "data/staging/or_ccb/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T16:42:35.711313+00:00",
+      "row_count": null,
+      "checksum_sha256": "3e29774d4128d84fbb6a523bc326c837d47329cbcb1cb8a4d8a29b78df430ac2",
+      "notes": "load_or_ccb_to_postgres \u2014 Oregon CCB Active Licenses",
+      "created_at": "2026-08-13T16:42:35.760217+00:00"
+    },
+    {
+      "source_system": "tx_tsbpe",
+      "source_dataset": "tsbpe_free_licensee_lists",
+      "source_url": "https://tsbpe.texas.gov/free-licensee-list/",
+      "source_file": "data/staging/tx_tsbpe/licenses_normalized.csv",
+      "extracted_at": "2026-08-13T16:09:25.153092+00:00",
+      "row_count": null,
+      "checksum_sha256": "7f93238cee106eddecb28e727545e45d862ec2d8d70ea84be2299e369ab8d19c",
+      "notes": "load_tx_tsbpe_to_postgres \u2014 TSBPE plumbing (RMP/Master) (no statewide GC)",
+      "created_at": "2026-08-13T16:09:25.202152+00:00"
+    },
+    {
+      "source_system": "tx_tdlr",
+      "source_dataset": "tdlr_specialty_licenses",
+      "source_url": "https://data.texas.gov/dataset/TDLR-All-Licenses/7358-krk7",
+      "source_file": "data/staging/tx_tdlr/licenses_normalized.csv",
+      "extracted_at": "2026-08-12T21:22:00.003242+00:00",
+      "row_count": null,
+      "checksum_sha256": "3c3ea0b986ea2b39431cee0e9e44ae12ccc1fe722ee848732c9edd73dfc82be9",
+      "notes": "load_tx_tdlr_to_postgres \u2014 TDLR specialty contractors only (no statewide GC)",
+      "created_at": "2026-08-12T21:22:00.061957+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data/raw/sunbiz/quarterly/cordata.zip#name-filtered",
+      "extracted_at": "2026-08-12T05:02:45.518674+00:00",
+      "row_count": null,
+      "checksum_sha256": "name-filtered-quarterly",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-12T05:02:40.567631+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data/raw/sunbiz/quarterly/cordata.zip",
+      "extracted_at": "2026-08-11T19:01:18.086357+00:00",
+      "row_count": null,
+      "checksum_sha256": "stream-quarterly",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-11T19:01:18.180588+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data/raw/sunbiz/quarterly/cordata.zip",
+      "extracted_at": "2026-08-11T18:28:54.117864+00:00",
+      "row_count": null,
+      "checksum_sha256": "stream-quarterly",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-11T18:28:54.218343+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data\\staging\\fl_sunbiz_full\\entities_normalized.csv#shard3/4",
+      "extracted_at": "2026-08-11T18:16:34.783855+00:00",
+      "row_count": null,
+      "checksum_sha256": "skipped-large",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-11T18:16:34.883362+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data\\staging\\fl_sunbiz_full\\entities_normalized.csv#shard2/4",
+      "extracted_at": "2026-08-11T18:16:34.763292+00:00",
+      "row_count": null,
+      "checksum_sha256": "skipped-large",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-11T18:16:34.863086+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data\\staging\\fl_sunbiz_full\\entities_normalized.csv#shard1/4",
+      "extracted_at": "2026-08-11T18:16:34.747123+00:00",
+      "row_count": null,
+      "checksum_sha256": "skipped-large",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-11T18:16:34.847177+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data\\staging\\fl_sunbiz_full\\entities_normalized.csv#shard0/4",
+      "extracted_at": "2026-08-11T18:16:34.729508+00:00",
+      "row_count": null,
+      "checksum_sha256": "skipped-large",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-11T18:16:34.828805+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data\\staging\\fl_sunbiz_full\\entities_normalized.csv#shard0/4",
+      "extracted_at": "2026-08-11T18:15:53.100951+00:00",
+      "row_count": null,
+      "checksum_sha256": "skipped-large",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-11T18:15:53.200829+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data/staging/fl_sunbiz_full/entities_normalized.csv",
+      "extracted_at": "2026-08-11T17:26:36.045473+00:00",
+      "row_count": null,
+      "checksum_sha256": "1d0f9e513d71c6af80c649877d9954acbfeac1cc68c0ea30af40cae69213724a",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-11T17:26:36.142075+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data/staging/fl_sunbiz_full/entities_normalized.csv",
+      "extracted_at": "2026-08-11T17:19:05.795939+00:00",
+      "row_count": null,
+      "checksum_sha256": "1d0f9e513d71c6af80c649877d9954acbfeac1cc68c0ea30af40cae69213724a",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-11T17:19:05.892515+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data/staging/fl_sunbiz_full/entities_normalized.csv",
+      "extracted_at": "2026-08-11T14:39:04.884754+00:00",
+      "row_count": null,
+      "checksum_sha256": "1d0f9e513d71c6af80c649877d9954acbfeac1cc68c0ea30af40cae69213724a",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-11T14:39:04.980777+00:00"
+    },
+    {
+      "source_system": "fl_sunbiz",
+      "source_dataset": "corporate_entities",
+      "source_url": "https://dos.fl.gov/sunbiz/other-services/data-downloads/",
+      "source_file": "data/staging/fl_sunbiz/entities_normalized.csv",
+      "extracted_at": "2026-08-11T12:24:47.585578+00:00",
+      "row_count": null,
+      "checksum_sha256": "0ff8e5e4e44c32bf54de3ed855e78168894b42792290a71bcc19b11382e0b1e0",
+      "notes": "load_sunbiz_to_postgres",
+      "created_at": "2026-08-11T12:24:47.671715+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "source_url": null,
+      "source_file": "data/staging/fl_dbpr_full/discipline_normalized.csv",
+      "extracted_at": "2026-08-11T07:15:51.183624+00:00",
+      "row_count": null,
+      "checksum_sha256": "323c25221bd284db08bf2604ef3c0176aee56dd03a421f7bbfe69c6da0d58781",
+      "notes": "load_fl_dbpr_to_postgres discipline",
+      "created_at": "2026-08-11T07:15:51.275009+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "qualifying_businesses",
+      "source_url": "https://www2.myfloridalicense.com/sto/file_download/extracts//CONSTRUCTIONLICENSE_1.csv",
+      "source_file": "data/staging/fl_dbpr_full/qualifying_businesses_normalized.csv",
+      "extracted_at": "2026-08-11T02:27:55.066239+00:00",
+      "row_count": null,
+      "checksum_sha256": "9eff844228bf06b2c8eecd2bf8db6b5d6c6aecae2899f8eb9ccd3b992cdc1547",
+      "notes": "load_fl_dbpr_to_postgres QB entities (no invented licenses)",
+      "created_at": "2026-08-11T02:27:55.131496+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "construction_licensees",
+      "source_url": "https://www2.myfloridalicense.com/sto/file_download/extracts//CONSTRUCTIONLICENSE_1.csv",
+      "source_file": "data/staging/fl_dbpr_full/licenses_normalized.csv",
+      "extracted_at": "2026-08-10T22:49:58.584081+00:00",
+      "row_count": null,
+      "checksum_sha256": "cc3d637c1d3d291f6fc31f25406485260682fa57b6fd20e28a71615de92676cb",
+      "notes": "load_fl_dbpr_to_postgres licenses",
+      "created_at": "2026-08-10T22:49:58.665983+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "source_url": null,
+      "source_file": "data/staging/fl_dbpr/discipline_normalized.csv",
+      "extracted_at": "2026-08-10T22:48:28.183902+00:00",
+      "row_count": null,
+      "checksum_sha256": "323c25221bd284db08bf2604ef3c0176aee56dd03a421f7bbfe69c6da0d58781",
+      "notes": "load_fl_dbpr_to_postgres discipline",
+      "created_at": "2026-08-10T22:48:28.267345+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "qualifying_businesses",
+      "source_url": "https://www2.myfloridalicense.com/sto/file_download/extracts//CONSTRUCTIONLICENSE_1.csv",
+      "source_file": "data/staging/fl_dbpr/qualifying_businesses_normalized.csv",
+      "extracted_at": "2026-08-10T22:48:28.030412+00:00",
+      "row_count": null,
+      "checksum_sha256": "52d972211a4d7e0983581cd3999437cba315c4141fd979cc9ed65aa5d3e76381",
+      "notes": "load_fl_dbpr_to_postgres QB entities (no invented licenses)",
+      "created_at": "2026-08-10T22:48:28.113461+00:00"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "construction_licensees",
+      "source_url": "https://www2.myfloridalicense.com/sto/file_download/extracts//CONSTRUCTIONLICENSE_1.csv",
+      "source_file": "data/staging/fl_dbpr/licenses_normalized.csv",
+      "extracted_at": "2026-08-10T22:45:31.669758+00:00",
+      "row_count": null,
+      "checksum_sha256": "69505712ef3a31b22ef3c3ec6c68c1ad38dd583af40d69b1dc956effb81c2836",
+      "notes": "load_fl_dbpr_to_postgres licenses",
+      "created_at": "2026-08-10T22:45:31.756075+00:00"
+    }
+  ],
+  "licensing": {
+    "entity_counted": "licenses rows where source_system=fl_dbpr (QB rows are not in this table)",
+    "dedup_key": "(source_system, external_key)",
+    "credential_rows": 143516,
+    "with_contractor_id": 143516,
+    "state_fl": 127314,
+    "state_not_fl": 16202,
+    "state_null": 0,
+    "with_address": 140935,
+    "with_county_code": 138081,
+    "with_county_name": 83338,
+    "with_dba": 121495,
+    "expiration_in_past": 2501,
+    "expiration_in_future": 121919,
+    "expiration_null": 19096,
+    "by_status": {
+      "active": 104444,
+      "inactive": 14786,
+      "current": 24217,
+      "expired": 0,
+      "suspended": 0,
+      "revoked": 0,
+      "other": 69,
+      "unknown": 0,
+      "null": 0
+    },
+    "active_plus_current": 128661
+  },
+  "occupations": [
+    {
+      "occupation_code": "CGC",
+      "credential_rows": 38923,
+      "active": 33056,
+      "current": 0,
+      "inactive": 5866
+    },
+    {
+      "occupation_code": "CBC",
+      "credential_rows": 19722,
+      "active": 17242,
+      "current": 0,
+      "inactive": 2479
+    },
+    {
+      "occupation_code": "CRC",
+      "credential_rows": 8556,
+      "active": 7283,
+      "current": 0,
+      "inactive": 1273
+    },
+    {
+      "occupation_code": "CCC",
+      "credential_rows": 11275,
+      "active": 10093,
+      "current": 0,
+      "inactive": 1182
+    },
+    {
+      "occupation_code": "CAC",
+      "credential_rows": 12378,
+      "active": 11125,
+      "current": 0,
+      "inactive": 1253
+    },
+    {
+      "occupation_code": "CFC",
+      "credential_rows": 9310,
+      "active": 8440,
+      "current": 0,
+      "inactive": 870
+    },
+    {
+      "occupation_code": "CMC",
+      "credential_rows": 2776,
+      "active": 2412,
+      "current": 0,
+      "inactive": 364
+    },
+    {
+      "occupation_code": "CPC",
+      "credential_rows": 4621,
+      "active": 4260,
+      "current": 0,
+      "inactive": 361
+    },
+    {
+      "occupation_code": "CUC",
+      "credential_rows": 3004,
+      "active": 2633,
+      "current": 0,
+      "inactive": 371
+    },
+    {
+      "occupation_code": "SCC",
+      "credential_rows": 3845,
+      "active": 3631,
+      "current": 0,
+      "inactive": 214
+    },
+    {
+      "occupation_code": "RR",
+      "credential_rows": 672,
+      "active": 588,
+      "current": 0,
+      "inactive": 84
+    },
+    {
+      "occupation_code": "RF",
+      "credential_rows": 589,
+      "active": 533,
+      "current": 0,
+      "inactive": 56
+    },
+    {
+      "occupation_code": "RP",
+      "credential_rows": 479,
+      "active": 453,
+      "current": 0,
+      "inactive": 26
+    },
+    {
+      "occupation_code": "FRO",
+      "credential_rows": 19087,
+      "active": 3,
+      "current": 19018,
+      "inactive": 0
+    },
+    {
+      "occupation_code": "RB",
+      "credential_rows": 427,
+      "active": 385,
+      "current": 0,
+      "inactive": 42
+    },
+    {
+      "occupation_code": "RG",
+      "credential_rows": 423,
+      "active": 379,
+      "current": 0,
+      "inactive": 43
+    },
+    {
+      "occupation_code": "RX",
+      "credential_rows": 216,
+      "active": 207,
+      "current": 0,
+      "inactive": 9
+    },
+    {
+      "occupation_code": "RA",
+      "credential_rows": 325,
+      "active": 285,
+      "current": 0,
+      "inactive": 40
+    }
+  ],
+  "trade_buckets": [
+    {
+      "bucket": "general",
+      "occupation_codes": [
+        "CGC"
+      ],
+      "credential_rows": 38923,
+      "active": 33056,
+      "current": 0,
+      "inactive": 5866
+    },
+    {
+      "bucket": "building",
+      "occupation_codes": [
+        "CBC"
+      ],
+      "credential_rows": 19722,
+      "active": 17242,
+      "current": 0,
+      "inactive": 2479
+    },
+    {
+      "bucket": "residential",
+      "occupation_codes": [
+        "CRC"
+      ],
+      "credential_rows": 8556,
+      "active": 7283,
+      "current": 0,
+      "inactive": 1273
+    },
+    {
+      "bucket": "roofing",
+      "occupation_codes": [
+        "CCC",
+        "RR"
+      ],
+      "credential_rows": 11947,
+      "active": 10681,
+      "current": 0,
+      "inactive": 1266
+    },
+    {
+      "bucket": "hvac_air_conditioning",
+      "occupation_codes": [
+        "CAC",
+        "RAC"
+      ],
+      "credential_rows": 12378,
+      "active": 11125,
+      "current": 0,
+      "inactive": 1253
+    },
+    {
+      "bucket": "plumbing",
+      "occupation_codes": [
+        "CFC"
+      ],
+      "credential_rows": 9310,
+      "active": 8440,
+      "current": 0,
+      "inactive": 870
+    },
+    {
+      "bucket": "mechanical",
+      "occupation_codes": [
+        "CMC"
+      ],
+      "credential_rows": 2776,
+      "active": 2412,
+      "current": 0,
+      "inactive": 364
+    },
+    {
+      "bucket": "pool_spa",
+      "occupation_codes": [
+        "CPC"
+      ],
+      "credential_rows": 4621,
+      "active": 4260,
+      "current": 0,
+      "inactive": 361
+    },
+    {
+      "bucket": "underground_utility",
+      "occupation_codes": [
+        "CUC"
+      ],
+      "credential_rows": 3004,
+      "active": 2633,
+      "current": 0,
+      "inactive": 371
+    },
+    {
+      "bucket": "specialty_structure",
+      "occupation_codes": [
+        "SCC"
+      ],
+      "credential_rows": 3845,
+      "active": 3631,
+      "current": 0,
+      "inactive": 214
+    },
+    {
+      "bucket": "solar",
+      "occupation_codes": [
+        "CSL",
+        "CSA"
+      ],
+      "credential_rows": 0,
+      "active": 0,
+      "current": 0,
+      "inactive": 0
+    },
+    {
+      "bucket": "qualifier_related",
+      "occupation_codes": [
+        "QB",
+        "FRO"
+      ],
+      "credential_rows": 19087,
+      "active": 3,
+      "current": 19018,
+      "inactive": 0
+    }
+  ],
+  "contractor_shells": {
+    "entity_counted": "contractors rows (credential-keyed shells, not distinct persons/businesses)",
+    "all": 1392730,
+    "home_state_fl": 246774,
+    "fl_not_thin": 131613,
+    "fl_thin": 115161,
+    "thin_any_state": 126486,
+    "fl_not_thin_with_phone": 0,
+    "fl_not_thin_with_website": 0,
+    "any_with_phone": 0,
+    "any_with_website": 0
+  },
+  "entities": {
+    "fl_dbpr_qb_shells": 126666,
+    "fl_dbpr_qb_active": 9746,
+    "fl_dbpr_qb_current": 116899,
+    "fl_dbpr_qb_inactive": 0,
+    "fl_sunbiz": "count timed out on full table; see ingest batches / link table",
+    "fl_sunbiz_with_fei": null
+  },
+  "contractor_entities": {
+    "all": 281255,
+    "by_role": {
+      "qualifying_business": 126486,
+      "sunbiz_entity": 154769,
+      "qualifier": 0,
+      "officer": 0,
+      "dba": 0,
+      "linked": 0,
+      "entity": 0
+    },
+    "sunbiz_ge_090": 154769,
+    "sunbiz_ge_095": 64863,
+    "sunbiz_ge_098": 42969,
+    "sunbiz_exact_name_address": 42969,
+    "sunbiz_exact_name_zip5": 21894,
+    "sunbiz_exact_name_city": 89906,
+    "sunbiz_officer_name_zip": 0,
+    "qualifier_role": 0
+  },
+  "discipline": {
+    "all_rows": 69674,
+    "fl_dbpr": 19827,
+    "fl_dfs": 48254,
+    "by_dataset": {
+      "contractor_disc_lic": {
+        "raw_rows": 6457,
+        "with_license_number_raw": 6457,
+        "license_id_present": 2375,
+        "contractor_id_present": 0,
+        "license_id_null": 4082,
+        "contractor_id_null": 6457,
+        "identity_state": {
+          "CONFIRMED": 0,
+          "HIGH_CONFIDENCE": 0,
+          "REVIEW_REQUIRED": 1411,
+          "UNRESOLVED": 3074,
+          "MATCHED": 0,
+          "ATTRIBUTED": 0
+        },
+        "identity_state_null": 0,
+        "publication_state": {
+          "PUBLIC": 0,
+          "INTERNAL": 6457,
+          "WITHHELD": 0,
+          "REVIEW_REQUIRED": 0,
+          "UNRESOLVED": 0
+        },
+        "publication_state_null": 0,
+        "identity_method": {
+          "EXACT_LICENSE_NUMBER": 0,
+          "NUMERIC_LICENSE_CORE": 0,
+          "NO_OFFICIAL_IDENTITY_IDENTIFIER": 0,
+          "EXACT_LICENSE_EXTERNAL_KEY": 0,
+          "LICENSE_NUMBER_AND_TYPE": 0,
+          "NAME_ONLY": 0,
+          "FEIN": 0
+        },
+        "public_and_contractor_linked": 0,
+        "internal_and_contractor_linked": 0,
+        "contractor_linked_publication_null": 0
+      },
+      "contractor_disc_ula": {
+        "raw_rows": 11691,
+        "with_license_number_raw": 0,
+        "license_id_present": 0,
+        "contractor_id_present": 0,
+        "license_id_null": 11691,
+        "contractor_id_null": 11691,
+        "identity_state": {
+          "CONFIRMED": 0,
+          "HIGH_CONFIDENCE": 0,
+          "REVIEW_REQUIRED": 0,
+          "UNRESOLVED": 11691,
+          "MATCHED": 0,
+          "ATTRIBUTED": 0
+        },
+        "identity_state_null": 0,
+        "publication_state": {
+          "PUBLIC": 0,
+          "INTERNAL": 11691,
+          "WITHHELD": 0,
+          "REVIEW_REQUIRED": 0,
+          "UNRESOLVED": 0
+        },
+        "publication_state_null": 0,
+        "identity_method": {
+          "EXACT_LICENSE_NUMBER": 0,
+          "NUMERIC_LICENSE_CORE": 0,
+          "NO_OFFICIAL_IDENTITY_IDENTIFIER": 11691,
+          "EXACT_LICENSE_EXTERNAL_KEY": 0,
+          "LICENSE_NUMBER_AND_TYPE": 0,
+          "NAME_ONLY": 0,
+          "FEIN": 0
+        },
+        "public_and_contractor_linked": 0,
+        "internal_and_contractor_linked": 0,
+        "contractor_linked_publication_null": 0
+      },
+      "contractor_disc_rf": {
+        "raw_rows": 1679,
+        "with_license_number_raw": 1679,
+        "license_id_present": 104,
+        "contractor_id_present": 0,
+        "license_id_null": 1575,
+        "contractor_id_null": 1679,
+        "identity_state": {
+          "CONFIRMED": 0,
+          "HIGH_CONFIDENCE": 0,
+          "REVIEW_REQUIRED": 342,
+          "UNRESOLVED": 1233,
+          "MATCHED": 0,
+          "ATTRIBUTED": 0
+        },
+        "identity_state_null": 0,
+        "publication_state": {
+          "PUBLIC": 0,
+          "INTERNAL": 1679,
+          "WITHHELD": 0,
+          "REVIEW_REQUIRED": 0,
+          "UNRESOLVED": 0
+        },
+        "publication_state_null": 0,
+        "identity_method": {
+          "EXACT_LICENSE_NUMBER": 0,
+          "NUMERIC_LICENSE_CORE": 0,
+          "NO_OFFICIAL_IDENTITY_IDENTIFIER": 0,
+          "EXACT_LICENSE_EXTERNAL_KEY": 0,
+          "LICENSE_NUMBER_AND_TYPE": 0,
+          "NAME_ONLY": 0,
+          "FEIN": 0
+        },
+        "public_and_contractor_linked": 0,
+        "internal_and_contractor_linked": 0,
+        "contractor_linked_publication_null": 0
+      },
+      "fl_dfs_workers_comp_stop_work": {
+        "raw_rows": 48254,
+        "with_license_number_raw": 0,
+        "license_id_present": 0,
+        "contractor_id_present": 0,
+        "license_id_null": 48254,
+        "contractor_id_null": 48254,
+        "identity_state": {
+          "CONFIRMED": 0,
+          "HIGH_CONFIDENCE": 0,
+          "REVIEW_REQUIRED": 0,
+          "UNRESOLVED": 48254,
+          "MATCHED": 0,
+          "ATTRIBUTED": 0
+        },
+        "identity_state_null": 0,
+        "publication_state": {
+          "PUBLIC": 0,
+          "INTERNAL": 48254,
+          "WITHHELD": 0,
+          "REVIEW_REQUIRED": 0,
+          "UNRESOLVED": 0
+        },
+        "publication_state_null": 0,
+        "identity_method": {
+          "EXACT_LICENSE_NUMBER": 0,
+          "NUMERIC_LICENSE_CORE": 0,
+          "NO_OFFICIAL_IDENTITY_IDENTIFIER": 48254,
+          "EXACT_LICENSE_EXTERNAL_KEY": 0,
+          "LICENSE_NUMBER_AND_TYPE": 0,
+          "NAME_ONLY": 0,
+          "FEIN": 0
+        },
+        "public_and_contractor_linked": 0,
+        "internal_and_contractor_linked": 0,
+        "contractor_linked_publication_null": 0
+      }
+    },
+    "identity_state_all": {
+      "CONFIRMED": 0,
+      "HIGH_CONFIDENCE": 0,
+      "REVIEW_REQUIRED": 1753,
+      "UNRESOLVED": 64252,
+      "MATCHED": 0,
+      "ATTRIBUTED": 0,
+      "null": 1593
+    },
+    "publication_state_all": {
+      "PUBLIC": 0,
+      "INTERNAL": 68081,
+      "WITHHELD": 0,
+      "REVIEW_REQUIRED": 0,
+      "UNRESOLVED": 0,
+      "null": 1593
+    },
+    "identity_method_all": {
+      "EXACT_LICENSE_NUMBER": 0,
+      "NUMERIC_LICENSE_CORE": 0,
+      "NO_OFFICIAL_IDENTITY_IDENTIFIER": 59945,
+      "EXACT_LICENSE_EXTERNAL_KEY": 0,
+      "LICENSE_NUMBER_AND_TYPE": 0,
+      "NAME_ONLY": 0,
+      "FEIN": 0
+    },
+    "profile_query_would_show": 1593,
+    "profile_query_would_show_non_public": 0,
+    "profile_query_would_show_internal": 0,
+    "profile_query_would_show_pub_null": 1593,
+    "search_exists_would_flag": 1593
+  },
+  "observations": {
+    "rows": 68081,
+    "current": 68081,
+    "by_dataset": {
+      "contractor_disc_lic": 6457,
+      "contractor_disc_ula": 11691,
+      "contractor_disc_rf": 1679,
+      "fl_dfs_workers_comp_stop_work": 48254
+    },
+    "occurrences": 68087
+  },
+  "discipline_samples": [
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "identity_state": "EXACT",
+      "identity_method": "official_type_plus_external_key",
+      "publication_state": "INTERNAL",
+      "review_reason": null,
+      "license_id": "87f97283-d016-498d-ad06-9ebc6fc9c6ab",
+      "contractor_id": null,
+      "license_number_raw": "1533136"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "identity_state": "UNRESOLVED",
+      "identity_method": "credential_not_found",
+      "publication_state": "INTERNAL",
+      "review_reason": "NO_CURRENT_CREDENTIAL",
+      "license_id": null,
+      "contractor_id": null,
+      "license_number_raw": "1326669"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "identity_state": "UNRESOLVED",
+      "identity_method": "credential_not_found",
+      "publication_state": "INTERNAL",
+      "review_reason": "NO_CURRENT_CREDENTIAL",
+      "license_id": null,
+      "contractor_id": null,
+      "license_number_raw": "1459897"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "identity_state": "EXACT",
+      "identity_method": "official_type_plus_external_key",
+      "publication_state": "INTERNAL",
+      "review_reason": null,
+      "license_id": "cc59fc2b-ca5d-483e-ae41-a2153e7be0f4",
+      "contractor_id": null,
+      "license_number_raw": "1326873"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "identity_state": "UNRESOLVED",
+      "identity_method": "credential_not_found",
+      "publication_state": "INTERNAL",
+      "review_reason": "NO_CURRENT_CREDENTIAL",
+      "license_id": null,
+      "contractor_id": null,
+      "license_number_raw": "1514291"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "identity_state": "REVIEW_REQUIRED",
+      "identity_method": "identifier_type_conflict",
+      "publication_state": "INTERNAL",
+      "review_reason": "OFFICIAL_TYPE_CONFLICT",
+      "license_id": "bcc513a7-27bb-49c5-8090-9473c2940b77",
+      "contractor_id": null,
+      "license_number_raw": "57942"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "identity_state": "UNRESOLVED",
+      "identity_method": "credential_not_found",
+      "publication_state": "INTERNAL",
+      "review_reason": "NO_CURRENT_CREDENTIAL",
+      "license_id": null,
+      "contractor_id": null,
+      "license_number_raw": "1457736"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "identity_state": "UNRESOLVED",
+      "identity_method": "credential_not_found",
+      "publication_state": "INTERNAL",
+      "review_reason": "NO_CURRENT_CREDENTIAL",
+      "license_id": null,
+      "contractor_id": null,
+      "license_number_raw": "1261161"
+    }
+  ],
+  "geography": {
+    "with_county_code": 138081,
+    "with_county_name": 83338,
+    "known_adapter_codes": [
+      {
+        "county_code": "16",
+        "adapter_name": "Broward",
+        "credential_rows": 11568,
+        "with_name": 11568
+      },
+      {
+        "county_code": "21",
+        "adapter_name": "Collier",
+        "credential_rows": 3797,
+        "with_name": 3797
+      },
+      {
+        "county_code": "23",
+        "adapter_name": "Miami-Dade",
+        "credential_rows": 14579,
+        "with_name": 14579
+      },
+      {
+        "county_code": "26",
+        "adapter_name": "Duval",
+        "credential_rows": 4409,
+        "with_name": 4409
+      },
+      {
+        "county_code": "39",
+        "adapter_name": "Hillsborough",
+        "credential_rows": 8297,
+        "with_name": 8297
+      },
+      {
+        "county_code": "46",
+        "adapter_name": "Lee",
+        "credential_rows": 7571,
+        "with_name": 7571
+      },
+      {
+        "county_code": "51",
+        "adapter_name": "Manatee",
+        "credential_rows": 2388,
+        "with_name": 2388
+      },
+      {
+        "county_code": "52",
+        "adapter_name": "Marion",
+        "credential_rows": 1734,
+        "with_name": 1734
+      },
+      {
+        "county_code": "58",
+        "adapter_name": "Orange",
+        "credential_rows": 6197,
+        "with_name": 6197
+      },
+      {
+        "county_code": "60",
+        "adapter_name": "Palm Beach",
+        "credential_rows": 9325,
+        "with_name": 9325
+      },
+      {
+        "county_code": "61",
+        "adapter_name": "Pasco",
+        "credential_rows": 3158,
+        "with_name": 3158
+      },
+      {
+        "county_code": "62",
+        "adapter_name": "Pinellas",
+        "credential_rows": 6017,
+        "with_name": 6017
+      },
+      {
+        "county_code": "68",
+        "adapter_name": "Sarasota",
+        "credential_rows": 4298,
+        "with_name": 4298
+      }
+    ],
+    "additional_codes_present": [
+      {
+        "county_code": "11",
+        "credential_rows": 1266
+      },
+      {
+        "county_code": "12",
+        "credential_rows": 178
+      },
+      {
+        "county_code": "13",
+        "credential_rows": 1269
+      },
+      {
+        "county_code": "14",
+        "credential_rows": 107
+      },
+      {
+        "county_code": "15",
+        "credential_rows": 3142
+      },
+      {
+        "county_code": "17",
+        "credential_rows": 49
+      },
+      {
+        "county_code": "18",
+        "credential_rows": 1754
+      },
+      {
+        "county_code": "19",
+        "credential_rows": 845
+      },
+      {
+        "county_code": "20",
+        "credential_rows": 998
+      },
+      {
+        "county_code": "22",
+        "credential_rows": 302
+      },
+      {
+        "county_code": "24",
+        "credential_rows": 209
+      },
+      {
+        "county_code": "25",
+        "credential_rows": 69
+      },
+      {
+        "county_code": "27",
+        "credential_rows": 1296
+      },
+      {
+        "county_code": "28",
+        "credential_rows": 733
+      },
+      {
+        "county_code": "29",
+        "credential_rows": 71
+      },
+      {
+        "county_code": "30",
+        "credential_rows": 206
+      },
+      {
+        "county_code": "31",
+        "credential_rows": 116
+      },
+      {
+        "county_code": "32",
+        "credential_rows": 47
+      },
+      {
+        "county_code": "33",
+        "credential_rows": 146
+      },
+      {
+        "county_code": "34",
+        "credential_rows": 38
+      },
+      {
+        "county_code": "35",
+        "credential_rows": 114
+      },
+      {
+        "county_code": "36",
+        "credential_rows": 222
+      },
+      {
+        "county_code": "37",
+        "credential_rows": 1330
+      },
+      {
+        "county_code": "38",
+        "credential_rows": 534
+      },
+      {
+        "county_code": "40",
+        "credential_rows": 79
+      },
+      {
+        "county_code": "41",
+        "credential_rows": 1165
+      },
+      {
+        "county_code": "42",
+        "credential_rows": 168
+      },
+      {
+        "county_code": "43",
+        "credential_rows": 75
+      },
+      {
+        "county_code": "44",
+        "credential_rows": 36
+      },
+      {
+        "county_code": "45",
+        "credential_rows": 2145
+      },
+      {
+        "county_code": "47",
+        "credential_rows": 1319
+      },
+      {
+        "county_code": "48",
+        "credential_rows": 207
+      },
+      {
+        "county_code": "49",
+        "credential_rows": 32
+      },
+      {
+        "county_code": "50",
+        "credential_rows": 47
+      },
+      {
+        "county_code": "53",
+        "credential_rows": 1525
+      },
+      {
+        "county_code": "54",
+        "credential_rows": 942
+      },
+      {
+        "county_code": "55",
+        "credential_rows": 574
+      },
+      {
+        "county_code": "56",
+        "credential_rows": 1044
+      },
+      {
+        "county_code": "57",
+        "credential_rows": 248
+      },
+      {
+        "county_code": "59",
+        "credential_rows": 1136
+      },
+      {
+        "county_code": "63",
+        "credential_rows": 2512
+      },
+      {
+        "county_code": "64",
+        "credential_rows": 323
+      },
+      {
+        "county_code": "65",
+        "credential_rows": 1864
+      },
+      {
+        "county_code": "66",
+        "credential_rows": 1998
+      },
+      {
+        "county_code": "67",
+        "credential_rows": 1121
+      },
+      {
+        "county_code": "69",
+        "credential_rows": 2702
+      }
+    ],
+    "county_code_null": 5435,
+    "permit_records": 0,
+    "permit_events": 0
+  },
+  "landing_stats_as_implemented": {
+    "contractors_query": "COUNT contractors WHERE is_thin_profile=FALSE AND home_state=FL",
+    "contractors": 131613,
+    "licenses_query": "COUNT licenses WHERE source_system=fl_dbpr (ALL statuses)",
+    "licenses": 143516,
+    "sunbiz_links_query": "COUNT contractor_entities role=sunbiz_entity confidence>=0.9",
+    "sunbiz_links": 154769
+  }
+}

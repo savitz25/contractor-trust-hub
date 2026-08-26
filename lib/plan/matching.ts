@@ -144,7 +144,7 @@ export type MatchOptions = {
 function projectEmptyHint(projectType: ProjectTypeId): string {
   switch (projectType) {
     case "roofing":
-      return "We only show certified or registered roofing licenses (CCC / RR) — not general contractors as roofing substitutes.";
+      return "We only show certified or registered roofing licenses (CCC / RC) — not general contractors as roofing substitutes. RR is registered residential, not roofing.";
     case "kitchen_remodel":
       return "We look for residential and building contractor licenses that typically coordinate kitchen remodels.";
     case "bathroom_remodel":

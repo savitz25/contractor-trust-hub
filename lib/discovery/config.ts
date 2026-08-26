@@ -19,7 +19,7 @@ export const DISCOVERY_STATES: Record<string, DiscoveryStateConfig> = {
     name: "Florida",
     shortName: "FL",
     blurb:
-      "Browse Florida construction license evidence by county and trade. Independent verification from DBPR and high-confidence Sunbiz links — not a marketplace or lead board.",
+      "Research Florida construction license evidence by county and trade. Independent verification from DBPR public records — not a marketplace, ranking, or lead board.",
     counties: FLORIDA_COUNTIES,
     trades: FLORIDA_TRADES,
     live: true,

@@ -20,18 +20,19 @@ const PRIMARY_TRADE_SLUGS = [
 
 const TRADE_NOTES: Record<string, string> = {
   "general-contractors":
-    "CGC — broad construction and remodeling authority under Florida’s general contractor class.",
+    "CGC / RG — certified and registered general contractor class.",
   "building-contractors":
-    "CBC — building construction (commercial and residential) within the building contractor class; not the same as CGC.",
+    "CBC / RB — certified and registered building contractors; not the same as CGC.",
   "residential-contractors":
-    "CRC — typically limited to residential (one- and two-family) work, not unrestricted commercial GC work.",
-  roofers: "CCC / RR — roof installation and repair. Confirm wind-mitigation and permit needs locally.",
-  "air-conditioning": "CAC — HVAC / air-conditioning installation and service.",
-  plumbing: "CFC — plumbing installation and repair.",
-  mechanical: "CMC — mechanical systems work.",
-  "pool-spa": "CPC — pool and spa construction and remodeling.",
-  "underground-utility": "CUC — underground utility and related infrastructure work.",
-  "specialty-structures": "SCC — specialty structures (e.g. certain enclosures). Confirm scope for your project.",
+    "CRC / RR — certified and registered residential (one- and two-family), not unrestricted commercial GC work.",
+  roofers: "CCC / RC — certified and registered roofing. RR is registered residential, not roofing.",
+  "air-conditioning": "CAC / RA — HVAC / air-conditioning installation and service.",
+  plumbing: "CFC / RF — plumbing installation and repair.",
+  mechanical: "CMC / RM — certified and registered mechanical systems work.",
+  "pool-spa": "CPC / RP — certified and registered pool and spa construction.",
+  "underground-utility": "CUC / RU — certified and registered underground utility work.",
+  "specialty-structures": "SCC / RX — certified and registered specialty structures. Confirm scope for your project.",
+  solar: "CVC / RV — certified and registered solar. Sheet metal (CSC) is a different class.",
 };
 
 type Props = {

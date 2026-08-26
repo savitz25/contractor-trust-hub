@@ -245,7 +245,7 @@ export function PlanFlow() {
                 </p>
                 <p className="mt-1 text-xs text-[var(--muted)]">
                   {linkedStudio.slug === "roofing"
-                    ? "Open the Roofing Studio for full replacement scope - material, tear-off, access, and licensed CCC/RR matches."
+                    ? "Open the Roofing Studio for full replacement scope - material, tear-off, access, and licensed CCC/RC matches."
                     : linkedStudio.slug === "kitchen"
                       ? "Open the Kitchen Studio for remodel depth - cabinets, layout, plumbing/electrical, and licensed GC matches."
                       : linkedStudio.slug === "bathroom"
