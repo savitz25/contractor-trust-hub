@@ -20,7 +20,7 @@ export type TradeReadiness = "READY" | "SOFT" | "UNSUPPORTED";
 /** Primary FL CILB / peer board codes that are class-backed (not name-assist). */
 export const OCCUPATION_TO_CATEGORY: Record<string, AskContractorCategory> = {
   CCC: "roofing",
-  RR: "roofing",
+  RC: "roofing",
   CFC: "plumbing",
   CAC: "hvac",
   CPC: "pool",
@@ -46,7 +46,7 @@ export const ASK_TRADE_META: Record<
 > = {
   roofing: {
     readiness: "READY",
-    sourceTrades: "FL CCC/RR; discovery slug roofers",
+    sourceTrades: "FL CCC/RC; discovery slug roofers",
     notes: "Florida CILB roofing occupation pages are live.",
   },
   plumbing: {

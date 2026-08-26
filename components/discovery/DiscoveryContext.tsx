@@ -42,13 +42,14 @@ export function DiscoveryContext({
       <ul className="grid gap-2 sm:grid-cols-3">
         <li className="rounded-xl border border-[var(--border)] bg-white px-3.5 py-2.5">
           <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-            Firms in this view
+            Profiles in this view
           </p>
           <p className="mt-0.5 text-lg font-semibold tabular-nums text-[var(--text)]">
             {stats.firms.toLocaleString()}
           </p>
           <p className="text-xs text-[var(--muted)]">
-            {stats.activeFirms.toLocaleString()} with an active/current license
+            {stats.activeFirms.toLocaleString()} with an active/current license. License profiles,
+            not a distinct-business census.
           </p>
         </li>
         <li className="rounded-xl border border-[var(--border)] bg-white px-3.5 py-2.5">
@@ -59,7 +60,7 @@ export function DiscoveryContext({
             {entityRate == null ? "—" : `${entityRate}%`}
           </p>
           <p className="text-xs text-[var(--muted)]">
-            {stats.entityLinked.toLocaleString()} firms linked — missing ≠ no company
+            {stats.entityLinked.toLocaleString()} high-confidence Sunbiz links — missing ≠ no company
           </p>
         </li>
         <li className="rounded-xl border border-[var(--border)] bg-white px-3.5 py-2.5">
@@ -76,9 +77,10 @@ export function DiscoveryContext({
       </ul>
 
       <p className="text-sm text-[var(--muted)]">
-        County comes from the address on the board extract
+        County is the HQ/base mailing county on the DBPR credential
         {cityLabel ? ` · city from the published license city (${cityLabel})` : ""}.
-        Confirm live status on Florida DBPR before you hire.
+        That is not proof the contractor only operates here. Confirm live status on Florida DBPR
+        before you hire.
       </p>
       <p className="text-sm font-medium text-[var(--text)]">
         Evidence browse only — not a ranking. {SORT_DISCLOSURE} Current order:{" "}

@@ -19,10 +19,12 @@ export const DISCOVERY_STATES: Record<string, DiscoveryStateConfig> = {
     name: "Florida",
     shortName: "FL",
     blurb:
-      "Browse Florida construction license evidence by county and trade. Independent verification from DBPR and high-confidence Sunbiz links — not a marketplace or lead board.",
+      "Research Florida construction license evidence by county and trade. Independent verification from DBPR public records — not a marketplace, ranking, or lead board.",
     counties: FLORIDA_COUNTIES,
     trades: FLORIDA_TRADES,
     live: true,
+    geoNote:
+      "County pages use the license mailing/principal county (headquarters/base). That is not evidence of operating in the county. Statewide totals are not the sum of county operating totals.",
   },
   /**
    * Texas discovery browse is not live until TDLR specialty data is loaded and

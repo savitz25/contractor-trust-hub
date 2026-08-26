@@ -1,5 +1,9 @@
 ﻿import { query } from "@/lib/db";
 import { asLicenseStatus } from "@/lib/contractors/format";
+import {
+  PUBLIC_FL_DISCIPLINE_PREDICATE,
+  PUBLIC_SUNBIZ_MIN_CONFIDENCE,
+} from "@/lib/intelligence/attribution";
 import type { SearchResult } from "@/lib/contractors/types";
 import { getStateBySlug, occupationLabel } from "@/lib/states/config";
 import { occupationCodesForProject, licenseMapNotes } from "./license-map";
@@ -12,7 +16,7 @@ import type {
   ProjectTypeId,
 } from "./types";
 
-const MIN_SUNBIZ_CONFIDENCE = 0.9;
+const MIN_SUNBIZ_CONFIDENCE = PUBLIC_SUNBIZ_MIN_CONFIDENCE;
 const DEFAULT_LIMIT = 12;
 /**
  * Prefer quality local specialty results. Do not jump statewide while we already
@@ -143,7 +147,7 @@ export type MatchOptions = {
 function projectEmptyHint(projectType: ProjectTypeId): string {
   switch (projectType) {
     case "roofing":
-      return "We only show certified or registered roofing licenses (CCC / RR) — not general contractors as roofing substitutes.";
+      return "We only show certified or registered roofing licenses (CCC / RC) — not general contractors as roofing substitutes.";
     case "kitchen_remodel":
       return "We look for residential and building contractor licenses that typically coordinate kitchen remodels.";
     case "bathroom_remodel":
@@ -670,7 +674,9 @@ async function queryContractors(opts: {
         e.status AS entity_status,
         e.legal_name AS entity_name,
         EXISTS (
-          SELECT 1 FROM discipline_actions d WHERE d.contractor_id = c.id
+          SELECT 1 FROM discipline_actions d
+          WHERE d.contractor_id = c.id
+            AND ${PUBLIC_FL_DISCIPLINE_PREDICATE}
         ) AS has_discipline,
         (${locTierSql})::int AS loc_tier,
         (${primaryRankSql})::int AS primary_rank,

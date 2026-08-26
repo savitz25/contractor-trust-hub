@@ -37,9 +37,9 @@
     },
     "roofing": {
       "label": "Roofing",
-      "primary": ["CCC", "RR"],
+      "primary": ["CCC", "RC"],
       "secondary": [],
-      "notes": "Roofing specialty only (certified CCC, registered RR). Do not fall back to CGC — a general contractor is not a substitute roofing match for homeowners. Thin areas expand statewide within CCC/RR only."
+      "notes": "Roofing specialty only (certified CCC, registered RC). RR is registered residential, not roofing. Do not fall back to CGC — a general contractor is not a substitute roofing match for homeowners. Thin areas expand statewide within CCC/RC only."
     },
     "siding_exterior": {
       "label": "Siding / Exterior",

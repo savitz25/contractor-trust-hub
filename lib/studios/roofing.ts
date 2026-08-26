@@ -46,8 +46,8 @@ export const roofingStudio: StudioDefinition = {
   shortName: "Roofing",
   headline: "Plan a roof replacement — then verify licensed roofing contractors",
   positioning:
-    "Roof replacement, re-roof, or major repair — with licensed contractor verification. Clarify size, material, tear-off, and access, then match CCC/RR licenses on evidence only.",
-  primaryOccupationCodes: ["CCC", "RR"],
+    "Roof replacement, re-roof, or major repair — with licensed contractor verification. Clarify size, material, tear-off, and access, then match CCC/RC licenses on evidence only.",
+  primaryOccupationCodes: ["CCC", "RC"],
   secondaryOccupationCodes: ["CGC"],
   strictMatching: true,
   budgetOptions: [

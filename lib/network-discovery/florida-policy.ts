@@ -34,7 +34,7 @@ export const FLORIDA_FEED_UNSUPPORTED = [
 /** Occupation lock: accepted FL CILB codes only. CMC/CBC/CRC are not widened. */
 export const FLORIDA_OCCUPATION_LOCK: Record<string, AskContractorCategory | null> = {
   CCC: "roofing",
-  RR: "roofing",
+  RC: "roofing",
   CFC: "plumbing",
   CAC: "hvac",
   CMC: null,
@@ -42,6 +42,7 @@ export const FLORIDA_OCCUPATION_LOCK: Record<string, AskContractorCategory | nul
   CGC: "general_contractor",
   CBC: null,
   CRC: null,
+  RR: null,
 };
 
 export const FLORIDA_DISCOVERY_POLICY = {

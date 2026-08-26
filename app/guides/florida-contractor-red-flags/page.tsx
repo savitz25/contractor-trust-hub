@@ -25,7 +25,7 @@ const flags = [
   },
   {
     title: "The license class does not fit the work",
-    body: "A roofing job typically needs a roofing class (CCC or RR), not a substitute “we do everything” story. Remodels and specialty trades have their own classes. Ask who will pull the permit for each trade.",
+    body: "A roofing job typically needs a roofing class (CCC or RC), not a substitute “we do everything” story. RR is registered residential, not roofing. Remodels and specialty trades have their own classes. Ask who will pull the permit for each trade.",
     record: "Read the occupation label on the Trust Report. See the license-types guide for CBC, CGC, CRC, CCC, and CFC.",
   },
   {

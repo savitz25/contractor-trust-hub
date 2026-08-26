@@ -1,5 +1,9 @@
 import { query, queryOne } from "@/lib/db";
 import { asLicenseStatus } from "@/lib/contractors/format";
+import {
+  PUBLIC_FL_DISCIPLINE_PREDICATE,
+  PUBLIC_SUNBIZ_MIN_CONFIDENCE,
+} from "@/lib/intelligence/attribution";
 import type { SearchResult } from "@/lib/contractors/types";
 import { getStateBySlug } from "@/lib/states/config";
 import {
@@ -9,7 +13,7 @@ import {
 } from "./config";
 import type { CountyDef, DiscoveryFacet, TradeDef } from "./types";
 
-const MIN_SUNBIZ_CONFIDENCE = 0.9;
+const MIN_SUNBIZ_CONFIDENCE = PUBLIC_SUNBIZ_MIN_CONFIDENCE;
 export const DISCOVERY_PAGE_SIZE = 24;
 
 function inStateSql(requireInState: boolean | undefined): string {
@@ -297,7 +301,9 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
       e.status AS entity_status,
       e.legal_name AS entity_name,
       EXISTS (
-        SELECT 1 FROM discipline_actions d WHERE d.contractor_id = p.id
+        SELECT 1 FROM discipline_actions d
+        WHERE d.contractor_id = p.id
+          AND ${PUBLIC_FL_DISCIPLINE_PREDICATE}
       ) AS has_discipline
     FROM picked p
     LEFT JOIN LATERAL (
@@ -353,7 +359,7 @@ export async function getStateDiscoveryStats(publicStateSlug: string): Promise<{
          JOIN entities e ON e.id = ce.entity_id
          WHERE ce.role = 'sunbiz_entity'
            AND e.source_system = $3
-           AND ce.confidence >= 0.9
+           AND ce.confidence >= ${MIN_SUNBIZ_CONFIDENCE}
         ) AS links
       `,
       [state.code, state.licenseSource, state.entitySource]

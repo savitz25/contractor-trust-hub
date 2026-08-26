@@ -1,63 +1,52 @@
+import { floridaDiscoveryCounties } from "@/lib/intelligence/florida-county-codes";
 import type { CountyDef } from "./types";
 
 /**
- * Curated Florida counties for discovery (quality over covering every FIPS code).
- * matchNames — board county_name / primary_county (case-insensitive).
- * matchCodes — licenses.county_code values observed when county_name is present
- *              (DBPR extract codes, not US FIPS).
+ * All 67 Florida counties from official DBPR county codes (11–77).
+ * License mailing county is headquarters/base — not evidence of operating here.
+ * Source: https://www2.myfloridalicense.com/about-us/understanding-dbpr-codes/
+ *
+ * Major markets stay first (existing URLs unchanged); remaining counties follow.
  */
-export const FLORIDA_COUNTIES: CountyDef[] = [
-  {
-    slug: "miami-dade",
-    name: "Miami-Dade",
-    matchNames: ["Miami-Dade", "Miami Dade", "Dade"],
-    matchCodes: ["23"],
-  },
-  { slug: "broward", name: "Broward", matchNames: ["Broward"], matchCodes: ["16"] },
-  {
-    slug: "palm-beach",
-    name: "Palm Beach",
-    matchNames: ["Palm Beach", "PalmBeach"],
-    matchCodes: ["60"],
-  },
-  {
-    slug: "hillsborough",
-    name: "Hillsborough",
-    matchNames: ["Hillsborough"],
-    matchCodes: ["39"],
-  },
-  { slug: "orange", name: "Orange", matchNames: ["Orange"], matchCodes: ["58"] },
-  { slug: "pinellas", name: "Pinellas", matchNames: ["Pinellas"], matchCodes: ["62"] },
-  { slug: "duval", name: "Duval", matchNames: ["Duval"], matchCodes: ["26"] },
-  { slug: "lee", name: "Lee", matchNames: ["Lee"], matchCodes: ["46"] },
-  { slug: "collier", name: "Collier", matchNames: ["Collier"], matchCodes: ["21"] },
-  { slug: "sarasota", name: "Sarasota", matchNames: ["Sarasota"], matchCodes: ["68"] },
-  { slug: "manatee", name: "Manatee", matchNames: ["Manatee"], matchCodes: ["51"] },
-  { slug: "pasco", name: "Pasco", matchNames: ["Pasco"], matchCodes: ["61"] },
-  { slug: "polk", name: "Polk", matchNames: ["Polk"] },
-  { slug: "brevard", name: "Brevard", matchNames: ["Brevard"] },
-  { slug: "volusia", name: "Volusia", matchNames: ["Volusia"] },
-  { slug: "seminole", name: "Seminole", matchNames: ["Seminole"] },
-  { slug: "osceola", name: "Osceola", matchNames: ["Osceola"] },
-  { slug: "marion", name: "Marion", matchNames: ["Marion"], matchCodes: ["52"] },
-  { slug: "lake", name: "Lake", matchNames: ["Lake"] },
-  {
-    slug: "st-lucie",
-    name: "St. Lucie",
-    matchNames: ["St. Lucie", "St Lucie", "Saint Lucie"],
-  },
-  { slug: "martin", name: "Martin", matchNames: ["Martin"] },
-  { slug: "indian-river", name: "Indian River", matchNames: ["Indian River"] },
-  { slug: "charlotte", name: "Charlotte", matchNames: ["Charlotte"] },
-  { slug: "escambia", name: "Escambia", matchNames: ["Escambia"] },
-  { slug: "leon", name: "Leon", matchNames: ["Leon"] },
-  { slug: "alachua", name: "Alachua", matchNames: ["Alachua"] },
-  { slug: "bay", name: "Bay", matchNames: ["Bay"] },
-  { slug: "okaloosa", name: "Okaloosa", matchNames: ["Okaloosa"] },
-  {
-    slug: "st-johns",
-    name: "St. Johns",
-    matchNames: ["St. Johns", "St Johns", "Saint Johns"],
-  },
-  { slug: "clay", name: "Clay", matchNames: ["Clay"] },
+const PREFERRED_SLUGS = [
+  "miami-dade",
+  "broward",
+  "palm-beach",
+  "hillsborough",
+  "orange",
+  "pinellas",
+  "duval",
+  "lee",
+  "collier",
+  "sarasota",
+  "manatee",
+  "pasco",
+  "polk",
+  "brevard",
+  "volusia",
+  "seminole",
+  "osceola",
+  "marion",
+  "lake",
+  "st-lucie",
+  "martin",
+  "indian-river",
+  "charlotte",
+  "escambia",
+  "leon",
+  "alachua",
+  "bay",
+  "okaloosa",
+  "st-johns",
+  "clay",
 ];
+
+const all = floridaDiscoveryCounties();
+const bySlug = new Map(all.map((c) => [c.slug, c]));
+export const FLORIDA_COUNTIES: CountyDef[] = [
+  ...PREFERRED_SLUGS.map((s) => bySlug.get(s)).filter((c): c is NonNullable<typeof c> => Boolean(c)),
+  ...all.filter((c) => !PREFERRED_SLUGS.includes(c.slug)),
+];
+
+export const FLORIDA_GEO_NOTE =
+  "County pages list credentials whose DBPR mailing/principal county code is this county. That is headquarters/base, not proof the firm operates or pulls permits here. Statewide totals are not the sum of county operating totals.";

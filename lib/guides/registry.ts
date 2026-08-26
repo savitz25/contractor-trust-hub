@@ -43,7 +43,7 @@ export const GUIDES: GuideMeta[] = [
     title: "Florida contractor license types explained",
     seoTitle: "Florida Contractor License Types Explained (CBC, CGC, CRC, CCC)",
     description:
-      "Plain-language guide to common Florida DBPR construction license classes — CBC, CGC, CRC, CCC/RR, CFC, CAC, and more. What each typically covers. Educational only.",
+      "Plain-language guide to common Florida DBPR construction license classes — CBC, CGC, CRC, CCC, RC, RR, CFC, CAC, and more. RR is registered residential, not roofing. Educational only.",
     kicker: "Florida · license classes",
     intent: "Understand what a license class allows",
     publishedAt: "2026-08-12",

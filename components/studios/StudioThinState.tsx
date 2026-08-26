@@ -29,7 +29,7 @@ export function StudioThinState({ match, studioSlug }: Props) {
             : "No qualifying active licenses matched this scope",
       body: isRoofing
         ? match.emptyReason ||
-          "We did not find active CCC/RR roofing licenses for this location in our extract. We do not pad with unrelated trades."
+          "We did not find active CCC/RC roofing licenses for this location in our extract. We do not pad with unrelated trades."
         : isKitchen
           ? match.emptyReason ||
             "We did not find active CGC/CBC/CRC licenses for this location in our extract. We do not invent matches for kitchen remodels."
@@ -48,14 +48,14 @@ export function StudioThinState({ match, studioSlug }: Props) {
     },
     statewide_only: {
       title: isRoofing
-        ? "No strong local roofing licenses — statewide CCC/RR only"
+        ? "No strong local roofing licenses — statewide CCC/RC only"
         : isKitchen
           ? "No strong local remodel licenses — statewide GC classes only"
           : isBathroom
             ? "No strong local bath remodel licenses — statewide CFC/CRC/CBC only"
             : "No strong local matches — statewide primary classes only",
       body: isRoofing
-        ? "Local ZIP/city/county did not yield enough active roofing specialty licenses. Statewide results still use CCC/RR (and disclosed CGC only if configured secondary)."
+        ? "Local ZIP/city/county did not yield enough active roofing specialty licenses. Statewide results still use CCC/RC (and disclosed CGC only if configured secondary)."
         : isKitchen
           ? "Local coverage was thin for CGC/CBC/CRC. Statewide results use the same remodel license classes — not unrelated trades."
           : isBathroom
@@ -73,7 +73,7 @@ export function StudioThinState({ match, studioSlug }: Props) {
             ? "Only secondary (CGC) matches nearby — not primary bath remodel classes"
             : "Only secondary / related license classes matched locally",
       body: isRoofing
-        ? "Local CCC/RR coverage was empty or very thin. Cards that show CGC are secondary fallbacks — review Trust Reports carefully before hiring for roof work."
+        ? "Local CCC/RC coverage was empty or very thin. Cards that show CGC are secondary fallbacks — review Trust Reports carefully before hiring for roof work."
         : isKitchen
           ? "Local general/residential remodel coverage was thin. Secondary classes (such as CFC) are disclosed — a plumber alone may not cover full kitchen GC scope."
           : isBathroom
@@ -91,7 +91,7 @@ export function StudioThinState({ match, studioSlug }: Props) {
             ? "Limited local bathroom remodel coverage"
             : "Limited local specialty coverage",
       body: isRoofing
-        ? "Only a small number of local CCC/RR matches met the evidence bar. Broader results may appear with location tier disclosed on each card."
+        ? "Only a small number of local CCC/RC matches met the evidence bar. Broader results may appear with location tier disclosed on each card."
         : isKitchen
           ? "Only a small number of local CGC/CBC/CRC matches met the evidence bar. Broader results may appear with location tier disclosed on each card."
           : isBathroom

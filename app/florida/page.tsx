@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { FloridaFacetFallback } from "@/components/discovery/FloridaFacetFallback";
-import { FloridaLandingChrome } from "@/components/discovery/FloridaLandingChrome";
-import { FloridaLandingFacets } from "@/components/discovery/FloridaLandingFacets";
+import { FloridaStateIntelligence } from "@/components/intelligence/FloridaStateIntelligence";
+import { IntelligenceHero } from "@/components/intelligence/IntelligenceHero";
 import { getDiscoveryState } from "@/lib/discovery/config";
-import { getFloridaLandingSnapshot } from "@/lib/discovery/landing-cache";
+import { getFloridaIntelligenceSnapshot } from "@/lib/intelligence/florida-snapshot";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
+import { Breadcrumbs } from "@/components/discovery/Breadcrumbs";
 
 const PUBLIC = "florida";
 
 /**
  * Dynamic so Vercel SSG does not open many parallel DB sessions
- * (Supabase session pooler EMAXCONNSESSION). Landing aggregations are
- * cached separately (see lib/discovery/landing-cache.ts).
+ * (Supabase session pooler EMAXCONNSESSION). Intelligence aggregations are
+ * cached in lib/intelligence/florida-snapshot.ts.
  */
 export const dynamic = "force-dynamic";
 
@@ -20,31 +20,38 @@ export async function generateMetadata(): Promise<Metadata> {
   const state = getDiscoveryState(PUBLIC)!;
   return discoveryMetadata({
     state,
-    title: "Florida Contractor Verification — Browse by County & Trade",
+    title: "Research Florida Contractors — License, County & Public-Record Intelligence",
     description:
-      "Browse Florida DBPR construction license evidence by county and trade. Independent Trust Reports with license status, Sunbiz entity links, and discipline — not a marketplace.",
+      "Research Florida contractor credentials, trade categories, HQ/base county distribution, and public regulatory records. Independent Trust Hub research — not a marketplace or ranking.",
   });
 }
 
-async function FloridaLandingBody() {
-  const snap = await getFloridaLandingSnapshot();
-  return (
-    <FloridaLandingChrome stats={snap.stats}>
-      <FloridaLandingFacets snapshot={snap} />
-    </FloridaLandingChrome>
-  );
+async function FloridaIntelligenceBody() {
+  const payload = await getFloridaIntelligenceSnapshot();
+  return <FloridaStateIntelligence payload={payload} />;
 }
 
 export default function FloridaLandingPage() {
   return (
     <Suspense
       fallback={
-        <FloridaLandingChrome>
-          <FloridaFacetFallback reason="loading" />
-        </FloridaLandingChrome>
+        <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+          <Breadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Florida" },
+            ]}
+          />
+          <div className="mt-4">
+            <IntelligenceHero />
+            <p className="mt-8 text-sm text-[var(--muted)]" role="status">
+              Loading Florida research snapshot…
+            </p>
+          </div>
+        </main>
       }
     >
-      <FloridaLandingBody />
+      <FloridaIntelligenceBody />
     </Suspense>
   );
 }
