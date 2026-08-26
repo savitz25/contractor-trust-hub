@@ -14,3 +14,6 @@ export * from "./source-catalog";
 export * from "./payload-types";
 export * from "./enhanced-county-identity";
 export * from "./enhanced-county-jurisdiction";
+export * from "./county-catalog";
+export * from "./county-education";
+export * from "./county-payload";

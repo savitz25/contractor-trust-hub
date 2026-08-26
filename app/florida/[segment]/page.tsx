@@ -18,6 +18,9 @@ import {
 import { listFloridaBrowse, listFloridaCities } from "@/lib/discovery/florida-list";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
 import { countByTrade, countCountiesForTrade } from "@/lib/discovery/queries";
+import { CountyIntelligence } from "@/components/intelligence/CountyIntelligence";
+import { isFloridaCountyIntelSlug } from "@/lib/intelligence/coverage";
+import { getFloridaCountyIntelligenceSnapshot } from "@/lib/intelligence/county-snapshot";
 
 const PUBLIC = "florida";
 
@@ -73,10 +76,12 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
   if (resolved.kind === "county") {
     const { county } = resolved;
     const view = parseBrowseView(sp);
-    const [{ results, total, stats }, trades, cities] = await Promise.all([
+    const countyIntel = isFloridaCountyIntelSlug(county.slug);
+    const [{ results, total, stats }, trades, cities, intelPayload] = await Promise.all([
       listFloridaBrowse({ county, browse }),
       countByTrade(PUBLIC, county),
       listFloridaCities(county),
+      countyIntel ? getFloridaCountyIntelligenceSnapshot(county.slug) : Promise.resolve(null),
     ]);
 
     return (
@@ -88,14 +93,18 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
             { label: county.name },
           ]}
         />
-        <header className="mt-4 border-b border-[var(--border)] pb-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
-            Florida · County
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)] sm:text-4xl">
-            {county.name} County contractors
-          </h1>
-        </header>
+        {intelPayload ? (
+          <CountyIntelligence payload={intelPayload} />
+        ) : (
+          <header className="mt-4 border-b border-[var(--border)] pb-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+              Florida · County
+            </p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)] sm:text-4xl">
+              {county.name} County contractors
+            </h1>
+          </header>
+        )}
 
         <div className="mt-8">
           <FacetGrid
@@ -107,16 +116,18 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
           />
         </div>
 
-        <FloridaBrowseSection
-          state={state}
-          county={county}
-          browse={browse}
-          results={results}
-          total={total}
-          stats={stats}
-          cities={cities}
-          view={view}
-        />
+        <div id="contractors">
+          <FloridaBrowseSection
+            state={state}
+            county={county}
+            browse={browse}
+            results={results}
+            total={total}
+            stats={stats}
+            cities={cities}
+            view={view}
+          />
+        </div>
 
         <div className="mt-10">
           <DiscoveryDisclaimer />
