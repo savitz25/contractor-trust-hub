@@ -1,6 +1,6 @@
--- Prompt 7: Broward + Palm Beach enhanced-county foundation.
+-- Prompt 7/8: Broward + Palm Beach enhanced-county foundation.
 -- Additive. Does not alter licenses / contractors identity or statewide Intelligence semantics.
--- Do not apply until a real source extract exists. This migration is the ingest contract.
+-- Idempotent CREATE IF NOT EXISTS. Safe to apply before extracts arrive.
 
 -- ---------------------------------------------------------------------------
 -- Jurisdiction coverage (denominator for every activity metric)
@@ -14,6 +14,13 @@ CREATE TABLE IF NOT EXISTS enhanced_jurisdictions (
   permitting_authority    TEXT NOT NULL,
   public_search_url       TEXT,
   vendor                  TEXT,
+  agency                  TEXT,
+  coverage_type           TEXT,
+  source                  TEXT,
+  expected_permit_authority TEXT,
+  data_availability       TEXT NOT NULL DEFAULT 'none',
+  metadata_status         TEXT NOT NULL DEFAULT 'seeded',
+  onestop_participation   BOOLEAN,
   coverage_start          DATE,
   coverage_end            DATE,
   coverage_last_refreshed TIMESTAMPTZ,
@@ -235,3 +242,27 @@ COMMENT ON TABLE permit_attributions IS
   'Fail-closed permit→credential links. Name-only matches stay REVIEW_REQUIRED/UNRESOLVED and are not public volume.';
 COMMENT ON COLUMN permit_source_records.valuation IS
   'Recorded permit valuation. Null when missing. Never store missing as 0. Not revenue.';
+
+CREATE TABLE IF NOT EXISTS enhanced_source_files (
+  id                      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  sha256                  TEXT NOT NULL UNIQUE,
+  original_filename       TEXT NOT NULL,
+  received_at             TIMESTAMPTZ NOT NULL DEFAULT now(),
+  county_slug             TEXT NOT NULL,
+  agency                  TEXT NOT NULL,
+  source_name             TEXT NOT NULL,
+  requested_date_range    TEXT,
+  file_format             TEXT NOT NULL,
+  row_count               BIGINT,
+  parser_version          TEXT,
+  request_id              TEXT,
+  notes                   TEXT,
+  created_at              TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CONSTRAINT enhanced_source_files_sha_check
+    CHECK (sha256 ~ '^[0-9a-f]{64}$')
+);
+
+COMMENT ON TABLE enhanced_source_files IS
+  'Provenance for received county exports. Never load a mystery spreadsheet.';
+COMMENT ON TABLE enhanced_jurisdictions IS
+  'AHJ coverage metadata. Not permit activity. Seeding this table does not make a county Enhanced.';

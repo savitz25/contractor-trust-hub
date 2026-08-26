@@ -1,25 +1,49 @@
-# Public-record request draft — Palm Beach County contractor certification / enrollment
+# FINAL SUBMISSION PACKAGE — Palm Beach County contractor certification / enrollment
 
-**Status: DRAFT ONLY. Do not submit unless authorized.**
+**Status: READY TO SUBMIT. Not submitted.**  
+**Blocker: SUBMISSION BLOCKED — REQUESTOR CONTACT REQUIRED**
 
-**To:** Palm Beach County PZB Contractor Regulations  
-2300 N. Jog Road, 2nd Floor, West Palm Beach, FL 33411  
-561-233-5525 · pzbctr@pbc.gov · pzbccert@pbcgov.org  
-Public records: http://pbcgov.com/eprr/pzb
+**Channel (when unblocked):** PZB Electronic Public Records Request  
+https://pbc.gov/eprr/pzb  
+Route toward **Contractor Regulations** where the system permits.  
+If internally re-routed, log the assigned department.
 
-**Re:** Request for existing electronic current + historical contractor certification and state-enrollment extracts
+---
 
-Please export **existing** database fields as CSV/XLSX. Certificate of Competency, state-license **enrollment**, journeyman certificates, and post-2025 **Installer Registration** (if stored) should be **separate files or a type column** — they are different regulatory records.
+## Cost-control (required)
 
-## Requested existing fields
+Please provide the records in their existing native electronic/machine-readable format where available. We are not asking the agency to create new analysis, reports, summaries, or programming if an existing database export can satisfy the request.
 
-local certificate/license ID; classification; person; company; state DBPR license if stored; issue date; expiration; current status; historical status; qualifier relationship; insurance dates/status; workers’ compensation / exemption; surety bond; business tax receipt status; public phone; public email; mailing address; physical address; disciplinary **status** if separately defined.
+Preferred delivery: **CSV, XLSX, database export, fixed-width/text, or JSON**. PDF is fallback only.
 
-Include a currentness flag or class list distinguishing:
+If fulfilling this request will result in fees or special service charges exceeding **$25**, please provide an itemized estimate **before** performing chargeable work.
 
-- currently required county-certified classes
-- state-enrolled DBPR contractors
+If any existing field layout, schema, data dictionary, class/status code list, or export metadata already exists, please include a copy. Do not create new documentation if none exists.
+
+---
+
+## Scope
+
+Current **and** historical Contractor Regulations records. Keep these credential concepts **separate** (separate files or a type column):
+
+- County Certificate of Competency
+- State Contractor Enrollment
 - Installer Registration (not a license)
-- historical / preempted classes effective 1 July 2025 (HB 735 / HB 1383 / SB 1142)
+- Journeyman credential where maintained
+- historical/preempted local credential
 
-Do not include SSN/PIN. Native electronic export preferred over PDFs.
+Preserve county/source terminology.
+
+**Do not include:** SSN, PIN, DOB, driver’s licenses, bank/payment data, or private account credentials. Lawful redaction is accepted.
+
+---
+
+## Preferred existing fields (only if maintained)
+
+county certificate/credential ID; contractor seven-digit system ID; credential number; credential type; classification code; classification description; person/license holder; company; DBPR license number; issue date; renewal date; expiration date; status; status effective date; currentness; state enrollment flag/type; installer registration indicator; historical/preempted class indication; phone; additional phone; email; additional email; mailing address; physical/business address; website; insurance status/date; workers comp status/exemption; surety bond status/amount/expiration; business tax receipt status where stored; qualifying relationship where stored.
+
+---
+
+## Organization (when unblocked)
+
+Contractor Trust Hub / Ask Trust Hub. Public contact on site: hello@asktrusthub.com

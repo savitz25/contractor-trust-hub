@@ -1,20 +1,42 @@
-# Public-record request draft — Broward local contractor credentials
+# FINAL SUBMISSION PACKAGE — Broward contractor certification / licensing
 
-**Status: DRAFT ONLY. Do not submit unless authorized.**
+**Status: READY TO SUBMIT. Not submitted.**  
+**Blocker: SUBMISSION BLOCKED — REQUESTOR CONTACT REQUIRED**
 
-**To:** Broward County Building Code Division / Central Examining Board records  
-954-765-4400
+**Channel (when unblocked):** Broward County GovQA public-records portal  
+https://browardcounty.govqa.us/WEBAPP/_rs/  
+Route to **Building Code Division / Contractor Licensing / Central Examining Board** as the portal categorizes.
 
-**Re:** Chapter 119 request for existing electronic contractor-certification extracts
+---
 
-Please provide **existing** machine-readable exports (CSV/XLSX/database extract) of current **and** historical Certificate of Competency / local contractor records from BCS / CEB systems. Do not create new reports.
+## Cost-control (required)
 
-## Requested existing fields
+Please provide the records in their existing native electronic/machine-readable format where available. We are not asking the agency to create new analysis, reports, summaries, or programming if an existing database export can satisfy the request.
 
-local certificate/license ID (CC / BCS ID); classification / trade; person name; company/firm; state DBPR license number if stored; issue date; expiration / renewal dates; current status; historical status; qualifier relationship if stored; insurance dates/status; workers’ compensation status/exemption; bond amount/expiration; public contact phone; public contact email; mailing address; physical address; disciplinary **status** where separately defined (not complaint narratives).
+Preferred delivery: **CSV, XLSX, database export, fixed-width/text, or JSON**. PDF is fallback only.
 
-Please include a classification list noting which classes remain **currently required**, which are **voluntary**, which are **historical only**, and which were **preempted** as of 1 July 2025 (HB 735 / §163.211).
+If fulfilling this request will result in fees or special service charges exceeding **$25**, please provide an itemized estimate **before** performing chargeable work.
 
-Do not include SSN, bank accounts, or other non-public personal identifiers.
+If any existing field layout, schema, data dictionary, **class/status code list**, or export metadata already exists, please include a copy. Do not create new documentation if none exists.
 
-Native CSV/XLSX preferred over PDFs.
+---
+
+## Scope
+
+Current **and** historical Broward contractor certification/licensing records maintained by Building Code Division / Contractor Licensing / CEB (BCS).
+
+Ask separately (if already maintained) for a code list explaining license/class/status values, including which classes remain currently required, which are voluntary, which are historical only, and which were affected by occupational-licensing preemption effective 1 July 2025.
+
+**Do not include:** SSN, DOB, driver’s license numbers, bank/payment data, PINs, or private account credentials. Lawful redaction is accepted.
+
+---
+
+## Preferred existing fields (only if maintained)
+
+local contractor/certificate ID; CC number; classification code; classification description; credential type; contractor/person name; firm/company; DBPR license number if stored; issue date; renewal date; expiration date; status; status effective date; current/historical flag; qualifying relationship if stored; state enrollment/registration if applicable; local class currentness/preemption indicator if stored; phone; additional phone; email; additional email; mailing address; physical/business address; website if stored; insurance status; insurance expiration; workers’ compensation status; exemption status; bond status; bond amount; bond expiration; **disciplinary status only if stored as a distinct official field** (not complaint narratives).
+
+---
+
+## Organization (when unblocked)
+
+Contractor Trust Hub / Ask Trust Hub. Public contact on site: hello@asktrusthub.com

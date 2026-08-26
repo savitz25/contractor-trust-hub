@@ -1,33 +1,53 @@
-# Public-record request draft — Unincorporated Palm Beach County building permits
+# FINAL SUBMISSION PACKAGE — Palm Beach County PZB building permits
 
-**Status: DRAFT ONLY. Do not submit unless authorized.**
+**Status: READY TO SUBMIT. Not submitted.**  
+**Blocker: SUBMISSION BLOCKED — REQUESTOR CONTACT REQUIRED**
 
-**To:** Palm Beach County Planning, Zoning & Building — Records / Building Division  
-2300 N. Jog Road, West Palm Beach, FL 33411  
-PZBOpenPermitSearch@pbcgov.org · 561-233-5160  
-Public records: http://pbcgov.com/eprr/pzb
+**Channel (when unblocked):** PZB Electronic Public Records Request  
+https://pbc.gov/eprr/pzb  
+Email routing if the portal requires it: PZBPublicRecords@pbc.gov  
+Route toward **Planning, Zoning & Building / Building Records**.
 
-**Re:** Public-records request for existing electronic **Unincorporated Palm Beach County** building-permit extracts
+This is **not** a fee-based certified open-permit search for a single PCN. It is a Chapter 119 request for an **existing electronic extract**.
 
-PZB’s own published search describes results as **Unincorporated Palm Beach County Building permits**. Please keep that jurisdiction boundary in the extract. Do **not** label municipal permits as county permits.
+---
 
-Census/BPS notes that the unincorporated permit system also covers **Loxahatchee Groves**; if that is still true in the database, disclose it as a coverage footnote rather than calling the file countywide.
+## Cost-control (required)
 
-## Date window
+Please provide the records in their existing native electronic/machine-readable format where available. We are not asking the agency to create new analysis, reports, summaries, or programming if an existing database export can satisfy the request.
 
-- Permits issued on or after **2023-01-01**, **and**
-- All currently open/unfinaled permits regardless of original issue date (statuses PZB publishes: active, inactive, expired, excluded, in process, ready for issuance, printed, agency approved, stop issue).
+Preferred delivery: **CSV, XLSX, database export, fixed-width/text, or JSON**. PDF is fallback only.
 
-If a 5-year or longer native extract is equally practical, prefer it.
+If fulfilling this request will result in fees or special service charges exceeding **$25**, please provide an itemized estimate **before** performing chargeable work.
 
-## Requested existing fields
+If any existing field layout, schema, data dictionary, **raw status-value definitions**, or export metadata already exists, please include a copy. Do not create new documentation if none exists.
 
-permit number; jurisdiction (unincorporated / any contract town); property address; PCN/parcel; contractor name; contractor license number (full DBPR or county certification); contractor system ID (7-digit ID if stored); permit type; description; application date; issue date; expiration; final date; **raw** permit status; declared/job valuation; fees if stored; inspection status; source/update timestamp.
+---
 
-Related inspection extract if it exists: permit number, inspection type, date, result, inspector, reinspection, failure/correction reason.
+## Hard jurisdiction
 
-## Format
+Request **Palm Beach County Planning, Zoning & Building Building Division permit records maintained in the County's permitting system, principally Unincorporated Palm Beach County and any other jurisdictions actually administered in that same system.**
 
-Existing electronic export (CSV/XLSX/JSON) plus field dictionary. Do not produce PDFs of individual permits if a table extract exists.
+This is **not** a request for “all Palm Beach County permits” and **not** a request for the 39 municipal building departments’ permits unless PZB confirms those rows are actually held in the County system.
 
-Do not create new analysis.
+If Loxahatchee Groves (or any other town) is administered in the same PZB building system, disclose that as coverage — do not relabel the file countywide.
+
+**Do not send pre-1985 scanned index-card images** in this initial request.
+
+**Time range:** 2023-01-01 through current, **plus** all currently open/unfinaled permits regardless of original issue date (including statuses the County publishes such as active, inactive, expired, excluded, in process, ready for issuance, printed, agency approved, stop issue), where existing export capability permits.
+
+**Do not include:** plans, drawings, surveys as images, SSN, DOB, driver’s licenses, bank/payment data, or private credentials. Lawful redaction is accepted.
+
+---
+
+## Preferred existing fields (only if maintained)
+
+permit record ID; permit number; PCN/parcel; jurisdiction; municipality where applicable; site address; permit type; permit subtype; description; contractor name; company; county contractor/certification ID; seven-digit contractor ID if stored; full DBPR license number; application date; issue date; expiration; final/close date; **raw** status; declared/job valuation; owner-builder flag; contractor/system identifier; last update timestamp.
+
+Optional related inspection **metadata** (not photos): permit number, type, date, result, inspector, reinspection, public failure/correction text.
+
+---
+
+## Organization (when unblocked)
+
+Contractor Trust Hub / Ask Trust Hub. Public contact on site: hello@asktrusthub.com

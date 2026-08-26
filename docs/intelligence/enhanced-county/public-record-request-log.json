@@ -1,0 +1,62 @@
+{
+  "asOf": "2026-08-26",
+  "submission_blocker": "SUBMISSION BLOCKED — REQUESTOR CONTACT REQUIRED",
+  "requests": [
+    {
+      "id": "PRR-BROWARD-PERMITS-001",
+      "county": "broward",
+      "department": "Building Code Division",
+      "title": "Existing electronic building-permit metadata extract",
+      "channel": "https://browardcounty.govqa.us/WEBAPP/_rs/",
+      "status": "DRAFTED",
+      "submitted": false,
+      "request_id": null,
+      "timestamp": "2026-08-26T20:00:00Z",
+      "fee": null,
+      "acknowledgment": null,
+      "package": "docs/intelligence/enhanced-county/pra-broward-permits.md"
+    },
+    {
+      "id": "PRR-BROWARD-CERTS-001",
+      "county": "broward",
+      "department": "Building Code Division / Contractor Licensing / CEB",
+      "title": "Existing electronic contractor certification extract",
+      "channel": "https://browardcounty.govqa.us/WEBAPP/_rs/",
+      "status": "DRAFTED",
+      "submitted": false,
+      "request_id": null,
+      "timestamp": "2026-08-26T20:00:00Z",
+      "fee": null,
+      "acknowledgment": null,
+      "package": "docs/intelligence/enhanced-county/pra-broward-certification.md"
+    },
+    {
+      "id": "PRR-PBC-PERMITS-001",
+      "county": "palm-beach",
+      "department": "PZB Building Records",
+      "title": "County-system permit metadata extract (principally unincorporated)",
+      "channel": "https://pbc.gov/eprr/pzb",
+      "status": "DRAFTED",
+      "submitted": false,
+      "request_id": null,
+      "timestamp": "2026-08-26T20:00:00Z",
+      "fee": null,
+      "acknowledgment": null,
+      "package": "docs/intelligence/enhanced-county/pra-pbc-permits.md"
+    },
+    {
+      "id": "PRR-PBC-CERTS-001",
+      "county": "palm-beach",
+      "department": "PZB Contractor Regulations",
+      "title": "Certification / enrollment / installer extract",
+      "channel": "https://pbc.gov/eprr/pzb",
+      "status": "DRAFTED",
+      "submitted": false,
+      "request_id": null,
+      "timestamp": "2026-08-26T20:00:00Z",
+      "fee": null,
+      "acknowledgment": null,
+      "package": "docs/intelligence/enhanced-county/pra-pbc-certification.md"
+    }
+  ]
+}

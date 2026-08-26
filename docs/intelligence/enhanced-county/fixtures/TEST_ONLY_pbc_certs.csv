@@ -1,0 +1,4 @@
+certificate_id,credential_type,classification,person_name,company,dbpr_license,status,issue_date,phone,email,mailing_address
+U-1,Certificate of Competency,General,TEST ONLY Person,Test Only Firm LLC,CGC1111111,Active,2020-01-01,561-555-0100,testonly@example.invalid,1 Test St
+U-2,Installer Registration,Painting,TEST ONLY Painter,Paint Co,,Current,2025-07-02,561-233-5525,paint@example.invalid,2 Test St
+U-3,State Enrollment,Roofing,TEST ONLY Roofer,Roof Co,CCC2222222,Enrolled,2024-06-01,561-555-0101,,3 Test St

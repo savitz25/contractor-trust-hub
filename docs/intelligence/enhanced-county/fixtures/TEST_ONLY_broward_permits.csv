@@ -1,0 +1,5 @@
+permit_number,jurisdiction,municipality,site_address,folio,permit_type,description,contractor_name,company,license_number,cc_number,application_date,issue_date,expiration_date,final_date,status,job_value
+B-1001,bmsd,Unincorporated,100 TEST ONLY ST,12345678,Roof,TEST_ONLY synthetic reroof,Acme Roofing LLC,Acme Roofing LLC,CCC1234567,CC-1,2024-01-02,2024-01-15,2025-01-15,2024-06-01,closed,25000
+B-1002,bmsd,Unincorporated,101 TEST ONLY ST,12345679,Building,TEST_ONLY addition,Jane Doe,Jane Doe,1234567,,2024-02-01,2024-02-10,,,issued,0
+B-1003,fort-lauderdale,Fort Lauderdale,102 TEST ONLY AVE,999,Plumbing,TEST_ONLY municipal row,Name Only Co,Name Only Co,,,2024-03-01,,,,in process,
+B-1003,bmsd,Unincorporated,103 TEST ONLY RD,888,Plumbing,TEST_ONLY same number different AHJ,Pipe LLC,Pipe LLC,CFC9999999,CC-9,2024-03-02,2024-03-20,,,issued,1200

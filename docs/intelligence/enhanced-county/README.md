@@ -1,6 +1,6 @@
 # Enhanced County Data Foundation — Broward & Palm Beach (Prompt 7)
 
-**Stage:** architecture + source map + ingest contract. **No population load. Coverage level remains Statewide Research.**
+**Stage:** architecture + ingest contract + native-export importers. **PRA packages ready; submission blocked pending authorized requestor. Migration 011 not applied (DB password). Coverage remains Statewide Research.**
 
 Consumer target (when loaded): state license evidence + local authorization + local permit/activity + locally attributable regulatory observations + official contacts = Enhanced Local Research.
 

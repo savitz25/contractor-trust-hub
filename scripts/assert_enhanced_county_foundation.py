@@ -62,7 +62,7 @@ def main() -> int:
     assert_('"epermits_onestop"' in matrix, "OneStop source")
     assert_("portal_only" in matrix, "portal-only flagged")
 
-    assert_("Do not submit" in pra_b, "Broward PRA not auto-submit")
+    assert_("SUBMISSION BLOCKED" in pra_b or "Do not submit" in pra_b, "Broward PRA not auto-submit")
     assert_("machine-readable" in pra_b.lower(), "native export requested")
     assert_("Unincorporated" in pra_p, "PBC PRA jurisdiction")
     assert_("2023-01-01" in pra_b and "2023-01-01" in pra_p, "date window")
