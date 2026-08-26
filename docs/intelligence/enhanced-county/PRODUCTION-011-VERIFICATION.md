@@ -1,6 +1,6 @@
 # Production 011 + seed verification (Prompt 10)
 
-Verified via PostgREST against production. **Did not re-run migration or seed.**
+Re-verified 2026-08-26 via PostgREST (service role; anon is revoked on these tables). **Did not re-run migration or seed.**
 
 | Table | Exists | Count |
 | --- | --- | --- |
