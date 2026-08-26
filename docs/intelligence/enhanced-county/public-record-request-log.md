@@ -8,8 +8,8 @@ Do not store passwords or sensitive portal credentials.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | PRR-PBC-PERMITS-001 | Palm Beach | existing electronic permit metadata extract | **REQ-2026-09008** | 2026-08-26 | Planning Zoning & Building / Building Records | **YES** | Email | Request Created; placed in BCC public records database; email confirmation sent; Open | none yet | **SUBMITTED_ANONYMOUS (Open)** |
 | PRR-PBC-CERTS-001 | Palm Beach | existing electronic certification/enrollment extract | **REQ-2026-09009** | 2026-08-26 | Planning Zoning & Building / Contractor Regulations | **YES** | Email | Request Created; placed in BCC public records database; email confirmation sent; Open | none yet | **SUBMITTED_ANONYMOUS (Open)** |
-| PRR-BROWARD-PERMITS-001 | Broward | existing electronic permit metadata extract | none | none — not accepted | Permitting and Licensing / Building Code Division | **NO** | none — portal account required | none — GovQA Create Account required | none | **PORTAL_ACCOUNT_REQUIRED** |
-| PRR-BROWARD-CERTS-001 | Broward | existing electronic certification extract | none | none — not accepted | Permitting and Licensing / Building Code / CEB | **NO** | none — portal account required | none — GovQA Create Account required | none | **PORTAL_ACCOUNT_REQUIRED** |
+| PRR-BROWARD-PERMITS-001 | Broward | existing electronic permit metadata extract | **R002812-082626** | 2026-08-26 | Building Code Division | **YES** | portal reference tracking (email requested in body: hello@asktrusthub.com) | Received 2026-08-26; track via Search by Reference Number | none yet | **SUBMITTED_ANONYMOUS (received)** |
+| PRR-BROWARD-CERTS-001 | Broward | existing electronic certification extract | **R002813-082626** | 2026-08-26 | Building Code Division | **YES** | portal reference tracking (email requested in body: hello@asktrusthub.com) | Received 2026-08-26; track via Search by Reference Number | none yet | **SUBMITTED_ANONYMOUS (received)** |
 
 ---
 
@@ -45,28 +45,28 @@ Do not store passwords or sensitive portal credentials.
 
 - **county:** Broward
 - **request type:** existing electronic permit metadata extract
-- **request ID:** none
-- **submission timestamp:** none — request was not accepted
-- **department:** Permitting and Licensing / Building Code Division
-- **anonymous:** NO
-- **delivery contact type:** none — portal account required before delivery can be selected
-- **acknowledgment:** none — request not accepted by GovQA without Create Account
-- **fee:** none
-- **status:** PORTAL_ACCOUNT_REQUIRED
-- **notes:** Attempted 2026-08-26 at GovQA RequestSelect / Login. “If this is your first online request, please create an account… Email Address* Password*.” Category Select does not open a guest form. Did not create or store a GovQA password. Did not use a personal mailbox. Did not invent a requester identity. Lawful non-portal alternatives remain: phone/written/in-person to Building Code (954-765-4400); Building records email `ELBPDRecordRequests@broward.org` if a human files from the project mailbox.
+- **request ID:** R002812-082626
+- **submission timestamp:** 2026-08-26
+- **department:** Building Code Division (GovQA category Permitting and Licensing)
+- **anonymous:** YES
+- **delivery contact type:** portal reference tracking; request body asked electronic delivery to hello@asktrusthub.com
+- **acknowledgment:** Thank you for your interest in public records of Broward County. Your request has been received in this office on August 26, 2026 and given the reference number R002812-082626 for tracking purposes. It is your responsibility to keep your reference number and check the “Search by Reference Number” section. Records Agency: Building Code Division. You will be notified of any costs in advance.
+- **fee:** none yet
+- **status:** SUBMITTED_ANONYMOUS (received)
+- **notes:** Filed 2026-08-26 via GovQA RequestOpen Submit Anonymously (category Permitting and Licensing → agency Building Code Division). Portal login password was not present in this environment and was not stored. No false requester role. $25 estimate-before-work gate included. No files returned immediately. Track at Search by Reference Number. Package: docs/intelligence/enhanced-county/pra-broward-permits.md
 
 ## PRR-BROWARD-CERTS-001
 
 - **county:** Broward
 - **request type:** existing electronic certification extract
-- **request ID:** none
-- **submission timestamp:** none — request was not accepted
-- **department:** Permitting and Licensing / Building Code / CEB
-- **anonymous:** NO
-- **delivery contact type:** none — portal account required before delivery can be selected
-- **acknowledgment:** none — request not accepted by GovQA without Create Account
-- **fee:** none
-- **status:** PORTAL_ACCOUNT_REQUIRED
-- **notes:** Same GovQA Create Account blocker as PRR-BROWARD-PERMITS-001. No request ID issued. No password stored.
+- **request ID:** R002813-082626
+- **submission timestamp:** 2026-08-26
+- **department:** Building Code Division (GovQA category Permitting and Licensing; CEB/contractor licensing is under this agency)
+- **anonymous:** YES
+- **delivery contact type:** portal reference tracking; request body asked electronic delivery to hello@asktrusthub.com
+- **acknowledgment:** Thank you for your interest in public records of Broward County. Your request has been received in this office on August 26, 2026 and given the reference number R002813-082626 for tracking purposes. Records Agency: Building Code Division. You will be notified of any costs in advance.
+- **fee:** none yet
+- **status:** SUBMITTED_ANONYMOUS (received)
+- **notes:** Filed 2026-08-26 via GovQA RequestOpen Submit Anonymously, same category/agency as the permit request. No CEB-specific agency row exists in the portal; Building Code Division description covers contractor permitting and licensing. No password stored. $25 gate included. No files returned immediately. Package: docs/intelligence/enhanced-county/pra-broward-certification.md
 
 JSON: `public-record-request-log.json`.
