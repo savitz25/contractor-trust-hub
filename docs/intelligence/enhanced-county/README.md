@@ -50,3 +50,13 @@ Open-permit mapping **designed** from PZB published statuses; not applied.
 ## Next
 
 Additional source acquisition / public-record exports (option C), independently for both counties. Do not mark Enhanced or build county Intelligence UI first.
+
+---
+
+## Miami-Dade + Pinellas (Prompt 1 — discovery only)
+
+Audit complete 2026-08-26. **No production writes. No Enhanced. No Intelligence pages.** Broward/Palm Beach evidence above is unchanged.
+
+Index: `MIAMI-DADE-PINELLAS-PROMPT-1.md`  
+Proposed AHJ metadata (35 + 25 rows): `proposed-seed-miami-dade-pinellas-jurisdictions.json` — **do not apply**.  
+PRA drafts: `pra-miami-dade-*.md`, `pra-pinellas-*.md` — **not filed**.

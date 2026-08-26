@@ -56,3 +56,43 @@ Florida §163.211 (HB 735 / 2021-214, extended by HB 1383 / SB 1142): local occu
 **Certification application historically required:** GL certificate, WC, Business Tax Receipt, $2,000 surety bond. Public profile may only show these if the extract has **actual status/dates**.
 
 **Identifiers:** county certification number, 7-digit contractor ID, DBPR license on enrollment, qualifier (owner of the license).
+
+## Miami-Dade (Prompt 1 — not ingested)
+
+**Agency:** RER Contractor Licensing Section + Construction Trades Qualifying Board (Chapter 10). Search: BCCO Contractor Inquiry. No public bulk COC CSV.
+
+**Current vs historical vs preempted:**
+
+| Concept | Currentness |
+| --- | --- |
+| Certificate of Competency (contractor business, remaining Chapter 10 / §489.105 classes) | `CURRENT_LOCAL_AUTHORIZATION` **if** live CTQB class list still issues it |
+| Certificate of eligibility | map from extract status; not a substitute for a current COC |
+| Journeyman COC | `CURRENT_LOCAL_AUTHORIZATION` as journeyman only — not a contractor |
+| Master COC | as source, after business license exists |
+| Authorized Employee COC | county/municipal employees only; not a public contractor credential |
+| Maintenance categories | as live class list |
+| Voluntary verification of **Florida certified** contractors for **unincorporated** permitting | `STATE_ENROLLED` — “only valid in unincorporated Miami Dade County.” Permit-gate, not a COC |
+| County COC holders who must also be **state-registered** (F.S. 489.115 / 489.513) | local row + `REGISTERED_FROM` state credential when DBPR number is stored |
+| Reciprocity from Broward / Palm Beach | as source; still a Miami-Dade credential once issued |
+| Specialty occupational / non-489.105 classes after HB 735 / HB 1383 | `PREEMPTED_CLASS` / `HISTORICAL_LOCAL_LICENSE` until a live extract proves current issuance |
+
+Do not treat EnerGov Consumer Protection business licenses as COC.
+
+**Identifiers:** county COC / certificate number, company, qualifier, raw status, complaint flag. Full DBPR number **not confirmed in public search UI** — request in PRA.
+
+## Pinellas (Prompt 1 — not ingested)
+
+**Agency:** Pinellas County Construction Licensing Board (dependent special district, Chapter 2024-294, structure effective 2024-06-14) + Contractor Licensing Department. Countywide **credentials**, including all 24 municipalities. That is **not** countywide permits.
+
+**Current vs historical vs preempted:**
+
+| Concept | Currentness |
+| --- | --- |
+| Local certified county contractor (`C-`) | `CURRENT_LOCAL_AUTHORIZATION` if class still issued. Renewal: certified county + journeyman expire **2026-09-30**; annual window begins June 1 |
+| Journeyman (`J-`) | journeyman only — “You cannot hire a Journeyman directly” |
+| State **certified** contractors | **pcclb.com 2026: “DO NOT have to register or renew their registrations with PCCLB to work in Pinellas County.”** Not a PCCLB enrollment census. They still show state license + insurance **to each building department** to pull permits. Permit-gate ≠ county credential |
+| State **registered** (`I-`) if extract still issues them | `STATE_ENROLLED` / `CURRENT_REGISTRATION` only if live |
+| Specialty local classes after HB 735 / HB 1383 | `PREEMPTED_CLASS` / `HISTORICAL_LOCAL_LICENSE` unless live class list (`contractor-class.pdf`) says otherwise |
+| Reciprocity with other Florida jurisdictions | as source |
+
+**Identifiers:** local `C-`/`J-`/`I-` number, business name, person, status, expiration. Request full DBPR number in PRA. Insurance/bond on file is currentness support, not a public phone.

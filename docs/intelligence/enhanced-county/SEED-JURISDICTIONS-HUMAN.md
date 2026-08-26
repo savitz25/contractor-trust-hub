@@ -30,3 +30,14 @@ SELECT jurisdiction_slug, notes FROM public.enhanced_jurisdictions
 ```
 
 Expect: Broward BMSD present; Broward municipals not `kind=county`; PBC unincorporated present; Westlake 2017 own-system note; Loxahatchee Groves dual-coverage note. **Do not treat these rows as permit coverage.**
+
+## Miami-Dade + Pinellas — proposed, not applied
+
+`scripts/proposed_seed_mdc_pinellas_jurisdictions.py` writes JSON only (`proposed-seed-miami-dade-pinellas-jurisdictions.json`). It does **not** connect to production.
+
+| County | Proposed rows | Status |
+| --- | --- | --- |
+| Miami-Dade | 1 unincorporated + 34 municipalities = **35** | `PROPOSED_NOT_APPLIED` |
+| Pinellas | 1 unincorporated + 24 municipalities = **25** | `PROPOSED_NOT_APPLIED` |
+
+Do not run this JSON through `seed_enhanced_jurisdictions.py` until Prompt 2 review. Islandia is not an AHJ. Pinellas Accela partner cities stay `kind=municipal` with notes; they are not extra county rows.

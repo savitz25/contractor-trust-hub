@@ -70,3 +70,27 @@ Do not store passwords or sensitive portal credentials.
 - **notes:** Filed 2026-08-26 via GovQA RequestOpen Submit Anonymously, same category/agency as the permit request. No CEB-specific agency row exists in the portal; Building Code Division description covers contractor permitting and licensing. No password stored. $25 gate included. No files returned immediately. Package: docs/intelligence/enhanced-county/pra-broward-certification.md
 
 JSON: `public-record-request-log.json`.
+
+---
+
+## Miami-Dade + Pinellas — DRAFT, NOT FILED (Prompt 1)
+
+Prompt 1 forbids filing. Packages exist for Prompt 2 review only.
+
+| ID | County | Request type | Request ID | Submission timestamp | Department | Anonymous | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| PRR-MDC-PERMITS-001 | Miami-Dade | existing electronic permit metadata extract (history/status beyond Open Data issued window) | none | not submitted | RER Building Division / Building Records | planned YES | **DRAFT_NOT_FILED** |
+| PRR-MDC-CONTRACTORS-001 | Miami-Dade | CTQB / Certificate of Competency extract | none | not submitted | RER Contractor Licensing / CTQB | planned YES | **DRAFT_NOT_FILED** |
+| PRR-MDC-ENFORCEMENT-001 | Miami-Dade | contractor complaints / board dispositions | none | not submitted | RER Contractor Licensing and Contractor Enforcement | planned YES | **DRAFT_NOT_FILED** |
+| PRR-PIN-CONTRACTORS-001 | Pinellas | PCCLB C-/J-/(I-) credential extract | none | not submitted | PCCLB / Contractor Licensing Department | planned YES | **DRAFT_NOT_FILED** |
+| PRR-PIN-PERMITS-001 | Pinellas | Accela building permits (unincorporated + partner cities) | none | not submitted | BDRS | planned YES | **DRAFT_NOT_FILED** |
+| PRR-PIN-ENFORCEMENT-001 | Pinellas | PCCLB citations / admin fines / orders | none | not submitted | PCCLB / Contractor Licensing Department | planned YES | **DRAFT_NOT_FILED** |
+
+Packages:
+
+- `pra-miami-dade-permits.md`
+- `pra-miami-dade-contractors.md`
+- `pra-miami-dade-enforcement.md`
+- `pra-pinellas-contractors.md`
+- `pra-pinellas-permits.md`
+- `pra-pinellas-enforcement.md`
