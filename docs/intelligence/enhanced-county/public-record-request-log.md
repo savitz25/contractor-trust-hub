@@ -1,20 +1,24 @@
 # Public-record request log
 
-Anonymous electronic filing was **tested** against the live official forms. No request was filed with a fabricated sender.
-
 | ID | County | Department | Title | Channel | Submitted | Request ID | Timestamp | Fee | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PRR-BROWARD-PERMITS-001 | Broward | Permitting and Licensing / Building Code | Existing electronic building-permit metadata extract | GovQA RequestSelect | **NO** | — | 2026-08-26 | none | **PORTAL_ACCOUNT_REQUIRED** |
-| PRR-BROWARD-CERTS-001 | Broward | Permitting and Licensing / Building Code / CEB | Existing electronic contractor certification extract | GovQA RequestSelect | **NO** | — | 2026-08-26 | none | **PORTAL_ACCOUNT_REQUIRED** |
-| PRR-PBC-PERMITS-001 | Palm Beach | PZB Building Records | County-system permit metadata extract | https://pbc.gov/eprr/pzb | **NO** | — | 2026-08-26 | none | **DELIVERY_CONTACT_REQUIRED** |
-| PRR-PBC-CERTS-001 | Palm Beach | PZB Contractor Regulations | Certification / enrollment / installer extract | https://pbc.gov/eprr/pzb | **NO** | — | 2026-08-26 | none | **DELIVERY_CONTACT_REQUIRED** |
+| PRR-PBC-PERMITS-001 | Palm Beach | Planning Zoning & Building / Building Records | Existing electronic permit metadata extract | https://pbc.gov/eprr/pzb | **YES** | **REQ-2026-09008** | 2026-08-26 | none yet | **SUBMITTED_ANONYMOUS** (Open) |
+| PRR-PBC-CERTS-001 | Palm Beach | Planning Zoning & Building / Contractor Regulations | Existing electronic certification/enrollment extract | https://pbc.gov/eprr/pzb | **YES** | **REQ-2026-09009** | 2026-08-26 | none yet | **SUBMITTED_ANONYMOUS** (Open) |
+| PRR-BROWARD-PERMITS-001 | Broward | Permitting and Licensing / Building Code | Existing electronic permit metadata extract | GovQA RequestSelect / Login | **NO** | — | 2026-08-26 | none | **PORTAL_ACCOUNT_REQUIRED** |
+| PRR-BROWARD-CERTS-001 | Broward | Permitting and Licensing / Building Code / CEB | Existing electronic certification extract | GovQA RequestSelect / Login | **NO** | — | 2026-08-26 | none | **PORTAL_ACCOUNT_REQUIRED** |
 
-## Precise minimum contact (tested)
+## Palm Beach (filed)
 
-**Palm Beach ePRR:** Anonymous checkbox exists and clears name/address. If “How would you like to receive your documents?” = **Email**, the form **adds a required Email Address rule**. Pickup-in-person adds a **required phone**. US Mail **disables Anonymous** and requires a mailing address.  
-→ **Anonymous electronic submission requires a delivery contact** (email for electronic delivery, or phone for pickup). Not “Trust Hub identity required.”
+- Anonymous checkbox used. Delivery email: project public contact only (`hello@asktrusthub.com`). No personal name invented.
+- Acknowledgment: “Request Created… placed into the public records database for the Board of County Commissioners.” Toast: “The email confirmation was send successfully.”
+- Delivery method: Email.
+- $25 cost gate included in description text.
+- Tracking: request numbers on the confirmation screen.
 
-**Broward GovQA:** County PRR page states you can submit anonymously. The live portal also exposes **Login**, **My Request Center**, and **Search by Reference Number**. Category **Permitting and Licensing** includes Building Code. The category **Select** postback did not open a completable anonymous request form in this automated session.  
-→ **Electronic GovQA path did not complete without an account/login in this environment.** Lawful alternatives: phone / written / in-person to Building Code (954-765-4400) without a name. Portal retrieval later uses a **reference number**.
+## Broward (not filed)
 
-JSON twin: `public-record-request-log.json`.
+GovQA Login page: “If this is your first online request, please **create an account**… Email Address* Password*.” Category Select does not open a guest form. Creating/verifying a GovQA account requires inbox access we do not have for the project delivery mailbox in this environment. Did not use a personal mailbox. Did not invent a password in git.
+
+Lawful non-portal alternatives remain: phone/written/in-person to Building Code (954-765-4400); Building records email `ELBPDRecordRequests@broward.org` if a human files from the project mailbox.
+
+JSON: `public-record-request-log.json`.

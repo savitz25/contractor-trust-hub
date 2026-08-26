@@ -1,7 +1,7 @@
 # FINAL SUBMISSION PACKAGE — Palm Beach County contractor certification / enrollment
 
-**Status: READY TO SUBMIT. Not submitted.**  
-**Blocker: SUBMISSION BLOCKED — REQUESTOR CONTACT REQUIRED**
+**Status: SUBMITTED_ANONYMOUS.**  
+**Request ID: REQ-2026-09009 (Open).** Filed 2026-08-26 via https://pbc.gov/eprr/pzb. Delivery email only: hello@asktrusthub.com.
 
 **Channel (when unblocked):** PZB Electronic Public Records Request  
 https://pbc.gov/eprr/pzb  
