@@ -1,6 +1,6 @@
 # DRAFT — NOT FILED — PCCLB citations / administrative fines / orders
 
-**Status: DRAFT. Do not submit in Prompt 1.**
+**Status: READY. Prompt 2 portal attempt 2026-08-26: GovQA CONTRACTOR LICENSING `rqst=67` requires CREATE ANONYMOUS ACCOUNT. Not filed. No account/password created.**
 
 **Agency:** PCCLB / Contractor Licensing Department.  
 Accela record types include CLB-CT# (citations), CLB-AF# (administrative fines), CLB-EX# (expired-permit violations). Special magistrate hearings are public.

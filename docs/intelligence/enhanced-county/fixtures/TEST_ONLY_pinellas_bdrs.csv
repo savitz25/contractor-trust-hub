@@ -1,0 +1,5 @@
+permit_number,accela_id,jurisdiction,address,parcel,permit_type,contractor_name,license_number,status,issue_date,valuation
+B-100,ACC-1,Unincorporated,100 Gulf Blvd,00-00-00,Building,Local Builds Inc,CGC1111111,Issued,2024-06-01,50000
+B-100,ACC-2,Oldsmar,200 State St,11-11-11,Building,Local Builds Inc,CGC1111111,Issued,2024-06-02,
+B-200,ACC-3,St. Petersburg,1 Central Ave,22-22-22,Building,Should Not Be Countywide,CGC1111111,Issued,2024-06-03,1
+B-300,ACC-4,Unincorporated,300 Pinellas Ave,00-00-01,Building,Owner,OWNER,Issued,2024-06-04,0

@@ -1,0 +1,17 @@
+Public records request under Chapter 119, Florida Statutes.
+
+Please provide an existing native electronic extract of Pinellas County Construction Licensing Board / Contractor Licensing Department locally certified (C-), journeyman (J-), and any remaining state-registered (I-) credentials, plus insurance/bond certificates on file.
+
+We understand state-certified contractors currently may not be required to register with PCCLB. Do not invent enrollment rows. If the system stores optional registrations, include them labeled as such.
+
+Preferred existing fields: local license number; class; person; firm; qualifier; RAW status; issue/renewal/expiration; full DBPR number if stored; insurance/WC/bond amounts and expirations; addresses; phones; emails; last update.
+
+Include inactive, expired, revoked, and historical classes.
+
+Exclude: exam content, SSN, DL images, payments.
+
+Preferred format: existing CSV / XLSX / DB export / JSON. Include any existing data dictionary / class list.
+
+If fees or special service charges exceed $25, please provide an itemized estimate before performing chargeable work.
+
+Anonymous request. Electronic delivery to hello@asktrusthub.com if a delivery address is required. No personal name. Not an attorney, journalist, or government requestor.

@@ -1,6 +1,6 @@
 # DRAFT — NOT FILED — Pinellas BDRS Accela building permits
 
-**Status: DRAFT. Do not submit in Prompt 1.**
+**Status: READY. Prompt 2 portal attempt 2026-08-26: GovQA BUILDING SERVICES `rqst=65` requires CREATE ANONYMOUS ACCOUNT before the request form. Not filed. No account/password created.**
 
 **Agency:** Pinellas County Building and Development Review Services.  
 Access Portal: https://aca-prod.accela.com/pinellas/  

@@ -75,16 +75,16 @@ JSON: `public-record-request-log.json`.
 
 ## Miami-Dade + Pinellas — DRAFT, NOT FILED (Prompt 1)
 
-Prompt 1 forbids filing. Packages exist for Prompt 2 review only.
+Prompt 2 attempted GovQA filing 2026-08-26. **Not filed.** Miami-Dade anonymous form filled; portal returned “The submitted CAPTCHA code is incorrect.” Pinellas requires CREATE ANONYMOUS ACCOUNT before the request form; no account was created.
 
 | ID | County | Request type | Request ID | Submission timestamp | Department | Anonymous | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| PRR-MDC-PERMITS-001 | Miami-Dade | existing electronic permit metadata extract (history/status beyond Open Data issued window) | none | not submitted | RER Building Division / Building Records | planned YES | **DRAFT_NOT_FILED** |
-| PRR-MDC-CONTRACTORS-001 | Miami-Dade | CTQB / Certificate of Competency extract | none | not submitted | RER Contractor Licensing / CTQB | planned YES | **DRAFT_NOT_FILED** |
-| PRR-MDC-ENFORCEMENT-001 | Miami-Dade | contractor complaints / board dispositions | none | not submitted | RER Contractor Licensing and Contractor Enforcement | planned YES | **DRAFT_NOT_FILED** |
-| PRR-PIN-CONTRACTORS-001 | Pinellas | PCCLB C-/J-/(I-) credential extract | none | not submitted | PCCLB / Contractor Licensing Department | planned YES | **DRAFT_NOT_FILED** |
-| PRR-PIN-PERMITS-001 | Pinellas | Accela building permits (unincorporated + partner cities) | none | not submitted | BDRS | planned YES | **DRAFT_NOT_FILED** |
-| PRR-PIN-ENFORCEMENT-001 | Pinellas | PCCLB citations / admin fines / orders | none | not submitted | PCCLB / Contractor Licensing Department | planned YES | **DRAFT_NOT_FILED** |
+| PRR-MDC-PERMITS-001 | Miami-Dade | existing electronic permit metadata extract (history/status beyond Open Data issued window) | none | not submitted | RER (GovQA rqst=9) | YES attempted | **PORTAL_REACHED_CAPTCHA_BLOCKED** |
+| PRR-MDC-CONTRACTORS-001 | Miami-Dade | CTQB / Certificate of Competency extract | none | not submitted | RER (GovQA rqst=9) | YES attempted | **PORTAL_REACHED_CAPTCHA_BLOCKED** |
+| PRR-MDC-ENFORCEMENT-001 | Miami-Dade | contractor complaints / board dispositions | none | not submitted | RER (GovQA rqst=9) | YES attempted | **PORTAL_REACHED_CAPTCHA_BLOCKED** |
+| PRR-PIN-CONTRACTORS-001 | Pinellas | PCCLB C-/J-/(I-) credential extract | none | not submitted | CONTRACTOR LICENSING (rqst=67) | YES attempted | **PORTAL_ANON_ACCOUNT_REQUIRED** |
+| PRR-PIN-PERMITS-001 | Pinellas | Accela building permits (unincorporated + partner cities) | none | not submitted | BUILDING SERVICES (rqst=65) | YES attempted | **PORTAL_ANON_ACCOUNT_REQUIRED** |
+| PRR-PIN-ENFORCEMENT-001 | Pinellas | PCCLB citations / admin fines / orders | none | not submitted | CONTRACTOR LICENSING (rqst=67) | YES attempted | **PORTAL_ANON_ACCOUNT_REQUIRED** |
 
 Packages:
 

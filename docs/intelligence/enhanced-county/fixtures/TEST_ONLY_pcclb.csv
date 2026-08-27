@@ -1,0 +1,5 @@
+license,license_type,contractor,business_name,status,expiration_date,state_license,phone
+C-12345,Certified County General,Alex Local,Local Builds Inc,A,2026-09-30,CGC1111111,(727)555-0100
+J-888,Journeyman Electrician,Riley Journey,,A,2026-09-30,,(727)555-0101
+I-222,State Registered Residential,Reg Person,Reg Co,A,2026-09-30,RR2222222,(727)555-0102
+C-999,Certified County Roofing,Expired Roofer,Expired Roof LLC,E,2024-09-30,CCC3333333,(727)555-0103

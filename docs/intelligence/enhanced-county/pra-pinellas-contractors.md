@@ -1,6 +1,6 @@
 # DRAFT — NOT FILED — PCCLB contractor credential extract
 
-**Status: DRAFT. Do not submit in Prompt 1.**
+**Status: READY. Prompt 2 portal attempt 2026-08-26: GovQA CONTRACTOR LICENSING `rqst=67` requires CREATE ANONYMOUS ACCOUNT. Not filed. No account/password created.**
 
 **Agency:** Pinellas County Construction Licensing Board / Contractor Licensing Department.  
 440 Court Street, Clearwater. pcclb@pinellas.gov / (727) 582-3100.  

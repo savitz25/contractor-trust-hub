@@ -284,6 +284,38 @@ SOURCES = {
         "aliases": CERT_ALIASES,
         "required": ["local_credential_key"],
     },
+    "mdc-opendata-permits": {
+        "county": "miami-dade",
+        "agency": "Miami-Dade RER GIS / Open Data Hub",
+        "source_system": "mdc_opendata_issued",
+        "kind": "permit",
+        "aliases": PERMIT_ALIASES,
+        "required": ["permit_number"],
+    },
+    "mdc-ctqb-certs": {
+        "county": "miami-dade",
+        "agency": "Miami-Dade RER Contractor Licensing / CTQB",
+        "source_system": "mdc_ctqb_coc",
+        "kind": "cert",
+        "aliases": CERT_ALIASES,
+        "required": ["local_credential_key"],
+    },
+    "pcclb-certs": {
+        "county": "pinellas",
+        "agency": "Pinellas County Construction Licensing Board",
+        "source_system": "pcclb_local",
+        "kind": "cert",
+        "aliases": CERT_ALIASES,
+        "required": ["local_credential_key"],
+    },
+    "pinellas-bdrs-permits": {
+        "county": "pinellas",
+        "agency": "Pinellas County BDRS",
+        "source_system": "pinellas_bdrs_accela",
+        "kind": "permit",
+        "aliases": PERMIT_ALIASES,
+        "required": ["permit_number"],
+    },
 }
 
 

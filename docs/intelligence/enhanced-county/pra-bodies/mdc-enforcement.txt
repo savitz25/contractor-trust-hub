@@ -1,0 +1,15 @@
+Public records request under Chapter 119, Florida Statutes.
+
+Please provide existing electronic contractor complaint, investigation, citation, notice, board action, and final order/disposition records for Miami-Dade Certificate of Competency holders and unlicensed-contracting cases handled by RER Contractor Licensing and Contractor Enforcement.
+
+Not Building Support / Code Enforcement property cases unless the official row already stores a contractor license/COC number.
+
+Preferred existing fields: complaint/case number; contractor license/COC; company; allegation type; RAW stage (complaint / investigation / notice / hearing / order); disposition text; fine/suspension/revocation if present; dates; public vs confidential flag as stored.
+
+A complaint is not a finding. Please do not collapse stages.
+
+Preferred format: existing CSV / XLSX / DB export / JSON. No unnecessary scans.
+
+If fees or special service charges exceed $25, please provide an itemized estimate before performing chargeable work.
+
+Anonymous request. Electronic delivery to hello@asktrusthub.com if a delivery address is required. No personal name. Not an attorney, journalist, or government requestor.

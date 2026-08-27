@@ -1,6 +1,6 @@
 # DRAFT — NOT FILED — Miami-Dade contractor complaints / board discipline
 
-**Status: DRAFT. Do not submit in Prompt 1.**
+**Status: READY. Prompt 2 portal attempt 2026-08-26: anonymous RER form reached; CAPTCHA blocked submit. Not filed.**
 
 **Agency:** RER Contractor Licensing and Contractor Enforcement Section.  
 Complaint search UI: BCCO Contractor Complaint Search.

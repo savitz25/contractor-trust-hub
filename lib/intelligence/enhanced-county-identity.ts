@@ -114,3 +114,73 @@ export const VALUATION_IS_NOT_REVENUE =
 
 export const EXPIRED_PERMIT_IS_NOT_DISCIPLINE =
   "Permit expired is not contractor discipline. Failed inspection is not a bad-contractor finding.";
+
+/** Miami-Dade Open Data ContractorNumber mixed namespace. */
+export type MdcContractorNamespace =
+  | "DBPR_FULL_PREFIXED"
+  | "MIAMI_DADE_COC"
+  | "OWNER_BUILDER"
+  | "OTHER_LOCAL_IDENTIFIER"
+  | "AMBIGUOUS"
+  | "BLANK";
+
+const DBPR_PREFIXES = new Set([
+  "CAC",
+  "CBC",
+  "CCC",
+  "CFC",
+  "CGC",
+  "CMC",
+  "CPC",
+  "CRC",
+  "CSC",
+  "CUC",
+  "CVC",
+  "SCC",
+  "PCC",
+  "RA",
+  "RB",
+  "RC",
+  "RF",
+  "RG",
+  "RM",
+  "RP",
+  "RQ",
+  "RR",
+  "RS",
+  "RU",
+  "RV",
+  "RX",
+  "EC",
+  "ES",
+  "ER",
+  "EF",
+  "EG",
+  "ET",
+  "EY",
+  "LE",
+  "FPC",
+  "FSC",
+]);
+
+const MDC_COC = /^\d{2}[A-Z]{1,3}\d{4,}$/;
+
+export function classifyMdcContractorNumber(
+  raw: string | null | undefined,
+  contractorName?: string | null,
+): { namespace: MdcContractorNamespace; normalized: string } {
+  const name = (contractorName || "").replace(/[^A-Za-z]/g, "").toUpperCase();
+  if (name === "OWNER" || name.startsWith("OWNERBUILD")) {
+    return { namespace: "OWNER_BUILDER", normalized: normalizeFullLicense(raw) || "OWNER" };
+  }
+  const n = normalizeFullLicense(raw);
+  if (!n) return { namespace: "BLANK", normalized: "" };
+  const m = n.match(OCCUPATION_PREFIX);
+  if (m) {
+    const prefix = m[1];
+    if (DBPR_PREFIXES.has(prefix)) return { namespace: "DBPR_FULL_PREFIXED", normalized: n };
+    return { namespace: "AMBIGUOUS", normalized: n };
+  }
+  if (MDC_COC.test(n)) return { namespace: "MIAMI_DADE_COC", normalized: n };
+  return { namespace: "OTHER_LOCAL_IDENTIFIER", normalized: n };
+}

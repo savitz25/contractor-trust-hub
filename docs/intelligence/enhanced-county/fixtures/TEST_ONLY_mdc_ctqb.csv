@@ -1,0 +1,5 @@
+coc_number,classification,credential_type,person,company,qualifier,status,issue_date,expiration_date,dbpr_number,phone,email,insurance_status
+19B000138,General Building,Certificate of Competency,Jane Qualifier,Square And Compass LLC,Jane Qualifier,Active,2024-01-01,2026-09-30,CGC1508486,(305)555-0100,jane@example.test,current
+J-1001,Journeyman Plumber,Journeyman COC,Sam Journeyman,,Sam Journeyman,Active,2023-01-01,2026-09-30,,(305)555-0101,,
+ELIG-9,Electrical,Certificate of Eligibility,Pat Eligible,Eligible Electric,Pat Eligible,Active,2022-01-01,2026-09-30,EC13001606,(305)555-0102,,
+HIST-1,Painting,Certificate of Competency,Old Paint,Old Paint Inc,Old Paint,Preempted,2018-01-01,2025-07-01,,(305)555-0103,,

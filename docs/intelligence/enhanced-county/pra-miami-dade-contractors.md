@@ -1,6 +1,6 @@
 # DRAFT — NOT FILED — Miami-Dade CTQB / Certificate of Competency extract
 
-**Status: DRAFT. Do not submit in Prompt 1.**
+**Status: READY. Prompt 2 portal attempt 2026-08-26: anonymous RER form reached; CAPTCHA blocked submit. Not filed.**
 
 **Agency:** RER — Contractor Licensing Section / Construction Trades Qualifying Board.  
 Search UI (not bulk): https://www.miamidade.gov/Apps/RER/BCCOContractorMenu

@@ -1,6 +1,6 @@
 # DRAFT — NOT FILED — Miami-Dade RER unincorporated building permits
 
-**Status: DRAFT. Do not submit in Prompt 1.**
+**Status: READY. Prompt 2 portal attempt 2026-08-26: anonymous RequestOpen `rqst=9` reached; CAPTCHA blocked submit. Not filed.**
 
 **Agency / route:** Miami-Dade County Department of Regulatory and Economic Resources — Building Division / Building Records.  
 Public records: https://www.miamidade.gov/global/publicrecords/search.page  

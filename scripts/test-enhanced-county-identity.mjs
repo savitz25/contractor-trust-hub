@@ -61,6 +61,24 @@ function pcnUnincorporated(pcn) {
 assert.equal(pcnUnincorporated("00-42-43-27-01-000-0000"), true);
 assert.equal(pcnUnincorporated("74-42-43-27-01-000-0000"), false);
 
+const DBPR_PREFIXES = new Set(["CGC","CCC","CBC","CRC","CAC","CFC","CMC","CPC","CUC","SCC","CVC","EC","FPC","RA","RB","RC","RF","RG","RM","RP","RR","RU","RV","RX"]);
+const MDC_COC = /^\d{2}[A-Z]{1,3}\d{4,}$/;
+function classifyMdc(raw, name) {
+  const nm = String(name || "").replace(/[^A-Za-z]/g, "").toUpperCase();
+  if (nm === "OWNER" || nm.startsWith("OWNERBUILD")) return "OWNER_BUILDER";
+  const n = normalizeFullLicense(raw);
+  if (!n) return "BLANK";
+  const m = n.match(OCC);
+  if (m) return DBPR_PREFIXES.has(m[1]) ? "DBPR_FULL_PREFIXED" : "AMBIGUOUS";
+  if (MDC_COC.test(n)) return "MIAMI_DADE_COC";
+  return "OTHER_LOCAL_IDENTIFIER";
+}
+assert.equal(classifyMdc("CGC1508486"), "DBPR_FULL_PREFIXED");
+assert.equal(classifyMdc("19B000138"), "MIAMI_DADE_COC");
+assert.equal(classifyMdc("", "OWNER"), "OWNER_BUILDER");
+assert.equal(classifyMdc("1234567"), "OTHER_LOCAL_IDENTIFIER");
+assert.equal(classifyMdc("ZZZ99999"), "AMBIGUOUS");
+
 const permitKeyA = ["pbc_unincorporated", "12345"].join("|");
 const permitKeyB = ["west-palm-beach", "12345"].join("|");
 assert.notEqual(permitKeyA, permitKeyB);
