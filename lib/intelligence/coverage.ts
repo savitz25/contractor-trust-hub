@@ -44,13 +44,18 @@ export function evaluateEnhancedLocalResearchGate(
 
 /**
  * Public coverage for county pages. Always statewide until the gate is activated.
- * Broward / Palm Beach must not be marked enhanced until local ingest exists.
+ * Broward / Palm Beach / Miami-Dade / Pinellas stay statewide until the gate is wired.
  */
 export function countyResearchCoverage(_countySlug: string): ResearchCoverageLevel {
   return "statewide";
 }
 
-export const FLORIDA_COUNTY_INTEL_SLUGS = ["broward", "palm-beach"] as const;
+export const FLORIDA_COUNTY_INTEL_SLUGS = [
+  "broward",
+  "palm-beach",
+  "miami-dade",
+  "pinellas",
+] as const;
 export type FloridaCountyIntelSlug = (typeof FLORIDA_COUNTY_INTEL_SLUGS)[number];
 
 export function isFloridaCountyIntelSlug(slug: string): slug is FloridaCountyIntelSlug {

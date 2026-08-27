@@ -19,13 +19,13 @@ export const COUNTY_INTELLIGENCE_EDUCATION: IntelligenceEducationModule[] = [
     id: "why-permit-history",
     title: "Why permit history matters",
     summary:
-      "Permit records, when loaded, are operating evidence: who pulled work, where, and in which AHJ. They are a separate layer from the state credential. This county page does not yet publish permit counts because exports are still being acquired.",
+      "Permit records, when loaded, are operating evidence: who pulled work, where, and in which AHJ. They are a separate layer from the state credential. Confirmed county-issued rows are not complete municipal history. Issued is not final.",
   },
   {
     id: "many-permitting-authorities",
     title: "Why one county can have many permitting authorities",
     summary:
-      "Broward and Palm Beach each contain a county/unincorporated AHJ plus dozens of municipalities that issue their own building permits. Mapped jurisdictions tell us where local research must occur. Mapping is not permit coverage.",
+      "Florida counties typically contain a county/unincorporated AHJ plus municipalities that issue their own building permits. Mapped jurisdictions tell us where local research must occur. Mapping is not permit coverage.",
   },
   {
     id: "address-not-operating",
@@ -56,6 +56,6 @@ export const COUNTY_INTELLIGENCE_EDUCATION: IntelligenceEducationModule[] = [
     id: "check-permit-locally",
     title: "How to check a permit locally",
     summary:
-      "Identify the city or unincorporated area of the jobsite, then use that AHJ’s permit search — not a countywide warehouse unless the source is proven countywide. For unincorporated Palm Beach County start with PZB; for BMSD/unincorporated Broward start with county Building Code Division. Municipal jobs use the city portal.",
+      "Identify the city or unincorporated area of the jobsite, then use that AHJ’s permit search — not a countywide warehouse unless the source is proven countywide. Unincorporated Palm Beach: PZB. Unincorporated Broward / BMSD: county Building Code Division. Unincorporated Miami-Dade: RER Building (folio 30). Unincorporated Pinellas and Accela partner cities: county BDRS. Municipal jobs use that city’s portal.",
   },
 ];

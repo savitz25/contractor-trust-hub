@@ -42,13 +42,13 @@ function counts(kind: "broward" | "palm-beach") {
 }
 
 test("both counties stay Statewide Research", () => {
-  for (const slug of ["broward", "palm-beach"] as const) {
+  for (const slug of ["broward", "palm-beach", "miami-dade", "pinellas"] as const) {
     assert.equal(countyResearchCoverage(slug), "statewide");
     const p = buildCountyIntelligencePayload({
       countySlug: slug,
       generatedAt: GENERATED,
       timedOut: false,
-      counts: counts(slug),
+      counts: counts(slug === "palm-beach" ? "palm-beach" : "broward"),
     });
     assert.equal(p.coverageLevel, "statewide");
     assert.equal(p.enhancedGateActivated, false);
@@ -112,6 +112,46 @@ test("timeout omits numbers instead of publishing zeros", () => {
   assert.equal(p.timedOut, true);
   assert.equal(p.metrics.length, 0);
   assert.equal(publicCountyMetrics(p).length, 0);
+});
+
+test("Miami-Dade confirmed permits are READY and Pinellas permits stay pending", () => {
+  const mdc = buildCountyIntelligencePayload({
+    countySlug: "miami-dade",
+    generatedAt: GENERATED,
+    timedOut: false,
+    counts: {
+      ...counts("broward"),
+      permitEvidence: {
+        sourceRows: 139586,
+        confirmed: 80810,
+        confirmedLast12Months: 40000,
+        distinctLicenses: 8015,
+        unincorporated: 60000,
+        associatedReview: 10000,
+        withValuation: 70000,
+        recordedValuation: 123,
+        contactObservations: 16009,
+        contactDistinctLicenses: 5000,
+      },
+    },
+  });
+  assert.equal(mdc.coverageLevel, "statewide");
+  assert.equal(mdc.enhancedGateActivated, false);
+  const pub = publicCountyMetrics(mdc);
+  assert.ok(pub.some((m) => m.id === "confirmed_issued_permits" && m.value === 80810));
+  assert.equal(pub.some((m) => m.id === "permits"), false);
+  assert.match(
+    pub.find((m) => m.id === "confirmed_issued_permits")!.disclosure,
+    /Not all Miami-Dade permits/i
+  );
+  const pin = buildCountyIntelligencePayload({
+    countySlug: "pinellas",
+    generatedAt: GENERATED,
+    timedOut: false,
+    counts: counts("broward"),
+  });
+  assert.equal(pin.modules.find((m) => m.id === "permits")?.readiness, "NOT_READY");
+  assert.equal(publicCountyMetrics(pin).some((m) => m.id === "permits"), false);
 });
 
 test("RR is not in the roofing category", () => {

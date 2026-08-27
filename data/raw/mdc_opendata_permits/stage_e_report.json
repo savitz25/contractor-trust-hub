@@ -1,0 +1,22 @@
+{
+  "decision": "A_all_source_records_fail_closed_attribution",
+  "why": "011 separates permit_source_records (provenance) from permit_attributions (identity). Public contractor activity queries CONFIRMED only.",
+  "sha256": "9e9fe2d711dd8c2ec13d4832b70fe41ae9440c7a3be0b51910c22f8eb6c3effa",
+  "source_rows": 139586,
+  "stored_source_records": 139586,
+  "attributions": 139586,
+  "CONFIRMED": 80810,
+  "HIGH_CONFIDENCE": 0,
+  "REVIEW_REQUIRED": 25145,
+  "UNRESOLVED": 33631,
+  "conflicts": 0,
+  "contacts_predicted": 16009,
+  "contacts_inserted_batches": 16009,
+  "contact_phone_candidates": 7994,
+  "contact_address_candidates": 8015,
+  "contact_distinct_licenses": 8015,
+  "contact_duplicates_rejected": 0,
+  "agency_numbers_rejected": 0,
+  "city_of_miami_stage_e": false,
+  "stage_e": "LOADED"
+}

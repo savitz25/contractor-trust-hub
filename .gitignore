@@ -30,6 +30,7 @@ data/raw/**
 !data/raw/**/.gitkeep
 !data/raw/**/manifest.json
 !data/raw/**/stage_ad_report.json
+!data/raw/**/stage_e_report.json
 !data/raw/**/item.json
 
 # Staging / local DB dumps

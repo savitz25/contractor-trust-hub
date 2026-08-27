@@ -31,9 +31,7 @@ export function CountyIntelligence({ payload }: { payload: CountyMoveLikePayload
           Research {countyLabel} contractors
         </h1>
         <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--muted)] sm:text-base">
-          This county page currently combines Florida statewide licensing and regulatory research
-          with mapped local jurisdictions. Permit and local credential exports are still being
-          acquired.
+          {payload.heroIntro}
         </p>
         <div className="mt-6 max-w-2xl rounded-2xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4">
           <SearchForm
@@ -120,7 +118,13 @@ export function CountyIntelligence({ payload }: { payload: CountyMoveLikePayload
               {" · "}Municipalities:{" "}
               <span className="tabular-nums">{payload.jurisdictions.municipalCount}</span>
             </li>
-            <li>Jurisdictions with permit or local-credential activity loaded: none yet.</li>
+            <li>
+              Jurisdictions with permit or local-credential activity loaded:{" "}
+              {payload.jurisdictions.actualDataCoverageCount
+                ? `${payload.jurisdictions.actualDataCoverageCount} (unincorporated/county-issued evidence — not municipal histories)`
+                : "none yet"}
+              .
+            </li>
           </ul>
         ) : (
           <p className="mt-4 text-sm text-[var(--muted)]">
@@ -153,11 +157,25 @@ export function CountyIntelligence({ payload }: { payload: CountyMoveLikePayload
           Local permit research
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--muted)]">
-          Local permit research is being expanded. Permit export pending
-          ({payload.evidenceSources.find((s) => s.id === "pending_permits")?.requestId}). Future
-          fields — last 12 months, last 3 years, open, final/closed, valuation, type, source
-          jurisdiction, contractor attribution rate — remain NOT_READY until real records arrive
-          and pass QA.
+          {payload.modules.find((m) => m.id === "permits")?.readiness === "READY" ? (
+            <>
+              Public permit numbers on this page are confirmed Miami-Dade County-issued records
+              linked to Florida contractor credentials. The source is issued-only and rolling
+              (~2 years). It is not an open/pending census and not the permit history of all 34
+              municipalities. M/MBLD rows are associated county reviews, not municipal building
+              permits. Issued is not final. Recorded permit valuation is not revenue. REVIEW_REQUIRED
+              and UNRESOLVED rows are not public contractor activity.
+            </>
+          ) : (
+            <>
+              Local permit research is being expanded
+              {payload.evidenceSources.find((s) => s.id === "pending_permits")?.requestId
+                ? ` (request ${payload.evidenceSources.find((s) => s.id === "pending_permits")?.requestId})`
+                : ""}
+              . Missing export is not zero events. Last-3-year, open, pending, and final counts are
+              not published.
+            </>
+          )}
         </p>
       </section>
 
@@ -167,9 +185,11 @@ export function CountyIntelligence({ payload }: { payload: CountyMoveLikePayload
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--muted)]">
           Local credential / certification export pending
-          ({payload.evidenceSources.find((s) => s.id === "pending_local_credentials")?.requestId}).
-          Future statuses stay distinct: {payload.localCredentialStatuses.join(", ")}. No numeric
-          public metric until real data exists and passes QA. A state credential is not local
+          {payload.evidenceSources.find((s) => s.id === "pending_local_credentials")?.requestId
+            ? ` (request ${payload.evidenceSources.find((s) => s.id === "pending_local_credentials")?.requestId})`
+            : ""}
+          . Missing export is not zero events. Future statuses stay distinct:{" "}
+          {payload.localCredentialStatuses.join(", ")}. A state credential is not local
           authorization.
         </p>
       </section>

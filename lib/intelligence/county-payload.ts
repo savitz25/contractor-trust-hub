@@ -46,7 +46,11 @@ export type CountyIntelMetric = {
   readiness: MetricReadiness;
   publicEligibility: MetricPublicEligibility;
   disclosure: string;
-  geographicScope: "county_mailing_address" | "jurisdiction_metadata" | "unattributed";
+  geographicScope:
+    | "county_mailing_address"
+    | "jurisdiction_metadata"
+    | "unattributed"
+    | "confirmed_issued_permit_activity";
 };
 
 export type CountyJurisdictionCensus = {
@@ -82,6 +86,7 @@ export type CountyMoveLikePayload = {
   enhancedGateDocumented: boolean;
   enhancedGateActivated: boolean;
   addressFieldSemantics: string;
+  heroIntro: string;
   metrics: CountyIntelMetric[];
   categories: IntelligenceCategory[];
   modules: CountyIntelModuleStatus[];
@@ -106,6 +111,18 @@ export type CountyLiveCounts = {
   localCredentialRows: number | null;
   contactRows: number | null;
   sourceFileRows: number | null;
+  permitEvidence?: {
+    sourceRows: number;
+    confirmed: number;
+    confirmedLast12Months: number;
+    distinctLicenses: number;
+    unincorporated: number;
+    associatedReview: number;
+    withValuation: number;
+    recordedValuation: number | null;
+    contactObservations: number;
+    contactDistinctLicenses: number;
+  } | null;
 };
 
 const CONSUMER_BUCKETS = [
@@ -223,15 +240,18 @@ export function buildCountyIntelligencePayload(input: {
         .reduce((s, r) => s + r.n, 0)
     : null;
   const totalMapped = datasetPresent ? jurisRows.reduce((s, r) => s + r.n, 0) : null;
+  const ev = counts?.permitEvidence;
+  const mdcPermitsReady = catalog.slug === "miami-dade" && ev != null && ev.confirmed > 0;
 
   const jurisdictions: CountyJurisdictionCensus = {
     datasetPresent,
     totalMapped,
     municipalCount,
     unincorporatedCount,
-    actualDataCoverageCount: 0,
-    disclosure:
-      "Jurisdiction mapping tells us where local research must occur. It does not mean permit activity has been acquired. actualDataCoverageCount is permit/local-credential-loaded AHJs and is currently none.",
+    actualDataCoverageCount: mdcPermitsReady ? 1 : 0,
+    disclosure: mdcPermitsReady
+      ? "Jurisdiction mapping tells us where local research must occur. Confirmed county-issued permit evidence currently covers Unincorporated Miami-Dade (folio 30) plus associated M/MBLD county reviews. That is not 34 municipal permit histories."
+      : "Jurisdiction mapping tells us where local research must occur. It does not mean permit activity has been acquired. actualDataCoverageCount is permit/local-credential-loaded AHJs and is currently none.",
   };
 
   const metrics: CountyIntelMetric[] = input.timedOut
@@ -274,15 +294,87 @@ export function buildCountyIntelligencePayload(input: {
             "AHJ metadata rows. Not jurisdictions with permits loaded. Not local credential coverage.",
           geographicScope: "jurisdiction_metadata",
         },
-        {
-          id: "permits",
-          label: "Local permit records (loaded rows)",
-          value: counts?.permitRows ?? null,
-          readiness: "INTERNAL_ONLY",
-          publicEligibility: "internal_only",
-          disclosure: PENDING_NOTE,
-          geographicScope: "unattributed",
-        },
+        ...(mdcPermitsReady && ev
+          ? [
+              {
+                id: "confirmed_issued_permits",
+                label: "Confirmed Miami-Dade County-issued permit records linked to Florida contractor credentials",
+                value: ev.confirmed,
+                readiness: "READY" as const,
+                publicEligibility: "public" as const,
+                disclosure:
+                  "Issued-permit rows from the county RER Open Data table that match an occupation-prefixed DBPR license in our warehouse. Not all Miami-Dade permits. Not municipal histories. Issued is not final. HQ mailing county is a separate layer.",
+                geographicScope: "confirmed_issued_permit_activity" as const,
+              },
+              {
+                id: "confirmed_issued_permits_last_12_months",
+                label: "Confirmed county-issued permit records in the last 12 months",
+                value: ev.confirmedLast12Months,
+                readiness: "READY" as const,
+                publicEligibility: "public" as const,
+                disclosure:
+                  "Subset of confirmed issued rows with issue_date in the last 12 months. The source itself is a rolling ~2-year issued window. No 3-year public count.",
+                geographicScope: "confirmed_issued_permit_activity" as const,
+              },
+              {
+                id: "confirmed_linked_dbpr_credentials",
+                label: "Distinct Florida credentials linked to confirmed county-issued permits",
+                value: ev.distinctLicenses,
+                readiness: "READY" as const,
+                publicEligibility: "public" as const,
+                disclosure:
+                  "Distinct DBPR licenses on confirmed rows. A firm headquartered outside Miami-Dade can appear here. This is not the mailing-county credential census.",
+                geographicScope: "confirmed_issued_permit_activity" as const,
+              },
+              {
+                id: "confirmed_issued_unincorporated",
+                label: "Confirmed issued records in unincorporated Miami-Dade (folio 30)",
+                value: ev.unincorporated,
+                readiness: "READY" as const,
+                publicEligibility: "public" as const,
+                disclosure: "Folio prefix 30. Not the entire county.",
+                geographicScope: "confirmed_issued_permit_activity" as const,
+              },
+              {
+                id: "confirmed_issued_associated_review",
+                label: "Confirmed associated county-review (M/MBLD) records",
+                value: ev.associatedReview,
+                readiness: "READY" as const,
+                publicEligibility: "public" as const,
+                disclosure:
+                  "County Municipal Approval / associated reviews. Not municipal building-permit history.",
+                geographicScope: "confirmed_issued_permit_activity" as const,
+              },
+              {
+                id: "recorded_permit_valuation_coverage",
+                label: "Confirmed issued records with recorded permit valuation",
+                value: ev.withValuation,
+                readiness: "READY" as const,
+                publicEligibility: "public" as const,
+                disclosure: `Denominator is ${ev.confirmed.toLocaleString("en-US")} confirmed issued records. Missing valuation is not zero and is not summed.`,
+                geographicScope: "confirmed_issued_permit_activity" as const,
+              },
+              {
+                id: "contact_enrichment_coverage",
+                label: "Public contact observations from confirmed permit attribution",
+                value: ev.contactObservations,
+                readiness: "READY" as const,
+                publicEligibility: "public" as const,
+                disclosure: `Phone and mailing-address observations on ${ev.contactDistinctLicenses.toLocaleString("en-US")} distinct confirmed licenses. Agency numbers excluded. Secondary values are not overwritten.`,
+                geographicScope: "confirmed_issued_permit_activity" as const,
+              },
+            ]
+          : [
+              {
+                id: "permits",
+                label: "Local permit records (loaded rows)",
+                value: counts?.permitRows ?? null,
+                readiness: "INTERNAL_ONLY" as const,
+                publicEligibility: "internal_only" as const,
+                disclosure: PENDING_NOTE,
+                geographicScope: "unattributed" as const,
+              },
+            ]),
         {
           id: "local_credentials",
           label: "Local county credentials / certifications (loaded rows)",
@@ -302,15 +394,20 @@ export function buildCountyIntelligencePayload(input: {
             "Florida DBPR/DFS records are statewide events. A mailing-county association is not “county enforcement.” No public county-level count is published.",
           geographicScope: "unattributed",
         },
-        {
-          id: "contacts",
-          label: "County contact observations",
-          value: null,
-          readiness: "NOT_READY",
-          publicEligibility: "internal_only",
-          disclosure: "Public county contact metrics are not published. Secondary values are never overwritten.",
-          geographicScope: "unattributed",
-        },
+        ...(mdcPermitsReady
+          ? []
+          : [
+              {
+                id: "contacts",
+                label: "County contact observations",
+                value: null,
+                readiness: "NOT_READY" as const,
+                publicEligibility: "internal_only" as const,
+                disclosure:
+                  "Public county contact metrics are not published. Secondary values are never overwritten.",
+                geographicScope: "unattributed" as const,
+              },
+            ]),
         {
           id: "operating_geography",
           label: "Operating / activity evidence",
@@ -347,9 +444,11 @@ export function buildCountyIntelligencePayload(input: {
     {
       id: "permits",
       label: "Local permits",
-      readiness: "NOT_READY",
-      publicEligibility: "internal_only",
-      note: PENDING_NOTE,
+      readiness: mdcPermitsReady ? "READY" : "NOT_READY",
+      publicEligibility: mdcPermitsReady ? "public" : "internal_only",
+      note: mdcPermitsReady
+        ? "Confirmed Miami-Dade County-issued permit records linked to Florida contractor credentials. Issued-only rolling ~2-year RER source. Not municipal histories. Not open/pending. REVIEW_REQUIRED and UNRESOLVED are not public contractor activity."
+        : PENDING_NOTE,
     },
     {
       id: "local_credentials",
@@ -368,9 +467,11 @@ export function buildCountyIntelligencePayload(input: {
     {
       id: "contacts",
       label: "Contact enrichment",
-      readiness: "NOT_READY",
-      publicEligibility: "internal_only",
-      note: "Future county evidence may add multiple phones/emails/addresses without overwriting.",
+      readiness: mdcPermitsReady ? "READY" : "NOT_READY",
+      publicEligibility: mdcPermitsReady ? "public" : "internal_only",
+      note: mdcPermitsReady
+        ? "Public phones and mailing addresses observed on confirmed county-issued permit rows. Agency numbers excluded."
+        : "Future county evidence may add multiple phones/emails/addresses without overwriting.",
     },
     {
       id: "operating_activity",
@@ -408,12 +509,28 @@ export function buildCountyIntelligencePayload(input: {
       whatItContains: "AHJ metadata seed (municipal vs unincorporated). Not permit rows.",
       limitation: "Metadata ≠ permit coverage.",
     },
+    ...(mdcPermitsReady
+      ? [
+          {
+            id: "mdc_opendata_issued",
+            agency: "Miami-Dade RER GIS / Open Data Hub",
+            label: "County-issued building permits (2 prior years to present)",
+            contribution: "contributing" as const,
+            whatItContains:
+              "Issued permits pulled by Miami-Dade County. Confirmed rows are linked to occupation-prefixed DBPR licenses. Unincorporated folio 30 and associated M/MBLD reviews are labeled separately.",
+            limitation:
+              "Issued-only rolling window. Not open/pending. Not 34 municipal building departments. City of Miami GIS is excluded from public contractor volume.",
+          },
+        ]
+      : []),
     {
       id: "pending_permits",
       agency: catalog.pendingAgency,
-      label: "Local permit extract",
+      label: mdcPermitsReady ? "Full permit history / open / raw status extract" : "Local permit extract",
       contribution: "requested_pending",
-      whatItContains: "Existing electronic permit metadata — requested, not loaded.",
+      whatItContains: mdcPermitsReady
+        ? "Longer history, open/unfinaled, and raw status beyond the public issued table — requested, not loaded."
+        : "Existing electronic permit metadata — requested, not loaded.",
       limitation: PENDING_NOTE,
       requestId: catalog.pendingPermitRequestId,
     },
@@ -442,6 +559,7 @@ export function buildCountyIntelligencePayload(input: {
     enhancedGateDocumented: true,
     enhancedGateActivated: false,
     addressFieldSemantics: catalog.addressFieldSemantics,
+    heroIntro: catalog.heroIntro,
     metrics,
     categories: input.timedOut ? [] : categories,
     modules,
