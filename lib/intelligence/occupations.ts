@@ -244,6 +244,17 @@ export const INTELLIGENCE_TRADE_BUCKETS: Record<string, string[]> = {
   pollutant_storage: ["PCC", "RQ"],
 };
 
+/** Florida roofing comparison/trade definition used by charts and Ask. RR is Residential. */
+export function floridaRoofingCredentialDefinition(): string {
+  const codes = INTELLIGENCE_TRADE_BUCKETS.roofing;
+  return `certified ${codes[0]} plus registered ${codes[1]}`;
+}
+
+export function floridaRoofingAskSentence(activeCount: number | null): string {
+  if (activeCount == null) return "Live roofing-credential counts are temporarily unavailable.";
+  return `${activeCount.toLocaleString()} Florida DBPR roofing credentials currently carry Active status (${floridaRoofingCredentialDefinition()}). That is a credential count, not a count of roofing companies. RR is Registered Residential, not roofing.`;
+}
+
 /** Common mislabels that must never be treated as equivalent. */
 export const OCCUPATION_NON_EQUIVALENCE = {
   RR_is_not_roofing: {

@@ -558,3 +558,218 @@ header img[data-brand-logo] {
     transition: none;
   }
 }
+
+.cth-intel-home {
+  display: grid;
+  gap: 0;
+  width: 100%;
+  max-width: var(--th-shell-max);
+  margin-inline: auto;
+  padding-inline: var(--th-gutter-mobile);
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .cth-intel-home {
+    padding-inline: var(--th-gutter-desktop);
+  }
+}
+.cth-intel-home > * {
+  min-width: 0;
+  max-width: 100%;
+  padding-block: clamp(2rem, 5vw, 4rem);
+  border-top: 1px solid var(--border);
+}
+.cth-intel-hero {
+  border-top: 0;
+  padding-block: clamp(1.75rem, 6vw, 4.5rem);
+}
+.cth-intel-eyebrow {
+  margin: 0;
+  color: var(--navy);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.cth-intel-hero h1 {
+  max-width: 18ch;
+  margin: 1rem 0 0;
+  color: var(--navy);
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+.cth-intel-lede {
+  max-width: 44rem;
+  margin-top: 1.25rem;
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  line-height: 1.5;
+}
+.cth-intel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+.cth-intel-btn {
+  display: inline-flex;
+  min-height: var(--th-control);
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.25rem;
+  border-radius: var(--th-radius-control);
+  font-weight: 700;
+  text-decoration: none;
+}
+.cth-intel-btn--primary {
+  background: var(--accent);
+  color: var(--navy);
+}
+.cth-intel-btn--secondary {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--navy);
+}
+.cth-intel-card,
+.cth-intel-geo li,
+.cth-intel-trade li,
+.cth-intel-checklist {
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--th-radius-card);
+  background: #fff;
+  min-width: 0;
+}
+.cth-intel-metrics,
+.cth-intel-findings,
+.cth-intel-geo,
+.cth-intel-trade,
+.cth-intel-tools,
+.cth-intel-ask {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.cth-intel-metric-value {
+  margin: 0;
+  color: var(--navy);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 750;
+}
+.cth-intel-kicker {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.cth-intel-bar + .cth-intel-bar {
+  margin-top: 0.75rem;
+}
+.cth-intel-bar__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+.cth-intel-bar__track {
+  height: 0.7rem;
+  margin-top: 0.35rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e2e8f0;
+}
+.cth-intel-bar__fill {
+  display: block;
+  height: 100%;
+  background: var(--navy);
+}
+.cth-intel-legend {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.cth-intel-geo {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+}
+.cth-intel-geo li[data-depth="enhanced_intelligence"] {
+  border-color: var(--navy);
+}
+.cth-intel-geo a,
+.cth-intel-trade a,
+.cth-intel-ask a,
+.cth-intel-tools a {
+  color: var(--navy);
+  font-weight: 700;
+}
+.cth-intel-tools {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+}
+.cth-intel-tools a {
+  display: grid;
+  gap: 0.35rem;
+  min-height: var(--th-control);
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--th-radius-card);
+  background: #fff;
+  text-decoration: none;
+}
+.cth-intel-tools span {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.92rem;
+}
+.cth-intel-list,
+.cth-intel-journey {
+  max-width: 48rem;
+}
+.cth-intel-table-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  margin-top: 1rem;
+}
+.cth-intel-table-scroll:focus-visible,
+.cth-intel-btn:focus-visible,
+.cth-intel-home summary:focus-visible,
+.cth-intel-home a:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+.cth-intel-table-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.cth-intel-table-scroll th,
+.cth-intel-table-scroll td {
+  padding: 0.55rem 0.65rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+.cth-intel-home summary {
+  display: flex;
+  min-height: var(--th-control);
+  align-items: center;
+  cursor: pointer;
+  font-weight: 700;
+}
+.cth-intel-checklist ul {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+.cth-intel-checklist label {
+  display: flex;
+  min-height: var(--th-control);
+  align-items: center;
+  gap: 0.75rem;
+}
+@media (min-width: 48rem) {
+  .cth-intel-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 39.99rem) {
+  .cth-intel-hero h1 {
+    max-width: none;
+  }
+}

@@ -3,6 +3,7 @@
  * Pure functions. Living numbers come from snapshots. No ranking.
  */
 import type { IntelligenceCategory, IntelligenceCounty, IntelligenceEvidenceSource, IntelligenceMetricValue } from "./payload-types";
+import { floridaRoofingAskSentence } from "./occupations";
 
 export const CONTRACTOR_STATE_INTEL_V1 = "contractor-state-intel-v1";
 export const CONTRACTOR_COUNTY_INTEL_V1 = "contractor-county-intel-v1";
@@ -243,9 +244,7 @@ export function buildAskItems(input: {
       id: "roofing_active",
       question: "How many roofing credentials are active in Florida?",
       answer:
-        activeRoof == null
-          ? "Live roofing-credential counts are temporarily unavailable."
-          : `${activeRoof.toLocaleString()} Florida DBPR roofing credentials currently carry Active status (certified CCC plus registered RR). That is a credential count, not a count of roofing companies.`,
+        floridaRoofingAskSentence(activeRoof),
       href: "/florida/roofers",
     },
     {

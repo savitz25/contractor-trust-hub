@@ -5,6 +5,7 @@ export const CANONICAL_EXCLUDED_KEYS = [
   "generatedAt",
   "timedOut",
   "canonicalFingerprint",
+  "payloadFingerprint",
 ] as const;
 
 function sortValue(value: unknown): unknown {
