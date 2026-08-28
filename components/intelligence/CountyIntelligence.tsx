@@ -298,10 +298,11 @@ export function CountyIntelligence({ payload }: { payload: CountyMoveLikePayload
 
       <p className="text-xs text-[var(--muted)]">
         Intelligence aggregation {payload.version}
+        {payload.canonicalFingerprint ? ` · fingerprint ${payload.canonicalFingerprint.slice(0, 12)}` : ""}
         {payload.generatedAt
           ? ` · generated ${payload.generatedAt.slice(0, 16).replace("T", " ")} UTC`
           : ""}
-        . Canonical route {payload.canonicalPath}.
+        . Canonical route {payload.canonicalPath}. Fingerprint excludes generatedAt.
       </p>
     </div>
   );

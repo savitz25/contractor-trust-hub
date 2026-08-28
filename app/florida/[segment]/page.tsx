@@ -47,8 +47,12 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     return discoveryMetadata({
       state,
       county,
-      title: `${county.name} County FL Contractors — License Evidence`,
-      description: `Browse Florida DBPR construction license profiles whose HQ/base mailing county is ${county.name}. Not a list of who operates only in this county, and not a marketplace.`,
+      title: isFloridaCountyIntelSlug(county.slug)
+        ? `${county.name} Contractor Intelligence`
+        : `${county.name} County FL Contractors — License Evidence`,
+      description: isFloridaCountyIntelSlug(county.slug)
+        ? `How ${county.name} County contractor credentials compare with Florida. HQ/base mailing county is not a service area. Independent research, not a ranking.`
+        : `Browse Florida DBPR construction license profiles whose HQ/base mailing county is ${county.name}. Not a list of who operates only in this county, and not a marketplace.`,
       noIndex: browseIsVariant(browse),
     });
   }
@@ -77,14 +81,24 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
     const { county } = resolved;
     const view = parseBrowseView(sp);
     const countyIntel = isFloridaCountyIntelSlug(county.slug);
-    const [{ results, total, stats }, trades, cities] = await Promise.all([
-      listFloridaBrowse({ county, browse }),
-      countByTrade(PUBLIC, county),
-      listFloridaCities(county),
-    ]);
-    const intelPayload = countyIntel
-      ? await getFloridaCountyIntelligenceSnapshot(county.slug)
-      : null;
+    const listParam = Array.isArray(sp.list) ? sp.list[0] : sp.list;
+    const showDirectory = !countyIntel || browseIsVariant(browse) || listParam === "1";
+    const intelP = countyIntel
+      ? getFloridaCountyIntelligenceSnapshot(county.slug)
+      : Promise.resolve(null);
+    const browseP = showDirectory
+      ? Promise.all([
+          listFloridaBrowse({ county, browse }),
+          countByTrade(PUBLIC, county),
+          listFloridaCities(county),
+        ])
+      : Promise.resolve(null);
+    const [intelPayload, browseBundle] = await Promise.all([intelP, browseP]);
+    const results = browseBundle?.[0].results ?? [];
+    const total = browseBundle?.[0].total ?? 0;
+    const stats = browseBundle?.[0].stats;
+    const trades = browseBundle?.[1] ?? [];
+    const cities = browseBundle?.[2] ?? [];
 
     return (
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
@@ -108,7 +122,7 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
           </header>
         )}
 
-        <details className="mt-10 rounded-2xl border border-[var(--border)] bg-white px-4 py-4">
+        <details className="mt-10 rounded-2xl border border-[var(--border)] bg-white px-4 py-4" id="contractors">
           <summary className="cursor-pointer text-base font-semibold">
             Research contractors in {county.name} (directory)
           </summary>
@@ -116,27 +130,38 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
             Directory cards are secondary. They list credentials whose HQ/base mailing county is{" "}
             {county.name} — not everyone who works there.
           </p>
-          <div className="mt-8">
-            <FacetGrid
-              title={`Trades in ${county.name}`}
-              facets={trades}
-              hrefFor={(slug) =>
-                discoveryPath(state, { countySlug: county.slug, tradeSlug: slug })
-              }
-            />
-          </div>
-          <div id="contractors">
-            <FloridaBrowseSection
-              state={state}
-              county={county}
-              browse={browse}
-              results={results}
-              total={total}
-              stats={stats}
-              cities={cities}
-              view={view}
-            />
-          </div>
+          {showDirectory && stats ? (
+            <>
+              <div className="mt-8">
+                <FacetGrid
+                  title={`Trades in ${county.name}`}
+                  facets={trades}
+                  hrefFor={(slug) =>
+                    discoveryPath(state, { countySlug: county.slug, tradeSlug: slug })
+                  }
+                />
+              </div>
+              <FloridaBrowseSection
+                state={state}
+                county={county}
+                browse={browse}
+                results={results}
+                total={total}
+                stats={stats}
+                cities={cities}
+                view={view}
+              />
+            </>
+          ) : (
+            <p className="mt-4">
+              <Link
+                href={`${discoveryPath(state, { countySlug: county.slug })}?list=1#contractors`}
+                className="inline-flex min-h-11 items-center text-sm font-medium text-[var(--navy)] underline-offset-2 hover:underline"
+              >
+                Open {county.name} contractor directory
+              </Link>
+            </p>
+          )}
         </details>
 
         <div className="mt-10">
