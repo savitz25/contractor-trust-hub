@@ -58,13 +58,13 @@ export function StateLandscape() {
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <div className="max-w-2xl">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
-            Where we have evidence
+            Coverage across the U.S.
           </p>
           <h2
             id="states-heading"
             className="mt-1.5 text-lg font-semibold tracking-tight text-[var(--text)] sm:text-xl"
           >
-            {count} live state{count === 1 ? "" : "s"} — same list as Verify
+            Licensing works differently in every state
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
             <strong className="font-medium text-[var(--text)]">Florida</strong> is the full

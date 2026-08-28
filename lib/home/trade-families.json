@@ -1,0 +1,79 @@
+{
+  "canonicalNormalizationExisted": false,
+  "note": "No prior cross-state trade-family table existed. Homepage families use explicit occupation codes from published state adapters only. Solar, apprentice, bond, certificate, unlicensed-activity, and entity rows are excluded unless they are those occupation codes.",
+  "families": [
+    {
+      "id": "general-building",
+      "label": "General / Building",
+      "href": "/florida/general-contractors",
+      "members": [
+        { "sourceSystem": "fl_dbpr", "occupationCodes": ["CGC", "RG", "CBC", "RB"], "origin": "FLORIDA_TRADES" },
+        { "sourceSystem": "az_roc", "occupationCodes": ["KB-1", "KB-2", "KA", "B-1", "B-2", "A"], "origin": "ARIZONA_TRADES dual/commercial general" },
+        { "sourceSystem": "or_ccb", "occupationCodes": ["CGC1", "CGC2"], "origin": "OREGON_TRADES commercial GC" },
+        { "sourceSystem": "wa_lni", "occupationCodes": ["CC"], "origin": "WASHINGTON_TRADES construction contractor type" }
+      ]
+    },
+    {
+      "id": "residential",
+      "label": "Residential",
+      "href": "/florida/residential-contractors",
+      "members": [
+        { "sourceSystem": "fl_dbpr", "occupationCodes": ["CRC", "RR"], "origin": "FLORIDA_TRADES" },
+        { "sourceSystem": "az_roc", "occupationCodes": ["B", "B-3", "R-62"], "origin": "ARIZONA_TRADES general residential" },
+        { "sourceSystem": "or_ccb", "occupationCodes": ["RGC", "RSC", "RLC"], "origin": "OREGON_TRADES residential" }
+      ]
+    },
+    {
+      "id": "roofing",
+      "label": "Roofing",
+      "href": "/florida/roofers",
+      "members": [
+        { "sourceSystem": "fl_dbpr", "occupationCodes": ["CCC", "RC"], "origin": "FLORIDA_TRADES" },
+        { "sourceSystem": "az_roc", "occupationCodes": ["CR-42"], "origin": "ARIZONA_TRADES" },
+        { "sourceSystem": "or_ccb", "occupationCodes": ["RRC"], "origin": "OREGON_TRADES residential roofing" }
+      ]
+    },
+    {
+      "id": "electrical",
+      "label": "Electrical",
+      "href": "/verify?work=electrical",
+      "members": [
+        { "sourceSystem": "tx_tdlr", "occupationCodes": ["TEC", "TES", "TME", "TJE", "TAE"], "origin": "work-intents TX class chip" },
+        { "sourceSystem": "nj_dca", "occupationCodes": ["ELE", "TEL"], "origin": "work-intents NJ class chip" },
+        { "sourceSystem": "wa_lni", "occupationCodes": ["EC"], "origin": "WASHINGTON_TRADES" },
+        { "sourceSystem": "az_roc", "occupationCodes": ["CR-11", "C-11", "R-11"], "origin": "ARIZONA_TRADES electrical" }
+      ]
+    },
+    {
+      "id": "plumbing",
+      "label": "Plumbing",
+      "href": "/florida/plumbing",
+      "members": [
+        { "sourceSystem": "fl_dbpr", "occupationCodes": ["CFC", "RF"], "origin": "FLORIDA_TRADES" },
+        { "sourceSystem": "tx_tsbpe", "occupationCodes": ["TRMP", "TMP", "TJP", "TTP"], "origin": "work-intents TX plumbing codes" },
+        { "sourceSystem": "nj_dca", "occupationCodes": ["PLB"], "origin": "work-intents NJ class chip" },
+        { "sourceSystem": "wa_lni", "occupationCodes": ["PC"], "origin": "WASHINGTON_TRADES" },
+        { "sourceSystem": "az_roc", "occupationCodes": ["CR-37", "C-37", "R-37R"], "origin": "ARIZONA_TRADES plumbing" }
+      ]
+    },
+    {
+      "id": "hvac",
+      "label": "HVAC / Mechanical",
+      "href": "/florida/air-conditioning",
+      "members": [
+        { "sourceSystem": "fl_dbpr", "occupationCodes": ["CAC", "RA", "CMC", "RM"], "origin": "FLORIDA_TRADES AC + mechanical" },
+        { "sourceSystem": "tx_tdlr", "occupationCodes": ["TAC"], "origin": "work-intents TX class chip" },
+        { "sourceSystem": "nj_dca", "occupationCodes": ["HVAC"], "origin": "work-intents NJ class chip" },
+        { "sourceSystem": "az_roc", "occupationCodes": ["CR-39", "C-39", "R-39R"], "origin": "ARIZONA_TRADES HVAC" }
+      ]
+    },
+    {
+      "id": "pool-spa",
+      "label": "Pool / Spa",
+      "href": "/florida/pool-spa",
+      "members": [
+        { "sourceSystem": "fl_dbpr", "occupationCodes": ["CPC", "RP"], "origin": "FLORIDA_TRADES" }
+      ]
+    }
+  ]
+}

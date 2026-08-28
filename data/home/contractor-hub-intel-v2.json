@@ -1,0 +1,340 @@
+{
+  "schemaVersion": "contractor-hub-intel-v2",
+  "generatedAt": "2026-08-28T21:44:05.245Z",
+  "sourceFingerprint": "71a7c3ec403f584731f2a39dd07135669f4dd462dd4cac5691c32a91d6e757ba",
+  "publicCoverage": {
+    "liveStates": 10,
+    "liveStateCodes": [
+      "FL",
+      "TX",
+      "NJ",
+      "OR",
+      "WA",
+      "CA",
+      "AZ",
+      "LA",
+      "MS",
+      "KY"
+    ],
+    "liveSourceSystems": [
+      "az_roc",
+      "ca_cslb",
+      "fl_dbpr",
+      "ky_dhbc",
+      "la_lslbc",
+      "ms_sbc",
+      "nj_dca",
+      "or_ccb",
+      "tx_tdlr",
+      "tx_tsbpe",
+      "wa_lni"
+    ],
+    "credentialRecords": 644421,
+    "activeCurrentCredentialRecords": 499997,
+    "cohortRule": "licenses.source_system IN live sources parsed from lib/states/config.ts (EVIDENCE_STATES live:true + licenseSource/licenseSources, LIVE_STATE_ORDER)",
+    "activeCurrentRule": "status_normalized IN ('active','current') within the live source cohort"
+  },
+  "researchGraph": {
+    "contractorIdentityRows": 1392730,
+    "licenseRows": 1266214,
+    "licenseSourceSystems": 13,
+    "licenseSourceSystemKeys": [
+      "az_roc",
+      "ca_cslb",
+      "fl_dbpr",
+      "ky_dhbc",
+      "la_lslbc",
+      "ms_sbc",
+      "nj_dca",
+      "nv_nscb",
+      "or_ccb",
+      "tx_tdlr",
+      "tx_tsbpe",
+      "va_dpor",
+      "wa_lni"
+    ],
+    "entityLinks": 281255,
+    "publicContactObservations": 16009,
+    "note": "Research-graph totals are not currently public live coverage and must not be advertised as a U.S. contractor census."
+  },
+  "regulatoryEvidence": {
+    "totalActionRows": 69674,
+    "canonicalObservations": 68081,
+    "occurrences": 68087,
+    "byEvidenceFamily": [
+      {
+        "key": "fl_dfs_stop_work",
+        "label": "Florida DFS workers' compensation stop-work records",
+        "sourceSystem": "fl_dfs",
+        "sourceDataset": "fl_dfs_workers_comp_stop_work",
+        "rows": 48254
+      },
+      {
+        "key": "fl_dbpr_unlicensed",
+        "label": "Florida DBPR unlicensed activity",
+        "sourceSystem": "fl_dbpr",
+        "sourceDataset": "contractor_disc_ula",
+        "rows": 11691
+      },
+      {
+        "key": "fl_dbpr_discipline",
+        "label": "Florida DBPR licensing discipline",
+        "sourceSystem": "fl_dbpr",
+        "sourceDataset": "contractor_disc_lic",
+        "rows": 6457
+      },
+      {
+        "key": "fl_recovery_fund",
+        "label": "Florida Construction Recovery Fund",
+        "sourceSystem": "fl_dbpr",
+        "sourceDataset": "contractor_disc_rf",
+        "rows": 1679
+      },
+      {
+        "key": "nj_enforcement",
+        "label": "New Jersey enforcement / discipline flags",
+        "sourceSystem": "nj_enforcement",
+        "sourceDataset": "",
+        "rows": 1134
+      },
+      {
+        "key": "az_roc_discipline",
+        "label": "Arizona ROC disciplinary actions",
+        "sourceSystem": "az_roc",
+        "sourceDataset": "",
+        "rows": 459
+      }
+    ],
+    "grainNote": "totalActionRows is discipline_actions. Observations and occurrences are different grains and are not added to the action total."
+  },
+  "licensingStatus": {
+    "denominator": "research_graph_licenses",
+    "graph": {
+      "active": 828446,
+      "current": 36579,
+      "inactive": 177863,
+      "expired": 199397,
+      "suspended": 10954,
+      "revoked": 1674,
+      "unlicensed": 257,
+      "other": 11044
+    },
+    "liveCohort": {
+      "active": 463418,
+      "current": 36579,
+      "inactive": 58880,
+      "expired": 65877,
+      "suspended": 9822,
+      "revoked": 14,
+      "unlicensed": 257,
+      "other": 9574
+    }
+  },
+  "permits": {
+    "sourceRecords": 139586,
+    "grain": "permit_source_records indexed — not jobs completed and not nationwide contractor volume"
+  },
+  "tradeFamilies": {
+    "canonicalNormalizationExisted": false,
+    "note": "No prior cross-state trade-family table existed. Homepage families use explicit occupation codes from published state adapters only. Solar, apprentice, bond, certificate, unlicensed-activity, and entity rows are excluded unless they are those occupation codes.",
+    "families": [
+      {
+        "id": "general-building",
+        "label": "General / Building",
+        "href": "/florida/general-contractors",
+        "credentialRows": 229865,
+        "activeCurrentRows": 140433,
+        "contributingSources": [
+          "fl_dbpr",
+          "az_roc",
+          "or_ccb",
+          "wa_lni"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CGC",
+          "fl_dbpr:RG",
+          "fl_dbpr:CBC",
+          "fl_dbpr:RB",
+          "az_roc:KB-1",
+          "az_roc:KB-2",
+          "az_roc:KA",
+          "az_roc:B-1",
+          "az_roc:B-2",
+          "az_roc:A",
+          "or_ccb:CGC1",
+          "or_ccb:CGC2",
+          "wa_lni:CC"
+        ],
+        "origin": [
+          "FLORIDA_TRADES",
+          "ARIZONA_TRADES dual/commercial general",
+          "OREGON_TRADES commercial GC",
+          "WASHINGTON_TRADES construction contractor type"
+        ]
+      },
+      {
+        "id": "residential",
+        "label": "Residential",
+        "href": "/florida/residential-contractors",
+        "credentialRows": 54521,
+        "activeCurrentRows": 53133,
+        "contributingSources": [
+          "fl_dbpr",
+          "az_roc",
+          "or_ccb"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CRC",
+          "fl_dbpr:RR",
+          "az_roc:B",
+          "az_roc:B-3",
+          "az_roc:R-62",
+          "or_ccb:RGC",
+          "or_ccb:RSC",
+          "or_ccb:RLC"
+        ],
+        "origin": [
+          "FLORIDA_TRADES",
+          "ARIZONA_TRADES general residential",
+          "OREGON_TRADES residential"
+        ]
+      },
+      {
+        "id": "roofing",
+        "label": "Roofing",
+        "href": "/florida/roofers",
+        "credentialRows": 13192,
+        "activeCurrentRows": 11945,
+        "contributingSources": [
+          "fl_dbpr",
+          "az_roc",
+          "or_ccb"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CCC",
+          "fl_dbpr:RC",
+          "az_roc:CR-42",
+          "or_ccb:RRC"
+        ],
+        "origin": [
+          "FLORIDA_TRADES",
+          "ARIZONA_TRADES",
+          "OREGON_TRADES residential roofing"
+        ]
+      },
+      {
+        "id": "electrical",
+        "label": "Electrical",
+        "href": "/verify?work=electrical",
+        "credentialRows": 64168,
+        "activeCurrentRows": 38636,
+        "contributingSources": [
+          "tx_tdlr",
+          "nj_dca",
+          "wa_lni",
+          "az_roc"
+        ],
+        "occupationCodes": [
+          "tx_tdlr:TEC",
+          "tx_tdlr:TES",
+          "tx_tdlr:TME",
+          "tx_tdlr:TJE",
+          "tx_tdlr:TAE",
+          "nj_dca:ELE",
+          "nj_dca:TEL",
+          "wa_lni:EC",
+          "az_roc:CR-11",
+          "az_roc:C-11",
+          "az_roc:R-11"
+        ],
+        "origin": [
+          "work-intents TX class chip",
+          "work-intents NJ class chip",
+          "WASHINGTON_TRADES",
+          "ARIZONA_TRADES electrical"
+        ]
+      },
+      {
+        "id": "plumbing",
+        "label": "Plumbing",
+        "href": "/florida/plumbing",
+        "credentialRows": 41290,
+        "activeCurrentRows": 31674,
+        "contributingSources": [
+          "fl_dbpr",
+          "tx_tsbpe",
+          "nj_dca",
+          "wa_lni",
+          "az_roc"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CFC",
+          "fl_dbpr:RF",
+          "tx_tsbpe:TRMP",
+          "tx_tsbpe:TMP",
+          "tx_tsbpe:TJP",
+          "tx_tsbpe:TTP",
+          "nj_dca:PLB",
+          "wa_lni:PC",
+          "az_roc:CR-37",
+          "az_roc:C-37",
+          "az_roc:R-37R"
+        ],
+        "origin": [
+          "FLORIDA_TRADES",
+          "work-intents TX plumbing codes",
+          "work-intents NJ class chip",
+          "WASHINGTON_TRADES",
+          "ARIZONA_TRADES plumbing"
+        ]
+      },
+      {
+        "id": "hvac",
+        "label": "HVAC / Mechanical",
+        "href": "/florida/air-conditioning",
+        "credentialRows": 49473,
+        "activeCurrentRows": 42362,
+        "contributingSources": [
+          "fl_dbpr",
+          "tx_tdlr",
+          "nj_dca",
+          "az_roc"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CAC",
+          "fl_dbpr:RA",
+          "fl_dbpr:CMC",
+          "fl_dbpr:RM",
+          "tx_tdlr:TAC",
+          "nj_dca:HVAC",
+          "az_roc:CR-39",
+          "az_roc:C-39",
+          "az_roc:R-39R"
+        ],
+        "origin": [
+          "FLORIDA_TRADES AC + mechanical",
+          "work-intents TX class chip",
+          "work-intents NJ class chip",
+          "ARIZONA_TRADES HVAC"
+        ]
+      },
+      {
+        "id": "pool-spa",
+        "label": "Pool / Spa",
+        "href": "/florida/pool-spa",
+        "credentialRows": 5100,
+        "activeCurrentRows": 4713,
+        "contributingSources": [
+          "fl_dbpr"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CPC",
+          "fl_dbpr:RP"
+        ],
+        "origin": [
+          "FLORIDA_TRADES"
+        ]
+      }
+    ]
+  }
+}
