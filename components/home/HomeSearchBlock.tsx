@@ -34,7 +34,7 @@ export function HomeSearchBlock() {
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/verify?q=CBC015082"
-                className="rounded-lg border border-[var(--border)] bg-[var(--panel)] px-2.5 py-1 text-xs text-[var(--accent)] no-underline hover:border-[var(--accent)]/40"
+                className="rounded-lg border border-[var(--border)] bg-[var(--panel)] px-2.5 py-1 text-xs text-[var(--navy)] no-underline hover:border-[var(--navy)]/40"
               >
                 FL CBC015082
               </Link>
