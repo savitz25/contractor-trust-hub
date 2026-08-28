@@ -15,6 +15,7 @@ const assert = (c, m) => {
 const snap = JSON.parse(read("data/home/contractor-hub-intel-v2.json"));
 const config = read("lib/states/config.ts");
 const page = read("app/page.tsx");
+const shell = read("components/home-intel/ContractorHomeIntelligence.tsx");
 const hero = read("components/home/HomeIntelHero.tsx");
 const enforce = read("components/home/HomeEnforcement.tsx");
 const method = read("components/home/HomeMethodology.tsx");
@@ -59,14 +60,17 @@ for (const fam of snap.tradeFamilies.families) {
   assert(Array.isArray(fam.occupationCodes) && fam.occupationCodes.length > 0, `trade codes ${fam.id}`);
 }
 
-assert(page.includes("HomeIntelHero"), "hero");
-assert(page.includes("loadContractorHubIntel"), "snapshot loader");
+assert(page.includes("ContractorHomeIntelligence") && page.includes("getContractorHomeIntel"), "003C shell");
+assert(shell.includes("HomeIntelHero") && shell.includes("loadContractorHubIntel"), "hero wired");
 assert(hero.includes("SearchForm"), "search in hero");
 assert(hero.includes("id=\"search\"") || hero.includes('id="search"'), "search anchor");
 assert(!hero.includes("payload") && !hero.includes("SHA") && !hero.includes("fingerprint"), "no SHA in hero");
 assert(!/1\.39\s*million|every licensed contractor in America|69,674 bad/i.test(hero + enforce + method), "forbidden copy");
 assert(/bad contractors/i.test(enforce), "enforcement wording");
-assert(page.includes("/florida"), "florida link");
+assert(
+  shell.includes("/florida") || read("components/home/HomeBeyondLicense.tsx").includes("/florida"),
+  "florida link",
+);
 assert(snap.tradeFamilies.canonicalNormalizationExisted === false, "trade blocker documented");
 
 if (failures.length) {

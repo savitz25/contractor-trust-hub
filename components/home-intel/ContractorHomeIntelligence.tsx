@@ -1,7 +1,13 @@
 import Link from "next/link";
+import { HomeBeyondLicense } from "@/components/home/HomeBeyondLicense";
 import { HomeContinuity } from "@/components/home/HomeContinuity";
-import { HomeSearchBlock } from "@/components/home/HomeSearchBlock";
+import { HomeEnforcement } from "@/components/home/HomeEnforcement";
+import { HomeEvidenceLayers } from "@/components/home/HomeEvidenceLayers";
+import { HomeIntelHero } from "@/components/home/HomeIntelHero";
+import { HomeMethodology } from "@/components/home/HomeMethodology";
+import { HomeTradeExplorer } from "@/components/home/HomeTradeExplorer";
 import { JourneyNextStep } from "@/components/network/JourneyNextStep";
+import { loadContractorHubIntel } from "@/lib/home/load-intel-v2";
 import { researchDepthLabel } from "@/lib/home-intel/build";
 import type { ContractorHomeIntel, FeaturedStory } from "@/lib/home-intel/types";
 import type { JourneyModule } from "@/lib/network/journey-handoff";
@@ -91,29 +97,18 @@ export function ContractorHomeIntelligence({
   intel: ContractorHomeIntel;
   journeyModule: JourneyModule | null;
 }) {
+  const scale = loadContractorHubIntel();
   return (
     <div className="cth-intel-home">
-      <section className="cth-intel-hero" aria-labelledby="home-title">
-        <p className="cth-intel-eyebrow">National contractor-market intelligence</p>
-        <h1 id="home-title">Understand contractor licensing before you hire.</h1>
-        <p className="cth-intel-lede">
-          Contractor licensing is state-specific. TrustHub researches official public sources. Research depth differs
-          by jurisdiction. TrustHub does not rank contractors.{" "}
-          <strong>Understand the market. Verify the contractor. You decide.</strong>
-        </p>
-        <div className="cth-intel-actions">
-          <a className="cth-intel-btn cth-intel-btn--primary" href="#record">
-            Explore Contractor Intelligence
-          </a>
-          <a className="cth-intel-btn cth-intel-btn--secondary" href="#search">
-            Verify a contractor
-          </a>
-        </div>
-      </section>
+      <HomeContinuity />
+      <HomeIntelHero intel={scale} />
+      <HomeTradeExplorer intel={scale} />
+      <HomeEvidenceLayers />
+      <HomeEnforcement intel={scale} />
 
       <section id="record" aria-labelledby="record-title">
-        <p className="cth-intel-eyebrow">State of the record</p>
-        <h2 id="record-title">What this hub currently researches</h2>
+        <p className="cth-intel-eyebrow">Coverage across the U.S.</p>
+        <h2 id="record-title">Licensing works differently in every state</h2>
         <p>These are snapshot metrics about TrustHub coverage and regulatory structure. They are not contractor quality scores.</p>
         <div className="cth-intel-metrics">
           {intel.stateOfRecord.map((metric) => (
@@ -297,7 +292,6 @@ export function ContractorHomeIntelligence({
       <section id="use" aria-labelledby="use-title">
         <p className="cth-intel-eyebrow">Use the research</p>
         <h2 id="use-title">Act after you understand the evidence</h2>
-        <HomeContinuity />
         <div className="cth-intel-tools">
           {intel.tools.map((tool) => (
             <Link href={tool.href} key={tool.id}>
@@ -316,8 +310,10 @@ export function ContractorHomeIntelligence({
             </li>
           ))}
         </ol>
-        <HomeSearchBlock />
       </section>
+
+      <HomeBeyondLicense intel={scale} />
+      <HomeMethodology intel={scale} />
 
       <section id="sources" aria-labelledby="sources-title">
         <p className="cth-intel-eyebrow">Sources / limitations</p>
@@ -360,10 +356,13 @@ export function ContractorHomeIntelligence({
             <li key={item}>{item}</li>
           ))}
         </ul>
-        <p className="cth-intel-kicker">
-          Payload {intel.contractVersion}. Fingerprint {intel.payloadFingerprint.slice(0, 12)}… Change module:{" "}
-          {intel.changeCapability.status}.
-        </p>
+        <details>
+          <summary>Snapshot provenance</summary>
+          <p>
+            Intelligence OS {intel.contractVersion}. Evidence-scale snapshot {scale.schemaVersion} generated{" "}
+            {scale.generatedAt.slice(0, 10)}. Change module: {intel.changeCapability.status}.
+          </p>
+        </details>
       </section>
       <JourneyNextStep module={journeyModule} />
     </div>
