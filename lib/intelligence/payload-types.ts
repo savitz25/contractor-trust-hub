@@ -45,6 +45,10 @@ export type IntelligenceCounty = {
   href: string;
   tracked: number;
   active: number;
+  /** CCC+RC HQ/base credentials. RR is residential, not roofing. */
+  roofing: number;
+  /** CGC+RG HQ/base credentials. */
+  general: number;
   coverageLevel: ResearchCoverageLevel;
   metricKind: "hq";
 };
@@ -76,6 +80,7 @@ export type FloridaIntelligencePayload = {
   generatedAt: string;
   asOf: string | null;
   timedOut: boolean;
+  canonicalFingerprint: string;
   metrics: IntelligenceMetricValue[];
   categories: IntelligenceCategory[];
   geography: IntelligenceCounty[];

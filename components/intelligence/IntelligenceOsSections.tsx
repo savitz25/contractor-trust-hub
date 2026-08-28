@@ -85,6 +85,14 @@ export function TraceNumber({
                 <dd>{f.grain}</dd>
               </div>
               <div>
+                <dt className="font-medium text-[var(--text)]">Official as-of</dt>
+                <dd>{f.asOf || "See source extract dates."}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-[var(--text)]">Retrieved</dt>
+                <dd>{f.retrieved ? f.retrieved.slice(0, 10) : "See ingest batch timestamps."}</dd>
+              </div>
+              <div>
                 <dt className="font-medium text-[var(--text)]">Limitation</dt>
                 <dd>{f.limitation}</dd>
               </div>
@@ -332,7 +340,9 @@ export function EvidenceJourney() {
             <span className="tabular-nums text-[var(--muted)]">{i + 1}</span>
             <span className="font-medium">{n}</span>
             <span className="ml-auto text-xs text-[var(--muted)]">
-              {n.includes("permit") ? "Unavailable in most counties / requested in Broward" : "Connected where source-backed"}
+              {n.includes("permit")
+                ? "Where acquired — requested/pending in Broward"
+                : "Where connected / where available"}
             </span>
           </li>
         ))}

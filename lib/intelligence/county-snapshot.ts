@@ -13,12 +13,13 @@ import {
   type CountyMoveLikePayload,
 } from "./county-payload";
 import { isFloridaCountyIntelSlug, type FloridaCountyIntelSlug } from "./coverage";
+import { getFloridaIntelligenceSnapshot, metricById } from "./florida-snapshot";
 
 export type { CountyMoveLikePayload } from "./county-payload";
 export { CTH_FL_COUNTY_INTEL_VERSION, publicCountyMetrics } from "./county-payload";
 
 const REVALIDATE_SEC = 1_800;
-const TIMEOUT_MS = 20_000;
+const TIMEOUT_MS = 8_000;
 
 function iso(d: Date | string | null | undefined): string | null {
   if (!d) return null;
@@ -124,29 +125,12 @@ async function loadLive(slug: FloridaCountyIntelSlug): Promise<CountyMoveLikePay
         ).catch(() => null)
       : Promise.resolve(null);
 
-  const floridaP = queryOne<{
-    tracked: string;
-    active: string;
-    roofing: string;
-    general: string;
-  }>(
-    `
-      SELECT
-        COUNT(*)::text AS tracked,
-        COUNT(*) FILTER (WHERE status_normalized = 'active')::text AS active,
-        COUNT(*) FILTER (WHERE UPPER(COALESCE(occupation_code, '')) IN ('CCC', 'RR'))::text AS roofing,
-        COUNT(*) FILTER (WHERE UPPER(COALESCE(occupation_code, '')) = 'CGC')::text AS general
-      FROM licenses
-      WHERE source_system = 'fl_dbpr'
-      `
-  ).catch(() => null);
-
   const [stats, occRows, jurisRows, ev, fl] = await Promise.all([
     statsP,
     occP,
     jurisP,
     permitP,
-    floridaP,
+    getFloridaIntelligenceSnapshot().catch(() => null),
   ]);
 
   let permitEvidence: CountyLiveCounts["permitEvidence"] = null;
@@ -171,10 +155,10 @@ async function loadLive(slug: FloridaCountyIntelSlug): Promise<CountyMoveLikePay
     tradeTracked: stats?.trade_tracked != null ? Number(stats.trade_tracked) : null,
     tradeActive: stats?.trade_active != null ? Number(stats.trade_active) : null,
     asOf: iso(stats?.last_verified_at),
-    floridaTracked: fl?.tracked != null ? Number(fl.tracked) : null,
-    floridaActive: fl?.active != null ? Number(fl.active) : null,
-    floridaRoofing: fl?.roofing != null ? Number(fl.roofing) : null,
-    floridaGeneral: fl?.general != null ? Number(fl.general) : null,
+    floridaTracked: fl ? metricById(fl, "dbpr_credentials_tracked")?.value ?? null : null,
+    floridaActive: fl ? metricById(fl, "active_credentials")?.value ?? null : null,
+    floridaRoofing: fl?.categories.find((c) => c.slug === "roofers")?.tracked ?? null,
+    floridaGeneral: fl?.categories.find((c) => c.slug === "general-contractors")?.tracked ?? null,
     occupationRows: occRows.map((r) => ({
       occupation_code: r.occupation_code,
       tracked: Number(r.tracked) || 0,
@@ -215,7 +199,7 @@ export async function getFloridaCountyIntelligenceSnapshot(
   }
   const cached = unstable_cache(
     () => loadLive(countySlug),
-    ["cth-fl-county-intel-v1c", countySlug],
+    ["contractor-county-intel-v1", countySlug],
     {
       revalidate: REVALIDATE_SEC,
       tags: ["florida-county-intelligence", `florida-county-intelligence-${countySlug}`],

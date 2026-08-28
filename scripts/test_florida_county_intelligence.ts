@@ -171,3 +171,20 @@ test("RR is not in the roofing category", () => {
   assert.ok(residential.splits.some((s) => s.code === "RR"));
   assert.ok(roofing.href.includes("/florida/broward/roofers"));
 });
+
+test("county canonical fingerprint ignores generatedAt", () => {
+  const p1 = buildCountyIntelligencePayload({
+    countySlug: "broward",
+    generatedAt: "2026-08-28T01:00:00.000Z",
+    timedOut: false,
+    counts: counts("broward"),
+  });
+  const p2 = buildCountyIntelligencePayload({
+    countySlug: "broward",
+    generatedAt: "2026-08-28T02:00:00.000Z",
+    timedOut: false,
+    counts: counts("broward"),
+  });
+  assert.equal(p1.canonicalFingerprint, p2.canonicalFingerprint);
+  assert.equal(p1.canonicalFingerprint.length, 64);
+});

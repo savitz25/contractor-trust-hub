@@ -111,8 +111,8 @@ export function FloridaStateIntelligence({ payload }: { payload: FloridaIntellig
                 href: c?.href || `/florida/${slug}`,
                 tracked: c?.tracked ?? null,
                 active: c?.active ?? null,
-                roofing: null,
-                general: null,
+                roofing: c?.roofing ?? null,
+                general: c?.general ?? null,
                 researchDepth: "statewide" as const,
               };
             }),
@@ -132,8 +132,9 @@ export function FloridaStateIntelligence({ payload }: { payload: FloridaIntellig
       <div className="mt-12 space-y-3">
         <p className="text-xs text-[var(--muted)]">
           Intelligence aggregation {payload.version}
+          {payload.canonicalFingerprint ? ` · fingerprint ${payload.canonicalFingerprint.slice(0, 12)}` : ""}
           {payload.generatedAt ? ` · generated ${payload.generatedAt.slice(0, 16).replace("T", " ")} UTC` : ""}
-          . Regenerating the payload updates these figures without changing page copy.
+          . Fingerprint excludes generatedAt. Regenerating from unchanged evidence keeps the fingerprint.
         </p>
         <DiscoveryDisclaimer />
       </div>

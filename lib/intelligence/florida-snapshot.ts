@@ -14,6 +14,7 @@ import { countyResearchCoverage } from "./coverage";
 import { FLORIDA_INTELLIGENCE_EDUCATION } from "./education";
 import { FLORIDA_SOURCE_CATALOG } from "./source-catalog";
 import type { SourceFamily } from "./types";
+import { intelligenceFingerprint } from "./fingerprint";
 import type {
   FloridaIntelligencePayload,
   IntelligenceCategory,
@@ -81,7 +82,13 @@ const BUCKET_LABEL: Record<(typeof CONSUMER_BUCKETS)[number], string> = {
 };
 
 type OccRow = { occupation_code: string; tracked: string; active: string };
-type CountyRow = { county_code: string; tracked: string; active: string };
+type CountyRow = {
+  county_code: string;
+  tracked: string;
+  active: string;
+  roofing: string;
+  general: string;
+};
 type DiscRow = { source_system: string; source_dataset: string; n: string };
 type BatchRow = {
   source_system: string;
@@ -166,7 +173,9 @@ async function loadFloridaIntelligenceUncached(): Promise<
       `
       SELECT TRIM(COALESCE(county_code, '')) AS county_code,
              COUNT(*)::text AS tracked,
-             COUNT(*) FILTER (WHERE status_normalized = 'active')::text AS active
+             COUNT(*) FILTER (WHERE status_normalized = 'active')::text AS active,
+             COUNT(*) FILTER (WHERE UPPER(COALESCE(occupation_code, '')) IN ('CCC', 'RC'))::text AS roofing,
+             COUNT(*) FILTER (WHERE UPPER(COALESCE(occupation_code, '')) IN ('CGC', 'RG'))::text AS general
       FROM licenses
       WHERE source_system = 'fl_dbpr'
       GROUP BY 1
@@ -216,6 +225,8 @@ async function loadFloridaIntelligenceUncached(): Promise<
       href: state ? discoveryPath(state, { countySlug: cls.slug }) : `${basePath}/${cls.slug}`,
       tracked,
       active,
+      roofing: Number(row.roofing) || 0,
+      general: Number(row.general) || 0,
       coverageLevel: countyResearchCoverage(cls.slug),
       metricKind: "hq",
     });
@@ -433,7 +444,7 @@ async function loadFloridaIntelligenceUncached(): Promise<
 
   const coverage: IntelligenceCoverageItem[] = STATIC_COVERAGE;
 
-  return {
+  const payload: Omit<FloridaIntelligencePayload, "timedOut" | "canonicalFingerprint"> = {
     state: "florida",
     version: FL_STATE_INTEL_VERSION,
     generatedAt,
@@ -444,6 +455,10 @@ async function loadFloridaIntelligenceUncached(): Promise<
     evidenceSources,
     coverage,
     education: FLORIDA_INTELLIGENCE_EDUCATION,
+  };
+  return {
+    ...payload,
+    canonicalFingerprint: intelligenceFingerprint(payload),
   };
 }
 
@@ -544,12 +559,12 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
 }
 
 export function emptyFloridaIntelligencePayload(): FloridaIntelligencePayload {
-  return {
+  const generatedAt = new Date().toISOString();
+  const payload: Omit<FloridaIntelligencePayload, "timedOut" | "canonicalFingerprint"> = {
     state: "florida",
     version: FL_STATE_INTEL_VERSION,
-    generatedAt: new Date().toISOString(),
+    generatedAt,
     asOf: null,
-    timedOut: true,
     metrics: [],
     categories: CONSUMER_BUCKETS.map((bucket) => {
       const slug = BUCKET_TO_TRADE_SLUG[bucket];
@@ -581,6 +596,11 @@ export function emptyFloridaIntelligencePayload(): FloridaIntelligencePayload {
     })),
     coverage: STATIC_COVERAGE,
     education: FLORIDA_INTELLIGENCE_EDUCATION,
+  };
+  return {
+    ...payload,
+    timedOut: true,
+    canonicalFingerprint: intelligenceFingerprint(payload),
   };
 }
 

@@ -17,6 +17,7 @@ export type TraceFamily = {
   grain: "parsed_observation";
   limitation: string;
   asOf: string | null;
+  retrieved: string | null;
 };
 
 export type FeaturedFinding = {
@@ -72,7 +73,7 @@ function share(n: number | null, d: number | null): number | null {
 
 export function buildTraceFamilies(sources: IntelligenceEvidenceSource[]): TraceFamily[] {
   const byId = new Map<string, IntelligenceEvidenceSource>(sources.map((s) => [s.id, s]));
-  const spec: Array<Omit<TraceFamily, "count" | "asOf"> & { sourceId: string }> = [
+  const spec: Array<Omit<TraceFamily, "count" | "asOf" | "retrieved"> & { sourceId: string }> = [
     {
       sourceId: "fl_dbpr_discipline",
       id: "dbpr_discipline",
@@ -125,7 +126,8 @@ export function buildTraceFamilies(sources: IntelligenceEvidenceSource[]): Trace
       grain: s.grain,
       limitation: s.limitation,
       count: src?.observationCount ?? null,
-      asOf: src?.lastExtractedAt ?? null,
+      asOf: src?.coveragePeriod ?? src?.lastExtractedAt ?? null,
+      retrieved: src?.lastExtractedAt ?? null,
     };
   });
 }

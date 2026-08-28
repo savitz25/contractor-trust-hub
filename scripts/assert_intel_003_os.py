@@ -48,6 +48,10 @@ def main() -> int:
     assert_("Trust Score" not in ossec and "Best Contractor" not in ossec, "I003 no ranking copy")
     assert_("places.googleapis" not in layer.lower(), "I003 no Google Places")
     assert_("service area" in layer.lower() or "not service area" in county.lower() or "not operating" in cp.lower(), "I003 geography safety")
+    fp = read("lib/intelligence/fingerprint.ts")
+    assert_("generatedAt" in fp and "CANONICAL_EXCLUDED_KEYS" in fp, "I003B fingerprint excludes generatedAt")
+    assert_("c?.roofing" in fl or "c.roofing" in fl, "I003B florida compare uses county roofing")
+    assert_("IN ('CCC', 'RC')" in snap or "CCC', 'RC'" in snap, "I003B roofing CCC+RC not RR")
     print("INTEL003_OS", "PASS" if failed == 0 else "FAIL", "fails", failed)
     return 1 if failed else 0
 

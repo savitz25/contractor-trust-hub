@@ -15,6 +15,7 @@ import {
 } from "./coverage";
 import type { IntelligenceEducationModule } from "./education";
 import { FLORIDA_CILB_OCCUPATIONS, INTELLIGENCE_TRADE_BUCKETS } from "./occupations";
+import { intelligenceFingerprint } from "./fingerprint";
 import { shouldRenderConsumerMetric, type MetricReadiness } from "./readiness";
 import type { IntelligenceCategory, IntelligenceCategorySplit } from "./payload-types";
 import type { MetricPublicEligibility } from "./types";
@@ -81,6 +82,7 @@ export type CountyMoveLikePayload = {
   generatedAt: string;
   asOf: string | null;
   timedOut: boolean;
+  canonicalFingerprint: string;
   coverageLevel: "statewide" | "enhanced";
   coverageLabel: string;
   enhancedGateDocumented: boolean;
@@ -555,7 +557,7 @@ export function buildCountyIntelligencePayload(input: {
     },
   ];
 
-  return {
+  const payload: Omit<CountyMoveLikePayload, "canonicalFingerprint"> = {
     state: "florida",
     countySlug: catalog.slug,
     countyName: catalog.name,
@@ -606,6 +608,10 @@ export function buildCountyIntelligencePayload(input: {
     ],
     permitModuleSlots: PERMIT_MODULE_SLOTS,
     localCredentialStatuses: LOCAL_CREDENTIAL_CURRENTNESS,
+  };
+  return {
+    ...payload,
+    canonicalFingerprint: intelligenceFingerprint(payload),
   };
 }
 
