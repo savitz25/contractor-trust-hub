@@ -187,36 +187,29 @@ async function main() {
     const licenses = await count("licenses");
     const candidateSources = [
       ...liveSources,
+      "ct_dcp",
+      "id_dopl",
+      "mn_dli",
+      "nv_nscb",
+      "ok_cib",
+      "tn_blc",
+      "va_dpor",
+      "wi_dsps",
       "fl_sunbiz",
       "fl_dfs",
-      "wi_dsps",
-      "nj_enforcement",
-      "az_roc_discipline",
-      "tx_tsbpe",
-      "oh_cslb",
-      "nv_nscb",
-      "ga_sclb",
-      "nc_nclbgc",
-      "sc_llr",
-      "al_lirb",
-      "tn_commerce",
-      "va_dpor",
-      "md_dllr",
-      "pa_lni",
-      "il_idfpr",
-      "in_pla",
-      "mi_lara",
-      "co_dora",
-      "ut_doppl",
-      "nm_cid",
-      "ok_cclb",
     ];
-    const bySrc = await restGroupCount(base, key, "licenses", "source_system", [...new Set(candidateSources)]);
+    const uniqueCandidates = [...new Set(candidateSources)].sort();
+    const bySrc = await restGroupCount(base, key, "licenses", "source_system", uniqueCandidates);
     const sourceKeys = Object.entries(bySrc)
       .filter(([, n]) => n > 0)
       .map(([k]) => k)
       .sort();
-    const licenseSourceSystems = sourceKeys.length;
+    const remainder = await count("licenses", `source_system=not.in.(${sourceKeys.join(",")})`);
+    if (remainder > 0) {
+      throw new Error(`unlisted license source_system rows remain: ${remainder}`);
+    }
+    const populatedLicenseSourceSystems = sourceKeys.length;
+    const licenseSourceSystems = populatedLicenseSourceSystems;
     const contractorEntities = await count("contractor_entities");
     const entities = contractorEntities > 0 ? 0 : await count("entities");
     const entityLinks = contractorEntities > 0 ? contractorEntities : Math.max(0, entities);
@@ -381,7 +374,9 @@ async function main() {
         licenseSourceSystemKeys: sourceKeys,
         entityLinks,
         publicContactObservations: contacts,
-        note: "Research-graph totals are not currently public live coverage and must not be advertised as a U.S. contractor census.",
+        populatedLicenseSourceSystems,
+        populatedLicenseSourceSystemKeys: sourceKeys,
+        note: "Research-graph totals are not currently public live coverage and are not a U.S. contractor census.",
       },
       regulatoryEvidence: {
         totalActionRows: actions,

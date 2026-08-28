@@ -50,6 +50,10 @@ export type ContractorHubIntelV2 = {
   researchGraph: {
     contractorIdentityRows: number;
     licenseRows: number;
+    /** COUNT(DISTINCT licenses.source_system) with populated rows. Not the live public cohort. */
+    populatedLicenseSourceSystems: number;
+    populatedLicenseSourceSystemKeys: string[];
+    /** @deprecated use populatedLicenseSourceSystems */
     licenseSourceSystems: number;
     licenseSourceSystemKeys: string[];
     entityLinks: number;

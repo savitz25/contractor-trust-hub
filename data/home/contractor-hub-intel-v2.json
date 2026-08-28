@@ -1,7 +1,7 @@
 {
   "schemaVersion": "contractor-hub-intel-v2",
-  "generatedAt": "2026-08-28T21:44:05.245Z",
-  "sourceFingerprint": "71a7c3ec403f584731f2a39dd07135669f4dd462dd4cac5691c32a91d6e757ba",
+  "generatedAt": "2026-08-28T21:59:58.339Z",
+  "sourceFingerprint": "1aa55eb03fcfc3e29f86b5a6efd3d56de228773c170a4616f8cbfed4a885fd3f",
   "publicCoverage": {
     "liveStates": 10,
     "liveStateCodes": [
@@ -37,17 +37,22 @@
   "researchGraph": {
     "contractorIdentityRows": 1392730,
     "licenseRows": 1266214,
-    "licenseSourceSystems": 13,
+    "licenseSourceSystems": 18,
     "licenseSourceSystemKeys": [
       "az_roc",
       "ca_cslb",
+      "ct_dcp",
       "fl_dbpr",
+      "id_dopl",
       "ky_dhbc",
       "la_lslbc",
+      "mn_dli",
       "ms_sbc",
       "nj_dca",
       "nv_nscb",
+      "ok_cib",
       "or_ccb",
+      "tn_blc",
       "tx_tdlr",
       "tx_tsbpe",
       "va_dpor",
@@ -55,7 +60,28 @@
     ],
     "entityLinks": 281255,
     "publicContactObservations": 16009,
-    "note": "Research-graph totals are not currently public live coverage and must not be advertised as a U.S. contractor census."
+    "note": "Research-graph totals are not currently public live coverage and are not a U.S. contractor census.",
+    "populatedLicenseSourceSystems": 18,
+    "populatedLicenseSourceSystemKeys": [
+      "az_roc",
+      "ca_cslb",
+      "ct_dcp",
+      "fl_dbpr",
+      "id_dopl",
+      "ky_dhbc",
+      "la_lslbc",
+      "mn_dli",
+      "ms_sbc",
+      "nj_dca",
+      "nv_nscb",
+      "ok_cib",
+      "or_ccb",
+      "tn_blc",
+      "tx_tdlr",
+      "tx_tsbpe",
+      "va_dpor",
+      "wa_lni"
+    ]
   },
   "regulatoryEvidence": {
     "totalActionRows": 69674,

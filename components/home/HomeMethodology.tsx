@@ -36,8 +36,11 @@ export function HomeMethodology({ intel }: { intel: ContractorHubIntelV2 }) {
             <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-[var(--muted)]">
               <li>{formatIntelCount(graph.contractorIdentityRows)} contractor identity rows</li>
               <li>
-                {formatIntelCount(graph.licenseRows)} license rows across{" "}
-                {graph.licenseSourceSystems} enumerated source systems
+                <strong>
+                  {formatIntelCount(graph.licenseRows)} license records across{" "}
+                  {formatIntelCount(graph.populatedLicenseSourceSystems)} regulatory source systems
+                  in the broader research graph
+                </strong>
               </li>
               <li>
                 {formatIntelCount(graph.entityLinks)} contractor–entity relationship rows
@@ -46,7 +49,7 @@ export function HomeMethodology({ intel }: { intel: ContractorHubIntelV2 }) {
                 {formatIntelCount(graph.publicContactObservations)} public contact observations
               </li>
             </ul>
-            <p className="mt-2 text-xs text-[var(--muted)]">{graph.note}</p>
+            <p className="mt-2 text-xs leading-relaxed text-[var(--muted)]">{graph.note}</p>
           </div>
         </div>
         <p className="mt-5 text-sm text-[var(--muted)]">
