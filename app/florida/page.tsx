@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { FloridaStateIntelligence } from "@/components/intelligence/FloridaStateIntelligence";
-import { IntelligenceHero } from "@/components/intelligence/IntelligenceHero";
 import { getDiscoveryState } from "@/lib/discovery/config";
 import { getFloridaIntelligenceSnapshot } from "@/lib/intelligence/florida-snapshot";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
@@ -43,7 +42,6 @@ export default function FloridaLandingPage() {
             ]}
           />
           <div className="mt-4">
-            <IntelligenceHero />
             <p className="mt-8 text-sm text-[var(--muted)]" role="status">
               Loading Florida research snapshot…
             </p>
