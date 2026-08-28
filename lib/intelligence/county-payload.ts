@@ -19,7 +19,7 @@ import { shouldRenderConsumerMetric, type MetricReadiness } from "./readiness";
 import type { IntelligenceCategory, IntelligenceCategorySplit } from "./payload-types";
 import type { MetricPublicEligibility } from "./types";
 
-export const CTH_FL_COUNTY_INTEL_VERSION = "cth-fl-county-intel-v1";
+export const CTH_FL_COUNTY_INTEL_VERSION = "contractor-county-intel-v1";
 
 export type CountyIntelModuleId =
   | "county_address_credentials"
@@ -97,6 +97,12 @@ export type CountyMoveLikePayload = {
   discoveryLinks: Array<{ label: string; href: string; semantics: string }>;
   permitModuleSlots: readonly string[];
   localCredentialStatuses: readonly string[];
+  floridaBaseline: {
+    tracked: number | null;
+    active: number | null;
+    roofing: number | null;
+    general: number | null;
+  };
 };
 
 export type CountyLiveCounts = {
@@ -105,6 +111,10 @@ export type CountyLiveCounts = {
   tradeTracked: number | null;
   tradeActive: number | null;
   asOf: string | null;
+  floridaTracked?: number | null;
+  floridaActive?: number | null;
+  floridaRoofing?: number | null;
+  floridaGeneral?: number | null;
   occupationRows: Array<{ occupation_code: string; tracked: number; active: number }>;
   jurisdictionRows: Array<{ kind: string; n: number }> | null;
   permitRows: number | null;
@@ -559,7 +569,16 @@ export function buildCountyIntelligencePayload(input: {
     enhancedGateDocumented: true,
     enhancedGateActivated: false,
     addressFieldSemantics: catalog.addressFieldSemantics,
-    heroIntro: catalog.heroIntro,
+    heroIntro:
+      catalog.slug === "broward"
+        ? "How is Broward different from Florida? This page compares HQ/base credential counts, active share, and trade mix using identical definitions. Local permit export is still requested — missing export is not zero activity."
+        : catalog.heroIntro,
+    floridaBaseline: {
+      tracked: counts?.floridaTracked ?? null,
+      active: counts?.floridaActive ?? null,
+      roofing: counts?.floridaRoofing ?? null,
+      general: counts?.floridaGeneral ?? null,
+    },
     metrics,
     categories: input.timedOut ? [] : categories,
     modules,

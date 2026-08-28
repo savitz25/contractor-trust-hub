@@ -108,28 +108,36 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
           </header>
         )}
 
-        <div className="mt-8">
-          <FacetGrid
-            title={`Trades in ${county.name}`}
-            facets={trades}
-            hrefFor={(slug) =>
-              discoveryPath(state, { countySlug: county.slug, tradeSlug: slug })
-            }
-          />
-        </div>
-
-        <div id="contractors">
-          <FloridaBrowseSection
-            state={state}
-            county={county}
-            browse={browse}
-            results={results}
-            total={total}
-            stats={stats}
-            cities={cities}
-            view={view}
-          />
-        </div>
+        <details className="mt-10 rounded-2xl border border-[var(--border)] bg-white px-4 py-4">
+          <summary className="cursor-pointer text-base font-semibold">
+            Research contractors in {county.name} (directory)
+          </summary>
+          <p className="mt-2 text-sm text-[var(--muted)]">
+            Directory cards are secondary. They list credentials whose HQ/base mailing county is{" "}
+            {county.name} — not everyone who works there.
+          </p>
+          <div className="mt-8">
+            <FacetGrid
+              title={`Trades in ${county.name}`}
+              facets={trades}
+              hrefFor={(slug) =>
+                discoveryPath(state, { countySlug: county.slug, tradeSlug: slug })
+              }
+            />
+          </div>
+          <div id="contractors">
+            <FloridaBrowseSection
+              state={state}
+              county={county}
+              browse={browse}
+              results={results}
+              total={total}
+              stats={stats}
+              cities={cities}
+              view={view}
+            />
+          </div>
+        </details>
 
         <div className="mt-10">
           <DiscoveryDisclaimer />

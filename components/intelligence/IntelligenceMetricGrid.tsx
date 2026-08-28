@@ -28,7 +28,7 @@ export function IntelligenceMetricGrid({
   return (
     <section id="snapshot" aria-labelledby="snapshot-heading" className="scroll-mt-24">
       <h2 id="snapshot-heading" className="text-xl font-semibold tracking-tight text-[var(--text)] sm:text-2xl">
-        Florida research snapshot
+        State of the record
       </h2>
       <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--muted)] sm:text-base">
         These figures count <strong className="font-medium text-[var(--text)]">credentials</strong>{" "}

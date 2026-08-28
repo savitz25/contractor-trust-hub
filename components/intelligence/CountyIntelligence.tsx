@@ -6,6 +6,8 @@ import { IntelligenceEducationSection } from "@/components/intelligence/Intellig
 import { formatAsOf, formatIntelNumber } from "@/components/intelligence/format";
 import { publicCountyMetrics } from "@/lib/intelligence/county-payload";
 import type { CountyMoveLikePayload } from "@/lib/intelligence/county-payload";
+import { MarketCompare, WhatWeDontKnow } from "@/components/intelligence/IntelligenceOsSections";
+import { buildCompareRows, standsOutStatements } from "@/lib/intelligence/os-layer";
 
 export function CountyIntelligence({ payload }: { payload: CountyMoveLikePayload }) {
   const countyLabel = `${payload.countyName} County`;
@@ -28,7 +30,9 @@ export function CountyIntelligence({ payload }: { payload: CountyMoveLikePayload
           <span className="text-xs text-[var(--muted)]">Evidence depth, not contractor quality</span>
         </div>
         <h1 className="mt-3 max-w-3xl text-3xl font-semibold tracking-tight text-[var(--text)] sm:text-4xl">
-          Research {countyLabel} contractors
+          {payload.countySlug === "broward"
+            ? "Broward Contractor Intelligence"
+            : `Research ${countyLabel} contractors`}
         </h1>
         <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--muted)] sm:text-base">
           {payload.heroIntro}
@@ -94,6 +98,31 @@ export function CountyIntelligence({ payload }: { payload: CountyMoveLikePayload
           </p>
         ) : null}
       </section>
+      {(() => {
+        const roofing = payload.categories.find((c) => c.slug === "roofers")?.tracked ?? null;
+        const general = payload.categories.find((c) => c.slug === "general-contractors")?.tracked ?? null;
+        const countyTracked = payload.metrics.find((m) => m.id === "county_credentials")?.value ?? null;
+        const countyActive = payload.metrics.find((m) => m.id === "county_active_credentials")?.value ?? null;
+        const rows = buildCompareRows({
+          floridaTracked: payload.floridaBaseline.tracked,
+          floridaActive: payload.floridaBaseline.active,
+          floridaRoofing: payload.floridaBaseline.roofing,
+          floridaGeneral: payload.floridaBaseline.general,
+          counties: [
+            {
+              id: payload.countySlug,
+              label: countyLabel,
+              href: payload.canonicalPath,
+              tracked: countyTracked,
+              active: countyActive,
+              roofing,
+              general,
+              researchDepth: payload.coverageLevel,
+            },
+          ],
+        });
+        return <MarketCompare rows={rows} statements={standsOutStatements(rows)} />;
+      })()}
 
       {payload.categories.length > 0 ? (
         <IntelligenceCategoryExplorer categories={payload.categories} timedOut={payload.timedOut} />
@@ -152,6 +181,7 @@ export function CountyIntelligence({ payload }: { payload: CountyMoveLikePayload
         </p>
       </section>
 
+      <WhatWeDontKnow />
       <section id="permits" aria-labelledby="permits-heading" className="scroll-mt-24">
         <h2 id="permits-heading" className="text-xl font-semibold tracking-tight sm:text-2xl">
           Local permit research

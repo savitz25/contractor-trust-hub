@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const state = getDiscoveryState(PUBLIC)!;
   return discoveryMetadata({
     state,
-    title: "Research Florida Contractors — License, County & Public-Record Intelligence",
+    title: "Florida Contractor Intelligence — License, County & Public-Record Research",
     description:
       "Research Florida contractor credentials, trade categories, HQ/base county distribution, and public regulatory records. Independent Trust Hub research — not a marketplace or ranking.",
   });

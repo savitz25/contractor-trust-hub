@@ -34,7 +34,7 @@ export type {
   IntelligenceMetricValue,
 } from "./payload-types";
 
-export const FL_STATE_INTEL_VERSION = "fl-state-intel-v1";
+export const FL_STATE_INTEL_VERSION = "contractor-state-intel-v1";
 const REVALIDATE_SEC = 1_800;
 const TIMEOUT_MS = 6_000;
 

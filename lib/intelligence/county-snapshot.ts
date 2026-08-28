@@ -124,7 +124,30 @@ async function loadLive(slug: FloridaCountyIntelSlug): Promise<CountyMoveLikePay
         ).catch(() => null)
       : Promise.resolve(null);
 
-  const [stats, occRows, jurisRows, ev] = await Promise.all([statsP, occP, jurisP, permitP]);
+  const floridaP = queryOne<{
+    tracked: string;
+    active: string;
+    roofing: string;
+    general: string;
+  }>(
+    `
+      SELECT
+        COUNT(*)::text AS tracked,
+        COUNT(*) FILTER (WHERE status_normalized = 'active')::text AS active,
+        COUNT(*) FILTER (WHERE UPPER(COALESCE(occupation_code, '')) IN ('CCC', 'RR'))::text AS roofing,
+        COUNT(*) FILTER (WHERE UPPER(COALESCE(occupation_code, '')) = 'CGC')::text AS general
+      FROM licenses
+      WHERE source_system = 'fl_dbpr'
+      `
+  ).catch(() => null);
+
+  const [stats, occRows, jurisRows, ev, fl] = await Promise.all([
+    statsP,
+    occP,
+    jurisP,
+    permitP,
+    floridaP,
+  ]);
 
   let permitEvidence: CountyLiveCounts["permitEvidence"] = null;
   if (ev) {
@@ -148,6 +171,10 @@ async function loadLive(slug: FloridaCountyIntelSlug): Promise<CountyMoveLikePay
     tradeTracked: stats?.trade_tracked != null ? Number(stats.trade_tracked) : null,
     tradeActive: stats?.trade_active != null ? Number(stats.trade_active) : null,
     asOf: iso(stats?.last_verified_at),
+    floridaTracked: fl?.tracked != null ? Number(fl.tracked) : null,
+    floridaActive: fl?.active != null ? Number(fl.active) : null,
+    floridaRoofing: fl?.roofing != null ? Number(fl.roofing) : null,
+    floridaGeneral: fl?.general != null ? Number(fl.general) : null,
     occupationRows: occRows.map((r) => ({
       occupation_code: r.occupation_code,
       tracked: Number(r.tracked) || 0,
