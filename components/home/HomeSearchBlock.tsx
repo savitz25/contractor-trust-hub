@@ -3,29 +3,35 @@ import { SearchForm } from "@/components/search/SearchForm";
 import { getLiveStateCount } from "@/lib/states/config";
 
 /** Compact verify search for visitors who already know a name or license. */
-export function HomeSearchBlock() {
+export function HomeSearchBlock({ embedded = false }: { embedded?: boolean }) {
   const liveCount = getLiveStateCount();
+  const heading = embedded ? (
+    <p className="text-sm text-[var(--muted)]">
+      Choose a state ({liveCount} live), then search. Free — no account, no lead form.{" "}
+      <Link href="/#states" className="font-medium text-[var(--navy)] underline-offset-2 hover:underline">
+        Coverage by state
+      </Link>
+    </p>
+  ) : (
+    <>
+      <h2
+        id="search-heading"
+        className="text-lg font-semibold text-[var(--text)] sm:text-xl"
+      >
+        Search by license number or company name
+      </h2>
+      <p className="mt-1 text-sm text-[var(--muted)]">
+        Choose a state ({liveCount} live), then search. Free — no account, no lead form.{" "}
+        <Link href="/#states" className="font-medium text-[var(--navy)] underline-offset-2 hover:underline">
+          Coverage by state
+        </Link>
+      </p>
+    </>
+  );
 
-  return (
-    <section
-      id="search"
-      aria-labelledby="search-heading"
-      className="border-b border-[var(--border)]"
-    >
-      <div className="th-shell py-10 sm:py-12">
+  const body = (
         <div className="rounded-3xl border border-[var(--border)] bg-white p-4 shadow-[var(--shadow-md)] sm:p-6 md:p-8">
-          <h2
-            id="search-heading"
-            className="text-lg font-semibold text-[var(--text)] sm:text-xl"
-          >
-            Search by license number or company name
-          </h2>
-          <p className="mt-1 text-sm text-[var(--muted)]">
-            Choose a state ({liveCount} live), then search. Free — no account, no lead form.{" "}
-            <Link href="/#states" className="font-medium text-[var(--navy)] underline-offset-2 hover:underline">
-              Coverage by state
-            </Link>
-          </p>
+          {heading}
           <div className="mt-4 sm:mt-5">
             <SearchForm size="hero" showStatePicker />
           </div>
@@ -77,7 +83,23 @@ export function HomeSearchBlock() {
             </div>
           </div>
         </div>
+  );
+
+  if (embedded) {
+    return (
+      <div id="search" className="scroll-mt-24">
+        {body}
       </div>
+    );
+  }
+
+  return (
+    <section
+      id="search"
+      aria-labelledby="search-heading"
+      className="border-b border-[var(--border)]"
+    >
+      <div className="th-shell py-10 sm:py-12">{body}</div>
     </section>
   );
 }

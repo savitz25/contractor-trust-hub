@@ -19,7 +19,11 @@ test("C003C payload fingerprint is deterministic and ignores generatedAt", () =>
 test("C003C exactly 3 source-backed findings and no fake census", () => {
   const intel = buildContractorHomeIntel();
   assert.equal(intel.findings.length, 3);
-  assert.equal(intel.findings.map((f) => f.storyType).join(","), "BENCHMARK,GAP,GAP");
+  assert.equal(intel.findings.map((f) => f.storyType).join(","), "MARKET_FINDING,MARKET_FINDING,GAP");
+  assert.ok(intel.findings.filter((f) => f.storyType === "MARKET_FINDING").length >= 2);
+  assert.ok(intel.findings.filter((f) => f.storyType === "GAP").length <= 1);
+  assert.match(intel.findings[0]?.summary ?? "", /not that Florida contractors are worse/);
+  assert.doesNotMatch(intel.findings.map((f) => f.title).join(" "), /florida contractors are worse/i);
   assert.equal(intel.stateOfRecord[0]?.value, 10);
   assert.equal(intel.geography.length, 10);
   const blob = JSON.stringify(intel);

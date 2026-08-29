@@ -1,11 +1,12 @@
 import Link from "next/link";
+import { AskContractorTrustHub } from "@/components/ask/AskContractorTrustHub";
 import { HomeBeyondLicense } from "@/components/home/HomeBeyondLicense";
 import { HomeContinuity } from "@/components/home/HomeContinuity";
-import { HomeEnforcement } from "@/components/home/HomeEnforcement";
-import { HomeEvidenceLayers } from "@/components/home/HomeEvidenceLayers";
 import { HomeIntelHero } from "@/components/home/HomeIntelHero";
 import { HomeMethodology } from "@/components/home/HomeMethodology";
-import { HomeTradeExplorer } from "@/components/home/HomeTradeExplorer";
+import { HomeSearchBlock } from "@/components/home/HomeSearchBlock";
+import { ExplainDataDrawer } from "@/components/intel/ExplainDataDrawer";
+import { MarketCompare } from "@/components/intel/MarketCompare";
 import { JourneyNextStep } from "@/components/network/JourneyNextStep";
 import { loadContractorHubIntel } from "@/lib/home/load-intel-v2";
 import { researchDepthLabel } from "@/lib/home-intel/build";
@@ -66,26 +67,18 @@ function Story({ finding }: { finding: FeaturedStory }) {
           </table>
         </div>
       </figure>
-      <details>
-        <summary>Explain this chart</summary>
-        <p>
-          <strong>What am I looking at?</strong> {finding.chart.caption}
-        </p>
-        <p>
-          <strong>Why might this matter?</strong> {finding.whyItMatters}
-        </p>
-        <p>
-          <strong>What this does not mean</strong>
-        </p>
-        <ul>
-          {finding.doesNotMean.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-        <p>
-          Source keys: {finding.sourceIds.join(", ")}. Official as-of {finding.officialAsOf}. Retrieved {finding.retrievedAt}.
-        </p>
-      </details>
+      <p className="mt-2 text-sm text-[var(--muted)]">{finding.doesNotMean[0]}</p>
+      <ExplainDataDrawer
+        lookingAt={finding.chart.caption}
+        why={finding.whyItMatters}
+        source={`${finding.sourceIds.join(", ")} · as of ${finding.officialAsOf}`}
+        limitation={finding.doesNotMean[0]}
+        technical={[
+          { label: "Retrieved", value: finding.retrievedAt },
+          { label: "Payload keys", value: finding.payloadKeys.join(", ") },
+          ...finding.doesNotMean.slice(1).map((item, i) => ({ label: `Does not mean ${i + 2}`, value: item })),
+        ]}
+      />
     </article>
   );
 }
@@ -102,14 +95,28 @@ export function ContractorHomeIntelligence({
     <div className="cth-intel-home">
       <HomeContinuity />
       <HomeIntelHero intel={scale} />
-      <HomeTradeExplorer intel={scale} />
-      <HomeEvidenceLayers />
-      <HomeEnforcement intel={scale} />
+
+      <section id="findings" aria-labelledby="findings-title">
+        <span id="enforcement" className="sr-only">
+          Regulatory evidence
+        </span>
+        <p className="cth-intel-eyebrow">What the data says</p>
+        <h2 id="findings-title">Three things this research currently shows</h2>
+        <p>Two market findings from indexed records, and one coverage gap. None is a ranking of contractors.</p>
+        <div className="cth-intel-findings">
+          {intel.findings.map((finding) => (
+            <Story key={finding.storyId} finding={finding} />
+          ))}
+        </div>
+      </section>
+
+      <AskContractorTrustHub intel={scale} />
+      <MarketCompare />
 
       <section id="record" aria-labelledby="record-title">
         <p className="cth-intel-eyebrow">Coverage across the U.S.</p>
         <h2 id="record-title">Licensing works differently in every state</h2>
-        <p>These are snapshot metrics about TrustHub coverage and regulatory structure. They are not contractor quality scores.</p>
+        <p>Supporting structure metrics — not the principal proof of value, and not contractor quality scores.</p>
         <div className="cth-intel-metrics">
           {intel.stateOfRecord.map((metric) => (
             <article className="cth-intel-card" key={metric.id}>
@@ -122,7 +129,7 @@ export function ContractorHomeIntelligence({
                 <summary>Trace this number</summary>
                 <p>{metric.definition}</p>
                 <p>
-                  Grain: {metric.grain}. Method: {metric.method}. Payload key: <code>{metric.payloadKey}</code>
+                  Grain: {metric.grain}. Method: {metric.method}.
                 </p>
                 <p>Included states: {metric.includedStates.join(", ")}.</p>
                 <ul>
@@ -143,22 +150,23 @@ export function ContractorHomeIntelligence({
         </div>
       </section>
 
-      <section id="findings" aria-labelledby="findings-title">
-        <p className="cth-intel-eyebrow">What the data says</p>
-        <h2 id="findings-title">Three national evidence stories</h2>
-        <p>Each story is a benchmark or a coverage gap. None is a ranking of contractors or states.</p>
-        <div className="cth-intel-findings">
-          {intel.findings.map((finding) => (
-            <Story key={finding.storyId} finding={finding} />
-          ))}
-        </div>
-      </section>
-
       <section id="depth" aria-labelledby="depth-title">
         <p className="cth-intel-eyebrow">Evidence depth</p>
         <h2 id="depth-title">How complete is the research?</h2>
         <p>Coverage describes whether this hub has published evidence for a family. It does not describe how trustworthy a contractor is.</p>
-        <div className="cth-intel-table-scroll" tabIndex={0} role="region" aria-label="Evidence availability by family">
+        <ul className="cth-intel-metrics mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {intel.evidenceDepth.map((row) => (
+            <li key={row.family} className="cth-intel-card">
+              <p className="text-sm font-semibold text-[var(--text)]">{row.family}</p>
+              <p className="mt-1 text-sm text-[var(--navy)]">{row.display}</p>
+              <p className="mt-1 text-xs text-[var(--muted)]">{row.method}</p>
+              <p className="mt-2 text-[11px] uppercase tracking-[0.08em] text-[var(--muted)]">
+                {row.status.replaceAll("_", " ")}
+              </p>
+            </li>
+          ))}
+        </ul>
+        <div className="sr-only">
           <table>
             <caption>Evidence availability by family</caption>
             <thead>
@@ -170,7 +178,7 @@ export function ContractorHomeIntelligence({
             </thead>
             <tbody>
               {intel.evidenceDepth.map((row) => (
-                <tr key={row.family}>
+                <tr key={`a11y-${row.family}`}>
                   <th scope="row">{row.family}</th>
                   <td>{row.display}</td>
                   <td>{row.status.replaceAll("_", " ")}</td>
@@ -191,19 +199,18 @@ export function ContractorHomeIntelligence({
         </ul>
       </section>
 
-      <section id="explore" aria-labelledby="explore-title">
+      <section id="states" aria-labelledby="explore-title">
+        <span id="explore" className="sr-only">
+          State explorer
+        </span>
         <p className="cth-intel-eyebrow">Explore contractor research</p>
-        <h2 id="explore-title">Research depth by state — not a quality map</h2>
+        <h2 id="explore-title">Explore contractor research</h2>
         <p>
-          Color and badges encode TrustHub research depth and regulatory structure. They do not encode safer
-          contractors, better markets, or recommended states. Florida is the enhanced Intelligence OS reference.
-          Other live states use existing Verify routes. No thin intelligence shells.
-        </p>
-        <p className="cth-intel-legend">
-          Enhanced Intelligence · Statewide Verify · Partial/Pilot · Specialty Verify. Not a ranking.
+          Florida has state intelligence. Other live states have credential research and verification coverage.
+          Depth badges are TrustHub coverage, not safer contractors.
         </p>
         <ul className="cth-intel-geo">
-          {intel.geography.map((row) => (
+          {intel.geography.slice(0, 4).map((row) => (
             <li key={row.code} data-depth={row.depth}>
               <p>
                 <strong>
@@ -224,7 +231,11 @@ export function ContractorHomeIntelligence({
             </li>
           ))}
         </ul>
-        <div className="cth-intel-table-scroll" tabIndex={0} role="region" aria-label="Accessible state research list">
+        <details className="mt-4">
+          <summary className="cursor-pointer font-semibold text-[var(--navy)]">
+            View all researched jurisdictions
+          </summary>
+        <div className="cth-intel-table-scroll mt-3" tabIndex={0} role="region" aria-label="Accessible state research list">
           <table>
             <caption>Live researched states, board, structure, and destination</caption>
             <thead>
@@ -253,9 +264,10 @@ export function ContractorHomeIntelligence({
             </tbody>
           </table>
         </div>
+        </details>
       </section>
 
-      <section id="trade" aria-labelledby="trade-title">
+      <section id="trades" aria-labelledby="trade-title">
         <p className="cth-intel-eyebrow">Trade / occupation class</p>
         <h2 id="trade-title">Trade labels are not a national license taxonomy</h2>
         <p>
@@ -274,7 +286,7 @@ export function ContractorHomeIntelligence({
       </section>
 
       <section id="ask" aria-labelledby="ask-title">
-        <p className="cth-intel-eyebrow">Ask the market</p>
+        <p className="cth-intel-eyebrow">Common research questions</p>
         <h2 id="ask-title">Structured questions, not a chatbot</h2>
         <div className="cth-intel-ask">
           {intel.ask.map((item) => (
@@ -286,6 +298,17 @@ export function ContractorHomeIntelligence({
               </p>
             </details>
           ))}
+        </div>
+      </section>
+
+      <section id="verify" aria-labelledby="verify-title" className="scroll-mt-24">
+        <p className="cth-intel-eyebrow">Research a specific contractor</p>
+        <h2 id="verify-title">Search by company, license number, or supported identifier</h2>
+        <p className="mt-2 max-w-2xl text-sm text-[var(--muted)]">
+          Traditional verification is an action after you understand the market — not the identity of this homepage.
+        </p>
+        <div className="mt-4">
+          <HomeSearchBlock embedded />
         </div>
       </section>
 

@@ -1,6 +1,6 @@
 export const CONTRACTOR_HOME_INTEL_VERSION = "contractor-home-intel-v1" as const;
 
-export type StoryType = "BENCHMARK" | "GAP" | "CHANGE";
+export type StoryType = "BENCHMARK" | "MARKET_FINDING" | "GAP" | "CHANGE";
 export type CoverageStatus =
   | "strong"
   | "partial"

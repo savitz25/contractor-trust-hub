@@ -70,13 +70,32 @@ for (const fam of snap.tradeFamilies.families) {
   assert(Array.isArray(fam.occupationCodes) && fam.occupationCodes.length > 0, `trade codes ${fam.id}`);
 }
 
+const build = read("lib/home-intel/build.ts");
+const askUi = read("components/ask/AskContractorTrustHub.tsx");
+const compareUi = read("components/intel/MarketCompare.tsx");
+const interpret = read("lib/ask/interpret.ts");
+
 assert(page.includes("ContractorHomeIntelligence") && page.includes("getContractorHomeIntel"), "003C shell");
 assert(shell.includes("HomeIntelHero") && shell.includes("loadContractorHubIntel"), "hero wired");
-assert(hero.includes("SearchForm"), "search in hero");
-assert(hero.includes("id=\"search\"") || hero.includes('id="search"'), "search anchor");
+assert(shell.includes("AskContractorTrustHub"), "ask on homepage");
+assert(shell.includes("MarketCompare"), "compare on homepage");
+assert(shell.includes("HomeSearchBlock"), "verify search on homepage");
+assert(shell.includes("id=\"verify\"") || shell.includes('id="verify"'), "verify anchor");
+assert(shell.includes('id="states"'), "states coverage anchor");
+assert(!hero.includes("SearchForm"), "search is not the hero identity");
+assert(/Research contractor licensing/i.test(hero), "intelligence-first hero");
 assert(!hero.includes("payload") && !hero.includes("SHA") && !hero.includes("fingerprint"), "no SHA in hero");
 assert(!/1\.39\s*million|every licensed contractor in America|69,674 bad/i.test(hero + enforce + method), "forbidden copy");
 assert(/bad contractors/i.test(enforce), "enforcement wording");
+assert(build.includes("MARKET_FINDING"), "market findings");
+assert((build.match(/storyType: "MARKET_FINDING"/g) || []).length === 2, "exactly 2 market findings");
+assert((build.match(/storyType: "GAP"/g) || []).length === 1, "exactly 1 gap finding");
+assert(!/title: "[^"]*worse/i.test(build), "no florida-worse finding title");
+assert(askUi.includes("We interpreted your question as"), "interpretation UI");
+assert(interpret.includes("fail_closed"), "ask fail-closed");
+assert(interpret.includes("COMPLAINT_PHRASES"), "complaint fail-closed");
+assert(compareUi.includes("Permit volume is not compared"), "no permit compare");
+assert(compareUi.includes("/florida/broward") && compareUi.includes("/florida/palm-beach"), "compare counties");
 assert(
   shell.includes("/florida") || read("components/home/HomeBeyondLicense.tsx").includes("/florida"),
   "florida link",

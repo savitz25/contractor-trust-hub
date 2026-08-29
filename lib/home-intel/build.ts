@@ -1,3 +1,4 @@
+import { loadContractorHubIntel } from "@/lib/home/load-intel-v2";
 import { intelligenceFingerprint } from "@/lib/intelligence/fingerprint";
 import {
   floridaRoofingCredentialDefinition,
@@ -102,9 +103,6 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
   const specialty = geo.filter((s) => s.regulatoryClass === "specialty_only");
   const statewideBoard = geo.filter((s) => s.regulatoryClass !== "specialty_only");
   const enhanced = geo.filter((s) => s.depth === "enhanced_intelligence");
-  const statewideVerify = geo.filter((s) => s.depth === "statewide_verify");
-  const partialPilot = geo.filter((s) => s.depth === "partial_pilot");
-  const specialtyVerify = geo.filter((s) => s.depth === "specialty_verify");
   const noStatewideGc = geo.filter((s) => !s.statewideGc);
   const roofingCodes = INTELLIGENCE_TRADE_BUCKETS.roofing;
   const residentialCodes = INTELLIGENCE_TRADE_BUCKETS.residential;
@@ -199,12 +197,79 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
     },
   ];
 
+  const scale = loadContractorHubIntel();
+  const families = scale.regulatoryEvidence.byEvidenceFamily;
+  const actionTotal = scale.regulatoryEvidence.totalActionRows;
+  const floridaEnforcement = families
+    .filter((f) => f.sourceSystem === "fl_dbpr" || f.sourceSystem === "fl_dfs")
+    .reduce((s, f) => s + f.rows, 0);
+  const tradeActive = scale.tradeFamilies.families.reduce((s, f) => s + f.activeCurrentRows, 0);
+  const liveActive = scale.publicCoverage.activeCurrentCredentialRecords;
+
   const findings: FeaturedStory[] = [
     {
+      storyId: "enforcement-source-concentration",
+      storyType: "MARKET_FINDING",
+      title: "Indexed enforcement records are concentrated in Florida sources",
+      summary: `${fmt(floridaEnforcement)} of ${fmt(actionTotal)} indexed regulatory and enforcement records currently come from Florida DBPR and DFS families. That reflects deeper structured Florida datasets in this hub — not that Florida contractors are worse.`,
+      chart: {
+        caption:
+          "Indexed regulatory evidence by source family. Families are different legal processes and are not equivalent severity.",
+        series: families.map((f) => ({
+          label: f.label,
+          value: f.rows,
+          note: f.sourceSystem,
+          states: f.sourceSystem.startsWith("fl") ? ["FL"] : f.sourceSystem.startsWith("nj") ? ["NJ"] : ["AZ"],
+        })),
+        unit: "count",
+        max: actionTotal,
+      },
+      whyItMatters:
+        "Consumers comparing states should know this corpus is Florida-heavy because Florida publishes more structured enforcement files here, not because we scored states.",
+      doesNotMean: [
+        "Florida contractors are worse, riskier, or less trustworthy.",
+        "These families can be added into one risk or guilt score.",
+      ],
+      sourceIds: ["contractor-hub-intel-v2", "discipline_actions"],
+      officialAsOf: scale.generatedAt.slice(0, 10),
+      retrievedAt: scale.generatedAt.slice(0, 10),
+      payloadKeys: ["regulatoryEvidence.byEvidenceFamily", "regulatoryEvidence.totalActionRows"],
+    },
+    {
+      storyId: "mapped-trade-share",
+      storyType: "MARKET_FINDING",
+      title: "Mapped trade families account for most live active/current credentials we can classify",
+      summary: `${fmt(tradeActive)} of ${fmt(liveActive)} active/current credentials in the live public cohort sit in documented occupation-code families (general/building, residential, roofing, electrical, plumbing, HVAC/mechanical, pool/spa). The remainder are other published classes, not “unknown contractors.”`,
+      chart: {
+        caption:
+          "Active/current credential rows by mapped occupation-code family in the live public cohort. Not a national trade census.",
+        series: scale.tradeFamilies.families
+          .filter((f) => f.activeCurrentRows > 0)
+          .map((f) => ({
+            label: f.label,
+            value: f.activeCurrentRows,
+            note: f.contributingSources.join(", "),
+            states: f.contributingSources,
+          })),
+        unit: "count",
+        max: liveActive,
+      },
+      whyItMatters:
+        "If you are hiring a roofer, plumber, or HVAC contractor, the research graph already has explicit class maps — they are not the same license in every state.",
+      doesNotMean: [
+        "These families are a complete U.S. trade census.",
+        "Occupation codes mean the same legal scope in every state.",
+      ],
+      sourceIds: ["contractor-hub-intel-v2", "trade-families"],
+      officialAsOf: scale.generatedAt.slice(0, 10),
+      retrievedAt: scale.generatedAt.slice(0, 10),
+      payloadKeys: ["tradeFamilies.families", "publicCoverage.activeCurrentCredentialRecords"],
+    },
+    {
       storyId: "not-one-system",
-      storyType: "BENCHMARK",
-      title: "Contractor licensing is not one national system",
-      summary: `Among ${fmt(live.length)} live researched states, ${fmt(statewideBoard.length)} use a statewide contractor board or registration system in this product, and ${fmt(specialty.length)} are specialty-only with no statewide general-contractor class. These are different legal structures — not a ranking of states.`,
+      storyType: "GAP",
+      title: "Contractor licensing records are state-specific",
+      summary: `The evidence available for a contractor depends on where they operate. Among ${fmt(live.length)} live researched states, ${fmt(statewideBoard.length)} have a statewide contractor board or registration system in this product, and ${fmt(specialty.length)} (${specialty.map((s) => s.code).join(", ")}) have no statewide general-contractor class.`,
       chart: {
         caption: "Live researched states by statewide regulatory structure in this product. Not a contractor census.",
         series: [
@@ -225,97 +290,15 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
         max: live.length,
       },
       whyItMatters:
-        "A contractor search works differently from state to state because the official source itself is different. Knowing the structure prevents treating a Texas specialty lookup like a Florida CILB license.",
+        "A Texas specialty lookup is not a Florida CILB license. Search results only cover the official source configured for that state.",
       doesNotMean: [
-        "One structure is safer, better, or more trusted.",
+        "One structure is safer or more trusted.",
         "A national licensed-contractor total.",
-        "Every builder in a specialty-only state is unlicensed.",
-        "Statewide board coverage means every county and every trade is complete.",
       ],
       sourceIds: ["state-config"],
       officialAsOf: CONFIG_AS_OF,
       retrievedAt: RETRIEVED,
       payloadKeys: ["coverage.statewideBoards", "coverage.specialtyOnly", "coverage.liveStates"],
-    },
-    {
-      storyId: "verify-depth-differs",
-      storyType: "GAP",
-      title: "What TrustHub can verify differs by state",
-      summary: `Research coverage is not uniform. ${fmt(enhanced.length)} state currently has enhanced Intelligence OS pages, ${fmt(statewideVerify.length)} are statewide Verify, ${fmt(partialPilot.length)} are partial/pilot Verify, and ${fmt(specialtyVerify.length)} are specialty Verify. This is TrustHub coverage, not state quality.`,
-      chart: {
-        caption: "Live states by TrustHub research depth. Darker is more acquired research, not better contractors.",
-        series: [
-          {
-            label: "Enhanced Intelligence OS",
-            value: enhanced.length,
-            note: enhanced.map((s) => s.code).join(", ") || "none",
-            states: enhanced.map((s) => s.code),
-          },
-          {
-            label: "Statewide Verify",
-            value: statewideVerify.length,
-            note: statewideVerify.map((s) => s.code).join(", "),
-            states: statewideVerify.map((s) => s.code),
-          },
-          {
-            label: "Partial / Pilot Verify",
-            value: partialPilot.length,
-            note: partialPilot.map((s) => s.code).join(", "),
-            states: partialPilot.map((s) => s.code),
-          },
-          {
-            label: "Specialty Verify",
-            value: specialtyVerify.length,
-            note: specialtyVerify.map((s) => s.code).join(", "),
-            states: specialtyVerify.map((s) => s.code),
-          },
-        ],
-        unit: "count",
-        max: live.length,
-      },
-      whyItMatters:
-        "Consumers should know whether this hub can show a full evidence journey or only a name/license check against a board extract.",
-      doesNotMean: [
-        "Florida contractors are better because Florida has deeper TrustHub pages.",
-        "A Verify-only state has worse contractors.",
-        "Pilot/partial means the official board is incomplete.",
-        "Not-yet-researched states have zero contractors.",
-      ],
-      sourceIds: ["state-config", "florida-intel-003"],
-      officialAsOf: CONFIG_AS_OF,
-      retrievedAt: RETRIEVED,
-      payloadKeys: [
-        "coverage.enhancedIntelligence",
-        "coverage.geography.depth",
-      ],
-    },
-    {
-      storyId: "credential-limits",
-      storyType: "GAP",
-      title: "A contractor credential answers specific questions — and leaves others unanswered",
-      summary:
-        "Official credentials can identify a holder, status, occupation/class, and sometimes public discipline. They do not prove quality, service area, availability, job history, or that a firm is the right contractor for your project.",
-      chart: {
-        caption: "What a typical state credential in this hub can support versus what it does not prove. Not a score.",
-        series: [
-          { label: "Questions a credential can support (identity, status, class, board source)", value: 4, note: "Evidence-backed" },
-          { label: "Questions a credential does not prove (quality, service area, jobs, suitability)", value: 4, note: "Missingness" },
-        ],
-        unit: "count",
-        max: 4,
-      },
-      whyItMatters:
-        "Hiring decisions mix official evidence with contract, insurance, references, and on-site judgment. Treating a license row as a recommendation hides that gap.",
-      doesNotMean: [
-        "An active credential is an endorsement by TrustHub.",
-        "A license address is the contractor's service area.",
-        "No discipline row means a clean history.",
-        "Credential count equals company count.",
-      ],
-      sourceIds: ["state-config"],
-      officialAsOf: CONFIG_AS_OF,
-      retrievedAt: RETRIEVED,
-      payloadKeys: ["literacy.credentialCan", "literacy.credentialCannot"],
     },
   ];
 
@@ -371,10 +354,13 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
     },
     {
       family: "County-level intelligence",
-      display: "Broward Intelligence OS; other Florida counties not expanded here",
+      display: "Broward and Palm Beach County Intelligence; other Florida counties vary",
       status: "enhanced_in_selected_geographies",
-      method: "INTEL-003 Broward county payload with directory deferral.",
-      limitations: ["HQ/base county is not service area. Pending local data is not zero."],
+      method: "INTEL-003 county payloads. HQ/base mailing county is not service area.",
+      limitations: [
+        "HQ/base county is not service area. Pending local data is not zero.",
+        "Permit coverage is not treated as equivalent across counties.",
+      ],
     },
     {
       family: "Permit / local evidence",
@@ -453,7 +439,7 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
         id: "statewide-gc",
         question: "Does every state license general contractors?",
         answer: `No. In this product ${fmt(noStatewideGc.length)} live states have no statewide GC class: ${noStatewideGc.map((s) => `${s.name} (${s.scopeHint})`).join("; ")}. That is a source-structure fact, not a quality ranking, and it does not mean every builder there is unlicensed.`,
-        href: "#explore",
+        href: "#states",
         hrefLabel: "State explorer",
       },
       {
@@ -476,7 +462,7 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
         id: "not-found",
         question: "What if I cannot find someone in a state database?",
         answer: `No result is not automatically illegal activity. The person may be outside the board's class (for example a GC in a specialty-only state), in a county extract we do not hold, under another name, or simply not in this hub's extract. Confirm on the official board listed for that state.`,
-        href: "#explore",
+        href: "#states",
         hrefLabel: "State coverage",
       },
       {
@@ -504,8 +490,13 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
       { id: "bids", label: "Compare Bids", href: "/tools/compare-bids", note: "Compare offers, not a winner ranking." },
       { id: "contract", label: "Contract Analyzer", href: "/tools/contract-analyzer", note: "Educational contract review." },
       { id: "permit", label: "Permit Planner", href: "/tools/permit-planner", note: "Educational permit planning. Not a permit database." },
-      { id: "projects", label: "Projects", href: "/projects", note: "Save project context." },
-      { id: "passport", label: "Home Passport", href: "/passport", note: "Household research workspace." },
+      {
+        id: "saved-research",
+        label: "Saved Research",
+        href: "/projects",
+        note: "Opens Projects. Watch and Home Passport remain available and unchanged.",
+      },
+      { id: "passport", label: "Home Passport", href: "/passport", note: "Household research workspace. Unchanged." },
       { id: "guides", label: "Guides", href: "/guides", note: "Educational guides." },
       { id: "methodology", label: "Methodology", href: "/methodology", note: "How evidence is assembled." },
     ],

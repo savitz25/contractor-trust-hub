@@ -17,6 +17,8 @@ export const EXPLORE_GROUP: HeaderGroup = {
   label: "Explore",
   links: [
     { href: "/florida", label: "Browse Florida", hint: "County and trade lists" },
+    { href: "/#ask-graph", label: "Ask ContractorTrustHub", hint: "Structured research questions" },
+    { href: "/#compare", label: "Compare markets", hint: "Broward vs Palm Beach coverage" },
     { href: "/verify", label: "Verify by state", hint: "License or name search" },
     { href: "/#states", label: "Coverage", hint: "Where we have evidence" },
   ],
