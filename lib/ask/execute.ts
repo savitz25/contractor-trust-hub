@@ -1,14 +1,14 @@
 /**
  * Deterministic Ask execution. Parameterized SQL only. No LLM facts.
  */
+import { asLicenseStatus } from "@/lib/contractors/format";
 import type { LicenseStatus } from "@/lib/contractors/types";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
-import { DEFAULT_BROWSE } from "@/lib/discovery/browse";
-import { getCounty, getDiscoveryState, getTrade } from "@/lib/discovery/config";
-import { listFloridaBrowse } from "@/lib/discovery/florida-list";
-import type { CountyDef, TradeDef } from "@/lib/discovery/types";
+import { dbUserFacingError, query, queryOne } from "@/lib/db";
+import { getCounty, getDiscoveryState } from "@/lib/discovery/config";
 import { loadContractorHubIntel } from "@/lib/home/load-intel-v2";
 import { REGULATORY_PUBLICATION_GATE_ACTIVE } from "@/lib/regulatory/publication";
+import { getStateBySlug } from "@/lib/states/config";
 import type { ContractorResearchQuery, EvidenceFamilyId } from "./plan";
 import { ASK_PAGE_SIZE } from "./plan";
 import { CLASS_LABELS } from "./ontology";
@@ -137,44 +137,52 @@ function classLabel(code: string | null): string | null {
   return CLASS_LABELS[code] || getOccupationInfo(code).label || code;
 }
 
-function discoveryBits(plan: ContractorResearchQuery): { county: CountyDef | null; trade: TradeDef | null } | null {
+function askWhere(plan: ContractorResearchQuery, countySlug?: string | null): { where: string; params: unknown[] } | null {
+  const state = getStateBySlug("fl");
   const disc = getDiscoveryState("florida");
-  if (!disc) return null;
-  const trade = plan.trade.discoverySlug ? getTrade(disc, plan.trade.discoverySlug) : null;
-  const county =
-    plan.geography.countySlug && plan.geography.countySlug !== "fl"
-      ? getCounty(disc, plan.geography.countySlug)
-      : null;
-  return { county, trade };
+  if (!state?.live || !disc) return null;
+  const slug = countySlug === undefined ? plan.geography.countySlug : countySlug;
+  const county = slug && slug !== "fl" ? getCounty(disc, slug) : null;
+  const params: unknown[] = [state.licenseSource, state.code];
+  let where = `l.source_system = $1 AND c.is_thin_profile = FALSE AND (c.home_state = $2 OR l.state = $2)`;
+  if (plan.trade.occupationCodes.length) {
+    params.push(plan.trade.occupationCodes.map((c) => c.toUpperCase()));
+    where += ` AND UPPER(TRIM(COALESCE(l.occupation_code, ''))) = ANY($${params.length}::text[])`;
+  }
+  if (plan.credentialStatus === "active_current") {
+    where += ` AND l.status_normalized IN ('active', 'current')`;
+  } else if (plan.credentialStatus === "expired") {
+    where += ` AND l.status_normalized = 'expired'`;
+  }
+  if (county) {
+    const name = county.matchNames[0]?.toLowerCase() || county.name.toLowerCase();
+    params.push(name);
+    const nameIdx = params.length;
+    const ors = [
+      `LOWER(TRIM(COALESCE(l.county_name, ''))) = $${nameIdx}`,
+      `LOWER(TRIM(COALESCE(c.primary_county, ''))) = $${nameIdx}`,
+    ];
+    if (county.matchCodes?.[0]) {
+      params.push(county.matchCodes[0]);
+      ors.push(`TRIM(COALESCE(l.county_code, '')) = $${params.length}`);
+    }
+    where += ` AND (${ors.join(" OR ")})`;
+  }
+  return { where, params };
 }
 
-async function browseFor(plan: ContractorResearchQuery, countySlug?: string | null) {
-  const bits = discoveryBits({
-    ...plan,
-    geography: {
-      ...plan.geography,
-      countySlug: countySlug === undefined ? plan.geography.countySlug : countySlug,
-    },
-  });
-  if (!bits) return null;
-  const disc = getDiscoveryState("florida")!;
-  const county =
-    (countySlug === undefined ? plan.geography.countySlug : countySlug) &&
-    (countySlug === undefined ? plan.geography.countySlug : countySlug) !== "fl"
-      ? getCounty(disc, (countySlug === undefined ? plan.geography.countySlug : countySlug) as string)
-      : bits.county;
-  return listFloridaBrowse({
-    county,
-    trade: bits.trade,
-    browse: {
-      ...DEFAULT_BROWSE,
-      status: plan.credentialStatus === "active_current" ? "active" : "any",
-      page: plan.page,
-      sort: "name",
-      discipline:
-        plan.evidenceFamily && EVIDENCE_META[plan.evidenceFamily].joinable ? "present" : "any",
-    },
-  });
+async function askCounts(where: string, params: unknown[]): Promise<{ contractors: number; credentials: number }> {
+  const row = await queryOne<{ contractors: string; credentials: string }>(
+    `
+    SELECT COUNT(DISTINCT c.id)::text AS contractors, COUNT(*)::text AS credentials
+    FROM contractors c
+    JOIN licenses l ON l.contractor_id = c.id
+    WHERE ${where}
+    `,
+    params,
+    { statementTimeoutMs: 15_000 }
+  );
+  return { contractors: Number(row?.contractors || 0), credentials: Number(row?.credentials || 0) };
 }
 
 function whyMatched(plan: ContractorResearchQuery, card: { evidenceCount: number }): string {
@@ -241,100 +249,146 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
     });
   }
 
-  if (plan.mode === "comparison") {
-    const [left, right] = await Promise.all([browseFor(plan, "broward"), browseFor(plan, "palm-beach")]);
-    if (!left || !right) {
-      return emptyExecution({ blocked: true, blockMessage: "Comparison counties are not configured." });
+  try {
+    if (plan.mode === "comparison") {
+      const leftW = askWhere(plan, "broward");
+      const rightW = askWhere(plan, "palm-beach");
+      if (!leftW || !rightW) {
+        return emptyExecution({ blocked: true, blockMessage: "Comparison counties are not configured." });
+      }
+      const [left, right] = await Promise.all([askCounts(leftW.where, leftW.params), askCounts(rightW.where, rightW.params)]);
+      return emptyExecution({
+        ok: true,
+        asOf,
+        snapshotFingerprint: intel.sourceFingerprint,
+        grainLabel:
+          "Florida DBPR contractor profiles and matching credential rows whose indexed mailing/business address county matches. Not service-area market size and not permit volume.",
+        compare: {
+          left: {
+            label: "Broward County (indexed address county)",
+            href: "/florida/broward",
+            contractors: left.contractors,
+            credentials: left.credentials,
+          },
+          right: {
+            label: "Palm Beach County (indexed address county)",
+            href: "/florida/palm-beach",
+            contractors: right.contractors,
+            credentials: right.credentials,
+          },
+          limitation:
+            "Counts use the same Florida DBPR extract and the same address-county method. Contractor profiles and credential rows are different grains. Permit volume is not compared.",
+        },
+      });
     }
-    return emptyExecution({
-      ok: true,
-      asOf,
-      snapshotFingerprint: intel.sourceFingerprint,
-      grainLabel:
-        "Florida DBPR contractor/firm identities whose indexed mailing/business address county matches. Not service-area market size and not permit volume.",
-      compare: {
-        left: {
-          label: "Broward County (indexed address county)",
-          href: "/florida/broward",
-          contractors: left.stats.firms,
-          credentials: left.stats.activeFirms,
-        },
-        right: {
-          label: "Palm Beach County (indexed address county)",
-          href: "/florida/palm-beach",
-          contractors: right.stats.firms,
-          credentials: right.stats.activeFirms,
-        },
-        limitation:
-          "Firm identity counts use the same Florida DBPR extract and the same address-county method. Active-firm counts are a subset. Permit volume is not compared. Address county is not service territory.",
-      },
+
+    const built = askWhere(plan);
+    if (!built) {
+      return emptyExecution({ blocked: true, blockMessage: "Florida discovery configuration is not available." });
+    }
+    const totals = await askCounts(built.where, built.params);
+    if (plan.mode === "count") {
+      return emptyExecution({
+        ok: true,
+        contractorCount: totals.contractors,
+        credentialCount: totals.credentials,
+        grainLabel:
+          "Canonical contractor profiles vs matching credential rows in Florida DBPR. These are not the same grain.",
+        asOf,
+        snapshotFingerprint: intel.sourceFingerprint,
+        evidenceJoinable: plan.evidenceFamily ? EVIDENCE_META[plan.evidenceFamily].joinable : null,
+        sqlContract: "parameterized contractors ⋈ licenses (Ask lean path)",
+      });
+    }
+
+    const listParams = [...built.params, plan.limit, plan.offset];
+    const rows = await query<{
+      id: string;
+      slug: string;
+      display_name: string;
+      primary_city: string | null;
+      primary_county: string | null;
+      home_state: string | null;
+      external_key: string | null;
+      occupation_code: string | null;
+      status_normalized: string | null;
+      source_system: string | null;
+    }>(
+      `
+      SELECT * FROM (
+        SELECT DISTINCT ON (c.id)
+          c.id, c.slug, c.display_name, c.primary_city, c.primary_county, c.home_state,
+          l.external_key, l.occupation_code, l.status_normalized, l.source_system
+        FROM contractors c
+        JOIN licenses l ON l.contractor_id = c.id
+        WHERE ${built.where}
+        ORDER BY c.id,
+          CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
+          c.display_name
+      ) picked
+      ORDER BY LOWER(picked.display_name), picked.id
+      LIMIT $${built.params.length + 1}::int OFFSET $${built.params.length + 2}::int
+      `,
+      listParams,
+      { statementTimeoutMs: 15_000 }
+    );
+
+    const results: AskEntityCard[] = rows.map((r) => {
+      const card: AskEntityCard = {
+        contractorId: r.id,
+        slug: r.slug,
+        displayName: r.display_name,
+        credentialKey: r.external_key,
+        occupationCode: r.occupation_code,
+        occupationLabel: classLabel(r.occupation_code),
+        statusNormalized: asLicenseStatus(r.status_normalized),
+        statusLabel:
+          r.status_normalized === "active" || r.status_normalized === "current"
+            ? "Active/current in indexed DBPR record"
+            : r.status_normalized
+              ? `${r.status_normalized} in indexed DBPR record`
+              : "Status as published",
+        city: r.primary_city,
+        county: r.primary_county,
+        state: r.home_state,
+        sourceLabel: SOURCE_LABEL[r.source_system || "fl_dbpr"] || r.source_system || "Florida DBPR",
+        sourceSystem: r.source_system || "fl_dbpr",
+        geographyNote: plan.geography.countyLabel
+          ? `${plan.geography.countyLabel} recorded address in the indexed licensing record — not service territory.`
+          : "Recorded address on the indexed licensing record is not service territory.",
+        evidenceCount: 0,
+        newestEvidenceDate: null,
+        whyMatched: "",
+        evidence: [],
+        profileHref: r.slug ? `/contractors/${r.slug}` : null,
+      };
+      card.whyMatched = whyMatched(plan, card);
+      return card;
     });
-  }
 
-  const browsed = await browseFor(plan);
-  if (!browsed) {
-    return emptyExecution({ blocked: true, blockMessage: "Florida discovery configuration is not available." });
-  }
-
-  if (plan.mode === "count") {
     return emptyExecution({
       ok: true,
-      contractorCount: browsed.stats.firms,
-      credentialCount: browsed.stats.activeFirms,
+      contractorCount: totals.contractors,
+      credentialCount: totals.credentials,
       grainLabel:
-        "Firm identities (canonical contractor or high-confidence Sunbiz entity). Active-firm count is a subset. This is not a raw credential-row total.",
+        "Matching canonical contractor profiles (contractors.id) vs matching credential rows. These are not the same grain.",
       asOf,
       snapshotFingerprint: intel.sourceFingerprint,
+      results,
+      page: plan.page,
       evidenceJoinable: plan.evidenceFamily ? EVIDENCE_META[plan.evidenceFamily].joinable : null,
+      sqlContract: "parameterized contractors ⋈ licenses (Ask lean path)",
+    });
+  } catch (err) {
+    console.error("[ask] execute failed:", dbUserFacingError(err));
+    return emptyExecution({
+      blocked: true,
+      blockMessage:
+        "The structured query could not be completed against the live research graph. Try a narrower question or Verify search.",
+      asOf,
+      snapshotFingerprint: intel.sourceFingerprint,
     });
   }
-
-  const results: AskEntityCard[] = browsed.results.map((r) => {
-    const card: AskEntityCard = {
-      contractorId: r.id,
-      slug: r.slug,
-      displayName: r.displayName,
-      credentialKey: r.primaryLicenseKey,
-      occupationCode: r.occupationCode,
-      occupationLabel: classLabel(r.occupationCode),
-      statusNormalized: r.licenseStatus,
-      statusLabel:
-        r.licenseStatus === "active" || r.licenseStatus === "current"
-          ? "Active/current in indexed DBPR record"
-          : r.licenseStatus
-            ? `${r.licenseStatus} in indexed DBPR record`
-            : "Status as published",
-      city: r.city,
-      county: r.county,
-      state: r.state,
-      sourceLabel: SOURCE_LABEL[r.sourceSystem || "fl_dbpr"] || r.sourceSystem || "Florida DBPR",
-      sourceSystem: r.sourceSystem || "fl_dbpr",
-      geographyNote: plan.geography.countyLabel
-        ? `${plan.geography.countyLabel} recorded address in the indexed licensing record — not service territory.`
-        : "Recorded address on the indexed licensing record is not service territory.",
-      evidenceCount: r.hasDiscipline ? 1 : 0,
-      newestEvidenceDate: null,
-      whyMatched: "",
-      evidence: [],
-      profileHref: r.slug ? `/contractors/${r.slug}` : null,
-    };
-    card.whyMatched = whyMatched(plan, card);
-    return card;
-  });
-
-  return emptyExecution({
-    ok: true,
-    contractorCount: browsed.total,
-    credentialCount: browsed.stats.activeFirms,
-    grainLabel:
-      "Matching contractor/firm identities from contractors ⋈ licenses (Sunbiz entity roll-up when confidence ≥ 0.9). Active-firm count is a subset, not a credential-row census.",
-    asOf,
-    snapshotFingerprint: intel.sourceFingerprint,
-    results,
-    page: plan.page,
-    evidenceJoinable: plan.evidenceFamily ? EVIDENCE_META[plan.evidenceFamily].joinable : null,
-    sqlContract: "listFloridaBrowse — contractors ⋈ licenses via buildFilterClause",
-  });
 }
 
 const EXEC_MEMO = new Map<string, AskExecution>();
