@@ -167,12 +167,12 @@ export function AskResults({
             </thead>
             <tbody>
               <tr>
-                <td>Contractor profiles with indexed address county</td>
+                <td>Contractor/firm identities with indexed address county</td>
                 <td className="tabular-nums">{formatIntelCount(execution.compare.left.contractors)}</td>
                 <td className="tabular-nums">{formatIntelCount(execution.compare.right.contractors)}</td>
               </tr>
               <tr>
-                <td>Credential records with indexed address county</td>
+                <td>Active/current firm identities (subset)</td>
                 <td className="tabular-nums">{formatIntelCount(execution.compare.left.credentials)}</td>
                 <td className="tabular-nums">{formatIntelCount(execution.compare.right.credentials)}</td>
               </tr>
