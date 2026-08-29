@@ -147,7 +147,7 @@ function askWhere(plan: ContractorResearchQuery, countySlug?: string | null): { 
   let where = `l.source_system = $1 AND c.is_thin_profile = FALSE AND (c.home_state = $2 OR l.state = $2)`;
   if (plan.trade.occupationCodes.length) {
     params.push(plan.trade.occupationCodes.map((c) => c.toUpperCase()));
-    where += ` AND UPPER(TRIM(COALESCE(l.occupation_code, ''))) = ANY($${params.length}::text[])`;
+    where += ` AND l.occupation_code = ANY($${params.length}::text[])`;
   }
   if (plan.credentialStatus === "active_current") {
     where += ` AND l.status_normalized IN ('active', 'current')`;
@@ -155,18 +155,13 @@ function askWhere(plan: ContractorResearchQuery, countySlug?: string | null): { 
     where += ` AND l.status_normalized = 'expired'`;
   }
   if (county) {
-    const name = county.matchNames[0]?.toLowerCase() || county.name.toLowerCase();
-    params.push(name);
-    const nameIdx = params.length;
-    const ors = [
-      `LOWER(TRIM(COALESCE(l.county_name, ''))) = $${nameIdx}`,
-      `LOWER(TRIM(COALESCE(c.primary_county, ''))) = $${nameIdx}`,
-    ];
     if (county.matchCodes?.[0]) {
       params.push(county.matchCodes[0]);
-      ors.push(`TRIM(COALESCE(l.county_code, '')) = $${params.length}`);
+      where += ` AND l.county_code = $${params.length}`;
+    } else {
+      params.push(county.matchNames[0] || county.name);
+      where += ` AND l.county_name ILIKE $${params.length}`;
     }
-    where += ` AND (${ors.join(" OR ")})`;
   }
   return { where, params };
 }
