@@ -174,13 +174,22 @@ function askWhere(plan: ContractorResearchQuery, countySlug?: string | null): { 
 async function askCounts(where: string, params: unknown[]): Promise<{ contractors: number; credentials: number }> {
   const row = await queryOne<{ contractors: string; credentials: string }>(
     `
-    SELECT COUNT(DISTINCT c.id)::text AS contractors, COUNT(*)::text AS credentials
-    FROM contractors c
-    JOIN licenses l ON l.contractor_id = c.id
-    WHERE ${where}
+    SELECT
+      (
+        SELECT COUNT(*)::text FROM contractors c
+        WHERE EXISTS (
+          SELECT 1 FROM licenses l
+          WHERE l.contractor_id = c.id AND ${where}
+        )
+      ) AS contractors,
+      (
+        SELECT COUNT(*)::text FROM contractors c
+        JOIN licenses l ON l.contractor_id = c.id
+        WHERE ${where}
+      ) AS credentials
     `,
     params,
-    { statementTimeoutMs: 15_000 }
+    { statementTimeoutMs: 12_000 }
   );
   return { contractors: Number(row?.contractors || 0), credentials: Number(row?.credentials || 0) };
 }
@@ -286,8 +295,8 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
     if (!built) {
       return emptyExecution({ blocked: true, blockMessage: "Florida discovery configuration is not available." });
     }
-    const totals = await askCounts(built.where, built.params);
     if (plan.mode === "count") {
+      const totals = await askCounts(built.where, built.params);
       return emptyExecution({
         ok: true,
         contractorCount: totals.contractors,
@@ -366,6 +375,13 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
       return card;
     });
 
+    let totals: { contractors: number; credentials: number } | null = null;
+    try {
+      totals = await askCounts(built.where, built.params);
+    } catch {
+      totals = { contractors: results.length, credentials: results.length };
+    }
+
     return emptyExecution({
       ok: true,
       contractorCount: totals.contractors,
@@ -380,11 +396,14 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
       sqlContract: "parameterized contractors ⋈ licenses (Ask lean path)",
     });
   } catch (err) {
-    console.error("[ask] execute failed:", dbUserFacingError(err));
+    const detail = dbUserFacingError(err);
+    console.error("[ask] execute failed:", detail);
     return emptyExecution({
       blocked: true,
       blockMessage:
-        "The structured query could not be completed against the live research graph. Try a narrower question or Verify search.",
+        detail === "database error"
+          ? "The structured query could not be completed against the live research graph. Try a narrower question or Verify search."
+          : `The structured query could not be completed (${detail}). Try a narrower question or Verify search.`,
       asOf,
       snapshotFingerprint: intel.sourceFingerprint,
     });
