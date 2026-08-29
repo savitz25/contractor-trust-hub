@@ -71,7 +71,7 @@ for (const fam of snap.tradeFamilies.families) {
 }
 
 const build = read("lib/home-intel/build.ts");
-const askUi = read("components/ask/AskContractorTrustHub.tsx");
+const askUi = read("components/ask/AskContractorTrustHub.tsx") + read("components/ask/AskResults.tsx");
 const compareUi = read("components/intel/MarketCompare.tsx");
 const interpret = read("lib/ask/interpret.ts");
 

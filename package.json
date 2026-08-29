@@ -12,7 +12,7 @@
     "assert:florida-county-intelligence": "python scripts/assert_florida_county_intelligence.py",
     "test:intel-003b": "npx --yes tsx --test scripts/test_intel_003b_fingerprint.ts",
     "test:intel-003c": "npx --yes tsx --test scripts/test_intel_003c.ts",
-    "test:ask": "npx --yes tsx --test scripts/test_ask_interpret.ts",
+    "test:ask": "npx --yes tsx --test scripts/test_ask_interpret.ts scripts/test_ask_prompt2.ts scripts/test_ask_execute.ts",
     "home:intel": "node scripts/build_homepage_intel.mjs",
     "assert:home-intel": "node scripts/assert_homepage_intel.mjs",
     "assert:visual": "node scripts/assert-visual-007.mjs",

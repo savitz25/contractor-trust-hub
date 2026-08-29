@@ -10,9 +10,53 @@ export type TradeFamilyId =
   | "building"
   | "residential"
   | "hvac"
+  | "mechanical"
   | "plumbing"
   | "electrical"
-  | "pool_spa";
+  | "pool_spa"
+  | "solar"
+  | "underground"
+  | "specialty";
+
+export const CLASS_LABELS: Record<string, string> = {
+  CGC: "Certified General Contractor",
+  RG: "Registered General Contractor",
+  CBC: "Certified Building Contractor",
+  RB: "Registered Building Contractor",
+  CRC: "Certified Residential Contractor",
+  RR: "Registered Residential Contractor",
+  CCC: "Certified Roofing Contractor",
+  RC: "Registered Roofing Contractor",
+  CAC: "Certified Air Conditioning Contractor",
+  RA: "Registered Air Conditioning Contractor",
+  CMC: "Certified Mechanical Contractor",
+  RM: "Registered Mechanical Contractor",
+  CFC: "Certified Plumbing Contractor",
+  RF: "Registered Plumbing Contractor",
+  CPC: "Certified Pool / Spa Contractor",
+  RP: "Registered Pool / Spa Contractor",
+  CUC: "Certified Underground Utility Contractor",
+  RU: "Registered Underground Utility Contractor",
+  SCC: "Certified Specialty Structure Contractor",
+  RX: "Registered Specialty Structure Contractor",
+  CVC: "Certified Solar Contractor",
+  RV: "Registered Solar Contractor",
+};
+
+export const TRADE_TO_DISCOVERY_SLUG: Record<TradeFamilyId, string | null> = {
+  roofing: "roofers",
+  general: "general-contractors",
+  building: "building-contractors",
+  residential: "residential-contractors",
+  hvac: "air-conditioning",
+  mechanical: "mechanical",
+  plumbing: "plumbing",
+  electrical: null,
+  pool_spa: "pool-spa",
+  solar: "solar",
+  underground: "underground-utility",
+  specialty: "specialty-structures",
+};
 
 export const TRADE_ONTOLOGY: Array<{
   id: TradeFamilyId;
@@ -57,10 +101,18 @@ export const TRADE_ONTOLOGY: Array<{
   {
     id: "hvac",
     label: "HVAC / air conditioning",
-    phrases: ["hvac", "ac", "a/c", "air conditioning", "air conditioner", "mechanical"],
-    exactClasses: ["CAC", "RA", "CMC", "RM"],
-    familyNote: "Maps to Florida CAC/RA (air conditioning) and CMC/RM (mechanical) where asked as HVAC.",
+    phrases: ["hvac", "ac", "a/c", "air conditioning", "air conditioner"],
+    exactClasses: ["CAC", "RA"],
+    familyNote: "Florida air-conditioning class is CAC/RA. Mechanical (CMC/RM) is a distinct class.",
     href: "/florida/air-conditioning",
+  },
+  {
+    id: "mechanical",
+    label: "Mechanical",
+    phrases: ["mechanical contractor", "mechanical contractors", "mechanical"],
+    exactClasses: ["CMC", "RM"],
+    familyNote: "Florida mechanical class is CMC/RM, distinct from air-conditioning CAC/RA.",
+    href: "/florida/mechanical",
   },
   {
     id: "plumbing",
@@ -85,6 +137,30 @@ export const TRADE_ONTOLOGY: Array<{
     exactClasses: ["CPC", "RP"],
     familyNote: "Florida pool/spa class CPC/RP.",
     href: "/florida/pool-spa",
+  },
+  {
+    id: "solar",
+    label: "Solar",
+    phrases: ["solar", "solar contractor", "solar contractors"],
+    exactClasses: ["CVC", "RV"],
+    familyNote: "Florida solar class is CVC/RV. Sheet metal CSC is not solar.",
+    href: "/florida/solar",
+  },
+  {
+    id: "underground",
+    label: "Underground utility",
+    phrases: ["underground utility", "underground", "utility contractor"],
+    exactClasses: ["CUC", "RU"],
+    familyNote: "Florida underground utility class is CUC/RU.",
+    href: "/florida/underground-utility",
+  },
+  {
+    id: "specialty",
+    label: "Specialty structures",
+    phrases: ["specialty structure", "specialty structures", "screen enclosure"],
+    exactClasses: ["SCC", "RX"],
+    familyNote: "Florida specialty structure class is SCC/RX.",
+    href: "/florida/specialty-structures",
   },
 ];
 
@@ -170,7 +246,7 @@ export const COMPLAINT_PHRASES = [
   "better business",
 ];
 
-export const RATE_PHRASES = ["highest rate", "rate of", "per contractor", "normalized", "share of"];
+export const RATE_PHRASES = ["highest rate", "rate of", "per contractor", "normalized", "share of", "discipline rate"];
 export const MOST_PHRASES = ["most", "largest number", "highest count"];
 
 export function normalizeAskText(q: string): string {

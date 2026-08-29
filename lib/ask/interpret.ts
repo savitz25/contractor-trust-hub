@@ -13,7 +13,9 @@ import {
   normalizeAskText,
   phraseInText,
 } from "./ontology";
+import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { ASK_CONTRACT_VERSION, type AskInterpretation, type AskResult } from "./types";
+import { detectContradiction, detectUnsupportedConcept } from "./unsupported";
 
 const EMPTY_INTERPRET: AskInterpretation = {
   location: "Not specified",
@@ -28,9 +30,9 @@ const EMPTY_INTERPRET: AskInterpretation = {
 export const ASK_EXAMPLES = [
   "Show me active roofing contractors in Broward County.",
   "Find Florida general contractors with DBPR discipline records.",
-  "Which contractor trades have the most active Florida-mapped credentials?",
-  "Show contractors with Florida stop-work records.",
-  "Compare roofing credentials in Broward and Palm Beach.",
+  "Which trades have the most active/current credentials?",
+  "How many active roofing credentials are indexed?",
+  "Compare contractor research in Broward and Palm Beach.",
   "Find active HVAC contractors in Palm Beach County.",
 ] as const;
 
@@ -38,14 +40,13 @@ export const ASK_CHIPS = [
   { id: "status", label: "License status", prompt: "What does an active/current credential mean?" },
   { id: "roofing", label: "Roofing", prompt: "Show me active roofing contractors in Broward County." },
   { id: "hvac", label: "HVAC", prompt: "Find active HVAC contractors in Palm Beach County." },
-  { id: "general", label: "General contractors", prompt: "Find Florida general contractors with DBPR discipline records." },
-  { id: "history", label: "Regulatory history", prompt: "Show contractors with Florida stop-work records." },
-  { id: "discipline", label: "DBPR discipline", prompt: "Find Florida general contractors with DBPR discipline records." },
-  { id: "ula", label: "Unlicensed activity", prompt: "Show Florida unlicensed activity records." },
-  { id: "stop", label: "Stop-work", prompt: "Show contractors with Florida stop-work records." },
+  { id: "general", label: "General contractors", prompt: "Show active general contractors in Palm Beach County." },
+  { id: "discipline", label: "DBPR discipline", prompt: "Show Florida contractors with DBPR discipline." },
+  { id: "count", label: "Counts", prompt: "How many active roofing credentials are indexed?" },
+  { id: "aggregate", label: "Trade families", prompt: "Which trades have the most active/current credentials?" },
   { id: "broward", label: "Broward", prompt: "Show me active roofing contractors in Broward County." },
   { id: "pbc", label: "Palm Beach", prompt: "Find active HVAC contractors in Palm Beach County." },
-  { id: "compare", label: "Compare markets", prompt: "Compare roofing credentials in Broward and Palm Beach." },
+  { id: "compare", label: "Compare markets", prompt: "Compare contractor research in Broward and Palm Beach." },
 ] as const;
 
 function includesAny(text: string, phrases: string[]): boolean {
@@ -70,6 +71,24 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
       comparison: null,
       failMessage: "Enter a question we can map to licensing, trade, geography, or indexed regulatory evidence.",
       changeHints: ["Try an example prompt under Ask ContractorTrustHub."],
+    };
+  }
+
+  const unsupported = detectUnsupportedConcept(text);
+  if (unsupported) {
+    interpretation.notes.push(unsupported.message);
+    return {
+      version: ASK_CONTRACT_VERSION,
+      query,
+      mode: "fail_closed",
+      supported: false,
+      interpretation,
+      href: "/#ask-graph",
+      count: null,
+      aggregate: null,
+      comparison: null,
+      failMessage: unsupported.message,
+      changeHints: unsupported.alternatives,
     };
   }
 
@@ -139,6 +158,54 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
   } else if (/\blicensed\b/.test(text)) {
     interpretation.credentialStatus = "Interpreted as an indexed credential row — not TrustHub certification";
     interpretation.notes.push("“Licensed” here means a credential appears in the researched extract, not that TrustHub certified the contractor.");
+  }
+
+  const countyGeos = geos.filter((g) => g.kind === "county");
+  const contradiction = detectContradiction(text, countyGeos.length, /compar/.test(text));
+  if (contradiction) {
+    return {
+      version: ASK_CONTRACT_VERSION,
+      query,
+      mode: "fail_closed",
+      supported: false,
+      interpretation,
+      href: "/ask",
+      count: null,
+      aggregate: null,
+      comparison: null,
+      failMessage: contradiction,
+      changeHints: ["Choose one county", "Compare Broward and Palm Beach", "Choose one credential status"],
+    };
+  }
+
+  if (/what is a /.test(text) || /what is an /.test(text)) {
+    const classHit = TRADE_ONTOLOGY.flatMap((t) => t.exactClasses).find((code) => {
+      const label = getOccupationInfo(code).label.toLowerCase();
+      return text.includes(code.toLowerCase()) || (label && text.includes(label.toLowerCase()));
+    });
+    const roofingDef = /certified roofing/.test(text) ? "CCC" : /registered roofing/.test(text) ? "RC" : classHit;
+    if (roofingDef) {
+      const info = getOccupationInfo(roofingDef);
+      interpretation.trade = `${info.label} (${info.code})`;
+      return {
+        version: ASK_CONTRACT_VERSION,
+        query,
+        mode: "definition",
+        supported: true,
+        interpretation,
+        href: "/methodology",
+        count: null,
+        aggregate: null,
+        comparison: null,
+        failMessage: null,
+        changeHints: ["Open methodology", "Search a credential"],
+        definition: {
+          title: info.label,
+          body: `${info.allows} ${info.notes} This is product guidance from the maintained occupation layer, not a substitute for board rules.`,
+          href: "/methodology",
+        },
+      };
+    }
   }
 
   if (/what does/.test(text) && /mean/.test(text) && /active|current/.test(text) && !trade && !evidence) {
@@ -215,7 +282,27 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
     };
   }
 
-  if (evidence && (text.includes("show") || text.includes("find") || text.includes("with"))) {
+  if (evidence && trade && (text.includes("show") || text.includes("find") || text.includes("with"))) {
+    const href = geo?.kind === "county" ? geo.href : trade.href;
+    if (geo?.kind === "county") {
+      interpretation.notes.push("County pages use mailing/HQ county on the credential. That is not service territory.");
+    }
+    return {
+      version: ASK_CONTRACT_VERSION,
+      query,
+      mode: "entity",
+      supported: true,
+      interpretation,
+      href,
+      count: null,
+      aggregate: null,
+      comparison: null,
+      failMessage: null,
+      changeHints: ["Remove evidence family", "Change trade", "Open Florida Intelligence"],
+    };
+  }
+
+  if (evidence && !trade && (text.includes("show") || text.includes("find") || text.includes("with"))) {
     const family = intel.regulatoryEvidence.byEvidenceFamily.find((f) => {
       if (evidence.id === "stop_work") return f.key === "fl_dfs_stop_work";
       if (evidence.id === "unlicensed_activity") return f.key === "fl_dbpr_unlicensed";

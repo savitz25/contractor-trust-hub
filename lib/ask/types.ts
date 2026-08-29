@@ -11,6 +11,7 @@ export type AskQueryMode =
   | "aggregate"
   | "comparison"
   | "evidence"
+  | "definition"
   | "fail_closed";
 
 export type AskSort = "default" | "count_desc" | "unsupported_rate";
@@ -42,4 +43,5 @@ export type AskResult = {
   } | null;
   failMessage: string | null;
   changeHints: string[];
+  definition?: { title: string; body: string; href: string } | null;
 };

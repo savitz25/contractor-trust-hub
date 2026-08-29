@@ -383,7 +383,7 @@ export function ContractorHomeIntelligence({
           <summary>Snapshot provenance</summary>
           <p>
             Intelligence OS {intel.contractVersion}. Evidence-scale snapshot {scale.schemaVersion} generated{" "}
-            {scale.generatedAt.slice(0, 10)}. Change module: {intel.changeCapability.status}.
+            {scale.generatedAt.slice(0, 10)}.
           </p>
         </details>
       </section>
