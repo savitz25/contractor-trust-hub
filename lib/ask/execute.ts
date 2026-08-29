@@ -169,22 +169,13 @@ function askWhere(plan: ContractorResearchQuery, countySlug?: string | null): { 
 async function askCounts(where: string, params: unknown[]): Promise<{ contractors: number; credentials: number }> {
   const row = await queryOne<{ contractors: string; credentials: string }>(
     `
-    SELECT
-      (
-        SELECT COUNT(*)::text FROM contractors c
-        WHERE EXISTS (
-          SELECT 1 FROM licenses l
-          WHERE l.contractor_id = c.id AND ${where}
-        )
-      ) AS contractors,
-      (
-        SELECT COUNT(*)::text FROM contractors c
-        JOIN licenses l ON l.contractor_id = c.id
-        WHERE ${where}
-      ) AS credentials
+    SELECT COUNT(DISTINCT c.id)::text AS contractors, COUNT(*)::text AS credentials
+    FROM contractors c
+    JOIN licenses l ON l.contractor_id = c.id
+    WHERE ${where}
     `,
     params,
-    { statementTimeoutMs: 12_000 }
+    { statementTimeoutMs: 10_000 }
   );
   return { contractors: Number(row?.contractors || 0), credentials: Number(row?.credentials || 0) };
 }
@@ -290,6 +281,31 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
     if (!built) {
       return emptyExecution({ blocked: true, blockMessage: "Florida discovery configuration is not available." });
     }
+    if (plan.mode === "count" && !plan.geography.countySlug && plan.trade.familyId) {
+      const snap = intel.tradeFamilies.families.find((f) => {
+        if (plan.trade.familyId === "roofing") return f.id === "roofing";
+        if (plan.trade.familyId === "hvac") return f.id === "hvac";
+        if (plan.trade.familyId === "plumbing") return f.id === "plumbing";
+        if (plan.trade.familyId === "electrical") return f.id === "electrical";
+        if (plan.trade.familyId === "pool_spa") return f.id === "pool-spa";
+        if (plan.trade.familyId === "general" || plan.trade.familyId === "building") return f.id === "general-building";
+        if (plan.trade.familyId === "residential") return f.id === "residential";
+        return false;
+      });
+      if (snap) {
+        return emptyExecution({
+          ok: true,
+          contractorCount: null,
+          credentialCount: snap.activeCurrentRows,
+          grainLabel:
+            "Active/current credential rows in the mapped occupation-code family in the live public cohort (snapshot). Not a Florida-only census and not a contractor-entity count.",
+          asOf,
+          snapshotFingerprint: intel.sourceFingerprint,
+          sqlContract: "contractor-hub-intel-v2 tradeFamilies snapshot",
+        });
+      }
+    }
+
     if (plan.mode === "count") {
       const totals = await askCounts(built.where, built.params);
       return emptyExecution({
