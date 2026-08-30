@@ -59,6 +59,9 @@ import { njCredentialPlainLabel } from "@/lib/states/nj-credentials";
 import { orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { txTradePlainLabel } from "@/lib/states/tx-trades";
 import { parseHandoffQuery } from "@/lib/studios/handoff";
+import { ManageProfileCta } from "@/components/contractor/ManageProfileCta";
+import { eligibleClaimProfile } from "@/lib/claim/eligibility";
+import { claimCtaEnabledFor } from "@/lib/claim/server";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -187,6 +190,8 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const correctionHref = `/corrections?slug=${encodeURIComponent(contractor.slug)}${
     primary?.externalKey ? `&license=${encodeURIComponent(primary.externalKey)}` : ""
   }`;
+  const claimProfile = eligibleClaimProfile(contractor);
+  const showClaimCta = Boolean(claimProfile && claimCtaEnabledFor(claimProfile.id));
 
   // FL only: officer-name lineage from stored Sunbiz officers (no invented links)
   const entityLineage =
@@ -521,6 +526,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         {/* —— First screen: summary → meaning → actions —— */}
         <EvidenceSummary contractor={contractor} />
         <ConsumerMeaning contractor={contractor} />
+        {showClaimCta && claimProfile ? <ManageProfileCta profileId={claimProfile.id} /> : null}
         <TrustReportActions
           slug={contractor.slug}
           name={contractor.displayName}
