@@ -35,6 +35,7 @@
     "test:fl-safety": "python -m unittest scripts.test_fl_dbpr_identity scripts.test_regulatory_source_observation scripts.test_regulatory_source_migration && node --experimental-strip-types scripts/test_fl_regulatory_publication.ts",
     "check:journey-v21": "node scripts/check-journey-v21.mjs",
     "test:ath-cust-003": "npx --yes tsx --test scripts/test_ath_cust_003.ts",
+    "test:ath-cust-005": "npx --yes tsx --test scripts/test_ath_cust_005.tsx",
     "report:ath-cust-003": "node scripts/report_ath_cust_003_cohort.mjs"
   },
   "dependencies": {
