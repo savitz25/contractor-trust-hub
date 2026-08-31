@@ -63,6 +63,8 @@ import { ManageProfileCta } from "@/components/contractor/ManageProfileCta";
 import { eligibleClaimProfile } from "@/lib/claim/eligibility";
 import { claimCtaEnabledFor } from "@/lib/claim/server";
 import { getPublicBusinessProfile } from "@/lib/business-profile/server";
+import { getPublicBusinessReplies } from "@/lib/business-replies/server";
+import { BusinessResponses } from "@/components/contractor/BusinessResponses";
 import { BusinessSuppliedProfile } from "@/components/contractor/BusinessSuppliedProfile";
 
 type Props = {
@@ -195,6 +197,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const claimProfile = eligibleClaimProfile(contractor);
   const showClaimCta = Boolean(claimProfile && claimCtaEnabledFor(claimProfile.id));
   const businessProfile = claimProfile ? await getPublicBusinessProfile(claimProfile.id) : null;
+  const businessReplies = claimProfile ? await getPublicBusinessReplies(claimProfile.id) : null;
 
   // FL only: officer-name lineage from stored Sunbiz officers (no invented links)
   const entityLineage =
@@ -564,6 +567,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
             homeState={contractor.homeState}
           />
         ) : null}
+        {businessReplies?.replies.length ? <BusinessResponses data={businessReplies} /> : null}
 
         {!isThin ? (
           <div className="grid gap-5 sm:gap-6 lg:grid-cols-2">
