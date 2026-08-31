@@ -1,0 +1,1 @@
+import'server-only';import{fetchPublicBusinessReplies}from'./fetch-public';export function getPublicBusinessReplies(id:string,fetcher:typeof fetch=fetch){return fetchPublicBusinessReplies(id,process.env.ATH_PUBLIC_PROFILE_ORIGIN||'https://www.asktrusthub.com',fetcher)}

@@ -36,6 +36,7 @@
     "check:journey-v21": "node scripts/check-journey-v21.mjs",
     "test:ath-cust-003": "npx --yes tsx --test scripts/test_ath_cust_003.ts",
     "test:ath-cust-005": "npx --yes tsx --test scripts/test_ath_cust_005.tsx",
+    "test:ath-cust-007": "npx --yes tsx --test scripts/test_ath_cust_007.tsx",
     "report:ath-cust-003": "node scripts/report_ath_cust_003_cohort.mjs"
   },
   "dependencies": {
