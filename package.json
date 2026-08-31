@@ -7,9 +7,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "test": "node scripts/assert-brand-001.mjs && node scripts/assert-share-002.mjs && node scripts/assert-share-003.mjs && node scripts/assert-visual-007.mjs && node scripts/assert_homepage_intel.mjs && python scripts/assert_florida_state_intelligence.py && python scripts/assert_florida_p0_remediation.py && python scripts/assert_florida_intelligence_foundation.py && python scripts/assert_florida_qualifier_graph.py",
-    "assert:florida-intelligence": "python scripts/assert_florida_state_intelligence.py && python scripts/assert_florida_p0_remediation.py && python scripts/assert_florida_intelligence_foundation.py && python scripts/assert_florida_qualifier_graph.py && python scripts/assert_florida_county_intelligence.py && python scripts/assert_intel_003_os.py",
-    "assert:florida-county-intelligence": "python scripts/assert_florida_county_intelligence.py",
+    "test": "node scripts/assert-brand-001.mjs && node scripts/assert-share-002.mjs && node scripts/assert-share-003.mjs && node scripts/assert-visual-007.mjs && node scripts/assert_homepage_intel.mjs && python -X utf8 scripts/assert_florida_state_intelligence.py && python -X utf8 scripts/assert_florida_p0_remediation.py && python -X utf8 scripts/assert_florida_intelligence_foundation.py && python -X utf8 scripts/assert_florida_qualifier_graph.py",
+    "assert:florida-intelligence": "python -X utf8 scripts/assert_florida_state_intelligence.py && python -X utf8 scripts/assert_florida_p0_remediation.py && python -X utf8 scripts/assert_florida_intelligence_foundation.py && python -X utf8 scripts/assert_florida_qualifier_graph.py && python -X utf8 scripts/assert_florida_county_intelligence.py && python -X utf8 scripts/assert_intel_003_os.py",
+    "assert:florida-county-intelligence": "python -X utf8 scripts/assert_florida_county_intelligence.py",
     "test:intel-003b": "npx --yes tsx --test scripts/test_intel_003b_fingerprint.ts",
     "test:intel-003c": "npx --yes tsx --test scripts/test_intel_003c.ts",
     "test:ask": "npx --yes tsx --test scripts/test_ask_interpret.ts scripts/test_ask_prompt2.ts scripts/test_ask_execute.ts",
@@ -41,18 +41,18 @@
     "report:ath-cust-003": "node scripts/report_ath_cust_003_cohort.mjs"
   },
   "dependencies": {
-    "next": "^15.5.23",
+    "next": "16.3.3",
     "pg": "^8.23.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/pg": "^8.21.0",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
