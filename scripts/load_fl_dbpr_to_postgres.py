@@ -51,6 +51,7 @@ from ingest.regulatory.source_observation import (  # noqa: E402
     row_fingerprint_sha256,
     source_observation_key_v2,
 )
+from ingest.monitoring import insert_change_event, material_license_changes  # noqa: E402
 
 SOURCE_SYSTEM = "fl_dbpr"
 SOURCE_URL_LICENSEES = (
@@ -220,6 +221,7 @@ def load_licenses(
         "contractors_upserted": 0,
         "licenses_upserted": 0,
         "skipped": 0,
+        "monitoring_events": 0,
     }
 
     contractor_sql = """
@@ -323,6 +325,33 @@ def load_licenses(
 
             payload = parse_json(row.get("raw_payload_json"))
             cur.execute(
+                """SELECT primary_status,secondary_status,status_normalized,expiration_date,
+                          address_line_1,address_line_2,address_line_3,city,state,postal_code,
+                          licensee_name_raw,dba_name_raw
+                     FROM licenses WHERE source_system=%s AND external_key=%s""",
+                (row.get("source_system") or SOURCE_SYSTEM, external_key),
+            )
+            prior_row = cur.fetchone()
+            prior = dict(zip(
+                ("primary_status","secondary_status","status_normalized","expiration_date",
+                 "address_line_1","address_line_2","address_line_3","city","state","postal_code",
+                 "licensee_name_raw","dba_name_raw"), prior_row
+            )) if prior_row else None
+            current = {
+                "primary_status": row.get("primary_status") or None,
+                "secondary_status": row.get("secondary_status") or None,
+                "status_normalized": row.get("status_normalized") or None,
+                "expiration_date": parse_date(row.get("expiration_date")),
+                "address_line_1": row.get("address_line_1") or None,
+                "address_line_2": row.get("address_line_2") or None,
+                "address_line_3": row.get("address_line_3") or None,
+                "city": row.get("city") or None,
+                "state": state,
+                "postal_code": row.get("postal_code") or None,
+                "licensee_name_raw": licensee_name,
+                "dba_name_raw": row.get("dba_name_raw") or None,
+            }
+            cur.execute(
                 license_sql,
                 (
                     contractor_id,
@@ -357,6 +386,20 @@ def load_licenses(
                 ),
             )
             stats["licenses_upserted"] += 1
+            # A first observation is baseline evidence, not a customer alert.
+            # Existing records emit only normalized, consumer-visible differences.
+            if prior is not None:
+                for change_type, before_state, current_state in material_license_changes(prior, current):
+                    if insert_change_event(
+                        cur, contractor_id=contractor_id, source_system=SOURCE_SYSTEM,
+                        source_dataset="construction_licensees", source_record_id=external_key,
+                        change_type=change_type, prior_state=before_state,
+                        current_state=current_state, ingest_batch_id=batch_id,
+                        source_effective_at=(current["expiration_date"].isoformat()
+                                             if change_type == "LICENSE_EXPIRATION_CHANGED" and current["expiration_date"] else None),
+                        provenance={"ingest": "load_fl_dbpr_to_postgres", "batch_id": str(batch_id)},
+                    ):
+                        stats["monitoring_events"] += 1
 
             if stats["licenses_upserted"] % batch_size == 0:
                 conn.commit()
@@ -541,6 +584,7 @@ def load_discipline(
         "occurrences_inserted": 0,
         "exact_reobservations": 0,
         "revision_review_required": 0,
+        "monitoring_events": 0,
         "skipped": 0,
     }
 
@@ -565,6 +609,7 @@ def load_discipline(
                 )
             )
     resolver = FloridaDbprCredentialResolver(license_inventory)
+    contractor_by_license_id = {item.id: item.contractor_id for item in license_inventory}
 
     sql = """
         INSERT INTO discipline_actions (
@@ -804,6 +849,30 @@ def load_discipline(
             if not cur.fetchone():
                 raise RuntimeError("Source occurrence insert failed")
             stats["occurrences_inserted"] += 1
+
+            # Only a new, exact source observation with deterministic credential
+            # identity may generate a private discipline alert. Review-required
+            # revisions remain internal and never notify automatically.
+            monitoring_contractor_id = contractor_by_license_id.get(str(license_id)) if license_id else None
+            if not prior_logical and monitoring_contractor_id:
+                current_state = {
+                    "complaint_number": row.get("complaint_number") or None,
+                    "disposition": row.get("disposition") or None,
+                    "disposition_date": row.get("disposition_date") or None,
+                    "source_observation_key": observation_key,
+                }
+                if insert_change_event(
+                    cur, contractor_id=monitoring_contractor_id, source_system=SOURCE_SYSTEM,
+                    source_dataset=source_dataset, source_record_id=observation_key,
+                    change_type="DISCIPLINE_ADDED", prior_state=None,
+                    current_state=current_state, ingest_batch_id=batch_id,
+                    source_effective_at=(parse_date(row.get("disposition_date")).isoformat()
+                                         if parse_date(row.get("disposition_date")) else None),
+                    provenance={"source_observation_key": observation_key,
+                                "row_fingerprint_sha256": fingerprint,
+                                "ingest_batch_id": str(batch_id)},
+                ):
+                    stats["monitoring_events"] += 1
 
             if stats["rows_read"] % batch_size == 0:
                 conn.commit()
