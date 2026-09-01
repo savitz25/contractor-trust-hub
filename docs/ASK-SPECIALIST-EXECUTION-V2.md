@@ -37,7 +37,7 @@ Malformed or invalid inputs return 400. A valid request for a known but unavaila
 {"identifier":"CCC1332036","state":"FL"}
 ```
 
-The electrical+Boca request returns 400 `unsupported_florida_electrical_source`; the other examples execute against the accepted Florida construction source.
+The electrical+Boca request returns HTTP 422 with `status=unsupported_capability` and `errorCode=unsupported_florida_electrical_source`; the other examples execute against the accepted Florida construction source.
 
 “Best roofer” is not an execution input. Ask must remove/refuse ranking intent and send only supported structured fields.
 
