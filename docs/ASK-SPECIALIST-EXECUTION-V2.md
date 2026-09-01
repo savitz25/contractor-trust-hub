@@ -25,7 +25,7 @@ Queries require `fl_dbpr`, an existing non-thin public profile, a non-empty cano
 
 ## Errors and timeout behavior
 
-Invalid/unsupported inputs return 400 with a stable error code. Database or execution failure returns 503 `execution_unavailable`; no partial or invented rows/counts are returned. Ask should retain a deep research destination and state the limitation.
+Malformed or invalid inputs return 400. A valid request for a known but unavailable source capability returns HTTP 422 with `status=unsupported_capability`, a stable `errorCode`, requested trade, resolved geography, supported alternatives, provenance, and limitation. Database or execution failure returns 503 `execution_unavailable`; zero matching supported rows remain a successful 200 with `total=0`. No partial or invented rows/counts are returned.
 
 ## Golden requests
 

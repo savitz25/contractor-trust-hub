@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { contractorCapabilityContract, executeContractorSpecialistQuery, normalizeContractorExecutionRequest } from "../lib/specialist-execution/contractor-v2";
+import { contractorCapabilityContract, contractorUnsupportedElectricalResponse, executeContractorSpecialistQuery, normalizeContractorExecutionRequest } from "../lib/specialist-execution/contractor-v2";
 
 test("contract declares typed V2 capability without ranking", () => {
   const contract = contractorCapabilityContract();
@@ -22,6 +22,13 @@ test("Florida electrical fails closed because the accepted source does not conta
     executeContractorSpecialistQuery({ trade: "electrical", state: "FL", city: "Boca Raton" }),
     /unsupported_florida_electrical_source/
   );
+  const response = contractorUnsupportedElectricalResponse({ trade: "electrical", state: "FL", city: "Boca Raton" });
+  assert.equal(response.status, "unsupported_capability");
+  assert.equal(response.errorCode, "unsupported_florida_electrical_source");
+  assert.equal(response.resolvedGeography.county, "Palm Beach");
+  assert.match(response.resolvedGeography.meaning, /not prove service territory/);
+  assert.ok(response.supportedAlternatives.length >= 4);
+  assert.equal(response.provenance.capabilityState, "source_not_present");
 });
 
 test("accepted taxonomy is parsed without pretending every family is source-executable", () => {

@@ -54,6 +54,18 @@ export type ContractorExecutionResponse = {
   limitations: string[];
 };
 
+export type ContractorUnsupportedCapabilityResponse = {
+  contract: typeof SPECIALIST_EXECUTION_VERSION;
+  hub: "contractor";
+  status: "unsupported_capability";
+  errorCode: "unsupported_florida_electrical_source";
+  requestedTrade: "electrical";
+  resolvedGeography: { state: "FL"; county: "Palm Beach" | null; city: string | null; meaning: string };
+  supportedAlternatives: Array<{ label: string; request?: ContractorExecutionRequest; destination?: string }>;
+  provenance: { source: "Florida DBPR CILB construction extract"; capabilityState: "source_not_present" };
+  limitation: string;
+};
+
 type NormalizedRequest = Required<Pick<ContractorExecutionRequest, "state" | "credentialStatus" | "page" | "limit">> &
   Pick<ContractorExecutionRequest, "trade"> & {
     county: { slug: string; label: string; code: string | null } | null;
@@ -206,6 +218,40 @@ export async function executeContractorSpecialistQuery(raw: unknown): Promise<Co
       "Credential status and source clock reflect the indexed source and should be confirmed with Florida DBPR.",
       "Only existing public, non-thin ContractorTrustHub profiles are returned; this contract does not expand publication.",
     ],
+  };
+}
+
+export function contractorUnsupportedElectricalResponse(raw: unknown): ContractorUnsupportedCapabilityResponse {
+  const input = normalizeContractorExecutionRequest(raw);
+  if (input.trade !== "electrical") throw new Error("not_electrical_request");
+  const county = input.county?.label === "Palm Beach" ? "Palm Beach" : null;
+  return {
+    contract: SPECIALIST_EXECUTION_VERSION,
+    hub: "contractor",
+    status: "unsupported_capability",
+    errorCode: "unsupported_florida_electrical_source",
+    requestedTrade: "electrical",
+    resolvedGeography: {
+      state: "FL",
+      county,
+      city: input.city,
+      meaning: county
+        ? `${input.city ?? "The requested city"} resolves to Palm Beach County recorded geography. No Florida electrical credential source is present, and recorded geography would not prove service territory.`
+        : "Florida was resolved, but the accepted source does not contain Florida electrical credentials.",
+    },
+    supportedAlternatives: [
+      { label: "Research Florida roofing credentials", request: { trade: "roofing", state: "FL" } },
+      { label: "Research Florida HVAC credentials", request: { trade: "hvac", state: "FL" } },
+      { label: "Research Florida plumbing credentials", request: { trade: "plumbing", state: "FL" } },
+      { label: "Verify an exact known credential", destination: absoluteUrl("/verify") },
+      { label: "Confirm electrical licensing with the Florida regulator", destination: "https://www.myfloridalicense.com/" },
+    ],
+    provenance: {
+      source: "Florida DBPR CILB construction extract",
+      capabilityState: "source_not_present",
+    },
+    limitation:
+      "ContractorTrustHub cannot return Florida electrical credential rows from the accepted CILB construction source. No other-state code, name match, or address match is substituted.",
   };
 }
 
