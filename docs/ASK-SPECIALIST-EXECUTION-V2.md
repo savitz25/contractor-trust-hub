@@ -1,46 +1,115 @@
 # Ask specialist execution V2 — ContractorTrustHub
 
-Contract: `trusthub-specialist-execution-v2`. This server-side API executes structured Florida contractor research; it does not reinterpret natural language, rank contractors, or expand publication.
+- Contract: `trusthub-specialist-execution-v2`
+- Version: `2.1.0`
+- Endpoint: `GET|POST /api/specialist-execution/v2`
+- Consumer: AskTrustHub Guided Research
 
-## Endpoint
+`GET` without parameters returns capabilities. `GET` with structured query parameters and `POST` with JSON execute the same server-authoritative path. The response publishes deterministic `schemaFingerprint` and `contractFingerprint` values; consumers must bind the values returned by the released endpoint.
 
-- `GET /api/specialist-execution/v2` returns capability metadata.
-- `POST /api/specialist-execution/v2` accepts JSON and returns bounded public rows.
+## Request
 
-Request fields: `trade`, `state` (`FL`), `county`, `city`, `credentialStatus`, `identifier`, `page`, and `limit` (maximum 50). Unknown fields fail closed. A request requires `trade` or an exact credential `identifier`.
+```json
+{
+  "contract": "trusthub-specialist-execution-v2",
+  "queryType": "cohort",
+  "state": "NJ",
+  "trade": "home_improvement",
+  "geography": {
+    "stateCode": "NJ",
+    "intent": "RECORDED_CREDENTIAL_GEOGRAPHY"
+  },
+  "credentialStatus": "active_current",
+  "page": 1,
+  "limit": 24
+}
+```
 
-Executable Florida trades in the current source are general, building, roofing, HVAC, plumbing, residential, pool/spa, mechanical, solar, underground utility, and specialty structures. Each maps to explicit DBPR occupation codes; no name inference is used. Electrical is part of the network taxonomy but is **not executable for Florida**: the accepted Florida CILB construction extract does not contain Florida electrical credentials. Codes used by Texas/New Jersey/Wisconsin cannot be relabeled as Florida evidence.
+Accepted fields are strict. Maximum limit is 50. Existing Florida legacy fields (`state`, `trade`, `county`, `city`, `credentialStatus`, `identifier`, `page`, `limit`) remain accepted.
 
-## Response
+## Response and HTTP states
 
-The response contains `contract`, `hub`, `queryInterpretation`, `resultType`, `rows`, `total`, `pagination`, `availableRefinements`, `provenance`, and `limitations`. Rows expose only public profile identity, credential number/key, exact trade class, source-native status, recorded geography, source clock, a carefully bounded regulatory-history indicator, and canonical profile destination.
+All responses identify contract/version/fingerprints, state/trade/geography interpretation, result state, provenance, and limitations.
+
+- HTTP 200: `SUPPORTED_RESULTS`, `ZERO_MATCHING_ROWS`, `EXACT_IDENTITY`
+- HTTP 400: `INVALID_QUERY`
+- HTTP 422: `CLARIFICATION_REQUIRED`, `INVALID_GEOGRAPHY`, `UNSUPPORTED_STATE_CAPABILITY`, `UNSUPPORTED_TRADE_CAPABILITY`, `PUBLICATION_RESTRICTED`
+- HTTP 503: `BACKEND_UNAVAILABLE`
+- HTTP 504: `TIMEOUT`
+
+Capability/clarification responses contain `capabilityChoices[]` with stable ids, consumer labels, supported flags, optional follow-up requests, destinations, and limitations.
+
+## State and class capability
+
+The contract reuses `lib/states/config.ts` and one state capability matrix. Florida executes accepted DBPR/CILB construction classes. New Jersey executes `nj_dca` source classes:
+
+| Consumer family | Source class | Meaning |
+|---|---|---|
+| Home improvement | HIC | Home Improvement Contractor registration; not General |
+| Electrical | ELE | NJ DCA electrical credential class |
+| Plumbing | PLB | Master Plumber |
+| HVAC | HVAC | Master HVACR Contractor |
+| Mechanical | HVAC | Bounded HVACR interpretation, not a universal mechanical class |
+| Alarm | ALM | Alarm credential class |
+| Telecom | TEL | Telecom credential class |
+| Locksmith | LCK | Locksmith credential class |
+| Hearth | HRT | Master Hearth Specialist |
+
+New Jersey has no single statewide General contractor class in this source. A generic NJ contractor request returns clarification; HIC is never relabeled General. Florida electrical remains `unsupported_florida_electrical_source` because the accepted Florida source lacks that class.
 
 ## Geography
 
-Florida and configured counties use indexed DBPR credential/address geography. This is **not service territory** or proof of local authorization. Boca Raton can be deterministically mapped to Palm Beach County, but the required electrical+Boca execution remains blocked until an accepted Florida electrical source exists. The contract fails closed rather than returning an invented cohort.
+- Statewide NJ means NJ DCA credential jurisdiction. A credential holder's recorded address may be outside New Jersey.
+- County filters accept only the 21 authoritative NJ counties and require recorded address state NJ.
+- Summit is an authoritatively mapped city in Union County (NJ municipality code 2018).
+- `Summit County, New Jersey` is invalid and offers the Summit/Union correction.
+- Unmapped city or ZIP requests require explicit confirmation before statewide fallback.
+- Recorded credential/address geography never means service territory or current availability.
 
-## Publication and provenance
+## Rows, ordering, and publication
 
-Queries require `fl_dbpr`, an existing non-thin public profile, a non-empty canonical slug, and an exact license-to-contractor relationship. The endpoint creates no identities or profiles. Source clock is `licenses.updated_at`; consumers should confirm current status with Florida DBPR.
+Rows contain public name, exact credential id/key, source-native class/status, recorded geography, source clock, publication state, why shown, and destinations. They omit internal ids and private contacts.
 
-## Errors and timeout behavior
+Ordering is normalized public name, credential identifier, then stable source record. It is not review, rating, discipline, claimed, paid, popularity, or recommendation ordering.
 
-Malformed or invalid inputs return 400. A valid request for a known but unavailable source capability returns HTTP 422 with `status=unsupported_capability`, a stable `errorCode`, requested trade, resolved geography, supported alternatives, provenance, and limitation. Database or execution failure returns 503 `execution_unavailable`; zero matching supported rows remain a successful 200 with `total=0`. No partial or invented rows/counts are returned.
+Publication is server-controlled: only exact credentials already related to existing public non-thin profiles with slugs are eligible. The endpoint does not create identities or profiles. Destination types are `PUBLIC_PROFILE`, `CONTRACTORTRUSTHUB_VERIFY`, `OFFICIAL_BOARD_VERIFICATION`, and `NO_PUBLIC_DESTINATION`.
 
-## Golden requests
+## Examples
+
+Generic New Jersey clarification:
 
 ```json
-{"trade":"roofing","state":"FL","county":"broward"}
-{"trade":"electrical","state":"FL","city":"Boca Raton"}
-{"trade":"plumbing","state":"FL","county":"palm-beach"}
-{"trade":"hvac","state":"FL"}
-{"identifier":"CCC1332036","state":"FL"}
+{"state":"NJ"}
 ```
 
-The electrical+Boca request returns HTTP 422 with `status=unsupported_capability` and `errorCode=unsupported_florida_electrical_source`; the other examples execute against the accepted Florida construction source.
+HIC statewide cohort:
 
-“Best roofer” is not an execution input. Ask must remove/refuse ranking intent and send only supported structured fields.
+```json
+{"state":"NJ","trade":"home_improvement","credentialStatus":"active_current","page":1,"limit":24}
+```
 
-## Deep destinations
+Summit electrical recorded-geography cohort:
 
-Each row returns `https://www.contractortrusthub.com/contractors/{slug}`. No unverified section anchors are advertised.
+```json
+{"state":"NJ","trade":"electrical","city":"Summit"}
+```
+
+Invalid Summit County:
+
+```json
+{"state":"NJ","trade":"home_improvement","county":"Summit County"}
+```
+
+Explicit statewide fallback after an unsupported local request:
+
+```json
+{"state":"NJ","trade":"home_improvement","city":"Unmapped City","confirmStatewide":true}
+```
+
+Service territory refusal:
+
+```json
+{"state":"NJ","trade":"plumbing","geography":{"stateCode":"NJ","intent":"SERVICE_TERRITORY"}}
+```
+
+Timeouts return no partial rows or invented totals. Official source status should always be reconfirmed with the identified board.

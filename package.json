@@ -14,6 +14,7 @@
     "test:intel-003c": "npx --yes tsx --test scripts/test_intel_003c.ts",
     "test:ask": "npx --yes tsx --test scripts/test_ask_interpret.ts scripts/test_ask_prompt2.ts scripts/test_ask_execute.ts",
     "check:ath-cap-pilot-001": "npx --yes tsx --test scripts/test_ath_cap_pilot_001.ts",
+    "check:con-cap-002": "npx --yes tsx --test scripts/test_con_cap_002.ts",
     "home:intel": "node scripts/build_homepage_intel.mjs",
     "assert:home-intel": "node scripts/assert_homepage_intel.mjs",
     "assert:visual": "node scripts/assert-visual-007.mjs",
