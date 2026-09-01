@@ -24,7 +24,9 @@ export const SPECIALIST_EXECUTION_VERSION = "trusthub-specialist-execution-v2" a
 export const CONTRACT_VERSION = "2.1.0" as const;
 export const CONTRACTOR_RESULT_LIMIT = 24;
 const MAX_LIMIT = 50;
-const MAX_PAGE = 100;
+// Page size, not page number, is the response-volume boundary. Statewide
+// credential cohorts legitimately exceed 100 pages at the safe 50-row cap.
+const MAX_PAGE = 100_000;
 
 export type ContractorResultState =
   | "SUPPORTED_RESULTS" | "ZERO_MATCHING_ROWS" | "CLARIFICATION_REQUIRED"
