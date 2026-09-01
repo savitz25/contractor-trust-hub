@@ -8,6 +8,7 @@ export const SPECIALIST_EXECUTION_VERSION = "trusthub-specialist-execution-v2" a
 export const CONTRACTOR_RESULT_LIMIT = 24;
 const MAX_LIMIT = 50;
 const MAX_PAGE = 100;
+const FL_EXECUTABLE_TRADES = TRADE_ONTOLOGY.filter((row) => row.id !== "electrical");
 
 export type ContractorExecutionRequest = {
   trade?: TradeFamilyId;
@@ -138,6 +139,7 @@ function buildWhere(input: NormalizedRequest): { sql: string; params: unknown[];
 
 export async function executeContractorSpecialistQuery(raw: unknown): Promise<ContractorExecutionResponse> {
   const input = normalizeContractorExecutionRequest(raw);
+  if (input.trade === "electrical") throw new Error("unsupported_florida_electrical_source");
   const built = buildWhere(input);
   if (!input.trade && !input.identifier) throw new Error("trade_or_identifier_required");
   const offset = (input.page - 1) * input.limit;
@@ -193,7 +195,7 @@ export async function executeContractorSpecialistQuery(raw: unknown): Promise<Co
     total,
     pagination: { page: input.page, limit: input.limit, totalPages: Math.ceil(total / input.limit) },
     availableRefinements: [
-      { field: "trade", values: TRADE_ONTOLOGY.map((row) => row.id) },
+      { field: "trade", values: FL_EXECUTABLE_TRADES.map((row) => row.id) },
       { field: "credentialStatus", values: ["active_current", "expired", "all"] },
       { field: "county", values: FLORIDA_COUNTIES.map((row) => row.slug) },
     ],
@@ -216,12 +218,18 @@ export function contractorCapabilityContract() {
     requiredSlots: ["trade or identifier", "state=FL"],
     supportedGeography: ["Florida", "configured Florida county", "Boca Raton → Palm Beach County"],
     geographyMeaning: "Recorded credential/address geography; never service territory.",
-    filters: ["trade", "credentialStatus", "county"],
+    filters: ["trade (Florida construction extract; electrical unavailable)", "credentialStatus", "county"],
     evidenceFamilies: ["credential", "public regulatory-history indicator"],
     canReturnRows: true,
     resultFields: ["name", "credentialNumber", "trade", "status", "recordedGeography", "source", "destination"],
     refinements: ["trade", "credentialStatus", "county"],
-    limitations: ["No ranking", "No quality inference", "No service-territory inference", "No publication expansion"],
+    limitations: [
+      "No ranking",
+      "No quality inference",
+      "No service-territory inference",
+      "No publication expansion",
+      "Florida electrical is unavailable because the accepted CILB construction extract does not contain that specialty source",
+    ],
     publicationSemantics: "Existing public non-thin profile gate only.",
     destinationTemplates: ["https://www.contractortrusthub.com/contractors/{slug}"],
   };

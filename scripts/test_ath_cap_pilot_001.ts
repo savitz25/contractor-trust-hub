@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { contractorCapabilityContract, normalizeContractorExecutionRequest } from "../lib/specialist-execution/contractor-v2";
+import { contractorCapabilityContract, executeContractorSpecialistQuery, normalizeContractorExecutionRequest } from "../lib/specialist-execution/contractor-v2";
 
 test("contract declares typed V2 capability without ranking", () => {
   const contract = contractorCapabilityContract();
@@ -17,7 +17,14 @@ test("electrical Boca Raton resolves deterministically to Palm Beach recorded ge
   assert.equal(input.city, "Boca Raton");
 });
 
-test("accepted trade taxonomy includes general through specialty", () => {
+test("Florida electrical fails closed because the accepted source does not contain it", async () => {
+  await assert.rejects(
+    executeContractorSpecialistQuery({ trade: "electrical", state: "FL", city: "Boca Raton" }),
+    /unsupported_florida_electrical_source/
+  );
+});
+
+test("accepted taxonomy is parsed without pretending every family is source-executable", () => {
   for (const trade of ["general", "building", "roofing", "hvac", "plumbing", "electrical", "residential", "pool_spa", "mechanical", "solar", "specialty"]) {
     assert.equal(normalizeContractorExecutionRequest({ trade, state: "FL" }).trade, trade);
   }

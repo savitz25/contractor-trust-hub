@@ -9,7 +9,7 @@ Contract: `trusthub-specialist-execution-v2`. This server-side API executes stru
 
 Request fields: `trade`, `state` (`FL`), `county`, `city`, `credentialStatus`, `identifier`, `page`, and `limit` (maximum 50). Unknown fields fail closed. A request requires `trade` or an exact credential `identifier`.
 
-Supported trades are the accepted source-native families: general, building, roofing, HVAC, plumbing, electrical, residential, pool/spa, mechanical, solar, underground utility, and specialty structures. Each maps to explicit DBPR occupation codes; no name inference is used.
+Executable Florida trades in the current source are general, building, roofing, HVAC, plumbing, residential, pool/spa, mechanical, solar, underground utility, and specialty structures. Each maps to explicit DBPR occupation codes; no name inference is used. Electrical is part of the network taxonomy but is **not executable for Florida**: the accepted Florida CILB construction extract does not contain Florida electrical credentials. Codes used by Texas/New Jersey/Wisconsin cannot be relabeled as Florida evidence.
 
 ## Response
 
@@ -17,7 +17,7 @@ The response contains `contract`, `hub`, `queryInterpretation`, `resultType`, `r
 
 ## Geography
 
-Florida and configured counties use indexed DBPR credential/address geography. This is **not service territory** or proof of local authorization. Boca Raton is deterministically mapped to Palm Beach County for the pilot; results are described as Palm Beach County recorded-address credential research, never as contractors serving Boca Raton.
+Florida and configured counties use indexed DBPR credential/address geography. This is **not service territory** or proof of local authorization. Boca Raton can be deterministically mapped to Palm Beach County, but the required electrical+Boca execution remains blocked until an accepted Florida electrical source exists. The contract fails closed rather than returning an invented cohort.
 
 ## Publication and provenance
 
@@ -36,6 +36,8 @@ Invalid/unsupported inputs return 400 with a stable error code. Database or exec
 {"trade":"hvac","state":"FL"}
 {"identifier":"CCC1332036","state":"FL"}
 ```
+
+The electrical+Boca request returns 400 `unsupported_florida_electrical_source`; the other examples execute against the accepted Florida construction source.
 
 “Best roofer” is not an execution input. Ask must remove/refuse ranking intent and send only supported structured fields.
 
