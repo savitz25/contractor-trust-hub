@@ -104,8 +104,8 @@ export type ContractorExecutionRow = {
 };
 
 export type ContractorExecutionResponse = ReturnType<typeof baseEnvelope> & {
-  resultState: "SUPPORTED_RESULTS" | "ZERO_MATCHING_ROWS" | "EXACT_IDENTITY";
-  status: "supported";
+  resultState: "SUPPORTED_RESULTS" | "ZERO_MATCHING_ROWS" | "EXACT_IDENTITY" | "INVALID_QUERY";
+  status: "supported" | "invalid_query";
   queryInterpretation: {
     state: string; trade: string | null; occupationCodes: string[]; identifier: string | null;
     geography: NormalizedGeography; credentialStatus: string; ordering: string;
@@ -330,9 +330,11 @@ export async function executeContractorSpecialistQuery(raw: unknown): Promise<Co
      ORDER BY LOWER(c.display_name), UPPER(COALESCE(l.license_number, l.external_key, '')), l.id
      LIMIT $${built.params.length + 1}::int OFFSET $${built.params.length + 2}::int`, params, { statementTimeoutMs: 15_000 });
   const total = Number(count?.total ?? 0);
-  const resultState: ContractorExecutionResponse["resultState"] = input.identifier && total === 1 ? "EXACT_IDENTITY" : total === 0 ? "ZERO_MATCHING_ROWS" : "SUPPORTED_RESULTS";
+  const totalPages = Math.ceil(total / input.limit);
+  const pageOutOfRange = totalPages > 0 && input.page > totalPages;
+  const resultState: ContractorExecutionResponse["resultState"] = pageOutOfRange ? "INVALID_QUERY" : input.identifier && total === 1 ? "EXACT_IDENTITY" : total === 0 ? "ZERO_MATCHING_ROWS" : "SUPPORTED_RESULTS";
   return {
-    ...baseEnvelope(), resultState, status: "supported",
+    ...baseEnvelope(), resultState, status: pageOutOfRange ? "invalid_query" : "supported",
     queryInterpretation: { state: input.state, trade: input.tradeCapability?.label ?? input.credentialClass, occupationCodes: built.occupationCodes, identifier: input.identifier, geography: input.geography, credentialStatus: input.credentialStatus, ordering: "Normalized public name, then exact credential identifier, then stable source record. Neutral regulatory ordering; not recommendation." },
     resultType: input.identifier ? "exact_credential" : "credential_rows",
     rows: rows.map((row) => {
@@ -358,7 +360,7 @@ export async function executeContractorSpecialistQuery(raw: unknown): Promise<Co
       };
     }),
     total,
-    pagination: { page: input.page, limit: input.limit, totalPages: Math.ceil(total / input.limit), hasNextPage: input.page * input.limit < total },
+    pagination: { page: input.page, limit: input.limit, totalPages, hasNextPage: input.page * input.limit < total },
     availableRefinements: [
       { field: "trade", values: input.capability.trades.map((trade) => trade.id) },
       { field: "credentialStatus", values: ["active_current", "expired", "all"] },
@@ -371,6 +373,7 @@ export async function executeContractorSpecialistQuery(raw: unknown): Promise<Co
       `Credential status and source clock reflect the indexed ${input.capability.state.boardShortLabel} source and should be confirmed with the official board.`,
       "Only existing public, non-thin ContractorTrustHub profiles are returned; this contract does not expand publication.",
       ...(input.state === "NJ" ? ["New Jersey has no single statewide General contractor license class; HIC and each specialty remain separate."] : []),
+      ...(pageOutOfRange ? [`Requested page ${input.page} exceeds the current last page ${totalPages}; no broader or fallback query was executed.`] : []),
     ],
   };
 }

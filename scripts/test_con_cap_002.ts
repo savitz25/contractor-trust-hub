@@ -110,6 +110,7 @@ test("pagination is bounded and stable by contract", () => {
   assert.equal(normalizeContractorExecutionRequest({ state: "NJ", trade: "HIC" }).limit, 24); // 53
   assert.match(source, /LIMIT \$\$\{built\.params\.length \+ 1\}/); // 54
   assert.equal(normalizeContractorExecutionRequest({ state: "NJ", trade: "HIC", page: 5023, limit: 5 }).page, 5023);
+  assert.match(source, /pageOutOfRange \? "INVALID_QUERY"/);
 });
 
 test("Florida accepted behavior remains locked", async () => {
