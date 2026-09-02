@@ -52,6 +52,36 @@ FORBIDDEN_PUBLIC_LABELS = (
     "Safer Contractor",
 )
 
+SOURCE_COVERAGE_ACQUIRED = "ACQUIRED"
+SOURCE_COVERAGE_PARTIAL = "PARTIAL_SOURCE_COVERAGE"
+SOURCE_COVERAGE_NOT_ACQUIRED = "SOURCE_NOT_ACQUIRED"
+
+# Absence of an unacquired source is never a clean-history conclusion.
+FORBIDDEN_ABSENCE_CLAIMS = (
+    "No other enforcement record found",
+    "No record found",
+    "Clean record",
+    "No disciplinary history",
+)
+
+EVIDENCE_CLASS = {
+    "NJ_LEAD_EVALUATION": "specialty_credential",
+    "NJ_LEAD_ABATEMENT": "specialty_credential",
+    "NJ_ASCM_AUTHORIZATION": "specialty_credential",
+    "NJ_FIRE_PROTECTION_PERMIT": "specialty_credential",
+    "NJ_NEW_HOME_BUILDER": "specialty_credential",
+    "NJ_HEC_REGISTRATION": "specialty_credential",
+    "NJ_OPERATION_SAFE_HOUSE": "regulatory_event",
+    "NJ_OCP_LEGAL_FILING": "regulatory_event",
+    "NJ_BOARD_ACTION": "regulatory_event",
+    "NJ_PWCR_REGISTRATION": "registration_roster",
+    "NJ_PREVAILING_WAGE_DEBARMENT": "exclusion_list",
+    "NJ_WALL": "exclusion_list",
+    "NJ_WAGE_VIOLATION_WATCHLIST": "exclusion_list",
+    "NJ_TREASURY_CONSTRUCTION_DEBARMENT": "exclusion_list",
+    "NJ_TREASURY_VENDOR_DEBARMENT": "exclusion_list",
+}
+
 TREASURY_REASON = {
     "A": "Criminal Offense",
     "B": "Organized Crime Contract",
@@ -246,6 +276,7 @@ def _base_observation(source_family: str, raw: dict[str, Any], key_fields: dict[
         "match_confidence": "unresolved",
         "public_eligibility_status": "internal_only",
         "currency": "current_snapshot",
+        "evidence_class": EVIDENCE_CLASS.get(source_family),
         "raw_payload": raw.get("raw_payload") or {},
     }
 

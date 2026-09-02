@@ -1,17 +1,146 @@
 """NJ-CON-002A specialty credentials and OCP/Safe House enforcement parsers.
 
 Credentials stay out of discipline. NOVs are not final orders.
+Unacquired sources are SOURCE_NOT_ACQUIRED, never a zero-observation scan.
+OCP filings are PARTIAL_SOURCE_COVERAGE: four indexed PDFs are not a complete
+contractor-enforcement corpus and cannot support "no other record found."
 """
 from __future__ import annotations
 
 import csv
 import hashlib
-import json
 import re
 from pathlib import Path
 from typing import Any
 
-from ingest.adapters.nj_public_works import _base_observation, canonical_value, parse_date, split_us_address
+from ingest.adapters.nj_public_works import (
+    SOURCE_COVERAGE_ACQUIRED,
+    SOURCE_COVERAGE_NOT_ACQUIRED,
+    SOURCE_COVERAGE_PARTIAL,
+    _base_observation,
+    canonical_value,
+)
+
+# Repeatable complete files vs partial index vs not acquired.
+# PWCR / prevailing-wage remain SOURCE_NOT_ACQUIRED from NJ-CON-001 (OPRA).
+FAMILY_COVERAGE: dict[str, dict[str, Any]] = {
+    "NJ_LEAD_EVALUATION": {
+        "coverage": SOURCE_COVERAGE_ACQUIRED,
+        "repeatable": True,
+        "evidence_class": "specialty_credential",
+        "source_as_of": "2026-08-11",
+        "agency": "NJ DCA Lead Hazard Control",
+        "url": "https://www.nj.gov/dca/codes/lhi/lead_eval_contrs.shtml",
+        "note": "Official current lead-evaluation contractor certification list.",
+    },
+    "NJ_LEAD_ABATEMENT": {
+        "coverage": SOURCE_COVERAGE_ACQUIRED,
+        "repeatable": True,
+        "evidence_class": "specialty_credential",
+        "source_as_of": "2026-07-15",
+        "agency": "NJ DCA Lead Hazard Control",
+        "url": "https://www.nj.gov/dca/codes/lhi/ld_abat_c.shtml",
+        "note": "Official current lead-abatement contractor certification list. Distinct from lead evaluation.",
+    },
+    "NJ_ASCM_AUTHORIZATION": {
+        "coverage": SOURCE_COVERAGE_ACQUIRED,
+        "repeatable": True,
+        "evidence_class": "specialty_credential",
+        "source_as_of": "2026-07-30",
+        "agency": "NJ DCA Codes and Standards",
+        "url": "https://www.nj.gov/dca/codes/lhi/asmlist.shtml",
+        "note": "Asbestos Safety Control Monitoring authorization. Not a DOL asbestos-abatement-contractor license.",
+    },
+    "NJ_FIRE_PROTECTION_PERMIT": {
+        "coverage": SOURCE_COVERAGE_ACQUIRED,
+        "repeatable": True,
+        "evidence_class": "specialty_credential",
+        "source_as_of": "2026-07-02",
+        "agency": "NJ DFS Fire Protection",
+        "url": "https://www.nj.gov/dca/dfs/",
+        "note": "Current Fire Protection Equipment Contractor permitted-business list. Classes C1–C6 preserved separately.",
+    },
+    "NJ_OPERATION_SAFE_HOUSE": {
+        "coverage": SOURCE_COVERAGE_ACQUIRED,
+        "repeatable": True,
+        "evidence_class": "regulatory_event",
+        "source_as_of": "2025-12-01",
+        "agency": "NJ Division of Consumer Affairs",
+        "url": "https://www.njoag.gov/division-of-consumer-affairs-undercover-enforcement-operations-result-in-notices-of-violations-against-18-unregistered-home-improvement-contractor-businesses-and-11-unlicensed-moving-companies/",
+        "note": "Operation Safe House HIC NOVs. Notices of Violation and proposed penalties, not final orders or paid fines.",
+    },
+    "NJ_OCP_LEGAL_FILING": {
+        "coverage": SOURCE_COVERAGE_PARTIAL,
+        "repeatable": True,
+        "evidence_class": "regulatory_event",
+        "source_as_of": "2025-06-27",
+        "agency": "NJ Division of Consumer Affairs Office of Consumer Protection",
+        "url": "https://www.njconsumeraffairs.gov/ocp/Pages/LegalFilings.aspx",
+        "note": (
+            "PARTIAL_SOURCE_COVERAGE: four published OCP PDFs were indexed. "
+            "This is not a complete historical contractor-enforcement corpus. "
+            "These four documents cannot support a public statement such as "
+            "'No other enforcement record found.'"
+        ),
+        "acquired_document_count": 4,
+        "corpus_complete": False,
+    },
+    "NJ_NEW_HOME_BUILDER": {
+        "coverage": SOURCE_COVERAGE_NOT_ACQUIRED,
+        "repeatable": False,
+        "evidence_class": "specialty_credential",
+        "agency": "NJ DCA New Home Warranty Program",
+        "url": "https://serviceportal.dca.nj.gov/ultra-bhp-home/bhp-home-builder-search/",
+        "barrier": "Official list is a DCA Service Portal lookup; brlist.pdf 404. No deterministic full-file export. Not merged with HIC.",
+    },
+    "NJ_HEC_REGISTRATION": {
+        "coverage": SOURCE_COVERAGE_NOT_ACQUIRED,
+        "repeatable": False,
+        "evidence_class": "specialty_credential",
+        "agency": "NJ DCA",
+        "url": "https://www.nj.gov/dca/",
+        "barrier": "No official standalone Home Elevation Contractor roster acquired. Disaster-recovery program lists are not the HEC registration export. Not flattened into HIC.",
+    },
+    "NJ_BOARD_ACTION": {
+        "coverage": SOURCE_COVERAGE_NOT_ACQUIRED,
+        "repeatable": False,
+        "evidence_class": "regulatory_event",
+        "agency": "NJ Division of Consumer Affairs contractor boards",
+        "url": "https://www.njconsumeraffairs.gov/",
+        "barrier": "No official bulk contractor-board action index acquired. OCP legal filings are a separate partial family.",
+    },
+    "NJ_PWCR_REGISTRATION": {
+        "coverage": SOURCE_COVERAGE_NOT_ACQUIRED,
+        "repeatable": False,
+        "evidence_class": "registration_roster",
+        "agency": "NJDOL Division of Wage and Hour Compliance",
+        "url": "https://www.nj.gov/labor/wageandhour/registration-permits/register/publicworksregistration.shtml",
+        "barrier": "Official roster is a Power BI interactive view. OPRA preserved. Do not wait on OPRA for this ticket.",
+    },
+    "NJ_PREVAILING_WAGE_DEBARMENT": {
+        "coverage": SOURCE_COVERAGE_NOT_ACQUIRED,
+        "repeatable": False,
+        "evidence_class": "exclusion_list",
+        "agency": "NJDOL Division of Wage and Hour Compliance",
+        "url": "https://www.nj.gov/labor/wageandhour/registration-permits/register/debarmentlist.shtml",
+        "barrier": "Official list is a Power BI interactive view. OPRA preserved. Do not wait on OPRA for this ticket.",
+    },
+}
+
+SPECIALTY_FAMILIES = (
+    "NJ_LEAD_EVALUATION",
+    "NJ_LEAD_ABATEMENT",
+    "NJ_ASCM_AUTHORIZATION",
+    "NJ_FIRE_PROTECTION_PERMIT",
+)
+REGULATORY_FAMILIES = (
+    "NJ_OPERATION_SAFE_HOUSE",
+    "NJ_OCP_LEGAL_FILING",
+    "NJ_BOARD_ACTION",
+)
+UNACQUIRED_FAMILIES = tuple(
+    fam for fam, meta in FAMILY_COVERAGE.items() if meta["coverage"] == SOURCE_COVERAGE_NOT_ACQUIRED
+)
 from ingest.nj_identity_match import apply_matches, build_license_index, load_license_csv
 
 LEAD_LINE = re.compile(
@@ -75,6 +204,7 @@ def parse_lead_text(text: str, *, source_family: str, source_date: str | None) -
         obs = _base_observation(source_family, raw, key)
         obs["source_record_locator"] = f"line:{i}"
         obs["action"] = None
+        obs["source_coverage"] = SOURCE_COVERAGE_ACQUIRED
         out.append(obs)
     return out
 
@@ -110,6 +240,7 @@ def parse_ascm_text(text: str, *, source_date: str | None) -> list[dict[str, Any
         }
         obs = _base_observation("NJ_ASCM_AUTHORIZATION", raw, key)
         obs["source_record_locator"] = f"line:{i}"
+        obs["source_coverage"] = SOURCE_COVERAGE_ACQUIRED
         out.append(obs)
     return out
 
@@ -174,12 +305,14 @@ def parse_fire_text(text: str, *, source_date: str | None) -> list[dict[str, Any
         }
         obs = _base_observation("NJ_FIRE_PROTECTION_PERMIT", raw, key)
         obs["source_record_locator"] = f"block:{i}"
+        obs["source_coverage"] = SOURCE_COVERAGE_ACQUIRED
         out.append(obs)
     return out
 
 
 def parse_safe_house_csv(path: Path) -> list[dict[str, Any]]:
-    rows = list(csv.DictReader(path.open(encoding="utf-8-sig", newline="")))
+    with path.open(encoding="utf-8-sig", newline="") as fh:
+        rows = list(csv.DictReader(fh))
     out = []
     for i, row in enumerate(rows, start=2):
         violation = canonical_value(row.get("violation"))
@@ -199,16 +332,26 @@ def parse_safe_house_csv(path: Path) -> list[dict[str, Any]]:
             "action": "NOV",
             "reason_text": violation,
             "source_publication_date": row.get("source_date"),
-            "raw_payload": {**row, "allegation": allegation, "disposition": "NOV_ISSUED_NOT_FINAL_ADJUDICATION", "penalty_proposed": row.get("penalty")},
+            "raw_payload": {
+                **row,
+                "allegation": allegation,
+                "disposition": "NOV_ISSUED_NOT_FINAL_ADJUDICATION",
+                "penalty_proposed": row.get("penalty"),
+                "penalty_is_paid_fine": False,
+                "penalty_is_final_adjudication": False,
+                "source_coverage": SOURCE_COVERAGE_ACQUIRED,
+            },
         }
         obs = _base_observation("NJ_OPERATION_SAFE_HOUSE", raw, key)
         obs["source_record_locator"] = f"row:{i}"
+        obs["source_coverage"] = SOURCE_COVERAGE_ACQUIRED
         out.append(obs)
     return out
 
 
 def parse_ocp_csv(path: Path) -> list[dict[str, Any]]:
-    rows = list(csv.DictReader(path.open(encoding="utf-8-sig", newline="")))
+    with path.open(encoding="utf-8-sig", newline="") as fh:
+        rows = list(csv.DictReader(fh))
     out = []
     for i, row in enumerate(rows, start=2):
         doc = canonical_value(row.get("document_type"))
@@ -219,26 +362,80 @@ def parse_ocp_csv(path: Path) -> list[dict[str, Any]]:
             "action": doc,
             "effective_date": row.get("filed_date"),
             "source_publication_date": row.get("filed_date"),
-            "raw_payload": {**row, "nov_is_not_final_order": doc == "NOV"},
+            "raw_payload": {
+                **row,
+                "nov_is_not_final_order": doc == "NOV",
+                "source_coverage": SOURCE_COVERAGE_PARTIAL,
+                "corpus_complete": False,
+                "absence_is_not_no_record_found": True,
+            },
         }
         obs = _base_observation("NJ_OCP_LEGAL_FILING", raw, key)
         obs["source_record_locator"] = f"row:{i}"
+        obs["source_coverage"] = SOURCE_COVERAGE_PARTIAL
         out.append(obs)
     return out
 
 
-def related_docket_links(filings: list[dict[str, Any]]) -> list[dict[str, str]]:
-    """Link filings that share an official docket or NOV number. Name-only is not a link."""
-    by_id: dict[str, list[str]] = {}
+def related_docket_links(filings: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Link filings that share an NOV, or the same docket AND the same respondent.
+
+    OCP docket numbers are reused across unrelated respondents (e.g. Progressive
+    Paving and TNT Builders both carry docket 24-013 on distinct PDFs). A shared
+    docket string is not proof they are the same official case. Name-only is
+    never a link.
+    """
+    by_nov: dict[str, list[str]] = {}
+    by_docket_respondent: dict[tuple[str, str], list[str]] = {}
     for f in filings:
         payload = f.get("raw_payload") or {}
-        for ident in (payload.get("docket"), payload.get("nov_number"), f.get("certificate_or_vendor_id")):
-            ident = canonical_value(ident)
-            if ident:
-                by_id.setdefault(ident, []).append(f["source_observation_key"])
-    links = []
-    for ident, keys in by_id.items():
+        nov = canonical_value(payload.get("nov_number"))
+        docket = canonical_value(payload.get("docket"))
+        respondent = canonical_value(payload.get("respondent") or f.get("official_business_name"))
+        if nov:
+            by_nov.setdefault(nov, []).append(f["source_observation_key"])
+        if docket and respondent:
+            by_docket_respondent.setdefault((docket, respondent), []).append(f["source_observation_key"])
+    links: list[dict[str, Any]] = []
+    for ident, keys in by_nov.items():
         uniq = sorted(set(keys))
         if len(uniq) > 1:
-            links.append({"identifier": ident, "observation_keys": uniq, "relation": "same_official_docket_or_nov"})
+            links.append({"identifier": ident, "observation_keys": uniq, "relation": "same_official_nov"})
+    for (docket, respondent), keys in by_docket_respondent.items():
+        uniq = sorted(set(keys))
+        if len(uniq) > 1:
+            links.append({
+                "identifier": docket,
+                "respondent": respondent,
+                "observation_keys": uniq,
+                "relation": "same_official_docket_and_respondent",
+            })
     return links
+
+
+def coverage_record(family: str) -> dict[str, Any]:
+    meta = FAMILY_COVERAGE[family]
+    rec = {
+        "source_family": family,
+        "source_coverage": meta["coverage"],
+        "evidence_class": meta["evidence_class"],
+        "repeatable": meta["repeatable"],
+        "agency": meta.get("agency"),
+        "url": meta.get("url"),
+        "note": meta.get("note") or meta.get("barrier"),
+        "observations_written": 0,
+        "zero_valued_observation": False,
+    }
+    if meta["coverage"] == SOURCE_COVERAGE_NOT_ACQUIRED:
+        rec["barrier"] = meta.get("barrier")
+        rec["clean_history_conclusion"] = False
+        rec["public_absence_claim_allowed"] = False
+    if meta["coverage"] == SOURCE_COVERAGE_PARTIAL:
+        rec["corpus_complete"] = False
+        rec["acquired_document_count"] = meta.get("acquired_document_count")
+        rec["public_absence_claim_allowed"] = False
+    return rec
+
+
+def observations_allowed(family: str) -> bool:
+    return FAMILY_COVERAGE[family]["coverage"] != SOURCE_COVERAGE_NOT_ACQUIRED

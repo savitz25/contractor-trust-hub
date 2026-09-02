@@ -37,6 +37,7 @@ from ingest.nj_identity_match import (  # noqa: E402
     build_license_index,
     load_license_csv,
 )
+from ingest.official_source_persist import persist_official_source  # noqa: E402
 
 RAW_DIR = ROOT / "data" / "raw" / "nj_public_works"
 STAGING_DIR = ROOT / "data" / "staging" / "nj_public_works"
@@ -180,120 +181,16 @@ def load_licenses_from_db(conn) -> list:
 
 
 def execute_postgres(conn, family: str, acquisition: dict[str, Any], parsed: list[dict[str, Any]], dry_run: bool) -> dict[str, int]:
-    counts = {"inserted": 0, "updated": 0, "unchanged": 0}
-    if dry_run or conn is None:
-        counts["inserted"] = len(parsed)
-        return counts
-    acq = acquisition[family]
-    with conn.cursor() as cur:
-        cur.execute(
-            """
-            INSERT INTO ingest_batches (source_system, source_dataset, source_url, source_file, extracted_at, row_count, checksum_sha256, notes)
-            VALUES (%s,%s,%s,%s, now(), %s, %s, %s)
-            RETURNING id
-            """,
-            (
-                "nj_public_works",
-                family,
-                acq.get("url"),
-                acq.get("local_raw_path"),
-                len(parsed),
-                acq.get("sha256"),
-                "NJ-CON-001 baseline snapshot",
-            ),
-        )
-        batch_id = cur.fetchone()[0]
-        cur.execute(
-            """
-            INSERT INTO official_source_snapshots (
-              source_family, agency, official_url, retrieved_at, source_as_of, source_hash_sha256,
-              row_count, schema_fingerprint, jurisdiction, is_baseline, is_current_only, ingest_batch_id, notes
-            ) VALUES (%s,%s,%s, now(), %s, %s, %s, %s, 'NJ', TRUE, TRUE, %s, %s)
-            ON CONFLICT (source_family, source_hash_sha256) DO UPDATE SET row_count = EXCLUDED.row_count
-            RETURNING id
-            """,
-            (
-                family,
-                acq.get("agency"),
-                acq.get("url") or acq.get("page"),
-                acq.get("source_as_of"),
-                acq.get("sha256"),
-                len(parsed),
-                acq.get("schema_fingerprint") or "na",
-                batch_id,
-                acq.get("barrier"),
-            ),
-        )
-        snapshot_id = cur.fetchone()[0]
-        for obs in parsed:
-            cur.execute(
-                """
-                INSERT INTO official_source_observations (
-                  snapshot_id, ingest_batch_id, source_family, source_record_id, source_observation_key,
-                  row_fingerprint_sha256, contractor_id, official_business_name, individual_name,
-                  address_line_1, city, state, postal_code, county, certificate_or_vendor_id,
-                  registration_status, effective_date, expiration_date, action, reason_code, reason_text,
-                  debarring_department, debarring_agency, permanent_flag, source_publication_date,
-                  match_method, match_confidence, public_eligibility_status, currency, raw_payload
-                ) VALUES (
-                  %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'internal_only','current_snapshot',%s::jsonb
-                )
-                ON CONFLICT (source_family, source_observation_key) DO NOTHING
-                """,
-                (
-                    snapshot_id,
-                    batch_id,
-                    family,
-                    obs["source_record_id"],
-                    obs["source_observation_key"],
-                    obs["row_fingerprint_sha256"],
-                    obs.get("contractor_id"),
-                    obs.get("official_business_name"),
-                    obs.get("individual_name"),
-                    obs.get("address_line_1"),
-                    obs.get("city"),
-                    obs.get("state"),
-                    obs.get("postal_code"),
-                    obs.get("county"),
-                    obs.get("certificate_or_vendor_id"),
-                    obs.get("registration_status"),
-                    obs.get("effective_date"),
-                    obs.get("expiration_date"),
-                    obs.get("action"),
-                    obs.get("reason_code"),
-                    obs.get("reason_text"),
-                    obs.get("debarring_department"),
-                    obs.get("debarring_agency"),
-                    obs.get("permanent_flag"),
-                    obs.get("source_publication_date"),
-                    obs.get("match_method"),
-                    obs.get("match_confidence"),
-                    json.dumps(obs.get("raw_payload") or {}, ensure_ascii=True),
-                ),
-            )
-            counts["inserted" if cur.rowcount else "unchanged"] += 1
-            cur.execute(
-                "SELECT id FROM official_source_observations WHERE source_family = %s AND source_observation_key = %s",
-                (family, obs["source_observation_key"]),
-            )
-            obs_id = cur.fetchone()[0]
-            cur.execute(
-                """
-                INSERT INTO official_source_occurrences (
-                  observation_id, snapshot_id, ingest_batch_id, source_record_locator, source_file
-                ) VALUES (%s,%s,%s,%s,%s)
-                ON CONFLICT (observation_id, snapshot_id, source_record_locator) DO NOTHING
-                """,
-                (
-                    obs_id,
-                    snapshot_id,
-                    batch_id,
-                    obs.get("source_record_locator") or obs["source_observation_key"],
-                    acq.get("local_raw_path"),
-                ),
-            )
-    conn.commit()
-    return counts
+    return persist_official_source(
+        conn,
+        family,
+        acquisition,
+        parsed,
+        dry_run=dry_run,
+        source_system="nj_public_works",
+        notes="NJ-CON-001 baseline snapshot",
+        source_coverage=acquisition.get(family, {}).get("source_coverage"),
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
