@@ -205,7 +205,7 @@ def execute_postgres(conn, family: str, acquisition: dict[str, Any], parsed: lis
         batch_id = cur.fetchone()[0]
         cur.execute(
             """
-            INSERT INTO nj_source_snapshots (
+            INSERT INTO official_source_snapshots (
               source_family, agency, official_url, retrieved_at, source_as_of, source_hash_sha256,
               row_count, schema_fingerprint, jurisdiction, is_baseline, is_current_only, ingest_batch_id, notes
             ) VALUES (%s,%s,%s, now(), %s, %s, %s, %s, 'NJ', TRUE, TRUE, %s, %s)
@@ -228,7 +228,7 @@ def execute_postgres(conn, family: str, acquisition: dict[str, Any], parsed: lis
         for obs in parsed:
             cur.execute(
                 """
-                INSERT INTO nj_source_observations (
+                INSERT INTO official_source_observations (
                   snapshot_id, ingest_batch_id, source_family, source_record_id, source_observation_key,
                   row_fingerprint_sha256, contractor_id, official_business_name, individual_name,
                   address_line_1, city, state, postal_code, county, certificate_or_vendor_id,
@@ -272,6 +272,26 @@ def execute_postgres(conn, family: str, acquisition: dict[str, Any], parsed: lis
                 ),
             )
             counts["inserted" if cur.rowcount else "unchanged"] += 1
+            cur.execute(
+                "SELECT id FROM official_source_observations WHERE source_family = %s AND source_observation_key = %s",
+                (family, obs["source_observation_key"]),
+            )
+            obs_id = cur.fetchone()[0]
+            cur.execute(
+                """
+                INSERT INTO official_source_occurrences (
+                  observation_id, snapshot_id, ingest_batch_id, source_record_locator, source_file
+                ) VALUES (%s,%s,%s,%s,%s)
+                ON CONFLICT (observation_id, snapshot_id, source_record_locator) DO NOTHING
+                """,
+                (
+                    obs_id,
+                    snapshot_id,
+                    batch_id,
+                    obs.get("source_record_locator") or obs["source_observation_key"],
+                    acq.get("local_raw_path"),
+                ),
+            )
     conn.commit()
     return counts
 

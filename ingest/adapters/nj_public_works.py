@@ -306,6 +306,7 @@ def parse_treasury_text(text: str, *, delimiter: str, source_family: str) -> tup
             "raw_payload": rec,
         }
         obs = _base_observation(source_family, raw, key_fields)
+        obs["source_record_locator"] = f"line:{i}"
         parsed.append(obs)
     return parsed, rejected
 
@@ -355,7 +356,9 @@ def parse_wall_rows(rows: list[dict[str, str]]) -> tuple[list[dict[str, Any]], l
             "source_publication_date": row.get("Date Posted on the WALL"),
             "raw_payload": row,
         }
-        parsed.append(_base_observation("NJ_WALL", raw, key_fields))
+        obs = _base_observation("NJ_WALL", raw, key_fields)
+        obs["source_record_locator"] = f"row:{i}"
+        parsed.append(obs)
     return parsed, rejected
 
 
@@ -395,7 +398,9 @@ def parse_watchlist_rows(rows: list[dict[str, str]]) -> tuple[list[dict[str, Any
             "source_publication_date": row.get("Date of Final Order and Judgement"),
             "raw_payload": row,
         }
-        parsed.append(_base_observation("NJ_WAGE_VIOLATION_WATCHLIST", raw, key_fields))
+        obs = _base_observation("NJ_WAGE_VIOLATION_WATCHLIST", raw, key_fields)
+        obs["source_record_locator"] = f"row:{i}"
+        parsed.append(obs)
     return parsed, rejected
 
 
@@ -436,7 +441,9 @@ def parse_pwcr_rows(rows: list[dict[str, str]]) -> tuple[list[dict[str, Any]], l
             "expiration_date": key_fields["expiration_date"] or None,
             "raw_payload": row,
         }
-        parsed.append(_base_observation("NJ_PWCR_REGISTRATION", raw, key_fields))
+        obs = _base_observation("NJ_PWCR_REGISTRATION", raw, key_fields)
+        obs["source_record_locator"] = f"row:{i}"
+        parsed.append(obs)
     return parsed, rejected
 
 
@@ -469,7 +476,9 @@ def parse_pw_debarment_rows(rows: list[dict[str, str]]) -> tuple[list[dict[str, 
             "reason_text": canonical_value(row.get(lowered.get("reason") or "", "")) or None,
             "raw_payload": row,
         }
-        parsed.append(_base_observation("NJ_PREVAILING_WAGE_DEBARMENT", raw, key_fields))
+        obs = _base_observation("NJ_PREVAILING_WAGE_DEBARMENT", raw, key_fields)
+        obs["source_record_locator"] = f"row:{i}"
+        parsed.append(obs)
     return parsed, rejected
 
 

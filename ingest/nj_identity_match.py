@@ -144,15 +144,19 @@ def match_observation(obs: dict[str, Any], index: LicenseIndex) -> dict[str, Any
 
     if name and city:
         hits = _unique(index.by_name_city.get((name, city), []))
-        return _review(hits, "name plus city only")
+        if hits:
+            return _review(hits, "name plus city only")
 
     if person and not name:
+        person_hits = _unique(index.by_name.get(person, []))
+        if person_hits:
+            return _review(person_hits, "individual name to business")
         return {
-            "match_method": "review_required",
-            "match_confidence": "review_required",
+            "match_method": "unresolved",
+            "match_confidence": "unresolved",
             "contractor_id": None,
             "license_external_key": None,
-            "reason": "individual name to business",
+            "reason": "individual name with no existing organization candidate",
             "candidates": [],
         }
 

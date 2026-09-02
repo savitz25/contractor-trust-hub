@@ -1,6 +1,6 @@
 {
   "ticket": "NJ-CON-001",
-  "retrieved_at": "2026-09-02T14:45:49Z",
+  "retrieved_at": "2026-09-02T15:11:13Z",
   "mode": "local-input",
   "dry_run": true,
   "forbidden_public_labels": [
@@ -22,7 +22,7 @@
       "sha256": "685bd16da4d4ae0c602c5ab7f58d42e138cccab23b015eb722d3078c6feb41d0",
       "bytes": 66714,
       "source_as_of": "2026-08-05",
-      "retrieved_at": "2026-09-02T14:45:48Z",
+      "retrieved_at": "2026-09-02T15:10:44Z",
       "historical_or_current": "current_snapshot",
       "repeatable": true,
       "barrier": null,
@@ -40,7 +40,7 @@
       "sha256": "fc1ccd76c989f0a7c713f2032cc8da9540661395afeedb99ee2d63fc8fb9bc4e",
       "bytes": 104981,
       "source_as_of": "2026-03-20",
-      "retrieved_at": "2026-09-02T14:45:48Z",
+      "retrieved_at": "2026-09-02T15:10:44Z",
       "historical_or_current": "current_snapshot",
       "repeatable": true,
       "barrier": null,
@@ -58,7 +58,7 @@
       "sha256": "c6bc05c08f37329e25a13b89a0d277b2339a40540708a828c50f70558bc21f05",
       "bytes": 51830,
       "source_as_of": "2025-10-15",
-      "retrieved_at": "2026-09-02T14:45:48Z",
+      "retrieved_at": "2026-09-02T15:10:44Z",
       "historical_or_current": "current_snapshot",
       "repeatable": true,
       "barrier": null,
@@ -76,7 +76,7 @@
       "sha256": "d0c1c095332aef7efafc602afa3debcea0fa16575add8fdac030653e4f4b5e62",
       "bytes": 7572,
       "source_as_of": "2026-02-13",
-      "retrieved_at": "2026-09-02T14:45:48Z",
+      "retrieved_at": "2026-09-02T15:10:44Z",
       "historical_or_current": "current_snapshot",
       "repeatable": true,
       "barrier": null,
@@ -92,7 +92,7 @@
       "local_raw_path": null,
       "sha256": null,
       "source_as_of": null,
-      "retrieved_at": "2026-09-02T14:45:48Z",
+      "retrieved_at": "2026-09-02T15:10:44Z",
       "historical_or_current": "current_interactive_list",
       "repeatable": false,
       "barrier": "Official roster is a Power BI interactive view with no supported deterministic full-file export."
@@ -105,7 +105,7 @@
       "local_raw_path": null,
       "sha256": null,
       "source_as_of": null,
-      "retrieved_at": "2026-09-02T14:45:48Z",
+      "retrieved_at": "2026-09-02T15:10:44Z",
       "historical_or_current": "current_interactive_list",
       "repeatable": false,
       "barrier": "Official list is a Power BI interactive view with no supported deterministic full-file export."
@@ -147,9 +147,9 @@
       "missing_identifiers": 394,
       "exact": 0,
       "high_confidence": 0,
-      "review_required": 374,
+      "review_required": 7,
       "conflicts": 0,
-      "unresolved": 20,
+      "unresolved": 387,
       "public_label": "Workplace Accountability in Labor List"
     },
     "NJ_WAGE_VIOLATION_WATCHLIST": {
@@ -167,9 +167,9 @@
       "missing_identifiers": 1116,
       "exact": 0,
       "high_confidence": 0,
-      "review_required": 1109,
+      "review_required": 4,
       "conflicts": 0,
-      "unresolved": 7,
+      "unresolved": 1112,
       "public_label": "Wage Violation Watchlist"
     },
     "NJ_TREASURY_CONSTRUCTION_DEBARMENT": {
@@ -187,9 +187,9 @@
       "missing_identifiers": 321,
       "exact": 0,
       "high_confidence": 0,
-      "review_required": 323,
+      "review_required": 2,
       "conflicts": 0,
-      "unresolved": 0,
+      "unresolved": 321,
       "public_label": "New Jersey Treasury construction debarment, suspension, or disqualification"
     },
     "NJ_TREASURY_VENDOR_DEBARMENT": {
@@ -207,13 +207,13 @@
       "missing_identifiers": 52,
       "exact": 0,
       "high_confidence": 0,
-      "review_required": 59,
+      "review_required": 0,
       "conflicts": 0,
-      "unresolved": 6,
+      "unresolved": 65,
       "public_label": "New Jersey Treasury vendor debarment, suspension, or disqualification"
     }
   },
-  "license_index_size": 12,
+  "license_index_size": 87355,
   "database_blocker": "No authorized database session (DATABASE_URL missing or connection failed). Code/migrations/tests complete; production ingest not executed.",
   "overlap_path": "data/staging/nj_public_works/contractor_source_overlap.csv",
   "no_clean_record_disclaimer": "Absence from a current list does not prove a clean history. No attached record found in this source snapshot is not clean, cleared, safe, approved, trusted, or vetted."

@@ -159,6 +159,19 @@ class IdentityTests(unittest.TestCase):
         self.assertEqual(result["match_method"], "unresolved")
         self.assertIn("name-only", result["reason"])
 
+    def test_name_city_without_candidate_is_unresolved(self):
+        obs = {
+            "source_family": "NJ_WALL",
+            "official_business_name": "NO SUCH FIRM LLC",
+            "individual_name": None,
+            "address_line_1": "1 MISSING RD",
+            "city": "HOBOKEN",
+            "postal_code": "07030",
+            "certificate_or_vendor_id": None,
+        }
+        result = match_observation(obs, self.index)
+        self.assertEqual(result["match_method"], "unresolved")
+
     def test_unmatched_rows_preserved(self):
         parsed, _ = load_source(SAMPLES / "pwcr_sample.csv", "NJ_PWCR_REGISTRATION")
         ledgers = apply_matches(parsed, self.index)
@@ -180,6 +193,16 @@ class IdentityTests(unittest.TestCase):
 
 
 class IdempotencyTests(unittest.TestCase):
+    def test_watchlist_duplicate_rows_keep_distinct_locators(self):
+        raw = ROOT / "data" / "raw" / "nj_public_works" / "WVW-List.xlsx"
+        if not raw.exists():
+            self.skipTest("official watchlist not on disk")
+        parsed, _ = load_source(raw, "NJ_WAGE_VIOLATION_WATCHLIST")
+        keys = [o["source_observation_key"] for o in parsed]
+        locators = [o["source_record_locator"] for o in parsed]
+        self.assertEqual(len(locators), len(set(locators)))
+        self.assertLess(len(set(keys)), len(keys))
+
     def test_duplicate_event_prevention_and_second_parse(self):
         a, _ = load_source(SAMPLES / "wall_sample.csv", "NJ_WALL")
         b, _ = load_source(SAMPLES / "wall_sample.csv", "NJ_WALL")
@@ -198,6 +221,10 @@ class IdempotencyTests(unittest.TestCase):
         self.assertIn("internal_only", sql)
         self.assertIn("contractor_id", sql)
         self.assertIn("REFERENCES contractors", sql)
+        self.assertIn("official_source_snapshots", sql)
+        self.assertIn("official_source_observations", sql)
+        self.assertIn("official_source_occurrences", sql)
+        self.assertNotIn("CREATE TABLE IF NOT EXISTS nj_source_", sql)
 
 
 class RegressionTests(unittest.TestCase):

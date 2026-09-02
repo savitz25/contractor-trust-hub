@@ -28,10 +28,16 @@ Required headers are documented in `ingest/adapters/nj_public_works.py`.
 
 ## Reconciliation SQL (after execute)
 
+Tables are generic (`official_source_snapshots` / `official_source_observations` / `official_source_occurrences`), not NJ-only clones of Florida `discipline_actions`. Source family stays on each row. Duplicate official watchlist rows are unique observations by fingerprint and retain every file locator as an occurrence.
+
 ```sql
-SELECT source_family, COUNT(*) FROM nj_source_observations GROUP BY 1 ORDER BY 1;
-SELECT source_family, match_method, COUNT(*) FROM nj_source_observations GROUP BY 1,2 ORDER BY 1,2;
-SELECT COUNT(*) FROM nj_source_observations WHERE contractor_id IS NULL;
+SELECT source_family, COUNT(*) FROM official_source_observations GROUP BY 1 ORDER BY 1;
+SELECT source_family, match_method, COUNT(*) FROM official_source_observations GROUP BY 1,2 ORDER BY 1,2;
+SELECT COUNT(*) FROM official_source_observations WHERE contractor_id IS NULL;
+SELECT o.source_family, COUNT(*) AS occurrences, COUNT(DISTINCT o.observation_id) AS observations
+FROM official_source_occurrences o
+JOIN official_source_observations s ON s.id = o.observation_id
+GROUP BY 1;
 -- Absence from a snapshot is not a clean history.
 ```
 

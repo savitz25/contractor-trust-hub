@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT))
 from ingest.env import load_dotenv_files  # noqa: E402
 
 MIG = ROOT / "schema" / "migrations" / "013_nj_public_works_sanctions.sql"
-TABLES = ["nj_source_snapshots", "nj_source_observations"]
+TABLES = ["official_source_snapshots", "official_source_observations", "official_source_occurrences"]
 
 
 def main() -> int:
