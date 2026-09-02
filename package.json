@@ -24,6 +24,7 @@
     "test:matcher": "node scripts/test_permit_matcher.mjs",
     "test:nj": "node scripts/test_nj_verify_smoke.mjs",
     "test:nj-con-001": "python -m unittest scripts.test_nj_con_001",
+    "test:nj-con-002a": "python -m unittest scripts.test_nj_con_002a",
     "test:funnel": "node scripts/test_funnel_smoke.mjs",
     "verify:stage6": "node scripts/verify_stage6_migration.mjs",
     "verify:stage7": "node scripts/verify_stage7_data.mjs",

@@ -32,6 +32,15 @@ PUBLIC_LABELS = {
     "NJ_WAGE_VIOLATION_WATCHLIST": "Wage Violation Watchlist",
     "NJ_TREASURY_CONSTRUCTION_DEBARMENT": "New Jersey Treasury construction debarment, suspension, or disqualification",
     "NJ_TREASURY_VENDOR_DEBARMENT": "New Jersey Treasury vendor debarment, suspension, or disqualification",
+    "NJ_LEAD_EVALUATION": "New Jersey Lead Evaluation Certification",
+    "NJ_LEAD_ABATEMENT": "New Jersey Lead Abatement Certification",
+    "NJ_ASCM_AUTHORIZATION": "New Jersey Asbestos Safety Control Monitoring Authorization",
+    "NJ_FIRE_PROTECTION_PERMIT": "New Jersey Fire Protection Equipment Contractor Permit",
+    "NJ_NEW_HOME_BUILDER": "New Jersey New Home Builder Registration",
+    "NJ_HEC_REGISTRATION": "New Jersey Home Elevation Contractor Registration",
+    "NJ_OPERATION_SAFE_HOUSE": "Notice of Violation",
+    "NJ_OCP_LEGAL_FILING": "Office of Consumer Protection legal filing",
+    "NJ_BOARD_ACTION": "New Jersey contractor board action",
 }
 
 FORBIDDEN_PUBLIC_LABELS = (
@@ -210,7 +219,7 @@ def _base_observation(source_family: str, raw: dict[str, Any], key_fields: dict[
     key = observation_key(source_family=source_family, fields=key_fields)
     return {
         "source_family": source_family,
-        "public_label": PUBLIC_LABELS[source_family],
+        "public_label": PUBLIC_LABELS.get(source_family, source_family),
         "source_record_id": key_fields.get("source_record_id") or key,
         "source_observation_key": key,
         "row_fingerprint_sha256": key,

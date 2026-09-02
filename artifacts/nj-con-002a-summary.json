@@ -1,0 +1,133 @@
+{
+  "ticket": "NJ-CON-002A",
+  "license_index_size": 87355,
+  "families": {
+    "NJ_LEAD_EVALUATION": {
+      "parsed": 182,
+      "distinct_ids": 182,
+      "exact": 0,
+      "high_confidence": 0,
+      "review_required": 0,
+      "conflicts": 0,
+      "unresolved": 182
+    },
+    "NJ_LEAD_ABATEMENT": {
+      "parsed": 87,
+      "distinct_ids": 87,
+      "exact": 0,
+      "high_confidence": 0,
+      "review_required": 0,
+      "conflicts": 0,
+      "unresolved": 87
+    },
+    "NJ_ASCM_AUTHORIZATION": {
+      "parsed": 37,
+      "distinct_ids": 37,
+      "exact": 0,
+      "high_confidence": 0,
+      "review_required": 0,
+      "conflicts": 0,
+      "unresolved": 37
+    },
+    "NJ_FIRE_PROTECTION_PERMIT": {
+      "parsed": 529,
+      "distinct_ids": 529,
+      "exact": 0,
+      "high_confidence": 0,
+      "review_required": 0,
+      "conflicts": 0,
+      "unresolved": 529
+    },
+    "NJ_OPERATION_SAFE_HOUSE": {
+      "parsed": 18,
+      "distinct_ids": 18,
+      "exact": 0,
+      "high_confidence": 0,
+      "review_required": 6,
+      "conflicts": 0,
+      "unresolved": 12
+    },
+    "NJ_OCP_LEGAL_FILING": {
+      "parsed": 4,
+      "distinct_ids": 4,
+      "exact": 0,
+      "high_confidence": 0,
+      "review_required": 0,
+      "conflicts": 0,
+      "unresolved": 4
+    },
+    "NJ_NEW_HOME_BUILDER": {
+      "parsed": 0,
+      "distinct_ids": 0,
+      "exact": 0,
+      "high_confidence": 0,
+      "review_required": 0,
+      "conflicts": 0,
+      "unresolved": 0
+    },
+    "NJ_HEC_REGISTRATION": {
+      "parsed": 0,
+      "distinct_ids": 0,
+      "exact": 0,
+      "high_confidence": 0,
+      "review_required": 0,
+      "conflicts": 0,
+      "unresolved": 0
+    },
+    "NJ_BOARD_ACTION": {
+      "parsed": 0,
+      "distinct_ids": 0,
+      "exact": 0,
+      "high_confidence": 0,
+      "review_required": 0,
+      "conflicts": 0,
+      "unresolved": 0
+    }
+  },
+  "blockers": [
+    "NJ_NEW_HOME_BUILDER: official list now a DCA Service Portal lookup (https://serviceportal.dca.nj.gov/ultra-bhp-home/bhp-home-builder-search/), brlist.pdf 404. No deterministic full-file export.",
+    "NJ_HEC_REGISTRATION: not present in the 87,355 nj_dca credential dump; no current official standalone HEC roster acquired (disaster-recovery program lists are not the HEC registration export).",
+    "NJ_BOARD_ACTION: no official bulk contractor-board action index acquired; OCP legal filings indexed from published PDFs only.",
+    "Production database execution pending (no authorized session)."
+  ],
+  "ocp_related_dockets": [
+    {
+      "identifier": "24-013",
+      "observation_keys": [
+        "0121cc9ffb6a36c4bb45c60ac696bfccd75e80af4f32ed6c2ca400c600e1edd4",
+        "c9acb2fbd21aed3dde2c542790632d72bef1571eb1fbe2d606533afe8a1dfdfa"
+      ],
+      "relation": "same_official_docket_or_nov"
+    }
+  ],
+  "source_files": {
+    "asmlist_list.pdf": {
+      "sha256": "be51abec20b211dff0f53480501d7f882cdc222bd93f40f28794577fc54d6199",
+      "bytes": 350932
+    },
+    "contractorslisting.pdf": {
+      "sha256": "f73ae8171580a81f4ec29c0bad693df39e3d2d16c1c62ee9d4e3acc602119072",
+      "bytes": 80751
+    },
+    "fire_protection_permitted_business.pdf": {
+      "sha256": "601e1cf46e880507cc2dc6af5b673007781e6183b0e5b42dbf69a4908946efac",
+      "bytes": 217891
+    },
+    "ld_abat_c.pdf": {
+      "sha256": "9ca9a00b09dce8042c063e364f0241673284889fa37c7e023ac5912e670e19fb",
+      "bytes": 178198
+    },
+    "ld_eval_contrs.pdf": {
+      "sha256": "a81260215e1fac9ff11a1540a11571aa3ffc3c1e92117dc86d9acaf589c7e434",
+      "bytes": 284620
+    },
+    "Lead_Abatement_Contractors_March_2025.pdf": {
+      "sha256": "7da26cc52f87f58b43d4488f206afaafd9f5bcca45b0e398e082d8cf5fc29930",
+      "bytes": 270809
+    },
+    "Program_Validated_Construction_Contractors_May_2025.pdf": {
+      "sha256": "7cd77501bc69fe4721a4e0070020c3136ffb9983078be9ef78c9aa636218798b",
+      "bytes": 645083
+    }
+  }
+}
