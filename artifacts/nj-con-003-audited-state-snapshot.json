@@ -1,0 +1,287 @@
+{
+  "ticket": "NJ-CON-003",
+  "publication_status": "internal_only",
+  "source_as_of": "2026-08-13",
+  "source_hash": "abc0df7f4d25691f82ca80b14358fd10f94cd8841433edd935f4191e06e46c4e",
+  "denominators": {
+    "total_source_records": 2678341,
+    "permit_issued": 1366478,
+    "certificate_issued": 1311863,
+    "update_marked": 355585,
+    "municipal": 2678281,
+    "state": 60,
+    "other_status": 0,
+    "equation": "permit_issued + certificate_issued + other_status = total_source_records; municipal + state = total_source_records"
+  },
+  "coverage_gaps": {
+    "pwcr": "SOURCE_NOT_ACQUIRED",
+    "prevailing_wage_debarment": "SOURCE_NOT_ACQUIRED",
+    "new_home_builder": "SOURCE_NOT_ACQUIRED",
+    "hec": "SOURCE_NOT_ACQUIRED",
+    "board_action": "SOURCE_NOT_ACQUIRED",
+    "ocp_legal_filings": "PARTIAL_SOURCE_COVERAGE"
+  },
+  "specialty_and_labor": "See NJ-CON-001 / NJ-CON-002A artifacts. Production execute pending.",
+  "permit_certificate_market": {
+    "approved_cost_metric": "permit-issued municipal source-reported estimated construction value (ok+zero). P+C combined cost is not approved.",
+    "approved_unit_metric": "net housing-unit change, with gross positive and gross negative disclosed. Not labeled units gained.",
+    "work_type_mix_permit_issued": {
+      "Alteration": 1213078,
+      "Demolition": 46394,
+      "Addition": 38381,
+      "New": 68625
+    },
+    "work_type_mix_certificate_issued": {
+      "Alteration": 1176808,
+      "Demolition": 64692,
+      "Addition": 26695,
+      "New": 43668
+    },
+    "county": {
+      "ATLANTIC": {
+        "permit_issued_records": 31968,
+        "certificate_issued_records": 28355,
+        "update_marked": 9309,
+        "permit_issued_cost_ok_zero": 1713037260.0,
+        "net_sale_unit_change": 1309,
+        "net_rental_unit_change": 625,
+        "gross_positive_sale_units": 2273,
+        "gross_negative_sale_units": -964,
+        "observed_municipality_codes": 23
+      },
+      "BERGEN": {
+        "permit_issued_records": 158223,
+        "certificate_issued_records": 138021,
+        "update_marked": 34055,
+        "permit_issued_cost_ok_zero": 7884485500.0,
+        "net_sale_unit_change": 6996,
+        "net_rental_unit_change": 9099,
+        "gross_positive_sale_units": 9357,
+        "gross_negative_sale_units": -2361,
+        "observed_municipality_codes": 70
+      },
+      "BURLINGTON": {
+        "permit_issued_records": 87583,
+        "certificate_issued_records": 59513,
+        "update_marked": 18081,
+        "permit_issued_cost_ok_zero": 3185859697.0,
+        "net_sale_unit_change": 2876,
+        "net_rental_unit_change": 4025,
+        "gross_positive_sale_units": 3156,
+        "gross_negative_sale_units": -280,
+        "observed_municipality_codes": 40
+      },
+      "CAMDEN": {
+        "permit_issued_records": 68496,
+        "certificate_issued_records": 59041,
+        "update_marked": 15210,
+        "permit_issued_cost_ok_zero": 2365426130.0,
+        "net_sale_unit_change": 1651,
+        "net_rental_unit_change": 1529,
+        "gross_positive_sale_units": 2252,
+        "gross_negative_sale_units": -601,
+        "observed_municipality_codes": 37
+      },
+      "CAPE MAY": {
+        "permit_issued_records": 33772,
+        "certificate_issued_records": 23672,
+        "update_marked": 6876,
+        "permit_issued_cost_ok_zero": 1761653432.0,
+        "net_sale_unit_change": 2376,
+        "net_rental_unit_change": 74,
+        "gross_positive_sale_units": 4224,
+        "gross_negative_sale_units": -1848,
+        "observed_municipality_codes": 16
+      },
+      "CUMBERLAND": {
+        "permit_issued_records": 14270,
+        "certificate_issued_records": 18857,
+        "update_marked": 3802,
+        "permit_issued_cost_ok_zero": 695132557.0,
+        "net_sale_unit_change": 607,
+        "net_rental_unit_change": 86,
+        "gross_positive_sale_units": 940,
+        "gross_negative_sale_units": -333,
+        "observed_municipality_codes": 14
+      },
+      "ESSEX": {
+        "permit_issued_records": 88290,
+        "certificate_issued_records": 68373,
+        "update_marked": 22410,
+        "permit_issued_cost_ok_zero": 5792074082.0,
+        "net_sale_unit_change": 7315,
+        "net_rental_unit_change": 17033,
+        "gross_positive_sale_units": 8336,
+        "gross_negative_sale_units": -1021,
+        "observed_municipality_codes": 22
+      },
+      "GLOUCESTER": {
+        "permit_issued_records": 49368,
+        "certificate_issued_records": 40499,
+        "update_marked": 10712,
+        "permit_issued_cost_ok_zero": 2052092821.0,
+        "net_sale_unit_change": 3136,
+        "net_rental_unit_change": 410,
+        "gross_positive_sale_units": 3466,
+        "gross_negative_sale_units": -330,
+        "observed_municipality_codes": 23
+      },
+      "HUDSON": {
+        "permit_issued_records": 43502,
+        "certificate_issued_records": 20670,
+        "update_marked": 11681,
+        "permit_issued_cost_ok_zero": 5896392018.0,
+        "net_sale_unit_change": 10489,
+        "net_rental_unit_change": 16761,
+        "gross_positive_sale_units": 11274,
+        "gross_negative_sale_units": -785,
+        "observed_municipality_codes": 12
+      },
+      "HUNTERDON": {
+        "permit_issued_records": 22914,
+        "certificate_issued_records": 33628,
+        "update_marked": 5380,
+        "permit_issued_cost_ok_zero": 656812285.0,
+        "net_sale_unit_change": 407,
+        "net_rental_unit_change": 1068,
+        "gross_positive_sale_units": 578,
+        "gross_negative_sale_units": -171,
+        "observed_municipality_codes": 26
+      },
+      "MERCER": {
+        "permit_issued_records": 79987,
+        "certificate_issued_records": 53524,
+        "update_marked": 22751,
+        "permit_issued_cost_ok_zero": 4181027217.0,
+        "net_sale_unit_change": -396,
+        "net_rental_unit_change": 3199,
+        "gross_positive_sale_units": 3127,
+        "gross_negative_sale_units": -3523,
+        "observed_municipality_codes": 14
+      },
+      "MIDDLESEX": {
+        "permit_issued_records": 148392,
+        "certificate_issued_records": 104272,
+        "update_marked": 29948,
+        "permit_issued_cost_ok_zero": 7999567484.0,
+        "net_sale_unit_change": 6328,
+        "net_rental_unit_change": 5639,
+        "gross_positive_sale_units": 7010,
+        "gross_negative_sale_units": -682,
+        "observed_municipality_codes": 25
+      },
+      "MONMOUTH": {
+        "permit_issued_records": 130883,
+        "certificate_issued_records": 129708,
+        "update_marked": 39354,
+        "permit_issued_cost_ok_zero": 5684692567.0,
+        "net_sale_unit_change": 6332,
+        "net_rental_unit_change": 3174,
+        "gross_positive_sale_units": 8813,
+        "gross_negative_sale_units": -2481,
+        "observed_municipality_codes": 53
+      },
+      "MORRIS": {
+        "permit_issued_records": 84959,
+        "certificate_issued_records": 121808,
+        "update_marked": 26429,
+        "permit_issued_cost_ok_zero": 3315383008.0,
+        "net_sale_unit_change": 3885,
+        "net_rental_unit_change": 6413,
+        "gross_positive_sale_units": 4788,
+        "gross_negative_sale_units": -903,
+        "observed_municipality_codes": 38
+      },
+      "OCEAN": {
+        "permit_issued_records": 124658,
+        "certificate_issued_records": 105938,
+        "update_marked": 47751,
+        "permit_issued_cost_ok_zero": 4626323909.0,
+        "net_sale_unit_change": 8581,
+        "net_rental_unit_change": 2114,
+        "gross_positive_sale_units": 11423,
+        "gross_negative_sale_units": -2842,
+        "observed_municipality_codes": 31
+      },
+      "PASSAIC": {
+        "permit_issued_records": 41429,
+        "certificate_issued_records": 46195,
+        "update_marked": 7995,
+        "permit_issued_cost_ok_zero": 2014885061.0,
+        "net_sale_unit_change": 770,
+        "net_rental_unit_change": 1643,
+        "gross_positive_sale_units": 1299,
+        "gross_negative_sale_units": -529,
+        "observed_municipality_codes": 16
+      },
+      "SALEM": {
+        "permit_issued_records": 8551,
+        "certificate_issued_records": 7484,
+        "update_marked": 1688,
+        "permit_issued_cost_ok_zero": 840507693.0,
+        "net_sale_unit_change": 82,
+        "net_rental_unit_change": 81,
+        "gross_positive_sale_units": 226,
+        "gross_negative_sale_units": -144,
+        "observed_municipality_codes": 14
+      },
+      "SOMERSET": {
+        "permit_issued_records": 48424,
+        "certificate_issued_records": 86887,
+        "update_marked": 15912,
+        "permit_issued_cost_ok_zero": 1667897162.0,
+        "net_sale_unit_change": 1339,
+        "net_rental_unit_change": 4289,
+        "gross_positive_sale_units": 1715,
+        "gross_negative_sale_units": -376,
+        "observed_municipality_codes": 21
+      },
+      "SUSSEX": {
+        "permit_issued_records": 25421,
+        "certificate_issued_records": 44066,
+        "update_marked": 6552,
+        "permit_issued_cost_ok_zero": 583045453.0,
+        "net_sale_unit_change": 1478,
+        "net_rental_unit_change": 218,
+        "gross_positive_sale_units": 1624,
+        "gross_negative_sale_units": -146,
+        "observed_municipality_codes": 22
+      },
+      "UNION": {
+        "permit_issued_records": 59973,
+        "certificate_issued_records": 93937,
+        "update_marked": 15929,
+        "permit_issued_cost_ok_zero": 4113128065.0,
+        "net_sale_unit_change": 3061,
+        "net_rental_unit_change": 7908,
+        "gross_positive_sale_units": 3771,
+        "gross_negative_sale_units": -710,
+        "observed_municipality_codes": 20
+      },
+      "WARREN": {
+        "permit_issued_records": 15389,
+        "certificate_issued_records": 27381,
+        "update_marked": 3757,
+        "permit_issued_cost_ok_zero": 490579378.0,
+        "net_sale_unit_change": 981,
+        "net_rental_unit_change": 475,
+        "gross_positive_sale_units": 1102,
+        "gross_negative_sale_units": -121,
+        "observed_municipality_codes": 22
+      },
+      "STATE": {
+        "permit_issued_records": 26,
+        "certificate_issued_records": 34,
+        "update_marked": 3,
+        "permit_issued_cost_ok_zero": 1129307.0,
+        "net_sale_unit_change": -15,
+        "net_rental_unit_change": 0,
+        "gross_positive_sale_units": 0,
+        "gross_negative_sale_units": -15,
+        "observed_municipality_codes": 0
+      }
+    }
+  },
+  "credentials": "Production NJ DCA credential census not refreshed in this ticket (no authorized DB session).",
+  "public_permit_attribution": 0
+}

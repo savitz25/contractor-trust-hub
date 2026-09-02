@@ -26,6 +26,7 @@
     "test:nj-con-001": "python -m unittest scripts.test_nj_con_001",
     "test:nj-con-002a": "python -m unittest scripts.test_nj_con_002a",
     "test:nj-con-002b": "python -m unittest scripts.test_nj_con_002b",
+    "test:nj-con-003": "python -m unittest scripts.test_nj_con_003",
     "test:funnel": "node scripts/test_funnel_smoke.mjs",
     "verify:stage6": "node scripts/verify_stage6_migration.mjs",
     "verify:stage7": "node scripts/verify_stage7_data.mjs",

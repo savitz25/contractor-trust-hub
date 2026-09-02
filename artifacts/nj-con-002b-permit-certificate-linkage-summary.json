@@ -1,0 +1,246 @@
+{
+  "p_records": 1366478,
+  "c_records": 1311863,
+  "candidate_key": "municipality_code + permit_number",
+  "candidate_key_sufficient_for_project": false,
+  "reason_insufficient": "Permit numbers are reused within a municipality. Groups include one-to-many, many-to-one, and many-to-many P/C patterns. No official project identifier exists.",
+  "p_records_with_candidate_c": 13393,
+  "c_records_with_candidate_p": 13388,
+  "one_to_one_candidate_groups": 13308,
+  "one_to_many_groups": 12,
+  "many_to_one_groups": 25,
+  "many_to_many_groups": 4,
+  "unlinked_p_groups": 1331916,
+  "unlinked_c_groups": 1296418,
+  "cost_repeated_exactly_one_to_one": 10797,
+  "unit_fields_repeated_exactly_one_to_one": 13022,
+  "conflicting_cost_one_to_one": 1407,
+  "conflicting_units_one_to_one": 286,
+  "unsafe_project_grouping_records": 41,
+  "permit_number_reused_within_municipality_p_only_groups": 12329,
+  "approved_analytical_treatment": "Do not create a project identifier. Do not add P and C construction costs. Approved public cost metric is permit-issued municipal records only. Certificate-issued records are a separate source class.",
+  "one_to_one_samples": [
+    {
+      "comu": "0103",
+      "permitno": "202400164",
+      "p_cost": 1959556.0,
+      "c_cost": 0.0,
+      "p_sale": 1,
+      "c_sale": 1
+    },
+    {
+      "comu": "0103",
+      "permitno": "202400333",
+      "p_cost": 500.0,
+      "c_cost": 21400.0,
+      "p_sale": 0,
+      "c_sale": -1
+    },
+    {
+      "comu": "0103",
+      "permitno": "202400386",
+      "p_cost": 1000.0,
+      "c_cost": 1000.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "200000316",
+      "p_cost": 35000.0,
+      "c_cost": 35000.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202100094",
+      "p_cost": 12500.0,
+      "c_cost": 12500.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202100095",
+      "p_cost": 11200.0,
+      "c_cost": 11200.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202100096",
+      "p_cost": 12200.0,
+      "c_cost": 12200.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202100097",
+      "p_cost": 12200.0,
+      "c_cost": 12200.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202100404",
+      "p_cost": 776800.0,
+      "c_cost": 776800.0,
+      "p_sale": 1,
+      "c_sale": 1
+    },
+    {
+      "comu": "0103",
+      "permitno": "202100548",
+      "p_cost": 7550.0,
+      "c_cost": 7550.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202100580",
+      "p_cost": 8205.0,
+      "c_cost": 8205.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202100598",
+      "p_cost": 40400.0,
+      "c_cost": 40400.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202100718",
+      "p_cost": 4000.0,
+      "c_cost": 4000.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202100754",
+      "p_cost": 11500.0,
+      "c_cost": 11500.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202200079",
+      "p_cost": 115500.0,
+      "c_cost": 115500.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202200203",
+      "p_cost": 68400.0,
+      "c_cost": 68400.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202200311",
+      "p_cost": 1546140.0,
+      "c_cost": 1546140.0,
+      "p_sale": 1,
+      "c_sale": 1
+    },
+    {
+      "comu": "0103",
+      "permitno": "202200310",
+      "p_cost": 25000.0,
+      "c_cost": 25000.0,
+      "p_sale": 0,
+      "c_sale": 0
+    },
+    {
+      "comu": "0103",
+      "permitno": "202200316",
+      "p_cost": 313500.0,
+      "c_cost": 313500.0,
+      "p_sale": 1,
+      "c_sale": 1
+    },
+    {
+      "comu": "0103",
+      "permitno": "202200381",
+      "p_cost": 83350.0,
+      "c_cost": 83350.0,
+      "p_sale": 0,
+      "c_sale": 0
+    }
+  ],
+  "one_to_many_samples": [
+    {
+      "comu": "0113",
+      "permitno": "24-407",
+      "p": 1,
+      "c": 2
+    },
+    {
+      "comu": "0602",
+      "permitno": "020090008",
+      "p": 1,
+      "c": 2
+    },
+    {
+      "comu": "1216",
+      "permitno": "000000971187",
+      "p": 1,
+      "c": 2
+    },
+    {
+      "comu": "1340",
+      "permitno": "202400826",
+      "p": 1,
+      "c": 2
+    },
+    {
+      "comu": "1410",
+      "permitno": "01-0539",
+      "p": 1,
+      "c": 2
+    },
+    {
+      "comu": "1511",
+      "permitno": "202101638",
+      "p": 1,
+      "c": 2
+    },
+    {
+      "comu": "1523",
+      "permitno": "23-286",
+      "p": 1,
+      "c": 2
+    },
+    {
+      "comu": "1605",
+      "permitno": "23-00047",
+      "p": 1,
+      "c": 2
+    },
+    {
+      "comu": "1605",
+      "permitno": "23-00032",
+      "p": 1,
+      "c": 2
+    },
+    {
+      "comu": "1614",
+      "permitno": "2048",
+      "p": 1,
+      "c": 2
+    }
+  ]
+}
