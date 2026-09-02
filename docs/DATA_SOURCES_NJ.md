@@ -117,6 +117,21 @@ python -m ingest.adapters.nj_dca \
 python scripts/load_nj_dca_to_postgres.py --staging-dir data/staging/nj_dca_sample --limit 100
 ```
 
+## NJ-CON-001 public-works registration and exclusion sources
+
+Separate from the HIC/board credential graph. Do not collapse into one debarment field. See [NJ-CON-001-RUNBOOK.md](./NJ-CON-001-RUNBOOK.md).
+
+| Family | Official page | Bulk |
+|--------|---------------|------|
+| PWCR | https://www.nj.gov/labor/wageandhour/registration-permits/register/publicworksregistration.shtml | Power BI only — OPRA |
+| Prevailing-wage debarment | https://www.nj.gov/labor/wageandhour/registration-permits/register/debarmentlist.shtml | Power BI only — OPRA |
+| WALL | https://www.nj.gov/labor/ea/osec/wall.shtml | `Wall_Dataset.xlsx` |
+| Wage Violation Watchlist | https://www.nj.gov/labor/ea/osec/wageviolationlist.shtml | `WVW-List.xlsx` |
+| Treasury construction | https://www.nj.gov/treasury/revenue/debarment/debarsearch-construction.shtml | tab/`%` text |
+| Treasury vendor | https://www.nj.gov/treasury/revenue/debarment/debarsearch-vendor.shtml | tab/`%` text |
+
+Absence from a current list is not a clean history.
+
 ## Related
 
 - Florida sources: [DATA_SOURCES.md](./DATA_SOURCES.md)  

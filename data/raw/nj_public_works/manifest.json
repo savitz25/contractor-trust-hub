@@ -1,0 +1,43 @@
+{
+  "ticket": "NJ-CON-001",
+  "jurisdiction": "NJ",
+  "retrieved_at_utc": "2026-09-02T14:45:48Z",
+  "sources": {
+    "NJ_WALL": {
+      "file": "Wall_Dataset.xlsx",
+      "sha256": "685bd16da4d4ae0c602c5ab7f58d42e138cccab23b015eb722d3078c6feb41d0",
+      "bytes": 66714,
+      "source_as_of": "2026-08-05",
+      "url": "https://www.nj.gov/labor/ea/assets/PDFs/Wall_Dataset.xlsx"
+    },
+    "NJ_WAGE_VIOLATION_WATCHLIST": {
+      "file": "WVW-List.xlsx",
+      "sha256": "fc1ccd76c989f0a7c713f2032cc8da9540661395afeedb99ee2d63fc8fb9bc4e",
+      "bytes": 104981,
+      "source_as_of": "2026-03-20",
+      "url": "https://www.nj.gov/labor/ea/assets/PDFs/WVW-List.xlsx"
+    },
+    "NJ_TREASURY_CONSTRUCTION_DEBARMENT": {
+      "file": "Debarment-CONSTRUCTION.txt",
+      "sha256": "c6bc05c08f37329e25a13b89a0d277b2339a40540708a828c50f70558bc21f05",
+      "bytes": 51830,
+      "source_as_of": "2025-10-15",
+      "url": "https://www.nj.gov/treasury/treasfiles/debarment/Debarment-CONSTRUCTION.txt"
+    },
+    "NJ_TREASURY_VENDOR_DEBARMENT": {
+      "file": "Debarment-VENDOR.txt",
+      "sha256": "d0c1c095332aef7efafc602afa3debcea0fa16575add8fdac030653e4f4b5e62",
+      "bytes": 7572,
+      "source_as_of": "2026-02-13",
+      "url": "https://www.nj.gov/treasury/treasfiles/debarment/Debarment-VENDOR.txt"
+    },
+    "NJ_PWCR_REGISTRATION": {
+      "status": "source_not_acquired",
+      "barrier": "Power BI interactive view; no supported deterministic export"
+    },
+    "NJ_PREVAILING_WAGE_DEBARMENT": {
+      "status": "source_not_acquired",
+      "barrier": "Power BI interactive view; no supported deterministic export"
+    }
+  }
+}

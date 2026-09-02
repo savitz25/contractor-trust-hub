@@ -1,0 +1,422 @@
+[
+  {
+    "family": "NJ_WALL",
+    "sample": [
+      {
+        "official_business_name": "Cabanaman Pools LLC",
+        "individual_name": null,
+        "action": "WALL_LISTING",
+        "reason_text": "Unemployment and Temporary Disability Insurance",
+        "effective_date": null,
+        "city": "Brick",
+        "match_method": "review_required",
+        "source_family": "NJ_WALL"
+      },
+      {
+        "official_business_name": "Stanford Angels LLC",
+        "individual_name": null,
+        "action": "WALL_LISTING",
+        "reason_text": "Wage and Hour",
+        "effective_date": null,
+        "city": "Woodbridge Township",
+        "match_method": "review_required",
+        "source_family": "NJ_WALL"
+      },
+      {
+        "official_business_name": "Pinnacle Freight Lines, Inc.",
+        "individual_name": null,
+        "action": "WALL_LISTING",
+        "reason_text": "Gross Income Tax Act",
+        "effective_date": null,
+        "city": "Brookville",
+        "match_method": "review_required",
+        "source_family": "NJ_WALL"
+      },
+      {
+        "official_business_name": "Fletcher Engineering, Inc.",
+        "individual_name": null,
+        "action": "WALL_LISTING",
+        "reason_text": "Unemployment and Temporary Disability Insurance",
+        "effective_date": null,
+        "city": "Hopelawn",
+        "match_method": "review_required",
+        "source_family": "NJ_WALL"
+      },
+      {
+        "official_business_name": "Garde State Psychiatric Services LLC",
+        "individual_name": null,
+        "action": "WALL_LISTING",
+        "reason_text": "Wage and Hour",
+        "effective_date": null,
+        "city": "Woodbury",
+        "match_method": "review_required",
+        "source_family": "NJ_WALL"
+      },
+      {
+        "official_business_name": "Neha Inc. d/b/a Beverage Shop Liquor & Wines",
+        "individual_name": null,
+        "action": "WALL_LISTING",
+        "reason_text": "Workers' Compensation",
+        "effective_date": null,
+        "city": "Rahway",
+        "match_method": "review_required",
+        "source_family": "NJ_WALL"
+      },
+      {
+        "official_business_name": "Jam Musical Industries, LLC T/A RadioTakeOver/Face The Music",
+        "individual_name": null,
+        "action": "WALL_LISTING",
+        "reason_text": "Unemployment and Temporary Disability Insurance",
+        "effective_date": null,
+        "city": "Cherry Hill",
+        "match_method": "review_required",
+        "source_family": "NJ_WALL"
+      },
+      {
+        "official_business_name": "The French Cleaners Inc d/b/a Waldwick Cleaners & Tailoring",
+        "individual_name": null,
+        "action": "WALL_LISTING",
+        "reason_text": "Workers' Compensation",
+        "effective_date": null,
+        "city": "New York",
+        "match_method": "review_required",
+        "source_family": "NJ_WALL"
+      },
+      {
+        "official_business_name": "MSS Enterprises LLC",
+        "individual_name": null,
+        "action": "WALL_LISTING",
+        "reason_text": "Unemployment and Temporary Disability Insurance",
+        "effective_date": null,
+        "city": "Cherry Hill",
+        "match_method": "review_required",
+        "source_family": "NJ_WALL"
+      },
+      {
+        "official_business_name": "Schaffer Quality Builders LLC",
+        "individual_name": null,
+        "action": "WALL_LISTING",
+        "reason_text": "Wage and Hour",
+        "effective_date": null,
+        "city": "West New York",
+        "match_method": "review_required",
+        "source_family": "NJ_WALL"
+      }
+    ]
+  },
+  {
+    "family": "NJ_WAGE_VIOLATION_WATCHLIST",
+    "sample": [
+      {
+        "official_business_name": "MCJ Cleaning, LLC d/b/a Maria Camila Jaramillo",
+        "individual_name": null,
+        "action": "WATCHLIST_FINAL_DETERMINATION",
+        "reason_text": "Minimum Wage Rate, Unpaid Wages",
+        "effective_date": "2026-01-06",
+        "city": "Clifton",
+        "match_method": "review_required",
+        "source_family": "NJ_WAGE_VIOLATION_WATCHLIST"
+      },
+      {
+        "official_business_name": "ALS New Jersey Group 2, LLC d/b/a Amazing Lash Studio",
+        "individual_name": null,
+        "action": "WATCHLIST_FINAL_DETERMINATION",
+        "reason_text": "Unpaid Wages",
+        "effective_date": "2024-03-25",
+        "city": "Clifton",
+        "match_method": "review_required",
+        "source_family": "NJ_WAGE_VIOLATION_WATCHLIST"
+      },
+      {
+        "official_business_name": "Depot Deliveries, LLC",
+        "individual_name": null,
+        "action": "WATCHLIST_FINAL_DETERMINATION",
+        "reason_text": "Unpaid Wages, Overtime Rate",
+        "effective_date": "2024-09-05",
+        "city": "Clifton",
+        "match_method": "review_required",
+        "source_family": "NJ_WAGE_VIOLATION_WATCHLIST"
+      },
+      {
+        "official_business_name": "Fastmed of NJ Limited Liability Company  d/b/a Fastmed of NJ, LLC",
+        "individual_name": null,
+        "action": "WATCHLIST_FINAL_DETERMINATION",
+        "reason_text": "Minimum Wage Rate, Overtime Rate, Unpaid Wages",
+        "effective_date": "2025-02-11",
+        "city": "Clifton",
+        "match_method": "review_required",
+        "source_family": "NJ_WAGE_VIOLATION_WATCHLIST"
+      },
+      {
+        "official_business_name": "Hailbail, LLC d/b/a The Rock Bar And Grill",
+        "individual_name": null,
+        "action": "WATCHLIST_FINAL_DETERMINATION",
+        "reason_text": "Unpaid Wages, Overtime Rate",
+        "effective_date": "2024-08-08",
+        "city": "Clifton",
+        "match_method": "review_required",
+        "source_family": "NJ_WAGE_VIOLATION_WATCHLIST"
+      },
+      {
+        "official_business_name": "Jga Hospitality, LLC",
+        "individual_name": null,
+        "action": "WATCHLIST_FINAL_DETERMINATION",
+        "reason_text": "Unpaid Wages",
+        "effective_date": "2023-07-28",
+        "city": "Absecon",
+        "match_method": "review_required",
+        "source_family": "NJ_WAGE_VIOLATION_WATCHLIST"
+      },
+      {
+        "official_business_name": "Watch Me Play Learn & Grow Acedemy, LLC d/b/a Watch Me Play & Grow  Academy",
+        "individual_name": null,
+        "action": "WATCHLIST_FINAL_DETERMINATION",
+        "reason_text": "Unpaid Wages, Overtime Rate",
+        "effective_date": "2024-05-10",
+        "city": "Irvington",
+        "match_method": "review_required",
+        "source_family": "NJ_WAGE_VIOLATION_WATCHLIST"
+      },
+      {
+        "official_business_name": "B&T Contracting, LLC",
+        "individual_name": null,
+        "action": "WATCHLIST_FINAL_DETERMINATION",
+        "reason_text": "Unpaid Wages",
+        "effective_date": "2024-09-16",
+        "city": "Irvington",
+        "match_method": "review_required",
+        "source_family": "NJ_WAGE_VIOLATION_WATCHLIST"
+      },
+      {
+        "official_business_name": "DPF Evolution Truck Repairs, LLC d/b/a DPF Evolution Truck Repairs",
+        "individual_name": null,
+        "action": "WATCHLIST_FINAL_DETERMINATION",
+        "reason_text": "Minimum Wage Rate, Overtime Rate, Unpaid Wages",
+        "effective_date": "2025-08-15",
+        "city": "Irvington",
+        "match_method": "review_required",
+        "source_family": "NJ_WAGE_VIOLATION_WATCHLIST"
+      },
+      {
+        "official_business_name": "Happy Scholars Academy",
+        "individual_name": null,
+        "action": "WATCHLIST_FINAL_DETERMINATION",
+        "reason_text": "Unpaid Wages, Overtime Rate",
+        "effective_date": "2025-04-07",
+        "city": "Irvington",
+        "match_method": "review_required",
+        "source_family": "NJ_WAGE_VIOLATION_WATCHLIST"
+      }
+    ]
+  },
+  {
+    "family": "NJ_TREASURY_CONSTRUCTION_DEBARMENT",
+    "sample": [
+      {
+        "official_business_name": "American Eagle Contractor, Inc.",
+        "individual_name": "Agustin Zuniga, President",
+        "action": "DEBARMENT",
+        "reason_text": "Wage & Hour Violation",
+        "effective_date": "2014-08-12",
+        "city": "Long Branch",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_CONSTRUCTION_DEBARMENT"
+      },
+      {
+        "official_business_name": "S & S Electric, LLC",
+        "individual_name": "Al Shan, President",
+        "action": "DEBARMENT",
+        "reason_text": "Wage & Hour Violation",
+        "effective_date": "2015-01-13",
+        "city": "Toms River",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_CONSTRUCTION_DEBARMENT"
+      },
+      {
+        "official_business_name": "",
+        "individual_name": "Alan Lombardi, President",
+        "action": "DEBARMENT",
+        "reason_text": "Wage & Hour Violation",
+        "effective_date": "2014-12-10",
+        "city": null,
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_CONSTRUCTION_DEBARMENT"
+      },
+      {
+        "official_business_name": "Kitchen Crafters Plus d/b/a B&B Custom Cabinets",
+        "individual_name": "Albert Brisebois, Owner",
+        "action": "DEBARMENT",
+        "reason_text": "Wage & Hour Violation",
+        "effective_date": "2015-06-01",
+        "city": "Aberdeen",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_CONSTRUCTION_DEBARMENT"
+      },
+      {
+        "official_business_name": "Ren Construction",
+        "individual_name": "Albert Chwedczuk, Owner",
+        "action": "DEBARMENT",
+        "reason_text": "Wage & Hour Violation",
+        "effective_date": "2014-07-10",
+        "city": "Toms River",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_CONSTRUCTION_DEBARMENT"
+      },
+      {
+        "official_business_name": "",
+        "individual_name": "ALEXANDER, MARVIN",
+        "action": "DEBARMENT",
+        "reason_text": "Wage & Hour Violation",
+        "effective_date": "2013-12-04",
+        "city": "ORANGE",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_CONSTRUCTION_DEBARMENT"
+      },
+      {
+        "official_business_name": "Allied Construction LLC.Allied Construction Management, LLC",
+        "individual_name": "Alfred Sciubba, Managing Member",
+        "action": "DEBARMENT",
+        "reason_text": "Wage & Hour Violation",
+        "effective_date": "2013-10-22",
+        "city": "Cherry Hill",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_CONSTRUCTION_DEBARMENT"
+      },
+      {
+        "official_business_name": "Five Star Quality Construction",
+        "individual_name": "Alicirio Jose Santana Pires, Owner",
+        "action": "DEBARMENT",
+        "reason_text": "Wage & Hour Violation",
+        "effective_date": "2014-04-23",
+        "city": "Cinnaminson",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_CONSTRUCTION_DEBARMENT"
+      },
+      {
+        "official_business_name": "Vercon Building & Maintenance Corp.",
+        "individual_name": "Allanur Islambekov, Owner",
+        "action": "DEBARMENT",
+        "reason_text": "Wage & Hour Violation",
+        "effective_date": "2014-05-12",
+        "city": "Jackson",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_CONSTRUCTION_DEBARMENT"
+      },
+      {
+        "official_business_name": "",
+        "individual_name": "Andrzej Citak, Vice-President",
+        "action": "DEBARMENT",
+        "reason_text": "Wage & Hour Violation",
+        "effective_date": "2014-09-24",
+        "city": "Brooklyn",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_CONSTRUCTION_DEBARMENT"
+      }
+    ]
+  },
+  {
+    "family": "NJ_TREASURY_VENDOR_DEBARMENT",
+    "sample": [
+      {
+        "official_business_name": "",
+        "individual_name": "BAILEY, KENNETH",
+        "action": "CONSTRUCTION",
+        "reason_text": "Industry Law Violation",
+        "effective_date": "2015-05-07",
+        "city": "HEISLERVILLE",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_VENDOR_DEBARMENT"
+      },
+      {
+        "official_business_name": "",
+        "individual_name": "BARNEY, WILLIAM",
+        "action": "SUSPENSION",
+        "reason_text": "Criminal Offense",
+        "effective_date": "2001-08-27",
+        "city": "SICKLERVILLE",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_VENDOR_DEBARMENT"
+      },
+      {
+        "official_business_name": "",
+        "individual_name": "BARRETTI SR., PHILIP",
+        "action": "SUSPENSION",
+        "reason_text": "Organized Crime Contract",
+        "effective_date": "1996-01-09",
+        "city": "NEWARK",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_VENDOR_DEBARMENT"
+      },
+      {
+        "official_business_name": "",
+        "individual_name": "BIRDSALL, HOWARD",
+        "action": "DEBARMENT",
+        "reason_text": "Criminal Offense",
+        "effective_date": "2016-02-18",
+        "city": "BRIELLE",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_VENDOR_DEBARMENT"
+      },
+      {
+        "official_business_name": "",
+        "individual_name": "BIRDSALL, WILLIAM",
+        "action": "DEBARMENT",
+        "reason_text": "Criminal Offense",
+        "effective_date": "2016-05-02",
+        "city": "TAVARES",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_VENDOR_DEBARMENT"
+      },
+      {
+        "official_business_name": "",
+        "individual_name": "BOHRER, ARTHUR",
+        "action": "SUSPENSION",
+        "reason_text": "Criminal Offense",
+        "effective_date": "2000-09-17",
+        "city": "W. PALM BEACH",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_VENDOR_DEBARMENT"
+      },
+      {
+        "official_business_name": "",
+        "individual_name": "BRUNO, ROBERT",
+        "action": "DEBARMENT",
+        "reason_text": "Criminal Offense",
+        "effective_date": "2021-03-18",
+        "city": "WARREN",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_VENDOR_DEBARMENT"
+      },
+      {
+        "official_business_name": "",
+        "individual_name": "BRYAN, MARK",
+        "action": "DEBARMENT",
+        "reason_text": "Criminal Offense",
+        "effective_date": "2024-06-07",
+        "city": null,
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_VENDOR_DEBARMENT"
+      },
+      {
+        "official_business_name": "",
+        "individual_name": "BRYANT SR., DAVID V.",
+        "action": "DEBARMENT",
+        "reason_text": "Criminal Offense",
+        "effective_date": "2013-09-13",
+        "city": "NEWFIELD",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_VENDOR_DEBARMENT"
+      },
+      {
+        "official_business_name": "GULF COAST POLYMER SERVICES, INC.",
+        "individual_name": "BRYANT, GERALD",
+        "action": "DEBARMENT",
+        "reason_text": "Criminal Offense",
+        "effective_date": "2013-09-13",
+        "city": "NEWFIELD",
+        "match_method": "review_required",
+        "source_family": "NJ_TREASURY_VENDOR_DEBARMENT"
+      }
+    ]
+  }
+]
