@@ -1,0 +1,17 @@
+{
+  "dataset_id": "w9se-dmra",
+  "source_url": "https://data.nj.gov/api/views/w9se-dmra/rows.csv?accessType=DOWNLOAD",
+  "landing_url": "https://data.nj.gov/Reference-Data/NJ-Construction-Permit-Data/w9se-dmra",
+  "acquisition": {
+    "method": "socrata_csv_download",
+    "url": "https://data.nj.gov/api/views/w9se-dmra/rows.csv?accessType=DOWNLOAD",
+    "raw_filename": "nj_construction_permit_data.csv",
+    "bytes": 730422976,
+    "sha256": "abc0df7f4d25691f82ca80b14358fd10f94cd8841433edd935f4191e06e46c4e",
+    "retrieved_at_utc": "2026-09-02T15:55:28Z",
+    "csv_row_count": 2678341,
+    "repeatable": true
+  },
+  "schema_fingerprint": "a6c909ecb2d6919e4aa47480d1889eb0208a09d5105f1a47fa1cea0fd8934996",
+  "independent_count": 2678341
+}
