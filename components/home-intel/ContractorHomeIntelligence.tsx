@@ -3,6 +3,7 @@ import { AskContractorTrustHub } from "@/components/ask/AskContractorTrustHub";
 import { HomeBeyondLicense } from "@/components/home/HomeBeyondLicense";
 import { HomeContinuity } from "@/components/home/HomeContinuity";
 import { HomeIntelHero } from "@/components/home/HomeIntelHero";
+import { HomeDiscoverySearch } from "@/components/home/HomeDiscoverySearch";
 import { HomeMethodology } from "@/components/home/HomeMethodology";
 import { HomeSearchBlock } from "@/components/home/HomeSearchBlock";
 import { ExplainDataDrawer } from "@/components/intel/ExplainDataDrawer";
@@ -95,6 +96,7 @@ export function ContractorHomeIntelligence({
     <div className="cth-intel-home">
       <HomeContinuity />
       <HomeIntelHero intel={scale} />
+      <HomeDiscoverySearch />
 
       <section id="findings" aria-labelledby="findings-title">
         <span id="enforcement" className="sr-only">
@@ -302,8 +304,8 @@ export function ContractorHomeIntelligence({
       </section>
 
       <section id="verify" aria-labelledby="verify-title" className="scroll-mt-24">
-        <p className="cth-intel-eyebrow">Research a specific contractor</p>
-        <h2 id="verify-title">Search by company, license number, or supported identifier</h2>
+        <p className="cth-intel-eyebrow">Verify a known contractor</p>
+        <h2 id="verify-title">Verify by company, license number, or supported identifier</h2>
         <p className="mt-2 max-w-2xl text-sm text-[var(--muted)]">
           Traditional verification is an action after you understand the market — not the identity of this homepage.
         </p>

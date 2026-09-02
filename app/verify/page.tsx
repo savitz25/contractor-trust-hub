@@ -20,6 +20,7 @@ import { verifyMetadata } from "@/lib/seo/verify-meta";
 import { getLiveStates, getStateBySlug } from "@/lib/states/config";
 import { TX_COVERED_TRADES_PLAIN } from "@/lib/states/tx-trades";
 import { parseWorkIntent, verifyPathWithWork } from "@/lib/verify/work-intents";
+import { isDiscoveryQuery } from "@/lib/search/contractor-discovery";
 
 type Props = {
   searchParams: Promise<{ q?: string; intent?: string; state?: string; work?: string }>;
@@ -52,13 +53,14 @@ export default async function VerifyPage({ searchParams }: Props) {
   const isKy = state.slug === "ky";
   const isSpecialty = isTx || isNj || isOr || isCa || isAz || isWa || isLa || isMs || isKy;
   const q = (sp.q || "").trim();
+  const discoveryHandoff = q.length >= 2 && isDiscoveryQuery(q);
   const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
   const work = parseWorkIntent(sp.work);
   let results: Awaited<ReturnType<typeof searchContractors>>["results"] = [];
   let mode: "license" | "name" = "name";
   let error: string | null = null;
 
-  if (q.length >= 2 || work) {
+  if ((q.length >= 2 || work) && !discoveryHandoff) {
     try {
       const res = await searchContractors(q, { stateSlug: state.slug, work });
       results = res.results;
@@ -460,6 +462,15 @@ export default async function VerifyPage({ searchParams }: Props) {
         </p>
       </div>
 
+      {discoveryHandoff ? (
+        <div role="status" className="mt-6 rounded-xl border border-sky-200 bg-sky-50 px-4 py-4 text-sm leading-relaxed text-sky-950 sm:mt-8">
+          <p className="font-semibold">This looks like contractor discovery research.</p>
+          <p className="mt-1">Verify is for a known business or credential. Research this trade and recorded regulatory geography without losing your query.</p>
+          <Link href={`/search?q=${encodeURIComponent(q)}`} className="mt-3 inline-flex rounded-lg bg-[var(--navy)] px-4 py-2 font-semibold text-white no-underline">Research contractors instead</Link>
+          <p className="mt-2 text-xs">Recorded credential/address geography is not service territory or current availability.</p>
+        </div>
+      ) : null}
+
       {error ? (
         <div
           role="alert"
@@ -502,7 +513,7 @@ export default async function VerifyPage({ searchParams }: Props) {
         </div>
       ) : null}
 
-      {(q.length >= 2 || work) && !error ? (
+      {(q.length >= 2 || work) && !error && !discoveryHandoff ? (
         <section className="mt-7 sm:mt-10" aria-live="polite">
           <div className="mb-3 flex flex-col gap-0.5 sm:mb-4 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-2">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
