@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SearchForm } from "@/components/search/SearchForm";
 import { getLiveStateCount } from "@/lib/states/config";
 
-/** Compact verify search for visitors who already know a name or license. */
+/** Secondary exact verification path for visitors who already know a name or license. */
 export function HomeSearchBlock({ embedded = false }: { embedded?: boolean }) {
   const liveCount = getLiveStateCount();
   const heading = embedded ? (
@@ -18,7 +18,7 @@ export function HomeSearchBlock({ embedded = false }: { embedded?: boolean }) {
         id="search-heading"
         className="text-lg font-semibold text-[var(--text)] sm:text-xl"
       >
-        Search by license number or company name
+        Verify a known business or license
       </h2>
       <p className="mt-1 text-sm text-[var(--muted)]">
         Choose a state ({liveCount} live), then search. Free — no account, no lead form.{" "}

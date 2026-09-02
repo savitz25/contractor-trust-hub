@@ -53,12 +53,10 @@ export function HomeIntelHero({ intel }: { intel: ContractorHubIntelV2 }) {
         on the official board before you hire.
       </p>
       <div className="cth-intel-actions">
-        <a className="cth-intel-btn cth-intel-btn--primary" href="#findings">
-          Explore contractor intelligence
+        <a className="cth-intel-btn cth-intel-btn--primary" href="#contractor-search">
+          Find and research contractors
         </a>
-        <a className="cth-intel-btn cth-intel-btn--secondary" href="#verify">
-          Research a contractor
-        </a>
+        <Link className="cth-intel-btn cth-intel-btn--secondary" href="/verify">Verify a known business</Link>
       </div>
       <ul className="cth-intel-metrics mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {metrics.map((m) => (
