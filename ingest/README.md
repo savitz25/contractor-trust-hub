@@ -11,6 +11,7 @@
 | 3 | `adapters/tx_tdlr.py` | TX TDLR specialty licenses (Open Data) | `data/staging/tx_tdlr/` |
 | 4 | `adapters/tx_tsbpe.py` | TX plumbing (TSBPE free CSV lists) | `data/staging/tx_tsbpe/` |
 | 5 | `adapters/nj_dca.py` | NJ DCA HIC + specialty boards (no statewide GC) | `data/staging/nj_dca/` |
+| 5b | `adapters/nj_public_works.py` | NJ PWCR + exclusion lists (WALL, watchlist, Treasury; Power BI PWCR/PW debarment blocked) | `data/staging/nj_public_works/` |
 | 6 | `adapters/ca_cslb.py` | CA CSLB public list Excel (high-impact counties) | `data/staging/ca_cslb/` |
 | 6 | `adapters/or_ccb.py` | Oregon CCB Active Licenses | `data/staging/or_ccb/` |
 | 7 | Permits | County / city open data | Later |
