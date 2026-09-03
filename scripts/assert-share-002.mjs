@@ -31,7 +31,7 @@ const trustReport = read("lib/seo/trust-report-seo.ts");
 
 assert(shareHub.includes('id: "contractor"'), "SHARE_HUB.id is contractor");
 assert(shareHub.includes('host: "www.contractortrusthub.com"'), "SHARE_HUB.host");
-assert(shareHub.includes('ogImagePath: "/brand/contractor-trust-hub-og.png"'), "PNG OG path");
+assert(shareHub.includes('ogImagePath: "/opengraph-image"'), "dynamic canonical OG path");
 assert(shareHub.includes("ogWidth: 1200") && shareHub.includes("ogHeight: 630"), "1200×630");
 assert(shareHub.includes('twitterCard: "summary_large_image"'), "twitter large");
 

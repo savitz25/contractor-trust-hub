@@ -56,8 +56,7 @@ assert(layout.includes("data-th-chassis"), "chassis stamp");
 assert(layout.includes('id="main-content"'), "skip target");
 assert(layout.includes("Inter"), "Inter chrome font");
 assert(site.includes("https://www.contractortrusthub.com"), "canonical host");
-assert(shareCard.includes('viewBox="0 0 36 36"'), "SHARE-003 canonical mark viewBox");
-assert(shareCard.includes('strokeWidth="2.4"'), "SHARE-003 canonical stroke");
+assert(shareCard.includes("renderNetworkShareImage"), "SHARE-004B canonical network card");
 
 const order = ['id: "ask"', 'id: "move"', 'id: "lender"', 'id: "insurance"', 'id: "contractor"', 'id: "senior"', 'id: "investor"'];
 let last = -1;
