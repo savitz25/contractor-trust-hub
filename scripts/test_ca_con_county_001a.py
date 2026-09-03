@@ -112,8 +112,7 @@ class NamespaceTests(unittest.TestCase):
         self.assertTrue((ROOT / "scripts/california/counties/sf-sd").is_dir())
         self.assertTrue((ROOT / "data/california/counties/san-francisco/fixtures").is_dir())
         self.assertTrue((ROOT / "data/california/counties/san-diego/fixtures").is_dir())
-        self.assertFalse((ROOT / "data/california/counties/los-angeles").exists())
-        self.assertFalse((ROOT / "data/california/counties/santa-clara").exists())
+        # Additive sibling harvest (CA-CON-COUNTY-001B) may add los-angeles/santa-clara.
         self.assertEqual(MAN["ticket"], "CA-CON-COUNTY-001A")
         self.assertEqual(REP["publication_decision"]["san_francisco"], "PUBLISH_DEDICATED_COUNTY_PAGE")
         self.assertEqual(REP["publication_decision"]["city_of_san_diego"], "PUBLISH_LIGHT_MARKET_MODULE")

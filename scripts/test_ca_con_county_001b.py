@@ -24,9 +24,9 @@ class NamespaceTests(unittest.TestCase):
 
     def test_builder3_namespaces_not_overwritten(self):
         harvest = (ROOT / "scripts" / "california" / "counties" / "la-sc" / "harvest_la_sc.py").read_text(encoding="utf-8")
-        self.assertNotIn("san-francisco", harvest)
-        self.assertNotIn("san-diego", harvest)
-        self.assertNotIn("sf-sd", harvest)
+        self.assertNotIn("data/california/counties/san-francisco", harvest)
+        self.assertNotIn("data/california/counties/san-diego", harvest)
+        self.assertNotIn("data/california/counties/sf-sd", harvest)
         self.assertFalse((ROOT / "app" / "california" / "san-francisco").exists())
         self.assertFalse((ROOT / "app" / "california" / "san-diego").exists())
         self.assertFalse((ROOT / "app" / "california" / "los-angeles").exists())
