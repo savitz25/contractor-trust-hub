@@ -16,6 +16,7 @@ const PROFILE = {
   id: "11111111-1111-4111-8111-111111111111",
   slug: "cbc015082-acme-roofing",
   externalKey: "CBC015082",
+  displayName: "Acme Roofing",
 };
 
 function contractor(overrides: Partial<ContractorDetail> = {}): ContractorDetail {
@@ -64,11 +65,15 @@ function askAccepts(token: string, expected = PROFILE, now = new Date("2026-01-0
   const calculated = createHmac("sha256", SECRET).update(body, "utf8").digest("base64url");
   assert.equal(timingSafeEqual(Buffer.from(signature), Buffer.from(calculated)), true);
   const payload = JSON.parse(Buffer.from(body, "base64url").toString("utf8")) as AthHandoffPayload;
-  assert.equal(payload.v, 1);
+  assert.equal(payload.v, 2);
   assert.equal(payload.aud, "asktrusthub");
   assert.equal(payload.hub_id, "contractor");
   assert.equal(payload.home_state, "FL");
   assert.equal(payload.source_system, "fl_dbpr");
+  assert.equal(payload.identifier_namespace, "credential");
+  assert.equal(payload.entity_class, "contractor");
+  assert.equal(payload.canonical_profile_url, `https://www.contractortrusthub.com/contractors/${expected.slug}`);
+  assert.equal(payload.display_name, expected.displayName);
   assert.ok(payload.exp >= Math.floor(now.getTime() / 1000));
   assert.equal(payload.native_profile_id, expected.id);
   assert.equal(payload.slug, expected.slug);

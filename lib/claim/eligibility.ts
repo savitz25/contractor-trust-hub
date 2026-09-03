@@ -4,6 +4,7 @@ export type ClaimProfile = {
   id: string;
   slug: string;
   externalKey: string;
+  displayName: string;
 };
 
 export function eligibleClaimProfile(contractor: ContractorDetail): ClaimProfile | null {
@@ -15,5 +16,5 @@ export function eligibleClaimProfile(contractor: ContractorDetail): ClaimProfile
       (contractor.homeState === "FL" || item.state === "FL")
   );
   if (!license) return null;
-  return { id: contractor.id, slug: contractor.slug, externalKey: license.externalKey };
+  return { id: contractor.id, slug: contractor.slug, externalKey: license.externalKey, displayName: contractor.displayName };
 }

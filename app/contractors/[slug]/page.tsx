@@ -195,9 +195,14 @@ export default async function ContractorPage({ params, searchParams }: Props) {
     primary?.externalKey ? `&license=${encodeURIComponent(primary.externalKey)}` : ""
   }`;
   const claimProfile = eligibleClaimProfile(contractor);
-  const showClaimCta = Boolean(claimProfile && claimCtaEnabledFor(claimProfile.id));
-  const businessProfile = claimProfile ? await getPublicBusinessProfile(claimProfile.id) : null;
-  const businessReplies = claimProfile ? await getPublicBusinessReplies(claimProfile.id) : null;
+  const customerRolloutEnabled = Boolean(claimProfile && claimCtaEnabledFor(claimProfile.id));
+  const showClaimCta = customerRolloutEnabled;
+  const [businessProfile, businessReplies] = customerRolloutEnabled && claimProfile
+    ? await Promise.all([
+        getPublicBusinessProfile(claimProfile.id),
+        getPublicBusinessReplies(claimProfile.id),
+      ])
+    : [null, null];
 
   // FL only: officer-name lineage from stored Sunbiz officers (no invented links)
   const entityLineage =
