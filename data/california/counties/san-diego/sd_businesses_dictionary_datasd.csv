@@ -1,0 +1,28 @@
+field,data_type,description,possible_values
+account_key,,Primary Key,
+account_status,,Whether the account is active or inactive,Active; Inactive
+date_account_creation,,Date when the business tax account was created.,
+date_cert_expiration,,Date when the business tax certificate expires.,
+date_cert_effective,,Date when the business tax certificate becomes effective.,
+business_owner_name,,Business Owner,
+ownership_type,,Ownership Type,"Corp-Coporation,H-W-Married, LLC-Limited Liability Co (LLC), LP-Limited Partnership (LP), NO/PRF-Non-profit entity, Partnr-partnership, SCORP-S Corporation, Sole-Sole Propriethorship, Trust-Trust"
+date_business_start,,Date when the business began operations.,
+dba_name,,Doing Business As name,
+naics_sector,,NAICS (North American Industry Classification System) sector,https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2012
+naics_code,,NAICS code,
+naics_description,,NAICS code description,
+address_no,,Street address number of the business location.,
+address_pd,,Directional prefix of the business address.,
+address_road,,Street name of the business location.,
+address_sfx,,Street type or suffix of the business address.,
+address_no_fraction,,Fractional component of the business address number.,
+address_city,,City where the business is located.,
+address_state,,State where the business is located.,
+address_zip,,ZIP code of the business location.,
+address_suite,,Suite or unit number of the business location.,
+address_pmb_box,,Private mailbox number associated with the business address.,
+address_po_box,,Post office box number associated with the business address.,
+bid,,"Business Improvement District, if business is located within one",https://www.sandiego.gov/sites/default/files/0313_bid_map_2018_final_landscape.pdf
+council_district,,City council district where the business is located.,
+lat,,Latitude coordinate of the business location.,
+lng,,Longitude coordinate of the business location.,

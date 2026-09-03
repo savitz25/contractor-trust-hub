@@ -1,0 +1,1123 @@
+{
+  "ticket": "CA-CON-COUNTY-001A",
+  "as_of": "2026-09-03",
+  "cslb_spine": {
+    "rows": 75572,
+    "coverage": "ACQUIRED_PARTIAL_STREAM_TRUNCATED",
+    "complete_denominator": "UNKNOWN",
+    "non_match_is_not_unlicensed": true
+  },
+  "no_public_county_routes": true,
+  "no_shared_county_loader": true,
+  "sf_registered_business": {
+    "grain": "registered business location",
+    "rows": 366307,
+    "distinct_business_accounts": 258032,
+    "distinct_locations": 366307,
+    "distinct_business_names": 282402,
+    "current_if_no_end_and_not_admin_closed": 126522,
+    "sf_city_rows": 296266,
+    "ca_or_blank_state_rows": 355356,
+    "family_rows": {
+      "construction": 12128,
+      "financial": 3481,
+      "senior": 980,
+      "moving": 520,
+      "insurance": 578
+    },
+    "construction_related_rows": 12128,
+    "construction_related_accounts": 8743,
+    "cslb_match": {
+      "UNSAFE": 10511,
+      "HIGH_CONFIDENCE": 831,
+      "REVIEW_REQUIRED": 785,
+      "NO_SOURCE_LICENSE_ID": 1
+    },
+    "contacts": {
+      "phones": 0,
+      "emails": 0,
+      "websites": 0,
+      "addresses": 366302,
+      "phone_eligibility": "INTERNAL_ONLY",
+      "email_eligibility": "INTERNAL_ONLY",
+      "address_eligibility": "PUBLIC_ELIGIBLE",
+      "note": "DataSF registered-business schema has no phone/email/website columns."
+    },
+    "file": {
+      "bytes": 116522528,
+      "sha256": "48e62d70a17ec8008b0334ea33591c5f4d87b97d15f58ebf5bb2e78359c28a5f",
+      "columns": [
+        "UniqueID",
+        "Business Account Number",
+        "Location Id",
+        "Ownership Name",
+        "DBA Name",
+        "Street Address",
+        "City",
+        "State",
+        "Source Zipcode",
+        "Business Start Date",
+        "Business End Date",
+        "Location Start Date",
+        "Location End Date",
+        "Administratively Closed",
+        "Mail Address",
+        "Mail City",
+        "Mail State",
+        "Mail Zipcode",
+        "Self-Reported NAICS Code",
+        "LIC Code",
+        "LIC Code Description",
+        "LIC Code Descriptions List",
+        "Parking Tax",
+        "Transient Occupancy Tax",
+        "Business Location",
+        "Business Corridor",
+        "Supervisor District",
+        "Community Benefit District",
+        "Neighborhoods - Analysis Boundaries",
+        "data_as_of",
+        "data_loaded_at",
+        "Current Supervisor Districts",
+        "Analysis Neighborhoods",
+        "Neighborhoods",
+        "SF Find Neighborhoods",
+        "Current Police Districts"
+      ]
+    }
+  },
+  "sf_building_permits": {
+    "grain": "permit at an address (source-native; permit numbers may repeat)",
+    "rows": 1294909,
+    "distinct_permit_numbers": 1149123,
+    "permit_type_top": [
+      [
+        "otc alterations permit",
+        973792
+      ],
+      [
+        "additions alterations or repairs",
+        271433
+      ],
+      [
+        "sign - erect",
+        21142
+      ],
+      [
+        "new construction wood frame",
+        13125
+      ],
+      [
+        "demolitions",
+        7310
+      ],
+      [
+        "wall or painted sign",
+        4133
+      ],
+      [
+        "new construction",
+        2496
+      ],
+      [
+        "grade or quarry or fill or excavate",
+        835
+      ],
+      [
+        "(blank)",
+        643
+      ]
+    ],
+    "status_top": [
+      [
+        "complete",
+        743055
+      ],
+      [
+        "issued",
+        247659
+      ],
+      [
+        "expired",
+        232324
+      ],
+      [
+        "cancelled",
+        43312
+      ],
+      [
+        "filed",
+        11408
+      ],
+      [
+        "withdrawn",
+        11284
+      ],
+      [
+        "reinstated",
+        1494
+      ],
+      [
+        "approved",
+        1166
+      ],
+      [
+        "filing",
+        1098
+      ],
+      [
+        "suspend",
+        671
+      ],
+      [
+        "disapproved",
+        574
+      ],
+      [
+        "triage",
+        452
+      ],
+      [
+        "revoked",
+        269
+      ],
+      [
+        "plancheck",
+        51
+      ],
+      [
+        "appeal",
+        28
+      ]
+    ],
+    "rows_with_contractor_name": 0,
+    "rows_with_contractor_license_on_permit_file": 0,
+    "rows_with_valuation": 1151222,
+    "rows_with_parcel_or_block_lot": 1294909,
+    "rows_with_completed_date": 747866,
+    "filed_date_min": "1901/03/10 12:07:00 AM",
+    "filed_date_max": "2026/09/02 12:55:53 PM",
+    "columns": [
+      "Permit Number",
+      "Permit Type",
+      "Permit Type Definition",
+      "Permit Creation Date",
+      "Block",
+      "Lot",
+      "Street Number",
+      "Street Number Suffix",
+      "Street Name",
+      "Street Suffix",
+      "Unit",
+      "Unit Suffix",
+      "Description",
+      "Current Status",
+      "Current Status Date",
+      "Filed Date",
+      "Issued Date",
+      "Completed Date",
+      "First Construction Document Date",
+      "approved_date",
+      "Structural Notification",
+      "Number of Existing Stories",
+      "Number of Proposed Stories",
+      "Voluntary Soft-Story Retrofit",
+      "Fire Only Permit",
+      "Estimated Cost",
+      "Revised Cost",
+      "Existing Use",
+      "Existing Units",
+      "Proposed Use",
+      "Proposed Units",
+      "Plansets",
+      "TIDF Compliance",
+      "Existing Occupancy",
+      "Proposed Occupancy",
+      "Existing Construction Type",
+      "Existing Construction Type Description",
+      "Proposed Construction Type",
+      "Proposed Construction Type Description",
+      "Site Permit",
+      "Last Permit Activity Date",
+      "Application Submission Method",
+      "ADU",
+      "Primary Address Flag",
+      "supervisor_district",
+      "neighborhoods_analysis_boundaries",
+      "Zipcode",
+      "Location",
+      "point_source",
+      "reroof",
+      "Record ID",
+      "data_as_of",
+      "data_loaded_at"
+    ],
+    "bytes": 698337480,
+    "sha256": "bc85fa947ab971bb4ded4c3910a832d5ff92a91c4b4b621603f11aabe6aee603",
+    "semantics": [
+      "PERMIT APPLICATION != ISSUED PERMIT",
+      "ISSUED != COMPLETED",
+      "COMPLETED != PASSED EVERY INSPECTION",
+      "PERMIT HOLDER != PROPERTY OWNER",
+      "PERMIT VALUE != FINAL PROJECT COST",
+      "PERMIT COUNT != QUALITY",
+      "NO PERMIT FOUND != NO WORK PERFORMED"
+    ]
+  },
+  "sf_permit_contacts": {
+    "grain": "permit contact / agent row",
+    "rows": 1032543,
+    "rows_with_license1_or_license2": 562059,
+    "distinct_license_ids": 23179,
+    "distinct_contact_names": 104291,
+    "distinct_permits_with_license": 517092,
+    "role_top": [
+      [
+        "contractor",
+        584555
+      ],
+      [
+        "authorized agent-others",
+        148422
+      ],
+      [
+        "architect",
+        97439
+      ],
+      [
+        "engineer",
+        71584
+      ],
+      [
+        "lessee",
+        42529
+      ],
+      [
+        "payor",
+        33575
+      ],
+      [
+        "pmt consultant/expediter",
+        26188
+      ],
+      [
+        "designer",
+        15965
+      ],
+      [
+        "project contact",
+        11554
+      ],
+      [
+        "attorney",
+        571
+      ],
+      [
+        "subcontractor",
+        161
+      ]
+    ],
+    "exact_license_tokens_in_acquired_spine": 93436,
+    "exact_license_tokens_absent_from_partial_spine": 1030686,
+    "name_only_contact_rows": 470473,
+    "no_name_only_auto_attach": true,
+    "sample_exact": [
+      {
+        "permit_number": "202605211720",
+        "license": "1044595",
+        "canonical": "CA-CSLB:1044595",
+        "firm_name": "Elm Roofing Contractors",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      },
+      {
+        "permit_number": "202605211720",
+        "license": "1044595",
+        "canonical": "CA-CSLB:1044595",
+        "firm_name": "Elm Roofing Contractors",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      },
+      {
+        "permit_number": "202605211725",
+        "license": "1036279",
+        "canonical": "CA-CSLB:1036279",
+        "firm_name": "Star Waterproofing And Roofing",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      },
+      {
+        "permit_number": "202605211725",
+        "license": "1036279",
+        "canonical": "CA-CSLB:1036279",
+        "firm_name": "Star Waterproofing And Roofing",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      },
+      {
+        "permit_number": "202601294829",
+        "license": "1098742",
+        "canonical": "CA-CSLB:1098742",
+        "firm_name": "Only Kitchens And Baths Inc",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      },
+      {
+        "permit_number": "202601294829",
+        "license": "1098742",
+        "canonical": "CA-CSLB:1098742",
+        "firm_name": "Only Kitchens And Baths Inc",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      },
+      {
+        "permit_number": "202510147297",
+        "license": "1111393",
+        "canonical": "CA-CSLB:1111393",
+        "firm_name": "Rahimi Construction",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      },
+      {
+        "permit_number": "202510147297",
+        "license": "1111393",
+        "canonical": "CA-CSLB:1111393",
+        "firm_name": "Rahimi Construction",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      },
+      {
+        "permit_number": "202601294813",
+        "license": "1088923",
+        "canonical": "CA-CSLB:1088923",
+        "firm_name": "Camp Roofing Ltd Dba Camp Construction",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      },
+      {
+        "permit_number": "202601294813",
+        "license": "1088923",
+        "canonical": "CA-CSLB:1088923",
+        "firm_name": "Camp Roofing Ltd Dba Camp Construction",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      },
+      {
+        "permit_number": "202601294801",
+        "license": "1108753",
+        "canonical": "CA-CSLB:1108753",
+        "firm_name": "Kita Construction Group Llc",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      },
+      {
+        "permit_number": "202601294801",
+        "license": "1108753",
+        "canonical": "CA-CSLB:1108753",
+        "firm_name": "Kita Construction Group Llc",
+        "role": null,
+        "cslb_name": "",
+        "cslb_status": "CLEAR",
+        "class": "EXACT_MATCH_ACQUIRED_CSLB"
+      }
+    ],
+    "bytes": 199220575,
+    "sha256": "055fc44275a9a91213366b3cb41d73c084b8f874daecf2ddae4e05ef1857b883",
+    "columns_identity": [
+      "permit_number",
+      "license1",
+      "license2",
+      "firm_name",
+      "role",
+      "sf_business_license_number"
+    ],
+    "distinct_exact_match_acquired_cslb": 2729,
+    "distinct_exact_license_not_in_acquired_partial_spine": 20450,
+    "contractor_role_rows": 584716
+  },
+  "sf_inspections": {
+    "grain": "inspection event (permit/complaint/address; not contractor-attributed unless source says so)",
+    "rows": 702749,
+    "reference_number_type": {
+      "permit": 621099,
+      "address": 12292,
+      "complaint": 69358
+    },
+    "result_top": [
+      [
+        "PASSED",
+        524212
+      ],
+      [
+        "(blank)",
+        111309
+      ],
+      [
+        "FAILED",
+        67228
+      ]
+    ],
+    "rows_with_reference_number": 690457,
+    "rows_with_parcel_or_block_lot": 702749,
+    "contractor_license_field": false,
+    "attribution": "PERMIT_OR_PROPERTY_GRAIN",
+    "do_not_translate_to_contractor_passed": true,
+    "join_keys": [
+      "reference_number",
+      "parcel_number",
+      "block",
+      "lot"
+    ],
+    "columns": [
+      "reference_number",
+      "reference_number_type",
+      "block",
+      "lot",
+      "street_number",
+      "avs_street_name",
+      "avs_street_sfx",
+      "unit",
+      "unit_sfx",
+      "bid_district",
+      "inspector_district",
+      "inspector",
+      "ampm",
+      "scheduled_date",
+      "rescheduled_date",
+      "appointment_date",
+      "request_date",
+      "request_taken_by",
+      "request_taken_date",
+      "changed_by",
+      "cancelled_by",
+      "code",
+      "inspection_description",
+      "result",
+      "parcel_number",
+      "eas_baseid",
+      "point_source",
+      "zip_code",
+      "point",
+      "supervisor_district",
+      "analysis_neighborhood",
+      "data_as_of",
+      "data_loaded_at"
+    ],
+    "bytes": 237048664,
+    "sha256": "45c139c61fcfe410ede8e77c237d215ec6d187d79645fffcfab6b88a757708df"
+  },
+  "sd_city_approvals": {
+    "jurisdiction": "CITY_OF_SAN_DIEGO",
+    "not_san_diego_county_permits": true,
+    "grain": "one approval row (permit/map/agreement); APPROVAL ROW != PROJECT COUNT",
+    "rows": 172453,
+    "distinct_approval_ids": 172453,
+    "distinct_project_ids": 39612,
+    "approval_type_top": [
+      [
+        "Traffic Control Permit",
+        32256
+      ],
+      [
+        "No-Plan - Residential - Combination Mech/Elec/Plum",
+        27956
+      ],
+      [
+        "Combination Building Permit",
+        15485
+      ],
+      [
+        "Photovoltaic - SB 379",
+        15419
+      ],
+      [
+        "Electrical Pmt",
+        10213
+      ],
+      [
+        "Building Permit",
+        9355
+      ],
+      [
+        "Approval - Construction - Right Of Way Pmt-Const Plan",
+        7805
+      ],
+      [
+        "Transportation Permit",
+        6186
+      ],
+      [
+        "Plumbing Pmt",
+        4957
+      ],
+      [
+        "No-Plan - Nonresidential/Multifamily - Electrical",
+        4956
+      ],
+      [
+        "Construction Noise Permit",
+        4930
+      ],
+      [
+        "Mechanical Pmt",
+        4866
+      ],
+      [
+        "Approval - Process - Agreement",
+        3932
+      ],
+      [
+        "No-Plan - Nonresidential/Multifamily - Plumbing",
+        3629
+      ],
+      [
+        "No-Plan - Nonresidential/Multifamily - Mechanical",
+        3169
+      ]
+    ],
+    "approval_status_top": [
+      [
+        "Issued",
+        69900
+      ],
+      [
+        "Closed",
+        53476
+      ],
+      [
+        "Opened",
+        19700
+      ],
+      [
+        "Cancelled",
+        11052
+      ],
+      [
+        "Inspection Followup",
+        9155
+      ],
+      [
+        "Approved Upon Final Payment",
+        3479
+      ],
+      [
+        "Cancelled Application Expired",
+        1522
+      ],
+      [
+        "Open",
+        900
+      ],
+      [
+        "Inspecting",
+        634
+      ],
+      [
+        "Recheck Required",
+        595
+      ],
+      [
+        "Pending Invoice Payment",
+        594
+      ],
+      [
+        "Invoice Paid",
+        372
+      ],
+      [
+        "Withdrawn",
+        343
+      ],
+      [
+        "Created",
+        206
+      ],
+      [
+        "In Review",
+        128
+      ]
+    ],
+    "rows_with_permit_holder": 136645,
+    "distinct_permit_holders": 22108,
+    "rows_with_apn": 159261,
+    "rows_with_valuation": 19709,
+    "rows_with_license_like_token_in_holder": 23,
+    "cslb_match": {
+      "UNSAFE": 133626,
+      "NO_SOURCE_LICENSE_ID": 35809,
+      "REVIEW_REQUIRED": 2995,
+      "EXACT_LICENSE_NOT_IN_ACQUIRED_PARTIAL_SPINE": 19,
+      "EXACT_MATCH_ACQUIRED_CSLB": 4
+    },
+    "create_date_min": "2024-01-01",
+    "create_date_max": "2026-09-03",
+    "permit_holder_meaning": "Contact name whom the Approval is issued to (official dictionary). Not automatically a licensed contractor.",
+    "sample": [
+      {
+        "approval_id": "2619211",
+        "permit_holder": "Khang Xa",
+        "class": "UNSAFE"
+      },
+      {
+        "approval_id": "2618232",
+        "permit_holder": "DCC COMPANIES INC, TODD COOMES",
+        "class": "UNSAFE"
+      },
+      {
+        "approval_id": "2618836",
+        "permit_holder": "Barnhart-Reese Construction,In, Cole Benson",
+        "class": "UNSAFE"
+      },
+      {
+        "approval_id": "2617487",
+        "permit_holder": "Patrick Yip",
+        "class": "UNSAFE"
+      },
+      {
+        "approval_id": "2617175",
+        "permit_holder": "San Diego Permit , Ian Harris",
+        "class": "UNSAFE"
+      },
+      {
+        "approval_id": "2617047",
+        "permit_holder": "John Vo",
+        "class": "UNSAFE"
+      },
+      {
+        "approval_id": "2617732",
+        "permit_holder": "Holland Partner Group, Adam Gressel",
+        "class": "UNSAFE"
+      },
+      {
+        "approval_id": "2618807",
+        "permit_holder": "LPA Design Studios, Veli Kemal",
+        "class": "UNSAFE"
+      }
+    ],
+    "columns": [
+      "DEVELOPMENT_ID",
+      "PROJECT_ID",
+      "PROJECT_TYPE",
+      "PROJECT_STATUS",
+      "PROJECT_PROCESSING_CODE",
+      "PROJECT_CREATE_DATE",
+      "PROJECT_DEEMEDCOMPLETE_DATE",
+      "PROJECT_TRUST_ACCOUNT_NO",
+      "PROJECT_TITLE",
+      "PROJECT_SCOPE",
+      "JOB_ID",
+      "JOB_DRAWING_NUMBER",
+      "GIS_ADDRESS",
+      "GIS_APN",
+      "JOB_BC_CODE",
+      "JOB_BC_CODE_DESCRIPTION",
+      "GIS_LATITUDE",
+      "GIS_LONGITUDE",
+      "APPROVAL_ID",
+      "APPROVAL_CATEGORY_CODE",
+      "APPROVAL_PROCESSING_CODE",
+      "APPROVAL_TYPE",
+      "APPROVAL_STATUS",
+      "APPROVAL_SCOPE",
+      "APPROVAL_CREATE_DATE",
+      "APPROVAL_ISSUE_DATE",
+      "APPROVAL_CLOSE_DATE",
+      "APPROVAL_EXPIRE_DATE",
+      "APPROVAL_VALUATION",
+      "APPROVAL_DU_NET_CHANGE",
+      "APPROVAL_STORIES",
+      "APPROVAL_FLOOR_AREA",
+      "APPROVAL_DU_EXTREMELY_LOW",
+      "APPROVAL_DU_VERY_LOW",
+      "APPROVAL_DU_LOW",
+      "APPROVAL_DU_MODERATE",
+      "APPROVAL_DU_ABOVE_MODERATE",
+      "APPROVAL_DU_FUTURE_DEMO",
+      "APPROVAL_DU_BONUS",
+      "APPROVAL_ADU_EXTREMELY_LOW",
+      "APPROVAL_ADU_VERY_LOW",
+      "APPROVAL_ADU_LOW",
+      "APPROVAL_ADU_MODERATE",
+      "APPROVAL_ADU_ABOVE_MODERATE",
+      "APPROVAL_ADU_BONUS",
+      "APPROVAL_ADU_TOTAL",
+      "APPROVAL_JADU_EXTREMELY_LOW",
+      "APPROVAL_JADU_VERY_LOW",
+      "APPROVAL_JADU_LOW",
+      "APPROVAL_JADU_MODERATE",
+      "APPROVAL_JADU_ABOVE_MODERATE",
+      "APPROVAL_JADU_BONUS",
+      "APPROVAL_JADU_TOTAL",
+      "APPROVAL_PERMIT_HOLDER"
+    ],
+    "bytes": 92833039,
+    "sha256": "4a273741d02f1c160b20f08967a9b95ac1a8a4b887ed2794ddbe06d90ed6a8e0",
+    "coverage": "CITY_OF_SAN_DIEGO created approvals 2024-2026 year files; full 653MB historical created file not stored",
+    "year_files": [
+      "approvals_created_2024_datasd.csv",
+      "approvals_created_2025_datasd.csv",
+      "approvals_created_2026_datasd.csv"
+    ]
+  },
+  "sd_business_tax_active": {
+    "jurisdiction": "CITY_OF_SAN_DIEGO",
+    "grain": "business tax certificate / account",
+    "not_trade_license": true,
+    "rows": 59321,
+    "distinct_accounts": 59321,
+    "distinct_names": 57069,
+    "status": {
+      "Active": 59296,
+      "Pending": 25
+    },
+    "family_rows": {
+      "construction": 5409,
+      "financial": 669,
+      "moving": 1091,
+      "senior": 805,
+      "insurance": 306
+    },
+    "construction_related_rows": 5409,
+    "construction_related_accounts": 5409,
+    "cslb_match": {
+      "UNSAFE": 4659,
+      "REVIEW_REQUIRED": 430,
+      "HIGH_CONFIDENCE": 320
+    },
+    "contacts": {
+      "phones": 0,
+      "emails": 0,
+      "websites": 0,
+      "addresses": 57664,
+      "address_eligibility": "PUBLIC_ELIGIBLE",
+      "phone_eligibility": "INTERNAL_ONLY"
+    },
+    "columns": [
+      "account_key",
+      "account_status",
+      "date_account_creation",
+      "date_cert_expiration",
+      "date_cert_effective",
+      "business_owner_name",
+      "ownership_type",
+      "date_business_start",
+      "dba_name",
+      "naics_sector",
+      "naics_code",
+      "naics_description",
+      "address_no",
+      "address_pd",
+      "address_road",
+      "address_sfx",
+      "address_no_fraction",
+      "address_city",
+      "address_state",
+      "address_zip",
+      "address_suite",
+      "address_pmb_box",
+      "address_po_box",
+      "bid",
+      "council_district",
+      "lat",
+      "lng"
+    ],
+    "bytes": 18846465,
+    "sha256": "011d1d0b58589d43ee5c57e212bd4bef8344142400d556267cb1a25aaea3456e",
+    "status_filter_expected": "Active"
+  },
+  "sd_rental_unit_business_tax": {
+    "jurisdiction": "CITY_OF_SAN_DIEGO",
+    "hub_value": "Lender/Investor property context; not contractor attribution",
+    "no_owner_dossiers": true,
+    "identity_fields": [
+      "account_key",
+      "assessor_parcel_no",
+      "property_address"
+    ],
+    "path": "data/raw/california/counties/san-diego/rtax_accounts_datasd.csv",
+    "bytes": 24294209,
+    "sha256": "ae4b1b173965a188af12745b371e9feb9bb695fe75341136d4bfc6d13804fa54",
+    "rows": 328337,
+    "columns": [
+      "account_key",
+      "assessor_parcel_no",
+      "property_address",
+      "city",
+      "zip"
+    ],
+    "sample": [
+      {
+        "account_key": "2011500002.0",
+        "assessor_parcel_no": "2410902900",
+        "property_address": "14895 SAN PASQUAL VALLEY RD",
+        "city": "ESCONDIDO",
+        "zip": "92027-6931"
+      },
+      {
+        "account_key": "2011500013.0",
+        "assessor_parcel_no": "2672310500",
+        "property_address": "15755 CONCORD RIDGE TER",
+        "city": "SAN DIEGO",
+        "zip": "92127-4160"
+      },
+      {
+        "account_key": "2011500015.0",
+        "assessor_parcel_no": "2672310700",
+        "property_address": "15765 CONCORD RIDGE TE",
+        "city": "SAN DIEGO",
+        "zip": "92127-4160"
+      },
+      {
+        "account_key": "2011500018.0",
+        "assessor_parcel_no": "2672311001",
+        "property_address": "15779 CONCORD RIDGE TER",
+        "city": "SAN DIEGO",
+        "zip": "92127-4160"
+      },
+      {
+        "account_key": "2011500019.0",
+        "assessor_parcel_no": "2672311002",
+        "property_address": "15783 CONCORD RIDGE TER",
+        "city": "SAN DIEGO",
+        "zip": "92127-4160"
+      },
+      {
+        "account_key": "2011500020.0",
+        "assessor_parcel_no": "2672311101",
+        "property_address": "15780 PASEO DEL SUR",
+        "city": "SAN DIEGO",
+        "zip": "92127-4180"
+      },
+      {
+        "account_key": "2011500025.0",
+        "assessor_parcel_no": "2672311302",
+        "property_address": "15760 PASEO DEL SUR",
+        "city": "SAN DIEGO",
+        "zip": "92127-4180"
+      },
+      {
+        "account_key": "2011500035.0",
+        "assessor_parcel_no": "2672312100",
+        "property_address": "16068 WAYNE HL",
+        "city": "SAN DIEGO",
+        "zip": "92127-4182"
+      }
+    ],
+    "nonempty": {
+      "account_key": 1,
+      "assessor_parcel_no": 1,
+      "property_address": 1,
+      "city": 1,
+      "zip": 1
+    }
+  },
+  "sd_business_tax_inactive_2015": {
+    "jurisdiction": "CITY_OF_SAN_DIEGO",
+    "grain": "business tax certificate / account",
+    "not_trade_license": true,
+    "rows": 104083,
+    "distinct_accounts": 104083,
+    "distinct_names": 100382,
+    "status": {
+      "Cancelled": 104083
+    },
+    "family_rows": {
+      "construction": 7503,
+      "senior": 1642,
+      "moving": 2859,
+      "financial": 1267,
+      "insurance": 560
+    },
+    "construction_related_rows": 7503,
+    "construction_related_accounts": 7503,
+    "cslb_match": {
+      "UNSAFE": 6913,
+      "REVIEW_REQUIRED": 342,
+      "HIGH_CONFIDENCE": 248
+    },
+    "contacts": {
+      "phones": 0,
+      "emails": 0,
+      "websites": 0,
+      "addresses": 101946,
+      "address_eligibility": "PUBLIC_ELIGIBLE",
+      "phone_eligibility": "INTERNAL_ONLY"
+    },
+    "columns": [
+      "account_key",
+      "account_status",
+      "date_account_creation",
+      "date_cert_expiration",
+      "date_cert_effective",
+      "business_owner_name",
+      "ownership_type",
+      "date_business_start",
+      "dba_name",
+      "naics_sector",
+      "naics_code",
+      "naics_description",
+      "address_no",
+      "address_pd",
+      "address_road",
+      "address_sfx",
+      "address_no_fraction",
+      "address_city",
+      "address_state",
+      "address_zip",
+      "address_suite",
+      "address_pmb_box",
+      "address_po_box",
+      "bid",
+      "council_district",
+      "lat",
+      "lng"
+    ],
+    "bytes": 33159190,
+    "sha256": "093151e870d865ee0f4b7d75b7c5241f34fe78e7fd6d0145cadef1c7ef59c104",
+    "status_filter_expected": "Inactive"
+  },
+  "publication_decision": {
+    "san_francisco": "PUBLISH_DEDICATED_COUNTY_PAGE",
+    "city_of_san_diego": "PUBLISH_LIGHT_MARKET_MODULE",
+    "san_diego_county": "PARK",
+    "no_routes_this_ticket": true,
+    "notes": {
+      "san_francisco": "Consolidated city-county; exact CSLB on permit contacts; parcel/block-lot on every permit row; inspections join at permit/property grain.",
+      "city_of_san_diego": "Strong approval+APN+valuation+permit-holder name; almost no source-native CSLB. Keep City grain. Do not call it county permits.",
+      "san_diego_county": "No county permit bulk acquired. SANDAG/SanGIS inventory only."
+    }
+  },
+  "scorecard": {
+    "san_francisco": {
+      "CONTRACTOR_IDENTITY": "HIGH",
+      "CONTRACTOR_WORK_HISTORY": "HIGH",
+      "PUBLIC_CONTACTS": "MEDIUM",
+      "PROPERTY_APN": "HIGH",
+      "LENDER_VALUE": "MEDIUM",
+      "SENIOR_VALUE": "LOW",
+      "MOVE_VALUE": "LOW",
+      "INSURANCE_VALUE": "LOW",
+      "INVESTOR_VALUE": "MEDIUM",
+      "ACQUISITION_EASE": "HIGH",
+      "UPDATE_REFRESHABILITY": "HIGH"
+    },
+    "city_of_san_diego": {
+      "CONTRACTOR_IDENTITY": "MEDIUM",
+      "CONTRACTOR_WORK_HISTORY": "HIGH",
+      "PUBLIC_CONTACTS": "LOW",
+      "PROPERTY_APN": "HIGH",
+      "LENDER_VALUE": "HIGH",
+      "SENIOR_VALUE": "LOW",
+      "MOVE_VALUE": "LOW",
+      "INSURANCE_VALUE": "LOW",
+      "INVESTOR_VALUE": "HIGH",
+      "ACQUISITION_EASE": "HIGH",
+      "UPDATE_REFRESHABILITY": "HIGH"
+    },
+    "internal_only": true,
+    "not_consumer_ranking": true
+  },
+  "skipped": [
+    {
+      "source": "SF eviction notices 5cei-gny5",
+      "reason": "inventory only; not contractor attribution",
+      "hub": "Lender/Investor"
+    },
+    {
+      "source": "SF 311",
+      "reason": "service request != business violation; skip ingest",
+      "hub": "Ask/local context"
+    },
+    {
+      "source": "SD full created approvals 653MB",
+      "reason": "disk; used 2024-2026 year files instead"
+    },
+    {
+      "source": "SD issued/closed full variants",
+      "reason": "redundant lenses on same approvals"
+    },
+    {
+      "source": "SD inactive business tax pre-2015",
+      "reason": "bounded; 2015+ plus active is enough"
+    },
+    {
+      "source": "SANDAG/SanGIS 330+ layers",
+      "reason": "inventory only; address/parcel already on city files"
+    },
+    {
+      "source": "other San Diego municipalities",
+      "reason": "hard stop"
+    },
+    {
+      "source": "CSLB paid full file",
+      "reason": "DO_NOT_BUY; reuse partial spine"
+    }
+  ],
+  "contact_completeness": {
+    "do_not_overwrite_cslb_contacts": true,
+    "sources": {
+      "CSLB_PHONE": {
+        "eligibility": "PUBLIC_ELIGIBLE",
+        "note": "state spine; 75,483 public phones"
+      },
+      "SF_BUSINESS_REGISTRY_CONTACT": {
+        "addresses": 366302,
+        "phones": 0,
+        "emails": 0,
+        "eligibility": "PUBLIC_ELIGIBLE for street address only"
+      },
+      "SF_PERMIT_CONTACT": {
+        "eligibility": "REVIEW_REQUIRED",
+        "note": "agent/firm addresses on permit contacts; not CSLB phones"
+      },
+      "SD_BUSINESS_TAX_CONTACT": {
+        "addresses": 57664,
+        "phones": 0,
+        "emails": 0,
+        "eligibility": "PUBLIC_ELIGIBLE for reconstructed street address"
+      },
+      "SD_RENTAL_PROPERTY": {
+        "eligibility": "PUBLIC_ELIGIBLE",
+        "fields": [
+          "assessor_parcel_no",
+          "property_address"
+        ],
+        "no_owner_names": true
+      }
+    }
+  },
+  "totals": {
+    "sf_permit_rows": 1294909,
+    "sf_distinct_permits": 1149123,
+    "sf_contact_rows": 1032543,
+    "sf_distinct_source_licenses": 23179,
+    "sf_exact_acquired_cslb_licenses": 2729,
+    "sf_exact_license_not_in_partial_spine": 20450,
+    "sd_city_approval_rows_2024_2026": 172453,
+    "sd_city_distinct_projects_2024_2026": 39612,
+    "local_permit_or_approval_rows": 1467362,
+    "name_only_auto_attach": 0
+  }
+}

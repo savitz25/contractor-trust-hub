@@ -1,0 +1,37 @@
+{
+  "ticket": "CA-CON-COUNTY-001A",
+  "jurisdiction": "City and County of San Francisco",
+  "raw_gitignored": true,
+  "files": [
+    {
+      "id": "g8m3-pdis",
+      "local": "g8m3-pdis-registered-business-locations.csv",
+      "sha256": "48e62d70a17ec8008b0334ea33591c5f4d87b97d15f58ebf5bb2e78359c28a5f",
+      "bytes": 116522528,
+      "rows": 366307
+    },
+    {
+      "id": "i98e-djp9",
+      "local": "i98e-djp9-building-permits.csv",
+      "sha256": "bc85fa947ab971bb4ded4c3910a832d5ff92a91c4b4b621603f11aabe6aee603",
+      "bytes": 698337480,
+      "rows": 1294909,
+      "retained_after_profile": false
+    },
+    {
+      "id": "3pee-9qhc",
+      "local": "3pee-9qhc-building-permit-contacts.csv",
+      "sha256": "055fc44275a9a91213366b3cb41d73c084b8f874daecf2ddae4e05ef1857b883",
+      "bytes": 199220575,
+      "rows": 1032543
+    },
+    {
+      "id": "vckc-dh2h",
+      "local": "vckc-dh2h-building-inspections.csv",
+      "sha256": "45c139c61fcfe410ede8e77c237d215ec6d187d79645fffcfab6b88a757708df",
+      "bytes": 237048664,
+      "rows": 702749,
+      "retained_after_profile": false
+    }
+  ]
+}

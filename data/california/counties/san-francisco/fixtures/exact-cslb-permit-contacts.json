@@ -1,0 +1,122 @@
+[
+  {
+    "permit_number": "202605211720",
+    "license": "1044595",
+    "canonical": "CA-CSLB:1044595",
+    "firm_name": "Elm Roofing Contractors",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  },
+  {
+    "permit_number": "202605211720",
+    "license": "1044595",
+    "canonical": "CA-CSLB:1044595",
+    "firm_name": "Elm Roofing Contractors",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  },
+  {
+    "permit_number": "202605211725",
+    "license": "1036279",
+    "canonical": "CA-CSLB:1036279",
+    "firm_name": "Star Waterproofing And Roofing",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  },
+  {
+    "permit_number": "202605211725",
+    "license": "1036279",
+    "canonical": "CA-CSLB:1036279",
+    "firm_name": "Star Waterproofing And Roofing",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  },
+  {
+    "permit_number": "202601294829",
+    "license": "1098742",
+    "canonical": "CA-CSLB:1098742",
+    "firm_name": "Only Kitchens And Baths Inc",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  },
+  {
+    "permit_number": "202601294829",
+    "license": "1098742",
+    "canonical": "CA-CSLB:1098742",
+    "firm_name": "Only Kitchens And Baths Inc",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  },
+  {
+    "permit_number": "202510147297",
+    "license": "1111393",
+    "canonical": "CA-CSLB:1111393",
+    "firm_name": "Rahimi Construction",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  },
+  {
+    "permit_number": "202510147297",
+    "license": "1111393",
+    "canonical": "CA-CSLB:1111393",
+    "firm_name": "Rahimi Construction",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  },
+  {
+    "permit_number": "202601294813",
+    "license": "1088923",
+    "canonical": "CA-CSLB:1088923",
+    "firm_name": "Camp Roofing Ltd Dba Camp Construction",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  },
+  {
+    "permit_number": "202601294813",
+    "license": "1088923",
+    "canonical": "CA-CSLB:1088923",
+    "firm_name": "Camp Roofing Ltd Dba Camp Construction",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  },
+  {
+    "permit_number": "202601294801",
+    "license": "1108753",
+    "canonical": "CA-CSLB:1108753",
+    "firm_name": "Kita Construction Group Llc",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  },
+  {
+    "permit_number": "202601294801",
+    "license": "1108753",
+    "canonical": "CA-CSLB:1108753",
+    "firm_name": "Kita Construction Group Llc",
+    "role": null,
+    "cslb_name": "",
+    "cslb_status": "CLEAR",
+    "class": "EXACT_MATCH_ACQUIRED_CSLB"
+  }
+]

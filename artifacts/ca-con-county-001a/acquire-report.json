@@ -1,0 +1,111 @@
+{
+  "ticket": "CA-CON-COUNTY-001A",
+  "retrieved_at": "2026-09-03T20:33:31.252203+00:00",
+  "files": [
+    {
+      "http_status": 200,
+      "content_type": "binary/octet-stream",
+      "bytes": 32756623,
+      "sha256": "4dfeb05e4307cc96ef7dad6db1ec291c0411d8724ca2effcb8f745a90d8c62b2",
+      "seconds": 2.03,
+      "path": "data/raw/california/counties/san-diego/approvals_created_2024_datasd.csv",
+      "id": "sd_approvals_created_2024",
+      "url": "https://seshat.datasd.org/development_permits/approvals_created_2024_datasd.csv",
+      "agency": "City of San Diego Development Services",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "jurisdiction": "city-of-san-diego",
+      "note": "Year-filtered created approvals. Full 653MB created file skipped (disk). CITY OF SAN DIEGO, not county."
+    },
+    {
+      "http_status": 200,
+      "content_type": "binary/octet-stream",
+      "bytes": 38062408,
+      "sha256": "bb9b6d811c1cff7c636732ca0cb1130194d82caefb07ef56bc62c9849be18b7d",
+      "seconds": 2.01,
+      "path": "data/raw/california/counties/san-diego/approvals_created_2025_datasd.csv",
+      "id": "sd_approvals_created_2025",
+      "url": "https://seshat.datasd.org/development_permits/approvals_created_2025_datasd.csv",
+      "agency": "City of San Diego Development Services",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "jurisdiction": "city-of-san-diego"
+    },
+    {
+      "http_status": 200,
+      "content_type": "binary/octet-stream",
+      "bytes": 22016314,
+      "sha256": "ee9c34990f648f2b80f12a1f1043456b1e77418236c6652a928e1de832191bf2",
+      "seconds": 1.68,
+      "path": "data/raw/california/counties/san-diego/approvals_created_2026_datasd.csv",
+      "id": "sd_approvals_created_2026",
+      "url": "https://seshat.datasd.org/development_permits/approvals_created_2026_datasd.csv",
+      "agency": "City of San Diego Development Services",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "jurisdiction": "city-of-san-diego"
+    },
+    {
+      "http_status": 200,
+      "content_type": "text/csv",
+      "bytes": 3157,
+      "sha256": "d8ab7dad7d9b52a11bee89cd392a61223a87b23ba2bbef0858374f4ea5e7417a",
+      "seconds": 0.38,
+      "path": "data/raw/california/counties/san-diego/permits_set2_datasd_dict.csv",
+      "id": "sd_approvals_dictionary",
+      "url": "https://seshat.datasd.org/development_permits_set2/permits_set2_datasd_dict.csv",
+      "agency": "City of San Diego Development Services",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "jurisdiction": "city-of-san-diego"
+    },
+    {
+      "http_status": 200,
+      "content_type": "binary/octet-stream",
+      "bytes": 18846465,
+      "sha256": "011d1d0b58589d43ee5c57e212bd4bef8344142400d556267cb1a25aaea3456e",
+      "seconds": 1.61,
+      "path": "data/raw/california/counties/san-diego/sd_businesses_active_datasd.csv",
+      "id": "sd_business_tax_active",
+      "url": "https://seshat.datasd.org/business_tax_certificates/sd_businesses_active_datasd.csv",
+      "agency": "City of San Diego Treasurer",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "jurisdiction": "city-of-san-diego"
+    },
+    {
+      "http_status": 200,
+      "content_type": "binary/octet-stream",
+      "bytes": 33159190,
+      "sha256": "093151e870d865ee0f4b7d75b7c5241f34fe78e7fd6d0145cadef1c7ef59c104",
+      "seconds": 2.29,
+      "path": "data/raw/california/counties/san-diego/sd_businesses_inactive_2015tocurr_datasd.csv",
+      "id": "sd_business_tax_inactive_2015",
+      "url": "https://seshat.datasd.org/business_tax_certificates/sd_businesses_inactive_2015tocurr_datasd.csv",
+      "agency": "City of San Diego Treasurer",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "jurisdiction": "city-of-san-diego"
+    },
+    {
+      "http_status": 200,
+      "content_type": "text/csv",
+      "bytes": 1947,
+      "sha256": "df68d8b493d72e1d6f55c0321aeab82d46d570cc06c538259688e57244e85837",
+      "seconds": 0.41,
+      "path": "data/raw/california/counties/san-diego/sd_businesses_dictionary_datasd.csv",
+      "id": "sd_business_tax_dictionary",
+      "url": "https://seshat.datasd.org/business_tax_certificates/sd_businesses_dictionary_datasd.csv",
+      "agency": "City of San Diego Treasurer",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "jurisdiction": "city-of-san-diego"
+    },
+    {
+      "http_status": 200,
+      "content_type": "binary/octet-stream",
+      "bytes": 24294209,
+      "sha256": "ae4b1b173965a188af12745b371e9feb9bb695fe75341136d4bfc6d13804fa54",
+      "seconds": 1.49,
+      "path": "data/raw/california/counties/san-diego/rtax_accounts_datasd.csv",
+      "id": "sd_rental_unit_business_tax",
+      "url": "https://seshat.datasd.org/rtax_accounts/rtax_accounts_datasd.csv",
+      "agency": "City of San Diego Treasurer",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "jurisdiction": "city-of-san-diego"
+    }
+  ]
+}

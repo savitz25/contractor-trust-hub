@@ -1,0 +1,38 @@
+{
+  "ticket": "CA-CON-COUNTY-001A",
+  "jurisdiction": "CITY_OF_SAN_DIEGO",
+  "not_san_diego_county": true,
+  "raw_gitignored": true,
+  "files": [
+    {
+      "id": "approvals_created_2024",
+      "sha256": "4dfeb05e4307cc96ef7dad6db1ec291c0411d8724ca2effcb8f745a90d8c62b2",
+      "bytes": 32756623
+    },
+    {
+      "id": "approvals_created_2025",
+      "sha256": "bb9b6d811c1cff7c636732ca0cb1130194d82caefb07ef56bc62c9849be18b7d",
+      "bytes": 38062408
+    },
+    {
+      "id": "approvals_created_2026",
+      "sha256": "ee9c34990f648f2b80f12a1f1043456b1e77418236c6652a928e1de832191bf2",
+      "bytes": 22016314
+    },
+    {
+      "id": "sd_businesses_active",
+      "sha256": "011d1d0b58589d43ee5c57e212bd4bef8344142400d556267cb1a25aaea3456e",
+      "bytes": 18846465
+    },
+    {
+      "id": "sd_businesses_inactive_2015",
+      "sha256": "093151e870d865ee0f4b7d75b7c5241f34fe78e7fd6d0145cadef1c7ef59c104",
+      "bytes": 33159190
+    },
+    {
+      "id": "rtax_accounts",
+      "sha256": "ae4b1b173965a188af12745b371e9feb9bb695fe75341136d4bfc6d13804fa54",
+      "bytes": 24294209
+    }
+  ]
+}
