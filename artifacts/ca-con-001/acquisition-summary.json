@@ -1,0 +1,796 @@
+{
+  "ticket": "CA-CON-001",
+  "generated_at": "2026-09-03T17:51:09.657333+00:00",
+  "publication": "NOT_PUBLISHED",
+  "public_route": null,
+  "regulator": {
+    "agency": "Contractors State License Board (CSLB), California Department of Consumer Affairs",
+    "primary_identifier": "CSLB license number",
+    "instant_check": "https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx",
+    "public_data_portal": "https://www.cslb.ca.gov/onlineservices/dataportal",
+    "master_list": "https://www.cslb.ca.gov/onlineservices/dataportal/ContractorList",
+    "classifications": "https://www.cslb.ca.gov/About_Us/Library/Licensing_Classifications/"
+  },
+  "license_master": {
+    "acquired": true,
+    "coverage": "ACQUIRED_PARTIAL_STREAM_TRUNCATED",
+    "source_as_of": "2026-09-02",
+    "source_url": "https://www.cslb.ca.gov/onlineservices/dataportal/ContractorList",
+    "bytes": 24437638,
+    "sha256": "f6ebbee6ed6c8b9476414e972382e6fcb4065f2c6e88a19392371a1e1e996838",
+    "fieldnames": [
+      "LicenseNo",
+      "LastUpdate",
+      "BusinessName",
+      "BUS-NAME-2",
+      "FullBusinessName",
+      "MailingAddress",
+      "City",
+      "State",
+      "County",
+      "ZIPCode",
+      "country",
+      "BusinessPhone",
+      "BusinessType",
+      "IssueDate",
+      "ReissueDate",
+      "ExpirationDate",
+      "InactivationDate",
+      "ReactivationDate",
+      "PendingSuspension",
+      "PendingClassRemoval",
+      "PendingClassReplace",
+      "PrimaryStatus",
+      "SecondaryStatus",
+      "Classifications(s)",
+      "AsbestosReg",
+      "WorkersCompCoverageType",
+      "WCInsuranceCompany",
+      "WCPolicyNumber",
+      "WCEffectiveDate",
+      "WCExpirationDate",
+      "WCCancellationDate",
+      "WCSuspendDate",
+      "CBSuretyCompany",
+      "CBNumber",
+      "CBEffectiveDate",
+      "CBCancellationDate",
+      "CBAmount",
+      "WBSuretyCompany",
+      "WBNumber",
+      "WBEffectiveDate",
+      "WBCancellationDate",
+      "WBAmount",
+      "DBSuretyCompany",
+      "DBNumber",
+      "DBEffectiveDate",
+      "DBCancellationDate",
+      "DBAmount",
+      "DateRequired",
+      "DiscpCaseRegion",
+      "DBBondReason",
+      "DBCaseNo",
+      "NAME-TP-2"
+    ],
+    "license_rows": 75572,
+    "distinct_license_numbers": 75572,
+    "distinct_business_name_address_zip": 75560,
+    "named_rows": 75572,
+    "rows_with_business_phone": 75483,
+    "rows_with_mailing_address": 75571,
+    "rows_with_public_email": 0,
+    "rows_with_website": 0,
+    "email_policy": "NOT_PROVIDED_BPC_27",
+    "website_policy": "NOT_IN_SOURCE",
+    "primary_status_counts": {
+      "CLEAR": 67239,
+      "Contr Bond Susp": 6366,
+      "Work Comp Susp": 1044,
+      "Judgement Susp": 58,
+      "Family Sup Susp": 92,
+      "SOS Suspension": 133,
+      "Susp - No Qualifier": 88,
+      "Out Liab Susp": 46,
+      "Liab Ins Susp": 295,
+      "EMP/WK Bnd Susp": 41,
+      "J V Entity Susp": 11,
+      "QUAL Bond SUSP": 26,
+      "JDG Entity Susp": 47,
+      "O/L Entity Susp": 9,
+      "BOND Pay Susp": 57,
+      "BND Pay EN Susp": 9,
+      "Discp Bond SUSP": 3,
+      "Cit Entity Susp": 1,
+      "ARB Suspension": 3,
+      "Citation Susp": 2,
+      "ARB Entity Susp": 1,
+      "UNKNOWN": 1
+    },
+    "business_type_counts": {
+      "Corporation": 39283,
+      "Sole Owner": 28941,
+      "Limited Liability": 6033,
+      "Partnership": 1101,
+      "JointVenture": 213,
+      "UNKNOWN": 1
+    },
+    "county_counts_top": {
+      "Los Angeles": 16481,
+      "San Diego": 6829,
+      "Orange": 6224,
+      "Riverside": 5698,
+      "San Bernardino": 3686,
+      "Sacramento": 3220,
+      "Santa Clara": 3115,
+      "UNKNOWN": 2767,
+      "Contra Costa": 2306,
+      "Alameda": 2279,
+      "Ventura": 1823,
+      "Sonoma": 1576,
+      "Fresno": 1465,
+      "Placer": 1323,
+      "San Mateo": 1213
+    },
+    "county_count": 59,
+    "classification_token_counts": {
+      "B": 30813,
+      "C10": 8659,
+      "C36": 5592,
+      "C33": 5028,
+      "C20": 4047,
+      "A": 4035,
+      "C27": 3873,
+      "C15": 2139,
+      "C39": 1887,
+      "C54": 1859,
+      "C8": 1732,
+      "C7": 1557,
+      "D49": 1400,
+      "C6": 1301,
+      "C9": 1045,
+      "D28": 983,
+      "C17": 965,
+      "C53": 911,
+      "C12": 750,
+      "B2": 636,
+      "D12": 634,
+      "C13": 613,
+      "C35": 582,
+      "C16": 569,
+      "D06": 553,
+      "C21": 543,
+      "C29": 532,
+      "D35": 527,
+      "C51": 489,
+      "C38": 433,
+      "D34": 432,
+      "D52": 420,
+      "C5": 415,
+      "C60": 412,
+      "C46": 404,
+      "HAZ": 379,
+      "C23": 359,
+      "C2": 333,
+      "D63": 327,
+      "D21": 308,
+      "C45": 270,
+      "C43": 260,
+      "D64": 250,
+      "C42": 250,
+      "D24": 243,
+      "C57": 200,
+      "C31": 181,
+      "D03": 175,
+      "D38": 154,
+      "D41": 150,
+      "C34": 142,
+      "C32": 129,
+      "D42": 121,
+      "C28": 121,
+      "C4": 116,
+      "D39": 111,
+      "C47": 105,
+      "ASB": 99,
+      "C49": 90,
+      "C50": 80,
+      "C55": 78,
+      "C22": 73,
+      "C11": 69,
+      "D56": 52,
+      "D09": 51,
+      "D50": 49,
+      "D62": 40,
+      "D29": 36,
+      "D16": 33,
+      "D40": 28,
+      "D30": 27,
+      "D31": 25,
+      "D65": 15,
+      "D59": 14,
+      "D04": 11,
+      "D10": 8,
+      "D53": 3,
+      "D51": 2,
+      "D07": 1,
+      "D36": 1,
+      "UNKNOWN": 1
+    },
+    "distinct_classification_tokens": 81,
+    "multi_class_license_rows": 12139,
+    "contact_publication": {
+      "BusinessPhone": "PUBLIC_ELIGIBLE",
+      "MailingAddress": "REVIEW_REQUIRED",
+      "email": "NOT_IN_SOURCE",
+      "website": "NOT_IN_SOURCE"
+    },
+    "notes": [
+      "Official License Master CSV stream ended prematurely; last incomplete row dropped.",
+      "This is not the complete renewable universe. Full/Update files are REQUEST_ONLY ($235).",
+      "Cancelled, revoked, and expired-nonrenewable licenses are excluded by CSLB from this portal file even when complete."
+    ]
+  },
+  "dir_electrician": {
+    "certified": {
+      "acquired": true,
+      "label": "certified_electrician",
+      "rows": 36983,
+      "sha256": "ccab0eaa8cdd9ecc01b34e5cc9eac1dd129bf917a7f70156679e6d7711942466",
+      "fields": [
+        "ELECTRICIAN_NAME",
+        "ZIP_CODE",
+        "CERTIFICATE_NUMBER",
+        "EXPIRATION_DATE"
+      ],
+      "has_cslb_license_id": false,
+      "grain": "PERSON_CERTIFICATE",
+      "net_new_contractor_businesses": 0,
+      "notes": [
+        "Certified electrician / trainee is a person credential, not a CSLB contractor license.",
+        "No contractor license number is in this file. Do not auto-create contractor businesses."
+      ]
+    },
+    "trainee": {
+      "acquired": true,
+      "label": "electrician_trainee",
+      "rows": 19661,
+      "sha256": "76eba6a889726a5ae6c298a720f711f1b55ff26b57f81a31feaae11da5d5f21c",
+      "fields": [
+        "ELECTRICIAN_NAME",
+        "ZIP_CODE",
+        "CERTIFICATE_NUMBER",
+        "EXPIRATION_DATE"
+      ],
+      "has_cslb_license_id": false,
+      "grain": "PERSON_CERTIFICATE",
+      "net_new_contractor_businesses": 0,
+      "notes": [
+        "Certified electrician / trainee is a person credential, not a CSLB contractor license.",
+        "No contractor license number is in this file. Do not auto-create contractor businesses."
+      ]
+    }
+  },
+  "dlse_debarment": {
+    "source": "https://www.dir.ca.gov/dlse/debar.html",
+    "source_as_of_note": "Page footer July 2025; individual orders have their own dates.",
+    "license_id_mentions": 58,
+    "distinct_cslb_ids": 57,
+    "exact_cslb_ids": [
+      "291013",
+      "294141",
+      "343802",
+      "383306",
+      "411825",
+      "430969",
+      "461897",
+      "568103",
+      "592321",
+      "597866",
+      "610549",
+      "612429",
+      "659252",
+      "663784",
+      "664168",
+      "698182",
+      "699574",
+      "714836",
+      "726770",
+      "732014",
+      "748591",
+      "753575",
+      "758012",
+      "765312",
+      "774222",
+      "787533",
+      "792729",
+      "794007",
+      "796802",
+      "797967",
+      "827829",
+      "830772",
+      "834220",
+      "834335",
+      "839898",
+      "840416",
+      "849169",
+      "874947",
+      "892389",
+      "899312",
+      "902927",
+      "908891",
+      "914692",
+      "915036",
+      "915812",
+      "919516",
+      "929610",
+      "936832",
+      "945723",
+      "949229",
+      "954551",
+      "967267",
+      "969048",
+      "975222",
+      "976339",
+      "979297",
+      "991018"
+    ],
+    "period_mentions": 66,
+    "decision_pdf_links": 68,
+    "stayed_mentions": 1,
+    "grain": "DEBARMENT_ORDER_LISTING",
+    "identity_tier_for_listed_ids": "EXACT",
+    "semantics": "DLSE public works debarment is not CSLB license status. A stayed order is not a current debarment. Name-only rows without a CSLB number are UNSAFE.",
+    "exact_ids_present_in_acquired_master": [],
+    "exact_ids_not_in_acquired_master": [
+      "291013",
+      "294141",
+      "343802",
+      "383306",
+      "411825",
+      "430969",
+      "461897",
+      "568103",
+      "592321",
+      "597866",
+      "610549",
+      "612429",
+      "659252",
+      "663784",
+      "664168",
+      "698182",
+      "699574",
+      "714836",
+      "726770",
+      "732014",
+      "748591",
+      "753575",
+      "758012",
+      "765312",
+      "774222",
+      "787533",
+      "792729",
+      "794007",
+      "796802",
+      "797967",
+      "827829",
+      "830772",
+      "834220",
+      "834335",
+      "839898",
+      "840416",
+      "849169",
+      "874947",
+      "892389",
+      "899312",
+      "902927",
+      "908891",
+      "914692",
+      "915036",
+      "915812",
+      "919516",
+      "929610",
+      "936832",
+      "945723",
+      "949229",
+      "954551",
+      "967267",
+      "969048",
+      "975222",
+      "976339",
+      "979297",
+      "991018"
+    ]
+  },
+  "dosh_asbestos": {
+    "source": "https://www.dir.ca.gov/databases/doshacru/acrulist.asp",
+    "source_as_of": "9/2/2026",
+    "rows": 321,
+    "rows_with_exact_cslb_id": 312,
+    "distinct_cslb_ids": 312,
+    "rows_with_phone": 320,
+    "grain": "ASBESTOS_REGISTRANT",
+    "semantics": "Cal/OSHA asbestos registrant is not CSLB license status and not a C-22 classification proof by itself.",
+    "sample": [
+      {
+        "reg_no": "930",
+        "cslb_license_number": "897164",
+        "employer": "1-888-4-Abatement, Inc.",
+        "location": "Rancho Cordova&nbsp; CA",
+        "expires": "6/18/2027",
+        "phone": "916-231-0090",
+        "identity_tier": "EXACT"
+      },
+      {
+        "reg_no": "894",
+        "cslb_license_number": "962390",
+        "employer": "5M Contracting, Inc.",
+        "location": "Tustin&nbsp; CA",
+        "expires": "10/26/2026",
+        "phone": "714-730-6760",
+        "identity_tier": "EXACT"
+      },
+      {
+        "reg_no": "643",
+        "cslb_license_number": "845252",
+        "employer": "A &amp; V Contractors, Inc.",
+        "location": "Fullerton&nbsp; CA",
+        "expires": "8/4/2027",
+        "phone": "714-525-3503",
+        "identity_tier": "EXACT"
+      },
+      {
+        "reg_no": "1008",
+        "cslb_license_number": "835772",
+        "employer": "A.N.M. Construction, Inc. DBA: A N M Construction and Environmental Services",
+        "location": "Gardena&nbsp; CA",
+        "expires": "2/15/2027",
+        "phone": "310-305-8900",
+        "identity_tier": "EXACT"
+      },
+      {
+        "reg_no": "1219",
+        "cslb_license_number": "1066296",
+        "employer": "A1 Abatement Group, Inc.",
+        "location": "San Rafael&nbsp; CA",
+        "expires": "7/14/2027",
+        "phone": "415-479-0600",
+        "identity_tier": "EXACT"
+      }
+    ],
+    "exact_ids_present_in_acquired_master_count": 65,
+    "exact_ids_not_in_acquired_master_count": 247
+  },
+  "official_classification_dictionary": {
+    "source": "https://www.cslb.ca.gov/onlineservices/dataportal/ListByClassification.aspx",
+    "option_count": 78,
+    "options": [
+      {
+        "code": "A",
+        "label": "A - General Engineering Contractor"
+      },
+      {
+        "code": "B",
+        "label": "B - General Building Contractor"
+      },
+      {
+        "code": "B-2",
+        "label": "B-2 \u2013 Residential Remodeling Contractor"
+      },
+      {
+        "code": "C-2",
+        "label": "C-2 - Insulation and Acoustical Contractor"
+      },
+      {
+        "code": "C-4",
+        "label": "C-4 - Boiler, Hot Water Heating and Steam Fitting Contractor"
+      },
+      {
+        "code": "C-5",
+        "label": "C-5 - Framing and Rough Carpentry Contractor"
+      },
+      {
+        "code": "C-6",
+        "label": "C-6 - Cabinet, Millwork and Finish Carpentry Contractor"
+      },
+      {
+        "code": "C-7",
+        "label": "C-7 - Low Voltage Systems Contractor"
+      },
+      {
+        "code": "C-8",
+        "label": "C-8 - Concrete Contractor"
+      },
+      {
+        "code": "C-9",
+        "label": "C-9 - Drywall Contractor"
+      },
+      {
+        "code": "C-10",
+        "label": "C-10 - Electrical Contractor"
+      },
+      {
+        "code": "C-11",
+        "label": "C-11 - Elevator Contractor"
+      },
+      {
+        "code": "C-12",
+        "label": "C-12 - Earthwork and Paving Contractors"
+      },
+      {
+        "code": "C-13",
+        "label": "C-13 - Fencing Contractor"
+      },
+      {
+        "code": "C-15",
+        "label": "C-15 - Flooring and Floor Covering Contractors"
+      },
+      {
+        "code": "C-16",
+        "label": "C-16 - Fire Protection Contractor"
+      },
+      {
+        "code": "C-17",
+        "label": "C-17 - Glazing Contractor"
+      },
+      {
+        "code": "C-20",
+        "label": "C-20 - Warm-Air Heating, Ventilating and Air-Conditioning Contractor"
+      },
+      {
+        "code": "C-21",
+        "label": "C-21 - Building Moving/Demolition Contractor"
+      },
+      {
+        "code": "C-22",
+        "label": "C-22 - Asbestos Abatement Contractor"
+      },
+      {
+        "code": "C-23",
+        "label": "C-23 - Ornamental Metal Contractor"
+      },
+      {
+        "code": "C-27",
+        "label": "C-27 - Landscaping Contractor"
+      },
+      {
+        "code": "C-28",
+        "label": "C-28 - Lock and Security Equipment Contractor"
+      },
+      {
+        "code": "C-29",
+        "label": "C-29 - Masonry Contractor"
+      },
+      {
+        "code": "C-31",
+        "label": "C-31 - Construction Zone Traffic Control Contractor"
+      },
+      {
+        "code": "C-32",
+        "label": "C-32 - Parking and Highway Improvement Contractor"
+      },
+      {
+        "code": "C-33",
+        "label": "C-33 - Painting and Decorating Contractor"
+      },
+      {
+        "code": "C-34",
+        "label": "C-34 - Pipeline Contractor"
+      },
+      {
+        "code": "C-35",
+        "label": "C-35 - Lathing and Plastering Contractor"
+      },
+      {
+        "code": "C-36",
+        "label": "C-36 - Plumbing Contractor"
+      },
+      {
+        "code": "C-38",
+        "label": "C-38 - Refrigeration Contractor"
+      },
+      {
+        "code": "C-39",
+        "label": "C-39 - Roofing Contractor"
+      },
+      {
+        "code": "C-42",
+        "label": "C-42 - Sanitation System Contractor"
+      },
+      {
+        "code": "C-43",
+        "label": "C-43 - Sheet Metal Contractor"
+      },
+      {
+        "code": "C-45",
+        "label": "C-45 - Sign Contractor"
+      },
+      {
+        "code": "C-46",
+        "label": "C-46 - Solar Contractor"
+      },
+      {
+        "code": "C-47",
+        "label": "C-47 - General Manufactured Housing Contractor"
+      },
+      {
+        "code": "C-49",
+        "label": "C-49 - Tree and Palm Contractor"
+      },
+      {
+        "code": "C-50",
+        "label": "C-50 - Reinforcing Steel Contractor"
+      },
+      {
+        "code": "C-51",
+        "label": "C-51 - Structural Steel Contractor"
+      },
+      {
+        "code": "C-53",
+        "label": "C-53 - Swimming Pool Contractor"
+      },
+      {
+        "code": "C-54",
+        "label": "C-54 - Ceramic and Mosaic Tile Contractor"
+      },
+      {
+        "code": "C-55",
+        "label": "C-55 - Water Conditioning Contractor"
+      },
+      {
+        "code": "C-57",
+        "label": "C-57 - Well Drilling Contractor"
+      },
+      {
+        "code": "C-60",
+        "label": "C-60 - Welding Contractor"
+      },
+      {
+        "code": "C-61",
+        "label": "C-61 - Limited Specialty Classification"
+      },
+      {
+        "code": "C-61/D-3",
+        "label": "C-61/D-3 - Awnings Contractor"
+      },
+      {
+        "code": "C-61/D-4",
+        "label": "C-61/D-4 - Central Vacuum Systems Contractor"
+      },
+      {
+        "code": "C-61/D-6",
+        "label": "C-61/D-6 - Concrete-Related Services Contractor"
+      },
+      {
+        "code": "C-61/D-9",
+        "label": "C-61/D-9 - Drilling, Blasting and Oil Field Work Contractor"
+      },
+      {
+        "code": "C-61/D-10",
+        "label": "C-61/D-10 - Elevated Floors Contractor"
+      },
+      {
+        "code": "C-61/D-12",
+        "label": "C-61/D-12 - Synthetic Products Contractor"
+      },
+      {
+        "code": "C-61/D-16",
+        "label": "C-61/D-16 - Hardware, Locks and Safes Contractor"
+      },
+      {
+        "code": "C-61/D-21",
+        "label": "C-61/D-21 - Machinery and Pumps Contractor"
+      },
+      {
+        "code": "C-61/D-24",
+        "label": "C-61/D-24 - Metal Products Contractor"
+      },
+      {
+        "code": "C-61/D-28",
+        "label": "C-61/D-28 - Doors, Gates and Activating Devices Contractor"
+      },
+      {
+        "code": "C-61/D-29",
+        "label": "C-61/D-29 - Paperhanging Contractor"
+      },
+      {
+        "code": "C-61/D-30",
+        "label": "C-61/D-30 - Pile Driving and Pressure Foundation Jacking Contractor"
+      },
+      {
+        "code": "C-61/D-31",
+        "label": "C-61/D-31 - Pole Installation and Maintenance Contractor"
+      },
+      {
+        "code": "C-61/D-34",
+        "label": "C-61/D-34 - Prefabricated Equipment Contractor"
+      },
+      {
+        "code": "C-61/D-35",
+        "label": "C-61/D-35 - Pool and Spa Maintenance Contractor"
+      },
+      {
+        "code": "C-61/D-38",
+        "label": "C-61/D-38 - Sand and Water Blasting Contractor"
+      },
+      {
+        "code": "C-61/D-39",
+        "label": "C-61/D-39 - Scaffolding Contractor"
+      },
+      {
+        "code": "C-61/D-40",
+        "label": "C-61/D-40 - Service Station Equipment and Maintenance Contractor"
+      },
+      {
+        "code": "C-61/D-41",
+        "label": "C-61/D-41 - Siding and Decking Contractor"
+      },
+      {
+        "code": "C-61/D-42",
+        "label": "C-61/D-42 - Non-Electrical Sign Installation"
+      },
+      {
+        "code": "C-61/D-49",
+        "label": "C-61/D-49 - Tree Service Contractor"
+      },
+      {
+        "code": "C-61/D-50",
+        "label": "C-61/D-50 - Suspended Ceilings Contractor"
+      },
+      {
+        "code": "C-61/D-52",
+        "label": "C-61/D-52 - Window Coverings Contractor"
+      },
+      {
+        "code": "C-61/D-53",
+        "label": "C-61/D-53 - Wood Tanks Contractor"
+      },
+      {
+        "code": "C-61/D-56",
+        "label": "C-61/D-56 - Trenching Only Contractor"
+      },
+      {
+        "code": "C-61/D-59",
+        "label": "C-61/D-59 - Hydroseed Spraying Contractor"
+      },
+      {
+        "code": "C-61/D-62",
+        "label": "C-61/D-62 - Air and Water Balancing Contractor"
+      },
+      {
+        "code": "C-61/D-63",
+        "label": "C-61/D-63 - Construction Clean-up Contractor"
+      },
+      {
+        "code": "C-61/D-64",
+        "label": "C-61/D-64 - Non-specialized Contractor"
+      },
+      {
+        "code": "C-61/D-65",
+        "label": "C-61/D-65 - Weatherization and Energy Conservation Contractor"
+      },
+      {
+        "code": "ASB",
+        "label": "ASB - Asbestos Certification"
+      },
+      {
+        "code": "HAZ",
+        "label": "HAZ - Hazardous Substance Removal Certification"
+      }
+    ]
+  },
+  "identity": {
+    "primary": "CA contractor license number",
+    "secondary": [
+      "DIR public works registration ID",
+      "DGS/Cal eProcure vendor ID",
+      "SOS entity number",
+      "DIR electrician certificate number"
+    ],
+    "tiers": [
+      "EXACT",
+      "HIGH_CONFIDENCE",
+      "REVIEW_REQUIRED",
+      "UNSAFE"
+    ],
+    "adverse_attach_rule": "EXACT license ID only. Name-only is UNSAFE. REVIEW_REQUIRED is not auto-attached."
+  }
+}

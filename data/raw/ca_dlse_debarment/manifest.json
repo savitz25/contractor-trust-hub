@@ -1,0 +1,10 @@
+{
+  "source": "DIR DLSE public works debarment listing",
+  "url": "https://www.dir.ca.gov/dlse/debar.html",
+  "as_of_note": "Page footer July 2025",
+  "local_file": "debar.html",
+  "sha256": "df06408e1dd57554f3fe441323900822a3a03293fad48f454f6c45ee9e2cc5cf",
+  "bytes": 78572,
+  "distinct_cslb_ids": 57,
+  "grain": "DEBARMENT_ORDER_LISTING"
+}

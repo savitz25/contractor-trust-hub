@@ -1,0 +1,11 @@
+{
+  "source": "Cal/OSHA asbestos registrants database",
+  "url": "https://www.dir.ca.gov/databases/doshacru/acrulist.asp",
+  "as_of": "2026-09-02",
+  "local_file": "acrulist.html",
+  "sha256": "e4d1f5c5025a24ed98059ad5f00df0e05f898dd2c2f9e09828554b8d7e5fe44d",
+  "bytes": 205651,
+  "rows": 321,
+  "rows_with_cslb_id": 312,
+  "grain": "ASBESTOS_REGISTRANT"
+}

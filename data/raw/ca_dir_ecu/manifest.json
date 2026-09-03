@@ -1,0 +1,11 @@
+{
+  "source": "DIR Electrician Certification Unit via data.ca.gov CKAN datastore",
+  "package": "https://data.ca.gov/dataset/dir-electrician-certification-unit-ecu",
+  "as_of": "2026-09-03",
+  "certified_rows": 36983,
+  "certified_sha256": "ccab0eaa8cdd9ecc01b34e5cc9eac1dd129bf917a7f70156679e6d7711942466",
+  "trainee_rows": 19661,
+  "trainee_sha256": "76eba6a889726a5ae6c298a720f711f1b55ff26b57f81a31feaae11da5d5f21c",
+  "grain": "PERSON_CERTIFICATE",
+  "cslb_license_id": false
+}

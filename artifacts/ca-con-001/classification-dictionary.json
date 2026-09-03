@@ -1,0 +1,318 @@
+{
+  "source": "https://www.cslb.ca.gov/onlineservices/dataportal/ListByClassification.aspx",
+  "option_count": 78,
+  "options": [
+    {
+      "code": "A",
+      "label": "A - General Engineering Contractor"
+    },
+    {
+      "code": "B",
+      "label": "B - General Building Contractor"
+    },
+    {
+      "code": "B-2",
+      "label": "B-2 \u2013 Residential Remodeling Contractor"
+    },
+    {
+      "code": "C-2",
+      "label": "C-2 - Insulation and Acoustical Contractor"
+    },
+    {
+      "code": "C-4",
+      "label": "C-4 - Boiler, Hot Water Heating and Steam Fitting Contractor"
+    },
+    {
+      "code": "C-5",
+      "label": "C-5 - Framing and Rough Carpentry Contractor"
+    },
+    {
+      "code": "C-6",
+      "label": "C-6 - Cabinet, Millwork and Finish Carpentry Contractor"
+    },
+    {
+      "code": "C-7",
+      "label": "C-7 - Low Voltage Systems Contractor"
+    },
+    {
+      "code": "C-8",
+      "label": "C-8 - Concrete Contractor"
+    },
+    {
+      "code": "C-9",
+      "label": "C-9 - Drywall Contractor"
+    },
+    {
+      "code": "C-10",
+      "label": "C-10 - Electrical Contractor"
+    },
+    {
+      "code": "C-11",
+      "label": "C-11 - Elevator Contractor"
+    },
+    {
+      "code": "C-12",
+      "label": "C-12 - Earthwork and Paving Contractors"
+    },
+    {
+      "code": "C-13",
+      "label": "C-13 - Fencing Contractor"
+    },
+    {
+      "code": "C-15",
+      "label": "C-15 - Flooring and Floor Covering Contractors"
+    },
+    {
+      "code": "C-16",
+      "label": "C-16 - Fire Protection Contractor"
+    },
+    {
+      "code": "C-17",
+      "label": "C-17 - Glazing Contractor"
+    },
+    {
+      "code": "C-20",
+      "label": "C-20 - Warm-Air Heating, Ventilating and Air-Conditioning Contractor"
+    },
+    {
+      "code": "C-21",
+      "label": "C-21 - Building Moving/Demolition Contractor"
+    },
+    {
+      "code": "C-22",
+      "label": "C-22 - Asbestos Abatement Contractor"
+    },
+    {
+      "code": "C-23",
+      "label": "C-23 - Ornamental Metal Contractor"
+    },
+    {
+      "code": "C-27",
+      "label": "C-27 - Landscaping Contractor"
+    },
+    {
+      "code": "C-28",
+      "label": "C-28 - Lock and Security Equipment Contractor"
+    },
+    {
+      "code": "C-29",
+      "label": "C-29 - Masonry Contractor"
+    },
+    {
+      "code": "C-31",
+      "label": "C-31 - Construction Zone Traffic Control Contractor"
+    },
+    {
+      "code": "C-32",
+      "label": "C-32 - Parking and Highway Improvement Contractor"
+    },
+    {
+      "code": "C-33",
+      "label": "C-33 - Painting and Decorating Contractor"
+    },
+    {
+      "code": "C-34",
+      "label": "C-34 - Pipeline Contractor"
+    },
+    {
+      "code": "C-35",
+      "label": "C-35 - Lathing and Plastering Contractor"
+    },
+    {
+      "code": "C-36",
+      "label": "C-36 - Plumbing Contractor"
+    },
+    {
+      "code": "C-38",
+      "label": "C-38 - Refrigeration Contractor"
+    },
+    {
+      "code": "C-39",
+      "label": "C-39 - Roofing Contractor"
+    },
+    {
+      "code": "C-42",
+      "label": "C-42 - Sanitation System Contractor"
+    },
+    {
+      "code": "C-43",
+      "label": "C-43 - Sheet Metal Contractor"
+    },
+    {
+      "code": "C-45",
+      "label": "C-45 - Sign Contractor"
+    },
+    {
+      "code": "C-46",
+      "label": "C-46 - Solar Contractor"
+    },
+    {
+      "code": "C-47",
+      "label": "C-47 - General Manufactured Housing Contractor"
+    },
+    {
+      "code": "C-49",
+      "label": "C-49 - Tree and Palm Contractor"
+    },
+    {
+      "code": "C-50",
+      "label": "C-50 - Reinforcing Steel Contractor"
+    },
+    {
+      "code": "C-51",
+      "label": "C-51 - Structural Steel Contractor"
+    },
+    {
+      "code": "C-53",
+      "label": "C-53 - Swimming Pool Contractor"
+    },
+    {
+      "code": "C-54",
+      "label": "C-54 - Ceramic and Mosaic Tile Contractor"
+    },
+    {
+      "code": "C-55",
+      "label": "C-55 - Water Conditioning Contractor"
+    },
+    {
+      "code": "C-57",
+      "label": "C-57 - Well Drilling Contractor"
+    },
+    {
+      "code": "C-60",
+      "label": "C-60 - Welding Contractor"
+    },
+    {
+      "code": "C-61",
+      "label": "C-61 - Limited Specialty Classification"
+    },
+    {
+      "code": "C-61/D-3",
+      "label": "C-61/D-3 - Awnings Contractor"
+    },
+    {
+      "code": "C-61/D-4",
+      "label": "C-61/D-4 - Central Vacuum Systems Contractor"
+    },
+    {
+      "code": "C-61/D-6",
+      "label": "C-61/D-6 - Concrete-Related Services Contractor"
+    },
+    {
+      "code": "C-61/D-9",
+      "label": "C-61/D-9 - Drilling, Blasting and Oil Field Work Contractor"
+    },
+    {
+      "code": "C-61/D-10",
+      "label": "C-61/D-10 - Elevated Floors Contractor"
+    },
+    {
+      "code": "C-61/D-12",
+      "label": "C-61/D-12 - Synthetic Products Contractor"
+    },
+    {
+      "code": "C-61/D-16",
+      "label": "C-61/D-16 - Hardware, Locks and Safes Contractor"
+    },
+    {
+      "code": "C-61/D-21",
+      "label": "C-61/D-21 - Machinery and Pumps Contractor"
+    },
+    {
+      "code": "C-61/D-24",
+      "label": "C-61/D-24 - Metal Products Contractor"
+    },
+    {
+      "code": "C-61/D-28",
+      "label": "C-61/D-28 - Doors, Gates and Activating Devices Contractor"
+    },
+    {
+      "code": "C-61/D-29",
+      "label": "C-61/D-29 - Paperhanging Contractor"
+    },
+    {
+      "code": "C-61/D-30",
+      "label": "C-61/D-30 - Pile Driving and Pressure Foundation Jacking Contractor"
+    },
+    {
+      "code": "C-61/D-31",
+      "label": "C-61/D-31 - Pole Installation and Maintenance Contractor"
+    },
+    {
+      "code": "C-61/D-34",
+      "label": "C-61/D-34 - Prefabricated Equipment Contractor"
+    },
+    {
+      "code": "C-61/D-35",
+      "label": "C-61/D-35 - Pool and Spa Maintenance Contractor"
+    },
+    {
+      "code": "C-61/D-38",
+      "label": "C-61/D-38 - Sand and Water Blasting Contractor"
+    },
+    {
+      "code": "C-61/D-39",
+      "label": "C-61/D-39 - Scaffolding Contractor"
+    },
+    {
+      "code": "C-61/D-40",
+      "label": "C-61/D-40 - Service Station Equipment and Maintenance Contractor"
+    },
+    {
+      "code": "C-61/D-41",
+      "label": "C-61/D-41 - Siding and Decking Contractor"
+    },
+    {
+      "code": "C-61/D-42",
+      "label": "C-61/D-42 - Non-Electrical Sign Installation"
+    },
+    {
+      "code": "C-61/D-49",
+      "label": "C-61/D-49 - Tree Service Contractor"
+    },
+    {
+      "code": "C-61/D-50",
+      "label": "C-61/D-50 - Suspended Ceilings Contractor"
+    },
+    {
+      "code": "C-61/D-52",
+      "label": "C-61/D-52 - Window Coverings Contractor"
+    },
+    {
+      "code": "C-61/D-53",
+      "label": "C-61/D-53 - Wood Tanks Contractor"
+    },
+    {
+      "code": "C-61/D-56",
+      "label": "C-61/D-56 - Trenching Only Contractor"
+    },
+    {
+      "code": "C-61/D-59",
+      "label": "C-61/D-59 - Hydroseed Spraying Contractor"
+    },
+    {
+      "code": "C-61/D-62",
+      "label": "C-61/D-62 - Air and Water Balancing Contractor"
+    },
+    {
+      "code": "C-61/D-63",
+      "label": "C-61/D-63 - Construction Clean-up Contractor"
+    },
+    {
+      "code": "C-61/D-64",
+      "label": "C-61/D-64 - Non-specialized Contractor"
+    },
+    {
+      "code": "C-61/D-65",
+      "label": "C-61/D-65 - Weatherization and Energy Conservation Contractor"
+    },
+    {
+      "code": "ASB",
+      "label": "ASB - Asbestos Certification"
+    },
+    {
+      "code": "HAZ",
+      "label": "HAZ - Hazardous Substance Removal Certification"
+    }
+  ]
+}

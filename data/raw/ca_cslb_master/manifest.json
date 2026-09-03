@@ -1,0 +1,11 @@
+{
+  "source": "CSLB Public Data Portal License Master",
+  "url": "https://www.cslb.ca.gov/onlineservices/dataportal/ContractorList",
+  "as_of": "2026-09-02",
+  "local_file": "license_master.part",
+  "sha256": "f6ebbee6ed6c8b9476414e972382e6fcb4065f2c6e88a19392371a1e1e996838",
+  "bytes": 24437638,
+  "license_rows": 75572,
+  "coverage": "ACQUIRED_PARTIAL_STREAM_TRUNCATED",
+  "emails": "NOT_PROVIDED_BPC_27"
+}

@@ -1,0 +1,10 @@
+{
+  "source": "https://www.dir.ca.gov/databases/doshacru/acrulist.asp",
+  "source_as_of": "9/2/2026",
+  "rows": 321,
+  "rows_with_exact_cslb_id": 312,
+  "distinct_cslb_ids": 312,
+  "rows_with_phone": 320,
+  "grain": "ASBESTOS_REGISTRANT",
+  "semantics": "Cal/OSHA asbestos registrant is not CSLB license status and not a C-22 classification proof by itself."
+}

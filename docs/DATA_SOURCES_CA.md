@@ -97,6 +97,12 @@ python -m ingest.adapters.ca_cslb \
 
 Full county / class tables: [CALIFORNIA_VERIFY_V1.md](./CALIFORNIA_VERIFY_V1.md) · staging `batch_manifest.json`.
 
+## CA-CON-001 statewide foundation (2026-09-03)
+
+The high-impact county Excel extracts above remain the Verify v1 load. CA-CON-001 separately acquired the official **License Master** portal stream (as of 2026-09-02) plus DIR electrician, DLSE debarment, and Cal/OSHA asbestos lists.
+
+See [california/ca-con-001-contractor-opportunity.md](./california/ca-con-001-contractor-opportunity.md). `/california` is still unpublished.
+
 ## Remaining gaps
 
 | Gap | Notes |

@@ -29,6 +29,7 @@
     "test:nj-con-003": "python -m unittest scripts.test_nj_con_003",
     "test:nj-con-004": "python -m unittest scripts.test_nj_con_004 && python -X utf8 scripts/assert_nj_con_004.py",
     "test:nj-con-county-001": "python -m unittest scripts.test_nj_con_county_001 && python -X utf8 scripts/assert_nj_con_county_001.py",
+    "test:ca-con-001": "python -m unittest scripts.test_ca_con_001",
     "test:funnel": "node scripts/test_funnel_smoke.mjs",
     "verify:stage6": "node scripts/verify_stage6_migration.mjs",
     "verify:stage7": "node scripts/verify_stage7_data.mjs",
