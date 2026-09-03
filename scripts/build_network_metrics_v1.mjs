@@ -4,11 +4,10 @@
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { publicationMetricInputs } from "./publication_metric_inputs.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const requireJson = createRequire(import.meta.url);
 
 function loadEnv(p) {
   if (!existsSync(p)) return;
@@ -44,31 +43,6 @@ async function restCount(base, key, table, query = "") {
   return tail && tail !== "*" ? Number(tail) : 0;
 }
 
-function liveCohortFromConfig() {
-  const src = readFileSync(join(root, "lib/states/config.ts"), "utf8");
-  const orderMatch = src.match(/LIVE_STATE_ORDER = \[([^\]]+)\]/);
-  if (!orderMatch) throw new Error("LIVE_STATE_ORDER missing");
-  const order = [...orderMatch[1].matchAll(/"([a-z]+)"/g)].map((m) => m[1]);
-  const slugToCode = { fl: "FL", tx: "TX", nj: "NJ", or: "OR", wa: "WA", ca: "CA", az: "AZ", la: "LA", ms: "MS", ky: "KY", wi: "WI" };
-  const codes = [];
-  const sources = [];
-  for (const slug of order) {
-    const re = new RegExp(`\\n  ${slug}: \\{([\\s\\S]*?)\\n  \\},`);
-    const block = src.match(re)?.[1];
-    if (!block) throw new Error(`state block missing: ${slug}`);
-    if (!/live:\s*true/.test(block)) continue;
-    codes.push(slugToCode[slug] || slug.toUpperCase());
-    const multi = block.match(/licenseSources:\s*\[([^\]]+)\]/);
-    if (multi) sources.push(...[...multi[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]));
-    else {
-      const one = block.match(/licenseSource:\s*"([^"]+)"/);
-      if (!one) throw new Error(`licenseSource missing: ${slug}`);
-      sources.push(one[1]);
-    }
-  }
-  return { liveStateCodes: codes, liveSourceSystems: [...new Set(sources)].sort() };
-}
-
 async function main() {
   const { computeContractorNetworkMetrics } = await import(
     pathToFileURL(join(root, "lib/metrics/compute-contractor-network-metrics.ts")).href
@@ -76,7 +50,11 @@ async function main() {
   const prev = JSON.parse(readFileSync(join(root, "data/home/contractor-hub-intel-v2.json"), "utf8"));
   const nj = JSON.parse(readFileSync(join(root, "lib/new-jersey-intelligence/accepted-snapshot.json"), "utf8"));
   const caMaster = JSON.parse(readFileSync(join(root, "data/raw/ca_cslb_master/manifest.json"), "utf8"));
-  const cohort = liveCohortFromConfig();
+  const pub = publicationMetricInputs();
+  const cohort = {
+    liveStateCodes: pub.liveStateCodes,
+    liveSourceSystems: pub.liveSourceSystems,
+  };
   const base = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/$/, "");
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!base || !key) throw new Error("Supabase URL/key missing — cannot generate from production");
@@ -120,9 +98,10 @@ async function main() {
     njConstructionSourceAsOf: nj.hero.current_value,
     njCurrentMunicipalities: nj.hero.geography_value,
     njMunicipalityAsOf: nj.as_of,
-    njPublishedCountyPages: 4,
+    njPublishedCountyPages: pub.njPublishedCountyPages.length,
     njPublicWorksRegulatoryRows: nj.hero.observations_value,
-    floridaCountyIntelligencePages: 4,
+    floridaCountyIntelligencePages: pub.floridaCountyIntelligencePages.length,
+    caCityLocalPages: pub.caCityLocalPages.length,
   };
 
   const manifest = computeContractorNetworkMetrics(input);

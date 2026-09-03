@@ -35,6 +35,7 @@ export type NetworkMetricsInput = {
   njPublishedCountyPages: number;
   njPublicWorksRegulatoryRows: number;
   floridaCountyIntelligencePages: number;
+  caCityLocalPages: number;
 };
 
 function metric(partial: Omit<ContractorNetworkMetric, "unit" | "generatedAt"> & { generatedAt: string }): ContractorNetworkMetric {
@@ -67,6 +68,9 @@ export function assertGrainSafety(input: NetworkMetricsInput): void {
   const countyPages = input.floridaCountyIntelligencePages + input.njPublishedCountyPages;
   if (countyPages === input.liveStateCodes.length) {
     throw new Error("county pages must not be used as live state count");
+  }
+  if (input.caCityLocalPages > 0 && input.caCityLocalPages === countyPages) {
+    throw new Error("CA city local pages must not be counted as county intelligence pages");
   }
   const familySum = input.evidenceFamilies.reduce((n, f) => n + f.rows, 0);
   if (familySum !== input.disciplineActionRows) {
@@ -259,7 +263,7 @@ export function computeContractorNetworkMetrics(input: NetworkMetricsInput): Con
       publicationStatus: "PUBLIC",
       trace: commonTrace(
         "Published county intelligence routes.",
-        "Not live researched states, not municipalities, not Enhanced Local Research (gate not activated), not CA KEEP_DATA_ONLY harvests.",
+        "Not live researched states, not municipalities, not Enhanced Local Research (gate not activated), not CA city local pages.",
         ["florida-county-intel", "nj-county-intel"],
         "Selected FL and NJ counties",
         `NJ county publication fingerprints as of ${input.njMunicipalityAsOf}; FL county pages are statewide coverage until the enhanced gate is activated.`
@@ -326,6 +330,26 @@ export function computeContractorNetworkMetrics(input: NetworkMetricsInput): Con
       ),
     }),
     metric({
+      key: "published_ca_city_local_intelligence_pages",
+      label: "Published California city local intelligence pages",
+      value: input.caCityLocalPages,
+      grain: "published_city_local_intelligence_page",
+      denominator: "CA-CON-COUNTY-002 local publication gates (SF and City of LA)",
+      description: "City local permit/CSLB-exact pages. Not county intelligence pages and not live CSLB credentials.",
+      coverage: "San Francisco; City of Los Angeles",
+      contributingSourceSystems: ["ca-local-intel"],
+      sourceAsOf: input.caAcquiredAsOf,
+      generatedAt,
+      publicationStatus: "PUBLIC",
+      trace: commonTrace(
+        "Indexed CA city local intelligence routes.",
+        "Not county pages, not Los Angeles County, not the live ca_cslb credential denominator, not the truncated License Master universe.",
+        ["ca-local-intel"],
+        "City and County of San Francisco; City of Los Angeles only",
+        `Local publication alongside CSLB stream as_of ${input.caAcquiredAsOf}`
+      ),
+    }),
+    metric({
       key: "ca_acquired_cslb_license_master_rows_truncated",
       label: "Acquired CSLB License Master rows (truncated stream)",
       value: input.caAcquiredTruncatedRows,
@@ -364,6 +388,7 @@ export function computeContractorNetworkMetrics(input: NetworkMetricsInput): Con
     caTruncated: input.caAcquiredTruncatedRows,
     caProduction: input.caProductionCslbRows,
     countyPages,
+    caCityLocalPages: input.caCityLocalPages,
   };
 
   return {
@@ -426,6 +451,7 @@ export function requiredPublicKeys(): string[] {
     "public_contact_observations",
     "research_graph_contractor_identities",
     "ca_acquired_cslb_license_master_rows_truncated",
+    "published_ca_city_local_intelligence_pages",
   ];
 }
 

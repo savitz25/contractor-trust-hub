@@ -4,6 +4,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { publicationMetricInputs } from "./publication_metric_inputs.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (rel) => readFileSync(join(root, rel), "utf8");
@@ -14,22 +15,12 @@ const assert = (c, m) => {
 
 const v1 = JSON.parse(read("data/home/contractor-network-metrics-v1.json"));
 const intel = JSON.parse(read("data/home/contractor-hub-intel-v2.json"));
-const config = read("lib/states/config.ts");
 const hero = read("components/home/HomeIntelHero.tsx");
 const load = read("lib/home/load-intel-v2.ts");
 const byKey = Object.fromEntries(v1.metrics.map((m) => [m.key, m]));
 
-const order = [...config.match(/LIVE_STATE_ORDER = \[([^\]]+)\]/)[1].matchAll(/"([a-z]+)"/g)].map((m) => m[1]);
-const liveSources = [];
-for (const slug of order) {
-  const re = new RegExp(`\\n  ${slug}: \\{([\\s\\S]*?)\\n  \\},`);
-  const block = config.match(re)?.[1];
-  if (!block || !/live:\s*true/.test(block)) continue;
-  const multi = block.match(/licenseSources:\s*\[([^\]]+)\]/);
-  if (multi) liveSources.push(...[...multi[1].matchAll(/"([^"]+)"/g)].map((x) => x[1]));
-  else liveSources.push(block.match(/licenseSource:\s*"([^"]+)"/)[1]);
-}
-const expectedSources = [...new Set(liveSources)].sort();
+const pub = publicationMetricInputs();
+const expectedSources = pub.liveSourceSystems;
 
 assert(v1.schemaVersion === "contractor-network-metrics-v1", "schema");
 assert(JSON.stringify(v1.liveCohort.liveSourceSystems) === JSON.stringify(expectedSources), "metric sources match publication config");
@@ -40,7 +31,11 @@ assert(byKey.live_credential_records.value === expectedSources.reduce((n, s) => 
 assert(byKey.nj_construction_source_records.grain === "municipal_permit_or_certificate_source_record", "NJ grain");
 assert(byKey.nj_construction_source_records.value !== byKey.live_credential_records.value, "permits/construction != credentials");
 assert(byKey.public_contact_observations.value !== byKey.research_graph_contractor_identities.value, "contacts != entities");
+assert(byKey.published_county_intelligence_pages.value === pub.publishedCountyIntelligencePageCount, "county pages match FL+NJ catalogs");
 assert(byKey.published_county_intelligence_pages.value !== byKey.live_researched_states.value, "counties != states");
+assert(byKey.published_ca_city_local_intelligence_pages.value === pub.caCityLocalPages.length, "CA city local pages match publication gates");
+assert(byKey.published_ca_city_local_intelligence_pages.value !== byKey.published_county_intelligence_pages.value, "CA city pages are not county pages");
+assert(!pub.caCityLocalPages.some((p) => p.includes("county")), "CA local gates are city pages, not county OS pages");
 assert(v1.californiaReconciliation.joinLiveCredentialCohort === false, "CA fail closed");
 assert(byKey.ca_acquired_cslb_license_master_rows_truncated.sourceAsOf === "2026-09-02", "CA sourceAsOf");
 assert(byKey.nj_construction_source_records.sourceAsOf === "2026-08-07", "NJ sourceAsOf");

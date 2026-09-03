@@ -19,6 +19,7 @@ export type MetricGrain =
   | "municipal_permit_or_certificate_source_record"
   | "current_municipality"
   | "published_county_intelligence_page"
+  | "published_city_local_intelligence_page"
   | "public_contact_observation"
   | "acquired_partial_license_master_row";
 

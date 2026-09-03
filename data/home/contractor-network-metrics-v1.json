@@ -1,9 +1,9 @@
 {
   "schemaVersion": "contractor-network-metrics-v1",
-  "generatedAt": "2026-09-03T21:03:46.226Z",
+  "generatedAt": "2026-09-03T21:22:06.870Z",
   "newestDocumentedSourceAsOf": "2026-09-02",
   "newestDocumentedSourceAsOfNote": "Newest documented official source-effective date among metrics that carry a sourceAsOf. Not the live-credential board extract date and not Git/deploy time.",
-  "sourceFingerprint": "99468314cf4001e3697f56a586691a3574ff840659b40973fbe3eb16567dfc19",
+  "sourceFingerprint": "0a99e8a1cf53590d01506d57072f4a320aa6c0060476a779193d8af1dd8034b3",
   "liveCohort": {
     "liveStates": 10,
     "liveStateCodes": [
@@ -88,7 +88,7 @@
         "wa_lni"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "One row per license/credential in live source systems.",
@@ -135,7 +135,7 @@
         "wa_lni"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Live-cohort license rows with status_normalized active or current.",
@@ -182,7 +182,7 @@
         "wa_lni"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "States currently live in ContractorTrustHub Verify/config.",
@@ -225,7 +225,7 @@
         "va_dpor"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
       "trace": {
         "counts": "Every license row in the research graph.",
@@ -271,7 +271,7 @@
         "az_roc"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "discipline_actions rows, attributed to evidence families.",
@@ -300,7 +300,7 @@
         "permit_source_records"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Rows in permit_source_records.",
@@ -326,7 +326,7 @@
         "nj_construction_permits"
       ],
       "sourceAsOf": "2026-08-07",
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Permit-issued and certificate-issued SOURCE RECORDS in the NJ DCA construction extract.",
@@ -353,11 +353,11 @@
         "nj-county-intel"
       ],
       "sourceAsOf": "2026-08-13",
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Published county intelligence routes.",
-        "doesNotCount": "Not live researched states, not municipalities, not Enhanced Local Research (gate not activated), not CA KEEP_DATA_ONLY harvests.",
+        "doesNotCount": "Not live researched states, not municipalities, not Enhanced Local Research (gate not activated), not CA city local pages.",
         "contributingSourceSystems": [
           "florida-county-intel",
           "nj-county-intel"
@@ -380,7 +380,7 @@
         "nj_dca_construction_metadata"
       ],
       "sourceAsOf": "2026-08-13",
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Canonical current NJ municipality universe.",
@@ -406,7 +406,7 @@
         "public_contact_observations"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
       "trace": {
         "counts": "Public contact observation rows.",
@@ -432,7 +432,7 @@
         "contractors"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
       "trace": {
         "counts": "Rows in contractors.",
@@ -442,6 +442,32 @@
         ],
         "geographicCoverage": "Research graph",
         "sourceDates": "Identity rows are not a national census.",
+        "generationDate": "2026-09-03"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "published_ca_city_local_intelligence_pages",
+      "label": "Published California city local intelligence pages",
+      "value": 2,
+      "grain": "published_city_local_intelligence_page",
+      "denominator": "CA-CON-COUNTY-002 local publication gates (SF and City of LA)",
+      "description": "City local permit/CSLB-exact pages. Not county intelligence pages and not live CSLB credentials.",
+      "coverage": "San Francisco; City of Los Angeles",
+      "contributingSourceSystems": [
+        "ca-local-intel"
+      ],
+      "sourceAsOf": "2026-09-02",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC",
+      "trace": {
+        "counts": "Indexed CA city local intelligence routes.",
+        "doesNotCount": "Not county pages, not Los Angeles County, not the live ca_cslb credential denominator, not the truncated License Master universe.",
+        "contributingSourceSystems": [
+          "ca-local-intel"
+        ],
+        "geographicCoverage": "City and County of San Francisco; City of Los Angeles only",
+        "sourceDates": "Local publication alongside CSLB stream as_of 2026-09-02",
         "generationDate": "2026-09-03"
       }
     },
@@ -458,7 +484,7 @@
         "ca_cslb_master_truncated"
       ],
       "sourceAsOf": "2026-09-02",
-      "generatedAt": "2026-09-03T21:03:46.226Z",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
       "publicationStatus": "PUBLIC_PARTIAL",
       "trace": {
         "counts": "Rows in the truncated CSLB License Master acquisition.",
