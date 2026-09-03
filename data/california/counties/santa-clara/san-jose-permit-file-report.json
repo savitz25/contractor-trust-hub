@@ -1,0 +1,100 @@
+{
+  "source_id": "san-jose-permit-data-file-pdisue",
+  "source_name": "City of San Jos\u00e9 Permit Data file (TAB-delimited monthly/weekly extracts)",
+  "agency": "City of San Jos\u00e9 Permit Center",
+  "jurisdiction": "CITY_OF_SAN_JOSE",
+  "geographic_grain": "CITY_OF_SAN_JOSE_NOT_SANTA_CLARA_COUNTYWIDE",
+  "url": "https://sjpermits.org/permits/general/reportdata.asp",
+  "access_class": "OPEN_BULK_DOWNLOAD",
+  "format": "TAB-delimited text",
+  "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+  "source_as_of": "latest_month_file",
+  "refresh_cadence": "weekly_and_monthly_files",
+  "rows": 2456,
+  "row_grain": "issued_or_finaled_permit_row",
+  "identity_fields": [
+    "CONTRACTOR"
+  ],
+  "cslb_field": "",
+  "permit_fields": [
+    "TRACT",
+    "APN",
+    "ISSUEDATE",
+    "FINALDATE",
+    "LOT",
+    "FOLDERNUMBER",
+    "OWNERNAME",
+    "CONTRACTOR",
+    "APPLICANT",
+    "JOBLOCATION",
+    "PERMITAPPROVALS",
+    "SUBCODE",
+    "SUBDESC",
+    "WORKCODE",
+    "WORKDESC",
+    "CENSUSCODE",
+    "PERMITVALUATION",
+    "REROOFVALUATION",
+    "SQFT",
+    "DWELLUNITS",
+    "FOLDERRSN",
+    "SWIMMINGPOOL",
+    "SEWER",
+    "ENTERPRISE",
+    "PERMITFLAG"
+  ],
+  "property_apn_fields": [
+    "APN"
+  ],
+  "contact_fields": [],
+  "publication_eligibility": "KEEP_DATA_ONLY",
+  "limitations": [
+    "City of San Jose only \u2014 not Santa Clara County and not other municipalities.",
+    "Latest-month extract only in this ticket; historical year files exist on the same official page if a follow-up wants them.",
+    "Owner names may appear; this ticket does not build owner-person dossiers."
+  ],
+  "download": {
+    "path": "data\\raw\\california\\counties\\santa-clara\\sanjose_PDIssue_latest.txt",
+    "bytes": 1657806,
+    "sha256": "38d8abff081080cd57cc2466482368d6585de29c233db6756e9413b9acaaeefb",
+    "url": "https://csjpbce.sanjoseca.gov/reportviewer/permitdataMonths/PDIssue_latest.txt",
+    "cached": true
+  },
+  "layout": {
+    "error": "<urlopen error [WinError 10054] An existing connection was forcibly closed by the remote host>"
+  },
+  "stats": {
+    "rows_total": 2456,
+    "fieldnames": [
+      "TRACT",
+      "APN",
+      "ISSUEDATE",
+      "FINALDATE",
+      "LOT",
+      "FOLDERNUMBER",
+      "OWNERNAME",
+      "CONTRACTOR",
+      "APPLICANT",
+      "JOBLOCATION",
+      "PERMITAPPROVALS",
+      "SUBCODE",
+      "SUBDESC",
+      "WORKCODE",
+      "WORKDESC",
+      "CENSUSCODE",
+      "PERMITVALUATION",
+      "REROOFVALUATION",
+      "SQFT",
+      "DWELLUNITS",
+      "FOLDERRSN",
+      "SWIMMINGPOOL",
+      "SEWER",
+      "ENTERPRISE",
+      "PERMITFLAG"
+    ],
+    "rows_with_contractor_business": 2050,
+    "cslb_field": null,
+    "rows_with_source_native_license": 0,
+    "note": "No source-native CSLB license column in this official monthly file."
+  }
+}

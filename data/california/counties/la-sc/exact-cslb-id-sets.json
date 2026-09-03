@@ -1,0 +1,14 @@
+{
+  "acquired_cslb_spine_licenses": 75572,
+  "spine_coverage": "ACQUIRED_PARTIAL_STREAM_TRUNCATED",
+  "complete_statewide_renewable_denominator": "UNKNOWN",
+  "city_of_la_cofo_exact_match_licenses": 2507,
+  "city_of_la_cofo_outside_partial_spine_licenses": 10279,
+  "city_of_la_pcis_exact_match_licenses": 3063,
+  "city_of_la_pcis_outside_partial_spine_licenses": 15069,
+  "san_jose_exact_match_licenses": 0,
+  "san_jose_outside_partial_spine_licenses": 0,
+  "union_exact_match_licenses": 3708,
+  "union_outside_partial_spine_licenses": 16704,
+  "note": "Outside-partial-spine exact IDs are not invalid and are not unlicensed."
+}

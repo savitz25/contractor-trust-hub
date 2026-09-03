@@ -1,0 +1,57 @@
+{
+  "source_id": "santa-clara-county-parcels-ubcd-cewv",
+  "source_name": "Parcels",
+  "agency": "County of Santa Clara GIS",
+  "jurisdiction": "SANTA_CLARA_COUNTY",
+  "geographic_grain": "COUNTYWIDE_PARCELS",
+  "url": "https://data.sccgov.org/Government/Parcels/ubcd-cewv",
+  "access_class": "OPEN_API",
+  "format": "SODA / GIS",
+  "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+  "source_as_of": "2026-03-23",
+  "refresh_cadence": "unknown",
+  "rows": "504717",
+  "row_grain": "parcel",
+  "identity_fields": [
+    "apn"
+  ],
+  "cslb_field": null,
+  "permit_fields": [],
+  "property_apn_fields": [
+    "apn",
+    "situs_house_number",
+    "situs_street_name",
+    "situs_city_name",
+    "situs_zip_code"
+  ],
+  "contact_fields": [],
+  "publication_eligibility": "KEEP_DATA_ONLY",
+  "limitations": [
+    "Geometry not committed.",
+    "No contractor license on this layer.",
+    "GIS is dynamic and not a substitute for official recorder/assessor documents."
+  ],
+  "fields": [
+    "the_geom",
+    "objectid",
+    "apn",
+    "tax_rate_area",
+    "situs_house_number",
+    "situs_house_number_suffix",
+    "situs_street_direction",
+    "situs_street_name",
+    "situs_street_type",
+    "situs_unit_number",
+    "situs_city_name",
+    "situs_state_code",
+    "situs_zip_code",
+    "number_of_situs_address",
+    "reserved1",
+    "reserved2",
+    "reserved3",
+    "jurisdiction",
+    "shape_length",
+    "shape_area"
+  ],
+  "future_owner": "LENDER"
+}

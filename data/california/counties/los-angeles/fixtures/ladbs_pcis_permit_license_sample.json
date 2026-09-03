@@ -1,0 +1,44 @@
+[
+  {
+    "permit": "20016-10000-25330",
+    "license": "1062679",
+    "license_class": "EXACT_MATCH_ACQUIRED_CSLB",
+    "contractors_business_name": "ANDERSEN CONSTRUCTION",
+    "contractor_address": "1437 CHEVIOTDALE DR",
+    "contractor_city": "PASADENA",
+    "permit_type": "Bldg-Alter/Repair",
+    "status": "CofO Issued",
+    "issue_date": "04/30/2021",
+    "valuation": 15000.0,
+    "apn": "2274-023-017",
+    "note": "Public permit contractor fields. Applicant/principal names omitted from fixture."
+  },
+  {
+    "permit": "20016-10000-09906",
+    "license": "1061604",
+    "license_class": "EXACT_MATCH_ACQUIRED_CSLB",
+    "contractors_business_name": "LIAM CONSTRUCTION INC",
+    "contractor_address": "60 DARBY",
+    "contractor_city": "IRVINE",
+    "permit_type": "Bldg-Alter/Repair",
+    "status": "CofC Issued",
+    "issue_date": "05/04/2021",
+    "valuation": 25000.0,
+    "apn": "4322-016-003",
+    "note": "Public permit contractor fields. Applicant/principal names omitted from fixture."
+  },
+  {
+    "permit": "19016-10000-27068",
+    "license": "1020382",
+    "license_class": "EXACT_MATCH_ACQUIRED_CSLB",
+    "contractors_business_name": "AMERICAN RETROFITTERS CORP",
+    "contractor_address": "",
+    "contractor_city": "",
+    "permit_type": "Bldg-Alter/Repair",
+    "status": "CofC Issued",
+    "issue_date": "05/04/2021",
+    "valuation": 80000.0,
+    "apn": "2421-023-003",
+    "note": "Public permit contractor fields. Applicant/principal names omitted from fixture."
+  }
+]

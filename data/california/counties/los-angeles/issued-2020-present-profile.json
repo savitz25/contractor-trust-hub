@@ -1,0 +1,193 @@
+{
+  "source_id": "la-city-ladbs-building-permits-issued-2020-present-pi9x-tg5x",
+  "source_name": "Building and Safety - Building Permits Issued from 2020 to Present (N)",
+  "agency": "Los Angeles Department of Building and Safety / TSB",
+  "jurisdiction": "CITY_OF_LOS_ANGELES",
+  "geographic_grain": "CITY_OF_LOS_ANGELES_NOT_COUNTYWIDE",
+  "url": "https://data.lacity.org/City-Infrastructure-Service-Requests/Building-and-Safety-Building-Permits-Issued-from-2/pi9x-tg5x",
+  "access_class": "OPEN_BULK_DOWNLOAD",
+  "format": "CSV/SODA",
+  "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+  "source_as_of": "2026-08-31",
+  "refresh_cadence": "weekly",
+  "rows": "409619",
+  "row_grain": "issued_building_permit",
+  "identity_fields": [],
+  "cslb_field": null,
+  "permit_fields": [
+    "permit_nbr",
+    "permit_type",
+    "status_desc",
+    "issue_date",
+    "valuation",
+    "work_desc"
+  ],
+  "property_apn_fields": [
+    "apn",
+    "pin_nbr",
+    "primary_address"
+  ],
+  "contact_fields": [],
+  "publication_eligibility": "KEEP_DATA_ONLY",
+  "limitations": [
+    "Current official weekly extract does not include contractor name or CSLB license number.",
+    "Useful for City of LA market/APN/valuation/status context only.",
+    "Do not present as countywide permit coverage."
+  ],
+  "status_counts": [
+    {
+      "status_desc": "Permit Finaled",
+      "n": "224440"
+    },
+    {
+      "status_desc": "Issued",
+      "n": "111062"
+    },
+    {
+      "status_desc": "CofO Issued",
+      "n": "57432"
+    },
+    {
+      "status_desc": "Permit Expired",
+      "n": "6127"
+    },
+    {
+      "status_desc": "CofC Issued",
+      "n": "4938"
+    },
+    {
+      "status_desc": "Permit Closed",
+      "n": "2681"
+    },
+    {
+      "status_desc": "CofO in Progress",
+      "n": "1598"
+    },
+    {
+      "status_desc": "CofO Corrected",
+      "n": "952"
+    },
+    {
+      "status_desc": "Refund in Progress",
+      "n": "154"
+    },
+    {
+      "status_desc": "OK for CofC",
+      "n": "113"
+    },
+    {
+      "status_desc": "Intent to Revoke",
+      "n": "53"
+    },
+    {
+      "status_desc": "Re-Activate Permit",
+      "n": "37"
+    },
+    {
+      "status_desc": "CofC Corrected",
+      "n": "7"
+    },
+    {
+      "status_desc": "OK to Issue CofC",
+      "n": "5"
+    },
+    {
+      "status_desc": "No Progress",
+      "n": "5"
+    },
+    {
+      "status_desc": "Intent to Correct CofC",
+      "n": "4"
+    },
+    {
+      "status_desc": "CofO Reactivated",
+      "n": "2"
+    },
+    {
+      "status_desc": "Order to Comply Issued",
+      "n": "1"
+    },
+    {
+      "status_desc": "Not Required",
+      "n": "1"
+    },
+    {
+      "status_desc": "Permit Extended",
+      "n": "1"
+    },
+    {
+      "status_desc": "CofO Superseded",
+      "n": "1"
+    },
+    {
+      "status_desc": "Ready to Issue",
+      "n": "1"
+    },
+    {
+      "status_desc": "Refund Denied",
+      "n": "1"
+    },
+    {
+      "status_desc": "PC Approved",
+      "n": "1"
+    },
+    {
+      "status_desc": "TCO Issued",
+      "n": "1"
+    },
+    {
+      "status_desc": "PC Info Complete",
+      "n": "1"
+    }
+  ],
+  "permit_type_counts": [
+    {
+      "permit_type": "Bldg-Alter/Repair",
+      "n": "273996"
+    },
+    {
+      "permit_type": "Bldg-Addition",
+      "n": "34327"
+    },
+    {
+      "permit_type": "Bldg-New",
+      "n": "26334"
+    },
+    {
+      "permit_type": "Grading",
+      "n": "20378"
+    },
+    {
+      "permit_type": "Swimming-Pool/Spa",
+      "n": "16536"
+    },
+    {
+      "permit_type": "Nonbldg-New",
+      "n": "12799"
+    },
+    {
+      "permit_type": "Bldg-Demolition",
+      "n": "12277"
+    },
+    {
+      "permit_type": "Sign",
+      "n": "9008"
+    },
+    {
+      "permit_type": "Nonbldg-Alter/Repair",
+      "n": "3754"
+    },
+    {
+      "permit_type": "Nonbldg-Addition",
+      "n": "122"
+    },
+    {
+      "permit_type": "Nonbldg-Demolition",
+      "n": "78"
+    },
+    {
+      "permit_type": "Bldg-Relocation",
+      "n": "10"
+    }
+  ]
+}

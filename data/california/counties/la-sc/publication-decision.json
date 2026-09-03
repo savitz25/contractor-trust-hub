@@ -1,0 +1,22 @@
+{
+  "los_angeles_county": "KEEP_DATA_ONLY",
+  "city_of_los_angeles": "PUBLISH_CITY_MARKET_MODULE",
+  "unincorporated_los_angeles_county": "PARK",
+  "santa_clara_county": "KEEP_DATA_ONLY",
+  "city_of_san_jose": "PUBLISH_LIGHT_MARKET_MODULE",
+  "no_routes_this_ticket": [
+    "/california/los-angeles-county",
+    "/california/santa-clara-county",
+    "/california/los-angeles",
+    "/california/san-jose"
+  ],
+  "by_hub": {
+    "CONTRACTOR": "City of LA exact CSLB permit/CofO activity is the moat. San Jose monthly file is a light follow-up if license column exists.",
+    "LENDER": "LA/SC parcels + valuations. No ingest of giant GDB here.",
+    "SENIOR": "SC food-facility inspections are identity/inspection context only \u2014 not RCFE quality.",
+    "MOVE": "DCBA bulk not found. PARK.",
+    "INSURANCE": "Parcel use/year-built/hazard context later. No ingest.",
+    "INVESTOR": "Parcel/development market context later. No ingest.",
+    "ASK_NETWORK": "State-level California gateway remains; no CA county Ask pages."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "home": {
+    "url": "https://dcba.lacounty.gov/",
+    "http_status": 200,
+    "content_type": "text/html; charset=UTF-8",
+    "bytes_peek": 800
+  },
+  "complaints": {
+    "url": "https://dcba.lacounty.gov/consumer-protection/",
+    "http_status": 200,
+    "content_type": "text/html; charset=UTF-8",
+    "bytes_peek": 800
+  },
+  "open_data": {
+    "url": "https://data.lacounty.gov/",
+    "http_status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes_peek": 800
+  }
+}

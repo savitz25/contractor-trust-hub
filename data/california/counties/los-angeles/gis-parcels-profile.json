@@ -1,0 +1,475 @@
+{
+  "url": "https://public.gis.lacounty.gov/public/rest/services/LACounty_Cache/LACounty_Parcel/MapServer/0",
+  "ok": true,
+  "name": "Parcels",
+  "geometry_type": "esriGeometryPolygon",
+  "max_record_count": 1000,
+  "field_count": 92,
+  "fields": [
+    {
+      "name": "OBJECTID",
+      "alias": "OBJECTID",
+      "type": "esriFieldTypeOID"
+    },
+    {
+      "name": "AIN",
+      "alias": "AIN",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "APN",
+      "alias": "APN",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "SitusHouseNo",
+      "alias": "SitusHouseNo",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "SitusFraction",
+      "alias": "SitusFraction",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "SitusDirection",
+      "alias": "SitusDirection",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "SitusUnit",
+      "alias": "SitusUnit",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "SitusStreet",
+      "alias": "SitusStreet",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "SitusAddress",
+      "alias": "SADDR",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "SitusCity",
+      "alias": "CITY",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "SitusZIP",
+      "alias": "ZIP",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "SitusFullAddress",
+      "alias": "SitusFullAddress",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "TaxRateArea",
+      "alias": "TaxRateArea",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "TaxRateCity",
+      "alias": "TaxRateCity",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "AgencyClassNo",
+      "alias": "AgencyClassNo",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "AgencyName",
+      "alias": "AgencyName",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "AgencyType",
+      "alias": "AgencyType",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "UseCode",
+      "alias": "UseCode",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "UseCode_2",
+      "alias": "UseCode_2",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "UseType",
+      "alias": "UseType",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "UseDescription",
+      "alias": "UseDescription",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "DesignType1",
+      "alias": "DesignType1",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "YearBuilt1",
+      "alias": "YearBuilt1",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "EffectiveYear1",
+      "alias": "EffectiveYear1",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "Units1",
+      "alias": "Units1",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "Bedrooms1",
+      "alias": "Bedrooms1",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "Bathrooms1",
+      "alias": "Bathrooms1",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "SQFTmain1",
+      "alias": "SQFTmain1",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "DesignType2",
+      "alias": "DesignType2",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "YearBuilt2",
+      "alias": "YearBuilt2",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "EffectiveYear2",
+      "alias": "EffectiveYear2",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "Units2",
+      "alias": "Units2",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "Bedrooms2",
+      "alias": "Bedrooms2",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "Bathrooms2",
+      "alias": "Bathrooms2",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "SQFTmain2",
+      "alias": "SQFTmain2",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "DesignType3",
+      "alias": "DesignType3",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "YearBuilt3",
+      "alias": "YearBuilt3",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "EffectiveYear3",
+      "alias": "EffectiveYear3",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "Units3",
+      "alias": "Units3",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "Bedrooms3",
+      "alias": "Bedrooms3",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "Bathrooms3",
+      "alias": "Bathrooms3",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "SQFTmain3",
+      "alias": "SQFTmain3",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "DesignType4",
+      "alias": "DesignType4",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "YearBuilt4",
+      "alias": "YearBuilt4",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "EffectiveYear4",
+      "alias": "EffectiveYear4",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "Units4",
+      "alias": "Units4",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "Bedrooms4",
+      "alias": "Bedrooms4",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "Bathrooms4",
+      "alias": "Bathrooms4",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "SQFTmain4",
+      "alias": "SQFTmain4",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "DesignType5",
+      "alias": "DesignType5",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "YearBuilt5",
+      "alias": "YearBuilt5",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "EffectiveYear5",
+      "alias": "EffectiveYear5",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "Units5",
+      "alias": "Units5",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "Bedrooms5",
+      "alias": "Bedrooms5",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "Bathrooms5",
+      "alias": "Bathrooms5",
+      "type": "esriFieldTypeSmallInteger"
+    },
+    {
+      "name": "SQFTmain5",
+      "alias": "SQFTmain5",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "Roll_Year",
+      "alias": "Roll_Year",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "Roll_LandValue",
+      "alias": "Roll_LandValue",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "Roll_ImpValue",
+      "alias": "Roll_ImpValue",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "Roll_PersPropValue",
+      "alias": "Roll_PersPropValue",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "Roll_FixtureValue",
+      "alias": "Roll_FixtureValue",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "Roll_HomeOwnersExemp",
+      "alias": "Roll_HomeOwnersExemp",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "Roll_RealEstateExemp",
+      "alias": "Roll_RealEstateExemp",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "Roll_PersPropExemp",
+      "alias": "Roll_PersPropExemp",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "Roll_FixtureExemp",
+      "alias": "Roll_FixtureExemp",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "Roll_LandBaseYear",
+      "alias": "Roll_LandBaseYear",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "Roll_ImpBaseYear",
+      "alias": "Roll_ImpBaseYear",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "SpatialChangeDate",
+      "alias": "SpatialChangeDate",
+      "type": "esriFieldTypeDate"
+    },
+    {
+      "name": "ParcelCreateDate",
+      "alias": "ParcelCreateDate",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "ParcelTypeCode",
+      "alias": "ParcelTypeCode",
+      "type": "esriFieldTypeInteger"
+    },
+    {
+      "name": "Assr_Map",
+      "alias": "Assr_Map",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "Assr_Index_Map",
+      "alias": "Assr_Index_Map",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "QualityClass1",
+      "alias": "QualityClass1",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "QualityClass2",
+      "alias": "QualityClass2",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "QualityClass3",
+      "alias": "QualityClass3",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "QualityClass4",
+      "alias": "QualityClass4",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "QualityClass5",
+      "alias": "QualityClass5",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "LegalDescLine1",
+      "alias": "LegalDescLine1",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "LegalDescLine2",
+      "alias": "LegalDescLine2",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "LegalDescLine3",
+      "alias": "LegalDescLine3",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "LegalDescLine4",
+      "alias": "LegalDescLine4",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "LegalDescLine5",
+      "alias": "LegalDescLine5",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "LegalDescLineLast",
+      "alias": "LegalDescLineLast",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "LegalDescription",
+      "alias": "LegalDescription",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "CENTER_LAT",
+      "alias": "CENTER_LAT",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "CENTER_LON",
+      "alias": "CENTER_LON",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "CENTER_X",
+      "alias": "CENTER_X",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "CENTER_Y",
+      "alias": "CENTER_Y",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "LAT_LON",
+      "alias": "LAT_LON",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "Shape",
+      "alias": "Shape",
+      "type": "esriFieldTypeGeometry"
+    },
+    {
+      "name": "Shape.STArea()",
+      "alias": "Shape.STArea()",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "Shape.STLength()",
+      "alias": "Shape.STLength()",
+      "type": "esriFieldTypeDouble"
+    }
+  ],
+  "feature_count": 2432860,
+  "owner_person_fields": [
+    "Roll_HomeOwnersExemp"
+  ],
+  "no_owner_dossier": false
+}

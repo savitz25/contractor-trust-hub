@@ -1,0 +1,800 @@
+{
+  "ticket": "CA-CON-COUNTY-001B",
+  "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+  "namespaces": [
+    "la-sc",
+    "los-angeles",
+    "santa-clara"
+  ],
+  "builder3_namespaces_untouched": [
+    "sf-sd",
+    "san-francisco",
+    "san-diego"
+  ],
+  "cslb_spine": {
+    "license_rows": 75572,
+    "coverage": "ACQUIRED_PARTIAL_STREAM_TRUNCATED",
+    "complete_renewable_denominator": "UNKNOWN"
+  },
+  "sources": [
+    {
+      "source_id": "la-city-ladbs-cofo-3f9m-afei",
+      "source_name": "Building and Safety Certificate of Occupancy",
+      "agency": "Los Angeles Department of Building and Safety",
+      "jurisdiction": "CITY_OF_LOS_ANGELES",
+      "geographic_grain": "CITY_OF_LOS_ANGELES_NOT_COUNTYWIDE",
+      "url": "https://data.lacity.org/City-Infrastructure-Service-Requests/Building-and-Safety-Certificate-of-Occupancy/3f9m-afei",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "format": "CSV/SODA",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2026-08-31",
+      "refresh_cadence": "weekly",
+      "rows": 132426,
+      "row_grain": "certificate_of_occupancy",
+      "identity_fields": [
+        "License #",
+        "Contractor's Business Name",
+        "PCIS Permit #"
+      ],
+      "cslb_field": "License #",
+      "permit_fields": [
+        "PCIS Permit #",
+        "Permit Type",
+        "Permit Issue Date",
+        "Status"
+      ],
+      "property_apn_fields": [
+        "Assessor Book",
+        "Assessor Page",
+        "Assessor Parcel"
+      ],
+      "contact_fields": [
+        "Contractor Address",
+        "Contractor City",
+        "Contractor State"
+      ],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "City of Los Angeles only \u2014 not Los Angeles County.",
+        "CofO grain is not the complete issued-permit universe.",
+        "License # is source-native CSLB when present; 0/blank/owner-builder is not a license."
+      ],
+      "stats_ref": true
+    },
+    {
+      "source_id": "la-city-ladbs-pcis-permit-info-d9aa-v8bm",
+      "source_name": "Building Permit Information Data",
+      "agency": "Los Angeles Department of Building and Safety (fields); community-created Socrata view",
+      "jurisdiction": "CITY_OF_LOS_ANGELES",
+      "geographic_grain": "CITY_OF_LOS_ANGELES_NOT_COUNTYWIDE",
+      "url": "https://data.lacity.org/City-Infrastructure-Service-Requests/Building-Permit-Information-Data/d9aa-v8bm",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "format": "CSV/SODA",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2023-05-22",
+      "refresh_cadence": "STALE_NOT_THE_CURRENT_OFFICIAL_WEEKLY_EXTRACT",
+      "rows": 317027,
+      "row_grain": "pcis_permit_application",
+      "identity_fields": [
+        "License #",
+        "Contractor's Business Name",
+        "PCIS Permit #"
+      ],
+      "cslb_field": "License #",
+      "permit_fields": [
+        "PCIS Permit #",
+        "Permit Type",
+        "Issue Date",
+        "Status",
+        "Valuation",
+        "Work Description"
+      ],
+      "property_apn_fields": [
+        "Assessor Book",
+        "Assessor Page",
+        "Assessor Parcel"
+      ],
+      "contact_fields": [
+        "Contractor Address",
+        "Contractor City",
+        "Contractor State"
+      ],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "City of Los Angeles only.",
+        "Socrata labels this a community-created dataset; City of Los Angeles has not reviewed or endorsed changes.",
+        "Field names match official historical PCIS contractor/license columns.",
+        "Data last updated 2023-05-22. Current official weekly building-permit extract (pi9x-tg5x) dropped contractor/license columns."
+      ],
+      "stats_ref": true
+    },
+    {
+      "source_id": "la-city-ladbs-building-permits-issued-2020-present-pi9x-tg5x",
+      "source_name": "Building and Safety - Building Permits Issued from 2020 to Present (N)",
+      "agency": "Los Angeles Department of Building and Safety / TSB",
+      "jurisdiction": "CITY_OF_LOS_ANGELES",
+      "geographic_grain": "CITY_OF_LOS_ANGELES_NOT_COUNTYWIDE",
+      "url": "https://data.lacity.org/City-Infrastructure-Service-Requests/Building-and-Safety-Building-Permits-Issued-from-2/pi9x-tg5x",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "format": "CSV/SODA",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2026-08-31",
+      "refresh_cadence": "weekly",
+      "rows": "409619",
+      "row_grain": "issued_building_permit",
+      "identity_fields": [],
+      "cslb_field": null,
+      "permit_fields": [
+        "permit_nbr",
+        "permit_type",
+        "status_desc",
+        "issue_date",
+        "valuation",
+        "work_desc"
+      ],
+      "property_apn_fields": [
+        "apn",
+        "pin_nbr",
+        "primary_address"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "Current official weekly extract does not include contractor name or CSLB license number.",
+        "Useful for City of LA market/APN/valuation/status context only.",
+        "Do not present as countywide permit coverage."
+      ],
+      "status_counts": [
+        {
+          "status_desc": "Permit Finaled",
+          "n": "224440"
+        },
+        {
+          "status_desc": "Issued",
+          "n": "111062"
+        },
+        {
+          "status_desc": "CofO Issued",
+          "n": "57432"
+        },
+        {
+          "status_desc": "Permit Expired",
+          "n": "6127"
+        },
+        {
+          "status_desc": "CofC Issued",
+          "n": "4938"
+        },
+        {
+          "status_desc": "Permit Closed",
+          "n": "2681"
+        },
+        {
+          "status_desc": "CofO in Progress",
+          "n": "1598"
+        },
+        {
+          "status_desc": "CofO Corrected",
+          "n": "952"
+        },
+        {
+          "status_desc": "Refund in Progress",
+          "n": "154"
+        },
+        {
+          "status_desc": "OK for CofC",
+          "n": "113"
+        },
+        {
+          "status_desc": "Intent to Revoke",
+          "n": "53"
+        },
+        {
+          "status_desc": "Re-Activate Permit",
+          "n": "37"
+        },
+        {
+          "status_desc": "CofC Corrected",
+          "n": "7"
+        },
+        {
+          "status_desc": "OK to Issue CofC",
+          "n": "5"
+        },
+        {
+          "status_desc": "No Progress",
+          "n": "5"
+        },
+        {
+          "status_desc": "Intent to Correct CofC",
+          "n": "4"
+        },
+        {
+          "status_desc": "CofO Reactivated",
+          "n": "2"
+        },
+        {
+          "status_desc": "Order to Comply Issued",
+          "n": "1"
+        },
+        {
+          "status_desc": "Not Required",
+          "n": "1"
+        },
+        {
+          "status_desc": "Permit Extended",
+          "n": "1"
+        },
+        {
+          "status_desc": "CofO Superseded",
+          "n": "1"
+        },
+        {
+          "status_desc": "Ready to Issue",
+          "n": "1"
+        },
+        {
+          "status_desc": "Refund Denied",
+          "n": "1"
+        },
+        {
+          "status_desc": "PC Approved",
+          "n": "1"
+        },
+        {
+          "status_desc": "TCO Issued",
+          "n": "1"
+        },
+        {
+          "status_desc": "PC Info Complete",
+          "n": "1"
+        }
+      ],
+      "permit_type_counts": [
+        {
+          "permit_type": "Bldg-Alter/Repair",
+          "n": "273996"
+        },
+        {
+          "permit_type": "Bldg-Addition",
+          "n": "34327"
+        },
+        {
+          "permit_type": "Bldg-New",
+          "n": "26334"
+        },
+        {
+          "permit_type": "Grading",
+          "n": "20378"
+        },
+        {
+          "permit_type": "Swimming-Pool/Spa",
+          "n": "16536"
+        },
+        {
+          "permit_type": "Nonbldg-New",
+          "n": "12799"
+        },
+        {
+          "permit_type": "Bldg-Demolition",
+          "n": "12277"
+        },
+        {
+          "permit_type": "Sign",
+          "n": "9008"
+        },
+        {
+          "permit_type": "Nonbldg-Alter/Repair",
+          "n": "3754"
+        },
+        {
+          "permit_type": "Nonbldg-Addition",
+          "n": "122"
+        },
+        {
+          "permit_type": "Nonbldg-Demolition",
+          "n": "78"
+        },
+        {
+          "permit_type": "Bldg-Relocation",
+          "n": "10"
+        }
+      ],
+      "stats_ref": false
+    },
+    {
+      "source_id": "la-city-ladbs-inspections-9w5z-rg2h",
+      "source_name": "Building and Safety Inspections",
+      "agency": "Los Angeles Department of Building and Safety",
+      "jurisdiction": "CITY_OF_LOS_ANGELES",
+      "geographic_grain": "CITY_OF_LOS_ANGELES_NOT_COUNTYWIDE",
+      "url": "https://data.lacity.org/City-Infrastructure-Service-Requests/Building-and-Safety-Inspections/9w5z-rg2h",
+      "access_class": "OPEN_API",
+      "format": "SODA",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2026-08-31",
+      "refresh_cadence": "weekly",
+      "rows": "11691152",
+      "row_grain": "inspection_event",
+      "identity_fields": [
+        "permit"
+      ],
+      "cslb_field": null,
+      "permit_fields": [
+        "permit",
+        "permit_status"
+      ],
+      "property_apn_fields": [
+        "address"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "Joinable to permits via permit number only.",
+        "Inspection result is an event on a permit, not a contractor quality finding.",
+        "Do not say 'contractor passed inspection' unless the official grain and identity support that exact conclusion.",
+        "11.7M-row dump was not committed. Aggregates only."
+      ],
+      "inspection_result_counts": [
+        {
+          "inspection_result": "Approved",
+          "n": "2425450"
+        },
+        {
+          "inspection_result": "Permit Finaled",
+          "n": "1389881"
+        },
+        {
+          "inspection_result": "Insp Scheduled",
+          "n": "1380549"
+        },
+        {
+          "inspection_result": "Partial Approval",
+          "n": "1215347"
+        },
+        {
+          "inspection_result": "Not Ready for Inspection",
+          "n": "1037010"
+        },
+        {
+          "inspection_result": "Corrections Issued",
+          "n": "916395"
+        },
+        {
+          "inspection_result": "Insp Cancelled",
+          "n": "635435"
+        },
+        {
+          "n": "481450"
+        },
+        {
+          "inspection_result": "Partial Inspection",
+          "n": "438973"
+        },
+        {
+          "inspection_result": "Conditional Approval",
+          "n": "394019"
+        },
+        {
+          "inspection_result": "Cancelled",
+          "n": "251909"
+        },
+        {
+          "inspection_result": "No Access for Inspection",
+          "n": "165112"
+        },
+        {
+          "inspection_result": "SGSOV Approved",
+          "n": "152468"
+        },
+        {
+          "inspection_result": "CofO in Progress",
+          "n": "126388"
+        },
+        {
+          "inspection_result": "CofO Issued",
+          "n": "112880"
+        },
+        {
+          "inspection_result": "OK for CofO",
+          "n": "89468"
+        },
+        {
+          "inspection_result": "Completed",
+          "n": "71186"
+        },
+        {
+          "inspection_result": "OK to Issue CofO",
+          "n": "67961"
+        },
+        {
+          "inspection_result": "SGSOV Not Ready",
+          "n": "65062"
+        },
+        {
+          "inspection_result": "Permit Expired",
+          "n": "54559"
+        },
+        {
+          "inspection_result": "CofO on Hold",
+          "n": "41006"
+        },
+        {
+          "inspection_result": "Not Applicable",
+          "n": "40001"
+        },
+        {
+          "inspection_result": "Permit Closed",
+          "n": "37120"
+        },
+        {
+          "inspection_result": "Off-Hour Fees Due",
+          "n": "32184"
+        },
+        {
+          "inspection_result": "SGSOV No Gas",
+          "n": "10927"
+        },
+        {
+          "inspection_result": "Pending Review",
+          "n": "10496"
+        },
+        {
+          "inspection_result": "OK for CofC",
+          "n": "7829"
+        },
+        {
+          "inspection_result": "Completed (special insp)",
+          "n": "7345"
+        },
+        {
+          "inspection_result": "SGSOV Not Required",
+          "n": "5919"
+        },
+        {
+          "inspection_result": "Not Required",
+          "n": "4242"
+        }
+      ],
+      "inspection_type_counts": [
+        {
+          "inspection": "Final",
+          "n": "2684132"
+        },
+        {
+          "inspection": "Rough",
+          "n": "824410"
+        },
+        {
+          "n": "481137"
+        },
+        {
+          "inspection": "Smoke Detectors",
+          "n": "421635"
+        },
+        {
+          "inspection": "Inspection",
+          "n": "349685"
+        },
+        {
+          "inspection": "Service/Power Release",
+          "n": "333521"
+        },
+        {
+          "inspection": "Footing/Foundation/Slab",
+          "n": "302495"
+        },
+        {
+          "inspection": "SGSOV-Seismic Gas S/O Valve",
+          "n": "299538"
+        },
+        {
+          "inspection": "Floor/Roof Diaphrgm/Shear Wall",
+          "n": "284326"
+        },
+        {
+          "inspection": "Drywall Nailing",
+          "n": "246333"
+        },
+        {
+          "inspection": "CofO Issuance",
+          "n": "241657"
+        },
+        {
+          "inspection": "Interior/Exterior Lathing",
+          "n": "236592"
+        },
+        {
+          "inspection": "BUILDING-Rough-Frame",
+          "n": "230345"
+        },
+        {
+          "inspection": "Wood Frame",
+          "n": "217593"
+        },
+        {
+          "inspection": "PLUMBING-Rough",
+          "n": "201494"
+        }
+      ],
+      "association_rule": "Inspection events associated with this permit",
+      "stats_ref": false
+    },
+    {
+      "source_id": "la-county-egis-parcels-mapserver",
+      "source_name": "LA County Parcel Map Service",
+      "agency": "Los Angeles County Assessor / ISD eGIS",
+      "jurisdiction": "LOS_ANGELES_COUNTY",
+      "geographic_grain": "COUNTYWIDE_PARCELS_INCLUDING_ALL_CITIES_AND_UNINCORPORATED",
+      "url": "https://public.gis.lacounty.gov/public/rest/services/LACounty_Cache/LACounty_Parcel/MapServer/0",
+      "access_class": "OPEN_API",
+      "format": "ArcGIS MapServer",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "live_service",
+      "refresh_cadence": "weekly_cache_plus_monthly_downloadable_gdb",
+      "rows": 2432860,
+      "row_grain": "assessor_parcel",
+      "identity_fields": [
+        "AIN",
+        "APN",
+        "SitusFullAddress"
+      ],
+      "cslb_field": null,
+      "permit_fields": [],
+      "property_apn_fields": [
+        "AIN",
+        "APN",
+        "SitusFullAddress",
+        "TaxRateCity",
+        "UseCode",
+        "YearBuilt1"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "No owner-person fields on the public layer.",
+        "Do not commit the countywide GDB/shapefile in this ticket.",
+        "TaxRateCity is jurisdiction context, not a contractor license."
+      ],
+      "stats_ref": false
+    },
+    {
+      "source_id": "la-county-epic-la",
+      "source_name": "EPIC-LA / County permit citizen access",
+      "agency": "Los Angeles County Department of Regional Planning / Public Works",
+      "jurisdiction": "UNINCORPORATED_LOS_ANGELES_COUNTY_AND_CONTRACT_CITIES",
+      "geographic_grain": "NOT_CITY_OF_LOS_ANGELES",
+      "url": "https://epicla.lacounty.gov/",
+      "access_class": "OPEN_SEARCH_ONLY",
+      "format": "Citizen-access portal",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": null,
+      "refresh_cadence": null,
+      "rows": null,
+      "row_grain": "unknown_portal_record",
+      "identity_fields": [],
+      "cslb_field": null,
+      "permit_fields": [],
+      "property_apn_fields": [],
+      "contact_fields": [],
+      "publication_eligibility": "PARK",
+      "limitations": [
+        "No open bulk CSV/API found in this bounded pass.",
+        "Search/session portal. STOP \u2014 City of LA permit evidence already justifies the LA harvest."
+      ],
+      "stats_ref": false
+    },
+    {
+      "source_id": "la-county-dcba",
+      "source_name": "Los Angeles County Department of Consumer and Business Affairs",
+      "agency": "Los Angeles County DCBA",
+      "jurisdiction": "LOS_ANGELES_COUNTY",
+      "geographic_grain": "COUNTY_CONSUMER_AGENCY",
+      "url": "https://dcba.lacounty.gov/",
+      "access_class": "OPEN_SEARCH_ONLY",
+      "format": "webpages",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "rows": null,
+      "row_grain": null,
+      "identity_fields": [],
+      "cslb_field": null,
+      "permit_fields": [],
+      "property_apn_fields": [],
+      "contact_fields": [],
+      "publication_eligibility": "PARK",
+      "limitations": [
+        "No public CSV/API/open-data table of contractor complaints found in this bounded pass.",
+        "data.lacounty.gov catalog API 404 from this environment.",
+        "COMPLAINT != VIOLATION. INVESTIGATION != FINDING. REFERRAL != CONVICTION. CLOSED != MERITLESS.",
+        "No profile-level adverse attach without exact official business/license ID."
+      ],
+      "future_owner": "ASK_NETWORK",
+      "stats_ref": false
+    },
+    {
+      "source_id": "santa-clara-county-parcels-ubcd-cewv",
+      "source_name": "Parcels",
+      "agency": "County of Santa Clara GIS",
+      "jurisdiction": "SANTA_CLARA_COUNTY",
+      "geographic_grain": "COUNTYWIDE_PARCELS",
+      "url": "https://data.sccgov.org/Government/Parcels/ubcd-cewv",
+      "access_class": "OPEN_API",
+      "format": "SODA / GIS",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2026-03-23",
+      "refresh_cadence": "unknown",
+      "rows": "504717",
+      "row_grain": "parcel",
+      "identity_fields": [
+        "apn"
+      ],
+      "cslb_field": null,
+      "permit_fields": [],
+      "property_apn_fields": [
+        "apn",
+        "situs_house_number",
+        "situs_street_name",
+        "situs_city_name",
+        "situs_zip_code"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "Geometry not committed.",
+        "No contractor license on this layer.",
+        "GIS is dynamic and not a substitute for official recorder/assessor documents."
+      ],
+      "fields": [
+        "the_geom",
+        "objectid",
+        "apn",
+        "tax_rate_area",
+        "situs_house_number",
+        "situs_house_number_suffix",
+        "situs_street_direction",
+        "situs_street_name",
+        "situs_street_type",
+        "situs_unit_number",
+        "situs_city_name",
+        "situs_state_code",
+        "situs_zip_code",
+        "number_of_situs_address",
+        "reserved1",
+        "reserved2",
+        "reserved3",
+        "jurisdiction",
+        "shape_length",
+        "shape_area"
+      ],
+      "future_owner": "LENDER",
+      "stats_ref": false
+    },
+    {
+      "source_id": "santa-clara-county-accela-development-public",
+      "source_name": "Accela Development Records View Public",
+      "agency": "County of Santa Clara Planning / Development Services",
+      "jurisdiction": "UNINCORPORATED_SANTA_CLARA_COUNTY",
+      "geographic_grain": "COUNTY_PORTAL_NOT_EVERY_INCORPORATED_CITY",
+      "url": "https://services2.arcgis.com/tcv2cMrq63AgvbHF/arcgis/rest/services/Accela_Development_Records_View_Public/FeatureServer/0",
+      "access_class": "OPEN_API",
+      "format": "ArcGIS FeatureServer",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "rows": 30179,
+      "row_grain": "development_record",
+      "identity_fields": [
+        "record_id",
+        "record_number",
+        "current_status",
+        "status_date",
+        "apn",
+        "description",
+        "ObjectId"
+      ],
+      "cslb_field": null,
+      "permit_fields": [
+        "record_id",
+        "record_number",
+        "current_status",
+        "status_date"
+      ],
+      "property_apn_fields": [
+        "apn"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "County development records are not City of San Jose permits and not a countywide municipal permit universe."
+      ],
+      "stats_ref": false
+    },
+    {
+      "source_id": "san-jose-permit-data-file-pdisue",
+      "source_name": "City of San Jos\u00e9 Permit Data file (TAB-delimited monthly/weekly extracts)",
+      "agency": "City of San Jos\u00e9 Permit Center",
+      "jurisdiction": "CITY_OF_SAN_JOSE",
+      "geographic_grain": "CITY_OF_SAN_JOSE_NOT_SANTA_CLARA_COUNTYWIDE",
+      "url": "https://sjpermits.org/permits/general/reportdata.asp",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "format": "TAB-delimited text",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "latest_month_file",
+      "refresh_cadence": "weekly_and_monthly_files",
+      "rows": 2456,
+      "row_grain": "issued_or_finaled_permit_row",
+      "identity_fields": [
+        "CONTRACTOR"
+      ],
+      "cslb_field": "",
+      "permit_fields": [
+        "TRACT",
+        "APN",
+        "ISSUEDATE",
+        "FINALDATE",
+        "LOT",
+        "FOLDERNUMBER",
+        "OWNERNAME",
+        "CONTRACTOR",
+        "APPLICANT",
+        "JOBLOCATION",
+        "PERMITAPPROVALS",
+        "SUBCODE",
+        "SUBDESC",
+        "WORKCODE",
+        "WORKDESC",
+        "CENSUSCODE",
+        "PERMITVALUATION",
+        "REROOFVALUATION",
+        "SQFT",
+        "DWELLUNITS",
+        "FOLDERRSN",
+        "SWIMMINGPOOL",
+        "SEWER",
+        "ENTERPRISE",
+        "PERMITFLAG"
+      ],
+      "property_apn_fields": [
+        "APN"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "City of San Jose only \u2014 not Santa Clara County and not other municipalities.",
+        "Latest-month extract only in this ticket; historical year files exist on the same official page if a follow-up wants them.",
+        "Owner names may appear; this ticket does not build owner-person dossiers."
+      ],
+      "stats_ref": true
+    },
+    {
+      "source_id": "santa-clara-deh-food-facility-inspection-2021",
+      "source_name": "Food Facility Inspection Data 2021",
+      "agency": "Santa Clara County Department of Environmental Health",
+      "jurisdiction": "SANTA_CLARA_COUNTY",
+      "geographic_grain": "COUNTY_FOOD_FACILITIES",
+      "url": "https://data.sccgov.org/dataset/Food-Facility-Inspection-Data-2021/4k9d-9aaq",
+      "access_class": "OPEN_API",
+      "format": "SODA",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2021 / metadata 2022-09-13",
+      "rows": "13538",
+      "row_grain": "food_facility_inspection",
+      "identity_fields": [
+        "activity_number",
+        "activity_date",
+        "inspection_type",
+        "program_identifier",
+        "program_type",
+        "placardcolor",
+        "score"
+      ],
+      "cslb_field": null,
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "future_owner": "SENIOR",
+      "limitations": [
+        "Restaurant/food-facility inspection is not an RCFE or nursing-home quality score.",
+        "Vintage 2021. Not a current senior-care roster.",
+        "Useful only as official facility/business identity + inspection-event context."
+      ],
+      "stats_ref": false
+    }
+  ]
+}

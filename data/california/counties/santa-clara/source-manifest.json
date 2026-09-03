@@ -1,0 +1,290 @@
+{
+  "ticket": "CA-CON-COUNTY-001B",
+  "sources": [
+    {
+      "source_id": "santa-clara-county-parcels-ubcd-cewv",
+      "source_name": "Parcels",
+      "agency": "County of Santa Clara GIS",
+      "jurisdiction": "SANTA_CLARA_COUNTY",
+      "geographic_grain": "COUNTYWIDE_PARCELS",
+      "url": "https://data.sccgov.org/Government/Parcels/ubcd-cewv",
+      "access_class": "OPEN_API",
+      "format": "SODA / GIS",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2026-03-23",
+      "refresh_cadence": "unknown",
+      "rows": "504717",
+      "row_grain": "parcel",
+      "identity_fields": [
+        "apn"
+      ],
+      "cslb_field": null,
+      "permit_fields": [],
+      "property_apn_fields": [
+        "apn",
+        "situs_house_number",
+        "situs_street_name",
+        "situs_city_name",
+        "situs_zip_code"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "Geometry not committed.",
+        "No contractor license on this layer.",
+        "GIS is dynamic and not a substitute for official recorder/assessor documents."
+      ],
+      "fields": [
+        "the_geom",
+        "objectid",
+        "apn",
+        "tax_rate_area",
+        "situs_house_number",
+        "situs_house_number_suffix",
+        "situs_street_direction",
+        "situs_street_name",
+        "situs_street_type",
+        "situs_unit_number",
+        "situs_city_name",
+        "situs_state_code",
+        "situs_zip_code",
+        "number_of_situs_address",
+        "reserved1",
+        "reserved2",
+        "reserved3",
+        "jurisdiction",
+        "shape_length",
+        "shape_area"
+      ],
+      "future_owner": "LENDER"
+    },
+    {
+      "source_id": "santa-clara-county-accela-development-public",
+      "source_name": "Accela Development Records View Public",
+      "agency": "County of Santa Clara Planning / Development Services",
+      "jurisdiction": "UNINCORPORATED_SANTA_CLARA_COUNTY",
+      "geographic_grain": "COUNTY_PORTAL_NOT_EVERY_INCORPORATED_CITY",
+      "url": "https://services2.arcgis.com/tcv2cMrq63AgvbHF/arcgis/rest/services/Accela_Development_Records_View_Public/FeatureServer/0",
+      "access_class": "OPEN_API",
+      "format": "ArcGIS FeatureServer",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "rows": 30179,
+      "row_grain": "development_record",
+      "identity_fields": [
+        "record_id",
+        "record_number",
+        "current_status",
+        "status_date",
+        "apn",
+        "description",
+        "ObjectId"
+      ],
+      "cslb_field": null,
+      "permit_fields": [
+        "record_id",
+        "record_number",
+        "current_status",
+        "status_date"
+      ],
+      "property_apn_fields": [
+        "apn"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "County development records are not City of San Jose permits and not a countywide municipal permit universe."
+      ],
+      "gis": {
+        "url": "https://services2.arcgis.com/tcv2cMrq63AgvbHF/arcgis/rest/services/Accela_Development_Records_View_Public/FeatureServer/0",
+        "ok": true,
+        "name": "Accela_Development_Records",
+        "geometry_type": null,
+        "max_record_count": 1000,
+        "field_count": 7,
+        "fields": [
+          {
+            "name": "record_id",
+            "alias": "record_id",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "record_number",
+            "alias": "record_number",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "current_status",
+            "alias": "current_status",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "status_date",
+            "alias": "status_date",
+            "type": "esriFieldTypeDate"
+          },
+          {
+            "name": "apn",
+            "alias": "apn",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "description",
+            "alias": "description",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "ObjectId",
+            "alias": "ObjectId",
+            "type": "esriFieldTypeOID"
+          }
+        ],
+        "feature_count": 30179,
+        "owner_person_fields": [],
+        "no_owner_dossier": true
+      }
+    },
+    {
+      "source_id": "san-jose-permit-data-file-pdisue",
+      "source_name": "City of San Jos\u00e9 Permit Data file (TAB-delimited monthly/weekly extracts)",
+      "agency": "City of San Jos\u00e9 Permit Center",
+      "jurisdiction": "CITY_OF_SAN_JOSE",
+      "geographic_grain": "CITY_OF_SAN_JOSE_NOT_SANTA_CLARA_COUNTYWIDE",
+      "url": "https://sjpermits.org/permits/general/reportdata.asp",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "format": "TAB-delimited text",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "latest_month_file",
+      "refresh_cadence": "weekly_and_monthly_files",
+      "rows": 2456,
+      "row_grain": "issued_or_finaled_permit_row",
+      "identity_fields": [
+        "CONTRACTOR"
+      ],
+      "cslb_field": "",
+      "permit_fields": [
+        "TRACT",
+        "APN",
+        "ISSUEDATE",
+        "FINALDATE",
+        "LOT",
+        "FOLDERNUMBER",
+        "OWNERNAME",
+        "CONTRACTOR",
+        "APPLICANT",
+        "JOBLOCATION",
+        "PERMITAPPROVALS",
+        "SUBCODE",
+        "SUBDESC",
+        "WORKCODE",
+        "WORKDESC",
+        "CENSUSCODE",
+        "PERMITVALUATION",
+        "REROOFVALUATION",
+        "SQFT",
+        "DWELLUNITS",
+        "FOLDERRSN",
+        "SWIMMINGPOOL",
+        "SEWER",
+        "ENTERPRISE",
+        "PERMITFLAG"
+      ],
+      "property_apn_fields": [
+        "APN"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "City of San Jose only \u2014 not Santa Clara County and not other municipalities.",
+        "Latest-month extract only in this ticket; historical year files exist on the same official page if a follow-up wants them.",
+        "Owner names may appear; this ticket does not build owner-person dossiers."
+      ],
+      "download": {
+        "path": "data\\raw\\california\\counties\\santa-clara\\sanjose_PDIssue_latest.txt",
+        "bytes": 1657806,
+        "sha256": "38d8abff081080cd57cc2466482368d6585de29c233db6756e9413b9acaaeefb",
+        "url": "https://csjpbce.sanjoseca.gov/reportviewer/permitdataMonths/PDIssue_latest.txt",
+        "cached": true
+      },
+      "layout": {
+        "error": "<urlopen error [WinError 10054] An existing connection was forcibly closed by the remote host>"
+      },
+      "stats": {
+        "rows_total": 2456,
+        "fieldnames": [
+          "TRACT",
+          "APN",
+          "ISSUEDATE",
+          "FINALDATE",
+          "LOT",
+          "FOLDERNUMBER",
+          "OWNERNAME",
+          "CONTRACTOR",
+          "APPLICANT",
+          "JOBLOCATION",
+          "PERMITAPPROVALS",
+          "SUBCODE",
+          "SUBDESC",
+          "WORKCODE",
+          "WORKDESC",
+          "CENSUSCODE",
+          "PERMITVALUATION",
+          "REROOFVALUATION",
+          "SQFT",
+          "DWELLUNITS",
+          "FOLDERRSN",
+          "SWIMMINGPOOL",
+          "SEWER",
+          "ENTERPRISE",
+          "PERMITFLAG"
+        ],
+        "rows_with_contractor_business": 2050,
+        "cslb_field": null,
+        "rows_with_source_native_license": 0,
+        "note": "No source-native CSLB license column in this official monthly file."
+      }
+    },
+    {
+      "source_id": "santa-clara-deh-food-facility-inspection-2021",
+      "source_name": "Food Facility Inspection Data 2021",
+      "agency": "Santa Clara County Department of Environmental Health",
+      "jurisdiction": "SANTA_CLARA_COUNTY",
+      "geographic_grain": "COUNTY_FOOD_FACILITIES",
+      "url": "https://data.sccgov.org/dataset/Food-Facility-Inspection-Data-2021/4k9d-9aaq",
+      "access_class": "OPEN_API",
+      "format": "SODA",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2021 / metadata 2022-09-13",
+      "rows": "13538",
+      "row_grain": "food_facility_inspection",
+      "identity_fields": [
+        "activity_number",
+        "activity_date",
+        "inspection_type",
+        "program_identifier",
+        "program_type",
+        "placardcolor",
+        "score"
+      ],
+      "cslb_field": null,
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "future_owner": "SENIOR",
+      "limitations": [
+        "Restaurant/food-facility inspection is not an RCFE or nursing-home quality score.",
+        "Vintage 2021. Not a current senior-care roster.",
+        "Useful only as official facility/business identity + inspection-event context."
+      ],
+      "profile": {
+        "rows": "13538",
+        "fields": [
+          "activity_number",
+          "activity_date",
+          "inspection_type",
+          "program_identifier",
+          "program_type",
+          "placardcolor",
+          "score"
+        ]
+      }
+    }
+  ]
+}

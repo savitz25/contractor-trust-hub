@@ -1,0 +1,44 @@
+[
+  {
+    "permit": "23010-10000-01859",
+    "license": "1076283",
+    "license_class": "EXACT_MATCH_ACQUIRED_CSLB",
+    "contractors_business_name": "",
+    "contractor_address": "",
+    "contractor_city": "",
+    "permit_type": "Bldg-New",
+    "status": "CofO Issued",
+    "issue_date": "07/16/2024",
+    "valuation": 40000.0,
+    "apn": "5061-027-059",
+    "note": "Public permit contractor fields. Applicant/principal names omitted from fixture."
+  },
+  {
+    "permit": "21010-10000-05341",
+    "license": "1068007",
+    "license_class": "EXACT_MATCH_ACQUIRED_CSLB",
+    "contractors_business_name": "EMERALD BUILDERS AND DEVELOPERS",
+    "contractor_address": "1412 W 22ND STREET",
+    "contractor_city": "LOS ANGELES",
+    "permit_type": "Bldg-New",
+    "status": "CofO Issued",
+    "issue_date": "03/13/2025",
+    "valuation": 984400.0,
+    "apn": "5536-004-021",
+    "note": "Public permit contractor fields. Applicant/principal names omitted from fixture."
+  },
+  {
+    "permit": "18010-20000-02285",
+    "license": "1001034",
+    "license_class": "EXACT_MATCH_ACQUIRED_CSLB",
+    "contractors_business_name": "SHAPELL HOMES INC",
+    "contractor_address": "250 GIBRALTAR RD",
+    "contractor_city": "HORSHAM",
+    "permit_type": "Bldg-New",
+    "status": "CofO Corrected",
+    "issue_date": "11/14/2020",
+    "valuation": 250000.0,
+    "apn": "2761-001-***",
+    "note": "Public permit contractor fields. Applicant/principal names omitted from fixture."
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "union_exact_match_licenses": 3708,
+  "union_outside_partial_spine_licenses": 16704,
+  "cofo_exact_rows": 12505,
+  "pcis_exact_rows": 28974,
+  "cofo_outside_rows": 56308,
+  "pcis_outside_rows": 178977,
+  "safe_work_activity_definition": "Permit/CofO rows with EXACT_MATCH_ACQUIRED_CSLB. PERMIT ACTIVITY != QUALITY."
+}

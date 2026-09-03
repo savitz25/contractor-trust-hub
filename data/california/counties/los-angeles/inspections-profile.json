@@ -1,0 +1,217 @@
+{
+  "source_id": "la-city-ladbs-inspections-9w5z-rg2h",
+  "source_name": "Building and Safety Inspections",
+  "agency": "Los Angeles Department of Building and Safety",
+  "jurisdiction": "CITY_OF_LOS_ANGELES",
+  "geographic_grain": "CITY_OF_LOS_ANGELES_NOT_COUNTYWIDE",
+  "url": "https://data.lacity.org/City-Infrastructure-Service-Requests/Building-and-Safety-Inspections/9w5z-rg2h",
+  "access_class": "OPEN_API",
+  "format": "SODA",
+  "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+  "source_as_of": "2026-08-31",
+  "refresh_cadence": "weekly",
+  "rows": "11691152",
+  "row_grain": "inspection_event",
+  "identity_fields": [
+    "permit"
+  ],
+  "cslb_field": null,
+  "permit_fields": [
+    "permit",
+    "permit_status"
+  ],
+  "property_apn_fields": [
+    "address"
+  ],
+  "contact_fields": [],
+  "publication_eligibility": "KEEP_DATA_ONLY",
+  "limitations": [
+    "Joinable to permits via permit number only.",
+    "Inspection result is an event on a permit, not a contractor quality finding.",
+    "Do not say 'contractor passed inspection' unless the official grain and identity support that exact conclusion.",
+    "11.7M-row dump was not committed. Aggregates only."
+  ],
+  "inspection_result_counts": [
+    {
+      "inspection_result": "Approved",
+      "n": "2425450"
+    },
+    {
+      "inspection_result": "Permit Finaled",
+      "n": "1389881"
+    },
+    {
+      "inspection_result": "Insp Scheduled",
+      "n": "1380549"
+    },
+    {
+      "inspection_result": "Partial Approval",
+      "n": "1215347"
+    },
+    {
+      "inspection_result": "Not Ready for Inspection",
+      "n": "1037010"
+    },
+    {
+      "inspection_result": "Corrections Issued",
+      "n": "916395"
+    },
+    {
+      "inspection_result": "Insp Cancelled",
+      "n": "635435"
+    },
+    {
+      "n": "481450"
+    },
+    {
+      "inspection_result": "Partial Inspection",
+      "n": "438973"
+    },
+    {
+      "inspection_result": "Conditional Approval",
+      "n": "394019"
+    },
+    {
+      "inspection_result": "Cancelled",
+      "n": "251909"
+    },
+    {
+      "inspection_result": "No Access for Inspection",
+      "n": "165112"
+    },
+    {
+      "inspection_result": "SGSOV Approved",
+      "n": "152468"
+    },
+    {
+      "inspection_result": "CofO in Progress",
+      "n": "126388"
+    },
+    {
+      "inspection_result": "CofO Issued",
+      "n": "112880"
+    },
+    {
+      "inspection_result": "OK for CofO",
+      "n": "89468"
+    },
+    {
+      "inspection_result": "Completed",
+      "n": "71186"
+    },
+    {
+      "inspection_result": "OK to Issue CofO",
+      "n": "67961"
+    },
+    {
+      "inspection_result": "SGSOV Not Ready",
+      "n": "65062"
+    },
+    {
+      "inspection_result": "Permit Expired",
+      "n": "54559"
+    },
+    {
+      "inspection_result": "CofO on Hold",
+      "n": "41006"
+    },
+    {
+      "inspection_result": "Not Applicable",
+      "n": "40001"
+    },
+    {
+      "inspection_result": "Permit Closed",
+      "n": "37120"
+    },
+    {
+      "inspection_result": "Off-Hour Fees Due",
+      "n": "32184"
+    },
+    {
+      "inspection_result": "SGSOV No Gas",
+      "n": "10927"
+    },
+    {
+      "inspection_result": "Pending Review",
+      "n": "10496"
+    },
+    {
+      "inspection_result": "OK for CofC",
+      "n": "7829"
+    },
+    {
+      "inspection_result": "Completed (special insp)",
+      "n": "7345"
+    },
+    {
+      "inspection_result": "SGSOV Not Required",
+      "n": "5919"
+    },
+    {
+      "inspection_result": "Not Required",
+      "n": "4242"
+    }
+  ],
+  "inspection_type_counts": [
+    {
+      "inspection": "Final",
+      "n": "2684132"
+    },
+    {
+      "inspection": "Rough",
+      "n": "824410"
+    },
+    {
+      "n": "481137"
+    },
+    {
+      "inspection": "Smoke Detectors",
+      "n": "421635"
+    },
+    {
+      "inspection": "Inspection",
+      "n": "349685"
+    },
+    {
+      "inspection": "Service/Power Release",
+      "n": "333521"
+    },
+    {
+      "inspection": "Footing/Foundation/Slab",
+      "n": "302495"
+    },
+    {
+      "inspection": "SGSOV-Seismic Gas S/O Valve",
+      "n": "299538"
+    },
+    {
+      "inspection": "Floor/Roof Diaphrgm/Shear Wall",
+      "n": "284326"
+    },
+    {
+      "inspection": "Drywall Nailing",
+      "n": "246333"
+    },
+    {
+      "inspection": "CofO Issuance",
+      "n": "241657"
+    },
+    {
+      "inspection": "Interior/Exterior Lathing",
+      "n": "236592"
+    },
+    {
+      "inspection": "BUILDING-Rough-Frame",
+      "n": "230345"
+    },
+    {
+      "inspection": "Wood Frame",
+      "n": "217593"
+    },
+    {
+      "inspection": "PLUMBING-Rough",
+      "n": "201494"
+    }
+  ],
+  "association_rule": "Inspection events associated with this permit"
+}

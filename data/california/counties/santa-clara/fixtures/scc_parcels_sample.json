@@ -1,0 +1,23 @@
+[
+  {
+    "apn": "27715017",
+    "situs_city_name": "SAN JOSE",
+    "situs_street_name": "RICHMOND",
+    "situs_zip_code": "95128-2336",
+    "tax_rate_area": "58002"
+  },
+  {
+    "apn": "08826060",
+    "situs_city_name": "MILPITAS",
+    "situs_street_name": "CRATER LAKE",
+    "situs_zip_code": "95035-6605",
+    "tax_rate_area": "12003"
+  },
+  {
+    "apn": "65939113",
+    "situs_city_name": "SAN JOSE",
+    "situs_street_name": "HERITAGE ESTATES",
+    "situs_zip_code": "95148-3805",
+    "tax_rate_area": "17028"
+  }
+]

@@ -1,0 +1,3121 @@
+{
+  "ticket": "CA-CON-COUNTY-001B",
+  "sources": [
+    {
+      "source_id": "la-city-ladbs-cofo-3f9m-afei",
+      "source_name": "Building and Safety Certificate of Occupancy",
+      "agency": "Los Angeles Department of Building and Safety",
+      "jurisdiction": "CITY_OF_LOS_ANGELES",
+      "geographic_grain": "CITY_OF_LOS_ANGELES_NOT_COUNTYWIDE",
+      "url": "https://data.lacity.org/City-Infrastructure-Service-Requests/Building-and-Safety-Certificate-of-Occupancy/3f9m-afei",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "format": "CSV/SODA",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2026-08-31",
+      "refresh_cadence": "weekly",
+      "rows": 132426,
+      "row_grain": "certificate_of_occupancy",
+      "identity_fields": [
+        "License #",
+        "Contractor's Business Name",
+        "PCIS Permit #"
+      ],
+      "cslb_field": "License #",
+      "permit_fields": [
+        "PCIS Permit #",
+        "Permit Type",
+        "Permit Issue Date",
+        "Status"
+      ],
+      "property_apn_fields": [
+        "Assessor Book",
+        "Assessor Page",
+        "Assessor Parcel"
+      ],
+      "contact_fields": [
+        "Contractor Address",
+        "Contractor City",
+        "Contractor State"
+      ],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "City of Los Angeles only \u2014 not Los Angeles County.",
+        "CofO grain is not the complete issued-permit universe.",
+        "License # is source-native CSLB when present; 0/blank/owner-builder is not a license."
+      ],
+      "download": {
+        "path": "data\\raw\\california\\counties\\los-angeles\\ladbs_certificate_of_occupancy.csv",
+        "bytes": 58507934,
+        "sha256": "2c5cb869c0ff9ae32fe9852d3e121bdff549efb5bcc808c310bad6d15965cb26",
+        "url": "https://data.lacity.org/api/views/3f9m-afei/rows.csv?accessType=DOWNLOAD",
+        "cached": true
+      },
+      "stats": {
+        "rows_total": 132426,
+        "fieldnames": [
+          "CofO Number",
+          "CofO Issue Date                                                                                                                                                                                                                                                ",
+          "Status",
+          "Status Date",
+          "Assessor Book",
+          "Assessor Page",
+          "Assessor Parcel",
+          "TRACT",
+          "BLOCK",
+          "LOT",
+          "Reference # (Old Permit #)",
+          "PCIS Permit #",
+          "Permit Type",
+          "Permit Sub-Type",
+          "Permit Category",
+          "Project Number",
+          "Event Code",
+          "Initiating Office",
+          "Permit Issue Date",
+          "Address Start",
+          "Address Fraction Start",
+          "Address End",
+          "Address Fraction End",
+          "Street Direction",
+          "Street Name",
+          "Street Suffix",
+          "Suffix Direction",
+          "Unit Range Start",
+          "Unit Range End",
+          "Zip Code",
+          "Work Description",
+          "Valuation",
+          "Floor Area-L.A. Zoning Code Definition",
+          "# of Residential Dwelling Units",
+          "# of Stories",
+          "Contractor's Business Name",
+          "Contractor Address",
+          "Contractor City",
+          "Contractor State",
+          "License Type",
+          "License #",
+          "Principal First Name",
+          "Principal Middle Name",
+          "Principal Last Name",
+          "License Expiration Date",
+          "Applicant First Name",
+          "Applicant Last Name",
+          "Applicant Business Name",
+          "Applicant Address 1",
+          "Applicant Address 2",
+          "Applicant Address 3",
+          "ZONE",
+          "OCCUPANCY",
+          "Floor Area-L.A. Building Code Definition",
+          "Census Tract",
+          "Latitude/Longitude"
+        ],
+        "rows_with_contractor_business": 122487,
+        "rows_with_contractor_address": 66310,
+        "rows_with_work_description": 132426,
+        "rows_with_valuation": 132407,
+        "valuation_sum": 48122733276.7,
+        "distinct_permits": 132413,
+        "distinct_apn_or_property_keys": 93036,
+        "earliest_issue_date": "01/01/2018",
+        "latest_issue_date": "12/31/2025",
+        "status_counts": {
+          "CofO Issued": 130192,
+          "CofO Corrected": 2215,
+          "CofO Superseded": 15,
+          "CofO Reactivated": 4
+        },
+        "permit_type_counts": {
+          "Bldg-Addition": 49015,
+          "Bldg-New": 37714,
+          "Bldg-Alter/Repair": 27510,
+          "Swimming-Pool/Spa": 16107,
+          "Nonbldg-New": 1791,
+          "Nonbldg-Alter/Repair": 270,
+          "Bldg-Relocation": 10,
+          "Nonbldg-Addition": 8,
+          "Project": 1
+        },
+        "issue_years": {
+          "2013": 5976,
+          "2014": 6835,
+          "2015": 7026,
+          "2016": 8351,
+          "2017": 8481,
+          "2018": 10163,
+          "2019": 10812,
+          "2020": 10662,
+          "2021": 10238,
+          "2022": 10723,
+          "2023": 11280,
+          "2024": 11823,
+          "2025": 12617,
+          "2026": 7439
+        },
+        "license_kind_counts": {
+          "null_or_owner_builder": 63547,
+          "exact_source_native": 68813,
+          "malformed": 66
+        },
+        "license_class_counts": {
+          "null_or_owner_builder": 63547,
+          "EXACT_LICENSE_NOT_IN_ACQUIRED_PARTIAL_SPINE": 56308,
+          "EXACT_MATCH_ACQUIRED_CSLB": 12505,
+          "malformed": 66
+        },
+        "rows_with_source_native_license": 68813,
+        "distinct_source_native_licenses": 12786,
+        "exact_acquired_cslb_rows": 12505,
+        "exact_acquired_cslb_licenses": 2507,
+        "outside_partial_spine_rows": 56308,
+        "outside_partial_spine_licenses": 10279,
+        "malformed_ids": 66,
+        "null_or_owner_builder": 63547,
+        "source_native_phone_rows": 0,
+        "source_native_email_rows": 0,
+        "source_native_website_rows": 0,
+        "exact_activity_contractors": 2507,
+        "exact_activity_top25": [
+          {
+            "license": "1001034",
+            "ca_cslb_id": "CA-CSLB:1001034",
+            "permit_rows": 1202,
+            "distinct_permits": 1202,
+            "permit_types": {
+              "Bldg-New": 1198,
+              "Bldg-Addition": 3,
+              "Nonbldg-New": 1
+            },
+            "status": {
+              "CofO Issued": 1055,
+              "CofO Corrected": 147
+            },
+            "issue_years": {
+              "2015": 3,
+              "2016": 15,
+              "2017": 23,
+              "2018": 39,
+              "2019": 84,
+              "2020": 239,
+              "2021": 237,
+              "2022": 257,
+              "2023": 155,
+              "2024": 61,
+              "2025": 59,
+              "2026": 30
+            },
+            "valuation_rows": 1202,
+            "valuation_sum": 683416702.0,
+            "work_description_rows": 1202,
+            "distinct_property_locations": 734,
+            "earliest_permit_date": "01/03/2018",
+            "latest_permit_date": "12/30/2021",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 7
+          },
+          {
+            "license": "1025507",
+            "ca_cslb_id": "CA-CSLB:1025507",
+            "permit_rows": 427,
+            "distinct_permits": 427,
+            "permit_types": {
+              "Bldg-Addition": 232,
+              "Bldg-New": 192,
+              "Bldg-Alter/Repair": 3
+            },
+            "status": {
+              "CofO Issued": 427
+            },
+            "issue_years": {
+              "2018": 44,
+              "2019": 62,
+              "2020": 53,
+              "2021": 60,
+              "2022": 50,
+              "2023": 66,
+              "2024": 35,
+              "2025": 18,
+              "2026": 39
+            },
+            "valuation_rows": 427,
+            "valuation_sum": 157759559.0,
+            "work_description_rows": 427,
+            "distinct_property_locations": 375,
+            "earliest_permit_date": "01/03/2020",
+            "latest_permit_date": "12/31/2022",
+            "distinct_contractor_names_on_source": 3,
+            "distinct_contractor_addresses_on_source": 8
+          },
+          {
+            "license": "1053685",
+            "ca_cslb_id": "CA-CSLB:1053685",
+            "permit_rows": 132,
+            "distinct_permits": 132,
+            "permit_types": {
+              "Swimming-Pool/Spa": 129,
+              "Bldg-New": 3
+            },
+            "status": {
+              "CofO Issued": 131,
+              "CofO Corrected": 1
+            },
+            "issue_years": {
+              "2020": 6,
+              "2021": 22,
+              "2022": 38,
+              "2023": 28,
+              "2024": 17,
+              "2025": 11,
+              "2026": 10
+            },
+            "valuation_rows": 132,
+            "valuation_sum": 4297000.0,
+            "work_description_rows": 132,
+            "distinct_property_locations": 127,
+            "earliest_permit_date": "01/03/2024",
+            "latest_permit_date": "12/26/2020",
+            "distinct_contractor_names_on_source": 3,
+            "distinct_contractor_addresses_on_source": 5
+          },
+          {
+            "license": "1010243",
+            "ca_cslb_id": "CA-CSLB:1010243",
+            "permit_rows": 130,
+            "distinct_permits": 130,
+            "permit_types": {
+              "Swimming-Pool/Spa": 127,
+              "Bldg-New": 2,
+              "Bldg-Alter/Repair": 1
+            },
+            "status": {
+              "CofO Issued": 130
+            },
+            "issue_years": {
+              "2016": 2,
+              "2017": 22,
+              "2018": 15,
+              "2019": 10,
+              "2020": 14,
+              "2021": 16,
+              "2022": 13,
+              "2023": 11,
+              "2024": 10,
+              "2025": 10,
+              "2026": 7
+            },
+            "valuation_rows": 130,
+            "valuation_sum": 4264265.0,
+            "work_description_rows": 130,
+            "distinct_property_locations": 128,
+            "earliest_permit_date": "01/01/2018",
+            "latest_permit_date": "12/27/2023",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 2
+          },
+          {
+            "license": "1046115",
+            "ca_cslb_id": "CA-CSLB:1046115",
+            "permit_rows": 124,
+            "distinct_permits": 124,
+            "permit_types": {
+              "Swimming-Pool/Spa": 122,
+              "Bldg-New": 2
+            },
+            "status": {
+              "CofO Issued": 123,
+              "CofO Corrected": 1
+            },
+            "issue_years": {
+              "2019": 3,
+              "2020": 8,
+              "2021": 28,
+              "2022": 30,
+              "2023": 18,
+              "2024": 15,
+              "2025": 20,
+              "2026": 2
+            },
+            "valuation_rows": 124,
+            "valuation_sum": 3141972.0,
+            "work_description_rows": 124,
+            "distinct_property_locations": 123,
+            "earliest_permit_date": "01/02/2021",
+            "latest_permit_date": "12/29/2022",
+            "distinct_contractor_names_on_source": 2,
+            "distinct_contractor_addresses_on_source": 6
+          },
+          {
+            "license": "1013600",
+            "ca_cslb_id": "CA-CSLB:1013600",
+            "permit_rows": 122,
+            "distinct_permits": 122,
+            "permit_types": {
+              "Bldg-New": 104,
+              "Bldg-Addition": 11,
+              "Bldg-Alter/Repair": 5,
+              "Swimming-Pool/Spa": 1,
+              "Bldg-Relocation": 1
+            },
+            "status": {
+              "CofO Issued": 119,
+              "CofO Corrected": 3
+            },
+            "issue_years": {
+              "2017": 11,
+              "2018": 14,
+              "2019": 4,
+              "2020": 6,
+              "2021": 15,
+              "2022": 26,
+              "2023": 8,
+              "2024": 14,
+              "2025": 16,
+              "2026": 8
+            },
+            "valuation_rows": 122,
+            "valuation_sum": 29907918.0,
+            "work_description_rows": 122,
+            "distinct_property_locations": 53,
+            "earliest_permit_date": "01/13/2017",
+            "latest_permit_date": "12/30/2017",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 4
+          },
+          {
+            "license": "1086392",
+            "ca_cslb_id": "CA-CSLB:1086392",
+            "permit_rows": 114,
+            "distinct_permits": 114,
+            "permit_types": {
+              "Bldg-New": 114
+            },
+            "status": {
+              "CofO Issued": 113,
+              "CofO Corrected": 1
+            },
+            "issue_years": {
+              "2024": 7,
+              "2025": 83,
+              "2026": 24
+            },
+            "valuation_rows": 114,
+            "valuation_sum": 59350540.16,
+            "work_description_rows": 114,
+            "distinct_property_locations": 4,
+            "earliest_permit_date": "01/05/2026",
+            "latest_permit_date": "12/28/2025",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 1
+          },
+          {
+            "license": "1021458",
+            "ca_cslb_id": "CA-CSLB:1021458",
+            "permit_rows": 99,
+            "distinct_permits": 99,
+            "permit_types": {
+              "Bldg-New": 84,
+              "Bldg-Alter/Repair": 9,
+              "Bldg-Addition": 6
+            },
+            "status": {
+              "CofO Issued": 96,
+              "CofO Corrected": 3
+            },
+            "issue_years": {
+              "2017": 2,
+              "2018": 4,
+              "2019": 3,
+              "2020": 2,
+              "2021": 1,
+              "2022": 2,
+              "2023": 6,
+              "2024": 15,
+              "2025": 41,
+              "2026": 23
+            },
+            "valuation_rows": 99,
+            "valuation_sum": 27135944.0,
+            "work_description_rows": 99,
+            "distinct_property_locations": 57,
+            "earliest_permit_date": "01/09/2026",
+            "latest_permit_date": "12/18/2025",
+            "distinct_contractor_names_on_source": 3,
+            "distinct_contractor_addresses_on_source": 5
+          },
+          {
+            "license": "1023605",
+            "ca_cslb_id": "CA-CSLB:1023605",
+            "permit_rows": 97,
+            "distinct_permits": 97,
+            "permit_types": {
+              "Bldg-Alter/Repair": 52,
+              "Bldg-Addition": 27,
+              "Bldg-New": 17,
+              "Swimming-Pool/Spa": 1
+            },
+            "status": {
+              "CofO Issued": 97
+            },
+            "issue_years": {
+              "2017": 1,
+              "2018": 4,
+              "2019": 25,
+              "2020": 13,
+              "2021": 10,
+              "2022": 7,
+              "2023": 15,
+              "2024": 7,
+              "2025": 9,
+              "2026": 6
+            },
+            "valuation_rows": 97,
+            "valuation_sum": 5014507.0,
+            "work_description_rows": 97,
+            "distinct_property_locations": 88,
+            "earliest_permit_date": "01/02/2020",
+            "latest_permit_date": "12/30/2020",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 2
+          },
+          {
+            "license": "1065376",
+            "ca_cslb_id": "CA-CSLB:1065376",
+            "permit_rows": 84,
+            "distinct_permits": 84,
+            "permit_types": {
+              "Bldg-Alter/Repair": 71,
+              "Bldg-Addition": 8,
+              "Bldg-New": 4,
+              "Nonbldg-New": 1
+            },
+            "status": {
+              "CofO Issued": 82,
+              "CofO Corrected": 2
+            },
+            "issue_years": {
+              "2021": 5,
+              "2022": 9,
+              "2023": 17,
+              "2024": 24,
+              "2025": 16,
+              "2026": 13
+            },
+            "valuation_rows": 84,
+            "valuation_sum": 5447226.0,
+            "work_description_rows": 84,
+            "distinct_property_locations": 78,
+            "earliest_permit_date": "01/15/2026",
+            "latest_permit_date": "12/27/2021",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 4
+          },
+          {
+            "license": "1068007",
+            "ca_cslb_id": "CA-CSLB:1068007",
+            "permit_rows": 81,
+            "distinct_permits": 81,
+            "permit_types": {
+              "Bldg-New": 65,
+              "Bldg-Alter/Repair": 14,
+              "Bldg-Addition": 2
+            },
+            "status": {
+              "CofO Issued": 79,
+              "CofO Corrected": 2
+            },
+            "issue_years": {
+              "2021": 4,
+              "2022": 4,
+              "2023": 11,
+              "2024": 24,
+              "2025": 28,
+              "2026": 10
+            },
+            "valuation_rows": 81,
+            "valuation_sum": 37871565.23,
+            "work_description_rows": 81,
+            "distinct_property_locations": 49,
+            "earliest_permit_date": "01/09/2025",
+            "latest_permit_date": "12/26/2024",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 1
+          },
+          {
+            "license": "1043721",
+            "ca_cslb_id": "CA-CSLB:1043721",
+            "permit_rows": 75,
+            "distinct_permits": 75,
+            "permit_types": {
+              "Swimming-Pool/Spa": 58,
+              "Bldg-Addition": 12,
+              "Bldg-New": 3,
+              "Bldg-Alter/Repair": 2
+            },
+            "status": {
+              "CofO Issued": 74,
+              "CofO Corrected": 1
+            },
+            "issue_years": {
+              "2019": 3,
+              "2020": 3,
+              "2021": 13,
+              "2022": 12,
+              "2023": 14,
+              "2024": 13,
+              "2025": 11,
+              "2026": 6
+            },
+            "valuation_rows": 75,
+            "valuation_sum": 1740500.0,
+            "work_description_rows": 75,
+            "distinct_property_locations": 69,
+            "earliest_permit_date": "01/07/2025",
+            "latest_permit_date": "12/25/2021",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 3
+          },
+          {
+            "license": "1002927",
+            "ca_cslb_id": "CA-CSLB:1002927",
+            "permit_rows": 70,
+            "distinct_permits": 70,
+            "permit_types": {
+              "Bldg-Addition": 47,
+              "Bldg-Alter/Repair": 19,
+              "Bldg-New": 4
+            },
+            "status": {
+              "CofO Issued": 69,
+              "CofO Corrected": 1
+            },
+            "issue_years": {
+              "2016": 4,
+              "2018": 2,
+              "2019": 3,
+              "2020": 14,
+              "2021": 5,
+              "2022": 7,
+              "2023": 7,
+              "2024": 11,
+              "2025": 9,
+              "2026": 8
+            },
+            "valuation_rows": 70,
+            "valuation_sum": 3460301.0,
+            "work_description_rows": 70,
+            "distinct_property_locations": 68,
+            "earliest_permit_date": "01/05/2023",
+            "latest_permit_date": "12/30/2020",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 4
+          },
+          {
+            "license": "1003213",
+            "ca_cslb_id": "CA-CSLB:1003213",
+            "permit_rows": 70,
+            "distinct_permits": 70,
+            "permit_types": {
+              "Swimming-Pool/Spa": 47,
+              "Bldg-Addition": 18,
+              "Bldg-New": 2,
+              "Bldg-Alter/Repair": 2,
+              "Nonbldg-New": 1
+            },
+            "status": {
+              "CofO Issued": 70
+            },
+            "issue_years": {
+              "2016": 4,
+              "2017": 5,
+              "2018": 2,
+              "2019": 9,
+              "2020": 9,
+              "2021": 6,
+              "2022": 16,
+              "2023": 9,
+              "2024": 3,
+              "2025": 6,
+              "2026": 1
+            },
+            "valuation_rows": 70,
+            "valuation_sum": 1503630.0,
+            "work_description_rows": 70,
+            "distinct_property_locations": 62,
+            "earliest_permit_date": "01/03/2025",
+            "latest_permit_date": "12/21/2017",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 4
+          },
+          {
+            "license": "1028148",
+            "ca_cslb_id": "CA-CSLB:1028148",
+            "permit_rows": 63,
+            "distinct_permits": 63,
+            "permit_types": {
+              "Bldg-New": 43,
+              "Bldg-Addition": 13,
+              "Bldg-Alter/Repair": 7
+            },
+            "status": {
+              "CofO Issued": 61,
+              "CofO Corrected": 2
+            },
+            "issue_years": {
+              "2017": 1,
+              "2018": 7,
+              "2019": 9,
+              "2020": 6,
+              "2021": 5,
+              "2022": 7,
+              "2023": 4,
+              "2024": 5,
+              "2025": 10,
+              "2026": 9
+            },
+            "valuation_rows": 63,
+            "valuation_sum": 12260510.0,
+            "work_description_rows": 63,
+            "distinct_property_locations": 48,
+            "earliest_permit_date": "01/07/2026",
+            "latest_permit_date": "12/19/2017",
+            "distinct_contractor_names_on_source": 4,
+            "distinct_contractor_addresses_on_source": 6
+          },
+          {
+            "license": "1043456",
+            "ca_cslb_id": "CA-CSLB:1043456",
+            "permit_rows": 63,
+            "distinct_permits": 63,
+            "permit_types": {
+              "Bldg-Alter/Repair": 27,
+              "Bldg-Addition": 23,
+              "Bldg-New": 12,
+              "Swimming-Pool/Spa": 1
+            },
+            "status": {
+              "CofO Issued": 63
+            },
+            "issue_years": {
+              "2019": 3,
+              "2020": 7,
+              "2021": 6,
+              "2022": 12,
+              "2023": 14,
+              "2024": 12,
+              "2025": 4,
+              "2026": 5
+            },
+            "valuation_rows": 63,
+            "valuation_sum": 4814801.0,
+            "work_description_rows": 63,
+            "distinct_property_locations": 59,
+            "earliest_permit_date": "01/02/2025",
+            "latest_permit_date": "12/21/2023",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 2
+          },
+          {
+            "license": "1028796",
+            "ca_cslb_id": "CA-CSLB:1028796",
+            "permit_rows": 60,
+            "distinct_permits": 60,
+            "permit_types": {
+              "Bldg-Addition": 35,
+              "Bldg-New": 23,
+              "Bldg-Alter/Repair": 2
+            },
+            "status": {
+              "CofO Issued": 60
+            },
+            "issue_years": {
+              "2018": 1,
+              "2019": 4,
+              "2020": 9,
+              "2021": 2,
+              "2022": 12,
+              "2023": 12,
+              "2024": 8,
+              "2025": 7,
+              "2026": 5
+            },
+            "valuation_rows": 60,
+            "valuation_sum": 17969669.0,
+            "work_description_rows": 60,
+            "distinct_property_locations": 49,
+            "earliest_permit_date": "01/04/2022",
+            "latest_permit_date": "12/31/2025",
+            "distinct_contractor_names_on_source": 3,
+            "distinct_contractor_addresses_on_source": 1
+          },
+          {
+            "license": "1012096",
+            "ca_cslb_id": "CA-CSLB:1012096",
+            "permit_rows": 58,
+            "distinct_permits": 58,
+            "permit_types": {
+              "Bldg-New": 58
+            },
+            "status": {
+              "CofO Issued": 55,
+              "CofO Corrected": 3
+            },
+            "issue_years": {
+              "2018": 18,
+              "2019": 20,
+              "2020": 20
+            },
+            "valuation_rows": 58,
+            "valuation_sum": 27059462.0,
+            "work_description_rows": 58,
+            "distinct_property_locations": 7,
+            "earliest_permit_date": "01/10/2018",
+            "latest_permit_date": "12/20/2019",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 1
+          },
+          {
+            "license": "1008762",
+            "ca_cslb_id": "CA-CSLB:1008762",
+            "permit_rows": 50,
+            "distinct_permits": 50,
+            "permit_types": {
+              "Swimming-Pool/Spa": 50
+            },
+            "status": {
+              "CofO Issued": 50
+            },
+            "issue_years": {
+              "2019": 2,
+              "2020": 8,
+              "2021": 4,
+              "2022": 12,
+              "2023": 9,
+              "2024": 2,
+              "2025": 11,
+              "2026": 2
+            },
+            "valuation_rows": 50,
+            "valuation_sum": 1625945.0,
+            "work_description_rows": 50,
+            "distinct_property_locations": 50,
+            "earliest_permit_date": "01/09/2020",
+            "latest_permit_date": "12/12/2023",
+            "distinct_contractor_names_on_source": 5,
+            "distinct_contractor_addresses_on_source": 6
+          },
+          {
+            "license": "1014160",
+            "ca_cslb_id": "CA-CSLB:1014160",
+            "permit_rows": 47,
+            "distinct_permits": 47,
+            "permit_types": {
+              "Bldg-New": 31,
+              "Swimming-Pool/Spa": 8,
+              "Bldg-Addition": 8
+            },
+            "status": {
+              "CofO Issued": 47
+            },
+            "issue_years": {
+              "2018": 3,
+              "2019": 1,
+              "2020": 7,
+              "2021": 4,
+              "2022": 6,
+              "2023": 5,
+              "2024": 6,
+              "2025": 9,
+              "2026": 6
+            },
+            "valuation_rows": 47,
+            "valuation_sum": 19133042.1,
+            "work_description_rows": 47,
+            "distinct_property_locations": 30,
+            "earliest_permit_date": "01/03/2020",
+            "latest_permit_date": "12/13/2021",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 2
+          },
+          {
+            "license": "1005728",
+            "ca_cslb_id": "CA-CSLB:1005728",
+            "permit_rows": 46,
+            "distinct_permits": 46,
+            "permit_types": {
+              "Bldg-New": 46
+            },
+            "status": {
+              "CofO Issued": 41,
+              "CofO Corrected": 5
+            },
+            "issue_years": {
+              "2016": 2,
+              "2018": 3,
+              "2019": 2,
+              "2020": 2,
+              "2021": 15,
+              "2022": 13,
+              "2023": 9
+            },
+            "valuation_rows": 46,
+            "valuation_sum": 11571248.0,
+            "work_description_rows": 46,
+            "distinct_property_locations": 11,
+            "earliest_permit_date": "03/10/2018",
+            "latest_permit_date": "10/19/2023",
+            "distinct_contractor_names_on_source": 2,
+            "distinct_contractor_addresses_on_source": 2
+          },
+          {
+            "license": "1084275",
+            "ca_cslb_id": "CA-CSLB:1084275",
+            "permit_rows": 46,
+            "distinct_permits": 46,
+            "permit_types": {
+              "Bldg-New": 44,
+              "Bldg-Alter/Repair": 1,
+              "Bldg-Addition": 1
+            },
+            "status": {
+              "CofO Issued": 43,
+              "CofO Corrected": 3
+            },
+            "issue_years": {
+              "2023": 6,
+              "2024": 19,
+              "2025": 6,
+              "2026": 15
+            },
+            "valuation_rows": 46,
+            "valuation_sum": 17661000.0,
+            "work_description_rows": 46,
+            "distinct_property_locations": 22,
+            "earliest_permit_date": "01/15/2026",
+            "latest_permit_date": "12/07/2024",
+            "distinct_contractor_names_on_source": 2,
+            "distinct_contractor_addresses_on_source": 1
+          },
+          {
+            "license": "1010959",
+            "ca_cslb_id": "CA-CSLB:1010959",
+            "permit_rows": 45,
+            "distinct_permits": 45,
+            "permit_types": {
+              "Swimming-Pool/Spa": 43,
+              "Bldg-Addition": 2
+            },
+            "status": {
+              "CofO Issued": 45
+            },
+            "issue_years": {
+              "2017": 3,
+              "2018": 1,
+              "2019": 2,
+              "2020": 1,
+              "2021": 10,
+              "2022": 8,
+              "2023": 7,
+              "2024": 7,
+              "2025": 2,
+              "2026": 4
+            },
+            "valuation_rows": 45,
+            "valuation_sum": 1306178.0,
+            "work_description_rows": 45,
+            "distinct_property_locations": 45,
+            "earliest_permit_date": "01/21/2023",
+            "latest_permit_date": "12/30/2023",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 3
+          },
+          {
+            "license": "1034491",
+            "ca_cslb_id": "CA-CSLB:1034491",
+            "permit_rows": 45,
+            "distinct_permits": 45,
+            "permit_types": {
+              "Bldg-New": 37,
+              "Bldg-Alter/Repair": 5,
+              "Nonbldg-New": 2,
+              "Bldg-Relocation": 1
+            },
+            "status": {
+              "CofO Issued": 42,
+              "CofO Corrected": 3
+            },
+            "issue_years": {
+              "2020": 2,
+              "2021": 2,
+              "2022": 4,
+              "2023": 8,
+              "2024": 20,
+              "2025": 4,
+              "2026": 5
+            },
+            "valuation_rows": 45,
+            "valuation_sum": 249847103.8,
+            "work_description_rows": 45,
+            "distinct_property_locations": 39,
+            "earliest_permit_date": "01/10/2023",
+            "latest_permit_date": "12/23/2024",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 2
+          },
+          {
+            "license": "1039226",
+            "ca_cslb_id": "CA-CSLB:1039226",
+            "permit_rows": 45,
+            "distinct_permits": 45,
+            "permit_types": {
+              "Bldg-Alter/Repair": 24,
+              "Bldg-Addition": 13,
+              "Bldg-New": 8
+            },
+            "status": {
+              "CofO Issued": 45
+            },
+            "issue_years": {
+              "2019": 2,
+              "2020": 1,
+              "2022": 3,
+              "2023": 12,
+              "2024": 16,
+              "2025": 6,
+              "2026": 5
+            },
+            "valuation_rows": 45,
+            "valuation_sum": 4104200.0,
+            "work_description_rows": 45,
+            "distinct_property_locations": 44,
+            "earliest_permit_date": "01/07/2024",
+            "latest_permit_date": "12/24/2024",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 2
+          }
+        ],
+        "safe_work_activity_rows": 12505,
+        "fixture": "data\\california\\counties\\los-angeles\\fixtures\\ladbs_cofo_license_sample.json",
+        "semantics": {
+          "PERMIT_ACTIVITY_NE_QUALITY": true,
+          "EXACT_LICENSE_NOT_IN_ACQUIRED_PARTIAL_SPINE_NE_UNLICENSED": true,
+          "ADDRESS_DIFFERENCE_NE_VIOLATION": true,
+          "OWNER_BUILDER_NE_CSLB": true
+        }
+      }
+    },
+    {
+      "source_id": "la-city-ladbs-pcis-permit-info-d9aa-v8bm",
+      "source_name": "Building Permit Information Data",
+      "agency": "Los Angeles Department of Building and Safety (fields); community-created Socrata view",
+      "jurisdiction": "CITY_OF_LOS_ANGELES",
+      "geographic_grain": "CITY_OF_LOS_ANGELES_NOT_COUNTYWIDE",
+      "url": "https://data.lacity.org/City-Infrastructure-Service-Requests/Building-Permit-Information-Data/d9aa-v8bm",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "format": "CSV/SODA",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2023-05-22",
+      "refresh_cadence": "STALE_NOT_THE_CURRENT_OFFICIAL_WEEKLY_EXTRACT",
+      "rows": 317027,
+      "row_grain": "pcis_permit_application",
+      "identity_fields": [
+        "License #",
+        "Contractor's Business Name",
+        "PCIS Permit #"
+      ],
+      "cslb_field": "License #",
+      "permit_fields": [
+        "PCIS Permit #",
+        "Permit Type",
+        "Issue Date",
+        "Status",
+        "Valuation",
+        "Work Description"
+      ],
+      "property_apn_fields": [
+        "Assessor Book",
+        "Assessor Page",
+        "Assessor Parcel"
+      ],
+      "contact_fields": [
+        "Contractor Address",
+        "Contractor City",
+        "Contractor State"
+      ],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "City of Los Angeles only.",
+        "Socrata labels this a community-created dataset; City of Los Angeles has not reviewed or endorsed changes.",
+        "Field names match official historical PCIS contractor/license columns.",
+        "Data last updated 2023-05-22. Current official weekly building-permit extract (pi9x-tg5x) dropped contractor/license columns."
+      ],
+      "download": {
+        "path": "data\\raw\\california\\counties\\los-angeles\\ladbs_permit_information_d9aa_v8bm.csv",
+        "bytes": 139005173,
+        "sha256": "5923e92418bc6ddc020e6a51d8c5bd7fbc922ad519f88d06bd5beab539a03cce",
+        "url": "https://data.lacity.org/api/views/d9aa-v8bm/rows.csv?accessType=DOWNLOAD",
+        "cached": true
+      },
+      "stats": {
+        "rows_total": 317027,
+        "fieldnames": [
+          "Assessor Book",
+          "Assessor Page",
+          "Assessor Parcel",
+          "Tract",
+          "Block",
+          "Lot",
+          "Reference # (Old Permit #)",
+          "PCIS Permit #",
+          "Status",
+          "Status Date",
+          "Permit Type",
+          "Permit Sub-Type",
+          "Permit Category",
+          "Project Number",
+          "Event Code",
+          "Initiating Office",
+          "Issue Date",
+          "Address Start",
+          "Address Fraction Start",
+          "Address End",
+          "Address Fraction End",
+          "Street Direction",
+          "Street Name",
+          "Street Suffix",
+          "Suffix Direction",
+          "Unit Range Start",
+          "Unit Range End",
+          "Zip Code",
+          "Work Description",
+          "Valuation",
+          "Floor Area-L.A. Zoning Code Definition",
+          "# of Residential Dwelling Units",
+          "# of Stories",
+          "Contractor's Business Name",
+          "Contractor Address",
+          "Contractor City",
+          "Contractor State",
+          "License Type",
+          "License #",
+          "Principal First Name",
+          "Principal Middle Name",
+          "Principal Last Name",
+          "License Expiration Date",
+          "Applicant First Name",
+          "Applicant Last Name",
+          "Applicant Business Name",
+          "Applicant Address 1",
+          "Applicant Address 2",
+          "Applicant Address 3",
+          "Zone",
+          "Occupancy",
+          "Floor Area-L.A. Building Code Definition",
+          "Census Tract",
+          "Council District",
+          "Latitude/Longitude",
+          "Applicant Relationship"
+        ],
+        "rows_with_contractor_business": 310438,
+        "rows_with_contractor_address": 208054,
+        "rows_with_work_description": 317026,
+        "rows_with_valuation": 316991,
+        "valuation_sum": 68011314045.68,
+        "distinct_permits": 316685,
+        "distinct_apn_or_property_keys": 136491,
+        "earliest_issue_date": "01/01/2021",
+        "latest_issue_date": "12/31/2022",
+        "status_counts": {
+          "Permit Finaled": 146097,
+          "CofO Issued": 77922,
+          "Issued": 70541,
+          "CofC Issued": 9002,
+          "Permit Expired": 7100,
+          "Permit Closed": 1879,
+          "CofO Corrected": 1390,
+          "Refund Completed": 1110,
+          "CofO in Progress": 968,
+          "OK for CofC": 296,
+          "Re-Activate Permit": 224,
+          "Refund in Progress": 177,
+          "Permit Withdrawn": 112,
+          "OK to Issue CofC": 63,
+          "Permit Revoked": 62,
+          "Intent to Revoke": 39,
+          "CofC Corrected": 11,
+          "No Progress": 9,
+          "Intent to Correct CofC": 9,
+          "CofO Superseded": 4
+        },
+        "permit_type_counts": {
+          "Bldg-Alter/Repair": 175738,
+          "Bldg-Addition": 56410,
+          "Bldg-New": 39506,
+          "Bldg-Demolition": 21209,
+          "Sign": 18616,
+          "Nonbldg-Alter/Repair": 5169,
+          "Nonbldg-Addition": 263,
+          "Nonbldg-Demolition": 103,
+          "Bldg-Relocation": 13
+        },
+        "issue_years": {
+          "2013": 24049,
+          "2014": 25717,
+          "2015": 27733,
+          "2016": 28465,
+          "2017": 33803,
+          "2018": 37258,
+          "2019": 39042,
+          "2020": 26431,
+          "2021": 28689,
+          "2022": 34025,
+          "2023": 11815
+        },
+        "license_kind_counts": {
+          "exact_source_native": 207951,
+          "null_or_owner_builder": 108458,
+          "malformed": 618
+        },
+        "license_class_counts": {
+          "EXACT_LICENSE_NOT_IN_ACQUIRED_PARTIAL_SPINE": 178977,
+          "EXACT_MATCH_ACQUIRED_CSLB": 28974,
+          "null_or_owner_builder": 108458,
+          "malformed": 618
+        },
+        "rows_with_source_native_license": 207951,
+        "distinct_source_native_licenses": 18132,
+        "exact_acquired_cslb_rows": 28974,
+        "exact_acquired_cslb_licenses": 3063,
+        "outside_partial_spine_rows": 178977,
+        "outside_partial_spine_licenses": 15069,
+        "malformed_ids": 618,
+        "null_or_owner_builder": 108458,
+        "source_native_phone_rows": 0,
+        "source_native_email_rows": 0,
+        "source_native_website_rows": 0,
+        "exact_activity_contractors": 3063,
+        "exact_activity_top25": [
+          {
+            "license": "1001034",
+            "ca_cslb_id": "CA-CSLB:1001034",
+            "permit_rows": 2333,
+            "distinct_permits": 2332,
+            "permit_types": {
+              "Bldg-New": 1323,
+              "Bldg-Addition": 655,
+              "Bldg-Alter/Repair": 350,
+              "Nonbldg-Alter/Repair": 4,
+              "Nonbldg-Addition": 1
+            },
+            "status": {
+              "CofO Issued": 994,
+              "Permit Finaled": 930,
+              "Issued": 234,
+              "CofO Corrected": 166,
+              "CofO in Progress": 4,
+              "Permit Expired": 3,
+              "Re-Activate Permit": 1,
+              "Permit Closed": 1
+            },
+            "issue_years": {
+              "2015": 44,
+              "2016": 107,
+              "2017": 121,
+              "2018": 269,
+              "2019": 229,
+              "2020": 463,
+              "2021": 629,
+              "2022": 372,
+              "2023": 99
+            },
+            "valuation_rows": 2333,
+            "valuation_sum": 742183315.0,
+            "work_description_rows": 2333,
+            "distinct_property_locations": 834,
+            "earliest_permit_date": "01/03/2022",
+            "latest_permit_date": "12/31/2020",
+            "distinct_contractor_names_on_source": 2,
+            "distinct_contractor_addresses_on_source": 9
+          },
+          {
+            "license": "1012702",
+            "ca_cslb_id": "CA-CSLB:1012702",
+            "permit_rows": 1522,
+            "distinct_permits": 1522,
+            "permit_types": {
+              "Bldg-Alter/Repair": 1521,
+              "Bldg-Addition": 1
+            },
+            "status": {
+              "CofC Issued": 873,
+              "Permit Finaled": 468,
+              "Issued": 122,
+              "OK for CofC": 25,
+              "Permit Closed": 12,
+              "OK to Issue CofC": 6,
+              "CofO Issued": 5,
+              "Permit Withdrawn": 3
+            },
+            "issue_years": {
+              "2016": 20,
+              "2017": 115,
+              "2018": 311,
+              "2019": 366,
+              "2020": 284,
+              "2021": 205,
+              "2022": 182,
+              "2023": 39
+            },
+            "valuation_rows": 1522,
+            "valuation_sum": 53378598.0,
+            "work_description_rows": 1522,
+            "distinct_property_locations": 986,
+            "earliest_permit_date": "01/02/2019",
+            "latest_permit_date": "12/30/2020",
+            "distinct_contractor_names_on_source": 2,
+            "distinct_contractor_addresses_on_source": 8
+          },
+          {
+            "license": "1025507",
+            "ca_cslb_id": "CA-CSLB:1025507",
+            "permit_rows": 918,
+            "distinct_permits": 918,
+            "permit_types": {
+              "Bldg-Demolition": 350,
+              "Bldg-Addition": 268,
+              "Bldg-New": 186,
+              "Bldg-Alter/Repair": 111,
+              "Nonbldg-Alter/Repair": 3
+            },
+            "status": {
+              "Permit Finaled": 398,
+              "CofO Issued": 330,
+              "Issued": 183,
+              "CofO in Progress": 6,
+              "Permit Closed": 1
+            },
+            "issue_years": {
+              "2017": 124,
+              "2018": 177,
+              "2019": 94,
+              "2020": 144,
+              "2021": 146,
+              "2022": 199,
+              "2023": 34
+            },
+            "valuation_rows": 918,
+            "valuation_sum": 161536924.5,
+            "work_description_rows": 918,
+            "distinct_property_locations": 436,
+            "earliest_permit_date": "01/03/2023",
+            "latest_permit_date": "12/30/2021",
+            "distinct_contractor_names_on_source": 3,
+            "distinct_contractor_addresses_on_source": 7
+          },
+          {
+            "license": "1020382",
+            "ca_cslb_id": "CA-CSLB:1020382",
+            "permit_rows": 630,
+            "distinct_permits": 630,
+            "permit_types": {
+              "Bldg-Alter/Repair": 629,
+              "Bldg-Addition": 1
+            },
+            "status": {
+              "CofC Issued": 409,
+              "Permit Finaled": 151,
+              "Issued": 45,
+              "OK for CofC": 14,
+              "Permit Closed": 8,
+              "OK to Issue CofC": 1,
+              "Permit Withdrawn": 1,
+              "CofO Issued": 1
+            },
+            "issue_years": {
+              "2017": 11,
+              "2018": 71,
+              "2019": 158,
+              "2020": 165,
+              "2021": 129,
+              "2022": 78,
+              "2023": 18
+            },
+            "valuation_rows": 630,
+            "valuation_sum": 21836077.0,
+            "work_description_rows": 630,
+            "distinct_property_locations": 470,
+            "earliest_permit_date": "01/02/2020",
+            "latest_permit_date": "12/23/2020",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 2
+          },
+          {
+            "license": "1003868",
+            "ca_cslb_id": "CA-CSLB:1003868",
+            "permit_rows": 465,
+            "distinct_permits": 465,
+            "permit_types": {
+              "Bldg-Alter/Repair": 461,
+              "Bldg-Addition": 3,
+              "Bldg-New": 1
+            },
+            "status": {
+              "CofC Issued": 272,
+              "Permit Finaled": 102,
+              "Issued": 74,
+              "Permit Closed": 6,
+              "CofO Issued": 4,
+              "OK for CofC": 3,
+              "Permit Withdrawn": 2,
+              "Refund Completed": 1
+            },
+            "issue_years": {
+              "2018": 54,
+              "2019": 83,
+              "2020": 117,
+              "2021": 90,
+              "2022": 94,
+              "2023": 27
+            },
+            "valuation_rows": 465,
+            "valuation_sum": 18278367.0,
+            "work_description_rows": 465,
+            "distinct_property_locations": 331,
+            "earliest_permit_date": "01/02/2020",
+            "latest_permit_date": "12/30/2020",
+            "distinct_contractor_names_on_source": 3,
+            "distinct_contractor_addresses_on_source": 4
+          },
+          {
+            "license": "1039226",
+            "ca_cslb_id": "CA-CSLB:1039226",
+            "permit_rows": 307,
+            "distinct_permits": 307,
+            "permit_types": {
+              "Bldg-Alter/Repair": 293,
+              "Bldg-Addition": 8,
+              "Bldg-New": 5,
+              "Bldg-Demolition": 1
+            },
+            "status": {
+              "CofC Issued": 150,
+              "Issued": 75,
+              "Permit Finaled": 59,
+              "CofO Issued": 12,
+              "OK for CofC": 7,
+              "Permit Closed": 3,
+              "CofO in Progress": 1
+            },
+            "issue_years": {
+              "2018": 17,
+              "2019": 77,
+              "2020": 97,
+              "2021": 59,
+              "2022": 35,
+              "2023": 22
+            },
+            "valuation_rows": 307,
+            "valuation_sum": 14136557.0,
+            "work_description_rows": 307,
+            "distinct_property_locations": 220,
+            "earliest_permit_date": "01/04/2019",
+            "latest_permit_date": "12/30/2022",
+            "distinct_contractor_names_on_source": 4,
+            "distinct_contractor_addresses_on_source": 3
+          },
+          {
+            "license": "1013600",
+            "ca_cslb_id": "CA-CSLB:1013600",
+            "permit_rows": 294,
+            "distinct_permits": 292,
+            "permit_types": {
+              "Bldg-New": 124,
+              "Bldg-Alter/Repair": 110,
+              "Bldg-Demolition": 48,
+              "Bldg-Addition": 9,
+              "Nonbldg-Alter/Repair": 1,
+              "Bldg-Relocation": 1,
+              "Nonbldg-Addition": 1
+            },
+            "status": {
+              "Permit Finaled": 136,
+              "CofO Issued": 95,
+              "Issued": 60,
+              "CofO Corrected": 3
+            },
+            "issue_years": {
+              "2016": 28,
+              "2017": 63,
+              "2018": 34,
+              "2019": 75,
+              "2020": 19,
+              "2021": 27,
+              "2022": 39,
+              "2023": 9
+            },
+            "valuation_rows": 294,
+            "valuation_sum": 35637690.0,
+            "work_description_rows": 294,
+            "distinct_property_locations": 80,
+            "earliest_permit_date": "01/03/2019",
+            "latest_permit_date": "12/24/2021",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 4
+          },
+          {
+            "license": "1037437",
+            "ca_cslb_id": "CA-CSLB:1037437",
+            "permit_rows": 273,
+            "distinct_permits": 273,
+            "permit_types": {
+              "Bldg-Alter/Repair": 271,
+              "Bldg-New": 2
+            },
+            "status": {
+              "CofC Issued": 168,
+              "Permit Finaled": 67,
+              "Issued": 27,
+              "Permit Closed": 3,
+              "CofO Issued": 3,
+              "Refund Completed": 2,
+              "OK for CofC": 2,
+              "Intent to Correct CofC": 1
+            },
+            "issue_years": {
+              "2018": 49,
+              "2019": 83,
+              "2020": 77,
+              "2021": 30,
+              "2022": 20,
+              "2023": 14
+            },
+            "valuation_rows": 273,
+            "valuation_sum": 10831536.0,
+            "work_description_rows": 273,
+            "distinct_property_locations": 196,
+            "earliest_permit_date": "01/06/2020",
+            "latest_permit_date": "12/31/2018",
+            "distinct_contractor_names_on_source": 2,
+            "distinct_contractor_addresses_on_source": 1
+          },
+          {
+            "license": "1007924",
+            "ca_cslb_id": "CA-CSLB:1007924",
+            "permit_rows": 259,
+            "distinct_permits": 259,
+            "permit_types": {
+              "Bldg-Alter/Repair": 259
+            },
+            "status": {
+              "Permit Finaled": 103,
+              "CofC Issued": 78,
+              "Issued": 65,
+              "OK for CofC": 12,
+              "CofO Issued": 1
+            },
+            "issue_years": {
+              "2016": 7,
+              "2017": 2,
+              "2018": 15,
+              "2019": 108,
+              "2020": 93,
+              "2021": 15,
+              "2022": 17,
+              "2023": 2
+            },
+            "valuation_rows": 259,
+            "valuation_sum": 813436.0,
+            "work_description_rows": 259,
+            "distinct_property_locations": 36,
+            "earliest_permit_date": "01/10/2019",
+            "latest_permit_date": "12/17/2020",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 8
+          },
+          {
+            "license": "1037217",
+            "ca_cslb_id": "CA-CSLB:1037217",
+            "permit_rows": 192,
+            "distinct_permits": 192,
+            "permit_types": {
+              "Bldg-Alter/Repair": 187,
+              "Bldg-New": 2,
+              "Nonbldg-Alter/Repair": 1,
+              "Bldg-Addition": 1,
+              "Bldg-Demolition": 1
+            },
+            "status": {
+              "Permit Finaled": 168,
+              "Issued": 22,
+              "CofO Issued": 1,
+              "Permit Expired": 1
+            },
+            "issue_years": {
+              "2018": 9,
+              "2019": 62,
+              "2020": 56,
+              "2021": 39,
+              "2022": 24,
+              "2023": 2
+            },
+            "valuation_rows": 192,
+            "valuation_sum": 444084511.6,
+            "work_description_rows": 192,
+            "distinct_property_locations": 13,
+            "earliest_permit_date": "01/02/2019",
+            "latest_permit_date": "12/21/2022",
+            "distinct_contractor_names_on_source": 2,
+            "distinct_contractor_addresses_on_source": 6
+          },
+          {
+            "license": "1020262",
+            "ca_cslb_id": "CA-CSLB:1020262",
+            "permit_rows": 163,
+            "distinct_permits": 163,
+            "permit_types": {
+              "Bldg-Alter/Repair": 142,
+              "Nonbldg-Alter/Repair": 10,
+              "Bldg-Addition": 9,
+              "Bldg-New": 2
+            },
+            "status": {
+              "Permit Finaled": 115,
+              "Issued": 39,
+              "CofO Issued": 8,
+              "Permit Closed": 1
+            },
+            "issue_years": {
+              "2017": 7,
+              "2018": 22,
+              "2019": 37,
+              "2020": 25,
+              "2021": 23,
+              "2022": 41,
+              "2023": 8
+            },
+            "valuation_rows": 163,
+            "valuation_sum": 2424540000.0,
+            "work_description_rows": 163,
+            "distinct_property_locations": 5,
+            "earliest_permit_date": "01/06/2020",
+            "latest_permit_date": "12/27/2021",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 1
+          },
+          {
+            "license": "1026051",
+            "ca_cslb_id": "CA-CSLB:1026051",
+            "permit_rows": 154,
+            "distinct_permits": 154,
+            "permit_types": {
+              "Bldg-Alter/Repair": 151,
+              "Bldg-Addition": 2,
+              "Bldg-New": 1
+            },
+            "status": {
+              "CofC Issued": 65,
+              "Issued": 40,
+              "Permit Finaled": 40,
+              "CofO Issued": 4,
+              "OK for CofC": 4,
+              "Permit Withdrawn": 1
+            },
+            "issue_years": {
+              "2018": 16,
+              "2019": 36,
+              "2020": 44,
+              "2021": 47,
+              "2022": 9,
+              "2023": 2
+            },
+            "valuation_rows": 154,
+            "valuation_sum": 5552524.0,
+            "work_description_rows": 154,
+            "distinct_property_locations": 67,
+            "earliest_permit_date": "01/03/2019",
+            "latest_permit_date": "12/31/2018",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 2
+          },
+          {
+            "license": "1034491",
+            "ca_cslb_id": "CA-CSLB:1034491",
+            "permit_rows": 150,
+            "distinct_permits": 150,
+            "permit_types": {
+              "Bldg-Alter/Repair": 82,
+              "Bldg-New": 37,
+              "Bldg-Demolition": 25,
+              "Bldg-Relocation": 4,
+              "Sign": 1,
+              "Bldg-Addition": 1
+            },
+            "status": {
+              "Issued": 70,
+              "Permit Finaled": 67,
+              "CofO Issued": 10,
+              "CofO Corrected": 2,
+              "CofO in Progress": 1
+            },
+            "issue_years": {
+              "2018": 10,
+              "2019": 11,
+              "2020": 25,
+              "2021": 47,
+              "2022": 38,
+              "2023": 19
+            },
+            "valuation_rows": 150,
+            "valuation_sum": 243195519.8,
+            "work_description_rows": 150,
+            "distinct_property_locations": 55,
+            "earliest_permit_date": "01/03/2023",
+            "latest_permit_date": "12/29/2021",
+            "distinct_contractor_names_on_source": 2,
+            "distinct_contractor_addresses_on_source": 4
+          },
+          {
+            "license": "1042127",
+            "ca_cslb_id": "CA-CSLB:1042127",
+            "permit_rows": 147,
+            "distinct_permits": 147,
+            "permit_types": {
+              "Bldg-Alter/Repair": 143,
+              "Bldg-Addition": 3,
+              "Bldg-New": 1
+            },
+            "status": {
+              "CofC Issued": 65,
+              "Issued": 40,
+              "Permit Finaled": 31,
+              "CofO Issued": 5,
+              "OK for CofC": 4,
+              "Not Required": 1,
+              "CofO Corrected": 1
+            },
+            "issue_years": {
+              "2019": 28,
+              "2020": 42,
+              "2021": 31,
+              "2022": 39,
+              "2023": 7
+            },
+            "valuation_rows": 147,
+            "valuation_sum": 4660032.0,
+            "work_description_rows": 147,
+            "distinct_property_locations": 97,
+            "earliest_permit_date": "01/03/2022",
+            "latest_permit_date": "12/30/2020",
+            "distinct_contractor_names_on_source": 2,
+            "distinct_contractor_addresses_on_source": 1
+          },
+          {
+            "license": "1002927",
+            "ca_cslb_id": "CA-CSLB:1002927",
+            "permit_rows": 143,
+            "distinct_permits": 143,
+            "permit_types": {
+              "Bldg-Alter/Repair": 90,
+              "Bldg-Addition": 49,
+              "Bldg-New": 2,
+              "Bldg-Demolition": 1,
+              "Nonbldg-Alter/Repair": 1
+            },
+            "status": {
+              "Permit Finaled": 68,
+              "CofO Issued": 44,
+              "Issued": 29,
+              "Refund Completed": 1,
+              "CofO Corrected": 1
+            },
+            "issue_years": {
+              "2015": 5,
+              "2016": 15,
+              "2017": 18,
+              "2018": 11,
+              "2019": 23,
+              "2020": 17,
+              "2021": 22,
+              "2022": 20,
+              "2023": 12
+            },
+            "valuation_rows": 143,
+            "valuation_sum": 5091959.0,
+            "work_description_rows": 143,
+            "distinct_property_locations": 118,
+            "earliest_permit_date": "01/04/2018",
+            "latest_permit_date": "12/19/2018",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 4
+          },
+          {
+            "license": "1047943",
+            "ca_cslb_id": "CA-CSLB:1047943",
+            "permit_rows": 140,
+            "distinct_permits": 140,
+            "permit_types": {
+              "Bldg-Alter/Repair": 140
+            },
+            "status": {
+              "CofC Issued": 100,
+              "Permit Finaled": 17,
+              "Issued": 13,
+              "Permit Closed": 8,
+              "OK for CofC": 1,
+              "Intent to Correct CofC": 1
+            },
+            "issue_years": {
+              "2019": 108,
+              "2020": 32
+            },
+            "valuation_rows": 140,
+            "valuation_sum": 6017002.0,
+            "work_description_rows": 140,
+            "distinct_property_locations": 123,
+            "earliest_permit_date": "01/11/2019",
+            "latest_permit_date": "12/18/2019",
+            "distinct_contractor_names_on_source": 4,
+            "distinct_contractor_addresses_on_source": 2
+          },
+          {
+            "license": "1012096",
+            "ca_cslb_id": "CA-CSLB:1012096",
+            "permit_rows": 129,
+            "distinct_permits": 129,
+            "permit_types": {
+              "Bldg-New": 70,
+              "Bldg-Alter/Repair": 54,
+              "Bldg-Demolition": 3,
+              "Bldg-Addition": 1,
+              "Sign": 1
+            },
+            "status": {
+              "CofO Issued": 63,
+              "Permit Finaled": 62,
+              "CofO Corrected": 3,
+              "Issued": 1
+            },
+            "issue_years": {
+              "2016": 3,
+              "2017": 26,
+              "2018": 50,
+              "2019": 50
+            },
+            "valuation_rows": 129,
+            "valuation_sum": 30258683.0,
+            "work_description_rows": 129,
+            "distinct_property_locations": 33,
+            "earliest_permit_date": "01/07/2019",
+            "latest_permit_date": "12/27/2018",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 1
+          },
+          {
+            "license": "1045286",
+            "ca_cslb_id": "CA-CSLB:1045286",
+            "permit_rows": 128,
+            "distinct_permits": 128,
+            "permit_types": {
+              "Bldg-Alter/Repair": 118,
+              "Sign": 4,
+              "Bldg-New": 3,
+              "Bldg-Addition": 3
+            },
+            "status": {
+              "Permit Finaled": 82,
+              "Issued": 37,
+              "CofO Issued": 9
+            },
+            "issue_years": {
+              "2018": 1,
+              "2019": 28,
+              "2020": 29,
+              "2021": 27,
+              "2022": 31,
+              "2023": 12
+            },
+            "valuation_rows": 128,
+            "valuation_sum": 53622947.0,
+            "work_description_rows": 128,
+            "distinct_property_locations": 57,
+            "earliest_permit_date": "01/02/2020",
+            "latest_permit_date": "12/31/2019",
+            "distinct_contractor_names_on_source": 2,
+            "distinct_contractor_addresses_on_source": 3
+          },
+          {
+            "license": "1000182",
+            "ca_cslb_id": "CA-CSLB:1000182",
+            "permit_rows": 123,
+            "distinct_permits": 123,
+            "permit_types": {
+              "Bldg-Alter/Repair": 97,
+              "Nonbldg-Alter/Repair": 26
+            },
+            "status": {
+              "Permit Finaled": 88,
+              "Issued": 31,
+              "Permit Expired": 3,
+              "CofO Issued": 1
+            },
+            "issue_years": {
+              "2016": 3,
+              "2017": 25,
+              "2018": 12,
+              "2019": 20,
+              "2020": 5,
+              "2021": 39,
+              "2022": 16,
+              "2023": 3
+            },
+            "valuation_rows": 123,
+            "valuation_sum": 2930001.0,
+            "work_description_rows": 123,
+            "distinct_property_locations": 103,
+            "earliest_permit_date": "01/05/2018",
+            "latest_permit_date": "12/27/2018",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 3
+          },
+          {
+            "license": "1002544",
+            "ca_cslb_id": "CA-CSLB:1002544",
+            "permit_rows": 118,
+            "distinct_permits": 118,
+            "permit_types": {
+              "Bldg-Alter/Repair": 87,
+              "Bldg-Addition": 24,
+              "Bldg-New": 6,
+              "Bldg-Demolition": 1
+            },
+            "status": {
+              "Permit Finaled": 63,
+              "Issued": 28,
+              "CofO Issued": 22,
+              "CofO in Progress": 2,
+              "Re-Activate Permit": 1,
+              "Permit Closed": 1,
+              "Permit Expired": 1
+            },
+            "issue_years": {
+              "2016": 15,
+              "2017": 25,
+              "2018": 17,
+              "2019": 17,
+              "2020": 10,
+              "2021": 7,
+              "2022": 23,
+              "2023": 4
+            },
+            "valuation_rows": 118,
+            "valuation_sum": 5823674.0,
+            "work_description_rows": 118,
+            "distinct_property_locations": 93,
+            "earliest_permit_date": "01/04/2017",
+            "latest_permit_date": "12/29/2022",
+            "distinct_contractor_names_on_source": 2,
+            "distinct_contractor_addresses_on_source": 5
+          },
+          {
+            "license": "1068007",
+            "ca_cslb_id": "CA-CSLB:1068007",
+            "permit_rows": 117,
+            "distinct_permits": 117,
+            "permit_types": {
+              "Bldg-New": 64,
+              "Bldg-Demolition": 41,
+              "Bldg-Alter/Repair": 10,
+              "Bldg-Addition": 2
+            },
+            "status": {
+              "Issued": 74,
+              "Permit Finaled": 26,
+              "CofO Issued": 15,
+              "CofO Corrected": 1,
+              "CofO in Progress": 1
+            },
+            "issue_years": {
+              "2020": 10,
+              "2021": 33,
+              "2022": 52,
+              "2023": 22
+            },
+            "valuation_rows": 117,
+            "valuation_sum": 36718018.86,
+            "work_description_rows": 117,
+            "distinct_property_locations": 55,
+            "earliest_permit_date": "01/03/2023",
+            "latest_permit_date": "12/29/2022",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 1
+          },
+          {
+            "license": "1005728",
+            "ca_cslb_id": "CA-CSLB:1005728",
+            "permit_rows": 110,
+            "distinct_permits": 110,
+            "permit_types": {
+              "Bldg-New": 53,
+              "Bldg-Demolition": 28,
+              "Bldg-Alter/Repair": 27,
+              "Nonbldg-Alter/Repair": 1,
+              "Nonbldg-Addition": 1
+            },
+            "status": {
+              "Permit Finaled": 55,
+              "CofO Issued": 36,
+              "Issued": 14,
+              "CofO Corrected": 5
+            },
+            "issue_years": {
+              "2015": 8,
+              "2016": 7,
+              "2017": 7,
+              "2018": 25,
+              "2019": 31,
+              "2020": 20,
+              "2021": 10,
+              "2022": 2
+            },
+            "valuation_rows": 110,
+            "valuation_sum": 17659986.0,
+            "work_description_rows": 110,
+            "distinct_property_locations": 42,
+            "earliest_permit_date": "01/04/2018",
+            "latest_permit_date": "12/18/2015",
+            "distinct_contractor_names_on_source": 3,
+            "distinct_contractor_addresses_on_source": 3
+          },
+          {
+            "license": "1006248",
+            "ca_cslb_id": "CA-CSLB:1006248",
+            "permit_rows": 109,
+            "distinct_permits": 109,
+            "permit_types": {
+              "Bldg-Alter/Repair": 86,
+              "Bldg-Addition": 9,
+              "Bldg-Demolition": 7,
+              "Bldg-New": 6,
+              "Nonbldg-Alter/Repair": 1
+            },
+            "status": {
+              "Permit Finaled": 55,
+              "Issued": 30,
+              "CofO Issued": 23,
+              "CofO Corrected": 1
+            },
+            "issue_years": {
+              "2015": 2,
+              "2016": 10,
+              "2017": 14,
+              "2018": 20,
+              "2019": 18,
+              "2020": 7,
+              "2021": 17,
+              "2022": 12,
+              "2023": 9
+            },
+            "valuation_rows": 109,
+            "valuation_sum": 42239187.0,
+            "work_description_rows": 109,
+            "distinct_property_locations": 35,
+            "earliest_permit_date": "01/09/2018",
+            "latest_permit_date": "12/24/2015",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 2
+          },
+          {
+            "license": "1023605",
+            "ca_cslb_id": "CA-CSLB:1023605",
+            "permit_rows": 108,
+            "distinct_permits": 108,
+            "permit_types": {
+              "Bldg-Alter/Repair": 72,
+              "Bldg-Addition": 25,
+              "Bldg-New": 9,
+              "Bldg-Demolition": 2
+            },
+            "status": {
+              "CofO Issued": 72,
+              "Permit Finaled": 20,
+              "Issued": 14,
+              "Refund Completed": 1,
+              "CofO in Progress": 1
+            },
+            "issue_years": {
+              "2017": 3,
+              "2018": 28,
+              "2019": 33,
+              "2020": 9,
+              "2021": 15,
+              "2022": 17,
+              "2023": 3
+            },
+            "valuation_rows": 108,
+            "valuation_sum": 3330400.0,
+            "work_description_rows": 108,
+            "distinct_property_locations": 88,
+            "earliest_permit_date": "01/08/2021",
+            "latest_permit_date": "12/21/2022",
+            "distinct_contractor_names_on_source": 1,
+            "distinct_contractor_addresses_on_source": 2
+          },
+          {
+            "license": "1028796",
+            "ca_cslb_id": "CA-CSLB:1028796",
+            "permit_rows": 103,
+            "distinct_permits": 103,
+            "permit_types": {
+              "Bldg-Addition": 36,
+              "Bldg-Demolition": 31,
+              "Bldg-New": 18,
+              "Bldg-Alter/Repair": 18
+            },
+            "status": {
+              "Permit Finaled": 40,
+              "CofO Issued": 37,
+              "Issued": 24,
+              "Permit Closed": 1,
+              "CofO in Progress": 1
+            },
+            "issue_years": {
+              "2018": 15,
+              "2019": 21,
+              "2020": 4,
+              "2021": 27,
+              "2022": 28,
+              "2023": 8
+            },
+            "valuation_rows": 103,
+            "valuation_sum": 15596906.0,
+            "work_description_rows": 103,
+            "distinct_property_locations": 47,
+            "earliest_permit_date": "01/10/2022",
+            "latest_permit_date": "12/27/2018",
+            "distinct_contractor_names_on_source": 3,
+            "distinct_contractor_addresses_on_source": 1
+          }
+        ],
+        "safe_work_activity_rows": 28974,
+        "fixture": "data\\california\\counties\\los-angeles\\fixtures\\ladbs_pcis_permit_license_sample.json",
+        "semantics": {
+          "PERMIT_ACTIVITY_NE_QUALITY": true,
+          "EXACT_LICENSE_NOT_IN_ACQUIRED_PARTIAL_SPINE_NE_UNLICENSED": true,
+          "ADDRESS_DIFFERENCE_NE_VIOLATION": true,
+          "OWNER_BUILDER_NE_CSLB": true
+        }
+      }
+    },
+    {
+      "source_id": "la-city-ladbs-building-permits-issued-2020-present-pi9x-tg5x",
+      "source_name": "Building and Safety - Building Permits Issued from 2020 to Present (N)",
+      "agency": "Los Angeles Department of Building and Safety / TSB",
+      "jurisdiction": "CITY_OF_LOS_ANGELES",
+      "geographic_grain": "CITY_OF_LOS_ANGELES_NOT_COUNTYWIDE",
+      "url": "https://data.lacity.org/City-Infrastructure-Service-Requests/Building-and-Safety-Building-Permits-Issued-from-2/pi9x-tg5x",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "format": "CSV/SODA",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2026-08-31",
+      "refresh_cadence": "weekly",
+      "rows": "409619",
+      "row_grain": "issued_building_permit",
+      "identity_fields": [],
+      "cslb_field": null,
+      "permit_fields": [
+        "permit_nbr",
+        "permit_type",
+        "status_desc",
+        "issue_date",
+        "valuation",
+        "work_desc"
+      ],
+      "property_apn_fields": [
+        "apn",
+        "pin_nbr",
+        "primary_address"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "Current official weekly extract does not include contractor name or CSLB license number.",
+        "Useful for City of LA market/APN/valuation/status context only.",
+        "Do not present as countywide permit coverage."
+      ],
+      "status_counts": [
+        {
+          "status_desc": "Permit Finaled",
+          "n": "224440"
+        },
+        {
+          "status_desc": "Issued",
+          "n": "111062"
+        },
+        {
+          "status_desc": "CofO Issued",
+          "n": "57432"
+        },
+        {
+          "status_desc": "Permit Expired",
+          "n": "6127"
+        },
+        {
+          "status_desc": "CofC Issued",
+          "n": "4938"
+        },
+        {
+          "status_desc": "Permit Closed",
+          "n": "2681"
+        },
+        {
+          "status_desc": "CofO in Progress",
+          "n": "1598"
+        },
+        {
+          "status_desc": "CofO Corrected",
+          "n": "952"
+        },
+        {
+          "status_desc": "Refund in Progress",
+          "n": "154"
+        },
+        {
+          "status_desc": "OK for CofC",
+          "n": "113"
+        },
+        {
+          "status_desc": "Intent to Revoke",
+          "n": "53"
+        },
+        {
+          "status_desc": "Re-Activate Permit",
+          "n": "37"
+        },
+        {
+          "status_desc": "CofC Corrected",
+          "n": "7"
+        },
+        {
+          "status_desc": "OK to Issue CofC",
+          "n": "5"
+        },
+        {
+          "status_desc": "No Progress",
+          "n": "5"
+        },
+        {
+          "status_desc": "Intent to Correct CofC",
+          "n": "4"
+        },
+        {
+          "status_desc": "CofO Reactivated",
+          "n": "2"
+        },
+        {
+          "status_desc": "Order to Comply Issued",
+          "n": "1"
+        },
+        {
+          "status_desc": "Not Required",
+          "n": "1"
+        },
+        {
+          "status_desc": "Permit Extended",
+          "n": "1"
+        },
+        {
+          "status_desc": "CofO Superseded",
+          "n": "1"
+        },
+        {
+          "status_desc": "Ready to Issue",
+          "n": "1"
+        },
+        {
+          "status_desc": "Refund Denied",
+          "n": "1"
+        },
+        {
+          "status_desc": "PC Approved",
+          "n": "1"
+        },
+        {
+          "status_desc": "TCO Issued",
+          "n": "1"
+        },
+        {
+          "status_desc": "PC Info Complete",
+          "n": "1"
+        }
+      ],
+      "permit_type_counts": [
+        {
+          "permit_type": "Bldg-Alter/Repair",
+          "n": "273996"
+        },
+        {
+          "permit_type": "Bldg-Addition",
+          "n": "34327"
+        },
+        {
+          "permit_type": "Bldg-New",
+          "n": "26334"
+        },
+        {
+          "permit_type": "Grading",
+          "n": "20378"
+        },
+        {
+          "permit_type": "Swimming-Pool/Spa",
+          "n": "16536"
+        },
+        {
+          "permit_type": "Nonbldg-New",
+          "n": "12799"
+        },
+        {
+          "permit_type": "Bldg-Demolition",
+          "n": "12277"
+        },
+        {
+          "permit_type": "Sign",
+          "n": "9008"
+        },
+        {
+          "permit_type": "Nonbldg-Alter/Repair",
+          "n": "3754"
+        },
+        {
+          "permit_type": "Nonbldg-Addition",
+          "n": "122"
+        },
+        {
+          "permit_type": "Nonbldg-Demolition",
+          "n": "78"
+        },
+        {
+          "permit_type": "Bldg-Relocation",
+          "n": "10"
+        }
+      ]
+    },
+    {
+      "source_id": "la-city-ladbs-inspections-9w5z-rg2h",
+      "source_name": "Building and Safety Inspections",
+      "agency": "Los Angeles Department of Building and Safety",
+      "jurisdiction": "CITY_OF_LOS_ANGELES",
+      "geographic_grain": "CITY_OF_LOS_ANGELES_NOT_COUNTYWIDE",
+      "url": "https://data.lacity.org/City-Infrastructure-Service-Requests/Building-and-Safety-Inspections/9w5z-rg2h",
+      "access_class": "OPEN_API",
+      "format": "SODA",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "2026-08-31",
+      "refresh_cadence": "weekly",
+      "rows": "11691152",
+      "row_grain": "inspection_event",
+      "identity_fields": [
+        "permit"
+      ],
+      "cslb_field": null,
+      "permit_fields": [
+        "permit",
+        "permit_status"
+      ],
+      "property_apn_fields": [
+        "address"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "Joinable to permits via permit number only.",
+        "Inspection result is an event on a permit, not a contractor quality finding.",
+        "Do not say 'contractor passed inspection' unless the official grain and identity support that exact conclusion.",
+        "11.7M-row dump was not committed. Aggregates only."
+      ],
+      "inspection_result_counts": [
+        {
+          "inspection_result": "Approved",
+          "n": "2425450"
+        },
+        {
+          "inspection_result": "Permit Finaled",
+          "n": "1389881"
+        },
+        {
+          "inspection_result": "Insp Scheduled",
+          "n": "1380549"
+        },
+        {
+          "inspection_result": "Partial Approval",
+          "n": "1215347"
+        },
+        {
+          "inspection_result": "Not Ready for Inspection",
+          "n": "1037010"
+        },
+        {
+          "inspection_result": "Corrections Issued",
+          "n": "916395"
+        },
+        {
+          "inspection_result": "Insp Cancelled",
+          "n": "635435"
+        },
+        {
+          "n": "481450"
+        },
+        {
+          "inspection_result": "Partial Inspection",
+          "n": "438973"
+        },
+        {
+          "inspection_result": "Conditional Approval",
+          "n": "394019"
+        },
+        {
+          "inspection_result": "Cancelled",
+          "n": "251909"
+        },
+        {
+          "inspection_result": "No Access for Inspection",
+          "n": "165112"
+        },
+        {
+          "inspection_result": "SGSOV Approved",
+          "n": "152468"
+        },
+        {
+          "inspection_result": "CofO in Progress",
+          "n": "126388"
+        },
+        {
+          "inspection_result": "CofO Issued",
+          "n": "112880"
+        },
+        {
+          "inspection_result": "OK for CofO",
+          "n": "89468"
+        },
+        {
+          "inspection_result": "Completed",
+          "n": "71186"
+        },
+        {
+          "inspection_result": "OK to Issue CofO",
+          "n": "67961"
+        },
+        {
+          "inspection_result": "SGSOV Not Ready",
+          "n": "65062"
+        },
+        {
+          "inspection_result": "Permit Expired",
+          "n": "54559"
+        },
+        {
+          "inspection_result": "CofO on Hold",
+          "n": "41006"
+        },
+        {
+          "inspection_result": "Not Applicable",
+          "n": "40001"
+        },
+        {
+          "inspection_result": "Permit Closed",
+          "n": "37120"
+        },
+        {
+          "inspection_result": "Off-Hour Fees Due",
+          "n": "32184"
+        },
+        {
+          "inspection_result": "SGSOV No Gas",
+          "n": "10927"
+        },
+        {
+          "inspection_result": "Pending Review",
+          "n": "10496"
+        },
+        {
+          "inspection_result": "OK for CofC",
+          "n": "7829"
+        },
+        {
+          "inspection_result": "Completed (special insp)",
+          "n": "7345"
+        },
+        {
+          "inspection_result": "SGSOV Not Required",
+          "n": "5919"
+        },
+        {
+          "inspection_result": "Not Required",
+          "n": "4242"
+        }
+      ],
+      "inspection_type_counts": [
+        {
+          "inspection": "Final",
+          "n": "2684132"
+        },
+        {
+          "inspection": "Rough",
+          "n": "824410"
+        },
+        {
+          "n": "481137"
+        },
+        {
+          "inspection": "Smoke Detectors",
+          "n": "421635"
+        },
+        {
+          "inspection": "Inspection",
+          "n": "349685"
+        },
+        {
+          "inspection": "Service/Power Release",
+          "n": "333521"
+        },
+        {
+          "inspection": "Footing/Foundation/Slab",
+          "n": "302495"
+        },
+        {
+          "inspection": "SGSOV-Seismic Gas S/O Valve",
+          "n": "299538"
+        },
+        {
+          "inspection": "Floor/Roof Diaphrgm/Shear Wall",
+          "n": "284326"
+        },
+        {
+          "inspection": "Drywall Nailing",
+          "n": "246333"
+        },
+        {
+          "inspection": "CofO Issuance",
+          "n": "241657"
+        },
+        {
+          "inspection": "Interior/Exterior Lathing",
+          "n": "236592"
+        },
+        {
+          "inspection": "BUILDING-Rough-Frame",
+          "n": "230345"
+        },
+        {
+          "inspection": "Wood Frame",
+          "n": "217593"
+        },
+        {
+          "inspection": "PLUMBING-Rough",
+          "n": "201494"
+        }
+      ],
+      "association_rule": "Inspection events associated with this permit"
+    },
+    {
+      "source_id": "la-county-egis-parcels-mapserver",
+      "source_name": "LA County Parcel Map Service",
+      "agency": "Los Angeles County Assessor / ISD eGIS",
+      "jurisdiction": "LOS_ANGELES_COUNTY",
+      "geographic_grain": "COUNTYWIDE_PARCELS_INCLUDING_ALL_CITIES_AND_UNINCORPORATED",
+      "url": "https://public.gis.lacounty.gov/public/rest/services/LACounty_Cache/LACounty_Parcel/MapServer/0",
+      "access_class": "OPEN_API",
+      "format": "ArcGIS MapServer",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": "live_service",
+      "refresh_cadence": "weekly_cache_plus_monthly_downloadable_gdb",
+      "rows": 2432860,
+      "row_grain": "assessor_parcel",
+      "identity_fields": [
+        "AIN",
+        "APN",
+        "SitusFullAddress"
+      ],
+      "cslb_field": null,
+      "permit_fields": [],
+      "property_apn_fields": [
+        "AIN",
+        "APN",
+        "SitusFullAddress",
+        "TaxRateCity",
+        "UseCode",
+        "YearBuilt1"
+      ],
+      "contact_fields": [],
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "No owner-person fields on the public layer.",
+        "Do not commit the countywide GDB/shapefile in this ticket.",
+        "TaxRateCity is jurisdiction context, not a contractor license."
+      ],
+      "gis": {
+        "url": "https://public.gis.lacounty.gov/public/rest/services/LACounty_Cache/LACounty_Parcel/MapServer/0",
+        "ok": true,
+        "name": "Parcels",
+        "geometry_type": "esriGeometryPolygon",
+        "max_record_count": 1000,
+        "field_count": 92,
+        "fields": [
+          {
+            "name": "OBJECTID",
+            "alias": "OBJECTID",
+            "type": "esriFieldTypeOID"
+          },
+          {
+            "name": "AIN",
+            "alias": "AIN",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "APN",
+            "alias": "APN",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "SitusHouseNo",
+            "alias": "SitusHouseNo",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "SitusFraction",
+            "alias": "SitusFraction",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "SitusDirection",
+            "alias": "SitusDirection",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "SitusUnit",
+            "alias": "SitusUnit",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "SitusStreet",
+            "alias": "SitusStreet",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "SitusAddress",
+            "alias": "SADDR",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "SitusCity",
+            "alias": "CITY",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "SitusZIP",
+            "alias": "ZIP",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "SitusFullAddress",
+            "alias": "SitusFullAddress",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "TaxRateArea",
+            "alias": "TaxRateArea",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "TaxRateCity",
+            "alias": "TaxRateCity",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "AgencyClassNo",
+            "alias": "AgencyClassNo",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "AgencyName",
+            "alias": "AgencyName",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "AgencyType",
+            "alias": "AgencyType",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "UseCode",
+            "alias": "UseCode",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "UseCode_2",
+            "alias": "UseCode_2",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "UseType",
+            "alias": "UseType",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "UseDescription",
+            "alias": "UseDescription",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "DesignType1",
+            "alias": "DesignType1",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "YearBuilt1",
+            "alias": "YearBuilt1",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "EffectiveYear1",
+            "alias": "EffectiveYear1",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "Units1",
+            "alias": "Units1",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "Bedrooms1",
+            "alias": "Bedrooms1",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "Bathrooms1",
+            "alias": "Bathrooms1",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "SQFTmain1",
+            "alias": "SQFTmain1",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "DesignType2",
+            "alias": "DesignType2",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "YearBuilt2",
+            "alias": "YearBuilt2",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "EffectiveYear2",
+            "alias": "EffectiveYear2",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "Units2",
+            "alias": "Units2",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "Bedrooms2",
+            "alias": "Bedrooms2",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "Bathrooms2",
+            "alias": "Bathrooms2",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "SQFTmain2",
+            "alias": "SQFTmain2",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "DesignType3",
+            "alias": "DesignType3",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "YearBuilt3",
+            "alias": "YearBuilt3",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "EffectiveYear3",
+            "alias": "EffectiveYear3",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "Units3",
+            "alias": "Units3",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "Bedrooms3",
+            "alias": "Bedrooms3",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "Bathrooms3",
+            "alias": "Bathrooms3",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "SQFTmain3",
+            "alias": "SQFTmain3",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "DesignType4",
+            "alias": "DesignType4",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "YearBuilt4",
+            "alias": "YearBuilt4",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "EffectiveYear4",
+            "alias": "EffectiveYear4",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "Units4",
+            "alias": "Units4",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "Bedrooms4",
+            "alias": "Bedrooms4",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "Bathrooms4",
+            "alias": "Bathrooms4",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "SQFTmain4",
+            "alias": "SQFTmain4",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "DesignType5",
+            "alias": "DesignType5",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "YearBuilt5",
+            "alias": "YearBuilt5",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "EffectiveYear5",
+            "alias": "EffectiveYear5",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "Units5",
+            "alias": "Units5",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "Bedrooms5",
+            "alias": "Bedrooms5",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "Bathrooms5",
+            "alias": "Bathrooms5",
+            "type": "esriFieldTypeSmallInteger"
+          },
+          {
+            "name": "SQFTmain5",
+            "alias": "SQFTmain5",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "Roll_Year",
+            "alias": "Roll_Year",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "Roll_LandValue",
+            "alias": "Roll_LandValue",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "Roll_ImpValue",
+            "alias": "Roll_ImpValue",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "Roll_PersPropValue",
+            "alias": "Roll_PersPropValue",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "Roll_FixtureValue",
+            "alias": "Roll_FixtureValue",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "Roll_HomeOwnersExemp",
+            "alias": "Roll_HomeOwnersExemp",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "Roll_RealEstateExemp",
+            "alias": "Roll_RealEstateExemp",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "Roll_PersPropExemp",
+            "alias": "Roll_PersPropExemp",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "Roll_FixtureExemp",
+            "alias": "Roll_FixtureExemp",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "Roll_LandBaseYear",
+            "alias": "Roll_LandBaseYear",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "Roll_ImpBaseYear",
+            "alias": "Roll_ImpBaseYear",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "SpatialChangeDate",
+            "alias": "SpatialChangeDate",
+            "type": "esriFieldTypeDate"
+          },
+          {
+            "name": "ParcelCreateDate",
+            "alias": "ParcelCreateDate",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "ParcelTypeCode",
+            "alias": "ParcelTypeCode",
+            "type": "esriFieldTypeInteger"
+          },
+          {
+            "name": "Assr_Map",
+            "alias": "Assr_Map",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "Assr_Index_Map",
+            "alias": "Assr_Index_Map",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "QualityClass1",
+            "alias": "QualityClass1",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "QualityClass2",
+            "alias": "QualityClass2",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "QualityClass3",
+            "alias": "QualityClass3",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "QualityClass4",
+            "alias": "QualityClass4",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "QualityClass5",
+            "alias": "QualityClass5",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "LegalDescLine1",
+            "alias": "LegalDescLine1",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "LegalDescLine2",
+            "alias": "LegalDescLine2",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "LegalDescLine3",
+            "alias": "LegalDescLine3",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "LegalDescLine4",
+            "alias": "LegalDescLine4",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "LegalDescLine5",
+            "alias": "LegalDescLine5",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "LegalDescLineLast",
+            "alias": "LegalDescLineLast",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "LegalDescription",
+            "alias": "LegalDescription",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "CENTER_LAT",
+            "alias": "CENTER_LAT",
+            "type": "esriFieldTypeDouble"
+          },
+          {
+            "name": "CENTER_LON",
+            "alias": "CENTER_LON",
+            "type": "esriFieldTypeDouble"
+          },
+          {
+            "name": "CENTER_X",
+            "alias": "CENTER_X",
+            "type": "esriFieldTypeDouble"
+          },
+          {
+            "name": "CENTER_Y",
+            "alias": "CENTER_Y",
+            "type": "esriFieldTypeDouble"
+          },
+          {
+            "name": "LAT_LON",
+            "alias": "LAT_LON",
+            "type": "esriFieldTypeString"
+          },
+          {
+            "name": "Shape",
+            "alias": "Shape",
+            "type": "esriFieldTypeGeometry"
+          },
+          {
+            "name": "Shape.STArea()",
+            "alias": "Shape.STArea()",
+            "type": "esriFieldTypeDouble"
+          },
+          {
+            "name": "Shape.STLength()",
+            "alias": "Shape.STLength()",
+            "type": "esriFieldTypeDouble"
+          }
+        ],
+        "feature_count": 2432860,
+        "owner_person_fields": [
+          "Roll_HomeOwnersExemp"
+        ],
+        "no_owner_dossier": false
+      }
+    },
+    {
+      "source_id": "la-county-epic-la",
+      "source_name": "EPIC-LA / County permit citizen access",
+      "agency": "Los Angeles County Department of Regional Planning / Public Works",
+      "jurisdiction": "UNINCORPORATED_LOS_ANGELES_COUNTY_AND_CONTRACT_CITIES",
+      "geographic_grain": "NOT_CITY_OF_LOS_ANGELES",
+      "url": "https://epicla.lacounty.gov/",
+      "access_class": "OPEN_SEARCH_ONLY",
+      "format": "Citizen-access portal",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "source_as_of": null,
+      "refresh_cadence": null,
+      "rows": null,
+      "row_grain": "unknown_portal_record",
+      "identity_fields": [],
+      "cslb_field": null,
+      "permit_fields": [],
+      "property_apn_fields": [],
+      "contact_fields": [],
+      "publication_eligibility": "PARK",
+      "limitations": [
+        "No open bulk CSV/API found in this bounded pass.",
+        "Search/session portal. STOP \u2014 City of LA permit evidence already justifies the LA harvest."
+      ],
+      "probe": {
+        "home": {
+          "url": "https://epicla.lacounty.gov/",
+          "http_status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "bytes_peek": 800
+        },
+        "accela": {
+          "url": "https://epicla.lacounty.gov/CitizenAccess/",
+          "http_status": 404,
+          "error": "HTTP Error 404: Not Found"
+        },
+        "planning": {
+          "url": "https://planning.lacounty.gov/epic",
+          "http_status": 200,
+          "content_type": "image/png",
+          "bytes_peek": 800
+        }
+      }
+    },
+    {
+      "source_id": "la-county-dcba",
+      "source_name": "Los Angeles County Department of Consumer and Business Affairs",
+      "agency": "Los Angeles County DCBA",
+      "jurisdiction": "LOS_ANGELES_COUNTY",
+      "geographic_grain": "COUNTY_CONSUMER_AGENCY",
+      "url": "https://dcba.lacounty.gov/",
+      "access_class": "OPEN_SEARCH_ONLY",
+      "format": "webpages",
+      "retrieved_at": "2026-09-03T20:40:45.927993+00:00",
+      "rows": null,
+      "row_grain": null,
+      "identity_fields": [],
+      "cslb_field": null,
+      "permit_fields": [],
+      "property_apn_fields": [],
+      "contact_fields": [],
+      "publication_eligibility": "PARK",
+      "limitations": [
+        "No public CSV/API/open-data table of contractor complaints found in this bounded pass.",
+        "data.lacounty.gov catalog API 404 from this environment.",
+        "COMPLAINT != VIOLATION. INVESTIGATION != FINDING. REFERRAL != CONVICTION. CLOSED != MERITLESS.",
+        "No profile-level adverse attach without exact official business/license ID."
+      ],
+      "probe": {
+        "home": {
+          "url": "https://dcba.lacounty.gov/",
+          "http_status": 200,
+          "content_type": "text/html; charset=UTF-8",
+          "bytes_peek": 800
+        },
+        "complaints": {
+          "url": "https://dcba.lacounty.gov/consumer-protection/",
+          "http_status": 200,
+          "content_type": "text/html; charset=UTF-8",
+          "bytes_peek": 800
+        },
+        "open_data": {
+          "url": "https://data.lacounty.gov/",
+          "http_status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "bytes_peek": 800
+        }
+      },
+      "future_owner": "ASK_NETWORK"
+    }
+  ]
+}

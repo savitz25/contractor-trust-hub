@@ -1,0 +1,19 @@
+{
+  "home": {
+    "url": "https://epicla.lacounty.gov/",
+    "http_status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes_peek": 800
+  },
+  "accela": {
+    "url": "https://epicla.lacounty.gov/CitizenAccess/",
+    "http_status": 404,
+    "error": "HTTP Error 404: Not Found"
+  },
+  "planning": {
+    "url": "https://planning.lacounty.gov/epic",
+    "http_status": 200,
+    "content_type": "image/png",
+    "bytes_peek": 800
+  }
+}

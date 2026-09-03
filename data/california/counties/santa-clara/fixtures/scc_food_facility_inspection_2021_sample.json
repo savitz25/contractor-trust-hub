@@ -1,0 +1,20 @@
+[
+  {
+    "activity_number": "DAUHX6WEA",
+    "activity_date": "2021-01-03T00:00:00.000",
+    "inspection_type": "ROUTINE INSPECTION",
+    "program_identifier": "SAJJ RESTAURANT",
+    "program_type": "RESTAURANT",
+    "placardcolor": "Green",
+    "score": "97"
+  },
+  {
+    "activity_number": "DAQ2WTCAR",
+    "activity_date": "2021-01-03T00:00:00.000",
+    "inspection_type": "ROUTINE INSPECTION",
+    "program_identifier": "SUDAM KOREAN CUISINE",
+    "program_type": "RESTAURANT",
+    "placardcolor": "Green",
+    "score": "87"
+  }
+]
