@@ -1,0 +1,862 @@
+{
+  "ticket": "NJ-CON-COUNTY-001",
+  "version": "contractor-nj-county-intel-v1",
+  "county": "Monmouth",
+  "county_slug": "monmouth-county",
+  "county_fips": "34025",
+  "path": "/new-jersey/monmouth-county",
+  "as_of": "2026-08-13",
+  "source_clocks": {
+    "construction_metadata": "2026-08-13T18:00:24+00:00",
+    "construction_received": "2026-08-07",
+    "construction_sha256": "abc0df7f4d25691f82ca80b14358fd10f94cd8841433edd935f4191e06e46c4e",
+    "treasury_construction": "2025-10-15",
+    "treasury_vendor": "2026-02-13",
+    "wall": "2026-08-05",
+    "watchlist": "2026-03-20",
+    "njsavi": "2026-09-03",
+    "county_research": "2026-09-03"
+  },
+  "hero": {
+    "universe_label": "DCA construction source records",
+    "universe_value": 260591,
+    "universe_hint": "Permit-issued plus certificate-issued SOURCE RECORDS. Not unique permits or projects.",
+    "current_label": "data received as of",
+    "current_value": "2026-08-07",
+    "current_hint": "Official dataset note: data received as of 08/07/2026. Metadata update 2026-08-13.",
+    "observations_label": "construction-related NJSAVI vendor rows (city in county)",
+    "observations_value": 225,
+    "observations_hint": "Certified vendor, not a contractor license. Business city is not a service area.",
+    "geography_label": "current municipalities in this county",
+    "geography_value": 53,
+    "geography_hint": "53 observed reporters; 0 known non-reporters.",
+    "as_of_label": "construction source metadata",
+    "as_of_value": "2026-08-13"
+  },
+  "construction": {
+    "total_source_records": 260591,
+    "permit_issued_records": 130883,
+    "certificate_issued_records": 129708,
+    "p_is_not_c": true,
+    "p_plus_c_cost_blocked": true,
+    "total_is_not_permits": true,
+    "contractor_attribution": null,
+    "market_only": true,
+    "state_not_additive_municipality": true,
+    "grain": "municipal_permit_or_certificate_record",
+    "caveat": "P and C are separate source classes. Do not add their costs. No contractor, address, or project identifier is in this source.",
+    "landing_url": "https://data.nj.gov/Reference-Data/NJ-Construction-Permit-Data/w9se-dmra",
+    "work_class_composition": null,
+    "p_stage_unit_change": null,
+    "unit_change_note": "Statewide P-stage unit change is published on /new-jersey. County unit change is not computed from committed artifacts in this ticket.",
+    "cost_note": "Statewide calendar construction-value totals are BLOCKED_DUE_TO_RECONCILIATION versus the Construction Reporter (about 20\u201352% for 2023\u20132025). Combined P+C cost is BLOCKED_PENDING_DEFINITION. Extreme \u2265$500M rows are excluded from any approved metric."
+  },
+  "municipalities": {
+    "canonical_current": 53,
+    "observed_reporters": 53,
+    "known_non_reporters": 0,
+    "rows": [
+      {
+        "municipality_code": "1301",
+        "name": "Allenhurst Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 462,
+        "permit_issued_records": 234,
+        "certificate_issued_records": 228,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1302",
+        "name": "Allentown Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 520,
+        "permit_issued_records": 204,
+        "certificate_issued_records": 316,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1303",
+        "name": "Asbury Park City",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 5211,
+        "permit_issued_records": 2204,
+        "certificate_issued_records": 3007,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1304",
+        "name": "Atlantic Highlands Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1501,
+        "permit_issued_records": 1163,
+        "certificate_issued_records": 338,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1305",
+        "name": "Avon-by-the-Sea Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1893,
+        "permit_issued_records": 1107,
+        "certificate_issued_records": 786,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1306",
+        "name": "Belmar Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2239,
+        "permit_issued_records": 1362,
+        "certificate_issued_records": 877,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1307",
+        "name": "Bradley Beach Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2025,
+        "permit_issued_records": 1169,
+        "certificate_issued_records": 856,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1308",
+        "name": "Brielle Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2268,
+        "permit_issued_records": 1236,
+        "certificate_issued_records": 1032,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1309",
+        "name": "Colts Neck Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 4923,
+        "permit_issued_records": 1967,
+        "certificate_issued_records": 2956,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1310",
+        "name": "Deal Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 993,
+        "permit_issued_records": 731,
+        "certificate_issued_records": 262,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1311",
+        "name": "Eatontown Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 6347,
+        "permit_issued_records": 2283,
+        "certificate_issued_records": 4064,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1312",
+        "name": "Englishtown Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 512,
+        "permit_issued_records": 182,
+        "certificate_issued_records": 330,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1313",
+        "name": "Fair Haven Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2739,
+        "permit_issued_records": 1283,
+        "certificate_issued_records": 1456,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1314",
+        "name": "Farmingdale Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 220,
+        "permit_issued_records": 57,
+        "certificate_issued_records": 163,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1315",
+        "name": "Freehold Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 5745,
+        "permit_issued_records": 2374,
+        "certificate_issued_records": 3371,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1316",
+        "name": "Freehold Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 13260,
+        "permit_issued_records": 3981,
+        "certificate_issued_records": 9279,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1317",
+        "name": "Highlands Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1360,
+        "permit_issued_records": 1192,
+        "certificate_issued_records": 168,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1318",
+        "name": "Holmdel Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 8661,
+        "permit_issued_records": 2790,
+        "certificate_issued_records": 5871,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1319",
+        "name": "Howell Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 20714,
+        "permit_issued_records": 6547,
+        "certificate_issued_records": 14167,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1320",
+        "name": "Interlaken Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 433,
+        "permit_issued_records": 209,
+        "certificate_issued_records": 224,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1321",
+        "name": "Keansburg Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2067,
+        "permit_issued_records": 1387,
+        "certificate_issued_records": 680,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1322",
+        "name": "Keyport Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2032,
+        "permit_issued_records": 473,
+        "certificate_issued_records": 1559,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1323",
+        "name": "Little Silver Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2906,
+        "permit_issued_records": 1297,
+        "certificate_issued_records": 1609,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1324",
+        "name": "Loch Arbour Village",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 191,
+        "permit_issued_records": 113,
+        "certificate_issued_records": 78,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1325",
+        "name": "Long Branch City",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 8614,
+        "permit_issued_records": 4063,
+        "certificate_issued_records": 4551,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1326",
+        "name": "Manalapan Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 19950,
+        "permit_issued_records": 12740,
+        "certificate_issued_records": 7210,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1327",
+        "name": "Manasquan Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2864,
+        "permit_issued_records": 2135,
+        "certificate_issued_records": 729,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1328",
+        "name": "Marlboro Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 20461,
+        "permit_issued_records": 6586,
+        "certificate_issued_records": 13875,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1329",
+        "name": "Matawan Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2906,
+        "permit_issued_records": 1772,
+        "certificate_issued_records": 1134,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1330",
+        "name": "Aberdeen Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 6379,
+        "permit_issued_records": 4185,
+        "certificate_issued_records": 2194,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1331",
+        "name": "Middletown Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 22579,
+        "permit_issued_records": 17903,
+        "certificate_issued_records": 4676,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1332",
+        "name": "Millstone Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2907,
+        "permit_issued_records": 881,
+        "certificate_issued_records": 2026,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1333",
+        "name": "Monmouth Beach Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1879,
+        "permit_issued_records": 1158,
+        "certificate_issued_records": 721,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1334",
+        "name": "Neptune Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 8830,
+        "permit_issued_records": 5490,
+        "certificate_issued_records": 3340,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1335",
+        "name": "Neptune City Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1416,
+        "permit_issued_records": 1001,
+        "certificate_issued_records": 415,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1336",
+        "name": "Tinton Falls Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 6568,
+        "permit_issued_records": 3049,
+        "certificate_issued_records": 3519,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1337",
+        "name": "Ocean Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 12813,
+        "permit_issued_records": 5384,
+        "certificate_issued_records": 7429,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1338",
+        "name": "Oceanport Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 3628,
+        "permit_issued_records": 2033,
+        "certificate_issued_records": 1595,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1339",
+        "name": "Hazlet Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 6179,
+        "permit_issued_records": 2320,
+        "certificate_issued_records": 3859,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1340",
+        "name": "Red Bank Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 8922,
+        "permit_issued_records": 4143,
+        "certificate_issued_records": 4779,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1341",
+        "name": "Roosevelt Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 360,
+        "permit_issued_records": 83,
+        "certificate_issued_records": 277,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1342",
+        "name": "Rumson Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 4147,
+        "permit_issued_records": 2081,
+        "certificate_issued_records": 2066,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1343",
+        "name": "Sea Bright Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1225,
+        "permit_issued_records": 691,
+        "certificate_issued_records": 534,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1344",
+        "name": "Sea Girt Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1669,
+        "permit_issued_records": 919,
+        "certificate_issued_records": 750,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1345",
+        "name": "Shrewsbury Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2380,
+        "permit_issued_records": 689,
+        "certificate_issued_records": 1691,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1346",
+        "name": "Shrewsbury Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 581,
+        "permit_issued_records": 122,
+        "certificate_issued_records": 459,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1347",
+        "name": "Lake Como Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 324,
+        "permit_issued_records": 165,
+        "certificate_issued_records": 159,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1348",
+        "name": "Spring Lake Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2757,
+        "permit_issued_records": 1537,
+        "certificate_issued_records": 1220,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1349",
+        "name": "Spring Lake Heights Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1766,
+        "permit_issued_records": 871,
+        "certificate_issued_records": 895,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1350",
+        "name": "Union Beach Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 435,
+        "permit_issued_records": 391,
+        "certificate_issued_records": 44,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1351",
+        "name": "Upper Freehold Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 3697,
+        "permit_issued_records": 1230,
+        "certificate_issued_records": 2467,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1352",
+        "name": "Wall Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 12579,
+        "permit_issued_records": 10522,
+        "certificate_issued_records": 2057,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1353",
+        "name": "West Long Branch Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2554,
+        "permit_issued_records": 1194,
+        "certificate_issued_records": 1360,
+        "no_records_is_not_zero": false
+      }
+    ]
+  },
+  "regulatory": {
+    "statewide_families_remain_statewide": true,
+    "pwcr": {
+      "barrier": "Official roster is a Power BI interactive view with no supported deterministic full-file export.",
+      "coverage": "SOURCE_NOT_ACQUIRED",
+      "rows_displayed": null
+    },
+    "note": "WALL, Wage Watchlist, and Treasury lists are statewide families. This page does not infer county membership from business names.",
+    "safe_house_novs_in_county": [],
+    "consumer_affairs": {
+      "coverage": "LOOKUP_OR_REQUEST_ONLY",
+      "bulk_rows": 0,
+      "complaint_ne_violation": true,
+      "do_not_show_zero_complaints": true
+    }
+  },
+  "specialty": {
+    "statewide_only": true,
+    "note": "Lead, asbestos, and fire-protection snapshots are statewide program lists without a county field in the public NJ-CON-004 extract. Absence here is unknown, not zero.",
+    "lead_evaluation_url": "https://www.nj.gov/dca/codes/lhi/lead_eval_contrs.shtml",
+    "lead_abatement_url": "https://www.nj.gov/dca/codes/lhi/ld_abat_c.shtml",
+    "asbestos_url": "https://www.nj.gov/dca/codes/lhi/asmlist.shtml",
+    "fire_url": "https://www.nj.gov/dca/dfs/"
+  },
+  "local": {
+    "kind": "county_gis_property_context",
+    "source_families": [
+      "county_geohub",
+      "njgin_parcels_reference"
+    ],
+    "geohub": "https://gis-monmouthnj.opendata.arcgis.com/",
+    "property_viewer": "https://experience.arcgis.com/experience/c6d4c6eba758410dbedef25a6bce8591",
+    "njgin_parcel_count": 249796,
+    "note": "County GIS/property context on top of statewide NJGIN. Parcel geometry is not a legal survey. Do not scrape OPRS."
+  },
+  "contractor_discovery": {
+    "public_profiles_with_deterministic_county_address": 0,
+    "geography_label": "Business address in Monmouth County",
+    "not_service_area": true,
+    "njsavi_construction_vendor_candidates": 225,
+    "njsavi_with_phone": 225,
+    "njsavi_with_email": 225,
+    "auto_attached_profiles": 0,
+    "name_only_attach": false
+  },
+  "contact_enrichment": {
+    "new_business_phones": 225,
+    "new_business_emails": 225,
+    "websites": 0,
+    "matched_existing_profiles": 0,
+    "overwrote_stronger_evidence": false,
+    "source": "NJSAVI",
+    "public_eligibility": "business_contact_on_vendor_candidate_rows_only"
+  },
+  "njsavi_preview": [
+    {
+      "business_name": "3 R PAINTING & CONTRACTING CO., INC.",
+      "business_address": "122 DRUMMOND AVENUE",
+      "business_city": "NEPTUNE",
+      "business_state": "NJ",
+      "business_zip": "07753",
+      "county": "MONMOUTH",
+      "primary_phone": "7327754369",
+      "public_business_email": "3RPAINTING@GMAIL.COM",
+      "trade_or_category": "C-00590",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A LIST CLEANING SERVICE LLC",
+      "business_address": "7 BLAKE DRIVE",
+      "business_city": "MARLBORO",
+      "business_state": "NJ",
+      "business_zip": "07746",
+      "county": "MONMOUTH",
+      "primary_phone": "7327053222",
+      "public_business_email": "PATILES@ALISTCLEANINGSERVICE.COM",
+      "trade_or_category": "C-00230",
+      "certification_type": "MWBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A. B. KURRE CONTRACTING, INC.",
+      "business_address": "974 STATE ROUTE 33",
+      "business_city": "FREEHOLD",
+      "business_state": "NJ",
+      "business_zip": "07728",
+      "county": "MONMOUTH",
+      "primary_phone": "7325716800",
+      "public_business_email": "OFFICEMGR@ABKURRECONTRACTING.COM",
+      "trade_or_category": "C-00410",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "AANDA GROUP LLC",
+      "business_address": "105 Ironwood Ct.",
+      "business_city": "Middletown",
+      "business_state": "NJ",
+      "business_zip": "07748",
+      "county": "MONMOUTH",
+      "primary_phone": "9178041394",
+      "public_business_email": "operations@aandagroupus.com",
+      "trade_or_category": "C-00630",
+      "certification_type": "SBE | WBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ABLE MECHANICAL, INC.",
+      "business_address": "280 Route 35",
+      "business_city": "RED BANK",
+      "business_state": "NJ",
+      "business_zip": "07701",
+      "county": "MONMOUTH",
+      "primary_phone": "7324953800",
+      "public_business_email": "tlombardi@ablemechanical.com",
+      "trade_or_category": "C-00560",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ACT ELECTRICAL CONTRACTING LIMITED LIABILITY COMPANY",
+      "business_address": "1701 Valley Rd",
+      "business_city": "Ocean Township",
+      "business_state": "NJ",
+      "business_zip": "07712",
+      "county": "MONMOUTH",
+      "primary_phone": "7323951926",
+      "public_business_email": "chad@actelectricalnj.com",
+      "trade_or_category": "C-00420",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "AGGRESSIVE PROPERTY MAINTENANCE INC",
+      "business_address": "580 Squankum Yellowbrook Rd",
+      "business_city": "Farmingdale",
+      "business_state": "NJ",
+      "business_zip": "07727",
+      "county": "MONMOUTH",
+      "primary_phone": "7323679700",
+      "public_business_email": "lskinner@apmnj.com",
+      "trade_or_category": "C-00590",
+      "certification_type": "MBE | WBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "AIRCARE HEATING & COOLING  CORPORATION",
+      "business_address": "335 HUTCHINSON DR.",
+      "business_city": "FREEHOLD",
+      "business_state": "NJ",
+      "business_zip": "07728",
+      "county": "MONMOUTH",
+      "primary_phone": "7324709153",
+      "public_business_email": "INFO@AIRCAREHEATINGCOOLING.COM",
+      "trade_or_category": "C-00690",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ALEXANDER THE GREAT RESTORATION SPECIALISTS INC.",
+      "business_address": "7 COLTS DRIVE",
+      "business_city": "HOLMDEL",
+      "business_state": "NJ",
+      "business_zip": "07733",
+      "county": "MONMOUTH",
+      "primary_phone": "7324891448",
+      "public_business_email": "OFFICE.ATGRESTORATION@GMAIL.COM",
+      "trade_or_category": "C-00180",
+      "certification_type": "SBE | WBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ALL COAST SERVICE INCORPORATED",
+      "business_address": "22 AMANDA LN",
+      "business_city": "HOWELL",
+      "business_state": "NJ",
+      "business_zip": "07731",
+      "county": "MONMOUTH",
+      "primary_phone": "7329884717",
+      "public_business_email": "DESK@ALLCOASTSERVICE.COM",
+      "trade_or_category": "C-00020",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ALL JERSEY EPOXY FLOORS  LLC",
+      "business_address": "57 South Main Street",
+      "business_city": "Neptune",
+      "business_state": "NJ",
+      "business_zip": "07753",
+      "county": "MONMOUTH",
+      "primary_phone": "7329653750",
+      "public_business_email": "info@alljerseyepoxyfloorsllc.com",
+      "trade_or_category": "C-00550",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ALL MAINTENANCE ENTERPRISES, INC",
+      "business_address": "1531 Laurel Ct",
+      "business_city": "Manasquan",
+      "business_state": "NJ",
+      "business_zip": "08736",
+      "county": "MONMOUTH",
+      "primary_phone": "9082394096",
+      "public_business_email": "nicole425@gmail.com",
+      "trade_or_category": "C-00690",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    }
+  ],
+  "findings": [
+    {
+      "id": "construction-source-records",
+      "text": "Monmouth County has 260,591 DCA construction SOURCE RECORDS in the acquired extract (130,883 permit-issued and 129,708 certificate-issued). That is not 260,591 unique permits or projects. P and C are separate classes and their costs are not added."
+    },
+    {
+      "id": "municipality-coverage",
+      "text": "53 of 53 current municipalities are observed reporters in this extract. County data absence is not zero construction."
+    },
+    {
+      "id": "gis-context",
+      "text": "Monmouth County GIS/GeoHub and the Property Viewer add property/building context on top of statewide NJGIN parcels. OPRS land records remain search-only and were not scraped."
+    },
+    {
+      "id": "njsavi-vendors",
+      "text": "225 NJSAVI certified-vendor rows with a published business city in Monmouth County matched a construction-related keyword filter. A certified vendor is not a licensed contractor. Business address is not a service area."
+    }
+  ],
+  "coverage_gaps": [
+    "No county-filtered public contractor license roster in this snapshot.",
+    "PWCR remains SOURCE_NOT_ACQUIRED statewide.",
+    "Construction source records have no contractor field.",
+    "County procurement portals are search-only and were not scraped.",
+    "Consumer-affairs complaint history has no bulk extract."
+  ],
+  "skipped_sources": [
+    {
+      "source": "Monmouth OPRS / Middlesex SearchNG",
+      "reason": "SEARCH_ONLY"
+    },
+    {
+      "source": "County purchasing / OpenGov / POL bid portals",
+      "reason": "SEARCH_ONLY"
+    },
+    {
+      "source": "Union HIP participant list",
+      "reason": "REQUEST_ONLY"
+    },
+    {
+      "source": "MCIA $17,500+ payee HTML (mixed utilities/insurance)",
+      "reason": "LOW_ROI"
+    },
+    {
+      "source": "Chamber / BBB contractor directories",
+      "reason": "TERMS"
+    }
+  ],
+  "publication_gate": {
+    "authoritative_source_families": [
+      "county_geohub",
+      "nj_con_002b_municipality_universe",
+      "nj_dca_construction",
+      "njgin_parcels_reference",
+      "njsavi_certified_vendor"
+    ],
+    "family_count": 5,
+    "county_specific": true,
+    "finding_count": 4,
+    "thin_state_copy": false,
+    "indexable": true
+  },
+  "invariants": {
+    "business_address_ne_service_area": true,
+    "vendor_ne_licensed_contractor": true,
+    "program_participant_ne_licensed_contractor": true,
+    "construction_record_ne_contractor_attribution": true,
+    "lien_ne_wrongdoing": true,
+    "complaint_ne_violation": true,
+    "notice_ne_final_order": true,
+    "no_match_ne_clean": true,
+    "p_ne_c": true,
+    "p_plus_c_cost_blocked": true,
+    "no_ranking": true,
+    "no_trust_score": true
+  },
+  "fingerprint": "6a2b8f3311f5d6698497d4c5f2cd7c3ced918c1f8a2975e330da2c43c0047987"
+}

@@ -35,6 +35,7 @@ export function SiteFooter() {
   const researchLinks = [
     ...verifyLinks,
     { href: "/florida", label: "Browse Florida" },
+    { href: "/new-jersey", label: "New Jersey construction research" },
     { href: "/guides", label: "Homeowner guides" },
     { href: "/tools/coverage", label: "Where we cover" },
     { href: "/methodology", label: "Trust standards" },

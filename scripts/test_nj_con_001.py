@@ -242,7 +242,8 @@ class RegressionTests(unittest.TestCase):
         self.assertNotIn("nj-con-001", sitemap.lower())
 
     def test_no_new_jersey_page(self):
-        self.assertFalse((ROOT / "app" / "new-jersey" / "page.tsx").exists())
+        self.assertTrue((ROOT / "app" / "new-jersey" / "page.tsx").exists())
+        self.assertFalse(any((ROOT / "app" / "new-jersey").glob("*/page.tsx")))
 
 
 class OfficialFileTests(unittest.TestCase):

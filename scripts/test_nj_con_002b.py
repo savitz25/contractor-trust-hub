@@ -150,7 +150,8 @@ class ArchitectureTests(unittest.TestCase):
         self.assertIn("UNIQUE (source_system, source_jurisdiction, permit_number)", MIG011)
 
     def test_no_public_nj_page_or_score(self):
-        self.assertFalse((ROOT / "app" / "new-jersey").exists())
+        self.assertTrue((ROOT / "app" / "new-jersey" / "page.tsx").exists())
+        self.assertFalse(any((ROOT / "app" / "new-jersey").glob("*/page.tsx")))
         ingest = (ROOT / "scripts" / "nj_con_002b_ingest.py").read_text(encoding="utf-8")
         self.assertIn("no_public_permit_attribution", ingest)
         for banned in ("best contractor", "Trust Score", "ranked"):

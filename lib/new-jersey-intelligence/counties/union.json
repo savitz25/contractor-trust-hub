@@ -1,0 +1,618 @@
+{
+  "ticket": "NJ-CON-COUNTY-001",
+  "version": "contractor-nj-county-intel-v1",
+  "county": "Union",
+  "county_slug": "union-county",
+  "county_fips": "34039",
+  "path": "/new-jersey/union-county",
+  "as_of": "2026-08-13",
+  "source_clocks": {
+    "construction_metadata": "2026-08-13T18:00:24+00:00",
+    "construction_received": "2026-08-07",
+    "construction_sha256": "abc0df7f4d25691f82ca80b14358fd10f94cd8841433edd935f4191e06e46c4e",
+    "treasury_construction": "2025-10-15",
+    "treasury_vendor": "2026-02-13",
+    "wall": "2026-08-05",
+    "watchlist": "2026-03-20",
+    "njsavi": "2026-09-03",
+    "county_research": "2026-09-03"
+  },
+  "hero": {
+    "universe_label": "DCA construction source records",
+    "universe_value": 153910,
+    "universe_hint": "Permit-issued plus certificate-issued SOURCE RECORDS. Not unique permits or projects.",
+    "current_label": "data received as of",
+    "current_value": "2026-08-07",
+    "current_hint": "Official dataset note: data received as of 08/07/2026. Metadata update 2026-08-13.",
+    "observations_label": "construction-related NJSAVI vendor rows (city in county)",
+    "observations_value": 281,
+    "observations_hint": "Certified vendor, not a contractor license. Business city is not a service area.",
+    "geography_label": "current municipalities in this county",
+    "geography_value": 21,
+    "geography_hint": "20 observed reporters; 1 known non-reporter.",
+    "as_of_label": "construction source metadata",
+    "as_of_value": "2026-08-13"
+  },
+  "construction": {
+    "total_source_records": 153910,
+    "permit_issued_records": 59973,
+    "certificate_issued_records": 93937,
+    "p_is_not_c": true,
+    "p_plus_c_cost_blocked": true,
+    "total_is_not_permits": true,
+    "contractor_attribution": null,
+    "market_only": true,
+    "state_not_additive_municipality": true,
+    "grain": "municipal_permit_or_certificate_record",
+    "caveat": "P and C are separate source classes. Do not add their costs. No contractor, address, or project identifier is in this source.",
+    "landing_url": "https://data.nj.gov/Reference-Data/NJ-Construction-Permit-Data/w9se-dmra",
+    "work_class_composition": null,
+    "p_stage_unit_change": null,
+    "unit_change_note": "Statewide P-stage unit change is published on /new-jersey. County unit change is not computed from committed artifacts in this ticket.",
+    "cost_note": "Statewide calendar construction-value totals are BLOCKED_DUE_TO_RECONCILIATION versus the Construction Reporter (about 20\u201352% for 2023\u20132025). Combined P+C cost is BLOCKED_PENDING_DEFINITION. Extreme \u2265$500M rows are excluded from any approved metric."
+  },
+  "municipalities": {
+    "canonical_current": 21,
+    "observed_reporters": 20,
+    "known_non_reporters": 1,
+    "rows": [
+      {
+        "municipality_code": "2001",
+        "name": "Berkeley Heights Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 6048,
+        "permit_issued_records": 1495,
+        "certificate_issued_records": 4553,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2002",
+        "name": "Clark Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 3731,
+        "permit_issued_records": 1475,
+        "certificate_issued_records": 2256,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2003",
+        "name": "Cranford Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 9043,
+        "permit_issued_records": 3425,
+        "certificate_issued_records": 5618,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2004",
+        "name": "Elizabeth City",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 8262,
+        "permit_issued_records": 4060,
+        "certificate_issued_records": 4202,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2005",
+        "name": "Fanwood Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 3240,
+        "permit_issued_records": 625,
+        "certificate_issued_records": 2615,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2006",
+        "name": "Garwood Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1397,
+        "permit_issued_records": 573,
+        "certificate_issued_records": 824,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2007",
+        "name": "Hillside Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 4777,
+        "permit_issued_records": 3604,
+        "certificate_issued_records": 1173,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2008",
+        "name": "Kenilworth Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1478,
+        "permit_issued_records": 811,
+        "certificate_issued_records": 667,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2009",
+        "name": "Linden City",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 8596,
+        "permit_issued_records": 7041,
+        "certificate_issued_records": 1555,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2010",
+        "name": "Mountainside Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 3464,
+        "permit_issued_records": 594,
+        "certificate_issued_records": 2870,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2011",
+        "name": "New Providence Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 5313,
+        "permit_issued_records": 1510,
+        "certificate_issued_records": 3803,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2012",
+        "name": "Plainfield City",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 33365,
+        "permit_issued_records": 9626,
+        "certificate_issued_records": 23739,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2013",
+        "name": "Rahway City",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 9972,
+        "permit_issued_records": 4334,
+        "certificate_issued_records": 5638,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2014",
+        "name": "Roselle Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2807,
+        "permit_issued_records": 1460,
+        "certificate_issued_records": 1347,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2015",
+        "name": "Roselle Park Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 4129,
+        "permit_issued_records": 1658,
+        "certificate_issued_records": 2471,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2016",
+        "name": "Scotch Plains Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2196,
+        "permit_issued_records": 1882,
+        "certificate_issued_records": 314,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2017",
+        "name": "Springfield Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 5829,
+        "permit_issued_records": 1757,
+        "certificate_issued_records": 4072,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2018",
+        "name": "Summit City",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 10586,
+        "permit_issued_records": 3784,
+        "certificate_issued_records": 6802,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2019",
+        "name": "Union Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 10194,
+        "permit_issued_records": 6875,
+        "certificate_issued_records": 3319,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2020",
+        "name": "Westfield Town",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 19483,
+        "permit_issued_records": 3384,
+        "certificate_issued_records": 16099,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "2021",
+        "name": "Winfield Township",
+        "classification": "CURRENT_NON_REPORTING",
+        "observed_rows": 0,
+        "permit_issued_records": 0,
+        "certificate_issued_records": 0,
+        "no_records_is_not_zero": true
+      }
+    ]
+  },
+  "regulatory": {
+    "statewide_families_remain_statewide": true,
+    "pwcr": {
+      "barrier": "Official roster is a Power BI interactive view with no supported deterministic full-file export.",
+      "coverage": "SOURCE_NOT_ACQUIRED",
+      "rows_displayed": null
+    },
+    "note": "WALL, Wage Watchlist, and Treasury lists are statewide families. This page does not infer county membership from business names.",
+    "safe_house_novs_in_county": [
+      {
+        "company": "Jersey Best Paving & Masonry LLC",
+        "county": "Union",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Plainfield",
+        "violation": "Failure to Renew Registration"
+      }
+    ],
+    "consumer_affairs": {
+      "coverage": "LOOKUP_OR_REQUEST_ONLY",
+      "bulk_rows": 0,
+      "complaint_ne_violation": true,
+      "do_not_show_zero_complaints": true
+    }
+  },
+  "specialty": {
+    "statewide_only": true,
+    "note": "Lead, asbestos, and fire-protection snapshots are statewide program lists without a county field in the public NJ-CON-004 extract. Absence here is unknown, not zero.",
+    "lead_evaluation_url": "https://www.nj.gov/dca/codes/lhi/lead_eval_contrs.shtml",
+    "lead_abatement_url": "https://www.nj.gov/dca/codes/lhi/ld_abat_c.shtml",
+    "asbestos_url": "https://www.nj.gov/dca/codes/lhi/asmlist.shtml",
+    "fire_url": "https://www.nj.gov/dca/dfs/"
+  },
+  "local": {
+    "kind": "home_improvement_program",
+    "source_families": [
+      "union_cdbg_hip",
+      "consumer_affairs_coverage"
+    ],
+    "program_id": "UNION_COUNTY_HOME_IMPROVEMENT_PROGRAM",
+    "not_a_county_contractor_license": true,
+    "funding": "CDBG",
+    "eligible_property": "Owner-occupied 1- and 2-family homes",
+    "participating_municipalities": [
+      "Berkeley Heights",
+      "Clark",
+      "Cranford",
+      "Fanwood",
+      "Garwood",
+      "Hillside",
+      "Kenilworth",
+      "Mountainside",
+      "New Providence",
+      "Roselle",
+      "Roselle Park",
+      "Scotch Plains",
+      "Springfield",
+      "Summit",
+      "Westfield"
+    ],
+    "independent_municipal_rehab": [
+      "Elizabeth",
+      "Linden",
+      "Plainfield",
+      "Rahway",
+      "Union"
+    ],
+    "participant_list_public": false,
+    "participant_entity_class_if_acquired": "UNION_COUNTY_HOME_IMPROVEMENT_PROGRAM_PARTICIPANT",
+    "source_url": "https://ucnj.org/department-of-economic-development/home-improvement-and-senior-home-improvement-grant-programs/",
+    "source_as_of": "2026-01-14",
+    "benefit_note": "Deferred loan up to $24,999 as published 2026-01-14. HUD income limits change annually.",
+    "staff_role": "Program staff prepare work write-ups, review contractor bids, and inspect work. That is program administration, not a county license."
+  },
+  "contractor_discovery": {
+    "public_profiles_with_deterministic_county_address": 0,
+    "geography_label": "Business address in Union County",
+    "not_service_area": true,
+    "njsavi_construction_vendor_candidates": 281,
+    "njsavi_with_phone": 281,
+    "njsavi_with_email": 281,
+    "auto_attached_profiles": 0,
+    "name_only_attach": false
+  },
+  "contact_enrichment": {
+    "new_business_phones": 281,
+    "new_business_emails": 281,
+    "websites": 0,
+    "matched_existing_profiles": 0,
+    "overwrote_stronger_evidence": false,
+    "source": "NJSAVI",
+    "public_eligibility": "business_contact_on_vendor_candidate_rows_only"
+  },
+  "njsavi_preview": [
+    {
+      "business_name": "700 NANO LLC",
+      "business_address": "800 NEW BRUNSWICK AVE",
+      "business_city": "RAHWAY",
+      "business_state": "NJ",
+      "business_zip": "07065",
+      "county": "UNION",
+      "primary_phone": "7327184875",
+      "public_business_email": "HENSON.ROGERS@THE700NANO.COM",
+      "trade_or_category": "C-00420",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A AND J CARPENTERS CORP",
+      "business_address": "513 GRIER AVE",
+      "business_city": "ELIZABETH",
+      "business_state": "NJ",
+      "business_zip": "07202",
+      "county": "UNION",
+      "primary_phone": "2012595109",
+      "public_business_email": "DACLUISTAPIA@GMAIL.COM",
+      "trade_or_category": "C-00590",
+      "certification_type": "MBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A&A LEMARD GENERAL CONSTRUCTION LLC",
+      "business_address": "201 Watchung Ave",
+      "business_city": "Plainfield",
+      "business_state": "NJ",
+      "business_zip": "07061",
+      "county": "UNION",
+      "primary_phone": "9175579769",
+      "public_business_email": "aandaconstructionllc@yahoo.com",
+      "trade_or_category": "C-00180",
+      "certification_type": "MBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A-SQUARED LLC",
+      "business_address": "3312 HUDSON AVE",
+      "business_city": "UNION CITY",
+      "business_state": "NJ",
+      "business_zip": "07087",
+      "county": "UNION",
+      "primary_phone": "6464707367",
+      "public_business_email": "alkasurpur@yahoo.com",
+      "trade_or_category": "C-00180",
+      "certification_type": "MWBE | SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A. DELUCA PAVING, LLC",
+      "business_address": "1 LINDSEY AVE",
+      "business_city": "SCOTCH PLAINS",
+      "business_state": "NJ",
+      "business_zip": "07076",
+      "county": "UNION",
+      "primary_phone": "9084823004",
+      "public_business_email": "frank@adelucapaving.com",
+      "trade_or_category": "C-00050",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A. J. CELIANO, INC.",
+      "business_address": "460 LUDLOW AVE",
+      "business_city": "CRANFORD",
+      "business_state": "NJ",
+      "business_zip": "07016",
+      "county": "UNION",
+      "primary_phone": "9082727510",
+      "public_business_email": "AMEJIA@AJCELIANO.COM",
+      "trade_or_category": "C-00090",
+      "certification_type": "MBE | VOB",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A.K. DE RAMA INDUSTRIAL CONTROL SYSTEMS, INC.",
+      "business_address": "253 SHEFFIELD STREET",
+      "business_city": "MOUNTAINSIDE",
+      "business_state": "NJ",
+      "business_zip": "07092",
+      "county": "UNION",
+      "primary_phone": "9083370122",
+      "public_business_email": "DERAMA@AOL.COM",
+      "trade_or_category": "C-00290",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "AAA MOBILE WASH INC.",
+      "business_address": "130 WEST WESTFIELD AVENUE",
+      "business_city": "ROSELLE PARK",
+      "business_state": "NJ",
+      "business_zip": "07204",
+      "county": "UNION",
+      "primary_phone": "9082411000",
+      "public_business_email": "OURTEAM@AAAFMSERVICES.COM",
+      "trade_or_category": "C-00760",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ABDULLATIF CONSULTING LLC",
+      "business_address": "653 w edgar rd num 1120",
+      "business_city": "linden",
+      "business_state": "NJ",
+      "business_zip": "07036",
+      "county": "UNION",
+      "primary_phone": "9082918184",
+      "public_business_email": "info@abdullatifconsulting.com",
+      "trade_or_category": "C-00590",
+      "certification_type": "MBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "AGILE IT INSTITUTE LLC",
+      "business_address": "54 W Cherry St Apt 207",
+      "business_city": "Rahway",
+      "business_state": "NJ",
+      "business_zip": "070653272",
+      "county": "UNION",
+      "primary_phone": "6466201835",
+      "public_business_email": "SUJATHAGK@YAHOO.COM",
+      "trade_or_category": "C-00150",
+      "certification_type": "MWBE | SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "AGS PLUMBING & HEATING CORP.",
+      "business_address": "265 WEST GRAND ST",
+      "business_city": "ELIZABETH",
+      "business_state": "NJ",
+      "business_zip": "07202",
+      "county": "UNION",
+      "primary_phone": "9083543361",
+      "public_business_email": "JRIVERO@AGSPLUMBINGHEATING.COM",
+      "trade_or_category": "C-00090",
+      "certification_type": "MBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "AKOSUA CONSULTING ENTERPRISE LLC",
+      "business_address": "1357 Columbia Ave",
+      "business_city": "Plainfield",
+      "business_state": "NJ",
+      "business_zip": "07060",
+      "county": "UNION",
+      "primary_phone": "5168548333",
+      "public_business_email": "pwqueenvillage@gmail.com",
+      "trade_or_category": "C-00830",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    }
+  ],
+  "findings": [
+    {
+      "id": "construction-source-records",
+      "text": "Union County has 153,910 DCA construction SOURCE RECORDS in the acquired extract (59,973 permit-issued and 93,937 certificate-issued). That is not 153,910 unique permits or projects. P and C are separate classes and their costs are not added."
+    },
+    {
+      "id": "municipality-coverage",
+      "text": "20 of 21 current municipalities are observed reporters in this extract. Winfield Township is a known non-reporter (coverage gap, not zero activity)."
+    },
+    {
+      "id": "hip-not-license",
+      "text": "The Union County Home Improvement Program is a CDBG rehabilitation program, not a Union County contractor license. No public participant/vendor list was acquired."
+    },
+    {
+      "id": "safe-house",
+      "text": "One Safe House / HIC notice of violation in the statewide inventory names a Union County town (Plainfield). A notice is not a final order."
+    },
+    {
+      "id": "njsavi-vendors",
+      "text": "281 NJSAVI certified-vendor rows with a published business city in Union County matched a construction-related keyword filter. A certified vendor is not a licensed contractor. Business address is not a service area."
+    }
+  ],
+  "coverage_gaps": [
+    "No county-filtered public contractor license roster in this snapshot.",
+    "PWCR remains SOURCE_NOT_ACQUIRED statewide.",
+    "Construction source records have no contractor field.",
+    "County procurement portals are search-only and were not scraped.",
+    "Consumer-affairs complaint history has no bulk extract."
+  ],
+  "skipped_sources": [
+    {
+      "source": "Monmouth OPRS / Middlesex SearchNG",
+      "reason": "SEARCH_ONLY"
+    },
+    {
+      "source": "County purchasing / OpenGov / POL bid portals",
+      "reason": "SEARCH_ONLY"
+    },
+    {
+      "source": "Union HIP participant list",
+      "reason": "REQUEST_ONLY"
+    },
+    {
+      "source": "MCIA $17,500+ payee HTML (mixed utilities/insurance)",
+      "reason": "LOW_ROI"
+    },
+    {
+      "source": "Chamber / BBB contractor directories",
+      "reason": "TERMS"
+    }
+  ],
+  "publication_gate": {
+    "authoritative_source_families": [
+      "consumer_affairs_coverage",
+      "nj_con_002b_municipality_universe",
+      "nj_dca_construction",
+      "njsavi_certified_vendor",
+      "safe_house_nov_inventory",
+      "union_cdbg_hip"
+    ],
+    "family_count": 6,
+    "county_specific": true,
+    "finding_count": 5,
+    "thin_state_copy": false,
+    "indexable": true
+  },
+  "invariants": {
+    "business_address_ne_service_area": true,
+    "vendor_ne_licensed_contractor": true,
+    "program_participant_ne_licensed_contractor": true,
+    "construction_record_ne_contractor_attribution": true,
+    "lien_ne_wrongdoing": true,
+    "complaint_ne_violation": true,
+    "notice_ne_final_order": true,
+    "no_match_ne_clean": true,
+    "p_ne_c": true,
+    "p_plus_c_cost_blocked": true,
+    "no_ranking": true,
+    "no_trust_score": true
+  },
+  "fingerprint": "589e62b7cd42b12e46ae22d192247dbfd800e5112206d600cc3140571e6e18db"
+}

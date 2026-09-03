@@ -272,7 +272,8 @@ class PublicationTests(unittest.TestCase):
         self.assertNotIn("NJ_LEAD_ABATEMENT", hic)
 
     def test_no_nj_page_or_score(self):
-        self.assertFalse((ROOT / "app" / "new-jersey").exists())
+        self.assertTrue((ROOT / "app" / "new-jersey" / "page.tsx").exists())
+        self.assertFalse(any((ROOT / "app" / "new-jersey").glob("*/page.tsx")))
         blob = " ".join(PUBLIC_LABELS.values())
         for banned in ("Government approved", "Trusted contractor", "Clean record", "Best contractor"):
             self.assertNotIn(banned.lower(), blob.lower())

@@ -1,0 +1,770 @@
+{
+  "as_of": "2026-08-13",
+  "construction": {
+    "candidate_link_is_not_project": true,
+    "caveat": "P and C are separate source classes. Do not add their costs. No contractor, address, or project identifier is in this source.",
+    "certificate_issued_records": 1311863,
+    "columns": 46,
+    "contractor_attribution": null,
+    "dataset_id": "w9se-dmra",
+    "grain": "municipal_permit_or_certificate_record",
+    "landing_url": "https://data.nj.gov/Reference-Data/NJ-Construction-Permit-Data/w9se-dmra",
+    "market_only": true,
+    "municipal_rows": 2678281,
+    "p_is_not_c": true,
+    "p_plus_c_cost_blocked": true,
+    "permit_issued_records": 1366478,
+    "process_date_max": "2026-08-07T00:00:00.000",
+    "process_date_min": "1989-10-12T00:00:00.000",
+    "reporter_url": "https://www.nj.gov/dca/codes/reporter/building_permits.shtml",
+    "state_not_additive_municipality": true,
+    "state_rows": 60,
+    "stated_retention_months": 60,
+    "total_is_not_permits": true,
+    "total_source_records": 2678341,
+    "update_marked": 355585
+  },
+  "cost": {
+    "blank_cost": 2,
+    "c_stage_published": false,
+    "c_stage_sum_ok_zero": 58579930521.0,
+    "combined_p_plus_c": null,
+    "combined_published": false,
+    "extreme_unresolved_rows": 7,
+    "p_stage_published": false,
+    "p_stage_sum_ok_zero": 67521132086.0,
+    "reason": "Statewide calendar construction-value totals are BLOCKED_DUE_TO_RECONCILIATION versus the Construction Reporter (about 20\u201352% for 2023\u20132025). Combined P+C cost is BLOCKED_PENDING_DEFINITION. Extreme \u2265$500M rows are excluded from any approved metric."
+  },
+  "counties": [
+    {
+      "certificate_issued_records": 28355,
+      "is_state_category": false,
+      "name": "ATLANTIC",
+      "observed_municipality_codes": 23,
+      "permit_issued_records": 31968
+    },
+    {
+      "certificate_issued_records": 138021,
+      "is_state_category": false,
+      "name": "BERGEN",
+      "observed_municipality_codes": 70,
+      "permit_issued_records": 158223
+    },
+    {
+      "certificate_issued_records": 59513,
+      "is_state_category": false,
+      "name": "BURLINGTON",
+      "observed_municipality_codes": 40,
+      "permit_issued_records": 87583
+    },
+    {
+      "certificate_issued_records": 59041,
+      "is_state_category": false,
+      "name": "CAMDEN",
+      "observed_municipality_codes": 37,
+      "permit_issued_records": 68496
+    },
+    {
+      "certificate_issued_records": 23672,
+      "is_state_category": false,
+      "name": "CAPE MAY",
+      "observed_municipality_codes": 16,
+      "permit_issued_records": 33772
+    },
+    {
+      "certificate_issued_records": 18857,
+      "is_state_category": false,
+      "name": "CUMBERLAND",
+      "observed_municipality_codes": 14,
+      "permit_issued_records": 14270
+    },
+    {
+      "certificate_issued_records": 68373,
+      "is_state_category": false,
+      "name": "ESSEX",
+      "observed_municipality_codes": 22,
+      "permit_issued_records": 88290
+    },
+    {
+      "certificate_issued_records": 40499,
+      "is_state_category": false,
+      "name": "GLOUCESTER",
+      "observed_municipality_codes": 23,
+      "permit_issued_records": 49368
+    },
+    {
+      "certificate_issued_records": 20670,
+      "is_state_category": false,
+      "name": "HUDSON",
+      "observed_municipality_codes": 12,
+      "permit_issued_records": 43502
+    },
+    {
+      "certificate_issued_records": 33628,
+      "is_state_category": false,
+      "name": "HUNTERDON",
+      "observed_municipality_codes": 26,
+      "permit_issued_records": 22914
+    },
+    {
+      "certificate_issued_records": 53524,
+      "is_state_category": false,
+      "name": "MERCER",
+      "observed_municipality_codes": 14,
+      "permit_issued_records": 79987
+    },
+    {
+      "certificate_issued_records": 104272,
+      "is_state_category": false,
+      "name": "MIDDLESEX",
+      "observed_municipality_codes": 25,
+      "permit_issued_records": 148392
+    },
+    {
+      "certificate_issued_records": 129708,
+      "is_state_category": false,
+      "name": "MONMOUTH",
+      "observed_municipality_codes": 53,
+      "permit_issued_records": 130883
+    },
+    {
+      "certificate_issued_records": 121808,
+      "is_state_category": false,
+      "name": "MORRIS",
+      "observed_municipality_codes": 38,
+      "permit_issued_records": 84959
+    },
+    {
+      "certificate_issued_records": 105938,
+      "is_state_category": false,
+      "name": "OCEAN",
+      "observed_municipality_codes": 31,
+      "permit_issued_records": 124658
+    },
+    {
+      "certificate_issued_records": 46195,
+      "is_state_category": false,
+      "name": "PASSAIC",
+      "observed_municipality_codes": 16,
+      "permit_issued_records": 41429
+    },
+    {
+      "certificate_issued_records": 7484,
+      "is_state_category": false,
+      "name": "SALEM",
+      "observed_municipality_codes": 14,
+      "permit_issued_records": 8551
+    },
+    {
+      "certificate_issued_records": 86887,
+      "is_state_category": false,
+      "name": "SOMERSET",
+      "observed_municipality_codes": 21,
+      "permit_issued_records": 48424
+    },
+    {
+      "certificate_issued_records": 44066,
+      "is_state_category": false,
+      "name": "SUSSEX",
+      "observed_municipality_codes": 22,
+      "permit_issued_records": 25421
+    },
+    {
+      "certificate_issued_records": 93937,
+      "is_state_category": false,
+      "name": "UNION",
+      "observed_municipality_codes": 20,
+      "permit_issued_records": 59973
+    },
+    {
+      "certificate_issued_records": 27381,
+      "is_state_category": false,
+      "name": "WARREN",
+      "observed_municipality_codes": 22,
+      "permit_issued_records": 15389
+    },
+    {
+      "certificate_issued_records": 34,
+      "is_state_category": true,
+      "name": "STATE",
+      "observed_municipality_codes": 0,
+      "permit_issued_records": 26
+    }
+  ],
+  "coverage_gaps": [
+    {
+      "id": "pwcr",
+      "label": "PWCR machine-readable roster",
+      "state": "SOURCE_NOT_ACQUIRED"
+    },
+    {
+      "id": "prevailing-wage-debarment",
+      "label": "Prevailing-wage debarment bulk list",
+      "state": "SOURCE_NOT_ACQUIRED"
+    },
+    {
+      "id": "contractor-attribution",
+      "label": "Construction-record contractor/license fields",
+      "state": "not safely attributable"
+    },
+    {
+      "id": "project-id",
+      "label": "Canonical project identity",
+      "state": "not in source"
+    },
+    {
+      "id": "combined-cost",
+      "label": "Combined P+C construction value",
+      "state": "BLOCKED_PENDING_DEFINITION"
+    },
+    {
+      "id": "calendar-cost",
+      "label": "2023\u20132025 calendar value/unit vs Reporter",
+      "state": "BLOCKED_DUE_TO_RECONCILIATION"
+    },
+    {
+      "id": "ocp",
+      "label": "OCP legal filings",
+      "state": "PARTIAL_SOURCE_COVERAGE"
+    },
+    {
+      "id": "board-action",
+      "label": "Board-action bulk index",
+      "state": "SOURCE_NOT_ACQUIRED"
+    },
+    {
+      "id": "new-home",
+      "label": "New-home builder roster",
+      "state": "SOURCE_NOT_ACQUIRED"
+    },
+    {
+      "id": "hec",
+      "label": "Home Elevation Contractor roster",
+      "state": "SOURCE_NOT_ACQUIRED"
+    },
+    {
+      "id": "local-identity",
+      "label": "Local DCA identity auto-match",
+      "state": "insufficient address/ZIP depth"
+    }
+  ],
+  "findings": [
+    {
+      "id": "source-records",
+      "text": "The statewide NJ DCA construction extract contains 2,678,341 source records (1,366,478 permit-issued and 1,311,863 certificate-issued). That is not 2.68 million unique permits or projects."
+    },
+    {
+      "id": "muni-universe",
+      "text": "The canonical current New Jersey municipality universe is 564 municipalities; 556 are observed in this extract and 8 are agency-named non-reporters."
+    },
+    {
+      "id": "regulatory-families",
+      "text": "New Jersey maintains distinct public-works evidence sources: WALL, Wage Violation Watchlist, Treasury construction debarment, and Treasury vendor debarment. Appearance on one list is not appearance on another. Absence is not a clean record."
+    },
+    {
+      "id": "specialty",
+      "text": "Specialty state programs in the acquired snapshot include lead evaluation (182), lead abatement (87), asbestos safety-control monitors (37), and fire-protection permitted businesses (529) with official C1\u2013C6 classes preserved."
+    }
+  ],
+  "fingerprint": "6039233bf1748bf9e994818a9d38add1ca2f47c7140fd98809e55e6de11f1729",
+  "generated_at": "2026-09-03T00:00:00Z",
+  "hero": {
+    "as_of_label": "construction source metadata",
+    "as_of_value": "2026-08-13",
+    "current_hint": "Official dataset note: data received as of 08/07/2026. Metadata update 2026-08-13.",
+    "current_label": "data received as of",
+    "current_value": "2026-08-07",
+    "geography_hint": "Canonical current universe. Not every municipality reports in this extract.",
+    "geography_label": "current NJ municipalities",
+    "geography_value": 564,
+    "observations_hint": "WALL + Wage Watchlist occurrences + Treasury construction + Treasury vendor. Families stay distinct.",
+    "observations_label": "public-works regulatory source rows",
+    "observations_value": 1898,
+    "universe_hint": "Permit-issued and certificate-issued SOURCE RECORDS. Not 2.68 million permits or projects.",
+    "universe_label": "DCA construction source records",
+    "universe_value": 2678341
+  },
+  "invariants": {
+    "absence_ne_clean": true,
+    "candidate_ne_project": true,
+    "market_only": true,
+    "no_county_routes": true,
+    "no_ranking": true,
+    "no_trust_score": true,
+    "nov_ne_final": true,
+    "p_ne_c": true,
+    "p_plus_c_cost_blocked": true,
+    "proposed_ne_paid": true,
+    "state_ne_muni": true,
+    "total_ne_permits": true
+  },
+  "linkage": {
+    "c_records_with_candidate_p": 13388,
+    "candidate_key": "municipality_code + permit_number",
+    "headline_projects": null,
+    "one_to_one_candidate_groups": 13308,
+    "p_records_with_candidate_c": 13393,
+    "reason": "Permit numbers are reused within a municipality. Groups include one-to-many, many-to-one, and many-to-many P/C patterns. No official project identifier exists.",
+    "sufficient_for_project": false
+  },
+  "local_dca_identity": {
+    "broad_auto_match": false,
+    "license_index_size": 87355,
+    "name_only_attach": false
+  },
+  "municipalities": {
+    "canonical_current": 564,
+    "current_non_reporting": 8,
+    "current_reporting": 556,
+    "historical_or_inactive_codes": [
+      "0429",
+      "1109",
+      "1110"
+    ],
+    "non_reporters": [
+      {
+        "comu": "1901",
+        "county": "SUSSEX",
+        "name": "ANDOVER BOROUGH",
+        "observed_in_extract": false,
+        "treatment": "non_reporting"
+      },
+      {
+        "comu": "1513",
+        "county": "OCEAN",
+        "name": "LAKEHURST",
+        "observed_in_extract": false,
+        "treatment": "non_reporting"
+      },
+      {
+        "comu": "1704",
+        "county": "SALEM",
+        "name": "LOWER ALLOWAYS CREEK",
+        "observed_in_extract": false,
+        "treatment": "non_reporting"
+      },
+      {
+        "comu": "0812",
+        "county": "GLOUCESTER",
+        "name": "NATIONAL PARK",
+        "observed_in_extract": false,
+        "treatment": "non_reporting"
+      },
+      {
+        "comu": "1522",
+        "county": "OCEAN",
+        "name": "PINE BEACH",
+        "observed_in_extract": false,
+        "treatment": "non_reporting"
+      },
+      {
+        "comu": "1437",
+        "county": "MORRIS",
+        "name": "VICTORY GARDENS",
+        "observed_in_extract": false,
+        "treatment": "non_reporting"
+      },
+      {
+        "comu": "1923",
+        "county": "SUSSEX",
+        "name": "WALPACK",
+        "observed_in_extract": false,
+        "treatment": "non_reporting"
+      },
+      {
+        "comu": "2021",
+        "county": "UNION",
+        "name": "WINFIELD",
+        "observed_in_extract": false,
+        "treatment": "non_reporting"
+      }
+    ],
+    "observed_codes": 559,
+    "state_c": 34,
+    "state_p": 26,
+    "state_rows": 60,
+    "state_semantics": "STATE rows are individual state-building records. They are not an additional municipality and are not additive to a municipal statewide total."
+  },
+  "ocp": {
+    "absence_claim_allowed": false,
+    "corpus_complete": false,
+    "coverage": "PARTIAL_SOURCE_COVERAGE",
+    "documents": 4,
+    "url": "https://www.njconsumeraffairs.gov/ocp/Pages/LegalFilings.aspx"
+  },
+  "profile_modules": {
+    "absence_not_clean_copy": true,
+    "exact_may_attach": true,
+    "name_only_rejected": true,
+    "permit_attribution": null,
+    "public_profile_links_rendered": 0,
+    "review_unresolved_withheld": true
+  },
+  "publication": {
+    "canonical": "https://www.contractortrusthub.com/new-jersey",
+    "county_routes": false,
+    "florida_unchanged": true,
+    "indexable": true,
+    "rankings": false,
+    "robots": "index,follow",
+    "route": "/new-jersey",
+    "sitemap": true,
+    "trust_scores": false
+  },
+  "quality": {
+    "cost_outliers": 7,
+    "future_date_review": 1,
+    "invalid_years": 92,
+    "old_permit_recent_process": 86580,
+    "valid_historical_permit_dates": 219938
+  },
+  "reconciliation": {
+    "note": "Source-row activity and official Construction Reporter calendar summaries are different products. Record counts remain valid at source-record grain. Calendar value/unit totals that do not reconcile stay blocked.",
+    "rows": [
+      {
+        "difference_percentage": "-39.02",
+        "known_explanation": "Official Reporter is audited; microdata is raw. Gap exceeds 15%. Do not publish the microdata calendar total as the official authorized-unit figure.",
+        "measure": "housing_units_authorized",
+        "microdata_total": "13222",
+        "official_reporter_total": "21682",
+        "period": "2023",
+        "publication_approved": "BLOCKED_DUE_TO_RECONCILIATION"
+      },
+      {
+        "difference_percentage": "-42.03",
+        "known_explanation": "Official Reporter is audited; microdata is raw. Gap exceeds 15%. Combined P+C cost remains blocked.",
+        "measure": "authorized_construction_value",
+        "microdata_total": "12120951345.0",
+        "official_reporter_total": "20907647665",
+        "period": "2023",
+        "publication_approved": "BLOCKED_DUE_TO_RECONCILIATION"
+      },
+      {
+        "difference_percentage": "-41.98",
+        "known_explanation": "Official Reporter is audited; microdata is raw. Gap exceeds 15%.",
+        "measure": "housing_units_authorized",
+        "microdata_total": "15688",
+        "official_reporter_total": "27039",
+        "period": "2024",
+        "publication_approved": "BLOCKED_DUE_TO_RECONCILIATION"
+      },
+      {
+        "difference_percentage": "-42.97",
+        "known_explanation": "Official Reporter is audited; microdata is raw. Gap exceeds 15%.",
+        "measure": "new_construction_units",
+        "microdata_total": "15004",
+        "official_reporter_total": "26308",
+        "period": "2024",
+        "publication_approved": "BLOCKED_DUE_TO_RECONCILIATION"
+      },
+      {
+        "difference_percentage": "-52.08",
+        "known_explanation": "Official Reporter is audited; microdata is raw. Gap exceeds 15%. $126.1B P+C figure remains blocked.",
+        "measure": "authorized_construction_value",
+        "microdata_total": "11582457113.0",
+        "official_reporter_total": "24170883245",
+        "period": "2024",
+        "publication_approved": "BLOCKED_DUE_TO_RECONCILIATION"
+      },
+      {
+        "difference_percentage": "-19.8",
+        "known_explanation": "Gap about 20%. 2025 yearly Reporter PDF was not published (404).",
+        "measure": "housing_units_authorized",
+        "microdata_total": "15932",
+        "official_reporter_total": "19865",
+        "period": "2025",
+        "publication_approved": "BLOCKED_DUE_TO_RECONCILIATION"
+      },
+      {
+        "difference_percentage": "",
+        "known_explanation": "Official YTD cost not readable from the December 2025 PDF (cell overflow).",
+        "measure": "authorized_construction_value",
+        "microdata_total": "14222615797.0",
+        "official_reporter_total": "",
+        "period": "2025",
+        "publication_approved": "BLOCKED_DUE_TO_RECONCILIATION"
+      },
+      {
+        "difference_percentage": "",
+        "known_explanation": "January 2026 is within the agency's unaudited two-month window relative to later months; treat as unaudited when publishing trends.",
+        "measure": "housing_units_authorized",
+        "microdata_total": "",
+        "official_reporter_total": "2206",
+        "period": "2026-01",
+        "publication_approved": "INTERNAL_ONLY"
+      },
+      {
+        "difference_percentage": "",
+        "known_explanation": "Do not publish as 2.68 million permits.",
+        "measure": "combined_source_records",
+        "microdata_total": "2678341",
+        "official_reporter_total": "",
+        "period": "all-extract-p-plus-c",
+        "publication_approved": "BLOCKED_PENDING_DEFINITION"
+      },
+      {
+        "difference_percentage": "",
+        "known_explanation": "P and C costs are not proven additive. Not approved.",
+        "measure": "combined_construction_cost",
+        "microdata_total": "126101062607.0",
+        "official_reporter_total": "",
+        "period": "all-extract-p-plus-c",
+        "publication_approved": "BLOCKED_PENDING_DEFINITION"
+      }
+    ]
+  },
+  "regulatory": {
+    "absence_is_not_clean": true,
+    "families_are_distinct": true,
+    "pwcr": {
+      "barrier": "Official roster is a Power BI interactive view with no supported deterministic full-file export.",
+      "coverage": "SOURCE_NOT_ACQUIRED",
+      "rows_displayed": null
+    },
+    "treasury_construction": {
+      "as_of": "2025-10-15",
+      "distinct": 323,
+      "exact": 0,
+      "label": "New Jersey Treasury construction debarment, suspension, or disqualification",
+      "rows": 323,
+      "url": "https://www.nj.gov/treasury/revenue/debarment/debarsearch-construction.shtml"
+    },
+    "treasury_vendor": {
+      "as_of": "2026-02-13",
+      "distinct": 65,
+      "exact": 0,
+      "label": "New Jersey Treasury vendor debarment, suspension, or disqualification",
+      "rows": 65,
+      "url": "https://www.nj.gov/treasury/revenue/debarment/debarsearch-vendor.shtml"
+    },
+    "wage_watchlist": {
+      "as_of": "2026-03-20",
+      "distinct": 1088,
+      "exact": 0,
+      "label": "Wage Violation Watchlist",
+      "rows": 1116,
+      "unresolved": 1112,
+      "url": "https://www.nj.gov/labor/ea/osec/wageviolationlist.shtml"
+    },
+    "wall": {
+      "as_of": "2026-08-05",
+      "distinct": 394,
+      "exact": 0,
+      "label": "Workplace Accountability in Labor List",
+      "review_required": 7,
+      "rows": 394,
+      "unresolved": 387,
+      "url": "https://www.nj.gov/labor/ea/osec/wall.shtml"
+    }
+  },
+  "safe_house": {
+    "event_type": "NOV",
+    "failure_to_register": 3,
+    "failure_to_renew": 15,
+    "inventory": [
+      {
+        "company": "Charles Siebert t/a All-Star Garage Door",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Forked River",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Black River Contracting LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Ocean Gate",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "BW Carpeting LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Brick",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Car-Mo-Na Fencing LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Forked River",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Anthony L. Nagy t/a Eco Star Exterior",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Lanoka Harbor",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Effata Management LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Toms River",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Franks Masonry & More LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Beachwood",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Frogmen Construction LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Tuckerton",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "JB Construction & Consulting LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Toms River",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Jersey Best Paving & Masonry LLC",
+        "county": "Union",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Plainfield",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Magic Touch Handyman Services LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Toms River",
+        "violation": "Failure to Register"
+      },
+      {
+        "company": "Michael A. Smith d/b/a Mike\u2019s Roofing and Siding",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Barnegat",
+        "violation": "Failure to Register"
+      },
+      {
+        "company": "Pats Masonry LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Brick",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Revival Restoration LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Manahawkin",
+        "violation": "Failure to Register"
+      },
+      {
+        "company": "Revolution Flooring LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Jackson",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Dominick J. Fattaruso Sr. t/a Siding Master\u2019s",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Brick",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Ten Fence LLC",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Toms River",
+        "violation": "Failure to Renew Registration"
+      },
+      {
+        "company": "Justin J. McCarthy t/a Westbury Siding & Builders",
+        "county": "Ocean",
+        "event_type": "NOV",
+        "penalty_proposed_usd": 2500,
+        "town": "Jackson",
+        "violation": "Failure to Renew Registration"
+      }
+    ],
+    "nov_is_not_final_order": true,
+    "novs": 18,
+    "profile_links": 0,
+    "proposed_is_not_paid": true,
+    "proposed_penalty_usd": 2500,
+    "source_date": "2025-12-01"
+  },
+  "source_as_of": {
+    "construction_metadata": "2026-08-13T18:00:24+00:00",
+    "construction_received": "2026-08-07",
+    "construction_sha256": "abc0df7f4d25691f82ca80b14358fd10f94cd8841433edd935f4191e06e46c4e",
+    "treasury_construction": "2025-10-15",
+    "treasury_vendor": "2026-02-13",
+    "wall": "2026-08-05",
+    "watchlist": "2026-03-20"
+  },
+  "specialty": {
+    "asbestos_ascm": {
+      "count": 37,
+      "not_dol_abatement": true,
+      "not_general_license": true,
+      "url": "https://www.nj.gov/dca/codes/lhi/asmlist.shtml"
+    },
+    "fire_protection": {
+      "classes_preserved": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6"
+      ],
+      "count": 529,
+      "not_general_license": true,
+      "subclass_counts_in_public_snapshot": null,
+      "url": "https://www.nj.gov/dca/dfs/"
+    },
+    "lead_abatement": {
+      "count": 87,
+      "not_evaluation": true,
+      "not_general_license": true,
+      "url": "https://www.nj.gov/dca/codes/lhi/ld_abat_c.shtml"
+    },
+    "lead_evaluation": {
+      "count": 182,
+      "not_general_license": true,
+      "url": "https://www.nj.gov/dca/codes/lhi/lead_eval_contrs.shtml"
+    }
+  },
+  "ticket": "NJ-CON-004",
+  "units": {
+    "label": "Net housing-unit change on permit-issued records (gross positive and gross negative disclosed)",
+    "negative_is_net_loss": true,
+    "not_homes_built": true,
+    "p_rent_neg": -3099,
+    "p_rent_pos": 40795,
+    "p_sale_neg": -8021,
+    "p_sale_pos": 43697
+  },
+  "version": "contractor-nj-state-intel-v1"
+}
