@@ -90,6 +90,36 @@ export function NewJerseyContractorPage({ snapshot }: { snapshot: NewJerseyContr
       </section>
 
       <section className="mt-10">
+        <h2 className="text-lg font-semibold text-[var(--navy)]">Four-county research</h2>
+        <p className="mt-2 text-sm text-[var(--muted)]">
+          County pages project statewide construction source records onto four New Jersey counties.
+          They are not municipality directories and not service-area maps.
+        </p>
+        <ul className="mt-3 list-disc pl-5 text-sm">
+          <li>
+            <Link href="/new-jersey/monmouth-county" className="underline underline-offset-2">
+              Monmouth County
+            </Link>
+          </li>
+          <li>
+            <Link href="/new-jersey/middlesex-county" className="underline underline-offset-2">
+              Middlesex County
+            </Link>
+          </li>
+          <li>
+            <Link href="/new-jersey/somerset-county" className="underline underline-offset-2">
+              Somerset County
+            </Link>
+          </li>
+          <li>
+            <Link href="/new-jersey/union-county" className="underline underline-offset-2">
+              Union County
+            </Link>
+          </li>
+        </ul>
+      </section>
+
+      <section className="mt-10">
         <h2 className="text-lg font-semibold text-[var(--navy)]">Construction source records</h2>
         <p className="mt-2 text-sm text-[var(--muted)]">{C.caveat}</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">

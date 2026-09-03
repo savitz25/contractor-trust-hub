@@ -1,0 +1,578 @@
+{
+  "ticket": "NJ-CON-COUNTY-001",
+  "version": "contractor-nj-county-intel-v1",
+  "county": "Somerset",
+  "county_slug": "somerset-county",
+  "county_fips": "34035",
+  "path": "/new-jersey/somerset-county",
+  "as_of": "2026-08-13",
+  "source_clocks": {
+    "construction_metadata": "2026-08-13T18:00:24+00:00",
+    "construction_received": "2026-08-07",
+    "construction_sha256": "abc0df7f4d25691f82ca80b14358fd10f94cd8841433edd935f4191e06e46c4e",
+    "treasury_construction": "2025-10-15",
+    "treasury_vendor": "2026-02-13",
+    "wall": "2026-08-05",
+    "watchlist": "2026-03-20",
+    "njsavi": "2026-09-03",
+    "county_research": "2026-09-03"
+  },
+  "hero": {
+    "universe_label": "DCA construction source records",
+    "universe_value": 135311,
+    "universe_hint": "Permit-issued plus certificate-issued SOURCE RECORDS. Not unique permits or projects.",
+    "current_label": "data received as of",
+    "current_value": "2026-08-07",
+    "current_hint": "Official dataset note: data received as of 08/07/2026. Metadata update 2026-08-13.",
+    "observations_label": "construction-related NJSAVI vendor rows (city in county)",
+    "observations_value": 147,
+    "observations_hint": "Certified vendor, not a contractor license. Business city is not a service area.",
+    "geography_label": "current municipalities in this county",
+    "geography_value": 21,
+    "geography_hint": "21 observed reporters; 0 known non-reporters.",
+    "as_of_label": "construction source metadata",
+    "as_of_value": "2026-08-13"
+  },
+  "construction": {
+    "total_source_records": 135311,
+    "permit_issued_records": 48424,
+    "certificate_issued_records": 86887,
+    "p_is_not_c": true,
+    "p_plus_c_cost_blocked": true,
+    "total_is_not_permits": true,
+    "contractor_attribution": null,
+    "market_only": true,
+    "state_not_additive_municipality": true,
+    "grain": "municipal_permit_or_certificate_record",
+    "caveat": "P and C are separate source classes. Do not add their costs. No contractor, address, or project identifier is in this source.",
+    "landing_url": "https://data.nj.gov/Reference-Data/NJ-Construction-Permit-Data/w9se-dmra",
+    "work_class_composition": null,
+    "p_stage_unit_change": null,
+    "unit_change_note": "Statewide P-stage unit change is published on /new-jersey. County unit change is not computed from committed artifacts in this ticket.",
+    "cost_note": "Statewide calendar construction-value totals are BLOCKED_DUE_TO_RECONCILIATION versus the Construction Reporter (about 20\u201352% for 2023\u20132025). Combined P+C cost is BLOCKED_PENDING_DEFINITION. Extreme \u2265$500M rows are excluded from any approved metric."
+  },
+  "municipalities": {
+    "canonical_current": 21,
+    "observed_reporters": 21,
+    "known_non_reporters": 0,
+    "rows": [
+      {
+        "municipality_code": "1801",
+        "name": "Bedminster Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 3884,
+        "permit_issued_records": 1514,
+        "certificate_issued_records": 2370,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1802",
+        "name": "Bernards Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 13631,
+        "permit_issued_records": 3084,
+        "certificate_issued_records": 10547,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1803",
+        "name": "Bernardsville Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 5067,
+        "permit_issued_records": 2131,
+        "certificate_issued_records": 2936,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1804",
+        "name": "Bound Brook Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2203,
+        "permit_issued_records": 799,
+        "certificate_issued_records": 1404,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1805",
+        "name": "Branchburg Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 6322,
+        "permit_issued_records": 2127,
+        "certificate_issued_records": 4195,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1806",
+        "name": "Bridgewater Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 17563,
+        "permit_issued_records": 5643,
+        "certificate_issued_records": 11920,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1807",
+        "name": "Far Hills Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 586,
+        "permit_issued_records": 204,
+        "certificate_issued_records": 382,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1808",
+        "name": "Franklin Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 25516,
+        "permit_issued_records": 8739,
+        "certificate_issued_records": 16777,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1809",
+        "name": "Green Brook Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2799,
+        "permit_issued_records": 948,
+        "certificate_issued_records": 1851,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1810",
+        "name": "Hillsborough Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 18432,
+        "permit_issued_records": 6301,
+        "certificate_issued_records": 12131,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1811",
+        "name": "Manville Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 3181,
+        "permit_issued_records": 1258,
+        "certificate_issued_records": 1923,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1812",
+        "name": "Millstone Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 119,
+        "permit_issued_records": 39,
+        "certificate_issued_records": 80,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1813",
+        "name": "Montgomery Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 9850,
+        "permit_issued_records": 6215,
+        "certificate_issued_records": 3635,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1814",
+        "name": "North Plainfield Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1854,
+        "permit_issued_records": 1316,
+        "certificate_issued_records": 538,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1815",
+        "name": "Peapack and Gladstone Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1985,
+        "permit_issued_records": 907,
+        "certificate_issued_records": 1078,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1816",
+        "name": "Raritan Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2521,
+        "permit_issued_records": 1124,
+        "certificate_issued_records": 1397,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1817",
+        "name": "Rocky Hill Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 295,
+        "permit_issued_records": 97,
+        "certificate_issued_records": 198,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1818",
+        "name": "Somerville Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 4887,
+        "permit_issued_records": 1270,
+        "certificate_issued_records": 3617,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1819",
+        "name": "South Bound Brook Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 540,
+        "permit_issued_records": 214,
+        "certificate_issued_records": 326,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1820",
+        "name": "Warren Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 10036,
+        "permit_issued_records": 3397,
+        "certificate_issued_records": 6639,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1821",
+        "name": "Watchung Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 4040,
+        "permit_issued_records": 1097,
+        "certificate_issued_records": 2943,
+        "no_records_is_not_zero": false
+      }
+    ]
+  },
+  "regulatory": {
+    "statewide_families_remain_statewide": true,
+    "pwcr": {
+      "barrier": "Official roster is a Power BI interactive view with no supported deterministic full-file export.",
+      "coverage": "SOURCE_NOT_ACQUIRED",
+      "rows_displayed": null
+    },
+    "note": "WALL, Wage Watchlist, and Treasury lists are statewide families. This page does not infer county membership from business names.",
+    "safe_house_novs_in_county": [],
+    "consumer_affairs": {
+      "coverage": "NO_COUNTY_OFFICE_IN_ATH_AUDIT",
+      "bulk_rows": 0,
+      "complaint_ne_violation": true,
+      "do_not_show_zero_complaints": true
+    }
+  },
+  "specialty": {
+    "statewide_only": true,
+    "note": "Lead, asbestos, and fire-protection snapshots are statewide program lists without a county field in the public NJ-CON-004 extract. Absence here is unknown, not zero.",
+    "lead_evaluation_url": "https://www.nj.gov/dca/codes/lhi/lead_eval_contrs.shtml",
+    "lead_abatement_url": "https://www.nj.gov/dca/codes/lhi/ld_abat_c.shtml",
+    "asbestos_url": "https://www.nj.gov/dca/codes/lhi/asmlist.shtml",
+    "fire_url": "https://www.nj.gov/dca/dfs/"
+  },
+  "local": {
+    "kind": "county_gis_utilities",
+    "source_families": [
+      "county_gis_sewer",
+      "county_gis_hub"
+    ],
+    "sewer_service_areas": {
+      "feature_count": 48,
+      "note": "Service area is not a connection, permit, or engineering determination."
+    },
+    "gis_hub": {
+      "datasets_indexed": 75,
+      "note": "County Hub catalog. Do not duplicate NJGIN parcels."
+    }
+  },
+  "contractor_discovery": {
+    "public_profiles_with_deterministic_county_address": 0,
+    "geography_label": "Business address in Somerset County",
+    "not_service_area": true,
+    "njsavi_construction_vendor_candidates": 147,
+    "njsavi_with_phone": 147,
+    "njsavi_with_email": 147,
+    "auto_attached_profiles": 0,
+    "name_only_attach": false
+  },
+  "contact_enrichment": {
+    "new_business_phones": 147,
+    "new_business_emails": 147,
+    "websites": 0,
+    "matched_existing_profiles": 0,
+    "overwrote_stronger_evidence": false,
+    "source": "NJSAVI",
+    "public_eligibility": "business_contact_on_vendor_candidate_rows_only"
+  },
+  "njsavi_preview": [
+    {
+      "business_name": "A V CONSTRN INC",
+      "business_address": "132 STEINMETZ RD",
+      "business_city": "HILLSBOROUGH",
+      "business_state": "NJ",
+      "business_zip": "08844",
+      "county": "SOMERSET",
+      "primary_phone": "7328955656",
+      "public_business_email": "AFNYNJ@GMAIL.COM",
+      "trade_or_category": "C-00120",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A&J ENTERPRISES, LLC",
+      "business_address": "36 SOUTH ADAMSVILLE RD",
+      "business_city": "BRIDGEWATER",
+      "business_state": "NJ",
+      "business_zip": "08807",
+      "county": "SOMERSET",
+      "primary_phone": "9087976136",
+      "public_business_email": "tara@ajenterpriserigging.com",
+      "trade_or_category": "C-00470",
+      "certification_type": "SBE | WBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A-SQUARE CONTRACTING, INC.",
+      "business_address": "8 Staats Dr",
+      "business_city": "Hillsborough",
+      "business_state": "NJ",
+      "business_zip": "08844",
+      "county": "SOMERSET",
+      "primary_phone": "9085477393",
+      "public_business_email": "asquareinc1@gmail.com",
+      "trade_or_category": "C-02060",
+      "certification_type": "MWBE | SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "AFA TRUCKING LLC",
+      "business_address": "2 Commerce Street",
+      "business_city": "Branchburg",
+      "business_state": "NJ",
+      "business_zip": "08876",
+      "county": "SOMERSET",
+      "primary_phone": "9085345200",
+      "public_business_email": "admin@afatrucking.com",
+      "trade_or_category": "C-00050",
+      "certification_type": "SBE | WBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ALLIANCE BUILDERS LLC",
+      "business_address": "55 Lamington Rd",
+      "business_city": "Branchburg",
+      "business_state": "NJ",
+      "business_zip": "08876",
+      "county": "SOMERSET",
+      "primary_phone": "8622242628",
+      "public_business_email": "daniela@alliancebuildersnj.com",
+      "trade_or_category": "C-00590",
+      "certification_type": "MWBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ALLOY WELDING CO.",
+      "business_address": "6A CULNEN DRIVE",
+      "business_city": "SOMERVILLE",
+      "business_state": "NJ",
+      "business_zip": "08876",
+      "county": "SOMERSET",
+      "primary_phone": "9082181551",
+      "public_business_email": "lenjr@alloyweldingco.com",
+      "trade_or_category": "C-00470",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "AMERICAN FIX LLC",
+      "business_address": "20 S Cadillac Dr",
+      "business_city": "Somerville",
+      "business_state": "NJ",
+      "business_zip": "08876",
+      "county": "SOMERSET",
+      "primary_phone": "9085243786",
+      "public_business_email": "Matt.eisler@gmail.com",
+      "trade_or_category": "C-00180",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "AMERICAN PILE & FOUNDATION LLC",
+      "business_address": "61 COUNTY LINE ROAD",
+      "business_city": "SOMERVILLE",
+      "business_state": "NJ",
+      "business_zip": "08876",
+      "county": "SOMERSET",
+      "primary_phone": "9085347430",
+      "public_business_email": "ccutillo@americanpilellc.com",
+      "trade_or_category": "C-00140",
+      "certification_type": "MBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ANTHONY PHILIP ENTERPRISES, LLC",
+      "business_address": "21 Dead River Rd",
+      "business_city": "Warren",
+      "business_state": "NJ",
+      "business_zip": "07059",
+      "county": "SOMERSET",
+      "primary_phone": "2017253104",
+      "public_business_email": "anthonyphilipenterprises@gmail.com",
+      "trade_or_category": "C-00800",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "AOC NOTARY SERVICES LLC",
+      "business_address": "971 US HIGHWAY 202N",
+      "business_city": "BRANCHBURG",
+      "business_state": "NJ",
+      "business_zip": "08876",
+      "county": "SOMERSET",
+      "primary_phone": "9082011699",
+      "public_business_email": "INFO@AOCNOTARY.COM",
+      "trade_or_category": "C-00320",
+      "certification_type": "MWBE | SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ARCTIC ROOFING LLC",
+      "business_address": "789 US-202",
+      "business_city": "Bridgewater",
+      "business_state": "NJ",
+      "business_zip": "08807",
+      "county": "SOMERSET",
+      "primary_phone": "9083184513",
+      "public_business_email": "carlos@arcticroofing.org",
+      "trade_or_category": "C-01350",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ARROW SEWER AND DRAIN LLC",
+      "business_address": "25 Jean Pl",
+      "business_city": "Bernardsville",
+      "business_state": "NJ",
+      "business_zip": "07924",
+      "county": "SOMERSET",
+      "primary_phone": "9084036515",
+      "public_business_email": "luis@arrowsewernj.com",
+      "trade_or_category": "C-01110",
+      "certification_type": "MBE | SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    }
+  ],
+  "findings": [
+    {
+      "id": "construction-source-records",
+      "text": "Somerset County has 135,311 DCA construction SOURCE RECORDS in the acquired extract (48,424 permit-issued and 86,887 certificate-issued). That is not 135,311 unique permits or projects. P and C are separate classes and their costs are not added."
+    },
+    {
+      "id": "municipality-coverage",
+      "text": "21 of 21 current municipalities are observed reporters in this extract. County data absence is not zero construction."
+    },
+    {
+      "id": "sewer-gis",
+      "text": "Somerset County publishes 48 sewer service area polygons and a 75-dataset GIS Hub. A sewer service area is not a connection or a permit."
+    },
+    {
+      "id": "njsavi-vendors",
+      "text": "147 NJSAVI certified-vendor rows with a published business city in Somerset County matched a construction-related keyword filter. A certified vendor is not a licensed contractor. Business address is not a service area."
+    }
+  ],
+  "coverage_gaps": [
+    "No county-filtered public contractor license roster in this snapshot.",
+    "PWCR remains SOURCE_NOT_ACQUIRED statewide.",
+    "Construction source records have no contractor field.",
+    "County procurement portals are search-only and were not scraped.",
+    "Consumer-affairs complaint history has no bulk extract."
+  ],
+  "skipped_sources": [
+    {
+      "source": "Monmouth OPRS / Middlesex SearchNG",
+      "reason": "SEARCH_ONLY"
+    },
+    {
+      "source": "County purchasing / OpenGov / POL bid portals",
+      "reason": "SEARCH_ONLY"
+    },
+    {
+      "source": "Union HIP participant list",
+      "reason": "REQUEST_ONLY"
+    },
+    {
+      "source": "MCIA $17,500+ payee HTML (mixed utilities/insurance)",
+      "reason": "LOW_ROI"
+    },
+    {
+      "source": "Chamber / BBB contractor directories",
+      "reason": "TERMS"
+    }
+  ],
+  "publication_gate": {
+    "authoritative_source_families": [
+      "county_gis_hub",
+      "county_gis_sewer",
+      "nj_con_002b_municipality_universe",
+      "nj_dca_construction",
+      "njsavi_certified_vendor"
+    ],
+    "family_count": 5,
+    "county_specific": true,
+    "finding_count": 4,
+    "thin_state_copy": false,
+    "indexable": true
+  },
+  "invariants": {
+    "business_address_ne_service_area": true,
+    "vendor_ne_licensed_contractor": true,
+    "program_participant_ne_licensed_contractor": true,
+    "construction_record_ne_contractor_attribution": true,
+    "lien_ne_wrongdoing": true,
+    "complaint_ne_violation": true,
+    "notice_ne_final_order": true,
+    "no_match_ne_clean": true,
+    "p_ne_c": true,
+    "p_plus_c_cost_blocked": true,
+    "no_ranking": true,
+    "no_trust_score": true
+  },
+  "fingerprint": "d4621406db5b72ca54f2a5ba26c7081d6471d4530d21471c67be7fc3bdab23fc"
+}

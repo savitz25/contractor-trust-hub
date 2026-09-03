@@ -186,8 +186,15 @@ class RegressionTests(unittest.TestCase):
         self.assertIn("not a ranking, recommendation, or trust score", UI_FLAT)
 
     def test_no_county_routes(self):
+        # NJ-CON-004 frozen snapshot did not publish county routes.
+        # NJ-CON-COUNTY-001 adds exactly four county paths; no municipality routes.
         self.assertFalse(SNAP["publication"]["county_routes"])
-        self.assertNotIn('path: "/new-jersey/', SITEMAP)
+        self.assertIn('path: "/new-jersey"', SITEMAP)
+        self.assertIn('path: "/new-jersey/monmouth-county"', SITEMAP)
+        self.assertIn('path: "/new-jersey/middlesex-county"', SITEMAP)
+        self.assertIn('path: "/new-jersey/somerset-county"', SITEMAP)
+        self.assertIn('path: "/new-jersey/union-county"', SITEMAP)
+        self.assertNotIn("/new-jersey/freehold", SITEMAP)
         self.assertIn("/new-jersey", FOOTER)
 
     def test_five_noun_hero(self):

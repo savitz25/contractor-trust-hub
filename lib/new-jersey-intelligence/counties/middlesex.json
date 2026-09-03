@@ -1,0 +1,656 @@
+{
+  "ticket": "NJ-CON-COUNTY-001",
+  "version": "contractor-nj-county-intel-v1",
+  "county": "Middlesex",
+  "county_slug": "middlesex-county",
+  "county_fips": "34023",
+  "path": "/new-jersey/middlesex-county",
+  "as_of": "2026-08-13",
+  "source_clocks": {
+    "construction_metadata": "2026-08-13T18:00:24+00:00",
+    "construction_received": "2026-08-07",
+    "construction_sha256": "abc0df7f4d25691f82ca80b14358fd10f94cd8841433edd935f4191e06e46c4e",
+    "treasury_construction": "2025-10-15",
+    "treasury_vendor": "2026-02-13",
+    "wall": "2026-08-05",
+    "watchlist": "2026-03-20",
+    "njsavi": "2026-09-03",
+    "county_research": "2026-09-03"
+  },
+  "hero": {
+    "universe_label": "DCA construction source records",
+    "universe_value": 252664,
+    "universe_hint": "Permit-issued plus certificate-issued SOURCE RECORDS. Not unique permits or projects.",
+    "current_label": "data received as of",
+    "current_value": "2026-08-07",
+    "current_hint": "Official dataset note: data received as of 08/07/2026. Metadata update 2026-08-13.",
+    "observations_label": "construction-related NJSAVI vendor rows (city in county)",
+    "observations_value": 319,
+    "observations_hint": "Certified vendor, not a contractor license. Business city is not a service area.",
+    "geography_label": "current municipalities in this county",
+    "geography_value": 25,
+    "geography_hint": "25 observed reporters; 0 known non-reporters.",
+    "as_of_label": "construction source metadata",
+    "as_of_value": "2026-08-13"
+  },
+  "construction": {
+    "total_source_records": 252664,
+    "permit_issued_records": 148392,
+    "certificate_issued_records": 104272,
+    "p_is_not_c": true,
+    "p_plus_c_cost_blocked": true,
+    "total_is_not_permits": true,
+    "contractor_attribution": null,
+    "market_only": true,
+    "state_not_additive_municipality": true,
+    "grain": "municipal_permit_or_certificate_record",
+    "caveat": "P and C are separate source classes. Do not add their costs. No contractor, address, or project identifier is in this source.",
+    "landing_url": "https://data.nj.gov/Reference-Data/NJ-Construction-Permit-Data/w9se-dmra",
+    "work_class_composition": null,
+    "p_stage_unit_change": null,
+    "unit_change_note": "Statewide P-stage unit change is published on /new-jersey. County unit change is not computed from committed artifacts in this ticket.",
+    "cost_note": "Statewide calendar construction-value totals are BLOCKED_DUE_TO_RECONCILIATION versus the Construction Reporter (about 20\u201352% for 2023\u20132025). Combined P+C cost is BLOCKED_PENDING_DEFINITION. Extreme \u2265$500M rows are excluded from any approved metric."
+  },
+  "municipalities": {
+    "canonical_current": 25,
+    "observed_reporters": 25,
+    "known_non_reporters": 0,
+    "rows": [
+      {
+        "municipality_code": "1201",
+        "name": "Carteret Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 4300,
+        "permit_issued_records": 2871,
+        "certificate_issued_records": 1429,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1202",
+        "name": "Cranbury Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2965,
+        "permit_issued_records": 1427,
+        "certificate_issued_records": 1538,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1203",
+        "name": "Dunellen Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 806,
+        "permit_issued_records": 559,
+        "certificate_issued_records": 247,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1204",
+        "name": "East Brunswick Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 31599,
+        "permit_issued_records": 12502,
+        "certificate_issued_records": 19097,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1205",
+        "name": "Edison Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 32746,
+        "permit_issued_records": 14720,
+        "certificate_issued_records": 18026,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1206",
+        "name": "Helmetta Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 416,
+        "permit_issued_records": 260,
+        "certificate_issued_records": 156,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1207",
+        "name": "Highland Park Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 3162,
+        "permit_issued_records": 1680,
+        "certificate_issued_records": 1482,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1208",
+        "name": "Jamesburg Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1015,
+        "permit_issued_records": 379,
+        "certificate_issued_records": 636,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1209",
+        "name": "Old Bridge Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 24630,
+        "permit_issued_records": 9971,
+        "certificate_issued_records": 14659,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1210",
+        "name": "Metuchen Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 6794,
+        "permit_issued_records": 2059,
+        "certificate_issued_records": 4735,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1211",
+        "name": "Middlesex Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 3817,
+        "permit_issued_records": 2253,
+        "certificate_issued_records": 1564,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1212",
+        "name": "Milltown Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 1882,
+        "permit_issued_records": 1857,
+        "certificate_issued_records": 25,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1213",
+        "name": "Monroe Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 24187,
+        "permit_issued_records": 16377,
+        "certificate_issued_records": 7810,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1214",
+        "name": "New Brunswick City",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 5656,
+        "permit_issued_records": 2810,
+        "certificate_issued_records": 2846,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1215",
+        "name": "North Brunswick Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 4103,
+        "permit_issued_records": 1274,
+        "certificate_issued_records": 2829,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1216",
+        "name": "Perth Amboy City",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 6096,
+        "permit_issued_records": 4862,
+        "certificate_issued_records": 1234,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1217",
+        "name": "Piscataway Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 17467,
+        "permit_issued_records": 13611,
+        "certificate_issued_records": 3856,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1218",
+        "name": "Plainsboro Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 10875,
+        "permit_issued_records": 5545,
+        "certificate_issued_records": 5330,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1219",
+        "name": "Sayreville Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 10467,
+        "permit_issued_records": 6186,
+        "certificate_issued_records": 4281,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1220",
+        "name": "South Amboy City",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2361,
+        "permit_issued_records": 2209,
+        "certificate_issued_records": 152,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1221",
+        "name": "South Brunswick Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 18511,
+        "permit_issued_records": 13154,
+        "certificate_issued_records": 5357,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1222",
+        "name": "South Plainfield Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 10098,
+        "permit_issued_records": 8039,
+        "certificate_issued_records": 2059,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1223",
+        "name": "South River Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 3020,
+        "permit_issued_records": 2469,
+        "certificate_issued_records": 551,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1224",
+        "name": "Spotswood Borough",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 2181,
+        "permit_issued_records": 752,
+        "certificate_issued_records": 1429,
+        "no_records_is_not_zero": false
+      },
+      {
+        "municipality_code": "1225",
+        "name": "Woodbridge Township",
+        "classification": "CURRENT_REPORTING",
+        "observed_rows": 23510,
+        "permit_issued_records": 20566,
+        "certificate_issued_records": 2944,
+        "no_records_is_not_zero": false
+      }
+    ]
+  },
+  "regulatory": {
+    "statewide_families_remain_statewide": true,
+    "pwcr": {
+      "barrier": "Official roster is a Power BI interactive view with no supported deterministic full-file export.",
+      "coverage": "SOURCE_NOT_ACQUIRED",
+      "rows_displayed": null
+    },
+    "note": "WALL, Wage Watchlist, and Treasury lists are statewide families. This page does not infer county membership from business names.",
+    "safe_house_novs_in_county": [],
+    "consumer_affairs": {
+      "coverage": "LOOKUP_OR_REQUEST_ONLY",
+      "bulk_rows": 0,
+      "complaint_ne_violation": true,
+      "do_not_show_zero_complaints": true
+    }
+  },
+  "specialty": {
+    "statewide_only": true,
+    "note": "Lead, asbestos, and fire-protection snapshots are statewide program lists without a county field in the public NJ-CON-004 extract. Absence here is unknown, not zero.",
+    "lead_evaluation_url": "https://www.nj.gov/dca/codes/lhi/lead_eval_contrs.shtml",
+    "lead_abatement_url": "https://www.nj.gov/dca/codes/lhi/ld_abat_c.shtml",
+    "asbestos_url": "https://www.nj.gov/dca/codes/lhi/asmlist.shtml",
+    "fire_url": "https://www.nj.gov/dca/dfs/"
+  },
+  "local": {
+    "kind": "zoning_and_site_incentives",
+    "source_families": [
+      "county_gis_zoning",
+      "site_incentives"
+    ],
+    "zoning": {
+      "feature_count": 2794,
+      "municipalities_represented": 25,
+      "service_item_id": "be5d52d532cb4da281cd6849b9bdd223",
+      "fields": [
+        "MUNI",
+        "ZONENAME",
+        "Zone_code",
+        "Use_",
+        "Redevelopm"
+      ],
+      "note": "Planning compilation. Not a parcel zoning determination. Confirm with the municipality."
+    },
+    "incentives": {
+      "layers": [
+        {
+          "name": "Portfields",
+          "count": 6
+        },
+        {
+          "name": "Main Street",
+          "count": 2
+        },
+        {
+          "name": "Special Improvement Districts",
+          "count": 8
+        },
+        {
+          "name": "Brownfield Development Areas",
+          "count": 5
+        },
+        {
+          "name": "Foreign Trade Zones",
+          "count": 5
+        },
+        {
+          "name": "Urban Enterprise Zone",
+          "count": 3
+        },
+        {
+          "name": "Redevelopment Areas",
+          "count": 426
+        },
+        {
+          "name": "Transit Villages",
+          "count": 4
+        }
+      ],
+      "note": "Site-selection overlays, not a commercial real-estate database and not a project count."
+    }
+  },
+  "contractor_discovery": {
+    "public_profiles_with_deterministic_county_address": 0,
+    "geography_label": "Business address in Middlesex County",
+    "not_service_area": true,
+    "njsavi_construction_vendor_candidates": 319,
+    "njsavi_with_phone": 319,
+    "njsavi_with_email": 319,
+    "auto_attached_profiles": 0,
+    "name_only_attach": false
+  },
+  "contact_enrichment": {
+    "new_business_phones": 319,
+    "new_business_emails": 319,
+    "websites": 0,
+    "matched_existing_profiles": 0,
+    "overwrote_stronger_evidence": false,
+    "source": "NJSAVI",
+    "public_eligibility": "business_contact_on_vendor_candidate_rows_only"
+  },
+  "njsavi_preview": [
+    {
+      "business_name": "2021 TRUCKING INC.",
+      "business_address": "1A COLLETTI TER",
+      "business_city": "JAMESBURG",
+      "business_state": "NJ",
+      "business_zip": "08831",
+      "county": "MIDDLESEX",
+      "primary_phone": "6465225214",
+      "public_business_email": "2021TRUCKINGINC@GMAIL.COM",
+      "trade_or_category": "C-00260",
+      "certification_type": "MWBE | SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "3G WAREHOUSE, . INCORPORATED",
+      "business_address": "320 MILL ROAD",
+      "business_city": "EDISON",
+      "business_state": "NJ",
+      "business_zip": "08817",
+      "county": "MIDDLESEX",
+      "primary_phone": "6316175951",
+      "public_business_email": "lauren@3gwhse.com",
+      "trade_or_category": "C-00420",
+      "certification_type": "WBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "609 STUDIO LIMITED LIABILITY COMPANY",
+      "business_address": "142 ARLINGTON DR",
+      "business_city": "FORDS",
+      "business_state": "NJ",
+      "business_zip": "088631316",
+      "county": "MIDDLESEX",
+      "primary_phone": "3476134753",
+      "public_business_email": "ENGLEBERT.SAMPSON@GMAIL.COM",
+      "trade_or_category": "C-00590",
+      "certification_type": "MBE | SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A & A CURBING, INC.",
+      "business_address": "15 TERRY AVENUE",
+      "business_city": "SOUTH RIVER",
+      "business_state": "NJ",
+      "business_zip": "08882",
+      "county": "MIDDLESEX",
+      "primary_phone": "7322540650",
+      "public_business_email": "aandacurbing@yahoo.com",
+      "trade_or_category": "C-00249",
+      "certification_type": "MBE | SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A TAKTON CONCRETE CORPORATION",
+      "business_address": "13 TICE AVENUE",
+      "business_city": "SOUTH RIVER",
+      "business_state": "NJ",
+      "business_zip": "08882",
+      "county": "MIDDLESEX",
+      "primary_phone": "7322381008",
+      "public_business_email": "INFO@A-TAKTON.COM",
+      "trade_or_category": "C-00260",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A-TECH CONCRETE COMPANY, INC.",
+      "business_address": "11 TAYLOR ROAD",
+      "business_city": "EDISON",
+      "business_state": "NJ",
+      "business_zip": "08817",
+      "county": "MIDDLESEX",
+      "primary_phone": "7322481777",
+      "public_business_email": "knelson@atechconcrete.net",
+      "trade_or_category": "C-00110",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "A. SILVA PAINTING LLC",
+      "business_address": "28 PITTSBURGH AVENUE",
+      "business_city": "PISCATAWAY",
+      "business_state": "NJ",
+      "business_zip": "08854",
+      "county": "MIDDLESEX",
+      "primary_phone": "9737895989",
+      "public_business_email": "ASILVAPAINTINGLLC@GMAIL.COM",
+      "trade_or_category": "C-00960",
+      "certification_type": "MBE | SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ACCULLECT RE LLC",
+      "business_address": "1660 Van Buren Drive",
+      "business_city": "North Brunswick",
+      "business_state": "NJ",
+      "business_zip": "08902",
+      "county": "MIDDLESEX",
+      "primary_phone": "7326208148",
+      "public_business_email": "mdawson491@gmail.com",
+      "trade_or_category": "C-00590",
+      "certification_type": "MBE | SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ACEQUEST  CORPORATION",
+      "business_address": "200 Centinneal Avenue",
+      "business_city": "Piscataway",
+      "business_state": "NJ",
+      "business_zip": "08854",
+      "county": "MIDDLESEX",
+      "primary_phone": "7323387526",
+      "public_business_email": "Srinivas.Gattu@acequestcorporation.com",
+      "trade_or_category": "C-00890",
+      "certification_type": "MBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ACME DRAPEMASTER OF AMERICA INC.",
+      "business_address": "125 CLEARVIEW RD",
+      "business_city": "EDISON",
+      "business_state": "NJ",
+      "business_zip": "08837",
+      "county": "MIDDLESEX",
+      "primary_phone": "7325120613",
+      "public_business_email": "SPASTEKA@ACMEDRAPEMASTER.COM",
+      "trade_or_category": "C-00010",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ACT CONTRACTING LLC",
+      "business_address": "17 GUINEVERE RD",
+      "business_city": "MONROE TOWNSHIP",
+      "business_state": "NJ",
+      "business_zip": "08831",
+      "county": "MIDDLESEX",
+      "primary_phone": "9739328245",
+      "public_business_email": "APRILFELIX@ICLOUD.COM",
+      "trade_or_category": "C-00050",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    },
+    {
+      "business_name": "ADSORPTECH,  LLC",
+      "business_address": "452 Lincoln Blvd",
+      "business_city": "Middlesex",
+      "business_state": "NJ",
+      "business_zip": "08846",
+      "county": "MIDDLESEX",
+      "primary_phone": "7324917727",
+      "public_business_email": "accounts@adsorptech.com",
+      "trade_or_category": "C-00450",
+      "certification_type": "SBE",
+      "entity_class": "NJSAVI_CERTIFIED_VENDOR",
+      "not_a_contractor_license": true,
+      "official_contractor_id": null,
+      "match_method": "city_to_county_crosswalk"
+    }
+  ],
+  "findings": [
+    {
+      "id": "construction-source-records",
+      "text": "Middlesex County has 252,664 DCA construction SOURCE RECORDS in the acquired extract (148,392 permit-issued and 104,272 certificate-issued). That is not 252,664 unique permits or projects. P and C are separate classes and their costs are not added."
+    },
+    {
+      "id": "municipality-coverage",
+      "text": "25 of 25 current municipalities are observed reporters in this extract. County data absence is not zero construction."
+    },
+    {
+      "id": "zoning-incentives",
+      "text": "County-standardized zoning covers all 25 municipalities (2,794 polygons). Redevelopment and incentive overlays add construction context. They are not parcel-level zoning determinations."
+    },
+    {
+      "id": "njsavi-vendors",
+      "text": "319 NJSAVI certified-vendor rows with a published business city in Middlesex County matched a construction-related keyword filter. A certified vendor is not a licensed contractor. Business address is not a service area."
+    }
+  ],
+  "coverage_gaps": [
+    "No county-filtered public contractor license roster in this snapshot.",
+    "PWCR remains SOURCE_NOT_ACQUIRED statewide.",
+    "Construction source records have no contractor field.",
+    "County procurement portals are search-only and were not scraped.",
+    "Consumer-affairs complaint history has no bulk extract."
+  ],
+  "skipped_sources": [
+    {
+      "source": "Monmouth OPRS / Middlesex SearchNG",
+      "reason": "SEARCH_ONLY"
+    },
+    {
+      "source": "County purchasing / OpenGov / POL bid portals",
+      "reason": "SEARCH_ONLY"
+    },
+    {
+      "source": "Union HIP participant list",
+      "reason": "REQUEST_ONLY"
+    },
+    {
+      "source": "MCIA $17,500+ payee HTML (mixed utilities/insurance)",
+      "reason": "LOW_ROI"
+    },
+    {
+      "source": "Chamber / BBB contractor directories",
+      "reason": "TERMS"
+    }
+  ],
+  "publication_gate": {
+    "authoritative_source_families": [
+      "county_gis_zoning",
+      "nj_con_002b_municipality_universe",
+      "nj_dca_construction",
+      "njsavi_certified_vendor",
+      "site_incentives"
+    ],
+    "family_count": 5,
+    "county_specific": true,
+    "finding_count": 4,
+    "thin_state_copy": false,
+    "indexable": true
+  },
+  "invariants": {
+    "business_address_ne_service_area": true,
+    "vendor_ne_licensed_contractor": true,
+    "program_participant_ne_licensed_contractor": true,
+    "construction_record_ne_contractor_attribution": true,
+    "lien_ne_wrongdoing": true,
+    "complaint_ne_violation": true,
+    "notice_ne_final_order": true,
+    "no_match_ne_clean": true,
+    "p_ne_c": true,
+    "p_plus_c_cost_blocked": true,
+    "no_ranking": true,
+    "no_trust_score": true
+  },
+  "fingerprint": "12d4ae43716fb7bb4cd0145e00e6dd1413ebc174e008fcc1393bdbe21562b338"
+}
