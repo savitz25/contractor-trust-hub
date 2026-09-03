@@ -13,22 +13,33 @@ const assert = (c, m) => {
 };
 
 const snap = JSON.parse(read("data/home/contractor-hub-intel-v2.json"));
+const v1 = JSON.parse(read("data/home/contractor-network-metrics-v1.json"));
 const config = read("lib/states/config.ts");
 const page = read("app/page.tsx");
 const shell = read("components/home-intel/ContractorHomeIntelligence.tsx");
 const hero = read("components/home/HomeIntelHero.tsx");
 const enforce = read("components/home/HomeEnforcement.tsx");
 const method = read("components/home/HomeMethodology.tsx");
+const load = read("lib/home/load-intel-v2.ts");
 
+assert(v1.schemaVersion === "contractor-network-metrics-v1", "v1 schema");
+assert(typeof v1.sourceFingerprint === "string" && v1.sourceFingerprint.length === 64, "v1 fingerprint");
 assert(snap.schemaVersion === "contractor-hub-intel-v2", "schema version");
-assert(typeof snap.sourceFingerprint === "string" && snap.sourceFingerprint.length === 64, "fingerprint");
+assert(snap.sourceFingerprint === v1.sourceFingerprint, "intel-v2 fingerprint tracks v1");
+assert(load.includes("projectIntelV2FromNetworkMetrics"), "homepage intel projected from v1");
+assert(hero.includes("newestDocumentedSourceAsOf"), "hero uses documented source clock");
+assert(!hero.includes("Last official update"), "no ambiguous last official update");
 
+const byKey = Object.fromEntries(v1.metrics.map((m) => [m.key, m]));
 const live = snap.publicCoverage;
 assert(live.liveStates === 10, "10 live states");
-assert(live.credentialRecords === 644421, "live credentials");
-assert(live.activeCurrentCredentialRecords === 499997, "live active/current");
+assert(live.credentialRecords === byKey.live_credential_records.value, "live credentials match v1");
+assert(live.activeCurrentCredentialRecords === byKey.live_active_current_credential_records.value, "live active/current match v1");
 assert(live.activeCurrentCredentialRecords <= live.credentialRecords, "active subset of credentials");
 assert(live.liveSourceSystems.includes("fl_dbpr") && live.liveSourceSystems.includes("tx_tsbpe"), "live sources");
+assert(byKey.nj_construction_source_records.value !== live.credentialRecords, "NJ construction != credentials");
+assert(v1.californiaReconciliation.joinLiveCredentialCohort === false, "CA truncated not joined");
+assert(v1.californiaReconciliation.productionCslbCredentialRows !== v1.californiaReconciliation.acquiredTruncatedLicenseMasterRows, "CA production != truncated extract");
 
 const order = [...config.match(/LIVE_STATE_ORDER = \[([^\]]+)\]/)[1].matchAll(/"([a-z]+)"/g)].map((m) => m[1]);
 assert(order.length >= 10, "LIVE_STATE_ORDER");

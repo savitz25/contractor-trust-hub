@@ -22,8 +22,11 @@ import {
   type TraceMetric,
 } from "./types";
 
-const RETRIEVED = "2026-08-28";
-const CONFIG_AS_OF = "product config on INTEL-003 production SHA 929e18c";
+import { loadContractorNetworkMetrics } from "@/lib/metrics/load-network-metrics";
+
+const networkMetrics = loadContractorNetworkMetrics();
+const RETRIEVED = networkMetrics.generatedAt.slice(0, 10);
+const CONFIG_AS_OF = "product config live EvidenceState rows";
 
 function fmt(n: number): string {
   return n.toLocaleString("en-US");
@@ -354,20 +357,24 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
     },
     {
       family: "County-level intelligence",
-      display: "Broward and Palm Beach County Intelligence; other Florida counties vary",
+      display: `${networkMetrics.metrics.find((m) => m.key === "published_county_intelligence_pages")?.value ?? 8} published county intelligence pages (FL + NJ). Enhanced Local Research gate is not activated.`,
       status: "enhanced_in_selected_geographies",
-      method: "INTEL-003 county payloads. HQ/base mailing county is not service area.",
+      method: "Florida county intelligence slugs plus published NJ county pages. CA county harvests remain KEEP_DATA_ONLY.",
       limitations: [
         "HQ/base county is not service area. Pending local data is not zero.",
+        "County pages are not live researched states.",
         "Permit coverage is not treated as equivalent across counties.",
       ],
     },
     {
       family: "Permit / local evidence",
-      display: "Not a national permit census",
+      display: "Indexed permit_source_records are not NJ construction-source rows",
       status: "limited",
-      method: "Selected Florida local research only.",
-      limitations: ["Missing local export ≠ zero local activity."],
+      method: "Production permit_source_records stay a separate grain from NJ DCA construction source records.",
+      limitations: [
+        "Missing local export ≠ zero local activity.",
+        "NJ construction rows are MARKET_ONLY municipal source records, not contractor credentials.",
+      ],
     },
     {
       family: "Public contacts",

@@ -53,9 +53,9 @@ export function HomeMethodology({ intel }: { intel: ContractorHubIntelV2 }) {
           </div>
         </div>
         <p className="mt-5 text-sm text-[var(--muted)]">
-          Snapshot {intel.schemaVersion}, generated {intel.generatedAt.slice(0, 10)}. Source
-          datasets, exact denominators, and included systems are in this section — not Git SHAs on
-          the homepage.{" "}
+          Snapshot {intel.schemaVersion} projected from contractor-network-metrics-v1, generated{" "}
+          {intel.generatedAt.slice(0, 10)}. Source datasets, exact denominators, and included systems
+          are in this section — not Git SHAs on the homepage.{" "}
           <Link href="/methodology" className="font-medium text-[var(--navy)] hover:underline">
             Full methodology
           </Link>

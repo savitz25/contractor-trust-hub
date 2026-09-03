@@ -1,0 +1,771 @@
+{
+  "schemaVersion": "contractor-network-metrics-v1",
+  "generatedAt": "2026-09-03T21:22:06.870Z",
+  "newestDocumentedSourceAsOf": "2026-09-02",
+  "newestDocumentedSourceAsOfNote": "Newest documented official source-effective date among metrics that carry a sourceAsOf. Not the live-credential board extract date and not Git/deploy time.",
+  "sourceFingerprint": "0a99e8a1cf53590d01506d57072f4a320aa6c0060476a779193d8af1dd8034b3",
+  "liveCohort": {
+    "liveStates": 10,
+    "liveStateCodes": [
+      "FL",
+      "TX",
+      "NJ",
+      "OR",
+      "WA",
+      "CA",
+      "AZ",
+      "LA",
+      "MS",
+      "KY"
+    ],
+    "liveSourceSystems": [
+      "az_roc",
+      "ca_cslb",
+      "fl_dbpr",
+      "ky_dhbc",
+      "la_lslbc",
+      "ms_sbc",
+      "nj_dca",
+      "or_ccb",
+      "tx_tdlr",
+      "tx_tsbpe",
+      "wa_lni"
+    ],
+    "licensesBySource": {
+      "az_roc": 58408,
+      "ca_cslb": 43779,
+      "fl_dbpr": 143516,
+      "ky_dhbc": 8360,
+      "la_lslbc": 26298,
+      "ms_sbc": 8242,
+      "nj_dca": 87355,
+      "or_ccb": 55980,
+      "tx_tdlr": 37834,
+      "tx_tsbpe": 13651,
+      "wa_lni": 160998
+    },
+    "cohortRule": "licenses.source_system IN live sources parsed from lib/states/config.ts (EVIDENCE_STATES live:true + licenseSource/licenseSources, LIVE_STATE_ORDER)",
+    "activeCurrentRule": "status_normalized IN ('active','current') within the live source cohort"
+  },
+  "californiaReconciliation": {
+    "productionCslbCredentialRows": 43779,
+    "acquiredTruncatedLicenseMasterRows": 75572,
+    "acquiredCoverage": "ACQUIRED_PARTIAL_STREAM_TRUNCATED",
+    "joinLiveCredentialCohort": false,
+    "decision": "Fail closed. Keep production licenses.ca_cslb as the live California credential contribution. The 75,572 License Master extract is a truncated stream powering /california intelligence and is not merged into the live credential denominator."
+  },
+  "newJerseyReconciliation": {
+    "dcaCredentialRows": 87355,
+    "constructionSourceRecords": 2678341,
+    "constructionGrain": "municipal_permit_or_certificate_source_record",
+    "constructionMarketOnly": true,
+    "currentMunicipalities": 564,
+    "publishedCountyPages": 4,
+    "publicWorksRegulatorySourceRows": 1898,
+    "vendorCandidatesAreNotLicensedContractors": true
+  },
+  "metrics": [
+    {
+      "unit": "count",
+      "key": "live_credential_records",
+      "label": "Live credential records",
+      "value": 644421,
+      "grain": "license_credential_record",
+      "denominator": "licenses.source_system IN live Verify sources from lib/states/config.ts",
+      "description": "License/credential rows in the public live researched-state cohort.",
+      "coverage": "FL, TX, NJ, OR, WA, CA, AZ, LA, MS, KY",
+      "contributingSourceSystems": [
+        "az_roc",
+        "ca_cslb",
+        "fl_dbpr",
+        "ky_dhbc",
+        "la_lslbc",
+        "ms_sbc",
+        "nj_dca",
+        "or_ccb",
+        "tx_tdlr",
+        "tx_tsbpe",
+        "wa_lni"
+      ],
+      "sourceAsOf": null,
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC",
+      "trace": {
+        "counts": "One row per license/credential in live source systems.",
+        "doesNotCount": "Not contractor entities, permits, construction-source rows, contacts, counties, or the truncated CA CSLB stream.",
+        "contributingSourceSystems": [
+          "az_roc",
+          "ca_cslb",
+          "fl_dbpr",
+          "ky_dhbc",
+          "la_lslbc",
+          "ms_sbc",
+          "nj_dca",
+          "or_ccb",
+          "tx_tdlr",
+          "tx_tsbpe",
+          "wa_lni"
+        ],
+        "geographicCoverage": "10 live researched states",
+        "sourceDates": "Board extract dates vary by state; not represented by Git or deploy time.",
+        "generationDate": "2026-09-03",
+        "currentActiveRule": "This metric is all live-cohort rows, not only active/current."
+      }
+    },
+    {
+      "unit": "count",
+      "key": "live_active_current_credential_records",
+      "label": "Active/current live credential records",
+      "value": 499997,
+      "grain": "license_credential_record_active_current",
+      "denominator": "live credential records with status_normalized IN (active, current)",
+      "description": "Subset of the live credential cohort whose normalized status is active or current.",
+      "coverage": "FL, TX, NJ, OR, WA, CA, AZ, LA, MS, KY",
+      "contributingSourceSystems": [
+        "az_roc",
+        "ca_cslb",
+        "fl_dbpr",
+        "ky_dhbc",
+        "la_lslbc",
+        "ms_sbc",
+        "nj_dca",
+        "or_ccb",
+        "tx_tdlr",
+        "tx_tsbpe",
+        "wa_lni"
+      ],
+      "sourceAsOf": null,
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC",
+      "trace": {
+        "counts": "Live-cohort license rows with status_normalized active or current.",
+        "doesNotCount": "Not inactive/expired/suspended/revoked rows, and not a count of businesses.",
+        "contributingSourceSystems": [
+          "az_roc",
+          "ca_cslb",
+          "fl_dbpr",
+          "ky_dhbc",
+          "la_lslbc",
+          "ms_sbc",
+          "nj_dca",
+          "or_ccb",
+          "tx_tdlr",
+          "tx_tsbpe",
+          "wa_lni"
+        ],
+        "geographicCoverage": "10 live researched states",
+        "sourceDates": "Board extract dates vary by state.",
+        "generationDate": "2026-09-03",
+        "currentActiveRule": "status_normalized IN ('active','current')"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "live_researched_states",
+      "label": "Live researched states",
+      "value": 10,
+      "grain": "live_researched_state",
+      "denominator": "EVIDENCE_STATES live:true in LIVE_STATE_ORDER via getLiveStates()",
+      "description": "Product-configured live Verify states. Not a U.S. contractor census.",
+      "coverage": "FL, TX, NJ, OR, WA, CA, AZ, LA, MS, KY",
+      "contributingSourceSystems": [
+        "az_roc",
+        "ca_cslb",
+        "fl_dbpr",
+        "ky_dhbc",
+        "la_lslbc",
+        "ms_sbc",
+        "nj_dca",
+        "or_ccb",
+        "tx_tdlr",
+        "tx_tsbpe",
+        "wa_lni"
+      ],
+      "sourceAsOf": null,
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC",
+      "trace": {
+        "counts": "States currently live in ContractorTrustHub Verify/config.",
+        "doesNotCount": "Not counties, municipalities, or unpublished adapter states (e.g. Wisconsin).",
+        "contributingSourceSystems": [
+          "lib/states/config.ts"
+        ],
+        "geographicCoverage": "FL, TX, NJ, OR, WA, CA, AZ, LA, MS, KY",
+        "sourceDates": "Product configuration, not a regulator extract date.",
+        "generationDate": "2026-09-03"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "research_graph_license_records",
+      "label": "Research-graph license records",
+      "value": 1266214,
+      "grain": "research_graph_license_record",
+      "denominator": "all licenses rows across populated source_systems, including non-live adapters",
+      "description": "Broader research-graph license rows. Not currently public live coverage.",
+      "coverage": "Populated license source systems including non-live adapters",
+      "contributingSourceSystems": [
+        "az_roc",
+        "ca_cslb",
+        "fl_dbpr",
+        "ky_dhbc",
+        "la_lslbc",
+        "ms_sbc",
+        "nj_dca",
+        "or_ccb",
+        "tx_tdlr",
+        "tx_tsbpe",
+        "wa_lni",
+        "ct_dcp",
+        "id_dopl",
+        "mn_dli",
+        "nv_nscb",
+        "ok_cib",
+        "tn_blc",
+        "va_dpor"
+      ],
+      "sourceAsOf": null,
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
+      "trace": {
+        "counts": "Every license row in the research graph.",
+        "doesNotCount": "Not the live public cohort and not a national contractor census.",
+        "contributingSourceSystems": [
+          "az_roc",
+          "ca_cslb",
+          "fl_dbpr",
+          "ky_dhbc",
+          "la_lslbc",
+          "ms_sbc",
+          "nj_dca",
+          "or_ccb",
+          "tx_tdlr",
+          "tx_tsbpe",
+          "wa_lni",
+          "ct_dcp",
+          "id_dopl",
+          "mn_dli",
+          "nv_nscb",
+          "ok_cib",
+          "tn_blc",
+          "va_dpor"
+        ],
+        "geographicCoverage": "All populated source systems",
+        "sourceDates": "Board extract dates vary.",
+        "generationDate": "2026-09-03"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "regulatory_discipline_action_rows",
+      "label": "Regulatory / enforcement source rows",
+      "value": 69674,
+      "grain": "discipline_action_row",
+      "denominator": "discipline_actions table",
+      "description": "Indexed regulatory and enforcement source rows, family-separated. Not a count of bad contractors.",
+      "coverage": "Florida DBPR/DFS families plus NJ and AZ rows currently indexed",
+      "contributingSourceSystems": [
+        "fl_dfs",
+        "fl_dbpr",
+        "nj_enforcement",
+        "az_roc"
+      ],
+      "sourceAsOf": null,
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC",
+      "trace": {
+        "counts": "discipline_actions rows, attributed to evidence families.",
+        "doesNotCount": "Not observations+occurrences, not credentials, not construction-source records.",
+        "contributingSourceSystems": [
+          "fl_dfs",
+          "fl_dbpr",
+          "nj_enforcement",
+          "az_roc"
+        ],
+        "geographicCoverage": "Florida-heavy; NJ and AZ families as indexed",
+        "sourceDates": "Family source dates vary; not interchangeable severity.",
+        "generationDate": "2026-09-03"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "indexed_permit_source_records",
+      "label": "Indexed permit source records",
+      "value": 139586,
+      "grain": "permit_source_record",
+      "denominator": "permit_source_records table",
+      "description": "Permit source records currently indexed in production. Not jobs completed and not NJ construction-source rows.",
+      "coverage": "Production permit_source_records",
+      "contributingSourceSystems": [
+        "permit_source_records"
+      ],
+      "sourceAsOf": null,
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC",
+      "trace": {
+        "counts": "Rows in permit_source_records.",
+        "doesNotCount": "Not NJ DCA construction source records, not credentials, not nationwide permit volume.",
+        "contributingSourceSystems": [
+          "permit_source_records"
+        ],
+        "geographicCoverage": "Selected indexed permit sources",
+        "sourceDates": "Permit file dates vary.",
+        "generationDate": "2026-09-03"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "nj_construction_source_records",
+      "label": "New Jersey construction source records",
+      "value": 2678341,
+      "grain": "municipal_permit_or_certificate_source_record",
+      "denominator": "NJ DCA construction extract (permit-issued + certificate-issued source records)",
+      "description": "MARKET_ONLY municipal construction source records. Not contractor credentials and not unique permits/projects.",
+      "coverage": "New Jersey",
+      "contributingSourceSystems": [
+        "nj_construction_permits"
+      ],
+      "sourceAsOf": "2026-08-07",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC",
+      "trace": {
+        "counts": "Permit-issued and certificate-issued SOURCE RECORDS in the NJ DCA construction extract.",
+        "doesNotCount": "Not licensed contractors, not unique permits, not projects, not credentials.",
+        "contributingSourceSystems": [
+          "nj_construction_permits"
+        ],
+        "geographicCoverage": "New Jersey municipalities in the extract",
+        "sourceDates": "Official data received as of 2026-08-07",
+        "generationDate": "2026-09-03"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "published_county_intelligence_pages",
+      "label": "Published county intelligence pages",
+      "value": 8,
+      "grain": "published_county_intelligence_page",
+      "denominator": "Florida county intelligence slugs + published NJ county pages",
+      "description": "County research pages currently published. Enhanced Local Research gate is not activated; this is not an enhanced-county quality score.",
+      "coverage": "Florida county intel slugs and four NJ counties",
+      "contributingSourceSystems": [
+        "florida-county-intel",
+        "nj-county-intel"
+      ],
+      "sourceAsOf": "2026-08-13",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC",
+      "trace": {
+        "counts": "Published county intelligence routes.",
+        "doesNotCount": "Not live researched states, not municipalities, not Enhanced Local Research (gate not activated), not CA city local pages.",
+        "contributingSourceSystems": [
+          "florida-county-intel",
+          "nj-county-intel"
+        ],
+        "geographicCoverage": "Selected FL and NJ counties",
+        "sourceDates": "NJ county publication fingerprints as of 2026-08-13; FL county pages are statewide coverage until the enhanced gate is activated.",
+        "generationDate": "2026-09-03"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "nj_current_municipalities",
+      "label": "Current New Jersey municipalities",
+      "value": 564,
+      "grain": "current_municipality",
+      "denominator": "canonical current NJ municipality universe",
+      "description": "Current New Jersey municipalities. Not contractor counts and not county counts.",
+      "coverage": "New Jersey",
+      "contributingSourceSystems": [
+        "nj_dca_construction_metadata"
+      ],
+      "sourceAsOf": "2026-08-13",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC",
+      "trace": {
+        "counts": "Canonical current NJ municipality universe.",
+        "doesNotCount": "Not counties, not credentials, not construction-source rows.",
+        "contributingSourceSystems": [
+          "nj_dca_construction_metadata"
+        ],
+        "geographicCoverage": "New Jersey",
+        "sourceDates": "Metadata as of 2026-08-13",
+        "generationDate": "2026-09-03"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "public_contact_observations",
+      "label": "Public contact observations",
+      "value": 16009,
+      "grain": "public_contact_observation",
+      "denominator": "public_contact_observations table",
+      "description": "Public contact fields as published. Not contractor entities and not service territory.",
+      "coverage": "Research graph",
+      "contributingSourceSystems": [
+        "public_contact_observations"
+      ],
+      "sourceAsOf": null,
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
+      "trace": {
+        "counts": "Public contact observation rows.",
+        "doesNotCount": "Not contractor identities, not licenses, not a service-area map.",
+        "contributingSourceSystems": [
+          "public_contact_observations"
+        ],
+        "geographicCoverage": "Research graph",
+        "sourceDates": "As published on board extracts.",
+        "generationDate": "2026-09-03"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "research_graph_contractor_identities",
+      "label": "Research-graph contractor identity rows",
+      "value": 1392730,
+      "grain": "research_graph_contractor_identity",
+      "denominator": "contractors table",
+      "description": "Identity rows in the research graph. Not a U.S. contractor census and not live public coverage.",
+      "coverage": "Research graph",
+      "contributingSourceSystems": [
+        "contractors"
+      ],
+      "sourceAsOf": null,
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
+      "trace": {
+        "counts": "Rows in contractors.",
+        "doesNotCount": "Not live credentials, not entities, not contacts.",
+        "contributingSourceSystems": [
+          "contractors"
+        ],
+        "geographicCoverage": "Research graph",
+        "sourceDates": "Identity rows are not a national census.",
+        "generationDate": "2026-09-03"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "published_ca_city_local_intelligence_pages",
+      "label": "Published California city local intelligence pages",
+      "value": 2,
+      "grain": "published_city_local_intelligence_page",
+      "denominator": "CA-CON-COUNTY-002 local publication gates (SF and City of LA)",
+      "description": "City local permit/CSLB-exact pages. Not county intelligence pages and not live CSLB credentials.",
+      "coverage": "San Francisco; City of Los Angeles",
+      "contributingSourceSystems": [
+        "ca-local-intel"
+      ],
+      "sourceAsOf": "2026-09-02",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC",
+      "trace": {
+        "counts": "Indexed CA city local intelligence routes.",
+        "doesNotCount": "Not county pages, not Los Angeles County, not the live ca_cslb credential denominator, not the truncated License Master universe.",
+        "contributingSourceSystems": [
+          "ca-local-intel"
+        ],
+        "geographicCoverage": "City and County of San Francisco; City of Los Angeles only",
+        "sourceDates": "Local publication alongside CSLB stream as_of 2026-09-02",
+        "generationDate": "2026-09-03"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "ca_acquired_cslb_license_master_rows_truncated",
+      "label": "Acquired CSLB License Master rows (truncated stream)",
+      "value": 75572,
+      "grain": "acquired_partial_license_master_row",
+      "denominator": "CA-CON License Master extract with coverage ACQUIRED_PARTIAL_STREAM_TRUNCATED",
+      "description": "Acquired CSLB public-data portal rows. Stream truncated. Not eligible to replace production ca_cslb live credentials.",
+      "coverage": "California intelligence snapshot only",
+      "contributingSourceSystems": [
+        "ca_cslb_master_truncated"
+      ],
+      "sourceAsOf": "2026-09-02",
+      "generatedAt": "2026-09-03T21:22:06.870Z",
+      "publicationStatus": "PUBLIC_PARTIAL",
+      "trace": {
+        "counts": "Rows in the truncated CSLB License Master acquisition.",
+        "doesNotCount": "Not the production ca_cslb live credential denominator. Not the complete renewable CSLB universe.",
+        "contributingSourceSystems": [
+          "ca_cslb_master_truncated"
+        ],
+        "geographicCoverage": "California",
+        "sourceDates": "Acquisition as_of 2026-09-02; coverage ACQUIRED_PARTIAL_STREAM_TRUNCATED",
+        "generationDate": "2026-09-03"
+      }
+    }
+  ],
+  "evidenceFamilies": [
+    {
+      "key": "fl_dfs_stop_work",
+      "label": "Florida DFS workers' compensation stop-work records",
+      "sourceSystem": "fl_dfs",
+      "sourceDataset": "fl_dfs_workers_comp_stop_work",
+      "rows": 48254,
+      "grain": "discipline_action_row"
+    },
+    {
+      "key": "fl_dbpr_unlicensed",
+      "label": "Florida DBPR unlicensed activity",
+      "sourceSystem": "fl_dbpr",
+      "sourceDataset": "contractor_disc_ula",
+      "rows": 11691,
+      "grain": "discipline_action_row"
+    },
+    {
+      "key": "fl_dbpr_discipline",
+      "label": "Florida DBPR licensing discipline",
+      "sourceSystem": "fl_dbpr",
+      "sourceDataset": "contractor_disc_lic",
+      "rows": 6457,
+      "grain": "discipline_action_row"
+    },
+    {
+      "key": "fl_recovery_fund",
+      "label": "Florida Construction Recovery Fund",
+      "sourceSystem": "fl_dbpr",
+      "sourceDataset": "contractor_disc_rf",
+      "rows": 1679,
+      "grain": "discipline_action_row"
+    },
+    {
+      "key": "nj_enforcement",
+      "label": "New Jersey enforcement / discipline flags",
+      "sourceSystem": "nj_enforcement",
+      "sourceDataset": "",
+      "rows": 1134,
+      "grain": "discipline_action_row"
+    },
+    {
+      "key": "az_roc_discipline",
+      "label": "Arizona ROC disciplinary actions",
+      "sourceSystem": "az_roc",
+      "sourceDataset": "",
+      "rows": 459,
+      "grain": "discipline_action_row"
+    }
+  ],
+  "researchGraphExtras": {
+    "entityLinks": 281255,
+    "regulatoryObservations": 68081,
+    "regulatoryOccurrences": 68087
+  },
+  "licensingStatus": {
+    "liveCohort": {
+      "active": 463418,
+      "current": 36579,
+      "inactive": 58880,
+      "expired": 65877,
+      "suspended": 9822,
+      "revoked": 14,
+      "unlicensed": 257,
+      "other": 9574
+    }
+  },
+  "tradeFamilies": {
+    "canonicalNormalizationExisted": false,
+    "note": "No prior cross-state trade-family table existed. Homepage families use explicit occupation codes from published state adapters only. Solar, apprentice, bond, certificate, unlicensed-activity, and entity rows are excluded unless they are those occupation codes.",
+    "families": [
+      {
+        "id": "general-building",
+        "label": "General / Building",
+        "href": "/florida/general-contractors",
+        "credentialRows": 229865,
+        "activeCurrentRows": 140433,
+        "contributingSources": [
+          "fl_dbpr",
+          "az_roc",
+          "or_ccb",
+          "wa_lni"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CGC",
+          "fl_dbpr:RG",
+          "fl_dbpr:CBC",
+          "fl_dbpr:RB",
+          "az_roc:KB-1",
+          "az_roc:KB-2",
+          "az_roc:KA",
+          "az_roc:B-1",
+          "az_roc:B-2",
+          "az_roc:A",
+          "or_ccb:CGC1",
+          "or_ccb:CGC2",
+          "wa_lni:CC"
+        ],
+        "origin": [
+          "FLORIDA_TRADES",
+          "ARIZONA_TRADES dual/commercial general",
+          "OREGON_TRADES commercial GC",
+          "WASHINGTON_TRADES construction contractor type"
+        ]
+      },
+      {
+        "id": "residential",
+        "label": "Residential",
+        "href": "/florida/residential-contractors",
+        "credentialRows": 54521,
+        "activeCurrentRows": 53133,
+        "contributingSources": [
+          "fl_dbpr",
+          "az_roc",
+          "or_ccb"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CRC",
+          "fl_dbpr:RR",
+          "az_roc:B",
+          "az_roc:B-3",
+          "az_roc:R-62",
+          "or_ccb:RGC",
+          "or_ccb:RSC",
+          "or_ccb:RLC"
+        ],
+        "origin": [
+          "FLORIDA_TRADES",
+          "ARIZONA_TRADES general residential",
+          "OREGON_TRADES residential"
+        ]
+      },
+      {
+        "id": "roofing",
+        "label": "Roofing",
+        "href": "/florida/roofers",
+        "credentialRows": 13192,
+        "activeCurrentRows": 11945,
+        "contributingSources": [
+          "fl_dbpr",
+          "az_roc",
+          "or_ccb"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CCC",
+          "fl_dbpr:RC",
+          "az_roc:CR-42",
+          "or_ccb:RRC"
+        ],
+        "origin": [
+          "FLORIDA_TRADES",
+          "ARIZONA_TRADES",
+          "OREGON_TRADES residential roofing"
+        ]
+      },
+      {
+        "id": "electrical",
+        "label": "Electrical",
+        "href": "/verify?work=electrical",
+        "credentialRows": 64168,
+        "activeCurrentRows": 38636,
+        "contributingSources": [
+          "tx_tdlr",
+          "nj_dca",
+          "wa_lni",
+          "az_roc"
+        ],
+        "occupationCodes": [
+          "tx_tdlr:TEC",
+          "tx_tdlr:TES",
+          "tx_tdlr:TME",
+          "tx_tdlr:TJE",
+          "tx_tdlr:TAE",
+          "nj_dca:ELE",
+          "nj_dca:TEL",
+          "wa_lni:EC",
+          "az_roc:CR-11",
+          "az_roc:C-11",
+          "az_roc:R-11"
+        ],
+        "origin": [
+          "work-intents TX class chip",
+          "work-intents NJ class chip",
+          "WASHINGTON_TRADES",
+          "ARIZONA_TRADES electrical"
+        ]
+      },
+      {
+        "id": "plumbing",
+        "label": "Plumbing",
+        "href": "/florida/plumbing",
+        "credentialRows": 41290,
+        "activeCurrentRows": 31674,
+        "contributingSources": [
+          "fl_dbpr",
+          "tx_tsbpe",
+          "nj_dca",
+          "wa_lni",
+          "az_roc"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CFC",
+          "fl_dbpr:RF",
+          "tx_tsbpe:TRMP",
+          "tx_tsbpe:TMP",
+          "tx_tsbpe:TJP",
+          "tx_tsbpe:TTP",
+          "nj_dca:PLB",
+          "wa_lni:PC",
+          "az_roc:CR-37",
+          "az_roc:C-37",
+          "az_roc:R-37R"
+        ],
+        "origin": [
+          "FLORIDA_TRADES",
+          "work-intents TX plumbing codes",
+          "work-intents NJ class chip",
+          "WASHINGTON_TRADES",
+          "ARIZONA_TRADES plumbing"
+        ]
+      },
+      {
+        "id": "hvac",
+        "label": "HVAC / Mechanical",
+        "href": "/florida/air-conditioning",
+        "credentialRows": 49473,
+        "activeCurrentRows": 42362,
+        "contributingSources": [
+          "fl_dbpr",
+          "tx_tdlr",
+          "nj_dca",
+          "az_roc"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CAC",
+          "fl_dbpr:RA",
+          "fl_dbpr:CMC",
+          "fl_dbpr:RM",
+          "tx_tdlr:TAC",
+          "nj_dca:HVAC",
+          "az_roc:CR-39",
+          "az_roc:C-39",
+          "az_roc:R-39R"
+        ],
+        "origin": [
+          "FLORIDA_TRADES AC + mechanical",
+          "work-intents TX class chip",
+          "work-intents NJ class chip",
+          "ARIZONA_TRADES HVAC"
+        ]
+      },
+      {
+        "id": "pool-spa",
+        "label": "Pool / Spa",
+        "href": "/florida/pool-spa",
+        "credentialRows": 5100,
+        "activeCurrentRows": 4713,
+        "contributingSources": [
+          "fl_dbpr"
+        ],
+        "occupationCodes": [
+          "fl_dbpr:CPC",
+          "fl_dbpr:RP"
+        ],
+        "origin": [
+          "FLORIDA_TRADES"
+        ]
+      }
+    ]
+  }
+}

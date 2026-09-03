@@ -1,0 +1,23 @@
+name: Contractor network metrics
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  stale-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - name: Fail if publication catalogs and live config diverge from the checked-in manifest
+        run: node scripts/assert_network_metrics_v1.mjs
+      - name: Homepage intel projection matches v1
+        run: node scripts/assert_homepage_intel.mjs
+      - name: Grain-safety unit tests
+        run: npx --yes tsx --test scripts/test_contractor_network_metrics.ts
