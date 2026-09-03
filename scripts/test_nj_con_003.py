@@ -117,7 +117,8 @@ class ArchitectureTests(unittest.TestCase):
         self.assertIn("permit_source_records_fl_uidx", MIG015)
 
     def test_no_new_jersey_app_route(self):
-        self.assertFalse((ROOT / "app" / "new-jersey").exists())
+        self.assertTrue((ROOT / "app" / "new-jersey" / "page.tsx").exists())
+        self.assertFalse(any((ROOT / "app" / "new-jersey").glob("*/page.tsx")))
 
     def test_forbidden_public_language_absent_from_dictionary(self):
         blob = DICT.lower()

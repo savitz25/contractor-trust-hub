@@ -115,6 +115,7 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/guides/florida-contractor-red-flags", priority: 0.86, changefreq: "monthly" },
     { path: "/guides/florida-contractor-license-types", priority: 0.86, changefreq: "monthly" },
     { path: "/florida", priority: 0.9, changefreq: "weekly" },
+    { path: "/new-jersey", priority: 0.9, changefreq: "weekly" },
     { path: "/arizona", priority: 0.9, changefreq: "weekly" },
     { path: "/arizona/phoenix", priority: 0.8, changefreq: "weekly" },
     { path: "/arizona/tucson", priority: 0.8, changefreq: "weekly" },
