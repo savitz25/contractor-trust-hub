@@ -25,9 +25,10 @@ export async function loadEligibleClaimProfile(profileId: string): Promise<Claim
     id: string;
     slug: string;
     external_key: string;
+    display_name: string;
   }>(
     `
-    SELECT c.id::text AS id, c.slug, l.external_key
+    SELECT c.id::text AS id, c.slug, c.display_name, l.external_key
     FROM contractors c
     JOIN LATERAL (
       SELECT external_key, state
@@ -47,7 +48,7 @@ export async function loadEligibleClaimProfile(profileId: string): Promise<Claim
     `,
     [profileId]
   );
-  return row ? { id: row.id, slug: row.slug, externalKey: row.external_key } : null;
+  return row ? { id: row.id, slug: row.slug, externalKey: row.external_key, displayName: row.display_name } : null;
 }
 
 export function mintClaimHandoff(profile: ClaimProfile, now?: Date) {
