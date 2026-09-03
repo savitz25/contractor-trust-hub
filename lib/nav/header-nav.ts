@@ -16,6 +16,7 @@ export const EXPLORE_GROUP: HeaderGroup = {
   id: "explore",
   label: "Explore",
   links: [
+    { href: "/texas", label: "Texas research", hint: "Specialty trades — no statewide GC license" },
     { href: "/california", label: "California research", hint: "Acquired CSLB public-data rows" },
     { href: "/california/san-francisco", label: "San Francisco permits", hint: "City and County local intelligence" },
     { href: "/california/los-angeles", label: "Los Angeles city permits", hint: "City of Los Angeles, not county" },

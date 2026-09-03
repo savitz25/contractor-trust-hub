@@ -114,6 +114,7 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/guides/how-to-verify-florida-contractor", priority: 0.88, changefreq: "monthly" },
     { path: "/guides/florida-contractor-red-flags", priority: 0.86, changefreq: "monthly" },
     { path: "/guides/florida-contractor-license-types", priority: 0.86, changefreq: "monthly" },
+    { path: "/texas", priority: 0.9, changefreq: "weekly" },
     { path: "/california", priority: 0.9, changefreq: "weekly" },
     { path: "/california/san-francisco", priority: 0.84, changefreq: "weekly" },
     { path: "/california/los-angeles", priority: 0.84, changefreq: "weekly" },

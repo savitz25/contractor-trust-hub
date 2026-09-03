@@ -1,0 +1,4224 @@
+{
+  "ticket": "TX-CON-001",
+  "as_of": "2026-09-03",
+  "acquired_at": "2026-09-03T21:26:58.634250+00:00",
+  "absolute_semantics": {
+    "texas_trade_credential_is_not_all_texas_contractors": true,
+    "person_trade_license_is_not_contractor_business": true,
+    "cmbl_hub_vethub_is_not_contractor_license": true,
+    "txdot_project_is_not_contractor_identity": true,
+    "tceq_regulated_entity_is_not_contractor": true,
+    "unmatched_vendor_is_not_unlicensed": true,
+    "expired_is_not_disciplined": true,
+    "complaint_is_not_violation": true,
+    "missing_is_not_zero": true,
+    "no_trust_score": true,
+    "no_ranking": true,
+    "no_statewide_general_contractor_license": true
+  },
+  "tdlr": {
+    "soda_all_licenses": {
+      "source": "https://data.texas.gov/dataset/TDLR-All-Licenses/7358-krk7",
+      "dataset_id": "7358-krk7",
+      "row_count": 983494,
+      "null_license_type_rows": 54932,
+      "type_count": 87,
+      "grain_totals": {
+        "PERSON_TRADE_CREDENTIAL": 391308,
+        "OTHER": 554352,
+        "BUSINESS_CONTRACTOR": 37834
+      },
+      "types": [
+        {
+          "license_type": "Apprentice Electrician",
+          "rows": 253611,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "Cosmetology Operator",
+          "rows": 197266,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Cosmetology Manicurist",
+          "rows": 70377,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "A/C Technician",
+          "rows": 59405,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "(blank)",
+          "rows": 54932,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Cosmetology Esthetician",
+          "rows": 47683,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Journeyman Electrician",
+          "rows": 44623,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "Full Service Establishment",
+          "rows": 35584,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Class A Barber",
+          "rows": 30405,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Mini Establishment",
+          "rows": 21616,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "A/C Contractor",
+          "rows": 20323,
+          "grain": "BUSINESS_CONTRACTOR"
+        },
+        {
+          "license_type": "Master Electrician",
+          "rows": 19745,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "Electrical Contractor",
+          "rows": 13917,
+          "grain": "BUSINESS_CONTRACTOR"
+        },
+        {
+          "license_type": "Devices",
+          "rows": 13518,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Cosmetology Manicurist/Esthetician",
+          "rows": 12136,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Tow Truck Operator (Incident Management)",
+          "rows": 11856,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Licensed Behavior Analyst",
+          "rows": 9023,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Manicurist/Esthetician Establishment",
+          "rows": 7690,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Tow Truck Operator (Consent Tow)",
+          "rows": 6999,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Cosmetology Eyelash Extension Specialist",
+          "rows": 5471,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Apprentice Sign Electrician",
+          "rows": 5294,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "Esthetician Establishment",
+          "rows": 4768,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Property Tax Appraiser",
+          "rows": 3962,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "VSF Employee",
+          "rows": 3504,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Property Tax Consultant",
+          "rows": 2663,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Residential Wireman",
+          "rows": 2535,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "Appliance Installer",
+          "rows": 2508,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "CS CONTESTANT",
+          "rows": 2060,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Auctioneer",
+          "rows": 1839,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Water Well Driller/Pump Installer",
+          "rows": 1740,
+          "grain": "BUSINESS_CONTRACTOR"
+        },
+        {
+          "license_type": "Water Well Driller/Pump Installer Apprentice",
+          "rows": 1002,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "Manicurist Establishment",
+          "rows": 857,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Appliance Installation Contractor",
+          "rows": 835,
+          "grain": "BUSINESS_CONTRACTOR"
+        },
+        {
+          "license_type": "Journeyman Industrial Electrician",
+          "rows": 753,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "Used Auto Parts Recycler",
+          "rows": 740,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Property Tax Assessor/Collector",
+          "rows": 684,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Maintenance Electrician",
+          "rows": 677,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "Eyelash Extension Establishment",
+          "rows": 666,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Electrical Sign Contractor",
+          "rows": 654,
+          "grain": "BUSINESS_CONTRACTOR"
+        },
+        {
+          "license_type": "Registered Accessibility Specialist",
+          "rows": 645,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Cosmetology Private School",
+          "rows": 640,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Service Technician",
+          "rows": 636,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Elevator Responsible Party",
+          "rows": 628,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Service Contract Provider",
+          "rows": 577,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Master Sign Electrician",
+          "rows": 553,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "Licensed Assistant Behavior Analyst",
+          "rows": 526,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Professional Employer Organization",
+          "rows": 432,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Tow Truck Operator (Private Property)",
+          "rows": 400,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Elevator Contractor",
+          "rows": 365,
+          "grain": "BUSINESS_CONTRACTOR"
+        },
+        {
+          "license_type": "Distributor/Wholesaler",
+          "rows": 331,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Journeyman Sign Electrician",
+          "rows": 316,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "Boiler Inspectors",
+          "rows": 289,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Cosmetology Vocational/High School",
+          "rows": 257,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Cosmetology CE Provider",
+          "rows": 235,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Qualified Elevator Inspector",
+          "rows": 210,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "Cosmetology Hair Weaving Specialist",
+          "rows": 189,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Licensed Breeder",
+          "rows": 185,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Electrician CE Provider",
+          "rows": 184,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Property Tax Collector",
+          "rows": 183,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Mobile Establishment",
+          "rows": 169,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Barber School",
+          "rows": 132,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Property Tax Professional CE Provider",
+          "rows": 114,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "CS JUDGE",
+          "rows": 105,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Service Company",
+          "rows": 103,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Associate Auctioneer",
+          "rows": 101,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "CS REFEREE",
+          "rows": 93,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "CS PROMOTER (Business)",
+          "rows": 92,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Hair Weaving  Establishment",
+          "rows": 85,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Supplier",
+          "rows": 85,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "A/C CE Provider",
+          "rows": 79,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Property Tax Professional Core Education Provider",
+          "rows": 77,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Journeyman Lineman Electrician",
+          "rows": 76,
+          "grain": "PERSON_TRADE_CREDENTIAL"
+        },
+        {
+          "license_type": "CS MANAGER",
+          "rows": 75,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Electrician Apprenticeship Program",
+          "rows": 70,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Professional Employer Organization (Limited license)",
+          "rows": 69,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Cosmetology Junior College",
+          "rows": 66,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Tow Operator CE Provider",
+          "rows": 43,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Auctioneer CE Provider",
+          "rows": 30,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Boiler Authorized Inspection Agency",
+          "rows": 25,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Property Tax Consultant CE Provider",
+          "rows": 25,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Water Well Driller/Pump Installer CE Provider",
+          "rows": 24,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "CS AMATEUR PROMOTER (Business)",
+          "rows": 23,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Elevator Responsible Party CE Provider",
+          "rows": 11,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Cosmetology Hair Weaving Specialist/Esthetician",
+          "rows": 8,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Registered Accessibility Specialist CE Provider",
+          "rows": 6,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Weather Modification License",
+          "rows": 5,
+          "grain": "OTHER"
+        },
+        {
+          "license_type": "Weather Modification Permit",
+          "rows": 1,
+          "grain": "OTHER"
+        }
+      ],
+      "no_status_field": true,
+      "status_field_note": "Socrata 7358-krk7 has expiration only. No source-native CURRENT/EXPIRED/REVOKED column.",
+      "as_of": "2026-09-03"
+    },
+    "native_portal": "https://www.tdlr.texas.gov/dbproduction2/",
+    "native_as_of": "2026-09-03",
+    "files": [
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/ltairref.csv",
+        "path": "data/raw/tx_tdlr/ltairref.csv",
+        "bytes": 3654963,
+        "sha256": "95559aecdf3b137c4d9b1ea640225da2b1eb53a8e8dc4a8308f25c7dd39ff84d",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "ac_contractor",
+          "label": "A/C Contractor",
+          "license_type": "A/C Contractor",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "ltairref.csv",
+          "format": "listing"
+        },
+        "profile": {
+          "meta": {
+            "key": "ac_contractor",
+            "label": "A/C Contractor",
+            "license_type": "A/C Contractor",
+            "grain": "BUSINESS_CONTRACTOR",
+            "filename": "ltairref.csv",
+            "format": "listing"
+          },
+          "row_count": 20427,
+          "distinct_keys": 20427,
+          "distinct_normalized_names": 19070,
+          "distinct_name_addr": 0,
+          "business_phone_public_eligible": 0,
+          "status_buckets": {
+            "CURRENT_BY_EXPIRATION": 19109,
+            "EXPIRED_BY_EXPIRATION": 1318
+          },
+          "subtype_counts": {
+            "BE": 7238,
+            "AC": 5722,
+            "AE": 4272,
+            "BC": 2213,
+            "AR": 454,
+            "BR": 278,
+            "AEBR": 148,
+            "ARBE": 99,
+            "ARBR": 1
+          },
+          "top_counties": [
+            {
+              "county": "HARRIS",
+              "rows": 3140
+            },
+            {
+              "county": "DALLAS",
+              "rows": 1811
+            },
+            {
+              "county": "TARRANT",
+              "rows": 1405
+            },
+            {
+              "county": "BEXAR",
+              "rows": 1340
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 711
+            },
+            {
+              "county": "OUT OF STATE",
+              "rows": 709
+            },
+            {
+              "county": "COLLIN",
+              "rows": 557
+            },
+            {
+              "county": "FORT BEND",
+              "rows": 541
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 527
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 492
+            },
+            {
+              "county": "HIDALGO",
+              "rows": 487
+            },
+            {
+              "county": "DENTON",
+              "rows": 470
+            }
+          ],
+          "named_counties": 232,
+          "fields_sample": [
+            "LICENSE TYPE",
+            "LICENSE NUMBER",
+            "LICENSE EXPIRATION DATE",
+            "COUNTY",
+            "NAME",
+            "MAILING ADDRESS LINE1",
+            "MAILING ADDRESS LINE2",
+            "MAILING ADDRESS CITY, STATE ZIP",
+            "PHONE NUMBER",
+            "BUSINESS NAME",
+            "BUSINESS ADDRESS-LINE1",
+            "BUSINESS ADDRESS-LINE2"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/Lteecele.csv",
+        "path": "data/raw/tx_tdlr/Lteecele.csv",
+        "bytes": 3793622,
+        "sha256": "82e139087d894a2eafb42d0520b1d8dcb06713a7504f66207e8ab27be8f6c3c7",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "electrical_contractor",
+          "label": "Electrical Contractor",
+          "license_type": "Electrical Contractor",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "Lteecele.csv",
+          "format": "listing"
+        },
+        "profile": {
+          "meta": {
+            "key": "electrical_contractor",
+            "label": "Electrical Contractor",
+            "license_type": "Electrical Contractor",
+            "grain": "BUSINESS_CONTRACTOR",
+            "filename": "Lteecele.csv",
+            "format": "listing"
+          },
+          "row_count": 14036,
+          "distinct_keys": 14036,
+          "distinct_normalized_names": 13190,
+          "distinct_name_addr": 14009,
+          "business_phone_public_eligible": 14030,
+          "status_buckets": {
+            "CURRENT_BY_EXPIRATION": 12309,
+            "EXPIRED_BY_EXPIRATION": 1727
+          },
+          "subtype_counts": {
+            "EC": 14036
+          },
+          "top_counties": [
+            {
+              "county": "HARRIS",
+              "rows": 1747
+            },
+            {
+              "county": "OUT OF STATE",
+              "rows": 1345
+            },
+            {
+              "county": "DALLAS",
+              "rows": 926
+            },
+            {
+              "county": "BEXAR",
+              "rows": 756
+            },
+            {
+              "county": "TARRANT",
+              "rows": 710
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 480
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 377
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 367
+            },
+            {
+              "county": "EL PASO",
+              "rows": 318
+            },
+            {
+              "county": "HIDALGO",
+              "rows": 288
+            },
+            {
+              "county": "COLLIN",
+              "rows": 288
+            },
+            {
+              "county": "DENTON",
+              "rows": 250
+            }
+          ],
+          "named_counties": 225,
+          "fields_sample": [
+            "LICENSE TYPE",
+            "LICENSE NUMBER",
+            "LICENSE EXPIRATION DATE",
+            "COUNTY",
+            "NAME",
+            "MAILING ADDRESS LINE1",
+            "MAILING ADDRESS LINE2",
+            "MAILING ADDRESS CITY, STATE ZIP",
+            "PHONE NUMBER",
+            "BUSINESS NAME",
+            "BUSINESS ADDRESS-LINE1",
+            "BUSINESS ADDRESS-LINE2"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/Ltescele.csv",
+        "path": "data/raw/tx_tdlr/Ltescele.csv",
+        "bytes": 179493,
+        "sha256": "2c162a7b0aa6baaa045c5608a46774f8720baffdc31fe0bb42e61cd8a6f11e05",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "electrical_sign_contractor",
+          "label": "Electrical Sign Contractor",
+          "license_type": "Electrical Sign Contractor",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "Ltescele.csv",
+          "format": "listing"
+        },
+        "profile": {
+          "meta": {
+            "key": "electrical_sign_contractor",
+            "label": "Electrical Sign Contractor",
+            "license_type": "Electrical Sign Contractor",
+            "grain": "BUSINESS_CONTRACTOR",
+            "filename": "Ltescele.csv",
+            "format": "listing"
+          },
+          "row_count": 655,
+          "distinct_keys": 655,
+          "distinct_normalized_names": 650,
+          "distinct_name_addr": 654,
+          "business_phone_public_eligible": 655,
+          "status_buckets": {
+            "EXPIRED_BY_EXPIRATION": 76,
+            "CURRENT_BY_EXPIRATION": 579
+          },
+          "subtype_counts": {
+            "SC": 655
+          },
+          "top_counties": [
+            {
+              "county": "HARRIS",
+              "rows": 129
+            },
+            {
+              "county": "DALLAS",
+              "rows": 92
+            },
+            {
+              "county": "BEXAR",
+              "rows": 53
+            },
+            {
+              "county": "TARRANT",
+              "rows": 40
+            },
+            {
+              "county": "EL PASO",
+              "rows": 34
+            },
+            {
+              "county": "OUT OF STATE",
+              "rows": 28
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 19
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 18
+            },
+            {
+              "county": "FORT BEND",
+              "rows": 18
+            },
+            {
+              "county": "HIDALGO",
+              "rows": 16
+            },
+            {
+              "county": "DENTON",
+              "rows": 13
+            },
+            {
+              "county": "COLLIN",
+              "rows": 10
+            }
+          ],
+          "named_counties": 80,
+          "fields_sample": [
+            "LICENSE TYPE",
+            "LICENSE NUMBER",
+            "LICENSE EXPIRATION DATE",
+            "COUNTY",
+            "NAME",
+            "MAILING ADDRESS LINE1",
+            "MAILING ADDRESS LINE2",
+            "MAILING ADDRESS CITY, STATE ZIP",
+            "PHONE NUMBER",
+            "BUSINESS NAME",
+            "BUSINESS ADDRESS-LINE1",
+            "BUSINESS ADDRESS-LINE2"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/Ltactele.csv",
+        "path": "data/raw/tx_tdlr/Ltactele.csv",
+        "bytes": 239173,
+        "sha256": "1f9cb25ecf19595478220e9a04b2bbd8a9d724389d94648e403018f3702e443e",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "appliance_installation_contractor",
+          "label": "Appliance Installation Contractor",
+          "license_type": "Appliance Installation Contractor",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "Ltactele.csv",
+          "format": "listing"
+        },
+        "profile": {
+          "meta": {
+            "key": "appliance_installation_contractor",
+            "label": "Appliance Installation Contractor",
+            "license_type": "Appliance Installation Contractor",
+            "grain": "BUSINESS_CONTRACTOR",
+            "filename": "Ltactele.csv",
+            "format": "listing"
+          },
+          "row_count": 838,
+          "distinct_keys": 838,
+          "distinct_normalized_names": 823,
+          "distinct_name_addr": 838,
+          "business_phone_public_eligible": 838,
+          "status_buckets": {
+            "CURRENT_BY_EXPIRATION": 706,
+            "EXPIRED_BY_EXPIRATION": 132
+          },
+          "subtype_counts": {
+            "RAIC": 838
+          },
+          "top_counties": [
+            {
+              "county": "HARRIS",
+              "rows": 115
+            },
+            {
+              "county": "TARRANT",
+              "rows": 87
+            },
+            {
+              "county": "COLLIN",
+              "rows": 81
+            },
+            {
+              "county": "DALLAS",
+              "rows": 61
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 57
+            },
+            {
+              "county": "DENTON",
+              "rows": 52
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 43
+            },
+            {
+              "county": "FORT BEND",
+              "rows": 32
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 27
+            },
+            {
+              "county": "BEXAR",
+              "rows": 26
+            },
+            {
+              "county": "OUT OF STATE",
+              "rows": 18
+            },
+            {
+              "county": "ROCKWALL",
+              "rows": 16
+            }
+          ],
+          "named_counties": 85,
+          "fields_sample": [
+            "LICENSE TYPE",
+            "LICENSE NUMBER",
+            "LICENSE EXPIRATION DATE",
+            "COUNTY",
+            "NAME",
+            "MAILING ADDRESS LINE1",
+            "MAILING ADDRESS LINE2",
+            "MAILING ADDRESS CITY, STATE ZIP",
+            "PHONE NUMBER",
+            "BUSINESS NAME",
+            "BUSINESS ADDRESS-LINE1",
+            "BUSINESS ADDRESS-LINE2"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/ltwwdpmp.csv",
+        "path": "data/raw/tx_tdlr/ltwwdpmp.csv",
+        "bytes": 456222,
+        "sha256": "0e5c4d3d0e348f378f58ca0a88060ea0ad385e96b63edc72a1e5ce5aae3a9164",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "water_well",
+          "label": "Water Well Driller/Pump Installer",
+          "license_type": "Water Well Driller/Pump Installer",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "ltwwdpmp.csv",
+          "format": "listing"
+        },
+        "profile": {
+          "meta": {
+            "key": "water_well",
+            "label": "Water Well Driller/Pump Installer",
+            "license_type": "Water Well Driller/Pump Installer",
+            "grain": "BUSINESS_CONTRACTOR",
+            "filename": "ltwwdpmp.csv",
+            "format": "listing"
+          },
+          "row_count": 1752,
+          "distinct_keys": 1752,
+          "distinct_normalized_names": 1752,
+          "distinct_name_addr": 1189,
+          "business_phone_public_eligible": 1751,
+          "status_buckets": {
+            "EXPIRED_BY_EXPIRATION": 172,
+            "CURRENT_BY_EXPIRATION": 1580
+          },
+          "subtype_counts": {
+            "KP": 169,
+            "W": 149,
+            "M": 142,
+            "KLPT": 135,
+            "KLP": 130,
+            "KPW": 109,
+            "KPT": 93,
+            "CKLMPTW": 92,
+            "PW": 80,
+            "CKMPW": 77,
+            "P": 63,
+            "CDKLMNPTW": 54,
+            "CKLMPW": 51,
+            "KLPTW": 43,
+            "KLPW": 40,
+            "CMW": 38,
+            "CDMNW": 27,
+            "CDKLMNPW": 27,
+            "KPTW": 27,
+            "LP": 22
+          },
+          "top_counties": [
+            {
+              "county": "UNKNOWN",
+              "rows": 562
+            },
+            {
+              "county": "OUT OF STATE",
+              "rows": 83
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 43
+            },
+            {
+              "county": "HARRIS",
+              "rows": 38
+            },
+            {
+              "county": "BEXAR",
+              "rows": 35
+            },
+            {
+              "county": "GAINES",
+              "rows": 33
+            },
+            {
+              "county": "HAYS",
+              "rows": 28
+            },
+            {
+              "county": "ERATH",
+              "rows": 22
+            },
+            {
+              "county": "LUBBOCK",
+              "rows": 20
+            },
+            {
+              "county": "BRAZORIA",
+              "rows": 19
+            },
+            {
+              "county": "PARKER",
+              "rows": 19
+            },
+            {
+              "county": "KERR",
+              "rows": 18
+            }
+          ],
+          "named_counties": 196,
+          "fields_sample": [
+            "LICENSE TYPE",
+            "LICENSE NUMBER",
+            "LICENSE EXPIRATION DATE",
+            "COUNTY",
+            "NAME",
+            "MAILING ADDRESS LINE1",
+            "MAILING ADDRESS LINE2",
+            "MAILING ADDRESS CITY, STATE ZIP",
+            "PHONE NUMBER",
+            "BUSINESS NAME",
+            "BUSINESS ADDRESS-LINE1",
+            "BUSINESS ADDRESS-LINE2"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/ltelectr.csv",
+        "path": "data/raw/tx_tdlr/ltelectr.csv",
+        "bytes": 104601,
+        "sha256": "208c8d2f0ac10a6eaa98086dc222c0fdc4c30e36a1b09c7601837453da5ed5f4",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "elevator_contractor",
+          "label": "Elevator Contractor",
+          "license_type": "Elevator Contractor",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "ltelectr.csv",
+          "format": "listing"
+        },
+        "profile": {
+          "meta": {
+            "key": "elevator_contractor",
+            "label": "Elevator Contractor",
+            "license_type": "Elevator Contractor",
+            "grain": "BUSINESS_CONTRACTOR",
+            "filename": "ltelectr.csv",
+            "format": "listing"
+          },
+          "row_count": 370,
+          "distinct_keys": 370,
+          "distinct_normalized_names": 368,
+          "distinct_name_addr": 369,
+          "business_phone_public_eligible": 367,
+          "status_buckets": {
+            "CURRENT_BY_EXPIRATION": 280,
+            "EXPIRED_BY_EXPIRATION": 90
+          },
+          "subtype_counts": {},
+          "top_counties": [
+            {
+              "county": "DALLAS",
+              "rows": 70
+            },
+            {
+              "county": "HARRIS",
+              "rows": 63
+            },
+            {
+              "county": "TARRANT",
+              "rows": 33
+            },
+            {
+              "county": "OUT OF STATE",
+              "rows": 28
+            },
+            {
+              "county": "BEXAR",
+              "rows": 22
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 15
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 11
+            },
+            {
+              "county": "COLLIN",
+              "rows": 9
+            },
+            {
+              "county": "DENTON",
+              "rows": 9
+            },
+            {
+              "county": "GALVESTON",
+              "rows": 8
+            },
+            {
+              "county": "NUECES",
+              "rows": 7
+            },
+            {
+              "county": "BASTROP",
+              "rows": 6
+            }
+          ],
+          "named_counties": 56,
+          "fields_sample": [
+            "LICENSE TYPE",
+            "LICENSE NUMBER",
+            "LICENSE EXPIRATION DATE",
+            "COUNTY",
+            "NAME",
+            "MAILING ADDRESS LINE1",
+            "MAILING ADDRESS LINE2",
+            "MAILING ADDRESS CITY, STATE ZIP",
+            "PHONE NUMBER",
+            "BUSINESS NAME",
+            "BUSINESS ADDRESS-LINE1",
+            "BUSINESS ADDRESS-LINE2"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/vsMoldAssessmentCompany.csv",
+        "path": "data/raw/tx_tdlr/vsMoldAssessmentCompany.csv",
+        "bytes": 36697,
+        "sha256": "a0c1329ec93a7f0d3ea4c252117784112b3debe8576de525b1adbcf4b0e94fa2",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "mold_assessment_company",
+          "label": "Mold Assessment Company",
+          "license_type": "Mold Assessment Company",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "vsMoldAssessmentCompany.csv",
+          "format": "versa_org"
+        },
+        "profile": {
+          "meta": {
+            "key": "mold_assessment_company",
+            "label": "Mold Assessment Company",
+            "license_type": "Mold Assessment Company",
+            "grain": "BUSINESS_CONTRACTOR",
+            "filename": "vsMoldAssessmentCompany.csv",
+            "format": "versa_org"
+          },
+          "row_count": 253,
+          "distinct_keys": 253,
+          "distinct_normalized_names": 247,
+          "distinct_name_addr": 252,
+          "business_phone_public_eligible": 253,
+          "status_buckets": {
+            "CURRENT": 205,
+            "EXPIRED": 48
+          },
+          "subtype_counts": {},
+          "top_counties": [
+            {
+              "county": "HARRIS",
+              "rows": 58
+            },
+            {
+              "county": "DALLAS",
+              "rows": 30
+            },
+            {
+              "county": "UNKNOWN",
+              "rows": 19
+            },
+            {
+              "county": "BEXAR",
+              "rows": 15
+            },
+            {
+              "county": "COLLIN",
+              "rows": 14
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 14
+            },
+            {
+              "county": "OUT OF STATE/UNKNOWN",
+              "rows": 14
+            },
+            {
+              "county": "TARRANT",
+              "rows": 12
+            },
+            {
+              "county": "DENTON",
+              "rows": 12
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 6
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 5
+            },
+            {
+              "county": "LUBBOCK",
+              "rows": 5
+            }
+          ],
+          "named_counties": 38,
+          "has_source_native_status": true,
+          "fields_sample": [
+            "License Number",
+            "Profession",
+            "License Status",
+            "Licensee",
+            "License Expiration Date",
+            "Address 1",
+            "Address 2",
+            "City",
+            "State",
+            "County",
+            "Zip",
+            "Phone"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/vsMoldRemediationCompany.csv",
+        "path": "data/raw/tx_tdlr/vsMoldRemediationCompany.csv",
+        "bytes": 85574,
+        "sha256": "ff606c85efb4d27f851d35632f52fbb3ef9b2258916536b063cad5203406e23c",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "mold_remediation_company",
+          "label": "Mold Remediation Company",
+          "license_type": "Mold Remediation Company",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "vsMoldRemediationCompany.csv",
+          "format": "versa_org"
+        },
+        "profile": {
+          "meta": {
+            "key": "mold_remediation_company",
+            "label": "Mold Remediation Company",
+            "license_type": "Mold Remediation Company",
+            "grain": "BUSINESS_CONTRACTOR",
+            "filename": "vsMoldRemediationCompany.csv",
+            "format": "versa_org"
+          },
+          "row_count": 591,
+          "distinct_keys": 584,
+          "distinct_normalized_names": 578,
+          "distinct_name_addr": 583,
+          "business_phone_public_eligible": 591,
+          "status_buckets": {
+            "CURRENT": 466,
+            "EXPIRED": 125
+          },
+          "subtype_counts": {},
+          "top_counties": [
+            {
+              "county": "HARRIS",
+              "rows": 124
+            },
+            {
+              "county": "TARRANT",
+              "rows": 56
+            },
+            {
+              "county": "DALLAS",
+              "rows": 51
+            },
+            {
+              "county": "BEXAR",
+              "rows": 40
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 35
+            },
+            {
+              "county": "COLLIN",
+              "rows": 31
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 23
+            },
+            {
+              "county": "UNKNOWN",
+              "rows": 22
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 21
+            },
+            {
+              "county": "DENTON",
+              "rows": 18
+            },
+            {
+              "county": "OUT OF STATE/UNKNOWN",
+              "rows": 17
+            },
+            {
+              "county": "ROCKWALL",
+              "rows": 11
+            }
+          ],
+          "named_counties": 65,
+          "has_source_native_status": true,
+          "fields_sample": [
+            "License Number",
+            "Profession",
+            "License Status",
+            "Licensee",
+            "License Expiration Date",
+            "Address 1",
+            "Address 2",
+            "City",
+            "State",
+            "County",
+            "Zip",
+            "Phone"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/vsMoldAnalysisLaboratory.csv",
+        "path": "data/raw/tx_tdlr/vsMoldAnalysisLaboratory.csv",
+        "bytes": 10857,
+        "sha256": "198a744b61a4c8e6a629facbb8e04775c28ae2ee3b5f8b875a204d0c5da9118e",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "mold_analysis_lab",
+          "label": "Mold Analysis Laboratory",
+          "license_type": "Mold Analysis Laboratory",
+          "grain": "BUSINESS_ADJACENT",
+          "filename": "vsMoldAnalysisLaboratory.csv",
+          "format": "versa_org"
+        },
+        "profile": {
+          "meta": {
+            "key": "mold_analysis_lab",
+            "label": "Mold Analysis Laboratory",
+            "license_type": "Mold Analysis Laboratory",
+            "grain": "BUSINESS_ADJACENT",
+            "filename": "vsMoldAnalysisLaboratory.csv",
+            "format": "versa_org"
+          },
+          "row_count": 71,
+          "distinct_keys": 71,
+          "distinct_normalized_names": 59,
+          "distinct_name_addr": 70,
+          "business_phone_public_eligible": 71,
+          "status_buckets": {
+            "CURRENT": 63,
+            "EXPIRED": 8
+          },
+          "subtype_counts": {},
+          "top_counties": [
+            {
+              "county": "UNKNOWN",
+              "rows": 26
+            },
+            {
+              "county": "OUT OF STATE/UNKNOWN",
+              "rows": 14
+            },
+            {
+              "county": "HARRIS",
+              "rows": 10
+            },
+            {
+              "county": "DALLAS",
+              "rows": 7
+            },
+            {
+              "county": "TARRANT",
+              "rows": 3
+            },
+            {
+              "county": "GALVESTON",
+              "rows": 2
+            },
+            {
+              "county": "SMITH",
+              "rows": 1
+            },
+            {
+              "county": "EL PASO",
+              "rows": 1
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 1
+            },
+            {
+              "county": "COLLIN",
+              "rows": 1
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 1
+            },
+            {
+              "county": "JEFFERSON",
+              "rows": 1
+            }
+          ],
+          "named_counties": 14,
+          "has_source_native_status": true,
+          "fields_sample": [
+            "License Number",
+            "Profession",
+            "License Status",
+            "Licensee",
+            "License Expiration Date",
+            "Address 1",
+            "Address 2",
+            "City",
+            "State",
+            "County",
+            "Zip",
+            "Phone"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/vsResidentialSolarRetailers.csv",
+        "path": "data/raw/tx_tdlr/vsResidentialSolarRetailers.csv",
+        "bytes": 3415,
+        "sha256": "e4bab92d6d66bda7a89aae2f74449e4a18a1364d1c1a0615a346893d930e70d2",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "solar_residential_retailer",
+          "label": "Solar Residential Retailer",
+          "license_type": "Solar Residential Retailer",
+          "grain": "BUSINESS_ADJACENT",
+          "filename": "vsResidentialSolarRetailers.csv",
+          "format": "versa_org"
+        },
+        "profile": {
+          "meta": {
+            "key": "solar_residential_retailer",
+            "label": "Solar Residential Retailer",
+            "license_type": "Solar Residential Retailer",
+            "grain": "BUSINESS_ADJACENT",
+            "filename": "vsResidentialSolarRetailers.csv",
+            "format": "versa_org"
+          },
+          "row_count": 27,
+          "distinct_keys": 27,
+          "distinct_normalized_names": 27,
+          "distinct_name_addr": 27,
+          "business_phone_public_eligible": 27,
+          "status_buckets": {
+            "Current": 27
+          },
+          "subtype_counts": {},
+          "top_counties": [
+            {
+              "county": "OUT OF STATE/UNKNOWN",
+              "rows": 10
+            },
+            {
+              "county": "DALLAS",
+              "rows": 4
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 2
+            },
+            {
+              "county": "COLLIN",
+              "rows": 2
+            },
+            {
+              "county": "KENDALL",
+              "rows": 1
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 1
+            },
+            {
+              "county": "TAYLOR",
+              "rows": 1
+            },
+            {
+              "county": "FORT BEND",
+              "rows": 1
+            },
+            {
+              "county": "NUECES",
+              "rows": 1
+            },
+            {
+              "county": "HAYS",
+              "rows": 1
+            },
+            {
+              "county": "HARRIS",
+              "rows": 1
+            },
+            {
+              "county": "DENTON",
+              "rows": 1
+            }
+          ],
+          "named_counties": 13,
+          "has_source_native_status": true,
+          "fields_sample": [
+            "License Number",
+            "Client",
+            "License Status",
+            "Licensee",
+            "License Expiration Date",
+            "Address1",
+            "Address2",
+            "State",
+            "City",
+            "Zip",
+            "County",
+            "Phone"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/vsEVSupplyProvider.csv",
+        "path": "data/raw/tx_tdlr/vsEVSupplyProvider.csv",
+        "bytes": 15711,
+        "sha256": "61b298e94d66e43acd922b100b62840e3bb6258a450eff2b23978c6f6fb8ff9d",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "ev_supply_provider",
+          "label": "EV Supply Provider",
+          "license_type": "EV Supply Provider",
+          "grain": "BUSINESS_ADJACENT",
+          "filename": "vsEVSupplyProvider.csv",
+          "format": "versa_org"
+        },
+        "profile": {
+          "meta": {
+            "key": "ev_supply_provider",
+            "label": "EV Supply Provider",
+            "license_type": "EV Supply Provider",
+            "grain": "BUSINESS_ADJACENT",
+            "filename": "vsEVSupplyProvider.csv",
+            "format": "versa_org"
+          },
+          "row_count": 106,
+          "distinct_keys": 106,
+          "distinct_normalized_names": 106,
+          "distinct_name_addr": 106,
+          "business_phone_public_eligible": 106,
+          "status_buckets": {
+            "EXPIRED": 47,
+            "CURRENT": 59
+          },
+          "subtype_counts": {},
+          "top_counties": [
+            {
+              "county": "DENTON",
+              "rows": 12
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 11
+            },
+            {
+              "county": "UNKNOWN",
+              "rows": 10
+            },
+            {
+              "county": "OUT OF STATE/UNKNOWN",
+              "rows": 10
+            },
+            {
+              "county": "BEXAR",
+              "rows": 8
+            },
+            {
+              "county": "HARRIS",
+              "rows": 7
+            },
+            {
+              "county": "DALLAS",
+              "rows": 5
+            },
+            {
+              "county": "POTTER",
+              "rows": 3
+            },
+            {
+              "county": "EL PASO",
+              "rows": 3
+            },
+            {
+              "county": "GREGG",
+              "rows": 2
+            },
+            {
+              "county": "WASHINGTON",
+              "rows": 2
+            },
+            {
+              "county": "VICTORIA",
+              "rows": 2
+            }
+          ],
+          "named_counties": 37,
+          "has_source_native_status": true,
+          "fields_sample": [
+            "License Number",
+            "Profession",
+            "License Status",
+            "Licensee",
+            "License Expiration Date",
+            "Address 1",
+            "Address 2",
+            "City",
+            "State",
+            "County",
+            "Zip",
+            "Phone"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/vsMoldRemediationContractor.csv",
+        "path": "data/raw/tx_tdlr/vsMoldRemediationContractor.csv",
+        "bytes": 85685,
+        "sha256": "9216cb5af6cb76e644a676ff83d976e32dd7d45508f0fc2c8f68e5ebc77fd708",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "mold_remediation_contractor",
+          "label": "Mold Remediation Contractor",
+          "license_type": "Mold Remediation Contractor",
+          "grain": "PERSON_TRADE_CREDENTIAL",
+          "filename": "vsMoldRemediationContractor.csv",
+          "format": "versa_person"
+        },
+        "profile": {
+          "meta": {
+            "key": "mold_remediation_contractor",
+            "label": "Mold Remediation Contractor",
+            "license_type": "Mold Remediation Contractor",
+            "grain": "PERSON_TRADE_CREDENTIAL",
+            "filename": "vsMoldRemediationContractor.csv",
+            "format": "versa_person"
+          },
+          "row_count": 998,
+          "distinct_keys": 997,
+          "distinct_normalized_names": 997,
+          "distinct_name_addr": 997,
+          "business_phone_public_eligible": 0,
+          "status_buckets": {
+            "CURRENT": 809,
+            "EXPIRED": 189
+          },
+          "subtype_counts": {},
+          "top_counties": [
+            {
+              "county": "HARRIS",
+              "rows": 176
+            },
+            {
+              "county": "TARRANT",
+              "rows": 93
+            },
+            {
+              "county": "BEXAR",
+              "rows": 65
+            },
+            {
+              "county": "DALLAS",
+              "rows": 62
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 54
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 49
+            },
+            {
+              "county": "UNKNOWN",
+              "rows": 42
+            },
+            {
+              "county": "COLLIN",
+              "rows": 41
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 40
+            },
+            {
+              "county": "OUT OF STATE/UNKNOWN",
+              "rows": 33
+            },
+            {
+              "county": "DENTON",
+              "rows": 32
+            },
+            {
+              "county": "FORT BEND",
+              "rows": 23
+            }
+          ],
+          "named_counties": 87,
+          "has_source_native_status": true,
+          "fields_sample": [
+            "License Number",
+            "Profession",
+            "License Status",
+            "Licensee",
+            "License Expiration Date",
+            "State",
+            "County"
+          ]
+        }
+      },
+      {
+        "url": "https://www.tdlr.texas.gov/dbproduction2/vsMoldAssessmentConsultant.csv",
+        "path": "data/raw/tx_tdlr/vsMoldAssessmentConsultant.csv",
+        "bytes": 93472,
+        "sha256": "d8b038da9f9b75fdd1c60693201fa1e4710564c9393853b8570777bc6bb7c537",
+        "ok": true,
+        "error": null,
+        "spec": {
+          "key": "mold_assessment_consultant",
+          "label": "Mold Assessment Consultant",
+          "license_type": "Mold Assessment Consultant",
+          "grain": "PERSON_TRADE_CREDENTIAL",
+          "filename": "vsMoldAssessmentConsultant.csv",
+          "format": "versa_person"
+        },
+        "profile": {
+          "meta": {
+            "key": "mold_assessment_consultant",
+            "label": "Mold Assessment Consultant",
+            "license_type": "Mold Assessment Consultant",
+            "grain": "PERSON_TRADE_CREDENTIAL",
+            "filename": "vsMoldAssessmentConsultant.csv",
+            "format": "versa_person"
+          },
+          "row_count": 1106,
+          "distinct_keys": 1106,
+          "distinct_normalized_names": 1106,
+          "distinct_name_addr": 1106,
+          "business_phone_public_eligible": 0,
+          "status_buckets": {
+            "CURRENT": 926,
+            "EXPIRED": 180
+          },
+          "subtype_counts": {},
+          "top_counties": [
+            {
+              "county": "HARRIS",
+              "rows": 242
+            },
+            {
+              "county": "DALLAS",
+              "rows": 90
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 65
+            },
+            {
+              "county": "BEXAR",
+              "rows": 60
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 52
+            },
+            {
+              "county": "TARRANT",
+              "rows": 51
+            },
+            {
+              "county": "DENTON",
+              "rows": 51
+            },
+            {
+              "county": "FORT BEND",
+              "rows": 49
+            },
+            {
+              "county": "UNKNOWN",
+              "rows": 46
+            },
+            {
+              "county": "COLLIN",
+              "rows": 45
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 34
+            },
+            {
+              "county": "OUT OF STATE/UNKNOWN",
+              "rows": 30
+            }
+          ],
+          "named_counties": 93,
+          "has_source_native_status": true,
+          "fields_sample": [
+            "License Number",
+            "Profession",
+            "License Status",
+            "Licensee",
+            "License Expiration Date",
+            "State",
+            "County"
+          ]
+        }
+      }
+    ],
+    "family_summaries": [
+      {
+        "meta": {
+          "key": "ac_contractor",
+          "label": "A/C Contractor",
+          "license_type": "A/C Contractor",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "ltairref.csv",
+          "format": "listing"
+        },
+        "row_count": 20427,
+        "distinct_keys": 20427,
+        "distinct_normalized_names": 19070,
+        "distinct_name_addr": 0,
+        "business_phone_public_eligible": 0,
+        "status_buckets": {
+          "CURRENT_BY_EXPIRATION": 19109,
+          "EXPIRED_BY_EXPIRATION": 1318
+        },
+        "subtype_counts": {
+          "BE": 7238,
+          "AC": 5722,
+          "AE": 4272,
+          "BC": 2213,
+          "AR": 454,
+          "BR": 278,
+          "AEBR": 148,
+          "ARBE": 99,
+          "ARBR": 1
+        },
+        "top_counties": [
+          {
+            "county": "HARRIS",
+            "rows": 3140
+          },
+          {
+            "county": "DALLAS",
+            "rows": 1811
+          },
+          {
+            "county": "TARRANT",
+            "rows": 1405
+          },
+          {
+            "county": "BEXAR",
+            "rows": 1340
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 711
+          },
+          {
+            "county": "OUT OF STATE",
+            "rows": 709
+          },
+          {
+            "county": "COLLIN",
+            "rows": 557
+          },
+          {
+            "county": "FORT BEND",
+            "rows": 541
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 527
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 492
+          },
+          {
+            "county": "HIDALGO",
+            "rows": 487
+          },
+          {
+            "county": "DENTON",
+            "rows": 470
+          }
+        ],
+        "named_counties": 232,
+        "fields_sample": [
+          "LICENSE TYPE",
+          "LICENSE NUMBER",
+          "LICENSE EXPIRATION DATE",
+          "COUNTY",
+          "NAME",
+          "MAILING ADDRESS LINE1",
+          "MAILING ADDRESS LINE2",
+          "MAILING ADDRESS CITY, STATE ZIP",
+          "PHONE NUMBER",
+          "BUSINESS NAME",
+          "BUSINESS ADDRESS-LINE1",
+          "BUSINESS ADDRESS-LINE2"
+        ]
+      },
+      {
+        "meta": {
+          "key": "electrical_contractor",
+          "label": "Electrical Contractor",
+          "license_type": "Electrical Contractor",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "Lteecele.csv",
+          "format": "listing"
+        },
+        "row_count": 14036,
+        "distinct_keys": 14036,
+        "distinct_normalized_names": 13190,
+        "distinct_name_addr": 14009,
+        "business_phone_public_eligible": 14030,
+        "status_buckets": {
+          "CURRENT_BY_EXPIRATION": 12309,
+          "EXPIRED_BY_EXPIRATION": 1727
+        },
+        "subtype_counts": {
+          "EC": 14036
+        },
+        "top_counties": [
+          {
+            "county": "HARRIS",
+            "rows": 1747
+          },
+          {
+            "county": "OUT OF STATE",
+            "rows": 1345
+          },
+          {
+            "county": "DALLAS",
+            "rows": 926
+          },
+          {
+            "county": "BEXAR",
+            "rows": 756
+          },
+          {
+            "county": "TARRANT",
+            "rows": 710
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 480
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 377
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 367
+          },
+          {
+            "county": "EL PASO",
+            "rows": 318
+          },
+          {
+            "county": "HIDALGO",
+            "rows": 288
+          },
+          {
+            "county": "COLLIN",
+            "rows": 288
+          },
+          {
+            "county": "DENTON",
+            "rows": 250
+          }
+        ],
+        "named_counties": 225,
+        "fields_sample": [
+          "LICENSE TYPE",
+          "LICENSE NUMBER",
+          "LICENSE EXPIRATION DATE",
+          "COUNTY",
+          "NAME",
+          "MAILING ADDRESS LINE1",
+          "MAILING ADDRESS LINE2",
+          "MAILING ADDRESS CITY, STATE ZIP",
+          "PHONE NUMBER",
+          "BUSINESS NAME",
+          "BUSINESS ADDRESS-LINE1",
+          "BUSINESS ADDRESS-LINE2"
+        ]
+      },
+      {
+        "meta": {
+          "key": "electrical_sign_contractor",
+          "label": "Electrical Sign Contractor",
+          "license_type": "Electrical Sign Contractor",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "Ltescele.csv",
+          "format": "listing"
+        },
+        "row_count": 655,
+        "distinct_keys": 655,
+        "distinct_normalized_names": 650,
+        "distinct_name_addr": 654,
+        "business_phone_public_eligible": 655,
+        "status_buckets": {
+          "EXPIRED_BY_EXPIRATION": 76,
+          "CURRENT_BY_EXPIRATION": 579
+        },
+        "subtype_counts": {
+          "SC": 655
+        },
+        "top_counties": [
+          {
+            "county": "HARRIS",
+            "rows": 129
+          },
+          {
+            "county": "DALLAS",
+            "rows": 92
+          },
+          {
+            "county": "BEXAR",
+            "rows": 53
+          },
+          {
+            "county": "TARRANT",
+            "rows": 40
+          },
+          {
+            "county": "EL PASO",
+            "rows": 34
+          },
+          {
+            "county": "OUT OF STATE",
+            "rows": 28
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 19
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 18
+          },
+          {
+            "county": "FORT BEND",
+            "rows": 18
+          },
+          {
+            "county": "HIDALGO",
+            "rows": 16
+          },
+          {
+            "county": "DENTON",
+            "rows": 13
+          },
+          {
+            "county": "COLLIN",
+            "rows": 10
+          }
+        ],
+        "named_counties": 80,
+        "fields_sample": [
+          "LICENSE TYPE",
+          "LICENSE NUMBER",
+          "LICENSE EXPIRATION DATE",
+          "COUNTY",
+          "NAME",
+          "MAILING ADDRESS LINE1",
+          "MAILING ADDRESS LINE2",
+          "MAILING ADDRESS CITY, STATE ZIP",
+          "PHONE NUMBER",
+          "BUSINESS NAME",
+          "BUSINESS ADDRESS-LINE1",
+          "BUSINESS ADDRESS-LINE2"
+        ]
+      },
+      {
+        "meta": {
+          "key": "appliance_installation_contractor",
+          "label": "Appliance Installation Contractor",
+          "license_type": "Appliance Installation Contractor",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "Ltactele.csv",
+          "format": "listing"
+        },
+        "row_count": 838,
+        "distinct_keys": 838,
+        "distinct_normalized_names": 823,
+        "distinct_name_addr": 838,
+        "business_phone_public_eligible": 838,
+        "status_buckets": {
+          "CURRENT_BY_EXPIRATION": 706,
+          "EXPIRED_BY_EXPIRATION": 132
+        },
+        "subtype_counts": {
+          "RAIC": 838
+        },
+        "top_counties": [
+          {
+            "county": "HARRIS",
+            "rows": 115
+          },
+          {
+            "county": "TARRANT",
+            "rows": 87
+          },
+          {
+            "county": "COLLIN",
+            "rows": 81
+          },
+          {
+            "county": "DALLAS",
+            "rows": 61
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 57
+          },
+          {
+            "county": "DENTON",
+            "rows": 52
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 43
+          },
+          {
+            "county": "FORT BEND",
+            "rows": 32
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 27
+          },
+          {
+            "county": "BEXAR",
+            "rows": 26
+          },
+          {
+            "county": "OUT OF STATE",
+            "rows": 18
+          },
+          {
+            "county": "ROCKWALL",
+            "rows": 16
+          }
+        ],
+        "named_counties": 85,
+        "fields_sample": [
+          "LICENSE TYPE",
+          "LICENSE NUMBER",
+          "LICENSE EXPIRATION DATE",
+          "COUNTY",
+          "NAME",
+          "MAILING ADDRESS LINE1",
+          "MAILING ADDRESS LINE2",
+          "MAILING ADDRESS CITY, STATE ZIP",
+          "PHONE NUMBER",
+          "BUSINESS NAME",
+          "BUSINESS ADDRESS-LINE1",
+          "BUSINESS ADDRESS-LINE2"
+        ]
+      },
+      {
+        "meta": {
+          "key": "water_well",
+          "label": "Water Well Driller/Pump Installer",
+          "license_type": "Water Well Driller/Pump Installer",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "ltwwdpmp.csv",
+          "format": "listing"
+        },
+        "row_count": 1752,
+        "distinct_keys": 1752,
+        "distinct_normalized_names": 1752,
+        "distinct_name_addr": 1189,
+        "business_phone_public_eligible": 1751,
+        "status_buckets": {
+          "EXPIRED_BY_EXPIRATION": 172,
+          "CURRENT_BY_EXPIRATION": 1580
+        },
+        "subtype_counts": {
+          "KP": 169,
+          "W": 149,
+          "M": 142,
+          "KLPT": 135,
+          "KLP": 130,
+          "KPW": 109,
+          "KPT": 93,
+          "CKLMPTW": 92,
+          "PW": 80,
+          "CKMPW": 77,
+          "P": 63,
+          "CDKLMNPTW": 54,
+          "CKLMPW": 51,
+          "KLPTW": 43,
+          "KLPW": 40,
+          "CMW": 38,
+          "CDMNW": 27,
+          "CDKLMNPW": 27,
+          "KPTW": 27,
+          "LP": 22
+        },
+        "top_counties": [
+          {
+            "county": "UNKNOWN",
+            "rows": 562
+          },
+          {
+            "county": "OUT OF STATE",
+            "rows": 83
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 43
+          },
+          {
+            "county": "HARRIS",
+            "rows": 38
+          },
+          {
+            "county": "BEXAR",
+            "rows": 35
+          },
+          {
+            "county": "GAINES",
+            "rows": 33
+          },
+          {
+            "county": "HAYS",
+            "rows": 28
+          },
+          {
+            "county": "ERATH",
+            "rows": 22
+          },
+          {
+            "county": "LUBBOCK",
+            "rows": 20
+          },
+          {
+            "county": "BRAZORIA",
+            "rows": 19
+          },
+          {
+            "county": "PARKER",
+            "rows": 19
+          },
+          {
+            "county": "KERR",
+            "rows": 18
+          }
+        ],
+        "named_counties": 196,
+        "fields_sample": [
+          "LICENSE TYPE",
+          "LICENSE NUMBER",
+          "LICENSE EXPIRATION DATE",
+          "COUNTY",
+          "NAME",
+          "MAILING ADDRESS LINE1",
+          "MAILING ADDRESS LINE2",
+          "MAILING ADDRESS CITY, STATE ZIP",
+          "PHONE NUMBER",
+          "BUSINESS NAME",
+          "BUSINESS ADDRESS-LINE1",
+          "BUSINESS ADDRESS-LINE2"
+        ]
+      },
+      {
+        "meta": {
+          "key": "elevator_contractor",
+          "label": "Elevator Contractor",
+          "license_type": "Elevator Contractor",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "ltelectr.csv",
+          "format": "listing"
+        },
+        "row_count": 370,
+        "distinct_keys": 370,
+        "distinct_normalized_names": 368,
+        "distinct_name_addr": 369,
+        "business_phone_public_eligible": 367,
+        "status_buckets": {
+          "CURRENT_BY_EXPIRATION": 280,
+          "EXPIRED_BY_EXPIRATION": 90
+        },
+        "subtype_counts": {},
+        "top_counties": [
+          {
+            "county": "DALLAS",
+            "rows": 70
+          },
+          {
+            "county": "HARRIS",
+            "rows": 63
+          },
+          {
+            "county": "TARRANT",
+            "rows": 33
+          },
+          {
+            "county": "OUT OF STATE",
+            "rows": 28
+          },
+          {
+            "county": "BEXAR",
+            "rows": 22
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 15
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 11
+          },
+          {
+            "county": "COLLIN",
+            "rows": 9
+          },
+          {
+            "county": "DENTON",
+            "rows": 9
+          },
+          {
+            "county": "GALVESTON",
+            "rows": 8
+          },
+          {
+            "county": "NUECES",
+            "rows": 7
+          },
+          {
+            "county": "BASTROP",
+            "rows": 6
+          }
+        ],
+        "named_counties": 56,
+        "fields_sample": [
+          "LICENSE TYPE",
+          "LICENSE NUMBER",
+          "LICENSE EXPIRATION DATE",
+          "COUNTY",
+          "NAME",
+          "MAILING ADDRESS LINE1",
+          "MAILING ADDRESS LINE2",
+          "MAILING ADDRESS CITY, STATE ZIP",
+          "PHONE NUMBER",
+          "BUSINESS NAME",
+          "BUSINESS ADDRESS-LINE1",
+          "BUSINESS ADDRESS-LINE2"
+        ]
+      },
+      {
+        "meta": {
+          "key": "mold_assessment_company",
+          "label": "Mold Assessment Company",
+          "license_type": "Mold Assessment Company",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "vsMoldAssessmentCompany.csv",
+          "format": "versa_org"
+        },
+        "row_count": 253,
+        "distinct_keys": 253,
+        "distinct_normalized_names": 247,
+        "distinct_name_addr": 252,
+        "business_phone_public_eligible": 253,
+        "status_buckets": {
+          "CURRENT": 205,
+          "EXPIRED": 48
+        },
+        "subtype_counts": {},
+        "top_counties": [
+          {
+            "county": "HARRIS",
+            "rows": 58
+          },
+          {
+            "county": "DALLAS",
+            "rows": 30
+          },
+          {
+            "county": "UNKNOWN",
+            "rows": 19
+          },
+          {
+            "county": "BEXAR",
+            "rows": 15
+          },
+          {
+            "county": "COLLIN",
+            "rows": 14
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 14
+          },
+          {
+            "county": "OUT OF STATE/UNKNOWN",
+            "rows": 14
+          },
+          {
+            "county": "TARRANT",
+            "rows": 12
+          },
+          {
+            "county": "DENTON",
+            "rows": 12
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 6
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 5
+          },
+          {
+            "county": "LUBBOCK",
+            "rows": 5
+          }
+        ],
+        "named_counties": 38,
+        "has_source_native_status": true,
+        "fields_sample": [
+          "License Number",
+          "Profession",
+          "License Status",
+          "Licensee",
+          "License Expiration Date",
+          "Address 1",
+          "Address 2",
+          "City",
+          "State",
+          "County",
+          "Zip",
+          "Phone"
+        ]
+      },
+      {
+        "meta": {
+          "key": "mold_remediation_company",
+          "label": "Mold Remediation Company",
+          "license_type": "Mold Remediation Company",
+          "grain": "BUSINESS_CONTRACTOR",
+          "filename": "vsMoldRemediationCompany.csv",
+          "format": "versa_org"
+        },
+        "row_count": 591,
+        "distinct_keys": 584,
+        "distinct_normalized_names": 578,
+        "distinct_name_addr": 583,
+        "business_phone_public_eligible": 591,
+        "status_buckets": {
+          "CURRENT": 466,
+          "EXPIRED": 125
+        },
+        "subtype_counts": {},
+        "top_counties": [
+          {
+            "county": "HARRIS",
+            "rows": 124
+          },
+          {
+            "county": "TARRANT",
+            "rows": 56
+          },
+          {
+            "county": "DALLAS",
+            "rows": 51
+          },
+          {
+            "county": "BEXAR",
+            "rows": 40
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 35
+          },
+          {
+            "county": "COLLIN",
+            "rows": 31
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 23
+          },
+          {
+            "county": "UNKNOWN",
+            "rows": 22
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 21
+          },
+          {
+            "county": "DENTON",
+            "rows": 18
+          },
+          {
+            "county": "OUT OF STATE/UNKNOWN",
+            "rows": 17
+          },
+          {
+            "county": "ROCKWALL",
+            "rows": 11
+          }
+        ],
+        "named_counties": 65,
+        "has_source_native_status": true,
+        "fields_sample": [
+          "License Number",
+          "Profession",
+          "License Status",
+          "Licensee",
+          "License Expiration Date",
+          "Address 1",
+          "Address 2",
+          "City",
+          "State",
+          "County",
+          "Zip",
+          "Phone"
+        ]
+      },
+      {
+        "meta": {
+          "key": "mold_analysis_lab",
+          "label": "Mold Analysis Laboratory",
+          "license_type": "Mold Analysis Laboratory",
+          "grain": "BUSINESS_ADJACENT",
+          "filename": "vsMoldAnalysisLaboratory.csv",
+          "format": "versa_org"
+        },
+        "row_count": 71,
+        "distinct_keys": 71,
+        "distinct_normalized_names": 59,
+        "distinct_name_addr": 70,
+        "business_phone_public_eligible": 71,
+        "status_buckets": {
+          "CURRENT": 63,
+          "EXPIRED": 8
+        },
+        "subtype_counts": {},
+        "top_counties": [
+          {
+            "county": "UNKNOWN",
+            "rows": 26
+          },
+          {
+            "county": "OUT OF STATE/UNKNOWN",
+            "rows": 14
+          },
+          {
+            "county": "HARRIS",
+            "rows": 10
+          },
+          {
+            "county": "DALLAS",
+            "rows": 7
+          },
+          {
+            "county": "TARRANT",
+            "rows": 3
+          },
+          {
+            "county": "GALVESTON",
+            "rows": 2
+          },
+          {
+            "county": "SMITH",
+            "rows": 1
+          },
+          {
+            "county": "EL PASO",
+            "rows": 1
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 1
+          },
+          {
+            "county": "COLLIN",
+            "rows": 1
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 1
+          },
+          {
+            "county": "JEFFERSON",
+            "rows": 1
+          }
+        ],
+        "named_counties": 14,
+        "has_source_native_status": true,
+        "fields_sample": [
+          "License Number",
+          "Profession",
+          "License Status",
+          "Licensee",
+          "License Expiration Date",
+          "Address 1",
+          "Address 2",
+          "City",
+          "State",
+          "County",
+          "Zip",
+          "Phone"
+        ]
+      },
+      {
+        "meta": {
+          "key": "solar_residential_retailer",
+          "label": "Solar Residential Retailer",
+          "license_type": "Solar Residential Retailer",
+          "grain": "BUSINESS_ADJACENT",
+          "filename": "vsResidentialSolarRetailers.csv",
+          "format": "versa_org"
+        },
+        "row_count": 27,
+        "distinct_keys": 27,
+        "distinct_normalized_names": 27,
+        "distinct_name_addr": 27,
+        "business_phone_public_eligible": 27,
+        "status_buckets": {
+          "Current": 27
+        },
+        "subtype_counts": {},
+        "top_counties": [
+          {
+            "county": "OUT OF STATE/UNKNOWN",
+            "rows": 10
+          },
+          {
+            "county": "DALLAS",
+            "rows": 4
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 2
+          },
+          {
+            "county": "COLLIN",
+            "rows": 2
+          },
+          {
+            "county": "KENDALL",
+            "rows": 1
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 1
+          },
+          {
+            "county": "TAYLOR",
+            "rows": 1
+          },
+          {
+            "county": "FORT BEND",
+            "rows": 1
+          },
+          {
+            "county": "NUECES",
+            "rows": 1
+          },
+          {
+            "county": "HAYS",
+            "rows": 1
+          },
+          {
+            "county": "HARRIS",
+            "rows": 1
+          },
+          {
+            "county": "DENTON",
+            "rows": 1
+          }
+        ],
+        "named_counties": 13,
+        "has_source_native_status": true,
+        "fields_sample": [
+          "License Number",
+          "Client",
+          "License Status",
+          "Licensee",
+          "License Expiration Date",
+          "Address1",
+          "Address2",
+          "State",
+          "City",
+          "Zip",
+          "County",
+          "Phone"
+        ]
+      },
+      {
+        "meta": {
+          "key": "ev_supply_provider",
+          "label": "EV Supply Provider",
+          "license_type": "EV Supply Provider",
+          "grain": "BUSINESS_ADJACENT",
+          "filename": "vsEVSupplyProvider.csv",
+          "format": "versa_org"
+        },
+        "row_count": 106,
+        "distinct_keys": 106,
+        "distinct_normalized_names": 106,
+        "distinct_name_addr": 106,
+        "business_phone_public_eligible": 106,
+        "status_buckets": {
+          "EXPIRED": 47,
+          "CURRENT": 59
+        },
+        "subtype_counts": {},
+        "top_counties": [
+          {
+            "county": "DENTON",
+            "rows": 12
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 11
+          },
+          {
+            "county": "UNKNOWN",
+            "rows": 10
+          },
+          {
+            "county": "OUT OF STATE/UNKNOWN",
+            "rows": 10
+          },
+          {
+            "county": "BEXAR",
+            "rows": 8
+          },
+          {
+            "county": "HARRIS",
+            "rows": 7
+          },
+          {
+            "county": "DALLAS",
+            "rows": 5
+          },
+          {
+            "county": "POTTER",
+            "rows": 3
+          },
+          {
+            "county": "EL PASO",
+            "rows": 3
+          },
+          {
+            "county": "GREGG",
+            "rows": 2
+          },
+          {
+            "county": "WASHINGTON",
+            "rows": 2
+          },
+          {
+            "county": "VICTORIA",
+            "rows": 2
+          }
+        ],
+        "named_counties": 37,
+        "has_source_native_status": true,
+        "fields_sample": [
+          "License Number",
+          "Profession",
+          "License Status",
+          "Licensee",
+          "License Expiration Date",
+          "Address 1",
+          "Address 2",
+          "City",
+          "State",
+          "County",
+          "Zip",
+          "Phone"
+        ]
+      },
+      {
+        "meta": {
+          "key": "mold_remediation_contractor",
+          "label": "Mold Remediation Contractor",
+          "license_type": "Mold Remediation Contractor",
+          "grain": "PERSON_TRADE_CREDENTIAL",
+          "filename": "vsMoldRemediationContractor.csv",
+          "format": "versa_person"
+        },
+        "row_count": 998,
+        "distinct_keys": 997,
+        "distinct_normalized_names": 997,
+        "distinct_name_addr": 997,
+        "business_phone_public_eligible": 0,
+        "status_buckets": {
+          "CURRENT": 809,
+          "EXPIRED": 189
+        },
+        "subtype_counts": {},
+        "top_counties": [
+          {
+            "county": "HARRIS",
+            "rows": 176
+          },
+          {
+            "county": "TARRANT",
+            "rows": 93
+          },
+          {
+            "county": "BEXAR",
+            "rows": 65
+          },
+          {
+            "county": "DALLAS",
+            "rows": 62
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 54
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 49
+          },
+          {
+            "county": "UNKNOWN",
+            "rows": 42
+          },
+          {
+            "county": "COLLIN",
+            "rows": 41
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 40
+          },
+          {
+            "county": "OUT OF STATE/UNKNOWN",
+            "rows": 33
+          },
+          {
+            "county": "DENTON",
+            "rows": 32
+          },
+          {
+            "county": "FORT BEND",
+            "rows": 23
+          }
+        ],
+        "named_counties": 87,
+        "has_source_native_status": true,
+        "fields_sample": [
+          "License Number",
+          "Profession",
+          "License Status",
+          "Licensee",
+          "License Expiration Date",
+          "State",
+          "County"
+        ]
+      },
+      {
+        "meta": {
+          "key": "mold_assessment_consultant",
+          "label": "Mold Assessment Consultant",
+          "license_type": "Mold Assessment Consultant",
+          "grain": "PERSON_TRADE_CREDENTIAL",
+          "filename": "vsMoldAssessmentConsultant.csv",
+          "format": "versa_person"
+        },
+        "row_count": 1106,
+        "distinct_keys": 1106,
+        "distinct_normalized_names": 1106,
+        "distinct_name_addr": 1106,
+        "business_phone_public_eligible": 0,
+        "status_buckets": {
+          "CURRENT": 926,
+          "EXPIRED": 180
+        },
+        "subtype_counts": {},
+        "top_counties": [
+          {
+            "county": "HARRIS",
+            "rows": 242
+          },
+          {
+            "county": "DALLAS",
+            "rows": 90
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 65
+          },
+          {
+            "county": "BEXAR",
+            "rows": 60
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 52
+          },
+          {
+            "county": "TARRANT",
+            "rows": 51
+          },
+          {
+            "county": "DENTON",
+            "rows": 51
+          },
+          {
+            "county": "FORT BEND",
+            "rows": 49
+          },
+          {
+            "county": "UNKNOWN",
+            "rows": 46
+          },
+          {
+            "county": "COLLIN",
+            "rows": 45
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 34
+          },
+          {
+            "county": "OUT OF STATE/UNKNOWN",
+            "rows": 30
+          }
+        ],
+        "named_counties": 93,
+        "has_source_native_status": true,
+        "fields_sample": [
+          "License Number",
+          "Profession",
+          "License Status",
+          "Licensee",
+          "License Expiration Date",
+          "State",
+          "County"
+        ]
+      }
+    ]
+  },
+  "tsbpe": {
+    "source": "https://tsbpe.texas.gov/free-licensee-list/",
+    "files": [
+      {
+        "url": "https://tsbpe.texas.gov/download-csv/RMP/",
+        "path": "data/raw/tx_tsbpe/tsbpe_rmp.csv",
+        "bytes": 1982197,
+        "sha256": "61bbb5139720b06c4eb0a3a072684ae4321bb4a2201367095a2456e673cf5780",
+        "ok": true,
+        "error": null,
+        "kind": "RMP",
+        "label": "Responsible Master Plumber",
+        "grain": "BUSINESS_CONTRACTOR",
+        "profile": {
+          "kind": "RMP",
+          "label": "Responsible Master Plumber",
+          "grain": "BUSINESS_CONTRACTOR",
+          "row_count": 9360,
+          "distinct_keys": 9360,
+          "fields": [
+            "RANK",
+            "LICENSE_NBR",
+            "LIC_STATUS",
+            "LICENSE_DATE",
+            "EXPIRATION_DTE",
+            "LAST_NAME",
+            "FIRST_NAME",
+            "MIDDLE_NAME",
+            "SUFFIX",
+            "ADDR1",
+            "ADDR2",
+            "ADDR3",
+            "CITY",
+            "STATE",
+            "ZIP",
+            "PHONE",
+            "COUNTY",
+            "MEDGAS_ENDR",
+            "MRF_ENDR",
+            "WS_ENDR"
+          ],
+          "status_buckets": {
+            "Current": 8570,
+            "Expired": 790
+          },
+          "business_phone_public_eligible": 4776,
+          "top_counties": [
+            {
+              "county": "HARRIS",
+              "rows": 984
+            },
+            {
+              "county": "BEXAR",
+              "rows": 612
+            },
+            {
+              "county": "TARRANT",
+              "rows": 595
+            },
+            {
+              "county": "DALLAS",
+              "rows": 591
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 309
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 280
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 246
+            },
+            {
+              "county": "COLLIN",
+              "rows": 240
+            },
+            {
+              "county": "DENTON",
+              "rows": 228
+            },
+            {
+              "county": "EL PASO",
+              "rows": 197
+            },
+            {
+              "county": "LUBBOCK",
+              "rows": 161
+            },
+            {
+              "county": "JOHNSON",
+              "rows": 151
+            }
+          ],
+          "has_source_native_status": true
+        }
+      },
+      {
+        "url": "https://tsbpe.texas.gov/download-csv/MP/",
+        "path": "data/raw/tx_tsbpe/tsbpe_mp.csv",
+        "bytes": 437186,
+        "sha256": "c1cb6292ac6471838430c37c2563935be7a4a568edd2243d2e3df735dca0cdb9",
+        "ok": true,
+        "error": null,
+        "kind": "MP",
+        "label": "Master Plumber",
+        "grain": "PERSON_TRADE_CREDENTIAL",
+        "profile": {
+          "kind": "MP",
+          "label": "Master Plumber",
+          "grain": "PERSON_TRADE_CREDENTIAL",
+          "row_count": 4325,
+          "distinct_keys": 4325,
+          "fields": [
+            "RANK",
+            "LICENSE_NBR",
+            "LIC_STATUS",
+            "LICENSE_DATE",
+            "EXPIRATION_DTE",
+            "LAST_NAME",
+            "FIRST_NAME",
+            "MIDDLE_NAME",
+            "SUFFIX",
+            "COUNTY",
+            "MEDGAS_ENDR",
+            "MRF_ENDR",
+            "WS_ENDR"
+          ],
+          "status_buckets": {
+            "Current": 3660,
+            "Expired": 665
+          },
+          "business_phone_public_eligible": 0,
+          "top_counties": [
+            {
+              "county": "HARRIS",
+              "rows": 352
+            },
+            {
+              "county": "BEXAR",
+              "rows": 305
+            },
+            {
+              "county": "DALLAS",
+              "rows": 279
+            },
+            {
+              "county": "TARRANT",
+              "rows": 262
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 178
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 156
+            },
+            {
+              "county": "DENTON",
+              "rows": 123
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 116
+            },
+            {
+              "county": "COLLIN",
+              "rows": 100
+            },
+            {
+              "county": "EL PASO",
+              "rows": 80
+            },
+            {
+              "county": "GALVESTON",
+              "rows": 67
+            },
+            {
+              "county": "LUBBOCK",
+              "rows": 67
+            }
+          ],
+          "has_source_native_status": true
+        }
+      },
+      {
+        "url": "https://tsbpe.texas.gov/wp-content/uploads/2015/03/JP.csv.zip",
+        "path": "data/raw/tx_tsbpe/tsbpe_jp.csv",
+        "bytes": 2644376,
+        "sha256": "ee207f8195261ad9b1bccfe0229b597320b501b6710d97395278e723ce3c9243",
+        "ok": true,
+        "error": null,
+        "kind": "JP",
+        "label": "Journeyman Plumber",
+        "grain": "PERSON_TRADE_CREDENTIAL",
+        "profile": {
+          "kind": "JP",
+          "label": "Journeyman Plumber",
+          "grain": "PERSON_TRADE_CREDENTIAL",
+          "row_count": 26209,
+          "distinct_keys": 26209,
+          "fields": [
+            "RANK",
+            "LICENSE_NBR",
+            "LIC_STATUS",
+            "LICENSE_DATE",
+            "EXPIRATION_DTE",
+            "LAST_NAME",
+            "FIRST_NAME",
+            "MIDDLE_NAME",
+            "SUFFIX",
+            "COUNTY",
+            "MEDGAS_ENDR",
+            "MRF_ENDR",
+            "WS_ENDR"
+          ],
+          "status_buckets": {
+            "Current": 23011,
+            "Expired": 3198
+          },
+          "business_phone_public_eligible": 0,
+          "top_counties": [
+            {
+              "county": "HARRIS",
+              "rows": 3165
+            },
+            {
+              "county": "BEXAR",
+              "rows": 2147
+            },
+            {
+              "county": "DALLAS",
+              "rows": 2057
+            },
+            {
+              "county": "TARRANT",
+              "rows": 1770
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 997
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 948
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 749
+            },
+            {
+              "county": "DENTON",
+              "rows": 635
+            },
+            {
+              "county": "COLLIN",
+              "rows": 631
+            },
+            {
+              "county": "LUBBOCK",
+              "rows": 479
+            },
+            {
+              "county": "EL PASO",
+              "rows": 469
+            },
+            {
+              "county": "JOHNSON",
+              "rows": 400
+            }
+          ],
+          "has_source_native_status": true
+        }
+      },
+      {
+        "url": "https://tsbpe.texas.gov/download-csv/TP/",
+        "path": "data/raw/tx_tsbpe/tsbpe_tp.csv",
+        "bytes": 319236,
+        "sha256": "d29f4b62b4e605e8e89893c53396064422cd1825eb36a2a97457fb3700126c83",
+        "ok": true,
+        "error": null,
+        "kind": "TP",
+        "label": "Tradesman Plumber-Limited",
+        "grain": "PERSON_TRADE_CREDENTIAL",
+        "profile": {
+          "kind": "TP",
+          "label": "Tradesman Plumber-Limited",
+          "grain": "PERSON_TRADE_CREDENTIAL",
+          "row_count": 3571,
+          "distinct_keys": 3571,
+          "fields": [
+            "RANK",
+            "LICENSE_NBR",
+            "LIC_STATUS",
+            "LICENSE_DATE",
+            "EXPIRATION_DTE",
+            "LAST_NAME",
+            "FIRST_NAME",
+            "MIDDLE_NAME",
+            "SUFFIX",
+            "COUNTY",
+            "TDC_ENDR"
+          ],
+          "status_buckets": {
+            "Current": 2911,
+            "Expired": 660
+          },
+          "business_phone_public_eligible": 0,
+          "top_counties": [
+            {
+              "county": "BEXAR",
+              "rows": 354
+            },
+            {
+              "county": "DALLAS",
+              "rows": 311
+            },
+            {
+              "county": "HARRIS",
+              "rows": 311
+            },
+            {
+              "county": "WILLIAMSON",
+              "rows": 281
+            },
+            {
+              "county": "TARRANT",
+              "rows": 239
+            },
+            {
+              "county": "TRAVIS",
+              "rows": 202
+            },
+            {
+              "county": "COLLIN",
+              "rows": 131
+            },
+            {
+              "county": "DENTON",
+              "rows": 117
+            },
+            {
+              "county": "MONTGOMERY",
+              "rows": 85
+            },
+            {
+              "county": "ROCKWALL",
+              "rows": 67
+            },
+            {
+              "county": "LUBBOCK",
+              "rows": 63
+            },
+            {
+              "county": "JOHNSON",
+              "rows": 55
+            }
+          ],
+          "has_source_native_status": true
+        }
+      }
+    ],
+    "family_summaries": [
+      {
+        "kind": "RMP",
+        "label": "Responsible Master Plumber",
+        "grain": "BUSINESS_CONTRACTOR",
+        "row_count": 9360,
+        "distinct_keys": 9360,
+        "fields": [
+          "RANK",
+          "LICENSE_NBR",
+          "LIC_STATUS",
+          "LICENSE_DATE",
+          "EXPIRATION_DTE",
+          "LAST_NAME",
+          "FIRST_NAME",
+          "MIDDLE_NAME",
+          "SUFFIX",
+          "ADDR1",
+          "ADDR2",
+          "ADDR3",
+          "CITY",
+          "STATE",
+          "ZIP",
+          "PHONE",
+          "COUNTY",
+          "MEDGAS_ENDR",
+          "MRF_ENDR",
+          "WS_ENDR"
+        ],
+        "status_buckets": {
+          "Current": 8570,
+          "Expired": 790
+        },
+        "business_phone_public_eligible": 4776,
+        "top_counties": [
+          {
+            "county": "HARRIS",
+            "rows": 984
+          },
+          {
+            "county": "BEXAR",
+            "rows": 612
+          },
+          {
+            "county": "TARRANT",
+            "rows": 595
+          },
+          {
+            "county": "DALLAS",
+            "rows": 591
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 309
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 280
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 246
+          },
+          {
+            "county": "COLLIN",
+            "rows": 240
+          },
+          {
+            "county": "DENTON",
+            "rows": 228
+          },
+          {
+            "county": "EL PASO",
+            "rows": 197
+          },
+          {
+            "county": "LUBBOCK",
+            "rows": 161
+          },
+          {
+            "county": "JOHNSON",
+            "rows": 151
+          }
+        ],
+        "has_source_native_status": true
+      },
+      {
+        "kind": "MP",
+        "label": "Master Plumber",
+        "grain": "PERSON_TRADE_CREDENTIAL",
+        "row_count": 4325,
+        "distinct_keys": 4325,
+        "fields": [
+          "RANK",
+          "LICENSE_NBR",
+          "LIC_STATUS",
+          "LICENSE_DATE",
+          "EXPIRATION_DTE",
+          "LAST_NAME",
+          "FIRST_NAME",
+          "MIDDLE_NAME",
+          "SUFFIX",
+          "COUNTY",
+          "MEDGAS_ENDR",
+          "MRF_ENDR",
+          "WS_ENDR"
+        ],
+        "status_buckets": {
+          "Current": 3660,
+          "Expired": 665
+        },
+        "business_phone_public_eligible": 0,
+        "top_counties": [
+          {
+            "county": "HARRIS",
+            "rows": 352
+          },
+          {
+            "county": "BEXAR",
+            "rows": 305
+          },
+          {
+            "county": "DALLAS",
+            "rows": 279
+          },
+          {
+            "county": "TARRANT",
+            "rows": 262
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 178
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 156
+          },
+          {
+            "county": "DENTON",
+            "rows": 123
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 116
+          },
+          {
+            "county": "COLLIN",
+            "rows": 100
+          },
+          {
+            "county": "EL PASO",
+            "rows": 80
+          },
+          {
+            "county": "GALVESTON",
+            "rows": 67
+          },
+          {
+            "county": "LUBBOCK",
+            "rows": 67
+          }
+        ],
+        "has_source_native_status": true
+      },
+      {
+        "kind": "JP",
+        "label": "Journeyman Plumber",
+        "grain": "PERSON_TRADE_CREDENTIAL",
+        "row_count": 26209,
+        "distinct_keys": 26209,
+        "fields": [
+          "RANK",
+          "LICENSE_NBR",
+          "LIC_STATUS",
+          "LICENSE_DATE",
+          "EXPIRATION_DTE",
+          "LAST_NAME",
+          "FIRST_NAME",
+          "MIDDLE_NAME",
+          "SUFFIX",
+          "COUNTY",
+          "MEDGAS_ENDR",
+          "MRF_ENDR",
+          "WS_ENDR"
+        ],
+        "status_buckets": {
+          "Current": 23011,
+          "Expired": 3198
+        },
+        "business_phone_public_eligible": 0,
+        "top_counties": [
+          {
+            "county": "HARRIS",
+            "rows": 3165
+          },
+          {
+            "county": "BEXAR",
+            "rows": 2147
+          },
+          {
+            "county": "DALLAS",
+            "rows": 2057
+          },
+          {
+            "county": "TARRANT",
+            "rows": 1770
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 997
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 948
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 749
+          },
+          {
+            "county": "DENTON",
+            "rows": 635
+          },
+          {
+            "county": "COLLIN",
+            "rows": 631
+          },
+          {
+            "county": "LUBBOCK",
+            "rows": 479
+          },
+          {
+            "county": "EL PASO",
+            "rows": 469
+          },
+          {
+            "county": "JOHNSON",
+            "rows": 400
+          }
+        ],
+        "has_source_native_status": true
+      },
+      {
+        "kind": "TP",
+        "label": "Tradesman Plumber-Limited",
+        "grain": "PERSON_TRADE_CREDENTIAL",
+        "row_count": 3571,
+        "distinct_keys": 3571,
+        "fields": [
+          "RANK",
+          "LICENSE_NBR",
+          "LIC_STATUS",
+          "LICENSE_DATE",
+          "EXPIRATION_DTE",
+          "LAST_NAME",
+          "FIRST_NAME",
+          "MIDDLE_NAME",
+          "SUFFIX",
+          "COUNTY",
+          "TDC_ENDR"
+        ],
+        "status_buckets": {
+          "Current": 2911,
+          "Expired": 660
+        },
+        "business_phone_public_eligible": 0,
+        "top_counties": [
+          {
+            "county": "BEXAR",
+            "rows": 354
+          },
+          {
+            "county": "DALLAS",
+            "rows": 311
+          },
+          {
+            "county": "HARRIS",
+            "rows": 311
+          },
+          {
+            "county": "WILLIAMSON",
+            "rows": 281
+          },
+          {
+            "county": "TARRANT",
+            "rows": 239
+          },
+          {
+            "county": "TRAVIS",
+            "rows": 202
+          },
+          {
+            "county": "COLLIN",
+            "rows": 131
+          },
+          {
+            "county": "DENTON",
+            "rows": 117
+          },
+          {
+            "county": "MONTGOMERY",
+            "rows": 85
+          },
+          {
+            "county": "ROCKWALL",
+            "rows": 67
+          },
+          {
+            "county": "LUBBOCK",
+            "rows": 63
+          },
+          {
+            "county": "JOHNSON",
+            "rows": 55
+          }
+        ],
+        "has_source_native_status": true
+      }
+    ],
+    "semantics": "TSBPE is a separate plumbing board. Responsible Master Plumber may contract with the public. Master/Journeyman/Tradesman are person credentials."
+  },
+  "cmbl_download": {
+    "source": "https://comptroller.texas.gov/purchasing/downloads",
+    "files": [
+      {
+        "url": "https://comptroller.texas.gov/auto-data/purchasing/web_name.csv",
+        "path": "data/raw/tx_cmbl/web_name.csv",
+        "bytes": 4069729,
+        "sha256": "2c831277a150ffe67c477df6bfbdae82f2409d1eb456d7269d923f9dc2d6f052",
+        "ok": true,
+        "error": null,
+        "role": "active_cmbl_vethub"
+      },
+      {
+        "url": "https://comptroller.texas.gov/auto-data/purchasing/vnr_clas.csv",
+        "path": "data/raw/tx_cmbl/vnr_clas.csv",
+        "bytes": 8420975,
+        "sha256": "5ac5cfa43796aa1935ecb3212bf5f972af99964f3632c0df20132370746a5bba",
+        "ok": true,
+        "error": null,
+        "role": "vendor_class_nigp"
+      },
+      {
+        "url": "https://comptroller.texas.gov/auto-data/purchasing/hub_name.csv",
+        "path": "data/raw/tx_cmbl/hub_name.csv",
+        "bytes": 531823,
+        "sha256": "a7cb0a090a2383dd457f923d369e9cfcdeecbc8187be686682e90b28e7e503ad",
+        "ok": true,
+        "error": null,
+        "role": "hub_vethub"
+      },
+      {
+        "url": "https://comptroller.texas.gov/auto-data/purchasing/hub_clas.csv",
+        "path": "data/raw/tx_cmbl/hub_clas.csv",
+        "bytes": 1014110,
+        "sha256": "5b802fa4f8af0f95bef7de8ae53b7b5d236f21b7dbdbe0afc41279d221828315",
+        "ok": true,
+        "error": null,
+        "role": "hub_class"
+      },
+      {
+        "url": "https://comptroller.texas.gov/auto-data/purchasing/comm_book.csv",
+        "path": "data/raw/tx_cmbl/comm_book.csv",
+        "bytes": 856896,
+        "sha256": "911ce2d718a47b63d5001a434f70e4287bbf978d029490550aa97b4dac159781",
+        "ok": true,
+        "error": null,
+        "role": "nigp_commodity_book"
+      }
+    ]
+  },
+  "cmbl": {
+    "coverage": "ACQUIRED",
+    "semantics": "CMBL_VENDOR_NOT_CONTRACTOR_LICENSE. HUB/VetHUB are procurement certifications, not trade licenses.",
+    "web_name_fields": [
+      "WEB_VID",
+      "WEB_NAME_VENDOR_NAME",
+      "WEB_ADDR1",
+      "WEB_ADDR2",
+      "WEB_CITY",
+      "WEB_STATE",
+      "WEB_ZIP",
+      "WEB_ALT_CITY_ST_ZIP",
+      "WEB_PHONE",
+      "WEB_FAX",
+      "WEB_GENDER",
+      "WEB_ETHNIC",
+      "WEB_HUB_STATUS",
+      "WEB_COUNTY",
+      "WEB_DESC",
+      "WEB_VENDOR_NO",
+      "WEB_HUB_EXPIRE_DATE",
+      "WEB_CONTACT",
+      "WEB_TX_OFFICE_FLAG",
+      "WEB_EMAIL_ADDRESS",
+      "WEB_QISV_FLAG",
+      "WEB_SDV_FLAG",
+      "WEB_SMALL_BUS_FLAG",
+      "WEB_CMBL_REASON_OFF",
+      "WEB_HUB_CLASS_EXP_DATE"
+    ],
+    "web_name_rows": 12000,
+    "hub_name_rows": 1482,
+    "hub_distinct_vids": 0,
+    "vnr_clas_rows": 49245,
+    "vnr_clas_fields": [
+      "CLASS_VID",
+      "CLASS_CODE",
+      "ALL_DISTS_FLAG",
+      "DIST_FLAGS",
+      "ALL_ITEMS_FLAG",
+      "ITEM_FLAGS",
+      "FILLER"
+    ],
+    "comm_book_rows": 9458,
+    "nigp_join_ok": false,
+    "construction_nigp_classes": [
+      "909",
+      "910",
+      "912",
+      "913",
+      "914",
+      "968"
+    ],
+    "construction_nigp_labels": {
+      "909": "",
+      "910": "",
+      "912": "",
+      "913": "",
+      "914": "",
+      "968": ""
+    },
+    "construction_vendor_vids": 0,
+    "construction_vendor_rows": 0,
+    "class_item_counts_top": [],
+    "vendor_phone_public_eligible": 0,
+    "vendor_email_public_eligible": 0,
+    "match": {
+      "EXACT": 0,
+      "HIGH_CONFIDENCE": 0,
+      "REVIEW_REQUIRED": 0,
+      "UNSAFE": 0,
+      "NET_NEW_BUSINESS_CANDIDATES": 0,
+      "note": "EXACT requires a source-native trade/license ID in the vendor row. HIGH_CONFIDENCE is name+address, not a license. NET_NEW is not unlicensed.",
+      "examples": {
+        "EXACT": [],
+        "HIGH_CONFIDENCE": [],
+        "REVIEW_REQUIRED": [],
+        "UNSAFE": [],
+        "NET_NEW": []
+      }
+    },
+    "adverse_attach_rule": "EXACT official credential ID only. Do not attach HIGH_CONFIDENCE/REVIEW/UNSAFE as adverse evidence."
+  },
+  "txdot": {
+    "source": "https://data.texas.gov/dataset/Project-Information/drau-zphx",
+    "dataset_id": "drau-zphx",
+    "row_count": 8605,
+    "let_type_counts": {
+      "Statewide Let": 6829,
+      "(blank)": 443,
+      "Local District Let": 434,
+      "Non-Let and Values": 396,
+      "Local Agency Let": 337,
+      "Non-Let Local Donate": 65,
+      "Local Agency - Local Funded": 59,
+      "Transfer to Other Agency": 17,
+      "Design Build": 11,
+      "Statewide Letting": 9,
+      "Cross State-Other State Let Project": 3,
+      "Statewide Let No Charge": 2
+    },
+    "project_status_counts": {
+      "Active": 8555,
+      "Closed": 31,
+      "(blank)": 9,
+      "Paused": 5,
+      "Inactive": 5
+    },
+    "top_type_of_work": [
+      {
+        "type": "Seal Coat",
+        "rows": 2430
+      },
+      {
+        "type": "Hazard Elimination & Safety",
+        "rows": 635
+      },
+      {
+        "type": "Bridge Maintenance",
+        "rows": 512
+      },
+      {
+        "type": "Bridge Replacement",
+        "rows": 486
+      },
+      {
+        "type": "Resurface Roadway",
+        "rows": 455
+      },
+      {
+        "type": "Preventive Maintenance",
+        "rows": 376
+      },
+      {
+        "type": "Rehabilitate Existing Roadway",
+        "rows": 245
+      },
+      {
+        "type": "Transportation Non-Roadway",
+        "rows": 211
+      },
+      {
+        "type": "Widen Road - Add Lanes",
+        "rows": 185
+      },
+      {
+        "type": "Highway Improvement",
+        "rows": 174
+      },
+      {
+        "type": "Traffic Signal Improvements",
+        "rows": 173
+      },
+      {
+        "type": "Bicycle And Pedestrian Improvements",
+        "rows": 164
+      },
+      {
+        "type": "Construct Pedestrian Infrastructure",
+        "rows": 163
+      },
+      {
+        "type": "Surfacing/Roadway Restoration",
+        "rows": 152
+      },
+      {
+        "type": "Intersection Improvement",
+        "rows": 121
+      }
+    ],
+    "construction_manager_is_txdot_staff": true,
+    "awarded_contractor_field": null,
+    "contractorish_columns": [],
+    "semantics": "PROJECT_NOT_CONTRACTOR. construction_manager is TxDOT contact, not the awarded contractor.",
+    "coverage": "ACQUIRED_METADATA_AND_AGGREGATES",
+    "as_of": "2026-09-03",
+    "csv_rows": 8605,
+    "csv_fields": [
+      "A+B ESTIMATE AMOUNT",
+      "BID RECEIVED UNTIL DATE AND TIME",
+      "BIDDER PRE-QUALIFICATION WAIVER FLAG",
+      "CITY",
+      "CONSTRUCTION MANAGER",
+      "CONSTRUCTION MANAGER EMAIL",
+      "CONTRACT LIMITS FROM",
+      "CONTRACT LIMITS TO",
+      "CONTRACT NUMBER",
+      "CONTROL SECTION",
+      "CONTROL SECTION JOB (CSJ)",
+      "CONTROLLING PROJECT ID (CCSJ)",
+      "COUNTY",
+      "DBE GOAL PERCENT",
+      "DISTRICT/ DIVISION",
+      "DISTRICT/DIVISION CSTR PERFORMANCE END DATE",
+      "ENVIRONMENTAL CLEAR TO LET DATE",
+      "ENVIRONMENTAL CLEARANCE TYPE",
+      "FEDERAL PROJECT NUMBER",
+      "HIGHWAY",
+      "LATITUDE (LINE) BEGIN",
+      "LATITUDE (LINE) END",
+      "LET TYPE DESCRIPTION",
+      "LETTING STATUS DESCRIPTION",
+      "LOCAL AGENCY CONTACT",
+      "LOCAL AGENCY EMAIL",
+      "LOCAL AGENCY NAME",
+      "LONGITUDE (LINE) BEGIN",
+      "LONGITUDE (LINE) END",
+      "MAXIMUM NUMBER OF WORKING DAYS",
+      "MOST RESTRICTIVE PROPOSED CLASS",
+      "MPO DESCRIPTION",
+      "OVERSIGHT DESCRIPTION",
+      "PROJECT ACTUAL LET DATE",
+      "PROJECT APPROVED LET DATE",
+      "PROJECT CLASSIFICATION",
+      "PROJECT DESCRIPTION",
+      "PROJECT ESTIMATE / LOW BID",
+      "PROJECT ESTIMATED LET DATE",
+      "PROJECT ID"
+    ],
+    "csv_sha256": "db931679d552152fb5589deed5822fc0b5c3f782e1481a29087961d06afa63ef",
+    "csv_bytes": 4859419,
+    "csv_contractorish_columns": [
+      "BIDDER PRE-QUALIFICATION WAIVER FLAG"
+    ],
+    "construction_manager_sample": [
+      {
+        "construction_manager": "Chad Ingram",
+        "email": "Chad.Ingram@txdot.gov"
+      },
+      {
+        "construction_manager": "Jennifer Chavarria",
+        "email": ""
+      },
+      {
+        "construction_manager": "Nestor Mendoza",
+        "email": ""
+      }
+    ],
+    "download": {
+      "url": "https://data.texas.gov/api/views/drau-zphx/rows.csv?accessType=DOWNLOAD",
+      "path": "data/raw/tx_txdot/drau-zphx.csv",
+      "bytes": 4859419,
+      "sha256": "db931679d552152fb5589deed5822fc0b5c3f782e1481a29087961d06afa63ef",
+      "ok": true,
+      "error": null
+    }
+  },
+  "tceq": {
+    "coverage": "PARKED_REGIONAL_FRAGMENT",
+    "dataset_id": "msah-s2rv",
+    "dataset_name": "TCEQ Central Registry Files - Central Texas",
+    "row_count": 660535,
+    "naics_23_sample": [
+      {
+        "naics": "236115 - New Single-Family Housing Construction (except Operative Builders)",
+        "rows": 31510
+      },
+      {
+        "naics": "236220 - Commercial and Institutional Building Construction",
+        "rows": 13333
+      },
+      {
+        "naics": "237310 - Highway, Street, and Bridge Construction",
+        "rows": 8266
+      },
+      {
+        "naics": "237210 - Land Subdivision",
+        "rows": 5202
+      },
+      {
+        "naics": "237110 - Water and Sewer Line and Related Structures Construction",
+        "rows": 3623
+      },
+      {
+        "naics": "237990 - Other Heavy and Civil Engineering Construction",
+        "rows": 2824
+      },
+      {
+        "naics": "236210 - Industrial Building Construction",
+        "rows": 2246
+      },
+      {
+        "naics": "238990 - All Other Specialty Trade Contractors",
+        "rows": 1098
+      },
+      {
+        "naics": "238910 - Site Preparation Contractors",
+        "rows": 1003
+      },
+      {
+        "naics": "237120 - Oil and Gas Pipeline and Related Structures Construction",
+        "rows": 752
+      },
+      {
+        "naics": "236116 - New Multifamily Housing Construction (except Operative Builders)",
+        "rows": 701
+      },
+      {
+        "naics": "236117 - New Housing Operative Builders",
+        "rows": 295
+      },
+      {
+        "naics": "237130 - Power and Communication Line and Related Structures Construction",
+        "rows": 204
+      },
+      {
+        "naics": "238220 - Plumbing, Heating, and Air-Conditioning Contractors",
+        "rows": 107
+      },
+      {
+        "naics": "238110 - Poured Concrete Foundation and Structure Contractors",
+        "rows": 92
+      },
+      {
+        "naics": "238320 - Painting and Wall Covering Contractors",
+        "rows": 85
+      },
+      {
+        "naics": "238290 - Other Building Equipment Contractors",
+        "rows": 50
+      },
+      {
+        "naics": "2373 - Highway, Street, and Bridge Construction",
+        "rows": 38
+      },
+      {
+        "naics": "238210 - Electrical Contractors",
+        "rows": 31
+      },
+      {
+        "naics": "23611 - Residential Building Construction",
+        "rows": 23
+      },
+      {
+        "naics": "23721 - Land Subdivision",
+        "rows": 14
+      },
+      {
+        "naics": "238340 - Tile and Terrazzo Contractors",
+        "rows": 13
+      },
+      {
+        "naics": "238140 - Masonry Contractors",
+        "rows": 12
+      },
+      {
+        "naics": "238390 - Other Building Finishing Contractors",
+        "rows": 11
+      },
+      {
+        "naics": "238120 - Structural Steel and Precast Concrete Contractors",
+        "rows": 8
+      },
+      {
+        "naics": "236 - Construction of Buildings",
+        "rows": 6
+      },
+      {
+        "naics": "238160 - Roofing Contractors",
+        "rows": 6
+      },
+      {
+        "naics": "23731 - Highway, Street, and Bridge Construction",
+        "rows": 4
+      },
+      {
+        "naics": "2362 - Nonresidential Building Construction",
+        "rows": 4
+      },
+      {
+        "naics": "237 - Heavy and Civil Engineering Construction",
+        "rows": 3
+      }
+    ],
+    "semantics": "TCEQ_REGULATED_ENTITY_NOT_CONTRACTOR. Customer/RE grain. Construction NAICS is not a contractor license.",
+    "statewide_complete": false,
+    "reason_parked": "Portal files are regional fragments (658k+ Central Texas alone). No statewide contractor-classified dump acquired."
+  },
+  "tdlr_identity_summary": {
+    "BUSINESS_CONTRACTOR": {
+      "credential_rows": 38922,
+      "distinct_keys": 38915,
+      "distinct_normalized_names": 35937,
+      "distinct_name_addr": 37481,
+      "status_buckets": {
+        "CURRENT_BY_EXPIRATION": 34563,
+        "EXPIRED_BY_EXPIRATION": 3515,
+        "CURRENT": 671,
+        "EXPIRED": 173
+      },
+      "trade_counts": [
+        {
+          "trade": "A/C Contractor",
+          "rows": 20427
+        },
+        {
+          "trade": "Electrical Contractor",
+          "rows": 14036
+        },
+        {
+          "trade": "Water Well Driller/Pump Installer",
+          "rows": 1752
+        },
+        {
+          "trade": "Appliance Installation Contractor",
+          "rows": 838
+        },
+        {
+          "trade": "Electrical Sign Contractor",
+          "rows": 655
+        },
+        {
+          "trade": "Mold Remediation Company",
+          "rows": 591
+        },
+        {
+          "trade": "Elevator Contractor",
+          "rows": 370
+        },
+        {
+          "trade": "Mold Assessment Company",
+          "rows": 253
+        }
+      ],
+      "business_phone_public_eligible": 18485
+    },
+    "BUSINESS_ADJACENT": {
+      "credential_rows": 204,
+      "distinct_keys": 204,
+      "distinct_normalized_names": 192,
+      "distinct_name_addr": 203,
+      "status_buckets": {
+        "CURRENT": 122,
+        "EXPIRED": 55,
+        "Current": 27
+      },
+      "trade_counts": [
+        {
+          "trade": "EV Supply Provider",
+          "rows": 106
+        },
+        {
+          "trade": "Mold Analysis Laboratory",
+          "rows": 71
+        },
+        {
+          "trade": "Solar Residential Retailer",
+          "rows": 27
+        }
+      ],
+      "business_phone_public_eligible": 204
+    },
+    "PERSON_TRADE_CREDENTIAL": {
+      "credential_rows": 2104,
+      "distinct_keys": 2103,
+      "distinct_normalized_names": 2009,
+      "distinct_name_addr": 2009,
+      "status_buckets": {
+        "CURRENT": 1735,
+        "EXPIRED": 369
+      },
+      "trade_counts": [
+        {
+          "trade": "Mold Assessment Consultant",
+          "rows": 1106
+        },
+        {
+          "trade": "Mold Remediation Contractor",
+          "rows": 998
+        }
+      ],
+      "business_phone_public_eligible": 0
+    }
+  },
+  "tsbpe_identity_summary": {
+    "BUSINESS_CONTRACTOR": {
+      "credential_rows": 9360,
+      "distinct_keys": 9360,
+      "distinct_normalized_names": 8581,
+      "distinct_name_addr": 9174,
+      "status_buckets": {
+        "Current": 8570,
+        "Expired": 790
+      },
+      "trade_counts": [
+        {
+          "trade": "Responsible Master Plumber",
+          "rows": 9360
+        }
+      ],
+      "business_phone_public_eligible": 4776
+    },
+    "PERSON_TRADE_CREDENTIAL": {
+      "credential_rows": 34105,
+      "distinct_keys": 34105,
+      "distinct_normalized_names": 30513,
+      "distinct_name_addr": 30513,
+      "status_buckets": {
+        "Current": 29582,
+        "Expired": 4523
+      },
+      "trade_counts": [
+        {
+          "trade": "Journeyman Plumber",
+          "rows": 26209
+        },
+        {
+          "trade": "Master Plumber",
+          "rows": 4325
+        },
+        {
+          "trade": "Tradesman Plumber-Limited",
+          "rows": 3571
+        }
+      ],
+      "business_phone_public_eligible": 0
+    }
+  },
+  "identity_counts": {
+    "tdlr_business_keys": 38915,
+    "tdlr_adjacent_keys": 204,
+    "tdlr_person_keys_acquired": 2103,
+    "tsbpe_rmp_keys": 9360,
+    "tsbpe_person_keys": 34105
+  }
+}

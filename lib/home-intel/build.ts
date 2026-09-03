@@ -52,6 +52,7 @@ function statewideGc(state: EvidenceState): boolean {
 
 function canVerify(state: EvidenceState): string {
   if (state.slug === "fl") return "Name/license Verify plus Florida Intelligence OS (state + selected county).";
+  if (state.slug === "tx") return "Name/license Verify plus Texas specialty-trade intelligence (/texas). No statewide GC class.";
   if (state.depth === "specialty_verify") return `Name/license Verify for ${state.scopeHint}.`;
   if (state.slug === "ca") return "Name/license Verify against CSLB high-impact county extracts.";
   return `Name/license Verify against the ${state.boardShortLabel} extract.`;
@@ -60,7 +61,7 @@ function canVerify(state: EvidenceState): string {
 function cannotInfer(state: EvidenceState): string {
   const bits = ["License address is not service area", "Active credential is not endorsement"];
   if (!statewideGc(state)) bits.push("No statewide general-contractor license in this source");
-  if (state.slug !== "fl") bits.push("No Intelligence OS state/county page on this hub yet");
+  if (state.slug !== "fl" && state.slug !== "tx") bits.push("No Intelligence OS state/county page on this hub yet");
   return bits.join(". ") + ".";
 }
 
@@ -79,8 +80,13 @@ function geoFrom(state: EvidenceState): GeoState {
     coverageNote: state.coverageNote,
     canVerify: canVerify(state),
     cannotInfer: cannotInfer(state),
-    href: state.slug === "fl" ? "/florida" : verifyPathFor(state),
-    hrefLabel: state.slug === "fl" ? "Explore Florida Intelligence" : `${state.name} Verify`,
+    href: state.slug === "fl" ? "/florida" : state.slug === "tx" ? "/texas" : verifyPathFor(state),
+    hrefLabel:
+      state.slug === "fl"
+        ? "Explore Florida Intelligence"
+        : state.slug === "tx"
+          ? "Explore Texas Intelligence"
+          : `${state.name} Verify`,
   };
 }
 
@@ -492,6 +498,7 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
     tools: [
       { id: "verify", label: "Verify a contractor", href: "/verify", note: "Name or license search across live states. Not a ranking." },
       { id: "florida", label: "Florida Contractor Intelligence", href: "/florida", note: "Enhanced state Intelligence OS. Unchanged in this task except Ask roofing copy." },
+      { id: "texas", label: "Texas Contractor & Trade Intelligence", href: "/texas", note: "Specialty trades and plumbing. No statewide general-contractor license." },
       { id: "scope", label: "Scope Builder", href: "/tools/scope-builder", note: "Project scoping. Not a contractor score." },
       { id: "quote", label: "Quote Analyzer", href: "/tools/quote-analyzer", note: "Read a quote against a checklist." },
       { id: "bids", label: "Compare Bids", href: "/tools/compare-bids", note: "Compare offers, not a winner ranking." },

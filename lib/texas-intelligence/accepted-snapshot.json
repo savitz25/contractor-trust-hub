@@ -1,0 +1,1113 @@
+{
+  "version": "contractor-tx-state-intel-v1",
+  "ticket": "TX-CON-001",
+  "as_of": "2026-09-03",
+  "generated_at": "2026-09-03T21:32:38.671686+00:00",
+  "no_trust_score": true,
+  "no_ranking": true,
+  "no_statewide_general_contractor_license": true,
+  "no_texas_local_routes": true,
+  "publication": {
+    "indexable": true,
+    "robots": "index,follow",
+    "canonical": "https://www.contractortrusthub.com/texas",
+    "route": "/texas",
+    "h1": "Texas Contractor & Trade Intelligence"
+  },
+  "hero": {
+    "universe_value": 38915,
+    "universe_label": "TDLR business contractor credentials",
+    "universe_hint": "Specialty/company files only. Not all Texas contractors.",
+    "current_value": 9360,
+    "current_label": "TSBPE Responsible Master Plumbers",
+    "current_hint": "Plumbing contracting-to-the-public credential. Separate board.",
+    "observations_value": 3337,
+    "observations_label": "Construction-related CMBL vendors",
+    "observations_hint": "Procurement vendors, not licenses.",
+    "geography_value": 8605,
+    "geography_label": "TxDOT project rows",
+    "geography_hint": "Projects, not awarded contractors.",
+    "as_of_value": "2026-09-03",
+    "as_of_label": "Native TDLR files"
+  },
+  "regulatory_map": {
+    "statewide_general_contractor_license": false,
+    "model": "SPLIT_SPECIALTY_PLUS_LOCAL",
+    "primary_business_regulators": [
+      {
+        "id": "tdlr",
+        "name": "Texas Department of Licensing and Regulation",
+        "url": "https://www.tdlr.texas.gov/",
+        "role": "Specialty trades (A/C, electrical, elevator, water well, mold companies, and others). Not a general-contractor board."
+      },
+      {
+        "id": "tsbpe",
+        "name": "Texas State Board of Plumbing Examiners",
+        "url": "https://tsbpe.texas.gov/",
+        "role": "Plumbing. Responsible Master Plumber may contract with the public."
+      }
+    ],
+    "not_a_license": [
+      "CMBL vendor registration",
+      "HUB certification",
+      "VetHUB / SDV flag",
+      "TxDOT project / CSJ",
+      "TCEQ customer or regulated entity"
+    ],
+    "local_building_regulation": "LOCAL_FRAGMENTED",
+    "local_note": "Cities and counties issue building permits and may register local contractors. No statewide building-permit file. Houston, Dallas, San Antonio, Austin, Fort Worth, and county harvests are out of scope for TX-CON-001."
+  },
+  "tdlr": {
+    "soda": {
+      "dataset_id": "7358-krk7",
+      "source": "https://data.texas.gov/dataset/TDLR-All-Licenses/7358-krk7",
+      "row_count": 983494,
+      "type_count": 87,
+      "null_license_type_rows": 54932,
+      "grain_totals": {
+        "PERSON_TRADE_CREDENTIAL": 391308,
+        "OTHER": 554352,
+        "BUSINESS_CONTRACTOR": 37834
+      },
+      "no_status_field": true,
+      "coverage": "ACQUIRED_TYPE_AGGREGATION",
+      "note": "Used to classify the full TDLR universe. Not downloaded as a 187MB all-licenses dump."
+    },
+    "native_portal": "https://www.tdlr.texas.gov/dbproduction2/",
+    "native_as_of": "2026-09-03",
+    "identity_namespace": "TX-TDLR:{LICENSE_TYPE}:{LICENSE_NUMBER}[:SUBTYPE]",
+    "license_number_collides_across_types": true,
+    "files": [
+      {
+        "key": "ac_contractor",
+        "label": "A/C Contractor",
+        "grain": "BUSINESS_CONTRACTOR",
+        "filename": "ltairref.csv",
+        "bytes": 3654963,
+        "sha256": "95559aecdf3b137c4d9b1ea640225da2b1eb53a8e8dc4a8308f25c7dd39ff84d",
+        "ok": true,
+        "row_count": 20427,
+        "distinct_keys": 20427,
+        "phones": 0,
+        "status_buckets": {
+          "CURRENT_BY_EXPIRATION": 19109,
+          "EXPIRED_BY_EXPIRATION": 1318
+        }
+      },
+      {
+        "key": "electrical_contractor",
+        "label": "Electrical Contractor",
+        "grain": "BUSINESS_CONTRACTOR",
+        "filename": "Lteecele.csv",
+        "bytes": 3793622,
+        "sha256": "82e139087d894a2eafb42d0520b1d8dcb06713a7504f66207e8ab27be8f6c3c7",
+        "ok": true,
+        "row_count": 14036,
+        "distinct_keys": 14036,
+        "phones": 14030,
+        "status_buckets": {
+          "CURRENT_BY_EXPIRATION": 12309,
+          "EXPIRED_BY_EXPIRATION": 1727
+        }
+      },
+      {
+        "key": "electrical_sign_contractor",
+        "label": "Electrical Sign Contractor",
+        "grain": "BUSINESS_CONTRACTOR",
+        "filename": "Ltescele.csv",
+        "bytes": 179493,
+        "sha256": "2c162a7b0aa6baaa045c5608a46774f8720baffdc31fe0bb42e61cd8a6f11e05",
+        "ok": true,
+        "row_count": 655,
+        "distinct_keys": 655,
+        "phones": 655,
+        "status_buckets": {
+          "EXPIRED_BY_EXPIRATION": 76,
+          "CURRENT_BY_EXPIRATION": 579
+        }
+      },
+      {
+        "key": "appliance_installation_contractor",
+        "label": "Appliance Installation Contractor",
+        "grain": "BUSINESS_CONTRACTOR",
+        "filename": "Ltactele.csv",
+        "bytes": 239173,
+        "sha256": "1f9cb25ecf19595478220e9a04b2bbd8a9d724389d94648e403018f3702e443e",
+        "ok": true,
+        "row_count": 838,
+        "distinct_keys": 838,
+        "phones": 838,
+        "status_buckets": {
+          "CURRENT_BY_EXPIRATION": 706,
+          "EXPIRED_BY_EXPIRATION": 132
+        }
+      },
+      {
+        "key": "water_well",
+        "label": "Water Well Driller/Pump Installer",
+        "grain": "BUSINESS_CONTRACTOR",
+        "filename": "ltwwdpmp.csv",
+        "bytes": 456222,
+        "sha256": "0e5c4d3d0e348f378f58ca0a88060ea0ad385e96b63edc72a1e5ce5aae3a9164",
+        "ok": true,
+        "row_count": 1752,
+        "distinct_keys": 1752,
+        "phones": 1751,
+        "status_buckets": {
+          "EXPIRED_BY_EXPIRATION": 172,
+          "CURRENT_BY_EXPIRATION": 1580
+        }
+      },
+      {
+        "key": "elevator_contractor",
+        "label": "Elevator Contractor",
+        "grain": "BUSINESS_CONTRACTOR",
+        "filename": "ltelectr.csv",
+        "bytes": 104601,
+        "sha256": "208c8d2f0ac10a6eaa98086dc222c0fdc4c30e36a1b09c7601837453da5ed5f4",
+        "ok": true,
+        "row_count": 370,
+        "distinct_keys": 370,
+        "phones": 367,
+        "status_buckets": {
+          "CURRENT_BY_EXPIRATION": 280,
+          "EXPIRED_BY_EXPIRATION": 90
+        }
+      },
+      {
+        "key": "mold_assessment_company",
+        "label": "Mold Assessment Company",
+        "grain": "BUSINESS_CONTRACTOR",
+        "filename": "vsMoldAssessmentCompany.csv",
+        "bytes": 36697,
+        "sha256": "a0c1329ec93a7f0d3ea4c252117784112b3debe8576de525b1adbcf4b0e94fa2",
+        "ok": true,
+        "row_count": 253,
+        "distinct_keys": 253,
+        "phones": 253,
+        "status_buckets": {
+          "CURRENT": 205,
+          "EXPIRED": 48
+        }
+      },
+      {
+        "key": "mold_remediation_company",
+        "label": "Mold Remediation Company",
+        "grain": "BUSINESS_CONTRACTOR",
+        "filename": "vsMoldRemediationCompany.csv",
+        "bytes": 85574,
+        "sha256": "ff606c85efb4d27f851d35632f52fbb3ef9b2258916536b063cad5203406e23c",
+        "ok": true,
+        "row_count": 591,
+        "distinct_keys": 584,
+        "phones": 591,
+        "status_buckets": {
+          "CURRENT": 466,
+          "EXPIRED": 125
+        }
+      },
+      {
+        "key": "mold_analysis_lab",
+        "label": "Mold Analysis Laboratory",
+        "grain": "BUSINESS_ADJACENT",
+        "filename": "vsMoldAnalysisLaboratory.csv",
+        "bytes": 10857,
+        "sha256": "198a744b61a4c8e6a629facbb8e04775c28ae2ee3b5f8b875a204d0c5da9118e",
+        "ok": true,
+        "row_count": 71,
+        "distinct_keys": 71,
+        "phones": 71,
+        "status_buckets": {
+          "CURRENT": 63,
+          "EXPIRED": 8
+        }
+      },
+      {
+        "key": "solar_residential_retailer",
+        "label": "Solar Residential Retailer",
+        "grain": "BUSINESS_ADJACENT",
+        "filename": "vsResidentialSolarRetailers.csv",
+        "bytes": 3415,
+        "sha256": "e4bab92d6d66bda7a89aae2f74449e4a18a1364d1c1a0615a346893d930e70d2",
+        "ok": true,
+        "row_count": 27,
+        "distinct_keys": 27,
+        "phones": 27,
+        "status_buckets": {
+          "Current": 27
+        }
+      },
+      {
+        "key": "ev_supply_provider",
+        "label": "EV Supply Provider",
+        "grain": "BUSINESS_ADJACENT",
+        "filename": "vsEVSupplyProvider.csv",
+        "bytes": 15711,
+        "sha256": "61b298e94d66e43acd922b100b62840e3bb6258a450eff2b23978c6f6fb8ff9d",
+        "ok": true,
+        "row_count": 106,
+        "distinct_keys": 106,
+        "phones": 106,
+        "status_buckets": {
+          "EXPIRED": 47,
+          "CURRENT": 59
+        }
+      },
+      {
+        "key": "mold_remediation_contractor",
+        "label": "Mold Remediation Contractor",
+        "grain": "PERSON_TRADE_CREDENTIAL",
+        "filename": "vsMoldRemediationContractor.csv",
+        "bytes": 85685,
+        "sha256": "9216cb5af6cb76e644a676ff83d976e32dd7d45508f0fc2c8f68e5ebc77fd708",
+        "ok": true,
+        "row_count": 998,
+        "distinct_keys": 997,
+        "phones": 0,
+        "status_buckets": {
+          "CURRENT": 809,
+          "EXPIRED": 189
+        }
+      },
+      {
+        "key": "mold_assessment_consultant",
+        "label": "Mold Assessment Consultant",
+        "grain": "PERSON_TRADE_CREDENTIAL",
+        "filename": "vsMoldAssessmentConsultant.csv",
+        "bytes": 93472,
+        "sha256": "d8b038da9f9b75fdd1c60693201fa1e4710564c9393853b8570777bc6bb7c537",
+        "ok": true,
+        "row_count": 1106,
+        "distinct_keys": 1106,
+        "phones": 0,
+        "status_buckets": {
+          "CURRENT": 926,
+          "EXPIRED": 180
+        }
+      }
+    ],
+    "business_contractor": {
+      "credential_rows": 38922,
+      "distinct_keys": 38915,
+      "distinct_normalized_names": 35937,
+      "distinct_name_addr": 37481,
+      "status_buckets": {
+        "CURRENT_BY_EXPIRATION": 34563,
+        "EXPIRED_BY_EXPIRATION": 3515,
+        "CURRENT": 671,
+        "EXPIRED": 173
+      },
+      "trade_counts": [
+        {
+          "trade": "A/C Contractor",
+          "rows": 20427
+        },
+        {
+          "trade": "Electrical Contractor",
+          "rows": 14036
+        },
+        {
+          "trade": "Water Well Driller/Pump Installer",
+          "rows": 1752
+        },
+        {
+          "trade": "Appliance Installation Contractor",
+          "rows": 838
+        },
+        {
+          "trade": "Electrical Sign Contractor",
+          "rows": 655
+        },
+        {
+          "trade": "Mold Remediation Company",
+          "rows": 591
+        },
+        {
+          "trade": "Elevator Contractor",
+          "rows": 370
+        },
+        {
+          "trade": "Mold Assessment Company",
+          "rows": 253
+        }
+      ],
+      "business_phone_public_eligible": 18485
+    },
+    "business_adjacent": {
+      "credential_rows": 204,
+      "distinct_keys": 204,
+      "distinct_normalized_names": 192,
+      "distinct_name_addr": 203,
+      "status_buckets": {
+        "CURRENT": 122,
+        "EXPIRED": 55,
+        "Current": 27
+      },
+      "trade_counts": [
+        {
+          "trade": "EV Supply Provider",
+          "rows": 106
+        },
+        {
+          "trade": "Mold Analysis Laboratory",
+          "rows": 71
+        },
+        {
+          "trade": "Solar Residential Retailer",
+          "rows": 27
+        }
+      ],
+      "business_phone_public_eligible": 204
+    },
+    "person_acquired_subset": {
+      "credential_rows": 2104,
+      "distinct_keys": 2103,
+      "distinct_normalized_names": 2009,
+      "distinct_name_addr": 2009,
+      "status_buckets": {
+        "CURRENT": 1735,
+        "EXPIRED": 369
+      },
+      "trade_counts": [
+        {
+          "trade": "Mold Assessment Consultant",
+          "rows": 1106
+        },
+        {
+          "trade": "Mold Remediation Contractor",
+          "rows": 998
+        }
+      ],
+      "business_phone_public_eligible": 0
+    },
+    "person_soda_count": 391308,
+    "person_soda_note": "Person trade credentials in All Licenses (electricians, A/C technicians, apprentices, and similar). Not contractor businesses. Not fully ingested as identities in this ticket except mold person Versa files.",
+    "listing_status": {
+      "method": "EXPIRATION_VS_AS_OF",
+      "CURRENT_BY_EXPIRATION": 34563,
+      "EXPIRED_BY_EXPIRATION": 3515,
+      "clear_is_not_verified": true,
+      "expired_is_not_disciplined": true
+    },
+    "versa_native_status": {
+      "CURRENT": 2528,
+      "EXPIRED": 597,
+      "Current": 27
+    },
+    "ac_file_phones_mostly_absent": true
+  },
+  "tsbpe": {
+    "source": "https://tsbpe.texas.gov/free-licensee-list/",
+    "identity_namespace": "TX-TSBPE:{KIND}:{LICENSE_NBR}",
+    "files": [
+      {
+        "kind": "RMP",
+        "label": "Responsible Master Plumber",
+        "grain": "BUSINESS_CONTRACTOR",
+        "bytes": 1982197,
+        "sha256": "61bbb5139720b06c4eb0a3a072684ae4321bb4a2201367095a2456e673cf5780",
+        "ok": true,
+        "row_count": 9360,
+        "distinct_keys": 9360,
+        "phones": 4776,
+        "status_buckets": {
+          "Current": 8570,
+          "Expired": 790
+        }
+      },
+      {
+        "kind": "MP",
+        "label": "Master Plumber",
+        "grain": "PERSON_TRADE_CREDENTIAL",
+        "bytes": 437186,
+        "sha256": "c1cb6292ac6471838430c37c2563935be7a4a568edd2243d2e3df735dca0cdb9",
+        "ok": true,
+        "row_count": 4325,
+        "distinct_keys": 4325,
+        "phones": 0,
+        "status_buckets": {
+          "Current": 3660,
+          "Expired": 665
+        }
+      },
+      {
+        "kind": "JP",
+        "label": "Journeyman Plumber",
+        "grain": "PERSON_TRADE_CREDENTIAL",
+        "bytes": 2644376,
+        "sha256": "ee207f8195261ad9b1bccfe0229b597320b501b6710d97395278e723ce3c9243",
+        "ok": true,
+        "row_count": 26209,
+        "distinct_keys": 26209,
+        "phones": 0,
+        "status_buckets": {
+          "Current": 23011,
+          "Expired": 3198
+        }
+      },
+      {
+        "kind": "TP",
+        "label": "Tradesman Plumber-Limited",
+        "grain": "PERSON_TRADE_CREDENTIAL",
+        "bytes": 319236,
+        "sha256": "d29f4b62b4e605e8e89893c53396064422cd1825eb36a2a97457fb3700126c83",
+        "ok": true,
+        "row_count": 3571,
+        "distinct_keys": 3571,
+        "phones": 0,
+        "status_buckets": {
+          "Current": 2911,
+          "Expired": 660
+        }
+      }
+    ],
+    "responsible_master_plumber": {
+      "credential_rows": 9360,
+      "distinct_keys": 9360,
+      "distinct_normalized_names": 8581,
+      "distinct_name_addr": 9174,
+      "status_buckets": {
+        "Current": 8570,
+        "Expired": 790
+      },
+      "trade_counts": [
+        {
+          "trade": "Responsible Master Plumber",
+          "rows": 9360
+        }
+      ],
+      "business_phone_public_eligible": 4776
+    },
+    "person_credentials": {
+      "credential_rows": 34105,
+      "distinct_keys": 34105,
+      "distinct_normalized_names": 30513,
+      "distinct_name_addr": 30513,
+      "status_buckets": {
+        "Current": 29582,
+        "Expired": 4523
+      },
+      "trade_counts": [
+        {
+          "trade": "Journeyman Plumber",
+          "rows": 26209
+        },
+        {
+          "trade": "Master Plumber",
+          "rows": 4325
+        },
+        {
+          "trade": "Tradesman Plumber-Limited",
+          "rows": 3571
+        }
+      ],
+      "business_phone_public_eligible": 0
+    },
+    "rmp_may_contract_with_public": true,
+    "master_plumber_is_person": true,
+    "insurance_on_rmp_file": {
+      "CURRENT_BY_EXPIRATION": 7932,
+      "EXPIRED_BY_EXPIRATION": 1416,
+      "MISSING": 12
+    },
+    "insurance_note": "INS_EXPIRY_DTE is on the RMP list. Current insurance-by-expiration is not a TDLR license and not a discipline record."
+  },
+  "status_distribution": {
+    "tdlr_listing_expiration": {
+      "CURRENT_BY_EXPIRATION": 34563,
+      "EXPIRED_BY_EXPIRATION": 3515
+    },
+    "tdlr_versa_source_native": {
+      "CURRENT": 2528,
+      "EXPIRED": 597,
+      "Current": 27
+    },
+    "tsbpe_source_native": {
+      "RMP": {
+        "Current": 8570,
+        "Expired": 790
+      },
+      "person": {
+        "Current": 29582,
+        "Expired": 4523
+      }
+    },
+    "rules": [
+      "Expired is not disciplined.",
+      "CURRENT / Current is not TrustHub Verified.",
+      "Listing-file expiration is not a source-native CURRENT flag."
+    ]
+  },
+  "trade_distribution": {
+    "tdlr_business": [
+      {
+        "trade": "A/C Contractor",
+        "rows": 20427
+      },
+      {
+        "trade": "Electrical Contractor",
+        "rows": 14036
+      },
+      {
+        "trade": "Water Well Driller/Pump Installer",
+        "rows": 1752
+      },
+      {
+        "trade": "Appliance Installation Contractor",
+        "rows": 838
+      },
+      {
+        "trade": "Electrical Sign Contractor",
+        "rows": 655
+      },
+      {
+        "trade": "Mold Remediation Company",
+        "rows": 591
+      },
+      {
+        "trade": "Elevator Contractor",
+        "rows": 370
+      },
+      {
+        "trade": "Mold Assessment Company",
+        "rows": 253
+      }
+    ],
+    "tsbpe": [
+      {
+        "trade": "Responsible Master Plumber",
+        "rows": 9360
+      },
+      {
+        "trade": "Journeyman Plumber",
+        "rows": 26209
+      },
+      {
+        "trade": "Master Plumber",
+        "rows": 4325
+      },
+      {
+        "trade": "Tradesman Plumber-Limited",
+        "rows": 3571
+      }
+    ],
+    "note": "Trades are source-native license types. Not a ranking."
+  },
+  "contacts": {
+    "tdlr_business_phone_public_eligible": 18485,
+    "tsbpe_rmp_phone_public_eligible": 4776,
+    "cmbl_vendor_phone_public_eligible": 11999,
+    "cmbl_vendor_email_public_eligible": 11998,
+    "person_phones_published": false,
+    "business_phone_is_not_personal": true,
+    "cmbl_contact_is_not_license_contact": true,
+    "inferred_email_or_website": false,
+    "mailing_address_policy": "REVIEW_REQUIRED",
+    "mail_address_is_not_service_area": true,
+    "ac_contractor_native_file_phone_gap": true
+  },
+  "cmbl": {
+    "coverage": "ACQUIRED",
+    "source": "https://comptroller.texas.gov/purchasing/downloads",
+    "code_legend_source": "https://comptroller.texas.gov/purchasing/vendor/codes.php",
+    "semantics": "CMBL_VENDOR_NOT_CONTRACTOR_LICENSE. HUB/VetHUB are procurement certifications, not trade licenses. Category 01 includes general contractors as a vendor self-class \u2014 that is not a statewide GC license.",
+    "web_name_rows": 12000,
+    "hub_name_rows": 1482,
+    "vnr_clas_rows": 49245,
+    "distinct_class_vids": 11897,
+    "hub_status_counts": {
+      "N": 7565,
+      "I": 555,
+      "D": 2252,
+      "A": 1480,
+      "X": 113,
+      "R": 12,
+      "G": 5,
+      "V": 9,
+      "M": 9
+    },
+    "hub_status_legend": {
+      "A": "Active HUB (source-native WEB_HUB_STATUS A)",
+      "N": "Not HUB (source-native WEB_HUB_STATUS N)",
+      "D": "Decertified or deleted-class HUB status (source-native D; confirm on Comptroller)",
+      "I": "Inactive / expired HUB (source-native I)",
+      "X": "Source-native X (confirm on Comptroller code list)",
+      "R": "Rejected / non-eligible (source-native R)",
+      "V": "Vendor requested removal (source-native V)",
+      "M": "Source-native M (confirm on Comptroller code list)",
+      "G": "Graduated (source-native G)"
+    },
+    "sdv_flag_counts": {
+      "(blank)": 10483,
+      "Y": 1517
+    },
+    "sdv_flag_note": "WEB_SDV_FLAG Y is the source-native service-disabled veteran flag on the active CMBL file. It is not a contractor license.",
+    "category_counts": {
+      "05": 802,
+      "06": 4810,
+      "04": 219,
+      "07": 2061,
+      "02": 1217,
+      "01": 420,
+      "08": 615,
+      "03": 1396,
+      "09": 460
+    },
+    "category_legend": {
+      "01": "Building Construction, including General Contractors and Operative Builders",
+      "02": "Special Trade Construction",
+      "03": "Financial and Accounting Services",
+      "04": "Architectural/Engineering and Surveying Services",
+      "05": "Other Services including Legal Services",
+      "06": "Commodities Wholesale",
+      "07": "Commodities Manufacturers",
+      "08": "Medical",
+      "09": "Source-native category 09 (label not fully expanded on codes page extract)"
+    },
+    "construction_nigp_classes": [
+      "909",
+      "910",
+      "912",
+      "913",
+      "914",
+      "968"
+    ],
+    "construction_nigp_labels": {
+      "909": "BUILDING CONSTRUCTION SERVICES, NEW, INCLUDING MAINTENANCE AND REPAIR SERVICES",
+      "910": "BUILDING MAINTENANCE, INSTALLATION AND REPAIR SERVICES",
+      "912": "CONSTRUCTION SERVICES, GENERAL, INCLUDING MAINTENANCE AND REPAIR SERVICES)",
+      "913": "CONSTRUCTION SERVICES, HEAVY, INCLUDING MAINTENANCE AND REPAIR SERVICES",
+      "914": "CONSTRUCTION SERVICES, TRADES, NEW CONSTRUCTION",
+      "968": "PUBLIC WORKS AND RELATED SERVICES"
+    },
+    "construction_nigp_class_rows": {
+      "909": 875,
+      "910": 1330,
+      "912": 855,
+      "913": 542,
+      "914": 1123,
+      "968": 551
+    },
+    "construction_nigp_vendor_vids": 2836,
+    "construction_category_01_02_rows": 1637,
+    "construction_vendor_vids": 3337,
+    "construction_vendor_rows": 3337,
+    "vendor_phone_public_eligible": 11999,
+    "vendor_email_public_eligible": 11998,
+    "match": {
+      "EXACT": 0,
+      "HIGH_CONFIDENCE": 43,
+      "REVIEW_REQUIRED": 241,
+      "UNSAFE": 71,
+      "NET_NEW_BUSINESS_CANDIDATES": 2982,
+      "examples": {
+        "EXACT": [],
+        "HIGH_CONFIDENCE": [
+          {
+            "vid": "1822776599900",
+            "name": "ACCUTEK TECHNOLOGIES, INC"
+          },
+          {
+            "vid": "1010611542000",
+            "name": "EFFICIENT FACILITIES INTERNATIONAL INC"
+          },
+          {
+            "vid": "1991476601900",
+            "name": "ARCHER ELECTRICAL CONTRACTING CO."
+          },
+          {
+            "vid": "1741703679901",
+            "name": "ELK ELECTRIC, INC."
+          }
+        ],
+        "REVIEW_REQUIRED": [
+          {
+            "vid": "1900734857600",
+            "name": "DELTA TEMP SERVICES, LLC"
+          },
+          {
+            "vid": "1841309171300",
+            "name": "BELFOR USA GROUP, INC."
+          },
+          {
+            "vid": "1813594267200",
+            "name": "AB POWERS, LLC"
+          },
+          {
+            "vid": "1760698345400",
+            "name": "DOBBINS FLOOR COVERING, INC."
+          }
+        ],
+        "UNSAFE": [
+          {
+            "vid": "1932924044400",
+            "name": "COMPLETE PLUMBING AND HVAC SERVICE LLC"
+          },
+          {
+            "vid": "1743149585600",
+            "name": "ERLING SALES & SERVICE LLC"
+          },
+          {
+            "vid": "1873313309600",
+            "name": "HTR AIR CONDITIONING & HEATING LLC."
+          },
+          {
+            "vid": "1823118263700",
+            "name": "S&J ELECTRIC, LLC"
+          }
+        ],
+        "NET_NEW": [
+          {
+            "vid": "1440229405300",
+            "name": "JE DUNN CONSTRUCTION"
+          },
+          {
+            "vid": "1581401466601",
+            "name": "TEXAS MATERIALS GROUP, INC."
+          },
+          {
+            "vid": "1331903053500",
+            "name": "K2 BAR NONE CONSTRUCTION SERVICES, LLC"
+          },
+          {
+            "vid": "1395022857000",
+            "name": "LONE STAR ELITE HAULING & JUNK REMOVAL"
+          }
+        ]
+      },
+      "note": "EXACT requires a source-native trade/license ID in the vendor row. HIGH_CONFIDENCE is unique name+address. NET_NEW is not unlicensed."
+    },
+    "adverse_attach_rule": "EXACT official credential ID only. Do not attach HIGH_CONFIDENCE/REVIEW/UNSAFE as adverse evidence.",
+    "class_item_counts_top": [
+      {
+        "class": "918",
+        "rows": 2899
+      },
+      {
+        "class": "962",
+        "rows": 1425
+      },
+      {
+        "class": "920",
+        "rows": 1354
+      },
+      {
+        "class": "910",
+        "rows": 1330
+      },
+      {
+        "class": "958",
+        "rows": 1226
+      },
+      {
+        "class": "961",
+        "rows": 1178
+      },
+      {
+        "class": "914",
+        "rows": 1123
+      },
+      {
+        "class": "208",
+        "rows": 921
+      },
+      {
+        "class": "909",
+        "rows": 875
+      },
+      {
+        "class": "912",
+        "rows": 855
+      },
+      {
+        "class": "915",
+        "rows": 808
+      },
+      {
+        "class": "925",
+        "rows": 786
+      }
+    ]
+  },
+  "txdot": {
+    "dataset_id": "drau-zphx",
+    "source": "https://data.texas.gov/dataset/Project-Information/drau-zphx",
+    "row_count": 8605,
+    "csv_rows": 8605,
+    "csv_sha256": "db931679d552152fb5589deed5822fc0b5c3f782e1481a29087961d06afa63ef",
+    "let_type_counts": {
+      "Statewide Let": 6829,
+      "(blank)": 443,
+      "Local District Let": 434,
+      "Non-Let and Values": 396,
+      "Local Agency Let": 337,
+      "Non-Let Local Donate": 65,
+      "Local Agency - Local Funded": 59,
+      "Transfer to Other Agency": 17,
+      "Design Build": 11,
+      "Statewide Letting": 9,
+      "Cross State-Other State Let Project": 3,
+      "Statewide Let No Charge": 2
+    },
+    "project_status_counts": {
+      "Active": 8555,
+      "Closed": 31,
+      "(blank)": 9,
+      "Paused": 5,
+      "Inactive": 5
+    },
+    "construction_manager_is_txdot_staff": true,
+    "awarded_contractor_field": null,
+    "semantics": "PROJECT_NOT_CONTRACTOR. construction_manager is TxDOT contact, not the awarded contractor.",
+    "coverage": "ACQUIRED"
+  },
+  "tceq": {
+    "coverage": "PARKED_REGIONAL_FRAGMENT",
+    "dataset_id": "msah-s2rv",
+    "row_count": 660535,
+    "naics_23_rows_in_fragment": 71564,
+    "naics_23_sample": [
+      {
+        "naics": "236115 - New Single-Family Housing Construction (except Operative Builders)",
+        "rows": 31510
+      },
+      {
+        "naics": "236220 - Commercial and Institutional Building Construction",
+        "rows": 13333
+      },
+      {
+        "naics": "237310 - Highway, Street, and Bridge Construction",
+        "rows": 8266
+      },
+      {
+        "naics": "237210 - Land Subdivision",
+        "rows": 5202
+      },
+      {
+        "naics": "237110 - Water and Sewer Line and Related Structures Construction",
+        "rows": 3623
+      },
+      {
+        "naics": "237990 - Other Heavy and Civil Engineering Construction",
+        "rows": 2824
+      },
+      {
+        "naics": "236210 - Industrial Building Construction",
+        "rows": 2246
+      },
+      {
+        "naics": "238990 - All Other Specialty Trade Contractors",
+        "rows": 1098
+      }
+    ],
+    "semantics": "TCEQ_REGULATED_ENTITY_NOT_CONTRACTOR. Customer/RE grain. Construction NAICS is not a contractor license.",
+    "statewide_complete": false,
+    "reason_parked": "Portal files are regional fragments (658k+ Central Texas alone). No statewide contractor-classified dump acquired."
+  },
+  "enforcement": {
+    "tdlr_bulk_license_id_file": "NOT_ACQUIRED",
+    "tdlr_public_stats": {
+      "source": "https://www.tdlr.texas.gov/enforcement/complaint-stats/2025/ceo-complaint-statistics-fy25.pdf",
+      "fy": 2025,
+      "agency_cases_opened": 12913,
+      "agency_total_licensees_cited_on_pdf": 1019176,
+      "note": "The 1,019,176 licensee figure on TDLR enforcement PDFs is all TDLR programs, including barbering and cosmetology. It is not a contractor count. Complaint statistics are not license-ID rows and are not attached as adverse evidence."
+    },
+    "tsbpe_bulk": "NOT_ACQUIRED",
+    "complaint_is_not_violation": true,
+    "attach_rule": "EXACT official credential ID only."
+  },
+  "qualifier_relationships": {
+    "tdlr_listing_name_vs_business_name": "TDLR listing files carry a person NAME and a BUSINESS NAME on the same license row. That is a source-native qualifier/company pairing on the credential. People are not published as profiles.",
+    "tsbpe_rmp_person_and_company": "RMP rows include the plumber's name and PLUMB_COMPANY plus insurance expiry. RMP is the business-facing plumbing credential.",
+    "rmp_insurance_expiry": {
+      "CURRENT_BY_EXPIRATION": 7932,
+      "EXPIRED_BY_EXPIRATION": 1416,
+      "MISSING": 12
+    },
+    "publish_people_as_profiles": false
+  },
+  "statewide_permits": {
+    "coverage": "LOCAL_FRAGMENTED",
+    "acquired": false,
+    "note": "Texas building permits are issued by cities and counties. No statewide permit file was acquired. Local harvests are out of scope."
+  },
+  "identity_graph": {
+    "namespaces": [
+      "TX-TDLR:{TYPE}:{NUMBER}[:SUBTYPE]",
+      "TX-TSBPE:{KIND}:{NUMBER}",
+      "TX-CMBL:{WEB_VID}",
+      "TXDOT-CSJ:{CSJ}"
+    ],
+    "tdlr_business_keys": 38915,
+    "tdlr_adjacent_keys": 204,
+    "tdlr_person_keys_acquired": 2103,
+    "tsbpe_rmp_keys": 9360,
+    "tsbpe_person_keys": 34105,
+    "cmbl_vendor_rows": 12000,
+    "txdot_project_rows": 8605,
+    "no_name_only_merge": true,
+    "adverse_attach_rule": "EXACT official credential ID only. Name-only is UNSAFE."
+  },
+  "contact_graph": {
+    "tdlr_business_phone": "PUBLIC_ELIGIBLE where present on business files",
+    "tsbpe_rmp_phone": "PUBLIC_ELIGIBLE where present on RMP list",
+    "person_phone": "NOT_PUBLISHED",
+    "cmbl_phone_email": "PUBLIC_ELIGIBLE as vendor contacts; not license contacts",
+    "websites_inferred": false
+  },
+  "specialty_registries": {
+    "mold_companies": "ACQUIRED",
+    "mold_person_credentials": "ACQUIRED",
+    "solar_residential_retailers": "ACQUIRED_ADJACENT",
+    "ev_supply_providers": "ACQUIRED_ADJACENT",
+    "industrialized_housing": "NOT_ON_TDLR_DOWNLOAD_PAGE",
+    "elevator_responsible_party": "NOT_CLASSIFIED_AS_CONTRACTOR"
+  },
+  "findings": [
+    {
+      "id": "no-statewide-gc",
+      "text": "Texas does not use one statewide general-contractor licensing system. TDLR licenses specialty trades. TSBPE licenses plumbing. Many builders are regulated only locally. Do not treat this page as a count of all Texas contractors."
+    },
+    {
+      "id": "tdlr-not-all-licenses",
+      "text": "TDLR All Licenses on data.texas.gov (7358-krk7) has 983,494 rows. 391,308 are person trade credentials and 554,352 are other TDLR programs (cosmetology, barbering, towing, and similar). Only 37,834 Socrata rows are construction-business contractor types. That 983,494 figure is not a Texas contractor census."
+    },
+    {
+      "id": "business-spine",
+      "text": "Native TDLR contractor/company files acquired 38,922 business-contractor credential rows / 38,915 distinct TX-TDLR keys (A/C, electrical, sign, appliance, water well, elevator, plus mold companies). TSBPE Responsible Master Plumber adds 9,360 business-facing plumbing credentials. Person licenses are counted separately."
+    },
+    {
+      "id": "status-not-discipline",
+      "text": "TDLR listing files have expiration dates, not CURRENT/REVOKED flags. Versa mold/solar/EV files and TSBPE lists publish source-native status labels. Expired is not disciplined. CURRENT_BY_EXPIRATION is not TrustHub Verified."
+    },
+    {
+      "id": "cmbl-not-license",
+      "text": "Comptroller active CMBL/VetHUB web_name.csv has 12,000 vendor rows. Construction-related vendors in this harvest: 3,337 (NIGP 909/910/912/913/914/968 or business category 01/02). A CMBL vendor is not a contractor license. Unmatched vendors are not unlicensed contractors."
+    },
+    {
+      "id": "txdot-not-identity",
+      "text": "TxDOT Project Information (drau-zphx) has 8,605 project rows. construction_manager is TxDOT staff. The file has no awarded-contractor identity field. A project is not a contractor."
+    },
+    {
+      "id": "tceq-not-contractor",
+      "text": "TCEQ Central Registry Central Texas fragment (msah-s2rv) has 660,535 regulated-entity rows; 71,564 carry NAICS 23* in that regional file. A TCEQ customer/RE is not a contractor license. Statewide TCEQ is not acquired."
+    }
+  ],
+  "evidence_depth": [
+    {
+      "family": "TDLR native specialty contractor files",
+      "grain": "business license row",
+      "public_treatment": "Published as acquired specialty credentials; not all Texas contractors"
+    },
+    {
+      "family": "TDLR All Licenses Socrata type aggregation",
+      "grain": "license type counts",
+      "public_treatment": "Used to separate person/other programs from business contractor types"
+    },
+    {
+      "family": "TSBPE free licensee lists",
+      "grain": "RMP business vs MP/JP/TP person",
+      "public_treatment": "RMP published as plumbing contracting credential; person lists counted, not profiled"
+    },
+    {
+      "family": "Comptroller CMBL / HUB / VetHUB",
+      "grain": "state vendor",
+      "public_treatment": "Vendor semantics; construction taxonomy via NIGP + category 01/02; not a license"
+    },
+    {
+      "family": "TxDOT Project Information",
+      "grain": "project / CSJ",
+      "public_treatment": "Project evidence; construction_manager is TxDOT staff"
+    },
+    {
+      "family": "TCEQ Central Registry",
+      "grain": "customer / regulated entity",
+      "public_treatment": "Regional fragment parked; not contractors"
+    },
+    {
+      "family": "TDLR enforcement",
+      "grain": "agency PDF stats",
+      "public_treatment": "No license-ID attach; missing \u2260 zero discipline"
+    }
+  ],
+  "coverage_gaps": [
+    {
+      "id": "statewide-gc",
+      "label": "Statewide general contractor license",
+      "state": "DOES_NOT_EXIST"
+    },
+    {
+      "id": "tdlr-all-licenses-native-187mb",
+      "label": "Native TDLR All Licenses 187MB dump",
+      "state": "NOT_DOWNLOADED_TYPE_AGGREGATION_USED"
+    },
+    {
+      "id": "tdlr-person-electricians-full",
+      "label": "Full electrician/A-C technician identity ingest",
+      "state": "COUNTED_VIA_SOCRATA_NOT_INGESTED"
+    },
+    {
+      "id": "tdlr-enforcement-ids",
+      "label": "TDLR disciplinary orders with license IDs",
+      "state": "PDF_STATS_ONLY"
+    },
+    {
+      "id": "txdot-awarded-contractor",
+      "label": "TxDOT awarded contractor identity",
+      "state": "NOT_IN_PROJECT_INFORMATION_FILE"
+    },
+    {
+      "id": "tceq-statewide",
+      "label": "Statewide TCEQ Central Registry",
+      "state": "PARKED_REGIONAL_FRAGMENT"
+    },
+    {
+      "id": "statewide-permits",
+      "label": "Statewide building permits",
+      "state": "LOCAL_FRAGMENTED"
+    },
+    {
+      "id": "texas-locals",
+      "label": "Texas city/county pages",
+      "state": "OUT_OF_SCOPE_THIS_TICKET"
+    },
+    {
+      "id": "ihb",
+      "label": "Industrialized Housing and Buildings roster",
+      "state": "NOT_ON_DOWNLOAD_PAGE"
+    }
+  ],
+  "semantics": [
+    "A Texas trade credential is not all Texas contractors.",
+    "A person trade license is not a contractor business.",
+    "CMBL / HUB / VetHUB is not a contractor license.",
+    "A TxDOT project is not a contractor identity.",
+    "A TCEQ regulated entity is not a contractor.",
+    "An unmatched vendor is not unlicensed.",
+    "Expired is not disciplined.",
+    "A complaint is not a violation.",
+    "Missing is not zero.",
+    "There is no statewide general-contractor license universe to invent."
+  ],
+  "verify": {
+    "tdlr_search": "https://www.tdlr.texas.gov/LicenseSearch/",
+    "tsbpe": "https://tsbpe.texas.gov/",
+    "cmbl_search": "https://mycpa.cpa.state.tx.us/tpasscmblsearch/index.jsp"
+  },
+  "gate": {
+    "regulatory_model_verified": true,
+    "major_business_credential_family_acquired": true,
+    "business_vs_person_validated": true,
+    "statuses_reconciled": true,
+    "vendor_semantics_safe": true,
+    "identity_graph_deterministic": true,
+    "contact_publication_safe": true,
+    "source_families": 4,
+    "findings": 7,
+    "deterministic_snapshot": true,
+    "passed": true,
+    "blocker": null
+  },
+  "fingerprint": "25d00ad3f4547ba212f4e2304177f788898c48d4750d1483944301eb1accadc6"
+}

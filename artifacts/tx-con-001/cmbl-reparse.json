@@ -1,0 +1,223 @@
+{
+  "coverage": "ACQUIRED",
+  "source": "https://comptroller.texas.gov/purchasing/downloads",
+  "code_legend_source": "https://comptroller.texas.gov/purchasing/vendor/codes.php",
+  "semantics": "CMBL_VENDOR_NOT_CONTRACTOR_LICENSE. HUB/VetHUB are procurement certifications, not trade licenses. Category 01 includes general contractors as a vendor self-class \u2014 that is not a statewide GC license.",
+  "web_name_rows": 12000,
+  "hub_name_rows": 1482,
+  "vnr_clas_rows": 49245,
+  "distinct_class_vids": 11897,
+  "hub_status_counts": {
+    "N": 7565,
+    "I": 555,
+    "D": 2252,
+    "A": 1480,
+    "X": 113,
+    "R": 12,
+    "G": 5,
+    "V": 9,
+    "M": 9
+  },
+  "hub_status_legend": {
+    "A": "Active HUB (source-native WEB_HUB_STATUS A)",
+    "N": "Not HUB (source-native WEB_HUB_STATUS N)",
+    "D": "Decertified or deleted-class HUB status (source-native D; confirm on Comptroller)",
+    "I": "Inactive / expired HUB (source-native I)",
+    "X": "Source-native X (confirm on Comptroller code list)",
+    "R": "Rejected / non-eligible (source-native R)",
+    "V": "Vendor requested removal (source-native V)",
+    "M": "Source-native M (confirm on Comptroller code list)",
+    "G": "Graduated (source-native G)"
+  },
+  "sdv_flag_counts": {
+    "(blank)": 10483,
+    "Y": 1517
+  },
+  "sdv_flag_note": "WEB_SDV_FLAG Y is the source-native service-disabled veteran flag on the active CMBL file. It is not a contractor license.",
+  "category_counts": {
+    "05": 802,
+    "06": 4810,
+    "04": 219,
+    "07": 2061,
+    "02": 1217,
+    "01": 420,
+    "08": 615,
+    "03": 1396,
+    "09": 460
+  },
+  "category_legend": {
+    "01": "Building Construction, including General Contractors and Operative Builders",
+    "02": "Special Trade Construction",
+    "03": "Financial and Accounting Services",
+    "04": "Architectural/Engineering and Surveying Services",
+    "05": "Other Services including Legal Services",
+    "06": "Commodities Wholesale",
+    "07": "Commodities Manufacturers",
+    "08": "Medical",
+    "09": "Source-native category 09 (label not fully expanded on codes page extract)"
+  },
+  "construction_nigp_classes": [
+    "909",
+    "910",
+    "912",
+    "913",
+    "914",
+    "968"
+  ],
+  "construction_nigp_labels": {
+    "909": "BUILDING CONSTRUCTION SERVICES, NEW, INCLUDING MAINTENANCE AND REPAIR SERVICES",
+    "910": "BUILDING MAINTENANCE, INSTALLATION AND REPAIR SERVICES",
+    "912": "CONSTRUCTION SERVICES, GENERAL, INCLUDING MAINTENANCE AND REPAIR SERVICES)",
+    "913": "CONSTRUCTION SERVICES, HEAVY, INCLUDING MAINTENANCE AND REPAIR SERVICES",
+    "914": "CONSTRUCTION SERVICES, TRADES, NEW CONSTRUCTION",
+    "968": "PUBLIC WORKS AND RELATED SERVICES"
+  },
+  "construction_nigp_class_rows": {
+    "909": 875,
+    "910": 1330,
+    "912": 855,
+    "913": 542,
+    "914": 1123,
+    "968": 551
+  },
+  "construction_nigp_vendor_vids": 2836,
+  "construction_category_01_02_rows": 1637,
+  "construction_vendor_vids": 3337,
+  "construction_vendor_rows": 3337,
+  "vendor_phone_public_eligible": 11999,
+  "vendor_email_public_eligible": 11998,
+  "match": {
+    "EXACT": 0,
+    "HIGH_CONFIDENCE": 43,
+    "REVIEW_REQUIRED": 241,
+    "UNSAFE": 71,
+    "NET_NEW_BUSINESS_CANDIDATES": 2982,
+    "examples": {
+      "EXACT": [],
+      "HIGH_CONFIDENCE": [
+        {
+          "vid": "1822776599900",
+          "name": "ACCUTEK TECHNOLOGIES, INC"
+        },
+        {
+          "vid": "1010611542000",
+          "name": "EFFICIENT FACILITIES INTERNATIONAL INC"
+        },
+        {
+          "vid": "1991476601900",
+          "name": "ARCHER ELECTRICAL CONTRACTING CO."
+        },
+        {
+          "vid": "1741703679901",
+          "name": "ELK ELECTRIC, INC."
+        }
+      ],
+      "REVIEW_REQUIRED": [
+        {
+          "vid": "1900734857600",
+          "name": "DELTA TEMP SERVICES, LLC"
+        },
+        {
+          "vid": "1841309171300",
+          "name": "BELFOR USA GROUP, INC."
+        },
+        {
+          "vid": "1813594267200",
+          "name": "AB POWERS, LLC"
+        },
+        {
+          "vid": "1760698345400",
+          "name": "DOBBINS FLOOR COVERING, INC."
+        }
+      ],
+      "UNSAFE": [
+        {
+          "vid": "1932924044400",
+          "name": "COMPLETE PLUMBING AND HVAC SERVICE LLC"
+        },
+        {
+          "vid": "1743149585600",
+          "name": "ERLING SALES & SERVICE LLC"
+        },
+        {
+          "vid": "1873313309600",
+          "name": "HTR AIR CONDITIONING & HEATING LLC."
+        },
+        {
+          "vid": "1823118263700",
+          "name": "S&J ELECTRIC, LLC"
+        }
+      ],
+      "NET_NEW": [
+        {
+          "vid": "1440229405300",
+          "name": "JE DUNN CONSTRUCTION"
+        },
+        {
+          "vid": "1581401466601",
+          "name": "TEXAS MATERIALS GROUP, INC."
+        },
+        {
+          "vid": "1331903053500",
+          "name": "K2 BAR NONE CONSTRUCTION SERVICES, LLC"
+        },
+        {
+          "vid": "1395022857000",
+          "name": "LONE STAR ELITE HAULING & JUNK REMOVAL"
+        }
+      ]
+    },
+    "note": "EXACT requires a source-native trade/license ID in the vendor row. HIGH_CONFIDENCE is unique name+address. NET_NEW is not unlicensed."
+  },
+  "adverse_attach_rule": "EXACT official credential ID only. Do not attach HIGH_CONFIDENCE/REVIEW/UNSAFE as adverse evidence.",
+  "class_item_counts_top": [
+    {
+      "class": "918",
+      "rows": 2899
+    },
+    {
+      "class": "962",
+      "rows": 1425
+    },
+    {
+      "class": "920",
+      "rows": 1354
+    },
+    {
+      "class": "910",
+      "rows": 1330
+    },
+    {
+      "class": "958",
+      "rows": 1226
+    },
+    {
+      "class": "961",
+      "rows": 1178
+    },
+    {
+      "class": "914",
+      "rows": 1123
+    },
+    {
+      "class": "208",
+      "rows": 921
+    },
+    {
+      "class": "909",
+      "rows": 875
+    },
+    {
+      "class": "912",
+      "rows": 855
+    },
+    {
+      "class": "915",
+      "rows": 808
+    },
+    {
+      "class": "925",
+      "rows": 786
+    }
+  ]
+}
