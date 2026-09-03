@@ -13,11 +13,10 @@ APP = ROOT / "app"
 
 
 class CaCon001Tests(unittest.TestCase):
-    def test_no_california_public_route(self):
-        self.assertFalse((APP / "california").exists())
+    def test_foundation_counts_remain_the_accepted_extract(self):
         summary = json.loads(SUMMARY.read_text(encoding="utf-8"))
-        self.assertEqual(summary["publication"], "NOT_PUBLISHED")
-        self.assertIsNone(summary["public_route"])
+        self.assertEqual(summary["license_master"]["license_rows"], 75572)
+        self.assertEqual(summary["license_master"]["coverage"], "ACQUIRED_PARTIAL_STREAM_TRUNCATED")
 
     def test_summary_fingerprint_and_counts(self):
         summary = json.loads(SUMMARY.read_text(encoding="utf-8"))

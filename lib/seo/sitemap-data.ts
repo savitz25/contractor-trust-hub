@@ -114,6 +114,7 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/guides/how-to-verify-florida-contractor", priority: 0.88, changefreq: "monthly" },
     { path: "/guides/florida-contractor-red-flags", priority: 0.86, changefreq: "monthly" },
     { path: "/guides/florida-contractor-license-types", priority: 0.86, changefreq: "monthly" },
+    { path: "/california", priority: 0.9, changefreq: "weekly" },
     { path: "/florida", priority: 0.9, changefreq: "weekly" },
     { path: "/new-jersey", priority: 0.9, changefreq: "weekly" },
     { path: "/new-jersey/monmouth-county", priority: 0.82, changefreq: "weekly" },

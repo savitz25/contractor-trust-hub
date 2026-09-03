@@ -1,0 +1,61 @@
+{
+  "ticket": "CA-CON-002",
+  "phase": "follow_official_downloadfile_redirect",
+  "generated_at": "2026-09-03T18:14:47.691525+00:00",
+  "results": [
+    {
+      "name": "MasterLicenseData",
+      "type": "C",
+      "url": "https://www.cslb.ca.gov/OnlineServices/DataPortal/DownLoadFile.ashx?fName=MasterLicenseData&type=C",
+      "status": 200,
+      "bytes": 4129604,
+      "written": 4129604,
+      "elapsed_s": 30.05,
+      "error": "ChunkedEncodingError: Response ended prematurely",
+      "content_type": null,
+      "content_length": null,
+      "transfer_encoding": null,
+      "content_disposition": null,
+      "accept_ranges": null,
+      "head": "LicenseNo,LastUpdate,BusinessName,BUS-NAME-2,FullBusinessNam",
+      "htmlish": false,
+      "sha256": "5976815e277726fe2ab4c4b1d10cc1ceadc423c6a6990d24486681a305a229a1"
+    },
+    {
+      "name": "PersonnelData",
+      "type": "C",
+      "url": "https://www.cslb.ca.gov/OnlineServices/DataPortal/DownLoadFile.ashx?fName=PersonnelData&type=C",
+      "status": 200,
+      "bytes": 3972170,
+      "written": 3972170,
+      "elapsed_s": 30.42,
+      "error": "ChunkedEncodingError: Response ended prematurely",
+      "content_type": null,
+      "content_length": null,
+      "transfer_encoding": null,
+      "content_disposition": null,
+      "accept_ranges": null,
+      "head": "LIC-NO,LastUpdated,REC-TP,SEQ-NO,Name-TP,Name,EMP-Titl-CDE,C",
+      "htmlish": false,
+      "sha256": "fb75560e9e7abe8a89e457f9e691c0cb17d759a891db0f8e6d71fe7ea8aff3b6"
+    },
+    {
+      "name": "WorkerCompData",
+      "type": "C",
+      "url": "https://www.cslb.ca.gov/OnlineServices/DataPortal/DownLoadFile.ashx?fName=WorkerCompData&type=C",
+      "status": 200,
+      "bytes": 6192196,
+      "written": 6192196,
+      "elapsed_s": 30.42,
+      "error": "ChunkedEncodingError: Response ended prematurely",
+      "content_type": null,
+      "content_length": null,
+      "transfer_encoding": null,
+      "content_disposition": null,
+      "accept_ranges": null,
+      "head": "LicenseType,LicenseNo,LastUpdate,WorkersCompCoverageType,WCI",
+      "htmlish": false,
+      "sha256": "12ae45b204dcf0ce29dba060b3c99c16432b01847370462aa70f93983b0102ea"
+    }
+  ]
+}

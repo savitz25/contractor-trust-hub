@@ -1,0 +1,296 @@
+{
+  "ticket": "CA-CON-002",
+  "generated_at": "2026-09-03T18:10:06.124787+00:00",
+  "baseline_ca_con_001": {
+    "exists": true,
+    "bytes": 24437638,
+    "sha256": "f6ebbee6ed6c8b9476414e972382e6fcb4065f2c6e88a19392371a1e1e996838",
+    "newlines": 75572,
+    "htmlish": false,
+    "head_ascii": "LicenseNo,LastUpdate,BusinessName,BUS-NAME-2,FullBusinessName,MailingAddress,Cit",
+    "accept_ranges_hint": null
+  },
+  "attempts": [
+    {
+      "id": 1,
+      "name": "license_master_csv_http10_connection_close",
+      "kind": "M",
+      "format": "csv",
+      "transport": "http/1.0 connection:close",
+      "as_of": "9/2/2026",
+      "complete_enough": false,
+      "transport_log": {
+        "status": 302,
+        "bytes_written": 196,
+        "elapsed_s": 0.33,
+        "content_type": null,
+        "content_disposition": null,
+        "transfer_encoding": null,
+        "content_length": null,
+        "accept_ranges": null,
+        "connection": null,
+        "error": null
+      },
+      "payload": {
+        "exists": true,
+        "bytes": 196,
+        "sha256": "5980f08c23de46b048bcc0c82b50c22893f382d6bd9c82138fc5b003e98ec75b",
+        "newlines": null,
+        "htmlish": true,
+        "head_ascii": "<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a hre",
+        "accept_ranges_hint": null
+      }
+    },
+    {
+      "id": 2,
+      "name": "license_master_excel_http11_stream",
+      "kind": "M",
+      "format": "xls",
+      "transport": "requests HTTP/1.1 stream",
+      "as_of": "9/2/2026",
+      "excel_event": "ctl00$MainContent$lbMasterExcel",
+      "complete_enough": false,
+      "transport_log": {
+        "status": 200,
+        "bytes_written": 5801477,
+        "elapsed_s": 30.15,
+        "content_type": null,
+        "content_disposition": null,
+        "transfer_encoding": null,
+        "content_length": null,
+        "accept_ranges": null,
+        "error": "ChunkedEncodingError: Response ended prematurely"
+      },
+      "payload": {
+        "exists": true,
+        "bytes": 5801477,
+        "sha256": "269c00f86e718b00caddbe534d633f46ef5bac2733984f2cd88cac1c82c8df42",
+        "newlines": 27228,
+        "htmlish": false,
+        "head_ascii": "PK\u0003\u0004\u0014\u0000\b\u0000\b\u0000\u00ad\u0018#]\u00e4H\u00ad\u00af\u0018\u0001\u0000\u00003\u0003\u0000\u0000\u0013\u0000\u0000\u0000[Content_Types].xml\u00b5\u0092\u00cfJ\u00031\u0010\u00c6_e\u00c9U\u009a\u00b4\u001eD\u00a4\u00db\u001e\u00aa\u001eU\u00b0>\u00c0\u0098\u00ccvC\u00f3\u008f",
+        "accept_ranges_hint": null
+      }
+    },
+    {
+      "id": 3,
+      "name": "list_by_classification_official_slices",
+      "format": "xls",
+      "transport": "ASP.NET listbox postback",
+      "option_count": 78,
+      "options_sample": [
+        [
+          "A",
+          "A - General Engineering Contractor"
+        ],
+        [
+          "B",
+          "B - General Building Contractor"
+        ],
+        [
+          "B-2",
+          "B-2 \u2013 Residential Remodeling Contractor"
+        ],
+        [
+          "C-2",
+          "C-2 - Insulation and Acoustical Contractor"
+        ],
+        [
+          "C-4",
+          "C-4 - Boiler, Hot Water Heating and Steam Fitting Contractor"
+        ]
+      ],
+      "buttons": [
+        "ctl00$MainContent$lbClassification",
+        "ctl00$MainContent$cbBondInfo",
+        "ctl00$MainContent$btnSearch",
+        "ctl00$MainContent$btnBack"
+      ],
+      "link_events": [],
+      "complete_enough": false,
+      "batches": [
+        {
+          "batch": [
+            "B"
+          ],
+          "variant": "eventtarget-btnSearch",
+          "transport": {
+            "status": 200,
+            "bytes_written": 34986,
+            "elapsed_s": 0.21,
+            "content_type": null,
+            "content_disposition": null,
+            "transfer_encoding": null,
+            "content_length": null,
+            "accept_ranges": null,
+            "error": null
+          },
+          "payload": {
+            "exists": true,
+            "bytes": 34986,
+            "sha256": "8642474ec3e588c4ccc57d099df70be60a8fd6cd23de249c3f4d502d6702500f",
+            "newlines": null,
+            "htmlish": true,
+            "head_ascii": "\r\n\r\n\r\n<!doctype html>\r\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en\"",
+            "accept_ranges_hint": null
+          },
+          "dataish": false
+        },
+        {
+          "batch": [
+            "C-10"
+          ],
+          "variant": "eventtarget-btnSearch",
+          "transport": {
+            "status": 200,
+            "bytes_written": 34986,
+            "elapsed_s": 0.21,
+            "content_type": null,
+            "content_disposition": null,
+            "transfer_encoding": null,
+            "content_length": null,
+            "accept_ranges": null,
+            "error": null
+          },
+          "payload": {
+            "exists": true,
+            "bytes": 34986,
+            "sha256": "3528d34e4f22096341517246b9d9cf0834b5c5295ba6ef6d0ab696d9c0c1a954",
+            "newlines": null,
+            "htmlish": true,
+            "head_ascii": "\r\n\r\n\r\n<!doctype html>\r\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en\"",
+            "accept_ranges_hint": null
+          },
+          "dataish": false
+        }
+      ],
+      "note": "Currently-renewed only; cancelled/revoked/expired-renewable not included. Used only if form postback returns a real spreadsheet."
+    },
+    {
+      "id": 4,
+      "name": "personnel_csv_http10_connection_close",
+      "kind": "P",
+      "format": "csv",
+      "transport": "http/1.0 connection:close",
+      "as_of": "9/3/2026",
+      "event": "ctl00$MainContent$lbPersonnelCSV",
+      "complete_enough": false,
+      "transport_log": {
+        "status": 200,
+        "bytes_written": 17877,
+        "elapsed_s": 0.44,
+        "content_type": null,
+        "content_disposition": null,
+        "transfer_encoding": null,
+        "content_length": null,
+        "accept_ranges": null,
+        "connection": null,
+        "error": null
+      },
+      "payload": {
+        "exists": true,
+        "bytes": 17877,
+        "sha256": "8037e0c03d810ed74c13cf04be8f34dcd1040946fc110855b939cdac3c8504f3",
+        "newlines": null,
+        "htmlish": true,
+        "head_ascii": "\r\n\r\n\r\n<!doctype html>\r\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en\"",
+        "accept_ranges_hint": null
+      },
+      "page_blocker": false
+    },
+    {
+      "id": 5,
+      "name": "workers_comp_csv_http10_connection_close",
+      "kind": "W",
+      "format": "csv",
+      "transport": "http/1.0 connection:close",
+      "as_of": "9/3/2026",
+      "event": "ctl00$MainContent$lbWorkerCompcsv",
+      "complete_enough": false,
+      "transport_log": {
+        "status": 302,
+        "bytes_written": 193,
+        "elapsed_s": 0.31,
+        "content_type": null,
+        "content_disposition": null,
+        "transfer_encoding": null,
+        "content_length": null,
+        "accept_ranges": null,
+        "connection": null,
+        "error": null
+      },
+      "payload": {
+        "exists": true,
+        "bytes": 193,
+        "sha256": "6d7147a2276d96d13080ee2a5c522ca226c8b7ad8991cd66ac466d52a5826ac8",
+        "newlines": null,
+        "htmlish": true,
+        "head_ascii": "<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a hre",
+        "accept_ranges_hint": null
+      },
+      "page_blocker": false
+    }
+  ],
+  "rule": "Max three materially different License Master attempts. Personnel/WC are not page blockers.",
+  "publication_rule": "Do not block /california if portal remains truncated.",
+  "follow_official_downloadfile": {
+    "ticket": "CA-CON-002",
+    "phase": "follow_official_downloadfile_redirect",
+    "generated_at": "2026-09-03T18:14:47.691525+00:00",
+    "results": [
+      {
+        "name": "MasterLicenseData",
+        "type": "C",
+        "url": "https://www.cslb.ca.gov/OnlineServices/DataPortal/DownLoadFile.ashx?fName=MasterLicenseData&type=C",
+        "status": 200,
+        "bytes": 4129604,
+        "written": 4129604,
+        "elapsed_s": 30.05,
+        "error": "ChunkedEncodingError: Response ended prematurely",
+        "content_type": null,
+        "content_length": null,
+        "transfer_encoding": null,
+        "content_disposition": null,
+        "accept_ranges": null,
+        "head": "LicenseNo,LastUpdate,BusinessName,BUS-NAME-2,FullBusinessNam",
+        "htmlish": false,
+        "sha256": "5976815e277726fe2ab4c4b1d10cc1ceadc423c6a6990d24486681a305a229a1"
+      },
+      {
+        "name": "PersonnelData",
+        "type": "C",
+        "url": "https://www.cslb.ca.gov/OnlineServices/DataPortal/DownLoadFile.ashx?fName=PersonnelData&type=C",
+        "status": 200,
+        "bytes": 3972170,
+        "written": 3972170,
+        "elapsed_s": 30.42,
+        "error": "ChunkedEncodingError: Response ended prematurely",
+        "content_type": null,
+        "content_length": null,
+        "transfer_encoding": null,
+        "content_disposition": null,
+        "accept_ranges": null,
+        "head": "LIC-NO,LastUpdated,REC-TP,SEQ-NO,Name-TP,Name,EMP-Titl-CDE,C",
+        "htmlish": false,
+        "sha256": "fb75560e9e7abe8a89e457f9e691c0cb17d759a891db0f8e6d71fe7ea8aff3b6"
+      },
+      {
+        "name": "WorkerCompData",
+        "type": "C",
+        "url": "https://www.cslb.ca.gov/OnlineServices/DataPortal/DownLoadFile.ashx?fName=WorkerCompData&type=C",
+        "status": 200,
+        "bytes": 6192196,
+        "written": 6192196,
+        "elapsed_s": 30.42,
+        "error": "ChunkedEncodingError: Response ended prematurely",
+        "content_type": null,
+        "content_length": null,
+        "transfer_encoding": null,
+        "content_disposition": null,
+        "accept_ranges": null,
+        "head": "LicenseType,LicenseNo,LastUpdate,WorkersCompCoverageType,WCI",
+        "htmlish": false,
+        "sha256": "12ae45b204dcf0ce29dba060b3c99c16432b01847370462aa70f93983b0102ea"
+      }
+    ]
+  }
+}

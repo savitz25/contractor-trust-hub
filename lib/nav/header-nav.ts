@@ -16,7 +16,9 @@ export const EXPLORE_GROUP: HeaderGroup = {
   id: "explore",
   label: "Explore",
   links: [
+    { href: "/california", label: "California research", hint: "Acquired CSLB public-data rows" },
     { href: "/florida", label: "Browse Florida", hint: "County and trade lists" },
+    { href: "/new-jersey", label: "New Jersey research", hint: "Construction source records" },
     { href: "/ask", label: "Ask ContractorTrustHub", hint: "Structured research questions" },
     { href: "/#compare", label: "Compare markets", hint: "Broward vs Palm Beach coverage" },
     { href: "/verify", label: "Verify by state", hint: "License or name search" },

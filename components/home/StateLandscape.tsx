@@ -21,6 +21,12 @@ const accentBySlug: Record<string, string> = {
 
 function pathsFor(s: EvidenceState): { href: string; label: string }[] {
   const verifyHref = verifyPathFor(s);
+  if (s.slug === "ca") {
+    return [
+      { href: "/california", label: "California research" },
+      { href: verifyHref, label: "Verify" },
+    ];
+  }
   if (s.browseEnabled || s.depth === "full_journey") {
     return [
       { href: verifyHref, label: "Verify" },

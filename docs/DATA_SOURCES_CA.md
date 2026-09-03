@@ -1,7 +1,10 @@
 # California data sources (Phase 0)
 
-Florida remains the full-journey product. Texas / New Jersey / Oregon are Verify-focused.  
-**California Verify v1** uses official **CSLB** (Contractors State License Board) public list downloads for high-impact counties.
+Florida remains the full-journey product. Texas / New Jersey / Oregon are Verify-focused.
+
+**CA-CON-002** publishes `/california` from the official CSLB Public Data Portal License Master. The accepted extract is **75,572** acquired rows, coverage `ACQUIRED_PARTIAL_STREAM_TRUNCATED` as of 2026-09-02. That is not the complete renewable universe. See `docs/california/ca-con-002-publication.md`.
+
+**California Verify v1** still uses official **CSLB** public list downloads for high-impact counties and remains a separate Verify surface.
 
 ## Coverage reality (product-critical)
 

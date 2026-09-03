@@ -3,7 +3,7 @@
  * Texas: TDLR specialty trades + TSBPE plumbing (no statewide GC) — see docs/DATA_SOURCES_TX.md.
  * New Jersey: HIC + specialty boards via DCA (no statewide GC) — see docs/DATA_SOURCES_NJ.md.
  * Oregon: CCB statewide contractor licenses — see docs/DATA_SOURCES_OR.md.
- * California: CSLB top-county public list extracts — see docs/DATA_SOURCES_CA.md.
+ * California: CSLB License Master public-data rows (partial portal stream) — see docs/DATA_SOURCES_CA.md.
  * Arizona: ROC current active posting lists — see docs/DATA_SOURCES_AZ.md.
  * Washington: L&I contractor extract — Verify-first.
  * Louisiana: LSLBC statewide contractor licenses — see docs/DATA_SOURCES_LA.md.
@@ -232,10 +232,10 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     pilot: true,
     depth: "verify",
     badge: "Statewide license",
-    scopeHint: "CSLB high-impact counties",
+    scopeHint: "CSLB public-data rows (partial master)",
     browseEnabled: false,
     coverageNote:
-      "California: CSLB licenses from high-impact county extracts — not every county file. Confirm on Instant License Check.",
+      "California: acquired CSLB License Master rows from the official public data portal. Stream truncated; not the complete renewable universe. Confirm on Instant License Check.",
   },
   wa: {
     code: "WA",

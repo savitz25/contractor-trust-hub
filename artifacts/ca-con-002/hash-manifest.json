@@ -1,0 +1,11 @@
+{
+  "ticket": "CA-CON-002",
+  "generated_at": "2026-09-03T18:12:32.356142+00:00",
+  "source_sha256": "f6ebbee6ed6c8b9476414e972382e6fcb4065f2c6e88a19392371a1e1e996838",
+  "source_bytes": 24437638,
+  "license_rows": 75572,
+  "inventory_sha256": "f8d81178b12222c25b4b5e66fea3cf696649fc1e7e66cf1e05c8ce572f9f1b24",
+  "inventory_bytes": 7601854,
+  "snapshot_fingerprint": "22a16cc508a54cfb2ccd302a4ca41427557834bdf5c2024ab3ee5059c26c8f19",
+  "coverage": "ACQUIRED_PARTIAL_STREAM_TRUNCATED"
+}

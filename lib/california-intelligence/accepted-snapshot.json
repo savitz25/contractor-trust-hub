@@ -1,0 +1,1215 @@
+{
+  "acquisition_attempts": [
+    {
+      "as_of": "9/2/2026",
+      "complete_enough": false,
+      "format": "csv",
+      "id": 1,
+      "kind": "M",
+      "name": "license_master_csv_http10_connection_close",
+      "payload": {
+        "accept_ranges_hint": null,
+        "bytes": 196,
+        "exists": true,
+        "head_ascii": "<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a hre",
+        "htmlish": true,
+        "newlines": null,
+        "sha256": "5980f08c23de46b048bcc0c82b50c22893f382d6bd9c82138fc5b003e98ec75b"
+      },
+      "transport": "http/1.0 connection:close",
+      "transport_log": {
+        "accept_ranges": null,
+        "bytes_written": 196,
+        "connection": null,
+        "content_disposition": null,
+        "content_length": null,
+        "content_type": null,
+        "elapsed_s": 0.33,
+        "error": null,
+        "status": 302,
+        "transfer_encoding": null
+      }
+    },
+    {
+      "as_of": "9/2/2026",
+      "complete_enough": false,
+      "excel_event": "ctl00$MainContent$lbMasterExcel",
+      "format": "xls",
+      "id": 2,
+      "kind": "M",
+      "name": "license_master_excel_http11_stream",
+      "payload": {
+        "accept_ranges_hint": null,
+        "bytes": 5801477,
+        "exists": true,
+        "head_ascii": "PK\u0003\u0004\u0014\u0000\b\u0000\b\u0000\u00ad\u0018#]\u00e4H\u00ad\u00af\u0018\u0001\u0000\u00003\u0003\u0000\u0000\u0013\u0000\u0000\u0000[Content_Types].xml\u00b5\u0092\u00cfJ\u00031\u0010\u00c6_e\u00c9U\u009a\u00b4\u001eD\u00a4\u00db\u001e\u00aa\u001eU\u00b0>\u00c0\u0098\u00ccvC\u00f3\u008f",
+        "htmlish": false,
+        "newlines": 27228,
+        "sha256": "269c00f86e718b00caddbe534d633f46ef5bac2733984f2cd88cac1c82c8df42"
+      },
+      "transport": "requests HTTP/1.1 stream",
+      "transport_log": {
+        "accept_ranges": null,
+        "bytes_written": 5801477,
+        "content_disposition": null,
+        "content_length": null,
+        "content_type": null,
+        "elapsed_s": 30.15,
+        "error": "ChunkedEncodingError: Response ended prematurely",
+        "status": 200,
+        "transfer_encoding": null
+      }
+    },
+    {
+      "batches": [
+        {
+          "batch": [
+            "B"
+          ],
+          "dataish": false,
+          "payload": {
+            "accept_ranges_hint": null,
+            "bytes": 34986,
+            "exists": true,
+            "head_ascii": "\r\n\r\n\r\n<!doctype html>\r\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en\"",
+            "htmlish": true,
+            "newlines": null,
+            "sha256": "8642474ec3e588c4ccc57d099df70be60a8fd6cd23de249c3f4d502d6702500f"
+          },
+          "transport": {
+            "accept_ranges": null,
+            "bytes_written": 34986,
+            "content_disposition": null,
+            "content_length": null,
+            "content_type": null,
+            "elapsed_s": 0.21,
+            "error": null,
+            "status": 200,
+            "transfer_encoding": null
+          },
+          "variant": "eventtarget-btnSearch"
+        },
+        {
+          "batch": [
+            "C-10"
+          ],
+          "dataish": false,
+          "payload": {
+            "accept_ranges_hint": null,
+            "bytes": 34986,
+            "exists": true,
+            "head_ascii": "\r\n\r\n\r\n<!doctype html>\r\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en\"",
+            "htmlish": true,
+            "newlines": null,
+            "sha256": "3528d34e4f22096341517246b9d9cf0834b5c5295ba6ef6d0ab696d9c0c1a954"
+          },
+          "transport": {
+            "accept_ranges": null,
+            "bytes_written": 34986,
+            "content_disposition": null,
+            "content_length": null,
+            "content_type": null,
+            "elapsed_s": 0.21,
+            "error": null,
+            "status": 200,
+            "transfer_encoding": null
+          },
+          "variant": "eventtarget-btnSearch"
+        }
+      ],
+      "buttons": [
+        "ctl00$MainContent$lbClassification",
+        "ctl00$MainContent$cbBondInfo",
+        "ctl00$MainContent$btnSearch",
+        "ctl00$MainContent$btnBack"
+      ],
+      "complete_enough": false,
+      "format": "xls",
+      "id": 3,
+      "link_events": [],
+      "name": "list_by_classification_official_slices",
+      "note": "Currently-renewed only; cancelled/revoked/expired-renewable not included. Used only if form postback returns a real spreadsheet.",
+      "option_count": 78,
+      "options_sample": [
+        [
+          "A",
+          "A - General Engineering Contractor"
+        ],
+        [
+          "B",
+          "B - General Building Contractor"
+        ],
+        [
+          "B-2",
+          "B-2 \u2013 Residential Remodeling Contractor"
+        ],
+        [
+          "C-2",
+          "C-2 - Insulation and Acoustical Contractor"
+        ],
+        [
+          "C-4",
+          "C-4 - Boiler, Hot Water Heating and Steam Fitting Contractor"
+        ]
+      ],
+      "transport": "ASP.NET listbox postback"
+    },
+    {
+      "as_of": "9/3/2026",
+      "complete_enough": false,
+      "event": "ctl00$MainContent$lbPersonnelCSV",
+      "format": "csv",
+      "id": 4,
+      "kind": "P",
+      "name": "personnel_csv_http10_connection_close",
+      "page_blocker": false,
+      "payload": {
+        "accept_ranges_hint": null,
+        "bytes": 17877,
+        "exists": true,
+        "head_ascii": "\r\n\r\n\r\n<!doctype html>\r\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en\"",
+        "htmlish": true,
+        "newlines": null,
+        "sha256": "8037e0c03d810ed74c13cf04be8f34dcd1040946fc110855b939cdac3c8504f3"
+      },
+      "transport": "http/1.0 connection:close",
+      "transport_log": {
+        "accept_ranges": null,
+        "bytes_written": 17877,
+        "connection": null,
+        "content_disposition": null,
+        "content_length": null,
+        "content_type": null,
+        "elapsed_s": 0.44,
+        "error": null,
+        "status": 200,
+        "transfer_encoding": null
+      }
+    },
+    {
+      "as_of": "9/3/2026",
+      "complete_enough": false,
+      "event": "ctl00$MainContent$lbWorkerCompcsv",
+      "format": "csv",
+      "id": 5,
+      "kind": "W",
+      "name": "workers_comp_csv_http10_connection_close",
+      "page_blocker": false,
+      "payload": {
+        "accept_ranges_hint": null,
+        "bytes": 193,
+        "exists": true,
+        "head_ascii": "<html><head><title>Object moved</title></head><body>\r\n<h2>Object moved to <a hre",
+        "htmlish": true,
+        "newlines": null,
+        "sha256": "6d7147a2276d96d13080ee2a5c522ca226c8b7ad8991cd66ac466d52a5826ac8"
+      },
+      "transport": "http/1.0 connection:close",
+      "transport_log": {
+        "accept_ranges": null,
+        "bytes_written": 193,
+        "connection": null,
+        "content_disposition": null,
+        "content_length": null,
+        "content_type": null,
+        "elapsed_s": 0.31,
+        "error": null,
+        "status": 302,
+        "transfer_encoding": null
+      }
+    }
+  ],
+  "as_of": "2026-09-02",
+  "asbestos": {
+    "attach_rule": "EXACT CSLB ID only. Name-only is UNSAFE.",
+    "distinct_cslb_ids": 312,
+    "exact_ids_not_in_extract": 247,
+    "exact_joins_to_extract": 65,
+    "grain": "ASBESTOS_REGISTRANT",
+    "rows": 321,
+    "rows_with_exact_cslb_id": 312,
+    "semantics": "Cal/OSHA asbestos registrant is not CSLB license status and not a C-22 classification proof by itself.",
+    "source": "https://www.dir.ca.gov/databases/doshacru/acrulist.asp",
+    "source_as_of": "9/2/2026"
+  },
+  "classifications": {
+    "multi_class_license_rows": 12139,
+    "note": "Observed tokens are not a ranking. Official dictionary is the 78 form options.",
+    "observed_token_count": 81,
+    "official_option_count": 78,
+    "official_options": [
+      {
+        "code": "A",
+        "label": "A - General Engineering Contractor"
+      },
+      {
+        "code": "B",
+        "label": "B - General Building Contractor"
+      },
+      {
+        "code": "B-2",
+        "label": "B-2 \u2013 Residential Remodeling Contractor"
+      },
+      {
+        "code": "C-2",
+        "label": "C-2 - Insulation and Acoustical Contractor"
+      },
+      {
+        "code": "C-4",
+        "label": "C-4 - Boiler, Hot Water Heating and Steam Fitting Contractor"
+      },
+      {
+        "code": "C-5",
+        "label": "C-5 - Framing and Rough Carpentry Contractor"
+      },
+      {
+        "code": "C-6",
+        "label": "C-6 - Cabinet, Millwork and Finish Carpentry Contractor"
+      },
+      {
+        "code": "C-7",
+        "label": "C-7 - Low Voltage Systems Contractor"
+      },
+      {
+        "code": "C-8",
+        "label": "C-8 - Concrete Contractor"
+      },
+      {
+        "code": "C-9",
+        "label": "C-9 - Drywall Contractor"
+      },
+      {
+        "code": "C-10",
+        "label": "C-10 - Electrical Contractor"
+      },
+      {
+        "code": "C-11",
+        "label": "C-11 - Elevator Contractor"
+      },
+      {
+        "code": "C-12",
+        "label": "C-12 - Earthwork and Paving Contractors"
+      },
+      {
+        "code": "C-13",
+        "label": "C-13 - Fencing Contractor"
+      },
+      {
+        "code": "C-15",
+        "label": "C-15 - Flooring and Floor Covering Contractors"
+      },
+      {
+        "code": "C-16",
+        "label": "C-16 - Fire Protection Contractor"
+      },
+      {
+        "code": "C-17",
+        "label": "C-17 - Glazing Contractor"
+      },
+      {
+        "code": "C-20",
+        "label": "C-20 - Warm-Air Heating, Ventilating and Air-Conditioning Contractor"
+      },
+      {
+        "code": "C-21",
+        "label": "C-21 - Building Moving/Demolition Contractor"
+      },
+      {
+        "code": "C-22",
+        "label": "C-22 - Asbestos Abatement Contractor"
+      },
+      {
+        "code": "C-23",
+        "label": "C-23 - Ornamental Metal Contractor"
+      },
+      {
+        "code": "C-27",
+        "label": "C-27 - Landscaping Contractor"
+      },
+      {
+        "code": "C-28",
+        "label": "C-28 - Lock and Security Equipment Contractor"
+      },
+      {
+        "code": "C-29",
+        "label": "C-29 - Masonry Contractor"
+      },
+      {
+        "code": "C-31",
+        "label": "C-31 - Construction Zone Traffic Control Contractor"
+      },
+      {
+        "code": "C-32",
+        "label": "C-32 - Parking and Highway Improvement Contractor"
+      },
+      {
+        "code": "C-33",
+        "label": "C-33 - Painting and Decorating Contractor"
+      },
+      {
+        "code": "C-34",
+        "label": "C-34 - Pipeline Contractor"
+      },
+      {
+        "code": "C-35",
+        "label": "C-35 - Lathing and Plastering Contractor"
+      },
+      {
+        "code": "C-36",
+        "label": "C-36 - Plumbing Contractor"
+      },
+      {
+        "code": "C-38",
+        "label": "C-38 - Refrigeration Contractor"
+      },
+      {
+        "code": "C-39",
+        "label": "C-39 - Roofing Contractor"
+      },
+      {
+        "code": "C-42",
+        "label": "C-42 - Sanitation System Contractor"
+      },
+      {
+        "code": "C-43",
+        "label": "C-43 - Sheet Metal Contractor"
+      },
+      {
+        "code": "C-45",
+        "label": "C-45 - Sign Contractor"
+      },
+      {
+        "code": "C-46",
+        "label": "C-46 - Solar Contractor"
+      },
+      {
+        "code": "C-47",
+        "label": "C-47 - General Manufactured Housing Contractor"
+      },
+      {
+        "code": "C-49",
+        "label": "C-49 - Tree and Palm Contractor"
+      },
+      {
+        "code": "C-50",
+        "label": "C-50 - Reinforcing Steel Contractor"
+      },
+      {
+        "code": "C-51",
+        "label": "C-51 - Structural Steel Contractor"
+      },
+      {
+        "code": "C-53",
+        "label": "C-53 - Swimming Pool Contractor"
+      },
+      {
+        "code": "C-54",
+        "label": "C-54 - Ceramic and Mosaic Tile Contractor"
+      },
+      {
+        "code": "C-55",
+        "label": "C-55 - Water Conditioning Contractor"
+      },
+      {
+        "code": "C-57",
+        "label": "C-57 - Well Drilling Contractor"
+      },
+      {
+        "code": "C-60",
+        "label": "C-60 - Welding Contractor"
+      },
+      {
+        "code": "C-61",
+        "label": "C-61 - Limited Specialty Classification"
+      },
+      {
+        "code": "C-61/D-3",
+        "label": "C-61/D-3 - Awnings Contractor"
+      },
+      {
+        "code": "C-61/D-4",
+        "label": "C-61/D-4 - Central Vacuum Systems Contractor"
+      },
+      {
+        "code": "C-61/D-6",
+        "label": "C-61/D-6 - Concrete-Related Services Contractor"
+      },
+      {
+        "code": "C-61/D-9",
+        "label": "C-61/D-9 - Drilling, Blasting and Oil Field Work Contractor"
+      },
+      {
+        "code": "C-61/D-10",
+        "label": "C-61/D-10 - Elevated Floors Contractor"
+      },
+      {
+        "code": "C-61/D-12",
+        "label": "C-61/D-12 - Synthetic Products Contractor"
+      },
+      {
+        "code": "C-61/D-16",
+        "label": "C-61/D-16 - Hardware, Locks and Safes Contractor"
+      },
+      {
+        "code": "C-61/D-21",
+        "label": "C-61/D-21 - Machinery and Pumps Contractor"
+      },
+      {
+        "code": "C-61/D-24",
+        "label": "C-61/D-24 - Metal Products Contractor"
+      },
+      {
+        "code": "C-61/D-28",
+        "label": "C-61/D-28 - Doors, Gates and Activating Devices Contractor"
+      },
+      {
+        "code": "C-61/D-29",
+        "label": "C-61/D-29 - Paperhanging Contractor"
+      },
+      {
+        "code": "C-61/D-30",
+        "label": "C-61/D-30 - Pile Driving and Pressure Foundation Jacking Contractor"
+      },
+      {
+        "code": "C-61/D-31",
+        "label": "C-61/D-31 - Pole Installation and Maintenance Contractor"
+      },
+      {
+        "code": "C-61/D-34",
+        "label": "C-61/D-34 - Prefabricated Equipment Contractor"
+      },
+      {
+        "code": "C-61/D-35",
+        "label": "C-61/D-35 - Pool and Spa Maintenance Contractor"
+      },
+      {
+        "code": "C-61/D-38",
+        "label": "C-61/D-38 - Sand and Water Blasting Contractor"
+      },
+      {
+        "code": "C-61/D-39",
+        "label": "C-61/D-39 - Scaffolding Contractor"
+      },
+      {
+        "code": "C-61/D-40",
+        "label": "C-61/D-40 - Service Station Equipment and Maintenance Contractor"
+      },
+      {
+        "code": "C-61/D-41",
+        "label": "C-61/D-41 - Siding and Decking Contractor"
+      },
+      {
+        "code": "C-61/D-42",
+        "label": "C-61/D-42 - Non-Electrical Sign Installation"
+      },
+      {
+        "code": "C-61/D-49",
+        "label": "C-61/D-49 - Tree Service Contractor"
+      },
+      {
+        "code": "C-61/D-50",
+        "label": "C-61/D-50 - Suspended Ceilings Contractor"
+      },
+      {
+        "code": "C-61/D-52",
+        "label": "C-61/D-52 - Window Coverings Contractor"
+      },
+      {
+        "code": "C-61/D-53",
+        "label": "C-61/D-53 - Wood Tanks Contractor"
+      },
+      {
+        "code": "C-61/D-56",
+        "label": "C-61/D-56 - Trenching Only Contractor"
+      },
+      {
+        "code": "C-61/D-59",
+        "label": "C-61/D-59 - Hydroseed Spraying Contractor"
+      },
+      {
+        "code": "C-61/D-62",
+        "label": "C-61/D-62 - Air and Water Balancing Contractor"
+      },
+      {
+        "code": "C-61/D-63",
+        "label": "C-61/D-63 - Construction Clean-up Contractor"
+      },
+      {
+        "code": "C-61/D-64",
+        "label": "C-61/D-64 - Non-specialized Contractor"
+      },
+      {
+        "code": "C-61/D-65",
+        "label": "C-61/D-65 - Weatherization and Energy Conservation Contractor"
+      },
+      {
+        "code": "ASB",
+        "label": "ASB - Asbestos Certification"
+      },
+      {
+        "code": "HAZ",
+        "label": "HAZ - Hazardous Substance Removal Certification"
+      }
+    ],
+    "token_counts": {
+      "A": 4035,
+      "ASB": 99,
+      "B": 30813,
+      "B2": 636,
+      "C10": 8659,
+      "C11": 69,
+      "C12": 750,
+      "C13": 613,
+      "C15": 2139,
+      "C16": 569,
+      "C17": 965,
+      "C2": 333,
+      "C20": 4047,
+      "C21": 543,
+      "C22": 73,
+      "C23": 359,
+      "C27": 3873,
+      "C28": 121,
+      "C29": 532,
+      "C31": 181,
+      "C32": 129,
+      "C33": 5028,
+      "C34": 142,
+      "C35": 582,
+      "C36": 5592,
+      "C38": 433,
+      "C39": 1887,
+      "C4": 116,
+      "C42": 250,
+      "C43": 260,
+      "C45": 270,
+      "C46": 404,
+      "C47": 105,
+      "C49": 90,
+      "C5": 415,
+      "C50": 80,
+      "C51": 489,
+      "C53": 911,
+      "C54": 1859,
+      "C55": 78,
+      "C57": 200,
+      "C6": 1301,
+      "C60": 412,
+      "C7": 1557,
+      "C8": 1732,
+      "C9": 1045,
+      "D03": 175,
+      "D04": 11,
+      "D06": 553,
+      "D07": 1,
+      "D09": 51,
+      "D10": 8,
+      "D12": 634,
+      "D16": 33,
+      "D21": 308,
+      "D24": 243,
+      "D28": 983,
+      "D29": 36,
+      "D30": 27,
+      "D31": 25,
+      "D34": 432,
+      "D35": 527,
+      "D36": 1,
+      "D38": 154,
+      "D39": 111,
+      "D40": 28,
+      "D41": 150,
+      "D42": 121,
+      "D49": 1400,
+      "D50": 49,
+      "D51": 2,
+      "D52": 420,
+      "D53": 3,
+      "D56": 52,
+      "D59": 14,
+      "D62": 40,
+      "D63": 327,
+      "D64": 250,
+      "D65": 15,
+      "HAZ": 379,
+      "UNKNOWN": 1
+    },
+    "top": [
+      {
+        "rows": 30813,
+        "token": "B"
+      },
+      {
+        "rows": 8659,
+        "token": "C10"
+      },
+      {
+        "rows": 5592,
+        "token": "C36"
+      },
+      {
+        "rows": 5028,
+        "token": "C33"
+      },
+      {
+        "rows": 4047,
+        "token": "C20"
+      },
+      {
+        "rows": 4035,
+        "token": "A"
+      },
+      {
+        "rows": 3873,
+        "token": "C27"
+      },
+      {
+        "rows": 2139,
+        "token": "C15"
+      },
+      {
+        "rows": 1887,
+        "token": "C39"
+      },
+      {
+        "rows": 1859,
+        "token": "C54"
+      },
+      {
+        "rows": 1732,
+        "token": "C8"
+      },
+      {
+        "rows": 1557,
+        "token": "C7"
+      }
+    ]
+  },
+  "contacts": {
+    "business_phone_is_not_personal": true,
+    "business_phone_policy": "PUBLIC_ELIGIBLE",
+    "business_phone_public_eligible": 75483,
+    "email_policy": "NOT_PROVIDED_BPC_27",
+    "email_rows": 0,
+    "mail_address_is_not_service_area": true,
+    "mailing_address_policy": "REVIEW_REQUIRED",
+    "mailing_address_rows": 75571,
+    "website_policy": "NOT_IN_SOURCE",
+    "website_rows": 0
+  },
+  "coverage": {
+    "complete_historical_count": null,
+    "complete_renewable_count": null,
+    "complete_universe_claimed": false,
+    "first_business_name": "RANDALL MARK DOCKERY",
+    "inventory_bytes": 7601854,
+    "inventory_label": "Acquired CSLB public-data rows",
+    "inventory_path": "/california-inventory.json",
+    "inventory_sha256": "f8d81178b12222c25b4b5e66fea3cf696649fc1e7e66cf1e05c8ce572f9f1b24",
+    "last_business_name": "TOOLBO",
+    "source_as_of": "2026-09-02",
+    "source_bytes": 24437638,
+    "source_sha256": "f6ebbee6ed6c8b9476414e972382e6fcb4065f2c6e88a19392371a1e1e996838",
+    "source_url": "https://www.cslb.ca.gov/onlineservices/dataportal/ContractorList",
+    "status": "ACQUIRED_PARTIAL_STREAM_TRUNCATED",
+    "truncation_note": "Official CSV stream ended prematurely. Last incomplete row dropped. Alphabetical tail after the last observed business name is not in this extract."
+  },
+  "coverage_gaps": [
+    {
+      "id": "complete-portal-master",
+      "label": "Complete CSLB portal License Master",
+      "state": "STREAM_TRUNCATED"
+    },
+    {
+      "id": "personnel",
+      "label": "CSLB Personnel file",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "id": "workers-comp-file",
+      "label": "CSLB Workers' Compensation file",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "id": "cancelled-revoked",
+      "label": "Cancelled / revoked / expired-nonrenewable licenses",
+      "state": "EXCLUDED_BY_PORTAL"
+    },
+    {
+      "id": "pwcr",
+      "label": "DIR PWCR machine-readable roster",
+      "state": "SEARCH_ONLY"
+    },
+    {
+      "id": "vendor",
+      "label": "Cal eProcure vendor dump",
+      "state": "SEARCH_ONLY"
+    },
+    {
+      "id": "permits",
+      "label": "Statewide building permits",
+      "state": "LOCAL_FRAGMENTED"
+    },
+    {
+      "id": "paid-full-file",
+      "label": "Paid CSLB Full File",
+      "state": "REQUEST_ONLY_NOT_PURCHASED"
+    },
+    {
+      "id": "emails",
+      "label": "Public emails",
+      "state": "NOT_PROVIDED_BPC_27"
+    },
+    {
+      "id": "california-counties",
+      "label": "California county pages",
+      "state": "OUT_OF_SCOPE_THIS_TICKET"
+    }
+  ],
+  "dlse": {
+    "attach_rule": "EXACT CSLB ID only. Do not invent currently-debarred totals.",
+    "currently_debarred_count": null,
+    "distinct_cslb_ids": 57,
+    "exact_cslb_ids": [
+      "291013",
+      "294141",
+      "343802",
+      "383306",
+      "411825",
+      "430969",
+      "461897",
+      "568103",
+      "592321",
+      "597866",
+      "610549",
+      "612429",
+      "659252",
+      "663784",
+      "664168",
+      "698182",
+      "699574",
+      "714836",
+      "726770",
+      "732014",
+      "748591",
+      "753575",
+      "758012",
+      "765312",
+      "774222",
+      "787533",
+      "792729",
+      "794007",
+      "796802",
+      "797967",
+      "827829",
+      "830772",
+      "834220",
+      "834335",
+      "839898",
+      "840416",
+      "849169",
+      "874947",
+      "892389",
+      "899312",
+      "902927",
+      "908891",
+      "914692",
+      "915036",
+      "915812",
+      "919516",
+      "929610",
+      "936832",
+      "945723",
+      "949229",
+      "954551",
+      "967267",
+      "969048",
+      "975222",
+      "976339",
+      "979297",
+      "991018"
+    ],
+    "exact_ids_not_in_extract": [
+      "291013",
+      "294141",
+      "343802",
+      "383306",
+      "411825",
+      "430969",
+      "461897",
+      "568103",
+      "592321",
+      "597866",
+      "610549",
+      "612429",
+      "659252",
+      "663784",
+      "664168",
+      "698182",
+      "699574",
+      "714836",
+      "726770",
+      "732014",
+      "748591",
+      "753575",
+      "758012",
+      "765312",
+      "774222",
+      "787533",
+      "792729",
+      "794007",
+      "796802",
+      "797967",
+      "827829",
+      "830772",
+      "834220",
+      "834335",
+      "839898",
+      "840416",
+      "849169",
+      "874947",
+      "892389",
+      "899312",
+      "902927",
+      "908891",
+      "914692",
+      "915036",
+      "915812",
+      "919516",
+      "929610",
+      "936832",
+      "945723",
+      "949229",
+      "954551",
+      "967267",
+      "969048",
+      "975222",
+      "976339",
+      "979297",
+      "991018"
+    ],
+    "exact_joins_to_extract": 0,
+    "grain": "DEBARMENT_ORDER_LISTING",
+    "semantics": "DLSE public works debarment is not CSLB license status. A stayed order is not a current debarment. Name-only rows without a CSLB number are UNSAFE. Do not invent a currently-debarred count from ambiguous dates.",
+    "source": "https://www.dir.ca.gov/dlse/debar.html",
+    "source_as_of_note": "Page footer July 2025; individual orders have their own dates.",
+    "stayed_mentions": 1
+  },
+  "electrician": {
+    "certified_rows": 36983,
+    "grain": "PERSON_CERTIFICATE",
+    "has_cslb_license_id": false,
+    "net_new_contractor_businesses": 0,
+    "note": "Electrician certificate is not a contractor business. No CSLB ID in the DIR ECU files.",
+    "trainee_rows": 19661
+  },
+  "evidence_depth": [
+    {
+      "family": "CSLB License Master",
+      "grain": "license row (renewed or expired-renewable)",
+      "public_treatment": "Published as acquired rows; complete universe UNKNOWN"
+    },
+    {
+      "family": "PrimaryStatus",
+      "grain": "source-native status label",
+      "public_treatment": "CLEAR / suspension labels preserved; CLEAR \u2260 verified"
+    },
+    {
+      "family": "Classifications",
+      "grain": "normalized class token on a license",
+      "public_treatment": "Counts in extract; 78 official options; not a ranking"
+    },
+    {
+      "family": "Business phone",
+      "grain": "license-row business phone",
+      "public_treatment": "PUBLIC_ELIGIBLE; not a personal phone"
+    },
+    {
+      "family": "Mailing address",
+      "grain": "license-row mailing location",
+      "public_treatment": "REVIEW_REQUIRED; not a proven service area; not in inventory"
+    },
+    {
+      "family": "Cal/OSHA asbestos",
+      "grain": "registrant with optional CSLB ID",
+      "public_treatment": "Exact-ID overlay only; not general license status"
+    },
+    {
+      "family": "DLSE debarment",
+      "grain": "debarment order listing",
+      "public_treatment": "Exact CSLB IDs stored; not CSLB revocation; no currently-debarred invention"
+    },
+    {
+      "family": "DIR ECU electrician",
+      "grain": "person certificate",
+      "public_treatment": "Counts only; not contractor businesses"
+    },
+    {
+      "family": "Personnel / WC files / PWCR / vendor",
+      "grain": "not acquired or search-only",
+      "public_treatment": "Coverage statement; missing \u2260 zero"
+    }
+  ],
+  "findings": [
+    {
+      "id": "acquired-rows",
+      "text": "This page searched 75,572 acquired CSLB public-data rows from the official License Master as of 2026-09-02. The download stream ended before the file finished (last observed business name starts 'TOOLBO'). The complete renewable-license denominator is UNKNOWN. This is not 75,572 contractors in California."
+    },
+    {
+      "id": "clear-not-verified",
+      "text": "67,239 acquired rows have source-native PrimaryStatus CLEAR. CLEAR is a CSLB status label. It is not TrustHub Verified and not an endorsement."
+    },
+    {
+      "id": "class-b",
+      "text": "In this truncated extract, 30,813 license rows hold classification B (General Building). 12,139 acquired rows hold more than one class. This is not a consumer ranking."
+    },
+    {
+      "id": "phones-not-email",
+      "text": "75,483 acquired rows have a public-eligible business phone. Emails are not in this source (Business & Professions Code \u00a7 27). A business phone is not a personal phone. A mailing address is not a proven service area."
+    },
+    {
+      "id": "asbestos-exact",
+      "text": "Cal/OSHA asbestos registrant table: 321 rows / 312 exact CSLB IDs; 65 join this extract on exact license number. Asbestos registration is not general CSLB license status."
+    },
+    {
+      "id": "dlse-not-revocation",
+      "text": "DIR DLSE public-works debarment listings name 57 exact CSLB IDs. 0 of those IDs appear in this renewable extract (57 are absent, which is expected when cancelled/revoked licenses are excluded). DLSE debarment is not CSLB revocation. A stayed order is not a current debarment."
+    }
+  ],
+  "fingerprint": "22a16cc508a54cfb2ccd302a4ca41427557834bdf5c2024ab3ee5059c26c8f19",
+  "generated_at": "2026-09-03T18:12:32.356142+00:00",
+  "geography": {
+    "city_count": 2223,
+    "named_counties": 58,
+    "no_california_county_pages": true,
+    "top_counties": [
+      {
+        "county": "Los Angeles",
+        "rows": 16481
+      },
+      {
+        "county": "San Diego",
+        "rows": 6829
+      },
+      {
+        "county": "Orange",
+        "rows": 6224
+      },
+      {
+        "county": "Riverside",
+        "rows": 5698
+      },
+      {
+        "county": "San Bernardino",
+        "rows": 3686
+      },
+      {
+        "county": "Sacramento",
+        "rows": 3220
+      },
+      {
+        "county": "Santa Clara",
+        "rows": 3115
+      },
+      {
+        "county": "UNKNOWN",
+        "rows": 2767
+      },
+      {
+        "county": "Contra Costa",
+        "rows": 2306
+      },
+      {
+        "county": "Alameda",
+        "rows": 2279
+      },
+      {
+        "county": "Ventura",
+        "rows": 1823
+      },
+      {
+        "county": "Sonoma",
+        "rows": 1576
+      },
+      {
+        "county": "Fresno",
+        "rows": 1465
+      },
+      {
+        "county": "Placer",
+        "rows": 1323
+      },
+      {
+        "county": "San Mateo",
+        "rows": 1213
+      }
+    ],
+    "unknown_county_rows": 2767
+  },
+  "hero": {
+    "as_of_label": "License Master",
+    "as_of_value": "2026-09-02",
+    "current_hint": "CLEAR is a CSLB status label. Not TrustHub Verified. Not an endorsement.",
+    "current_label": "CLEAR in extract",
+    "current_value": 67239,
+    "geography_hint": "2,767 rows have county UNKNOWN. Mailing county is not a service area.",
+    "geography_label": "named counties in extract",
+    "geography_value": 58,
+    "observations_hint": "Business phone, not personal phone. Emails are not in this source (BPC 27).",
+    "observations_label": "public business phones",
+    "observations_value": 75483,
+    "universe_hint": "Stream ended before the official file finished. Complete renewable count is UNKNOWN.",
+    "universe_label": "acquired rows",
+    "universe_value": 75572
+  },
+  "identity": {
+    "adverse_attach_rule": "EXACT license ID only. Name-only is UNSAFE.",
+    "primary": "CA-CSLB:{LicenseNo}",
+    "tiers": [
+      "EXACT",
+      "HIGH_CONFIDENCE",
+      "REVIEW_REQUIRED",
+      "UNSAFE"
+    ]
+  },
+  "license_master": {
+    "business_type_counts": {
+      "Corporation": 39283,
+      "JointVenture": 213,
+      "Limited Liability": 6033,
+      "Partnership": 1101,
+      "Sole Owner": 28941,
+      "UNKNOWN": 1
+    },
+    "clear_is_not_verified": true,
+    "distinct_business_name_address_zip": 75560,
+    "distinct_license_numbers": 75572,
+    "expired_renewable_is_not_cancelled": true,
+    "license_rows": 75572,
+    "named_rows": 75572,
+    "primary_status_counts": {
+      "ARB Entity Susp": 1,
+      "ARB Suspension": 3,
+      "BND Pay EN Susp": 9,
+      "BOND Pay Susp": 57,
+      "CLEAR": 67239,
+      "Cit Entity Susp": 1,
+      "Citation Susp": 2,
+      "Contr Bond Susp": 6366,
+      "Discp Bond SUSP": 3,
+      "EMP/WK Bnd Susp": 41,
+      "Family Sup Susp": 92,
+      "J V Entity Susp": 11,
+      "JDG Entity Susp": 47,
+      "Judgement Susp": 58,
+      "Liab Ins Susp": 295,
+      "O/L Entity Susp": 9,
+      "Out Liab Susp": 46,
+      "QUAL Bond SUSP": 26,
+      "SOS Suspension": 133,
+      "Susp - No Qualifier": 88,
+      "UNKNOWN": 1,
+      "Work Comp Susp": 1044
+    },
+    "secondary_status_counts": {
+      "7073E Probation": 90,
+      "BOND Pay Pending": 68,
+      "Bond Pay Entity Pending": 29,
+      "Class Removal Pending": 38,
+      "DISC Bond Filed": 79,
+      "Entity Susp PND": 7,
+      "FAM Sup Tmp Lic": 95,
+      "Judgement Pend": 29,
+      "LIC-Cont in eff": 7,
+      "Liability Pend": 30,
+      "O/L Entity Pending": 19,
+      "Pending Canc": 38,
+      "Pending Case/CIT": 242,
+      "Pending Case/CIT| DISC Bond Filed": 21,
+      "Pending Case/CIT| WC Susp Pending": 7,
+      "Pending IFS": 91,
+      "Renew Inactive only": 5,
+      "Renewal Recived": 30,
+      "SOS Problem": 19,
+      "WC Susp Pending": 1412
+    },
+    "suspension_is_not_revocation": true,
+    "suspension_rows_in_extract": 8332,
+    "unknown_status_rows": 1
+  },
+  "no_aggregate_rating": true,
+  "no_paid_ranking": true,
+  "no_review_schema": true,
+  "no_trust_score": true,
+  "paid_full_file": {
+    "decision": "DO_NOT_BUY_FOR_CA_CON_002",
+    "historical_rows_described": "700,000 to 830,000+",
+    "page_blocker": false,
+    "price_usd": 235,
+    "reason": "The free portal already supplies a deterministic 75,572-row renewable extract sufficient to publish an honest statewide research page. The paid Full File is historical (cancelled/revoked/expired-nonrenewable). Buy later only if a revocation/cancellation research product is separately authorized."
+  },
+  "personnel": {
+    "acquired": false,
+    "coverage": "NOT_ACQUIRED",
+    "note": "Personnel file was not acquired. Qualifiers are not published as people profiles.",
+    "page_blocker": false,
+    "publish_people_as_profiles": false
+  },
+  "publication": {
+    "canonical": "https://www.contractortrusthub.com/california",
+    "indexable": true,
+    "path": "/california",
+    "robots": "index,follow",
+    "sitemap": true
+  },
+  "pwcr": {
+    "acquired": false,
+    "coverage": "SEARCH_ONLY",
+    "note": "DIR Public Works Contractor Registration is not a CSLB license. Missing roster is not zero registrants."
+  },
+  "semantics": [
+    "ACQUIRED ROWS != COMPLETE CALIFORNIA CONTRACTOR UNIVERSE",
+    "CLEAR != TRUSTHUB VERIFIED",
+    "CLEAR != ENDORSEMENT",
+    "SUSPENSION != REVOCATION",
+    "EXPIRED-RENEWABLE != CANCELLED",
+    "VENDOR != LICENSED CONTRACTOR",
+    "PWCR != CSLB LICENSE",
+    "ASBESTOS REGISTRATION != GENERAL LICENSE STATUS",
+    "ELECTRICIAN CERTIFICATE != CONTRACTOR BUSINESS",
+    "BUSINESS PHONE != PERSONAL PHONE",
+    "MAIL ADDRESS != PROVEN SERVICE AREA",
+    "DLSE DEBARMENT != CSLB REVOCATION",
+    "MISSING != ZERO",
+    "NO TRUST SCORE",
+    "NO PAID RANKING"
+  ],
+  "vendor": {
+    "acquired": false,
+    "coverage": "SEARCH_ONLY",
+    "note": "Cal eProcure / SCPRS vendor identity is not a licensed contractor."
+  },
+  "verify": {
+    "instant_check": "https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx",
+    "license_detail_prefix": "https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/LicenseDetail.aspx?LicNum="
+  },
+  "version": "contractor-ca-state-intel-v1",
+  "workers_comp": {
+    "clear_is_not_current_wc": true,
+    "coverage_type_counts_from_master": {
+      "Exempt": 33245,
+      "Leasing Firm, Temp Agency, etc": 1026,
+      "License does not have current W/C": 1540,
+      "Out of State": 108,
+      "Self-Insured": 43,
+      "UNKNOWN": 1,
+      "Workers' Compensation Insurance": 39609
+    },
+    "note": "Workers' Compensation standalone portal file was not acquired. Master-list WC fields are source labels, not a live certificate check. CLEAR is not proof of current workers' compensation.",
+    "page_blocker": false,
+    "rows_with_wc_suspend_date": 1041,
+    "source_native_work_comp_susp": 1044,
+    "standalone_coverage": "NOT_ACQUIRED",
+    "standalone_file_acquired": false
+  }
+}
