@@ -30,7 +30,6 @@ for (const rel of routes) {
 const entityRoute = read("app/contractors/[slug]/share-og/route.tsx");
 const model = read("lib/seo/share-card-model.ts");
 const card = read("lib/og/contractor-share-card.tsx");
-const networkCard = read("lib/og/network-share-card.tsx");
 const helper = read("lib/og/contractor-share-og.ts");
 const trustReport = read("lib/seo/trust-report-seo.ts");
 const discoveryMeta = read("lib/discovery/metadata.ts");
@@ -69,10 +68,10 @@ for (const foreign of [
   );
 }
 
-assert(networkCard.includes("1200") && networkCard.includes("630"), "contextual card is 1200×630");
+assert(card.includes("1200") && card.includes("630"), "contextual card is 1200×630");
 assert(card.includes("contractortrusthub.com"), "card shows contractor domain");
 assert(!card.includes("lendertrusthub.com"), "card does not show lender domain");
-assert(networkCard.includes("THE TRUST HUB NETWORK"), "network label allowed");
+assert(card.includes("ASK TRUST HUB NETWORK"), "network label allowed");
 assert(model.includes("truncateShareText"), "long names are truncated");
 assert(!/no complaints|fully verified|trusted|approved|safe contractor/i.test(model), "no endorsement copy");
 assert(model.includes("Licensing · company research"), "neutral research label");
