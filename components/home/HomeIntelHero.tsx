@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { formatIntelCount } from "@/lib/home/intel-v2";
 import type { ContractorHubIntelV2 } from "@/lib/home/intel-v2";
+import { loadContractorNetworkMetrics } from "@/lib/metrics/load-network-metrics";
 
 export function HomeIntelHero({ intel }: { intel: ContractorHubIntelV2 }) {
   const live = intel.publicCoverage;
-  const snapshotDay = intel.generatedAt.slice(0, 10);
+  const network = loadContractorNetworkMetrics();
+  const generatedDay = network.generatedAt.slice(0, 10);
+  const newestSource = network.newestDocumentedSourceAsOf;
   const metrics = [
     {
       href: "#findings",
@@ -32,9 +35,11 @@ export function HomeIntelHero({ intel }: { intel: ContractorHubIntelV2 }) {
     },
     {
       href: "#methodology",
-      kicker: "Last official update",
-      value: snapshotDay,
-      label: "Research snapshot date — board extract dates vary",
+      kicker: "Network rollup generated",
+      value: generatedDay,
+      label: newestSource
+        ? `Newest documented official source date ${newestSource} — not Git or deploy time`
+        : "Board extract dates vary; this is rollup generatedAt, not an official regulator date",
     },
   ];
 
@@ -48,9 +53,16 @@ export function HomeIntelHero({ intel }: { intel: ContractorHubIntelV2 }) {
         Understand the market, then research a specific contractor.
       </p>
       <p className="mt-4 text-sm text-[var(--muted)]">
-        Latest official contractor datasets in this research snapshot include records updated through{" "}
-        <strong className="font-medium text-[var(--text)]">{snapshotDay}</strong>. Confirm live status
-        on the official board before you hire.
+        Network rollup generated{" "}
+        <strong className="font-medium text-[var(--text)]">{generatedDay}</strong>
+        {newestSource ? (
+          <>
+            . Newest documented official source date{" "}
+            <strong className="font-medium text-[var(--text)]">{newestSource}</strong>
+            {" "}(truncated CSLB stream as-of; live credential board dates vary)
+          </>
+        ) : null}
+        . Confirm live status on the official board before you hire.
       </p>
       <div className="cth-intel-actions">
         <a className="cth-intel-btn cth-intel-btn--primary" href="#contractor-search">
