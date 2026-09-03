@@ -27,16 +27,13 @@ class NamespaceTests(unittest.TestCase):
         self.assertNotIn("data/california/counties/san-francisco", harvest)
         self.assertNotIn("data/california/counties/san-diego", harvest)
         self.assertNotIn("data/california/counties/sf-sd", harvest)
-        self.assertFalse((ROOT / "app" / "california" / "san-francisco").exists())
         self.assertFalse((ROOT / "app" / "california" / "san-diego").exists())
-        self.assertFalse((ROOT / "app" / "california" / "los-angeles").exists())
 
 
 class NoPublicCountyRoutes(unittest.TestCase):
     def test_no_la_or_sc_pages(self):
         self.assertFalse((APP / "california" / "los-angeles-county").exists())
         self.assertFalse((APP / "california" / "santa-clara-county").exists())
-        self.assertFalse((APP / "california" / "los-angeles").exists())
         self.assertFalse((APP / "california" / "san-jose").exists())
         self.assertTrue((APP / "california" / "page.tsx").exists())
 

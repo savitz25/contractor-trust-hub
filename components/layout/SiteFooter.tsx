@@ -35,6 +35,8 @@ export function SiteFooter() {
   const researchLinks = [
     ...verifyLinks,
     { href: "/california", label: "California contractor research" },
+    { href: "/california/san-francisco", label: "San Francisco contractor research" },
+    { href: "/california/los-angeles", label: "Los Angeles city contractor research" },
     { href: "/florida", label: "Browse Florida" },
     { href: "/new-jersey", label: "New Jersey construction research" },
     { href: "/guides", label: "Homeowner guides" },

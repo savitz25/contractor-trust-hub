@@ -14,12 +14,10 @@ SITEMAP = (ROOT / "lib/seo/sitemap-data.ts").read_text(encoding="utf-8")
 
 class NoPublicationTests(unittest.TestCase):
     def test_no_county_routes(self):
-        self.assertFalse((ROOT / "app/california/san-francisco").exists())
         self.assertFalse((ROOT / "app/california/san-francisco-county").exists())
         self.assertFalse((ROOT / "app/california/san-diego").exists())
         self.assertFalse((ROOT / "app/california/san-diego-county").exists())
         self.assertFalse((ROOT / "app/california/[county]").exists())
-        self.assertNotIn("/california/san-francisco", SITEMAP)
         self.assertNotIn("/california/san-diego", SITEMAP)
         self.assertTrue((ROOT / "app/california/page.tsx").exists())
 

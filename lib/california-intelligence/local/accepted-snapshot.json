@@ -1,0 +1,299 @@
+{
+  "version": "contractor-ca-local-intel-v1",
+  "ticket": "CA-CON-COUNTY-002",
+  "as_of": "2026-09-03",
+  "cslb_spine": {
+    "rows": 75572,
+    "coverage": "ACQUIRED_PARTIAL_STREAM_TRUNCATED",
+    "complete_denominator": "UNKNOWN",
+    "outside_partial_is_not_unlicensed": true
+  },
+  "publication": {
+    "dedicated": [
+      "/california/san-francisco",
+      "/california/los-angeles"
+    ],
+    "modules_on_state_page": [
+      "san-diego",
+      "san-jose"
+    ],
+    "parked": [
+      "san-diego-county",
+      "santa-clara-county",
+      "los-angeles-county"
+    ],
+    "rankings": false,
+    "trustScore": false,
+    "indexable": true,
+    "robots": "index,follow"
+  },
+  "geographies": {
+    "san-francisco": {
+      "slug": "san-francisco",
+      "display_name": "City and County of San Francisco",
+      "geography_type": "CITY_COUNTY",
+      "route": "/california/san-francisco",
+      "surface": "DEDICATED_PAGE"
+    },
+    "los-angeles": {
+      "slug": "los-angeles",
+      "display_name": "City of Los Angeles",
+      "geography_type": "CITY",
+      "route": "/california/los-angeles",
+      "surface": "DEDICATED_PAGE",
+      "not_los_angeles_county": true
+    },
+    "san-diego": {
+      "slug": "san-diego",
+      "display_name": "City of San Diego",
+      "geography_type": "CITY",
+      "route": null,
+      "surface": "STATE_PAGE_MODULE",
+      "not_san_diego_county": true
+    },
+    "san-jose": {
+      "slug": "san-jose",
+      "display_name": "City of San Jose",
+      "geography_type": "CITY",
+      "route": null,
+      "surface": "STATE_PAGE_MODULE",
+      "not_santa_clara_countywide": true
+    }
+  },
+  "parked": {
+    "san-diego-county": {
+      "geography_type": "COUNTY",
+      "permit_bulk": "SOURCE_NOT_ACQUIRED"
+    },
+    "santa-clara-county": {
+      "geography_type": "COUNTY",
+      "parcels": 504717,
+      "development_records": 30179,
+      "cslb_field": false
+    },
+    "los-angeles-county": {
+      "geography_type": "COUNTY",
+      "unincorporated": "PARK"
+    }
+  },
+  "san_francisco": {
+    "business": {
+      "rows": 366307,
+      "accounts": 258032,
+      "current": 126522,
+      "construction_locations": 12128,
+      "construction_accounts": 8743,
+      "cslb_match": {
+        "UNSAFE": 10511,
+        "HIGH_CONFIDENCE": 831,
+        "REVIEW_REQUIRED": 785,
+        "NO_SOURCE_LICENSE_ID": 1
+      },
+      "no_source_native_cslb": true,
+      "high_confidence_is_not_license_verification": true
+    },
+    "permits": {
+      "rows": 1294909,
+      "distinct_permit_numbers": 1149123,
+      "status_top": [
+        [
+          "complete",
+          743055
+        ],
+        [
+          "issued",
+          247659
+        ],
+        [
+          "expired",
+          232324
+        ],
+        [
+          "cancelled",
+          43312
+        ],
+        [
+          "filed",
+          11408
+        ],
+        [
+          "withdrawn",
+          11284
+        ],
+        [
+          "reinstated",
+          1494
+        ],
+        [
+          "approved",
+          1166
+        ],
+        [
+          "filing",
+          1098
+        ],
+        [
+          "suspend",
+          671
+        ],
+        [
+          "disapproved",
+          574
+        ],
+        [
+          "triage",
+          452
+        ],
+        [
+          "revoked",
+          269
+        ],
+        [
+          "plancheck",
+          51
+        ],
+        [
+          "appeal",
+          28
+        ]
+      ],
+      "valuation_rows": 1151222,
+      "parcel_rows": 1294909,
+      "completed_date_rows": 747866,
+      "contractor_license_on_permit_file": 0,
+      "grain": "permit at an address",
+      "as_of": "2026-09-02"
+    },
+    "contacts": {
+      "rows": 1032543,
+      "with_license": 562059,
+      "distinct_source_licenses": 23179,
+      "exact_acquired_cslb_licenses": 2729,
+      "outside_partial_spine_licenses": 20450,
+      "contractor_role_rows": 584716
+    },
+    "inspections": {
+      "rows": 702749,
+      "by_reference_type": {
+        "permit": 621099,
+        "address": 12292,
+        "complaint": 69358
+      },
+      "result_top": [
+        [
+          "PASSED",
+          524212
+        ],
+        [
+          "(blank)",
+          111309
+        ],
+        [
+          "FAILED",
+          67228
+        ]
+      ],
+      "attribution": "PERMIT_OR_PROPERTY_GRAIN",
+      "not_contractor_passed": true
+    }
+  },
+  "los_angeles": {
+    "cofo": {
+      "rows": 132426,
+      "source_native_cslb_rows": 68813,
+      "distinct_source_licenses": 12786,
+      "exact_acquired_cslb_rows": 12505,
+      "exact_acquired_cslb_licenses": 2507,
+      "outside_partial_rows": 56308,
+      "outside_partial_licenses": 10279,
+      "as_of": "weekly / 2026-08-31",
+      "grain": "certificate of occupancy"
+    },
+    "pcis": {
+      "rows": 317027,
+      "as_of": "2023-05-22",
+      "stale": true,
+      "source_native_cslb_rows": 207951,
+      "distinct_source_licenses": 18132,
+      "exact_acquired_cslb_rows": 28974,
+      "exact_acquired_cslb_licenses": 3063,
+      "outside_partial_rows": 178977,
+      "outside_partial_licenses": 15069,
+      "grain": "pcis permit application"
+    },
+    "current_permits_2020_present": {
+      "rows": 409619,
+      "as_of": "2026-08-31",
+      "cslb_field": null,
+      "not_joined_to_stale_pcis_by_address": true,
+      "grain": "issued building permit"
+    },
+    "inspections": {
+      "rows": 11691152,
+      "as_of": "2026-08-31",
+      "runtime_asset": false,
+      "join": "permit number",
+      "wording": "Inspection events associated with this permit",
+      "not_contractor_quality": true
+    },
+    "union": {
+      "exact_acquired_cslb_licenses": 3708,
+      "outside_partial_spine_licenses": 16704,
+      "safely_attributable_acquired_spine_rows": {
+        "cofo": 12505,
+        "pcis": 28974,
+        "sources_kept_separate": true
+      }
+    },
+    "not_los_angeles_county": true
+  },
+  "san_diego": {
+    "approvals_created_2024_2026": {
+      "rows": 172453,
+      "distinct_projects": 39612,
+      "with_permit_holder": 136645,
+      "exact_acquired_cslb_rows": 4,
+      "outside_partial_rows": 19,
+      "source_native_exact_cslb_rows": 23,
+      "jurisdiction": "CITY_OF_SAN_DIEGO"
+    },
+    "business_tax_active": 59321,
+    "rental_unit_accounts": 328337,
+    "not_san_diego_county": true
+  },
+  "san_jose": {
+    "monthly_permit_rows": 2456,
+    "contractor_name_rows": 2050,
+    "source_native_cslb": 0,
+    "name_only": "UNSAFE",
+    "jurisdiction": "CITY_OF_SAN_JOSE",
+    "not_santa_clara_countywide": true
+  },
+  "exact_activity_index": {
+    "licenses": 42525,
+    "no_high_confidence_name_matches": true,
+    "key": "CA-CSLB:{LicenseNo}"
+  },
+  "semantics": [
+    "PERMIT ACTIVITY != QUALITY",
+    "HIGH PERMIT COUNT != BETTER CONTRACTOR",
+    "LOW PERMIT COUNT != INEXPERIENCED",
+    "PERMIT VALUE != COMPANY REVENUE",
+    "PERMIT VALUE != FINAL PROJECT COST",
+    "PERMIT HOLDER != PROPERTY OWNER",
+    "ISSUED != COMPLETED",
+    "COMPLETED != EVERY INSPECTION PASSED",
+    "INSPECTION PASSED != CONTRACTOR QUALITY",
+    "FAILED INSPECTION != CONTRACTOR MISCONDUCT",
+    "NO LOCAL RECORD != NO WORK",
+    "EXACT LOCAL LICENSE OUTSIDE PARTIAL SPINE != UNLICENSED",
+    "BUSINESS REGISTRY != CSLB LICENSE",
+    "BUSINESS TAX CERTIFICATE != TRADE AUTHORIZATION",
+    "NO TRUST SCORE",
+    "NO RANKING"
+  ],
+  "profile_integration": "DEFERRED",
+  "california_local_closeout": true,
+  "fingerprint": "8bda38b1d8a365d832331b9a5168a1e7429eb7c764e0665c2a040493b8e54373",
+  "generated_at": "2026-09-03T21:03:58.295288+00:00"
+}

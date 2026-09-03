@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Trace } from "@/components/new-jersey/trace";
 import { CaliforniaInventorySearch } from "@/components/california/ca-inventory-search";
+import { CaliforniaLocalEvidenceSection } from "@/components/california/ca-local-evidence-section";
 import {
   fmtHero,
   fmtInt,
@@ -86,6 +87,8 @@ export function CaliforniaContractorPage({ snapshot }: { snapshot: CaliforniaCon
           ))}
         </ul>
       </section>
+
+      <CaliforniaLocalEvidenceSection />
 
       <CaliforniaInventorySearch
         coverageLabel={s.coverage.inventory_label}
