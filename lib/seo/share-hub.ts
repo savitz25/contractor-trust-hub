@@ -10,8 +10,8 @@ export const SHARE_HUB = {
   host: "www.contractortrusthub.com",
   apexHost: "contractortrusthub.com",
   origin: "https://www.contractortrusthub.com",
-  ogImagePath: "/brand/contractor-trust-hub-og.png",
-  ogImageVersion: "20260821share002",
+  ogImagePath: "/opengraph-image",
+  ogImageVersion: "20260903share004b",
   ogWidth: 1200,
   ogHeight: 630,
   ogAlt:
