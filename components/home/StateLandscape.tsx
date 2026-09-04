@@ -27,6 +27,12 @@ function pathsFor(s: EvidenceState): { href: string; label: string }[] {
       { href: verifyHref, label: "Verify" },
     ];
   }
+  if (s.slug === "az") {
+    return [
+      { href: "/arizona", label: "Arizona research" },
+      { href: verifyHref, label: "Verify" },
+    ];
+  }
   if (s.browseEnabled || s.depth === "full_journey") {
     return [
       { href: verifyHref, label: "Verify" },

@@ -1,0 +1,259 @@
+{
+  "source_path": "C:\\Users\\Michael.Savitsky\\contractor-trust-hub\\data\\raw\\az_roc\\roc_all_current.csv",
+  "bytes": 12206370,
+  "sha256": "bc41033b03ca8c0426db672cd4c045547c781babc122d03fe96860e303a2d5cc",
+  "title": "Current Active Contractor Licenses - File created: Aug 12, 2026 - 58131 Records",
+  "file_created": "Aug 12, 2026",
+  "title_record_claim": 58131,
+  "fields": [
+    "#",
+    "License No",
+    "Business Name",
+    "Doing Business As",
+    "Class",
+    "Class Detail",
+    "Class Type",
+    "Address",
+    "City",
+    "State",
+    "Zip",
+    "Qualifying Party",
+    "Issued Date",
+    "Expiration Date",
+    "Status"
+  ],
+  "data_rows": 58131,
+  "skipped": 0,
+  "distinct_license_numbers": 58131,
+  "duplicate_license_rows": 0,
+  "distinct_normalized_business_names": 48795,
+  "distinct_business_plus_address": 50229,
+  "business_names_with_multiple_licenses": 7186,
+  "grain": "one data row = one ROC license number (License No)",
+  "status_counts": {
+    "Active": 58130,
+    "2027-11-30": 1
+  },
+  "class_type_counts": {
+    "Specialty Dual": 27388,
+    "Specialty Residential": 5600,
+    "General Residential": 5396,
+    "Specialty Commercial": 4116,
+    "General Commercial": 6570,
+    "General Dual": 9060,
+    "B-3 General Remodeling and Repair Contractor": 1
+  },
+  "category_counts": {
+    "Dual": 36448,
+    "Residential": 10996,
+    "Commercial": 10686,
+    "UNKNOWN": 1
+  },
+  "category_sum": 58131,
+  "top_classes": [
+    [
+      "KB-2",
+      4359
+    ],
+    [
+      "B",
+      3956
+    ],
+    [
+      "KB-1",
+      3584
+    ],
+    [
+      "B-1",
+      3033
+    ],
+    [
+      "CR-11",
+      3015
+    ],
+    [
+      "CR-39",
+      2971
+    ],
+    [
+      "CR-37",
+      2120
+    ],
+    [
+      "CR-21",
+      1995
+    ],
+    [
+      "CR-34",
+      1954
+    ],
+    [
+      "A",
+      1644
+    ],
+    [
+      "R-62",
+      1623
+    ],
+    [
+      "CR-60",
+      1562
+    ],
+    [
+      "CR-42",
+      1372
+    ],
+    [
+      "C-11",
+      1261
+    ],
+    [
+      "CR-61",
+      1179
+    ],
+    [
+      "CR-8",
+      1169
+    ],
+    [
+      "CR-67",
+      1154
+    ],
+    [
+      "B-3",
+      1012
+    ],
+    [
+      "CR-5",
+      938
+    ],
+    [
+      "CR-48",
+      775
+    ],
+    [
+      "CR-10",
+      762
+    ],
+    [
+      "R-11",
+      751
+    ],
+    [
+      "R-37R",
+      725
+    ],
+    [
+      "CR-9",
+      720
+    ],
+    [
+      "B-2",
+      719
+    ],
+    [
+      "CR-2",
+      571
+    ],
+    [
+      "KA",
+      569
+    ],
+    [
+      "C-39",
+      562
+    ],
+    [
+      "R-39R",
+      518
+    ],
+    [
+      "CR-65",
+      510
+    ],
+    [
+      "CR-36",
+      479
+    ],
+    [
+      "KA-5",
+      411
+    ],
+    [
+      "C-37",
+      397
+    ],
+    [
+      "CR-31",
+      382
+    ],
+    [
+      "CR-6",
+      378
+    ],
+    [
+      "CR-7",
+      289
+    ],
+    [
+      "CR-57",
+      285
+    ],
+    [
+      "R-60",
+      281
+    ],
+    [
+      "CR-14",
+      274
+    ],
+    [
+      "R-2",
+      272
+    ]
+  ],
+  "distinct_class_codes": 158,
+  "qualifying_party": {
+    "named": 56281,
+    "qp_exempt": 1850,
+    "blank": 0,
+    "id_field_present": false,
+    "start_end_association_present": false
+  },
+  "contacts": {
+    "address": 58122,
+    "phone": 0,
+    "email": 0,
+    "website": 0,
+    "fields_present": [
+      "#",
+      "License No",
+      "Business Name",
+      "Doing Business As",
+      "Class",
+      "Class Detail",
+      "Class Type",
+      "Address",
+      "City",
+      "State",
+      "Zip",
+      "Qualifying Party",
+      "Issued Date",
+      "Expiration Date",
+      "Status"
+    ]
+  },
+  "posting_list_header_2026_09_02": {
+    "all_current": 57886,
+    "commercial": 46913,
+    "dual": 36285,
+    "residential": 47258,
+    "note": "Official roc.az.gov/posting-list table retrieved 2026-09-04. Commercial/Residential/Dual files overlap; Dual licenses appear in the commercial and residential posting files. Do not add."
+  },
+  "pre_ingest_graph": {
+    "az_roc_licenses_in_network_metrics": 58408,
+    "az_roc_discipline_rows_in_network_metrics": 459,
+    "metrics_generated_at": "2026-09-03T21:22:06.870Z",
+    "note": "Committed contractor-network-metrics-v1. Refreshed identities are not net-new companies."
+  }
+}
