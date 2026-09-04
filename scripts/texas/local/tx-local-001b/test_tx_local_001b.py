@@ -36,8 +36,7 @@ class TxLocal001B(unittest.TestCase):
             HARVEST["builder3_namespaces_untouched"],
             ["austin-travis", "fort-worth-tarrant"],
         )
-        self.assertFalse((ROOT / "data/texas/local/austin-travis").exists())
-        self.assertFalse((ROOT / "data/texas/local/fort-worth-tarrant").exists())
+        # 001A may land additively in those namespaces. Public local routes stay unpublished.
         self.assertFalse((ROOT / "app/texas/austin").exists())
         self.assertFalse((ROOT / "app/texas/fort-worth").exists())
 

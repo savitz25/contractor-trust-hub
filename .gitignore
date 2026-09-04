@@ -36,7 +36,7 @@ data/raw/**
 # TX-CON-001 compact identity index (rebuild from raw; do not commit)
 artifacts/tx-con-001/business-identity-index.json
 
-# TX-CON-LOCAL-001B giant local extracts (keep manifests/summaries/samples)
+# TX-CON-LOCAL giant local extracts (keep manifests/summaries/samples)
 data/texas/local/**/*.csv
 data/texas/local/**/*.tsv
 data/texas/local/**/*.zip
@@ -46,6 +46,7 @@ data/texas/local/**/*.xlsx
 !data/texas/local/**/*-profile.json
 !data/texas/local/**/*-report.json
 !data/texas/local/**/*-sample.json
+!data/texas/local/**/*-sample.csv
 !data/texas/local/**/.gitkeep
 
 # Staging / local DB dumps

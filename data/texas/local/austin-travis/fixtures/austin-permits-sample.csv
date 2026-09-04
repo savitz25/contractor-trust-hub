@@ -1,0 +1,9 @@
+permit_number,permit_type_desc,contractor_company_name,contractor_phone,contractor_trade,tcad_id,status_current,match_class
+2026-112506 MP,Mechanical Permit,McCullough Heating & Air,5122800011,Mechanical Contractor,0162030405,Active,LOCAL_ONLY_CONTRACTOR_IDENTITY
+2026-111836 EP,Electrical Permit,ICM Services dba ION ELectrical Services,5126088935,Electrical Contractor,0400001206,Active,LOCAL_ONLY_CONTRACTOR_IDENTITY
+2026-112393 MP,Mechanical Permit,ABC Home and Commercial Services,5128379500,Mechanical Contractor,R402958,Active,LOCAL_ONLY_CONTRACTOR_IDENTITY
+2026-110952 PP,Plumbing Permit,"Protex Plumbing & Mechanical, LP",5128466400,Plumbing Contractor,0339111202,Active,UNSAFE
+2026-024301 EP,Electrical Permit,Aztec Electric Service,5128369582,Electrical Contractor,0230051111,Final,LOCAL_ONLY_CONTRACTOR_IDENTITY
+2025-161614 PP,Plumbing Permit,MAK Construction LLC,5129405805,General Contractor,0262081929,Final,LOCAL_ONLY_CONTRACTOR_IDENTITY
+2026-000126 EP,Electrical Permit,LED ES Electric,5124979275,Electrical Contractor,0430281307,Final,REVIEW_REQUIRED
+2025-123441 EP,Electrical Permit,Doctor Electric,2106678975,Electrical Contractor,0302590321,Final,REVIEW_REQUIRED

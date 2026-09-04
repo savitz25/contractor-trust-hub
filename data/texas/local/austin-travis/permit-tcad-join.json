@@ -1,0 +1,11 @@
+{
+  "permit_rows_with_tcad_id_distinct": 254703,
+  "prop_rows_scanned": 493324,
+  "prop_rows_with_geo_id": 457222,
+  "exact_geo_id_joins": 233085,
+  "unmatched_permit_tcad_ids": 21618,
+  "join_key": "Austin tcad_id == Travis CAD PROP.TXT geo_id (layout positions 547-596)",
+  "owner_fields_not_exported": true,
+  "appraisal_value_is_not_sale_price": true,
+  "duplicate_note": "PROP.TXT may contain one row per owner; join is on geo_id set, not owner."
+}

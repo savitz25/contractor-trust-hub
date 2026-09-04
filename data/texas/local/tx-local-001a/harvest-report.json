@@ -1,0 +1,942 @@
+{
+  "ticket": "TX-CON-LOCAL-001A",
+  "version": "contractor-tx-local-001a-v1",
+  "generated_at": "2026-09-04T15:28:02.857115+00:00",
+  "no_public_local_routes": true,
+  "no_shared_texas_local_loader": true,
+  "namespaces": [
+    "austin-travis",
+    "fort-worth-tarrant",
+    "tx-local-001a"
+  ],
+  "builder_4_namespaces_untouched": [
+    "san-antonio-bexar",
+    "houston-harris"
+  ],
+  "state_spine": {
+    "source": "TX-CON-001 acquired TDLR specialty business files + TSBPE RMP",
+    "keys": 47426,
+    "non_match_is_not_unlicensed": true
+  },
+  "austin": {
+    "source": "City of Austin Issued Construction Permits",
+    "dataset_id": "3syk-w9eu",
+    "url": "https://data.austintexas.gov/Building-and-Development/Issued-Construction-Permits/3syk-w9eu",
+    "access_class": "OPEN_SOCRATA",
+    "grain": "one row = one issued permit (permit_number unique in source metadata)",
+    "path": "S:\\ath-raw\\tx-con-local-001a\\austin-travis\\3syk-w9eu-issued-construction-permits.csv",
+    "bytes": 1512298131,
+    "sha256": "3ff78f727b98c7d8c7f6a17867e46afa133776c7fbb2b306b8b03cd9b7e53aa8",
+    "rows": 2373854,
+    "fields": null,
+    "license_like_columns": [],
+    "source_native_tdlr_or_tsbpe_id": false,
+    "source_native_city_contractor_number": false,
+    "rows_with_contractor_company": 1186388,
+    "rows_with_contractor_person_name": 1236997,
+    "rows_with_contractor_phone": 1333297,
+    "rows_with_contractor_address": 1326143,
+    "rows_with_contractor_trade": 1425481,
+    "rows_with_valuation": 1163347,
+    "rows_with_tcad_id": 2310765,
+    "distinct_contractor_company_values": 32330,
+    "distinct_normalized_company_plus_phone": 31908,
+    "distinct_tcad_ids": 254703,
+    "permit_types": [
+      [
+        "Electrical Permit",
+        686985
+      ],
+      [
+        "Plumbing Permit",
+        545319
+      ],
+      [
+        "Building Permit",
+        519904
+      ],
+      [
+        "Mechanical Permit",
+        505140
+      ],
+      [
+        "Driveway / Sidewalks",
+        116506
+      ]
+    ],
+    "status_mix": [
+      [
+        "Final",
+        2004157
+      ],
+      [
+        "Expired",
+        169074
+      ],
+      [
+        "VOID",
+        153257
+      ],
+      [
+        "Active",
+        28027
+      ],
+      [
+        "Withdrawn",
+        17704
+      ],
+      [
+        "Cancelled",
+        675
+      ],
+      [
+        "Pending",
+        231
+      ],
+      [
+        "Closed",
+        129
+      ],
+      [
+        "Aborted",
+        120
+      ],
+      [
+        "Cancelled - Contractor Required",
+        113
+      ],
+      [
+        "Inactive Pending Revision",
+        77
+      ],
+      [
+        "On Hold",
+        63
+      ],
+      [
+        "Pending Permit",
+        55
+      ],
+      [
+        "Re Review",
+        55
+      ],
+      [
+        "Denied but Closed",
+        43
+      ],
+      [
+        "Suspended",
+        26
+      ],
+      [
+        "(blank)",
+        14
+      ],
+      [
+        "Expired - License",
+        13
+      ],
+      [
+        "Cancelled - New Permit Required",
+        9
+      ],
+      [
+        "Inactive Contractor",
+        3
+      ],
+      [
+        "New Permit Required",
+        3
+      ],
+      [
+        "Application Incomplete",
+        2
+      ],
+      [
+        "Revoked",
+        2
+      ],
+      [
+        "Awaiting Upload",
+        1
+      ],
+      [
+        "Rejected",
+        1
+      ]
+    ],
+    "year_distribution": [
+      [
+        1921,
+        5
+      ],
+      [
+        1969,
+        3
+      ],
+      [
+        1970,
+        8
+      ],
+      [
+        1971,
+        9
+      ],
+      [
+        1976,
+        3
+      ],
+      [
+        1977,
+        53
+      ],
+      [
+        1978,
+        532
+      ],
+      [
+        1979,
+        1651
+      ],
+      [
+        1980,
+        17891
+      ],
+      [
+        1981,
+        41493
+      ],
+      [
+        1982,
+        48638
+      ],
+      [
+        1983,
+        58723
+      ],
+      [
+        1984,
+        70692
+      ],
+      [
+        1985,
+        67088
+      ],
+      [
+        1986,
+        55797
+      ],
+      [
+        1987,
+        43777
+      ],
+      [
+        1988,
+        37057
+      ],
+      [
+        1989,
+        33828
+      ],
+      [
+        1990,
+        31884
+      ],
+      [
+        1991,
+        31755
+      ],
+      [
+        1992,
+        35129
+      ],
+      [
+        1993,
+        38545
+      ],
+      [
+        1994,
+        38456
+      ],
+      [
+        1995,
+        39218
+      ],
+      [
+        1996,
+        44168
+      ],
+      [
+        1997,
+        40095
+      ],
+      [
+        1998,
+        44798
+      ],
+      [
+        1999,
+        42650
+      ],
+      [
+        2000,
+        41662
+      ],
+      [
+        2001,
+        36368
+      ],
+      [
+        2002,
+        39812
+      ],
+      [
+        2003,
+        42002
+      ],
+      [
+        2004,
+        44766
+      ],
+      [
+        2005,
+        53284
+      ],
+      [
+        2006,
+        58778
+      ],
+      [
+        2007,
+        50651
+      ],
+      [
+        2008,
+        50870
+      ],
+      [
+        2009,
+        46741
+      ],
+      [
+        2010,
+        49734
+      ],
+      [
+        2011,
+        51484
+      ],
+      [
+        2012,
+        56351
+      ],
+      [
+        2013,
+        61314
+      ],
+      [
+        2014,
+        61430
+      ],
+      [
+        2015,
+        62546
+      ],
+      [
+        2016,
+        66599
+      ],
+      [
+        2017,
+        68926
+      ],
+      [
+        2018,
+        69024
+      ],
+      [
+        2019,
+        75447
+      ],
+      [
+        2020,
+        68521
+      ],
+      [
+        2021,
+        74260
+      ],
+      [
+        2022,
+        70490
+      ],
+      [
+        2023,
+        60035
+      ],
+      [
+        2024,
+        55697
+      ],
+      [
+        2025,
+        54316
+      ],
+      [
+        2026,
+        38800
+      ]
+    ],
+    "contractor_trades": [
+      [
+        "General Contractor",
+        563495
+      ],
+      [
+        "Electrical Contractor",
+        365453
+      ],
+      [
+        "Plumbing Contractor",
+        268671
+      ],
+      [
+        "Mechanical Contractor",
+        227862
+      ]
+    ],
+    "permit_class_mapped": [
+      [
+        "Residential",
+        1620672
+      ],
+      [
+        "Commercial",
+        753182
+      ]
+    ],
+    "match_class": {
+      "LOCAL_ONLY_CONTRACTOR_IDENTITY": 965876,
+      "NO_CONTRACTOR": 948594,
+      "UNSAFE": 167231,
+      "REVIEW_REQUIRED": 117480,
+      "HIGH_CONFIDENCE_BUSINESS_MATCH": 174673
+    },
+    "local_only_trade_breakout": {
+      "mechanical/HVAC": 107038,
+      "electrical": 132198,
+      "plumbing": 137769,
+      "general": 351005
+    },
+    "contacts": {
+      "phones": 1333297,
+      "emails": 0,
+      "websites": 0,
+      "addresses": 1326143,
+      "provenance_phone": "AUSTIN_PERMIT_CONTRACTOR_PHONE",
+      "provenance_address": "AUSTIN_PERMIT_CONTRACTOR_ADDRESS",
+      "email_website": "NOT_IN_SOURCE"
+    },
+    "work_history_identities": 55756,
+    "work_history_top": [
+      {
+        "identity": "George Christianson",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 26649,
+        "distinct_permit_numbers": 26649,
+        "valuation_rows": 399
+      },
+      {
+        "identity": "D R Horton Homes",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 21728,
+        "distinct_permit_numbers": 21728,
+        "valuation_rows": 15272
+      },
+      {
+        "identity": "In Charge Electrical Services, LLC",
+        "class": "REVIEW_REQUIRED",
+        "state_keys": [
+          "TX-TDLR:ELECTRICAL-CONTRACTOR:24896:EC"
+        ],
+        "permit_rows": 19240,
+        "distinct_permit_numbers": 19240,
+        "valuation_rows": 0
+      },
+      {
+        "identity": "KB Home",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 17498,
+        "distinct_permit_numbers": 17498,
+        "valuation_rows": 14310
+      },
+      {
+        "identity": "Victory Plumbing Company",
+        "class": "REVIEW_REQUIRED",
+        "state_keys": [
+          "TX-TSBPE:RMP:37550",
+          "TX-TSBPE:RMP:14505"
+        ],
+        "permit_rows": 16436,
+        "distinct_permit_numbers": 16436,
+        "valuation_rows": 64
+      },
+      {
+        "identity": "Christianson Plumbing",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 14432,
+        "distinct_permit_numbers": 14432,
+        "valuation_rows": 5
+      },
+      {
+        "identity": "Austin Lanehart Electric Co., Inc.",
+        "class": "HIGH_CONFIDENCE_BUSINESS_MATCH",
+        "state_keys": [
+          "TX-TDLR:ELECTRICAL-CONTRACTOR:17175:EC"
+        ],
+        "permit_rows": 13353,
+        "distinct_permit_numbers": 13353,
+        "valuation_rows": 3270
+      },
+      {
+        "identity": "David Weekley Homes (MAIN)",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 11431,
+        "distinct_permit_numbers": 11431,
+        "valuation_rows": 9152
+      },
+      {
+        "identity": "Milburn, Bill",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 11312,
+        "distinct_permit_numbers": 11312,
+        "valuation_rows": 11288
+      },
+      {
+        "identity": "IES Residential, Inc.",
+        "class": "UNSAFE",
+        "state_keys": [
+          "TX-TDLR:A-C-CONTRACTOR:45895:AE",
+          "TX-TSBPE:RMP:36113",
+          "TX-TDLR:A-C-CONTRACTOR:94845:AE"
+        ],
+        "permit_rows": 10819,
+        "distinct_permit_numbers": 10819,
+        "valuation_rows": 387
+      },
+      {
+        "identity": "Lennar Homes of Texas***MAIN***",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 10300,
+        "distinct_permit_numbers": 10300,
+        "valuation_rows": 7184
+      },
+      {
+        "identity": "Bryan Neal",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 9295,
+        "distinct_permit_numbers": 9295,
+        "valuation_rows": 176
+      },
+      {
+        "identity": "Christianson Plumbing & Air Co",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 9252,
+        "distinct_permit_numbers": 9252,
+        "valuation_rows": 1
+      },
+      {
+        "identity": "Landmark Electric",
+        "class": "UNSAFE",
+        "state_keys": [
+          "TX-TDLR:ELECTRICAL-CONTRACTOR:19215:EC",
+          "TX-TDLR:ELECTRICAL-CONTRACTOR:31046:EC"
+        ],
+        "permit_rows": 8846,
+        "distinct_permit_numbers": 8846,
+        "valuation_rows": 2
+      },
+      {
+        "identity": "Newmark Homes LLC",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 8498,
+        "distinct_permit_numbers": 8498,
+        "valuation_rows": 8065
+      },
+      {
+        "identity": "Centex Homes",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 7259,
+        "distinct_permit_numbers": 7259,
+        "valuation_rows": 6435
+      },
+      {
+        "identity": "STANDARD PACIFIC Homes of Texas,Inc Austin Division",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 6910,
+        "distinct_permit_numbers": 6910,
+        "valuation_rows": 5143
+      },
+      {
+        "identity": "Meritage Homes Corp",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 6474,
+        "distinct_permit_numbers": 6474,
+        "valuation_rows": 5548
+      },
+      {
+        "identity": "Stan's Heating, Air, Plumbing, & Electrical",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 6412,
+        "distinct_permit_numbers": 6412,
+        "valuation_rows": 0
+      },
+      {
+        "identity": "Hoskins Electric Co.",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 6259,
+        "distinct_permit_numbers": 6259,
+        "valuation_rows": 634
+      },
+      {
+        "identity": "McCullough Heating & Air",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 6027,
+        "distinct_permit_numbers": 6027,
+        "valuation_rows": 73
+      },
+      {
+        "identity": "Mustang Plumbing",
+        "class": "REVIEW_REQUIRED",
+        "state_keys": [
+          "TX-TSBPE:RMP:15773"
+        ],
+        "permit_rows": 5596,
+        "distinct_permit_numbers": 5596,
+        "valuation_rows": 53
+      },
+      {
+        "identity": "Wayne Harrel",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 5326,
+        "distinct_permit_numbers": 5326,
+        "valuation_rows": 0
+      },
+      {
+        "identity": "Randall Baker",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 4897,
+        "distinct_permit_numbers": 4897,
+        "valuation_rows": 66
+      },
+      {
+        "identity": "Renewal by Andersen",
+        "class": "LOCAL_ONLY_CONTRACTOR_IDENTITY",
+        "state_keys": [],
+        "permit_rows": 4709,
+        "distinct_permit_numbers": 4709,
+        "valuation_rows": 4163
+      }
+    ],
+    "semantics": [
+      "LOCAL PERMIT CONTRACTOR != STATE LICENSEE",
+      "GENERAL CONTRACTOR WITHOUT TDLR != UNLICENSED",
+      "PERMIT COUNT != QUALITY",
+      "VALUATION != REVENUE",
+      "APPRAISAL VALUE != SALE PRICE",
+      "MISSING != ZERO",
+      "NO TRUST SCORE"
+    ]
+  },
+  "fort_worth": {
+    "source": "City of Fort Worth Development Permits",
+    "item_id": "d2740f4d746b4bfaa03e25de0376238b",
+    "url": "https://data.fortworthtexas.gov/Development-Infrastructure/Development-Permits/quz7-xnsy",
+    "access_class": "OPEN_GIS_SERVICE",
+    "grain": "one row = development permit record",
+    "path": "S:\\ath-raw\\tx-con-local-001a\\fort-worth-tarrant\\cfw-development-permits.csv",
+    "bytes": 377108855,
+    "sha256": "84ba7229d5b1281fdf5130797e250966a151ffc68507dc074e62b3a4715b06a6",
+    "rows": 1611699,
+    "fields": [
+      "Unique_ID",
+      "Permit_No",
+      "Permit_Type",
+      "Permit_SubType",
+      "Permit_Category",
+      "B1_SPECIAL_TEXT",
+      "B1_WORK_DESC",
+      "Full_Street_Address",
+      "Zip_Code",
+      "B1_LOT",
+      "B1_BLOCK",
+      "B1_TRACT",
+      "B1_LEGAL_DESC",
+      "Owner_Full_Name",
+      "File_Date",
+      "Current_Status",
+      "Status_Date",
+      "Location_1",
+      "JobValue",
+      "Use_Type",
+      "Specific_Use",
+      "Units",
+      "SqFt",
+      "ObjectId"
+    ],
+    "distinct_permit_numbers": 1549550,
+    "rows_with_street_address": 0,
+    "rows_with_job_value": 408939,
+    "rows_with_legal_description": 1533183,
+    "permit_types": [
+      [
+        "Plumbing",
+        410659
+      ],
+      [
+        "Electrical",
+        347062
+      ],
+      [
+        "Mechanical",
+        280461
+      ],
+      [
+        "Residential Building Permit",
+        252202
+      ],
+      [
+        "Plumbing Backflow",
+        145880
+      ],
+      [
+        "Commercial Building Permit",
+        85073
+      ],
+      [
+        "Residential Accessory Struct",
+        50607
+      ],
+      [
+        "Commercial Accessory Structure",
+        27115
+      ],
+      [
+        "Urban Forestry",
+        5630
+      ],
+      [
+        "Commercial Grading Permit",
+        3515
+      ],
+      [
+        "Design Review",
+        3495
+      ]
+    ],
+    "status_mix": [
+      [
+        "Finaled",
+        1277647
+      ],
+      [
+        "Expired",
+        199047
+      ],
+      [
+        "Issued",
+        47471
+      ],
+      [
+        "Void",
+        38680
+      ],
+      [
+        "Withdrawn",
+        19379
+      ],
+      [
+        "Pending",
+        9548
+      ],
+      [
+        "Approved",
+        8241
+      ],
+      [
+        "Plan Review",
+        3829
+      ],
+      [
+        "Awaiting Client Reply",
+        3572
+      ],
+      [
+        "Closed",
+        1304
+      ],
+      [
+        "Incomplete Submittal",
+        869
+      ],
+      [
+        "Denied",
+        697
+      ],
+      [
+        "Hold",
+        423
+      ],
+      [
+        "Closed By Rule",
+        356
+      ],
+      [
+        "Partial Approval",
+        194
+      ],
+      [
+        "In Review",
+        193
+      ],
+      [
+        "Accepted",
+        82
+      ],
+      [
+        "Approved w/Conditions",
+        56
+      ],
+      [
+        "Complete",
+        42
+      ],
+      [
+        "Close",
+        25
+      ],
+      [
+        "(blank)",
+        15
+      ],
+      [
+        "Pending HCLC Review",
+        10
+      ],
+      [
+        "Administrative Approval",
+        6
+      ],
+      [
+        "Issued Without Contractor",
+        5
+      ],
+      [
+        "Pending Fees",
+        3
+      ],
+      [
+        "Continued",
+        2
+      ],
+      [
+        "Opt-Out",
+        2
+      ],
+      [
+        "Appeal",
+        1
+      ]
+    ],
+    "contractor_company_field": false,
+    "contractor_phone_field": false,
+    "contractor_license_field": false,
+    "owner_full_name_is_not_contractor": true,
+    "source_native_tdlr_or_tsbpe_id": false,
+    "csv_acquired": true,
+    "semantics": [
+      "Owner_Full_Name is property owner, not contractor identity",
+      "LOCAL PERMIT CONTRACTOR != STATE LICENSEE",
+      "PERMIT COUNT != QUALITY",
+      "MISSING != ZERO"
+    ],
+    "service_count": 1611676,
+    "csv_acquired_complete": true,
+    "csv_partial_rows": 351987,
+    "note": "Official FeatureServer extract 1,611,699 rows. Full_Street_Address is empty in the bulk table. Owner_Full_Name is property owner, not contractor. No contractor identity fields.",
+    "rows_with_zip": 1081620,
+    "rows_with_owner_full_name": 1502331,
+    "permit_to_tad_exact_join": "NOT_AVAILABLE_NO_ACCOUNT_OR_SITUS_ON_PERMIT_TABLE"
+  },
+  "travis_cad": {
+    "acquired": true,
+    "path": "S:\\ath-raw\\tx-con-local-001a\\austin-travis\\tcad-2026-certified-appraisal-export-supp0-07182026.zip",
+    "bytes": 557228168,
+    "member_count": 21,
+    "prop_txt_uncompressed_gb": 4.9,
+    "prop_rows_scanned": 493324,
+    "owner_dossiers": false,
+    "appraisal_value_is_not_sale_price": true,
+    "join": {
+      "permit_rows_with_tcad_id_distinct": 254703,
+      "prop_rows_scanned": 493324,
+      "prop_rows_with_geo_id": 457222,
+      "exact_geo_id_joins": 233085,
+      "unmatched_permit_tcad_ids": 21618,
+      "join_key": "Austin tcad_id == Travis CAD PROP.TXT geo_id (layout positions 547-596)",
+      "owner_fields_not_exported": true,
+      "appraisal_value_is_not_sale_price": true,
+      "duplicate_note": "PROP.TXT may contain one row per owner; join is on geo_id set, not owner."
+    }
+  },
+  "guardrails": {
+    "local_permit_contractor_ne_state_licensee": true,
+    "gc_without_tdlr_ne_unlicensed": true,
+    "permit_ne_quality": true,
+    "permit_count_ne_experience_score": true,
+    "valuation_ne_revenue": true,
+    "appraisal_ne_sale_price": true,
+    "property_address_ne_owner": true,
+    "contractor_phone_ne_state_regulator_contact": true,
+    "missing_ne_zero": true,
+    "no_trust_score": true,
+    "no_ranking": true,
+    "no_name_only_adverse_attach": true
+  },
+  "tarrant_cad": {
+    "acquired": true,
+    "source": "TAD PropertyData-FullSet (Delimited)",
+    "url": "https://www.tad.org/resources/data-downloads",
+    "path": "S:\\ath-raw\\tx-con-local-001a\\fort-worth-tarrant\\PropertyData_Delimited.zip",
+    "bytes": 99303058,
+    "sha256": "dcfc196ad301a45fceb2abad38c010de872b67ae9f3666e1479d7db09f8d8f00",
+    "txt_uncompressed_mb": 685.2,
+    "rows": 2286442,
+    "distinct_account_num": 2279846,
+    "rows_with_situs": 781430,
+    "appraisal_year": "2026",
+    "owner_dossiers": false,
+    "appraisal_value_is_not_sale_price": true,
+    "true_prodigy_fullset_bytes": 747250579,
+    "true_prodigy_sha256": "a9dde0ce4afee974c0b8bd3ac25558196f8ab4e12655e6c31fc05cbba52d6dd4"
+  }
+}

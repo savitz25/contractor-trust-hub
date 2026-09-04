@@ -1,0 +1,200 @@
+{
+  "rows": 1611699,
+  "bytes": 377108855,
+  "sha256": "84ba7229d5b1281fdf5130797e250966a151ffc68507dc074e62b3a4715b06a6",
+  "fields": [
+    "Unique_ID",
+    "Permit_No",
+    "Permit_Type",
+    "Permit_SubType",
+    "Permit_Category",
+    "B1_SPECIAL_TEXT",
+    "B1_WORK_DESC",
+    "Full_Street_Address",
+    "Zip_Code",
+    "B1_LOT",
+    "B1_BLOCK",
+    "B1_TRACT",
+    "B1_LEGAL_DESC",
+    "Owner_Full_Name",
+    "File_Date",
+    "Current_Status",
+    "Status_Date",
+    "Location_1",
+    "JobValue",
+    "Use_Type",
+    "Specific_Use",
+    "Units",
+    "SqFt",
+    "ObjectId"
+  ],
+  "distinct_permit_numbers": 1549550,
+  "rows_with_street_address": 0,
+  "rows_with_zip": 1081620,
+  "rows_with_job_value": 408939,
+  "rows_with_legal_description": 1533183,
+  "rows_with_owner_full_name": 1502331,
+  "permit_types": [
+    [
+      "Plumbing",
+      410659
+    ],
+    [
+      "Electrical",
+      347062
+    ],
+    [
+      "Mechanical",
+      280461
+    ],
+    [
+      "Residential Building Permit",
+      252202
+    ],
+    [
+      "Plumbing Backflow",
+      145880
+    ],
+    [
+      "Commercial Building Permit",
+      85073
+    ],
+    [
+      "Residential Accessory Struct",
+      50607
+    ],
+    [
+      "Commercial Accessory Structure",
+      27115
+    ],
+    [
+      "Urban Forestry",
+      5630
+    ],
+    [
+      "Commercial Grading Permit",
+      3515
+    ],
+    [
+      "Design Review",
+      3495
+    ]
+  ],
+  "status_mix": [
+    [
+      "Finaled",
+      1277647
+    ],
+    [
+      "Expired",
+      199047
+    ],
+    [
+      "Issued",
+      47471
+    ],
+    [
+      "Void",
+      38680
+    ],
+    [
+      "Withdrawn",
+      19379
+    ],
+    [
+      "Pending",
+      9548
+    ],
+    [
+      "Approved",
+      8241
+    ],
+    [
+      "Plan Review",
+      3829
+    ],
+    [
+      "Awaiting Client Reply",
+      3572
+    ],
+    [
+      "Closed",
+      1304
+    ],
+    [
+      "Incomplete Submittal",
+      869
+    ],
+    [
+      "Denied",
+      697
+    ],
+    [
+      "Hold",
+      423
+    ],
+    [
+      "Closed By Rule",
+      356
+    ],
+    [
+      "Partial Approval",
+      194
+    ],
+    [
+      "In Review",
+      193
+    ],
+    [
+      "Accepted",
+      82
+    ],
+    [
+      "Approved w/Conditions",
+      56
+    ],
+    [
+      "Complete",
+      42
+    ],
+    [
+      "Close",
+      25
+    ],
+    [
+      "(blank)",
+      15
+    ],
+    [
+      "Pending HCLC Review",
+      10
+    ],
+    [
+      "Administrative Approval",
+      6
+    ],
+    [
+      "Issued Without Contractor",
+      5
+    ],
+    [
+      "Pending Fees",
+      3
+    ],
+    [
+      "Continued",
+      2
+    ],
+    [
+      "Opt-Out",
+      2
+    ],
+    [
+      "Appeal",
+      1
+    ]
+  ],
+  "contractor_company_field": false,
+  "parcel_account_field": false,
+  "owner_full_name_is_not_contractor": true
+}
