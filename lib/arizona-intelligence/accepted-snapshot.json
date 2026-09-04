@@ -1,0 +1,557 @@
+{
+  "version": "contractor-az-state-intel-v1",
+  "ticket": "AZ-CON-001",
+  "as_of": "2026-09-04",
+  "generated_at": "2026-09-04T18:07:06.171613+00:00",
+  "no_trust_score": true,
+  "no_ranking": true,
+  "no_arizona_local_intel_routes_this_ticket": true,
+  "publication": {
+    "indexable": true,
+    "robots": "index,follow",
+    "canonical": "https://www.contractortrusthub.com/arizona",
+    "route": "/arizona",
+    "h1": "Arizona Contractor License & Regulatory Intelligence"
+  },
+  "hero": {
+    "universe_value": 57886,
+    "universe_label": "ROC current contractor licenses",
+    "universe_hint": "Official All Current Contractors posting-list header as of 2026-09-02. Listed on ROC\u2019s current contractor posting. Not a recommendation.",
+    "commercial_value": 46913,
+    "commercial_label": "Commercial posting file",
+    "commercial_hint": "Includes Dual licenses. Do not add to Residential or Dual.",
+    "residential_value": 47258,
+    "residential_label": "Residential posting file",
+    "residential_hint": "Includes Dual licenses. Do not add to Commercial or Dual.",
+    "dual_value": 36285,
+    "dual_label": "Dual posting file",
+    "dual_hint": "Dual licenses also appear in the commercial and residential posting files.",
+    "discipline_value": 459,
+    "discipline_label": "Disciplinary action rows already in the graph",
+    "discipline_hint": "Pre-ingest az_roc discipline rows. Current posting-list CSV was not downloaded this ticket (Cloudflare 403). Action count is not quality.",
+    "as_of_value": "2026-09-02",
+    "as_of_label": "ROC posting-list header clock"
+  },
+  "regulatory_map": {
+    "model": "AZ_ROC_BUSINESS_LICENSE",
+    "primary_regulator": {
+      "id": "roc",
+      "name": "Arizona Registrar of Contractors",
+      "url": "https://roc.az.gov/",
+      "posting_list": "https://roc.az.gov/posting-list",
+      "verify": "https://azroc.my.site.com/AZRoc/s/contractor-search",
+      "unlicensed": "https://roc.az.gov/unlicensed-violators-list",
+      "role": "Licenses contractor businesses. Issues commercial, residential, and dual classifications plus specialty/general class codes."
+    },
+    "terminology": {
+      "current_posting": "Listed on ROC\u2019s current contractor posting as of the file date",
+      "license_number": "ROC License No",
+      "identity": "AZ-ROC:{License No}"
+    },
+    "what_it_establishes": [
+      "An official ROC contractor license identity",
+      "Source-native class code, class detail, and class type",
+      "Whether the license is on the current posting",
+      "Qualifying-party name when published",
+      "Business address when published"
+    ],
+    "what_it_does_not_establish": [
+      "Quality, safety, or a Trust Score",
+      "That current posting means recommended",
+      "That a license row is a unique company",
+      "That a qualifying party is the business owner",
+      "Current unlicensed status from a historical unlicensed-violation row",
+      "A clean record from missing discipline"
+    ],
+    "classes": {
+      "COMMERCIAL": "General Commercial or Specialty Commercial class type",
+      "RESIDENTIAL": "General Residential or Specialty Residential class type",
+      "DUAL": "General Dual or Specialty Dual class type \u2014 residential and commercial scope on that license"
+    }
+  },
+  "current_posting": {
+    "url": "https://roc.az.gov/posting-list",
+    "header_as_of": "2026-09-02",
+    "retrieved_at": "2026-09-04",
+    "all_current": 57886,
+    "commercial_file": 46913,
+    "residential_file": 47258,
+    "dual_file": 36285,
+    "files_are_not_additive": true,
+    "additive_sum_if_mistaken": 130456,
+    "wording": "Listed on ROC\u2019s current contractor posting as of 2026-09-02",
+    "current_ne_recommended": true,
+    "csv_automated_download": "HTTP_403_CLOUDFLARE",
+    "csv_urls": {
+      "all_current": "https://roc.az.gov/sites/default/files/ROC_Posting-List_2026-09-02.csv",
+      "commercial": "https://roc.az.gov/sites/default/files/ROC_Posting-List_Commercial_2026-09-02.csv",
+      "residential": "https://roc.az.gov/sites/default/files/ROC_Posting-List_Residential_2026-09-02.csv",
+      "dual": "https://roc.az.gov/sites/default/files/ROC_Posting-List_Dual_2026-09-02.csv"
+    }
+  },
+  "last_full_extract": {
+    "file_created": "Aug 12, 2026",
+    "title_record_claim": 58131,
+    "rows": 58131,
+    "distinct_license_numbers": 58131,
+    "sha256": "bc41033b03ca8c0426db672cd4c045547c781babc122d03fe96860e303a2d5cc",
+    "bytes": 12206370,
+    "grain": "one data row = one ROC license number (License No)",
+    "status_counts": {
+      "Active": 58130,
+      "2027-11-30": 1
+    },
+    "class_type_counts": {
+      "Specialty Dual": 27388,
+      "Specialty Residential": 5600,
+      "General Residential": 5396,
+      "Specialty Commercial": 4116,
+      "General Commercial": 6570,
+      "General Dual": 9060,
+      "B-3 General Remodeling and Repair Contractor": 1
+    },
+    "category_counts": {
+      "Dual": 36448,
+      "Residential": 10996,
+      "Commercial": 10686,
+      "UNKNOWN": 1
+    },
+    "category_sum_equals_rows": true,
+    "distinct_class_codes": 158,
+    "top_classes": [
+      {
+        "code": "KB-2",
+        "rows": 4359
+      },
+      {
+        "code": "B",
+        "rows": 3956
+      },
+      {
+        "code": "KB-1",
+        "rows": 3584
+      },
+      {
+        "code": "B-1",
+        "rows": 3033
+      },
+      {
+        "code": "CR-11",
+        "rows": 3015
+      },
+      {
+        "code": "CR-39",
+        "rows": 2971
+      },
+      {
+        "code": "CR-37",
+        "rows": 2120
+      },
+      {
+        "code": "CR-21",
+        "rows": 1995
+      },
+      {
+        "code": "CR-34",
+        "rows": 1954
+      },
+      {
+        "code": "A",
+        "rows": 1644
+      },
+      {
+        "code": "R-62",
+        "rows": 1623
+      },
+      {
+        "code": "CR-60",
+        "rows": 1562
+      },
+      {
+        "code": "CR-42",
+        "rows": 1372
+      },
+      {
+        "code": "C-11",
+        "rows": 1261
+      },
+      {
+        "code": "CR-61",
+        "rows": 1179
+      },
+      {
+        "code": "CR-8",
+        "rows": 1169
+      },
+      {
+        "code": "CR-67",
+        "rows": 1154
+      },
+      {
+        "code": "B-3",
+        "rows": 1012
+      },
+      {
+        "code": "CR-5",
+        "rows": 938
+      },
+      {
+        "code": "CR-48",
+        "rows": 775
+      }
+    ],
+    "overlap_proof": {
+      "extract_commercial_plus_dual": 47134,
+      "extract_residential_plus_dual": 47444,
+      "note": "The commercial and residential posting files include Dual licenses. Class-type buckets on All Current partition the extract and sum to the extract row count."
+    }
+  },
+  "identity": {
+    "namespace": "AZ-ROC:{License No}",
+    "license_number_preserved_exactly": true,
+    "fields": [
+      "#",
+      "License No",
+      "Business Name",
+      "Doing Business As",
+      "Class",
+      "Class Detail",
+      "Class Type",
+      "Address",
+      "City",
+      "State",
+      "Zip",
+      "Qualifying Party",
+      "Issued Date",
+      "Expiration Date",
+      "Status"
+    ],
+    "distinct_license_numbers": 58131,
+    "duplicate_license_rows": 0,
+    "distinct_normalized_business_names": 48795,
+    "distinct_business_plus_address": 50229,
+    "business_names_with_multiple_licenses": 7186,
+    "license_row_ne_unique_company": true
+  },
+  "qualifying_party": {
+    "named": 56281,
+    "qp_exempt": 1850,
+    "blank": 0,
+    "id_field_present": false,
+    "start_end_association_present": false,
+    "person_ne_contractor_business": true,
+    "qualifying_party_ne_owner_unless_source_says_so": true,
+    "no_automatic_person_profiles": true,
+    "grain": "name string on the license row; QP Exempt is a source-native sentinel, not a person identity"
+  },
+  "contacts": {
+    "business_address": {
+      "count": 58122,
+      "class": "PUBLIC_ELIGIBLE",
+      "provenance": "AZ_ROC_BUSINESS_ADDRESS"
+    },
+    "mailing_address": {
+      "count": 0,
+      "class": "NOT_IN_SOURCE"
+    },
+    "phone": {
+      "count": 0,
+      "class": "NOT_IN_SOURCE"
+    },
+    "email": {
+      "count": 0,
+      "class": "NOT_IN_SOURCE"
+    },
+    "website": {
+      "count": 0,
+      "class": "NOT_IN_SOURCE"
+    },
+    "no_internet_enrichment": true,
+    "qualifier_name_is_not_personal_contact": true
+  },
+  "new_licenses": {
+    "official_window": "2026-03-03 through 2026-09-02",
+    "url": "https://roc.az.gov/sites/default/files/ROC_New-Licenses-List_2026-09-02.csv",
+    "access": "SOURCE_NOT_ACQUIRED",
+    "reason": "Automated GET returned HTTP 403 (Cloudflare). No browser capture this ticket.",
+    "join": "Exact License No \u2192 AZ-ROC license when the file is acquired",
+    "new_license_ne_new_company": true
+  },
+  "discipline": {
+    "official_window": "2026-03-03 through 2026-09-02",
+    "url": "https://roc.az.gov/sites/default/files/ROC_Disciplinary-Actions_2026-09-02.csv",
+    "current_csv": "SOURCE_NOT_ACQUIRED",
+    "reason": "Automated GET returned HTTP 403 (Cloudflare).",
+    "pre_ingest_graph_rows": 459,
+    "attach": "EXACT License No / AZ-ROC only",
+    "name_only": "UNSAFE",
+    "schema_observed_prior": [
+      "Business Name",
+      "Doing Business As",
+      "Address",
+      "City",
+      "State",
+      "Zip",
+      "License No",
+      "License Class",
+      "Case Number",
+      "Description"
+    ],
+    "native_classes_observed_prior": [
+      "Suspended",
+      "Revoked"
+    ],
+    "complaint_ne_discipline": true,
+    "action_count_ne_quality": true,
+    "no_action_ne_clean": true
+  },
+  "unlicensed": {
+    "page": "https://roc.az.gov/unlicensed-violators-list",
+    "last_2y_csv": "SOURCE_NOT_ACQUIRED",
+    "full_list_csv": "SOURCE_NOT_ACQUIRED",
+    "reason": "Automated GET returned HTTP 403 (Cloudflare).",
+    "universe": "UNLICENSED_ACTIVITY_EVIDENCE_ONLY",
+    "name_only": "UNSAFE_FOR_PROFILE_ATTACH",
+    "name_plus_city": "REVIEW_REQUIRED",
+    "historical_ne_currently_unlicensed": true,
+    "do_not_attach_to_licensed_profile_by_name": true
+  },
+  "complaints_recovery": {
+    "pass": "bounded_easy_win",
+    "result": "NO_ADDITIONAL_BULK",
+    "note": "Disciplinary and unlicensed posting lists are the structured files. No recovery-fund or Most Wanted CSV was acquired. PDF/portal crawl skipped."
+  },
+  "acc": {
+    "pass": "bounded",
+    "result": "SEARCH_ONLY / NOT_ACQUIRED",
+    "note": "Arizona Corporation Commission entity lookup is search-oriented. No free bulk/API was acquired this ticket. ROC license remains primary identity.",
+    "crosswalk": "No source-native ACC entity number on the ROC posting list."
+  },
+  "pre_ingest_baseline": {
+    "az_roc_licenses_in_network_metrics": 58408,
+    "az_roc_discipline_rows_in_network_metrics": 459,
+    "metrics_generated_at": "2026-09-03T21:22:06.870Z",
+    "note": "Committed contractor-network-metrics-v1. Refreshed identities are not net-new companies.",
+    "existing_az_roc_license_ids": 58408,
+    "existing_arizona_public_profiles": "LIVE_GRAPH / NOT_RECOUNTED_THIS_TICKET",
+    "existing_arizona_evidence_rows": {
+      "licenses": 58408,
+      "discipline": 459
+    }
+  },
+  "expansion_ledger": {
+    "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
+    "NET_NEW_STATE_IDENTITIES": 0,
+    "EXISTING_ORGANIZATIONS_ENRICHED": 0,
+    "NEW_EVIDENCE_ROWS": 0,
+    "note": "Arizona ROC licenses are already in the ContractorTrustHub live graph (az_roc 58,408 in committed network metrics). This ticket publishes state intelligence and overlap semantics. It does not treat 57,886 current-posting licenses as net-new companies. Refreshed identities are not new."
+  },
+  "search": {
+    "channels": [
+      "/search",
+      "/verify",
+      "https://azroc.my.site.com/AZRoc/s/contractor-search"
+    ],
+    "fields": [
+      "business name",
+      "ROC license",
+      "city",
+      "ZIP",
+      "classification",
+      "commercial/residential/dual"
+    ],
+    "no_rank_by_discipline_or_license_count": true
+  },
+  "findings": [
+    {
+      "id": "current-posting-scale",
+      "text": "ROC\u2019s official All Current Contractors posting-list header on 2026-09-02 reports 57,886 licenses. That is the statewide current-posting universe for this page, not a unique-company count and not a recommendation."
+    },
+    {
+      "id": "crd-overlap",
+      "text": "Commercial (46,913), Residential (47,258), and Dual (36,285) posting files overlap. Dual licenses appear in the commercial and residential files. Adding those three files (130,456) is not the contractor universe. On the last full All Current extract, class-type buckets partition the file: Dual 36,448, Residential 10,996, Commercial 10,686."
+    },
+    {
+      "id": "license-ne-company",
+      "text": "The last full All Current extract has 58,131 license rows and 58,131 distinct License No values, but only 48,795 distinct normalized business names. 7,186 business names hold more than one license. A license row is not a unique company."
+    },
+    {
+      "id": "already-in-graph",
+      "text": "Committed network metrics already contain 58,408 az_roc licenses and 459 disciplinary rows. AZ-CON-001 does not claim 57,886 net-new canonical organizations."
+    },
+    {
+      "id": "qp-and-contacts",
+      "text": "Qualifying party is a name string (56,281 named; 1,850 QP Exempt). There is no qualifying-party ID. The posting list has business address, not phone, email, or website. Qualifying party is not the contractor business."
+    }
+  ],
+  "coverage_gaps": [
+    "Current 2026-09-02 microdata CSVs were not downloaded (Cloudflare 403).",
+    "New-licenses CSV not acquired this ticket.",
+    "Current disciplinary CSV not acquired this ticket (459 prior graph rows remain).",
+    "Unlicensed-violations CSVs not acquired this ticket.",
+    "No ACC bulk/API.",
+    "No phone/email/website on the ROC posting list.",
+    "No Arizona city/county intelligence pages in this ticket."
+  ],
+  "evidence_depth": [
+    {
+      "family": "ROC current posting header",
+      "agency": "ROC",
+      "source": "https://roc.az.gov/posting-list",
+      "as_of": "2026-09-02",
+      "grain": "official posting-list file header",
+      "rows": 57886,
+      "identity": "License No",
+      "contacts": "n/a",
+      "access": "OPEN_HTML",
+      "publication": "PUBLIC",
+      "limitations": "Header count, not unique companies. CSV GET 403."
+    },
+    {
+      "family": "ROC All Current extract",
+      "agency": "ROC",
+      "source": "roc_all_current.csv",
+      "as_of": "2026-08-12",
+      "grain": "one license row",
+      "rows": 58131,
+      "identity": "AZ-ROC:{License No}",
+      "contacts": "address",
+      "access": "PRIOR_ACQUIRED_CSV",
+      "publication": "SCHEMA / OVERLAP PROOF",
+      "limitations": "Three weeks older than the 2026-09-02 header."
+    },
+    {
+      "family": "ROC commercial posting file",
+      "agency": "ROC",
+      "source": "posting-list header",
+      "as_of": "2026-09-02",
+      "grain": "license in commercial file",
+      "rows": 46913,
+      "identity": "License No",
+      "contacts": "n/a",
+      "access": "OPEN_HTML",
+      "publication": "PUBLIC WITH OVERLAP",
+      "limitations": "Includes Dual. Not additive."
+    },
+    {
+      "family": "ROC residential posting file",
+      "agency": "ROC",
+      "source": "posting-list header",
+      "as_of": "2026-09-02",
+      "grain": "license in residential file",
+      "rows": 47258,
+      "identity": "License No",
+      "contacts": "n/a",
+      "access": "OPEN_HTML",
+      "publication": "PUBLIC WITH OVERLAP",
+      "limitations": "Includes Dual. Not additive."
+    },
+    {
+      "family": "ROC dual posting file",
+      "agency": "ROC",
+      "source": "posting-list header",
+      "as_of": "2026-09-02",
+      "grain": "license in dual file",
+      "rows": 36285,
+      "identity": "License No",
+      "contacts": "n/a",
+      "access": "OPEN_HTML",
+      "publication": "PUBLIC WITH OVERLAP",
+      "limitations": "Also counted in commercial and residential files."
+    },
+    {
+      "family": "ROC new licenses",
+      "agency": "ROC",
+      "source": "New Licenses CSV",
+      "as_of": "2026-03-03/2026-09-02",
+      "grain": "new-license row",
+      "rows": null,
+      "identity": "License No when acquired",
+      "contacts": "unknown",
+      "access": "SOURCE_NOT_ACQUIRED",
+      "publication": "PROCESS ONLY",
+      "limitations": "HTTP 403."
+    },
+    {
+      "family": "ROC disciplinary actions",
+      "agency": "ROC",
+      "source": "graph az_roc + posting-list CSV",
+      "as_of": "metrics 2026-09-03",
+      "grain": "discipline_action_row",
+      "rows": 459,
+      "identity": "exact License No",
+      "contacts": "n/a",
+      "access": "EXISTING_GRAPH / CURRENT_CSV_403",
+      "publication": "PUBLIC COUNT / NO NAME ATTACH",
+      "limitations": "Name-only UNSAFE. 459 is not a quality score."
+    },
+    {
+      "family": "ROC unlicensed violations",
+      "agency": "ROC",
+      "source": "https://roc.az.gov/unlicensed-violators-list",
+      "as_of": "2026-09-04",
+      "grain": "unlicensed violator row",
+      "rows": null,
+      "identity": "name/DBA/city \u2014 not a license",
+      "contacts": "n/a",
+      "access": "SOURCE_NOT_ACQUIRED",
+      "publication": "SAFETY RULES ONLY",
+      "limitations": "Separate universe. Historical \u2260 currently unlicensed."
+    },
+    {
+      "family": "ROC qualifying party",
+      "agency": "ROC",
+      "source": "All Current extract",
+      "as_of": "2026-08-12",
+      "grain": "name on license row",
+      "rows": 56281,
+      "identity": "name string / QP Exempt",
+      "contacts": "not a contact",
+      "access": "PRIOR_ACQUIRED_CSV",
+      "publication": "RELATIONSHIP EVIDENCE",
+      "limitations": "No QP ID. Person \u2260 business."
+    },
+    {
+      "family": "ACC business",
+      "agency": "ACC",
+      "source": "bounded check",
+      "as_of": "2026-09-04",
+      "grain": "entity",
+      "rows": null,
+      "identity": "none on ROC file",
+      "contacts": "n/a",
+      "access": "SEARCH_ONLY",
+      "publication": "NOT ACQUIRED",
+      "limitations": "ROC remains primary."
+    }
+  ],
+  "semantics": [
+    "LICENSE != QUALITY",
+    "CURRENT POSTING != RECOMMENDATION",
+    "COMMERCIAL + RESIDENTIAL + DUAL ARE NOT ADDITIVE",
+    "LICENSE ROW != UNIQUE COMPANY",
+    "QUALIFYING PARTY != CONTRACTOR BUSINESS",
+    "DISCIPLINARY ACTION != CRIMINAL CONVICTION",
+    "UNLICENSED VIOLATION != CURRENT UNLICENSED STATUS",
+    "NAME-ONLY ADVERSE MATCH = UNSAFE",
+    "NO DISCIPLINE FOUND != CLEAN RECORD",
+    "MISSING != ZERO",
+    "NO TRUST SCORE",
+    "NO PAID RANKING"
+  ],
+  "gate": {
+    "roc_current_header_reconciled": true,
+    "exact_license_identity_proven": true,
+    "business_vs_license_grain_understood": true,
+    "commercial_residential_dual_overlap_correct": true,
+    "discipline_identity_safe": true,
+    "unlicensed_identity_safety_correct": true,
+    "qualifying_party_person_separation_safe": true,
+    "expansion_ledger_measured": true,
+    "deterministic_snapshot": true,
+    "findings_at_least_3": true,
+    "passed": true,
+    "blocker": null
+  },
+  "fingerprint": "ac2bfa07ef7e65f7cfa1527cd4564161f989d27371166636e0cc012091db2cd1"
+}
