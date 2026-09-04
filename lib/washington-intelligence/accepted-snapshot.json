@@ -1,0 +1,776 @@
+{
+  "version": "contractor-wa-state-intel-v1",
+  "ticket": "WA-CON-001",
+  "as_of": "2026-09-04",
+  "generated_at": "2026-09-04T16:37:13.757410+00:00",
+  "no_trust_score": true,
+  "no_ranking": true,
+  "no_washington_local_intel_routes": true,
+  "publication": {
+    "indexable": true,
+    "robots": "index,follow",
+    "canonical": "https://www.contractortrusthub.com/washington",
+    "route": "/washington",
+    "h1": "Washington Contractor Registration, Bond & Insurance Intelligence"
+  },
+  "hero": {
+    "universe_value": 160923,
+    "universe_label": "L&I contractor registrations",
+    "universe_hint": "Source-native ContractorLicenseNumber. Construction registration plus electrical, plumbing, and elevator contractor businesses.",
+    "current_value": 75823,
+    "current_label": "Source-native ACTIVE",
+    "current_hint": "L&I ContractorLicenseStatus ACTIVE. Not a TrustHub Verified count.",
+    "observations_value": 82635,
+    "observations_label": "Registrations with bond source evidence",
+    "observations_hint": "Exact ContractorLicenseNumber join to the bond file. Missing row is not unbonded.",
+    "geography_value": 70622,
+    "geography_label": "Registrations with bond and insurance evidence",
+    "geography_hint": "Exact three-layer join. Not a Trust Score.",
+    "as_of_value": "2026-09-04",
+    "as_of_label": "L&I Socrata source clock"
+  },
+  "regulatory_map": {
+    "model": "LNI_CONTRACTOR_REGISTRATION_PLUS_TRADE_LICENSES",
+    "statewide_construction_contractor_registration": true,
+    "primary_regulator": {
+      "id": "lni",
+      "name": "Washington State Department of Labor & Industries",
+      "url": "https://lni.wa.gov/",
+      "verify": "https://secure.lni.wa.gov/verify/",
+      "role": "Registers construction contractors (RCW 18.27). Licenses electrical (RCW 19.28), plumbing (RCW 18.106), and elevator contractors. Publishes bond and liability-insurance filings on the same contractor identity."
+    },
+    "terminology": {
+      "dataset_label": "L&I Contractor License Data",
+      "unique_id_field": "ContractorLicenseNumber",
+      "construction_rcw": "RCW 18.27 contractor registration",
+      "electrical_rcw": "RCW 19.28 electrical contractor license",
+      "plumbing_rcw": "RCW 18.106 plumbing contractor license",
+      "consumer_term": "Use source-native L&I contractor registration/license number. Construction contractors are registered; electrical and plumbing contractor businesses in this file are licensed contractor businesses, not person certificates."
+    },
+    "what_it_establishes": [
+      "An official L&I contractor identity (ContractorLicenseNumber)",
+      "Source-native registration/license type and status",
+      "Bond records L&I publishes for that identity",
+      "Liability-insurance records L&I publishes for that identity",
+      "UBI when present on the L&I row"
+    ],
+    "what_it_does_not_establish": [
+      "Quality, safety, or a Trust Score",
+      "That missing bond/insurance rows mean unbonded/uninsured",
+      "Person electrician or plumber certificates",
+      "Local building permits",
+      "Complete complaint or enforcement history"
+    ]
+  },
+  "general": {
+    "dataset_id": "m8qx-ubtq",
+    "url": "https://data.wa.gov/Labor/L-I-Contractor-License-Data-General/m8qx-ubtq",
+    "grain": "one row = one ContractorLicenseNumber",
+    "rows": 160923,
+    "distinct_registration_ids": 160923,
+    "sha256": "818c7f8df6ecb857aea6375c2b6ec884ae278cc6a89999c0bf8ad49f87285b20",
+    "bytes": 35382044,
+    "source_clock": "2026-09-04T15:11:18+00:00",
+    "refresh": "L&I posts three times per day (7:30 a.m., 12:15 p.m., 5:15 p.m.)",
+    "identity_namespace": "WA-LNI:{ContractorLicenseNumber}",
+    "ubi_namespace": "WA-UBI:{UBI}",
+    "distinct_ubi": 149153,
+    "ubi_on_every_row": true,
+    "rows_with_ubi": 160923,
+    "status": [
+      {
+        "name": "ACTIVE",
+        "rows": 75823
+      },
+      {
+        "name": "EXPIRED",
+        "rows": 61083
+      },
+      {
+        "name": "SUSPENDED",
+        "rows": 9731
+      },
+      {
+        "name": "RE-LICENSED",
+        "rows": 9349
+      },
+      {
+        "name": "OUT OF BUSINESS",
+        "rows": 4696
+      },
+      {
+        "name": "INACTIVE",
+        "rows": 131
+      },
+      {
+        "name": "SUPERCEDED",
+        "rows": 94
+      },
+      {
+        "name": "PASSED AWAY",
+        "rows": 15
+      },
+      {
+        "name": "REVOKED DUE DEPT ERR",
+        "rows": 1
+      }
+    ],
+    "status_codes": [
+      {
+        "name": "A",
+        "rows": 75823
+      },
+      {
+        "name": "E",
+        "rows": 61083
+      },
+      {
+        "name": "S",
+        "rows": 9731
+      },
+      {
+        "name": "R",
+        "rows": 9349
+      },
+      {
+        "name": "O",
+        "rows": 4696
+      },
+      {
+        "name": "I",
+        "rows": 131
+      },
+      {
+        "name": "B",
+        "rows": 94
+      },
+      {
+        "name": "P",
+        "rows": 15
+      },
+      {
+        "name": "C",
+        "rows": 1
+      }
+    ],
+    "types": [
+      {
+        "name": "CONSTRUCTION CONTRACTOR",
+        "rows": 148557
+      },
+      {
+        "name": "ELECTRICAL CONTRACTOR",
+        "rows": 9186
+      },
+      {
+        "name": "PLUMBING CONTRACTOR",
+        "rows": 3059
+      },
+      {
+        "name": "ELEVATOR CONTRACTOR",
+        "rows": 121
+      }
+    ],
+    "type_codes": [
+      {
+        "name": "CC",
+        "rows": 148557
+      },
+      {
+        "name": "EC",
+        "rows": 9186
+      },
+      {
+        "name": "PC",
+        "rows": 3059
+      },
+      {
+        "name": "LC",
+        "rows": 121
+      }
+    ],
+    "specialties": [
+      {
+        "name": "GENERAL",
+        "rows": 115434
+      },
+      {
+        "name": "PAINTING/WALLCOVERING",
+        "rows": 5636
+      },
+      {
+        "name": "Floor Covering and Counter Tops",
+        "rows": 4248
+      },
+      {
+        "name": "LANDSCAPING",
+        "rows": 3236
+      },
+      {
+        "name": "Tile, Ceramic, Mosaic, Natural and MFG Stone",
+        "rows": 2263
+      },
+      {
+        "name": "Cabinets, Millwork and Finish Carpentry",
+        "rows": 2035
+      },
+      {
+        "name": "JOURNEY LEVEL",
+        "rows": 1944
+      },
+      {
+        "name": "RESIDENTIAL",
+        "rows": 1795
+      },
+      {
+        "name": "CONCRETE",
+        "rows": 1774
+      },
+      {
+        "name": "HANDYMAN",
+        "rows": 1451
+      },
+      {
+        "name": "Heating/Vent/Air-Conditioning and Refrig (HVAC/R)",
+        "rows": 1421
+      },
+      {
+        "name": "Tree Removal Service",
+        "rows": 1266
+      },
+      {
+        "name": "PLUMBING",
+        "rows": 1234
+      },
+      {
+        "name": "ROOFING",
+        "rows": 1205
+      },
+      {
+        "name": "Framing and Rough Carpentry",
+        "rows": 959
+      },
+      {
+        "name": "DRY WALL",
+        "rows": 957
+      },
+      {
+        "name": "LIMITED ENERGY",
+        "rows": 875
+      },
+      {
+        "name": "Siding",
+        "rows": 874
+      },
+      {
+        "name": "Excavation, Grading and Land Clearing",
+        "rows": 826
+      },
+      {
+        "name": "HVAC/RFRG",
+        "rows": 778
+      },
+      {
+        "name": "MASONRY",
+        "rows": 692
+      },
+      {
+        "name": "PRESSURE WASHING",
+        "rows": 599
+      },
+      {
+        "name": "FENCING",
+        "rows": 537
+      },
+      {
+        "name": "Welding and Ornamental Metal",
+        "rows": 517
+      },
+      {
+        "name": "GLAZING/GLASS",
+        "rows": 505
+      }
+    ],
+    "specialty_value_count": 86,
+    "families": [
+      {
+        "name": "General",
+        "rows": 110138
+      },
+      {
+        "name": "Specialty",
+        "rows": 21850
+      },
+      {
+        "name": "Electrical",
+        "rows": 9186
+      },
+      {
+        "name": "Painting",
+        "rows": 5636
+      },
+      {
+        "name": "Landscaping",
+        "rows": 4502
+      },
+      {
+        "name": "Plumbing",
+        "rows": 4293
+      },
+      {
+        "name": "Concrete",
+        "rows": 1774
+      },
+      {
+        "name": "HVAC",
+        "rows": 1499
+      },
+      {
+        "name": "Roofing",
+        "rows": 1219
+      },
+      {
+        "name": "Excavation",
+        "rows": 826
+      }
+    ],
+    "business_types": [
+      {
+        "name": "Limited Liability Company",
+        "rows": 93675
+      },
+      {
+        "name": "Individual",
+        "rows": 32882
+      },
+      {
+        "name": "Corporation",
+        "rows": 32174
+      },
+      {
+        "name": "Partnership",
+        "rows": 1423
+      },
+      {
+        "name": "Limited Liability Partnership",
+        "rows": 586
+      },
+      {
+        "name": "Joint Venture",
+        "rows": 82
+      },
+      {
+        "name": "(blank)",
+        "rows": 61
+      },
+      {
+        "name": "Association",
+        "rows": 34
+      },
+      {
+        "name": "Trust",
+        "rows": 6
+      }
+    ],
+    "individual_is_sole_prop_registration": true,
+    "person_certificate_not_in_this_file": true
+  },
+  "status_model": {
+    "source_native_field": "ContractorLicenseStatus",
+    "source_native": true,
+    "classes": [
+      "ACTIVE",
+      "EXPIRED",
+      "SUSPENDED",
+      "RE-LICENSED",
+      "OUT OF BUSINESS",
+      "INACTIVE",
+      "SUPERCEDED",
+      "PASSED AWAY",
+      "REVOKED DUE DEPT ERR"
+    ],
+    "active_is_not_verified": true,
+    "suspended_is_not_permanent_revocation": true,
+    "expired_is_not_discipline": true,
+    "registration_status_ne_quality": true
+  },
+  "contacts": {
+    "phone_public_eligible": 160819,
+    "address_public_eligible": 160923,
+    "email": 0,
+    "website": 0,
+    "email_website": "NOT_IN_SOURCE",
+    "provenance_phone": "WA_LNI_CONTRACTOR_PHONE",
+    "provenance_address": "WA_LNI_BUSINESS_ADDRESS",
+    "principal_name_is_not_person_contact": true
+  },
+  "bond": {
+    "dataset_id": "bzff-4fmt",
+    "url": "https://data.wa.gov/Labor/L-I-Contractor-License-Data-Bond/bzff-4fmt",
+    "grain": "one row = one bond filing associated with a ContractorLicenseNumber",
+    "rows": 176920,
+    "distinct_contractor_ids": 82635,
+    "multiple_record_ids": 56777,
+    "sha256": "127d8788bc09df8774b54a2d770e38fde70633f3a7c6577a2b20f0b8f5e6d6a7",
+    "bytes": 28382948,
+    "source_clock": "2026-09-04T14:33:23+00:00",
+    "impaired_rows": 294,
+    "firm_count": 525,
+    "top_firms": [
+      {
+        "name": "Western Surety Co",
+        "rows": 34514
+      },
+      {
+        "name": "NORTH RIVER INSURANCE COMPANY THE",
+        "rows": 21621
+      },
+      {
+        "name": "Nationwide Mutual Ins Co",
+        "rows": 15066
+      },
+      {
+        "name": "American Contractors Indem CO",
+        "rows": 11462
+      },
+      {
+        "name": "Ohio Cas Ins Co",
+        "rows": 10888
+      },
+      {
+        "name": "Contractors Bonding & Insurance Co",
+        "rows": 9390
+      },
+      {
+        "name": "Lexon Ins Co",
+        "rows": 9060
+      },
+      {
+        "name": "RLI Ins Co",
+        "rows": 8188
+      }
+    ],
+    "amount_buckets": [
+      {
+        "name": "12000+",
+        "rows": 146133
+      },
+      {
+        "name": "6000-11999",
+        "rows": 23591
+      },
+      {
+        "name": "under_6000",
+        "rows": 7196
+      }
+    ],
+    "filing_class": [
+      {
+        "name": "CURRENT_FILING_AS_OF",
+        "rows": 88095
+      },
+      {
+        "name": "CANCELLED",
+        "rows": 44621
+      },
+      {
+        "name": "EXPIRED",
+        "rows": 43717
+      },
+      {
+        "name": "IMPAIRED",
+        "rows": 294
+      },
+      {
+        "name": "NOT_YET_EFFECTIVE",
+        "rows": 193
+      }
+    ],
+    "current_filing_rule": "CURRENT_FILING_AS_OF when BondEffectiveDate <= as_of, BondCancelDate empty or after as_of, BondExpirationDate empty or >= as_of, and BondImpaired is not Y. Not a TrustHub guarantee.",
+    "ids_with_current_filing": 77371,
+    "no_row_ne_unbonded": true
+  },
+  "insurance": {
+    "dataset_id": "ciwg-agsx",
+    "url": "https://data.wa.gov/Labor/L-I-Contractor-License-Data-Insurance/ciwg-agsx",
+    "grain": "one row = one liability-insurance filing associated with a ContractorLicenseNumber",
+    "rows": 77005,
+    "distinct_contractor_ids": 70953,
+    "multiple_record_ids": 5582,
+    "sha256": "69108d87fbb6ac2eef9a3f33b36fa25296c59c2f0bcff9dd81da674971f99c35",
+    "bytes": 15955496,
+    "source_clock": "2026-09-04T14:39:32+00:00",
+    "insurer_count": 569,
+    "top_insurers": [
+      {
+        "name": "Ohio Security Ins Co",
+        "rows": 7006
+      },
+      {
+        "name": "Contractors Bonding & Insuranc",
+        "rows": 6806
+      },
+      {
+        "name": "State National Ins Co Inc",
+        "rows": 4419
+      },
+      {
+        "name": "Scottsdale Ins Co",
+        "rows": 2712
+      },
+      {
+        "name": "Continental Cas Co",
+        "rows": 2549
+      },
+      {
+        "name": "United Financial Casualty Comp",
+        "rows": 1834
+      },
+      {
+        "name": "Midvale Indemnity Comp",
+        "rows": 1807
+      },
+      {
+        "name": "Atlantic Casualty Ins Co",
+        "rows": 1680
+      }
+    ],
+    "amount_buckets": [
+      {
+        "name": "1000000+",
+        "rows": 74059
+      },
+      {
+        "name": "under_1000000",
+        "rows": 2946
+      }
+    ],
+    "filing_class": [
+      {
+        "name": "CURRENT_FILING_AS_OF",
+        "rows": 74684
+      },
+      {
+        "name": "CANCELLED",
+        "rows": 2321
+      }
+    ],
+    "current_filing_rule": "CURRENT_FILING_AS_OF when EffectiveDate <= as_of, CancelDate empty or after as_of, and ExpirationDate >= as_of. Not a TrustHub guarantee the contractor is insured.",
+    "ids_with_current_filing": 70929,
+    "no_row_ne_uninsured": true,
+    "file_skew_note": "Insurance extract is much smaller than the general file and is concentrated on ACTIVE contractor statuses. Completeness of non-active insurance history is not established."
+  },
+  "graph": {
+    "join_key": "ContractorLicenseNumber exact",
+    "general_ids": 160923,
+    "ids_with_bond_evidence": 82635,
+    "ids_with_insurance_evidence": 70953,
+    "ids_with_both": 70622,
+    "ids_with_neither": 77957,
+    "orphan_bond_ids": 0,
+    "orphan_insurance_ids": 0,
+    "multiple_bond_ids": 56777,
+    "multiple_insurance_ids": 5582,
+    "active_ids": 75823,
+    "active_with_bond": 75192,
+    "active_with_insurance": 70437,
+    "active_with_both": 70113,
+    "clock_differences": {
+      "general": "2026-09-04T15:11:18+00:00",
+      "bond": "2026-09-04T14:33:23+00:00",
+      "insurance": "2026-09-04T14:39:32+00:00"
+    },
+    "orphan_bond_not_discarded": true,
+    "name_match_not_used": true
+  },
+  "lookup": {
+    "public_identities": 160923,
+    "identity_key": "WA-LNI:{ContractorLicenseNumber}",
+    "result_cap": 25,
+    "sort": "alphabetical_or_query_relevance",
+    "never_sort_by_bond_or_insurance_amount": true,
+    "never_sort_by_enforcement_count": true
+  },
+  "principals": {
+    "dataset_id": "4xk5-x9j6",
+    "url": "https://data.wa.gov/Labor/L-I-Contractor-License-Principal-Data/4xk5-x9j6",
+    "rows": 250349,
+    "distinct_contractor_ids": 146379,
+    "rows_without_end_date": 224869,
+    "sha256": "1ea04f6371d50bbec359f001ee281d8a86f91de2c2fa9ef10bbf3895ddad4b07",
+    "source_clock": "2026-09-04T14:42:58+00:00",
+    "relationship": "PrincipalName is owner, member, partner, or corporate officer associated with a registered license number.",
+    "no_person_profile_routes": true,
+    "principal_ne_qualifying_license": true,
+    "on_general_primary_principal": 160555
+  },
+  "business_ubi_source": {
+    "lni_ubi_coverage_rows": 160923,
+    "dor_business_lookup": {
+      "url": "https://data.wa.gov/Consumer-Protection/Business-Lookup/4wur-kfnr",
+      "access": "OPEN_SEARCH_ONLY",
+      "bulk": "NOT_FOUND",
+      "downloads": 0,
+      "note": "DOR Business Lookup is an interactive search. No bulk CSV. Lookup only; stop."
+    },
+    "ubi_ne_contractor_registration": true,
+    "business_active_ne_registration_current": true
+  },
+  "additional_trades": {
+    "electrical_contractor_business_rows_in_general": 9186,
+    "plumbing_contractor_business_rows_in_general": 3059,
+    "elevator_contractor_business_rows_in_general": 121,
+    "person_certificates": "NOT_ACQUIRED_PERSON_HEAVY",
+    "person_certificate_ne_contractor_business": true,
+    "note": "EC/PC/elevator contractor businesses are already in the general file. Do not inflate the contractor count with individual electrician or plumber certificates."
+  },
+  "enforcement": {
+    "debarment": {
+      "source": "https://lni.wa.gov/ContractorDebarList",
+      "access": "STRUCTURED_HTML_SEARCH",
+      "records_stated_on_page": 703,
+      "identity_fields": [
+        "License",
+        "UBI",
+        "Company Name"
+      ],
+      "bulk_csv": "INTERACTIVE_DOWNLOAD_NOT_ACQUIRED",
+      "attach_rule": "EXACT L&I ContractorLicenseNumber or exact UBI only. Name-only is UNSAFE.",
+      "semantics": "DEBARMENT != ALL-PURPOSE CONTRACTOR BAN. Debarment restricts public-works bidding as defined by L&I."
+    },
+    "strikes": {
+      "source": "https://lni.wa.gov/licensing-permits/public-works-projects/strike-and-debar/",
+      "access": "STRUCTURED_HTML_SEARCH",
+      "attach_rule": "EXACT identity only."
+    },
+    "workplace_safety_sveP": {
+      "source": "https://lni.wa.gov/safety-health/safety-rules/severe-violators",
+      "access": "HTML_LIST",
+      "identity": "UBI on list",
+      "semantics": "WORKPLACE SAFETY CASE != CONTRACTOR QUALITY SCORE"
+    },
+    "complaint_ne_violation": true,
+    "citation_ne_criminal_conviction": true,
+    "investigation_ne_final_finding": true,
+    "suspension_ne_permanent_revocation": true
+  },
+  "public_works": {
+    "project_details": {
+      "dataset_id": "qp8s-a5uf",
+      "rows": 347082,
+      "identity": "Prime Contractor UBI",
+      "vendor_ne_contractor_registration": true
+    },
+    "affidavit_project_details": {
+      "dataset_id": "9ncw-tqjn",
+      "rows": 1192380,
+      "rows_with_prime_license": 1176254,
+      "identity": "primelicense and primeubi"
+    },
+    "award_ne_quality": true,
+    "public_works_eligible_ne_trusted": true,
+    "directory_not_published": true,
+    "note": "Public-works files are acquired as counts via SODA. They are not a contractor ranking."
+  },
+  "consumer_process": {
+    "verify": "https://secure.lni.wa.gov/verify/",
+    "report_a_contractor": "https://lni.wa.gov/licensing-permits/contractors/problems-with-a-contractor/report-a-contractor",
+    "report_fraud_phone": "1-888-811-5974",
+    "structured_complaint_bulk": "NOT_FOUND",
+    "complaint_ne_violation": true,
+    "no_complaint_found_ne_clean_record": true
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "text": "L&I General is a unique-ID contractor file: 160,923 rows and 160,923 distinct ContractorLicenseNumber values. Construction contractor is the dominant type; electrical, plumbing, and elevator contractor businesses are in the same file."
+    },
+    {
+      "id": "F2",
+      "text": "Exact ContractorLicenseNumber joins produce a three-layer graph. Bond and insurance extracts do not cover every general row; a missing row is not proof the contractor is unbonded or uninsured."
+    },
+    {
+      "id": "F3",
+      "text": "L&I publishes source-native ACTIVE/EXPIRED/SUSPENDED status plus separate bond impairment and insurance cancel/expiration dates. Status is not quality. A current filing as-of the source clock is not a TrustHub guarantee."
+    },
+    {
+      "id": "F4",
+      "text": "UBI is present on the L&I general row and is a cross-agency business identifier. DOR Business Lookup is search-only with no bulk file. UBI is not a contractor registration."
+    }
+  ],
+  "coverage_gaps": [
+    {
+      "id": "municipal_licenses",
+      "label": "City/county contractor licenses and permits",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "id": "person_trade_certs",
+      "label": "Individual electrician/plumber certificates",
+      "state": "NOT_ACQUIRED_PERSON_HEAVY"
+    },
+    {
+      "id": "complaint_denominator",
+      "label": "Complete contractor complaint census",
+      "state": "UNKNOWN"
+    },
+    {
+      "id": "enforcement_history",
+      "label": "Complete infraction/citation bulk",
+      "state": "HTML_SEARCH_ONLY"
+    },
+    {
+      "id": "bond_insurance_after_clock",
+      "label": "Filings after the Socrata source clock",
+      "state": "UNKNOWN"
+    },
+    {
+      "id": "email_website",
+      "label": "Contractor email and website",
+      "state": "NOT_IN_SOURCE"
+    }
+  ],
+  "semantics": [
+    "CONTRACTOR REGISTRATION != QUALITY",
+    "GENERAL CONTRACTOR != SPECIALTY CONTRACTOR",
+    "UBI != CONTRACTOR REGISTRATION",
+    "BOND RECORD != ENDORSEMENT",
+    "INSURANCE RECORD != SAFETY",
+    "BOND + INSURANCE != TRUST SCORE",
+    "NO BOND ROW != UNBONDED",
+    "NO INSURANCE ROW != UNINSURED",
+    "EXPIRED POLICY != DISCIPLINE",
+    "COMPLAINT != VIOLATION",
+    "PUBLIC WORKS AWARD != QUALITY",
+    "PERSON TRADE CERTIFICATE != CONTRACTOR BUSINESS",
+    "DEBARMENT != ALL-PURPOSE CONTRACTOR BAN",
+    "SUSPENSION != PERMANENT REVOCATION",
+    "MISSING != ZERO",
+    "NO TRUST SCORE",
+    "NO PAID RANKING"
+  ],
+  "gate": {
+    "lni_general_reconciles": true,
+    "lni_bond_reconciles": true,
+    "lni_insurance_reconciles": true,
+    "exact_joins_proven": true,
+    "bond_semantics_proven": true,
+    "insurance_semantics_proven": true,
+    "business_person_separation_safe": true,
+    "ubi_handling_safe": true,
+    "no_fake_verified_denominator": true,
+    "source_families_at_least_3": true,
+    "findings_at_least_3": true,
+    "deterministic_snapshot": true,
+    "passed": true,
+    "blocker": null
+  },
+  "profile_integration": "DEFERRED",
+  "next_backlog": [
+    "WA-CON-002: local permits only after state close",
+    "Debarment bulk if a stable CSV appears",
+    "Person electrical/plumbing certificate files kept separate",
+    "DOR/SOS bulk if a free business extract appears"
+  ],
+  "fingerprint": "031f999a27459dee36ba4dd2ee8b766c3f1166629146f8e798edb04cbb910803"
+}
