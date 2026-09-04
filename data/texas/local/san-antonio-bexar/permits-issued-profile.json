@@ -1,0 +1,361 @@
+{
+  "rows": 139124,
+  "columns": [
+    "_id",
+    "PERMIT TYPE",
+    "PERMIT #",
+    "PROJECT NAME",
+    "WORK TYPE",
+    "ADDRESS",
+    "LOCATION",
+    "X_COORD",
+    "Y_COORD",
+    "DATE SUBMITTED",
+    "DATE ISSUED",
+    "DECLARED VALUATION",
+    "AREA (SF)",
+    "PRIMARY CONTACT",
+    "CD",
+    "NCD",
+    "HD"
+  ],
+  "permit_number_populated": 139124,
+  "address_populated": 136305,
+  "contact_populated": 137843,
+  "contact_field": "PRIMARY CONTACT",
+  "distinct_contacts": 18482,
+  "blank_contacts": 1281,
+  "garage_sale_rows": 6104,
+  "top_permit_types": [
+    {
+      "label": "Mechanical Permit",
+      "count": 16395
+    },
+    {
+      "label": "Plumbing General Permit",
+      "count": 15369
+    },
+    {
+      "label": "Electrical General Permit",
+      "count": 13977
+    },
+    {
+      "label": "Plumbing Irrigation Permit",
+      "count": 11514
+    },
+    {
+      "label": "Re-Roof Permit",
+      "count": 10161
+    },
+    {
+      "label": "Residential Repair Permit",
+      "count": 9373
+    },
+    {
+      "label": "Res New Building Permit",
+      "count": 6543
+    },
+    {
+      "label": "Garage Sale",
+      "count": 6104
+    },
+    {
+      "label": "Foundation Repair Permit",
+      "count": 5243
+    },
+    {
+      "label": "LSR Plumbing Permit",
+      "count": 4559
+    },
+    {
+      "label": "Plumbing Sewer Permit",
+      "count": 4299
+    },
+    {
+      "label": "Plumbing Gas Permit",
+      "count": 4209
+    },
+    {
+      "label": "Tree Affidavit Permit",
+      "count": 3575
+    },
+    {
+      "label": "On Premise Sign",
+      "count": 3150
+    },
+    {
+      "label": "Electrical TOPS Permit",
+      "count": 2106
+    },
+    {
+      "label": "Residential Fence Permit",
+      "count": 1955
+    },
+    {
+      "label": "LSR Mechanical Permit",
+      "count": 1766
+    },
+    {
+      "label": "Solar - Photovoltaic Permit",
+      "count": 1631
+    },
+    {
+      "label": "Comm Remodel Permit",
+      "count": 1427
+    },
+    {
+      "label": "Home Addition Permit",
+      "count": 1228
+    },
+    {
+      "label": "Minor Commercial Repair Permit",
+      "count": 964
+    },
+    {
+      "label": "Sidewalk-Curb Permit",
+      "count": 924
+    },
+    {
+      "label": "Comm New Building Permit",
+      "count": 915
+    },
+    {
+      "label": "Electrical TML Permit",
+      "count": 821
+    },
+    {
+      "label": "Comm Sitework Permit",
+      "count": 796
+    }
+  ],
+  "top_work_types": [
+    {
+      "label": "(blank)",
+      "count": 111797
+    },
+    {
+      "label": "New",
+      "count": 18163
+    },
+    {
+      "label": "Existing",
+      "count": 8764
+    },
+    {
+      "label": "Other",
+      "count": 400
+    }
+  ],
+  "top_contacts": [
+    {
+      "label": "WILL FIX IT",
+      "count": 3217
+    },
+    {
+      "label": "3D LANDSCAPING & IRRIGATION",
+      "count": 2732
+    },
+    {
+      "label": "DOUBLE H LANDSCAPE, LIMITED",
+      "count": 2259
+    },
+    {
+      "label": "LENNAR HOMES",
+      "count": 1883
+    },
+    {
+      "label": "Greenhaven Landscape & Irrigation",
+      "count": 1362
+    },
+    {
+      "label": "Keven Uzun",
+      "count": 1282
+    },
+    {
+      "label": "JON WAYNE HEAT, ELCT& A/C,LTD.",
+      "count": 1067
+    },
+    {
+      "label": "MATTHEW NEWKHAM, PULTE HOMES OF TEXAS, L. P.",
+      "count": 940
+    },
+    {
+      "label": "JOHN LIKOVICH",
+      "count": 906
+    },
+    {
+      "label": "SA SPECIALTIES",
+      "count": 788
+    },
+    {
+      "label": "Marissa Robinson",
+      "count": 767
+    },
+    {
+      "label": "GREEN HOUSE LANDSCAPING",
+      "count": 698
+    },
+    {
+      "label": "Goettl Air Conditioning & Plumbing",
+      "count": 680
+    },
+    {
+      "label": "SHAUN L NEIDIG, \"WILL\" FIX IT",
+      "count": 626
+    },
+    {
+      "label": "LANDSCAPE OF TEXAS/SMITH&SONS",
+      "count": 616
+    },
+    {
+      "label": "MJS ENTERPRISES,INC.",
+      "count": 602
+    },
+    {
+      "label": "TRAVIS M JOYCE",
+      "count": 578
+    },
+    {
+      "label": "Misti White, Rhino Roofers",
+      "count": 569
+    },
+    {
+      "label": "JOHN CHANEY, BAIRD FOUNDATION REPAIR",
+      "count": 565
+    }
+  ],
+  "has_local_registration_id": false,
+  "has_tdlr_field": false,
+  "has_tsbpe_field": false,
+  "has_parcel_field": false,
+  "sample": [
+    {
+      "_id": "1",
+      "PERMIT TYPE": "Garage Sale",
+      "PERMIT #": "BLDG-GS-PMT-13814068",
+      "PROJECT NAME": "Tara Hernandez",
+      "WORK TYPE": "",
+      "ADDRESS": "3131 OLD ALMONTE DR, City of San Antonio, TX 78224",
+      "LOCATION": "",
+      "X_COORD": "-98.558092",
+      "Y_COORD": "29.315051",
+      "DATE SUBMITTED": "2025-01-01",
+      "DATE ISSUED": "2025-01-01",
+      "DECLARED VALUATION": "",
+      "AREA (SF)": "",
+      "PRIMARY CONTACT": "Tara Hernandez"
+    },
+    {
+      "_id": "2",
+      "PERMIT TYPE": "Comm New Building Permit",
+      "PERMIT #": "COM-BLG-PMT24-40200788",
+      "PROJECT NAME": "Building No: N/A; Unit No: N/A",
+      "WORK TYPE": "New",
+      "ADDRESS": "8751 STATE HWY 151, City of San Antonio, TX 78245",
+      "LOCATION": "",
+      "X_COORD": "2076498.5",
+      "Y_COORD": "13708187.9",
+      "DATE SUBMITTED": "2024-08-02",
+      "DATE ISSUED": "2025-01-01",
+      "DECLARED VALUATION": "3500000.0",
+      "AREA (SF)": "9110.0",
+      "PRIMARY CONTACT": "Taco Palenque"
+    },
+    {
+      "_id": "3",
+      "PERMIT TYPE": "Electrical General Permit",
+      "PERMIT #": "COM-BLG-PMT24-40200788",
+      "PROJECT NAME": "Building No: N/A; Unit No: N/A",
+      "WORK TYPE": "New",
+      "ADDRESS": "8751 STATE HWY 151, City of San Antonio, TX 78245",
+      "LOCATION": "",
+      "X_COORD": "2076498.5",
+      "Y_COORD": "13708187.9",
+      "DATE SUBMITTED": "2024-08-02",
+      "DATE ISSUED": "2025-01-01",
+      "DECLARED VALUATION": "",
+      "AREA (SF)": "",
+      "PRIMARY CONTACT": "Taco Palenque"
+    },
+    {
+      "_id": "4",
+      "PERMIT TYPE": "Electrical TOPS Permit",
+      "PERMIT #": "COM-BLG-PMT24-40200788",
+      "PROJECT NAME": "Building No: N/A; Unit No: N/A",
+      "WORK TYPE": "New",
+      "ADDRESS": "8751 STATE HWY 151, City of San Antonio, TX 78245",
+      "LOCATION": "",
+      "X_COORD": "2076498.5",
+      "Y_COORD": "13708187.9",
+      "DATE SUBMITTED": "2024-08-02",
+      "DATE ISSUED": "2025-01-01",
+      "DECLARED VALUATION": "",
+      "AREA (SF)": "",
+      "PRIMARY CONTACT": "Taco Palenque"
+    },
+    {
+      "_id": "5",
+      "PERMIT TYPE": "Mechanical Permit",
+      "PERMIT #": "COM-BLG-PMT24-40200788",
+      "PROJECT NAME": "Building No: N/A; Unit No: N/A",
+      "WORK TYPE": "New",
+      "ADDRESS": "8751 STATE HWY 151, City of San Antonio, TX 78245",
+      "LOCATION": "",
+      "X_COORD": "2076498.5",
+      "Y_COORD": "13708187.9",
+      "DATE SUBMITTED": "2024-08-02",
+      "DATE ISSUED": "2025-01-01",
+      "DECLARED VALUATION": "",
+      "AREA (SF)": "",
+      "PRIMARY CONTACT": "Taco Palenque"
+    },
+    {
+      "_id": "6",
+      "PERMIT TYPE": "Plumbing Gas Permit",
+      "PERMIT #": "COM-BLG-PMT24-40200788",
+      "PROJECT NAME": "Building No: N/A; Unit No: N/A",
+      "WORK TYPE": "New",
+      "ADDRESS": "8751 STATE HWY 151, City of San Antonio, TX 78245",
+      "LOCATION": "",
+      "X_COORD": "2076498.5",
+      "Y_COORD": "13708187.9",
+      "DATE SUBMITTED": "2024-08-02",
+      "DATE ISSUED": "2025-01-01",
+      "DECLARED VALUATION": "",
+      "AREA (SF)": "",
+      "PRIMARY CONTACT": "Taco Palenque"
+    },
+    {
+      "_id": "7",
+      "PERMIT TYPE": "Plumbing General Permit",
+      "PERMIT #": "COM-BLG-PMT24-40200788",
+      "PROJECT NAME": "Building No: N/A; Unit No: N/A",
+      "WORK TYPE": "New",
+      "ADDRESS": "8751 STATE HWY 151, City of San Antonio, TX 78245",
+      "LOCATION": "",
+      "X_COORD": "2076498.5",
+      "Y_COORD": "13708187.9",
+      "DATE SUBMITTED": "2024-08-02",
+      "DATE ISSUED": "2025-01-01",
+      "DECLARED VALUATION": "",
+      "AREA (SF)": "",
+      "PRIMARY CONTACT": "Taco Palenque"
+    },
+    {
+      "_id": "8",
+      "PERMIT TYPE": "Plumbing Sewer Permit",
+      "PERMIT #": "COM-BLG-PMT24-40200788",
+      "PROJECT NAME": "Building No: N/A; Unit No: N/A",
+      "WORK TYPE": "New",
+      "ADDRESS": "8751 STATE HWY 151, City of San Antonio, TX 78245",
+      "LOCATION": "",
+      "X_COORD": "2076498.5",
+      "Y_COORD": "13708187.9",
+      "DATE SUBMITTED": "2024-08-02",
+      "DATE ISSUED": "2025-01-01",
+      "DECLARED VALUATION": "",
+      "AREA (SF)": "",
+      "PRIMARY CONTACT": "Taco Palenque"
+    }
+  ]
+}

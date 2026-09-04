@@ -1,0 +1,43 @@
+{
+  "ticket": "TX-CON-LOCAL-001B",
+  "geography": "CITY_OF_SAN_ANTONIO_NOT_BEXAR_COUNTY",
+  "hierarchy": [
+    "EXACT_LOCAL_REGISTRATION",
+    "EXACT_TDLR",
+    "EXACT_TSBPE",
+    "HIGH_CONFIDENCE_BUSINESS",
+    "REVIEW_REQUIRED",
+    "UNSAFE"
+  ],
+  "permit_file": {
+    "rows": 139124,
+    "as_of": "2026-08-30",
+    "local_registration_id_field": false,
+    "tdlr_field": false,
+    "tsbpe_field": false,
+    "parcel_field": false,
+    "contractor_field": "PRIMARY CONTACT",
+    "contractor_field_grain": "name_string"
+  },
+  "counts": {
+    "permit_rows_with_local_contractor_id": 0,
+    "permit_rows_with_state_credential": 0,
+    "distinct_primary_contact_names": 18482,
+    "exact_local_registration_joins": 0,
+    "exact_tdlr_joins": 0,
+    "exact_tsbpe_joins": 0,
+    "high_confidence_business": 0,
+    "review_required": 0,
+    "unsafe_name_only": 18482
+  },
+  "local_gc_activity_signal": {
+    "res_new_building_permit": 6543,
+    "residential_repair_permit": 9373,
+    "foundation_repair_permit": 5243,
+    "label": "permit work types, not a Texas licensed GC census",
+    "note": "Texas has no statewide GC license. These rows are City of San Antonio issued permits with a PRIMARY CONTACT name. They are not a Contractor Connect registration roster and must not be labeled Texas licensed GC."
+  },
+  "no_tdlr_match_is_not_unlicensed": true,
+  "name_only_adverse": "UNSAFE",
+  "high_confidence_requires": "exact business name + exact government address/phone + one unambiguous candidate. Permit CSV has project address, not contractor address/phone."
+}
