@@ -1,0 +1,408 @@
+{
+  "version": "contractor-tx-austin-local-intel-v1",
+  "ticket": "TX-CON-LOCAL-002",
+  "as_of": "2026-09-04",
+  "generated_at": "2026-09-04T15:28:02.857115+00:00",
+  "source_clock": {
+    "harvest_ticket": "TX-CON-LOCAL-001A",
+    "harvest_generated_at": "2026-09-04T15:28:02.857115+00:00",
+    "dataset_id": "3syk-w9eu",
+    "dataset_url": "https://data.austintexas.gov/Building-and-Development/Issued-Construction-Permits/3syk-w9eu",
+    "csv_sha256": "3ff78f727b98c7d8c7f6a17867e46afa133776c7fbb2b306b8b03cd9b7e53aa8",
+    "csv_bytes": 1512298131,
+    "csv_rows": 2373854,
+    "grain": "one row = one issued permit (permit_number unique in source metadata)",
+    "runtime_csv_import": false,
+    "year_range": [
+      1921,
+      2026
+    ]
+  },
+  "publication": {
+    "dedicated": [
+      "/texas/austin"
+    ],
+    "parked": [
+      "fort-worth",
+      "tarrant",
+      "san-antonio",
+      "bexar",
+      "houston",
+      "harris"
+    ],
+    "rankings": false,
+    "trustScore": false,
+    "indexable": true,
+    "robots": "index,follow",
+    "canonical": "https://www.contractortrusthub.com/texas/austin",
+    "h1": "City of Austin Contractor & Permit Intelligence"
+  },
+  "geographies": {
+    "austin": {
+      "slug": "austin",
+      "display_name": "City of Austin",
+      "geography_type": "CITY",
+      "route": "/texas/austin",
+      "surface": "DEDICATED_PAGE",
+      "not_travis_county": true,
+      "not_austin_metro": true,
+      "not_statewide_permits": true
+    }
+  },
+  "austin": {
+    "source": "City of Austin Issued Construction Permits",
+    "dataset_id": "3syk-w9eu",
+    "url": "https://data.austintexas.gov/Building-and-Development/Issued-Construction-Permits/3syk-w9eu",
+    "access_class": "OPEN_SOCRATA",
+    "grain": "one row = one issued permit (permit_number unique in source metadata)",
+    "rows": 2373854,
+    "sha256": "3ff78f727b98c7d8c7f6a17867e46afa133776c7fbb2b306b8b03cd9b7e53aa8",
+    "bytes": 1512298131,
+    "source_native_tdlr_or_tsbpe_id": false,
+    "source_native_city_contractor_number": false,
+    "license_like_columns": [],
+    "exact_state_credential": 0,
+    "rows_with_contractor_company": 1186388,
+    "rows_with_contractor_person_name": 1236997,
+    "rows_with_contractor_phone": 1333297,
+    "rows_with_contractor_address": 1326143,
+    "rows_with_contractor_trade": 1425481,
+    "rows_with_valuation": 1163347,
+    "rows_with_tcad_id": 2310765,
+    "distinct_contractor_company_values": 32330,
+    "distinct_normalized_company_plus_phone": 31908,
+    "distinct_tcad_ids": 254703,
+    "permit_types": [
+      {
+        "name": "Electrical Permit",
+        "rows": 686985
+      },
+      {
+        "name": "Plumbing Permit",
+        "rows": 545319
+      },
+      {
+        "name": "Building Permit",
+        "rows": 519904
+      },
+      {
+        "name": "Mechanical Permit",
+        "rows": 505140
+      },
+      {
+        "name": "Driveway / Sidewalks",
+        "rows": 116506
+      }
+    ],
+    "status_mix": [
+      {
+        "name": "Final",
+        "rows": 2004157
+      },
+      {
+        "name": "Expired",
+        "rows": 169074
+      },
+      {
+        "name": "VOID",
+        "rows": 153257
+      },
+      {
+        "name": "Active",
+        "rows": 28027
+      },
+      {
+        "name": "Withdrawn",
+        "rows": 17704
+      },
+      {
+        "name": "Cancelled",
+        "rows": 675
+      },
+      {
+        "name": "Pending",
+        "rows": 231
+      },
+      {
+        "name": "Closed",
+        "rows": 129
+      },
+      {
+        "name": "Aborted",
+        "rows": 120
+      },
+      {
+        "name": "Cancelled - Contractor Required",
+        "rows": 113
+      },
+      {
+        "name": "Inactive Pending Revision",
+        "rows": 77
+      },
+      {
+        "name": "On Hold",
+        "rows": 63
+      },
+      {
+        "name": "Pending Permit",
+        "rows": 55
+      },
+      {
+        "name": "Re Review",
+        "rows": 55
+      },
+      {
+        "name": "Denied but Closed",
+        "rows": 43
+      },
+      {
+        "name": "Suspended",
+        "rows": 26
+      },
+      {
+        "name": "(blank)",
+        "rows": 14
+      },
+      {
+        "name": "Expired - License",
+        "rows": 13
+      },
+      {
+        "name": "Cancelled - New Permit Required",
+        "rows": 9
+      },
+      {
+        "name": "Inactive Contractor",
+        "rows": 3
+      },
+      {
+        "name": "New Permit Required",
+        "rows": 3
+      },
+      {
+        "name": "Application Incomplete",
+        "rows": 2
+      },
+      {
+        "name": "Revoked",
+        "rows": 2
+      },
+      {
+        "name": "Awaiting Upload",
+        "rows": 1
+      },
+      {
+        "name": "Rejected",
+        "rows": 1
+      }
+    ],
+    "contractor_trades": [
+      {
+        "name": "General Contractor",
+        "rows": 563495
+      },
+      {
+        "name": "Electrical Contractor",
+        "rows": 365453
+      },
+      {
+        "name": "Plumbing Contractor",
+        "rows": 268671
+      },
+      {
+        "name": "Mechanical Contractor",
+        "rows": 227862
+      }
+    ],
+    "permit_class_mapped": [
+      {
+        "name": "Residential",
+        "rows": 1620672
+      },
+      {
+        "name": "Commercial",
+        "rows": 753182
+      }
+    ],
+    "match_class": {
+      "EXACT_STATE_CREDENTIAL": 0,
+      "HIGH_CONFIDENCE_BUSINESS_MATCH": 174673,
+      "REVIEW_REQUIRED": 117480,
+      "UNSAFE": 167231,
+      "LOCAL_ONLY_CONTRACTOR_IDENTITY": 965876,
+      "NO_CONTRACTOR": 948594
+    },
+    "high_confidence_is_not_license_verification": true,
+    "high_confidence_is_internal_only": true,
+    "local_only_trade_breakout": {
+      "mechanical/HVAC": 107038,
+      "electrical": 132198,
+      "plumbing": 137769,
+      "general": 351005
+    },
+    "contacts": {
+      "phones": 1333297,
+      "emails": 0,
+      "websites": 0,
+      "addresses": 1326143,
+      "provenance_phone": "AUSTIN_PERMIT_CONTRACTOR_PHONE",
+      "provenance_address": "AUSTIN_PERMIT_CONTRACTOR_ADDRESS",
+      "email_website": "NOT_IN_SOURCE"
+    },
+    "work_history_identities_including_person_name": 55756,
+    "person_name_only": "REVIEW_REQUIRED_NOT_PUBLIC",
+    "identity_key": "AUSTIN_PERMIT_CONTRACTOR_IDENTITY",
+    "identity_key_rule": "normalized contractor company + normalized contractor phone; both required",
+    "jurisdiction": "CITY_OF_AUSTIN",
+    "not_travis_county": true,
+    "not_austin_metro": true
+  },
+  "lookup": {
+    "public_identities": 31876,
+    "identity_key": "AUSTIN_PERMIT_CONTRACTOR_IDENTITY",
+    "recent_permits_per_identity": 8,
+    "result_cap": 25,
+    "sort": "alphabetical_or_query_relevance",
+    "never_sort_by_permit_count": true,
+    "never_sort_by_valuation": true,
+    "not_a_complete_permit_directory": true,
+    "person_name_only_not_public": true,
+    "match_class_not_on_public_identity": true,
+    "harvest_distinct_normalized_company_plus_phone": 31908,
+    "placeholder_company_names_excluded": [
+      "OWNER",
+      "HOMEOWNER",
+      "HOMESTEAD",
+      "NA",
+      "N A",
+      "NONE"
+    ]
+  },
+  "state_credential": {
+    "exact_state_credential": 0,
+    "source_native_tdlr_or_tsbpe_id": false,
+    "source_native_city_contractor_number": false,
+    "high_confidence_business_match_rows": 174673,
+    "high_confidence_is_not_license_verification": true,
+    "high_confidence_is_internal_only": true,
+    "verify_tdlr": "https://www.tdlr.texas.gov/LicenseSearch/",
+    "verify_tsbpe": "https://tsbpe.texas.gov/"
+  },
+  "local_only": {
+    "rows": 965876,
+    "general": 351005,
+    "electrical": 132198,
+    "plumbing": 137769,
+    "mechanical_hvac": 107038,
+    "local_only_ne_unlicensed": true,
+    "no_statewide_general_contractor_license": true
+  },
+  "tcad": {
+    "permit_rows_with_tcad_id": 2310765,
+    "distinct_permit_tcad_ids": 254703,
+    "prop_rows_scanned": 493324,
+    "prop_rows_with_geo_id": 457222,
+    "exact_geo_id_joins": 233085,
+    "unmatched_permit_tcad_ids": 21618,
+    "join_rate": 0.9151,
+    "join_key": "Austin tcad_id == Travis CAD PROP.TXT geo_id (layout positions 547-596)",
+    "owner_dossiers": false,
+    "owner_fields_not_exported": true,
+    "appraisal_value_is_not_sale_price": true
+  },
+  "parked": {
+    "fort_worth": {
+      "surface": "DATA_ONLY",
+      "route": null,
+      "rows": 1611699,
+      "distinct_permit_numbers": 1549550,
+      "contractor_company_field": false,
+      "contractor_phone_field": false,
+      "contractor_license_field": false,
+      "owner_full_name_is_not_contractor": true,
+      "permit_to_tad_exact_join": "NOT_AVAILABLE_NO_ACCOUNT_OR_SITUS_ON_PERMIT_TABLE",
+      "note": "City of Fort Worth development permits have no contractor identity fields."
+    },
+    "tarrant": {
+      "surface": "DATA_ONLY",
+      "route": null,
+      "cad_rows": 2286442,
+      "owner_dossiers": false,
+      "appraisal_value_is_not_sale_price": true
+    },
+    "san_antonio": {
+      "surface": "DATA_ONLY",
+      "route": null,
+      "permits_issued_rows": 139124,
+      "permits_issued_2020_2024_rows": 368297,
+      "distinct_primary_contacts": 18482,
+      "contractor_registration": "OPEN_SEARCH_ONLY",
+      "credential_fields_in_permit_csv": "none"
+    },
+    "bexar": {
+      "surface": "DATA_ONLY",
+      "route": null,
+      "cad_bulk": "PARKED_REQUEST_OR_NOT_IMMEDIATELY_DOWNLOADABLE",
+      "permit_property_join": "NOT_POSSIBLE_NO_PARCEL_IN_PERMIT_FILE"
+    },
+    "houston": {
+      "surface": "DATA_ONLY",
+      "route": null,
+      "building_permit_bulk": "SOURCE_NOT_ACQUIRED / SEARCH_ONLY",
+      "geography": "CITY_OF_HOUSTON_NOT_HARRIS_COUNTY",
+      "contractor_registration": "OPEN_SEARCH_ONLY / FORM"
+    },
+    "harris": {
+      "surface": "DATA_ONLY",
+      "route": null,
+      "permit_bulk": "BOUNDED_PASS_NO_EASY_PERMIT_BULK",
+      "geography": "HARRIS_COUNTY_NOT_CITY_OF_HOUSTON",
+      "hcad_real_acct_rows": 1628241
+    }
+  },
+  "semantics": [
+    "LOCAL PERMIT CONTRACTOR != STATE LICENSEE",
+    "AUSTIN_PERMIT_CONTRACTOR_IDENTITY != TDLR OR TSBPE CREDENTIAL",
+    "HIGH_CONFIDENCE_BUSINESS_MATCH != LICENSE VERIFICATION",
+    "EXACT_STATE_CREDENTIAL = 0",
+    "GENERAL CONTRACTOR WITHOUT TDLR != UNLICENSED",
+    "LOCAL_ONLY != UNLICENSED",
+    "PERMIT != QUALITY",
+    "PERMIT COUNT != QUALITY",
+    "HIGH PERMIT COUNT != BETTER CONTRACTOR",
+    "LOW PERMIT COUNT != INEXPERIENCED",
+    "VALUATION != REVENUE",
+    "VALUATION != FINAL PROJECT COST",
+    "FINAL != INSPECTIONS PASSED",
+    "EXPIRED != DISCIPLINE",
+    "VOID != MISCONDUCT",
+    "APPRAISAL VALUE != SALE PRICE",
+    "TCAD JOIN != OWNER DOSSIER",
+    "PROPERTY ADDRESS != OWNER",
+    "CONTRACTOR PHONE != STATE REGULATOR CONTACT",
+    "PERSON-NAME-ONLY != PUBLIC IDENTITY",
+    "MISSING != ZERO",
+    "NO LOCAL RECORD != NO WORK",
+    "NO TRUST SCORE",
+    "NO RANKING"
+  ],
+  "profile_integration": "DEFERRED",
+  "texas_local_harvest_closed": true,
+  "texas_fully_closed": true,
+  "next_state": "WASHINGTON",
+  "guardrails": {
+    "local_permit_contractor_ne_state_licensee": true,
+    "gc_without_tdlr_ne_unlicensed": true,
+    "permit_ne_quality": true,
+    "permit_count_ne_experience_score": true,
+    "valuation_ne_revenue": true,
+    "appraisal_ne_sale_price": true,
+    "property_address_ne_owner": true,
+    "contractor_phone_ne_state_regulator_contact": true,
+    "missing_ne_zero": true,
+    "no_trust_score": true,
+    "no_ranking": true,
+    "no_name_only_adverse_attach": true
+  },
+  "fingerprint": "417adb3cec14ce3849e0ca92b992f557693ce96a3d98f32f56afa2932a39889f"
+}

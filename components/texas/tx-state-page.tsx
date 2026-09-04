@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Trace } from "@/components/new-jersey/trace";
+import { TexasLocalEvidenceSection } from "@/components/texas/tx-local-evidence-section";
 import {
   fmtHero,
   fmtInt,
@@ -309,11 +310,14 @@ export function TexasContractorPage({ snapshot }: { snapshot: TexasContractorSna
         <p className="mt-2 text-sm">People are not published as profiles.</p>
       </section>
 
+      <TexasLocalEvidenceSection />
+
       <section className="mt-10">
         <h2 className="text-lg font-semibold text-[var(--navy)]">Statewide permits</h2>
         <p className="mt-2 text-sm">
-          Coverage {s.statewide_permits.coverage}. {s.statewide_permits.note} No Texas city or county
-          routes are published in this ticket.
+          Coverage {s.statewide_permits.coverage}. Texas building permits are issued by cities and
+          counties. No statewide permit file was acquired. City of Austin is the only dedicated Texas
+          local page. Fort Worth, San Antonio, Houston, and Harris remain data-only.
         </p>
       </section>
 

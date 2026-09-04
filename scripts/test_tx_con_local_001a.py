@@ -14,8 +14,10 @@ MAN = json.loads((ROOT / "data/texas/local/tx-local-001a/source-manifest.json").
 class IsolationTests(unittest.TestCase):
     def test_no_local_routes(self):
         self.assertTrue((ROOT / "app/texas/page.tsx").exists())
+        # TX-CON-LOCAL-002 publishes City of Austin only.
+        self.assertTrue((ROOT / "app/texas/austin").exists())
+        self.assertIn('path: "/texas/austin"', SITEMAP)
         for p in (
-            "app/texas/austin",
             "app/texas/travis",
             "app/texas/fort-worth",
             "app/texas/tarrant",
@@ -24,7 +26,6 @@ class IsolationTests(unittest.TestCase):
         ):
             self.assertFalse((ROOT / p).exists(), p)
         self.assertIn('path: "/texas"', SITEMAP)
-        self.assertNotIn("/texas/austin", SITEMAP)
         self.assertNotIn("/texas/fort-worth", SITEMAP)
         self.assertNotIn("/texas/tarrant", SITEMAP)
         self.assertNotIn("/texas/travis", SITEMAP)
@@ -34,7 +35,7 @@ class IsolationTests(unittest.TestCase):
         self.assertEqual(REP["builder_4_namespaces_untouched"], ["san-antonio-bexar", "houston-harris"])
         self.assertTrue(REP["no_public_local_routes"])
         self.assertTrue(REP["no_shared_texas_local_loader"])
-        self.assertFalse((ROOT / "lib/texas-intelligence/local").exists())
+        self.assertTrue((ROOT / "lib/texas-intelligence/local").exists())
         self.assertFalse((ROOT / "data/texas/local/index.ts").exists())
         self.assertFalse((ROOT / "app/texas/san-antonio").exists())
         self.assertFalse((ROOT / "app/texas/houston").exists())

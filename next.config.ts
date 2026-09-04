@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   outputFileTracingExcludes: {
     "*": ["./data/**", "./ingest/**", "./schema/**", "./scripts/**"],
   },
+  outputFileTracingIncludes: {
+    "/texas/austin": ["./lib/texas-intelligence/local/identity-index.json"],
+  },
   // Do not externalize "server-only" — Next resolves it via react-server conditions.
   // Listing it here breaks Turbopack SSR with client-component boundaries.
   serverExternalPackages: ["pg"],
