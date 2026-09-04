@@ -36,8 +36,8 @@ class TxLocal001B(unittest.TestCase):
             HARVEST["builder3_namespaces_untouched"],
             ["austin-travis", "fort-worth-tarrant"],
         )
-        # 001A may land additively in those namespaces. Public local routes stay unpublished.
-        self.assertFalse((ROOT / "app/texas/austin").exists())
+        # 001A harvest may land additively. TX-CON-LOCAL-002 publishes Austin only.
+        self.assertTrue((ROOT / "app/texas/austin").exists())
         self.assertFalse((ROOT / "app/texas/fort-worth").exists())
 
     def test_no_local_publication_routes(self) -> None:

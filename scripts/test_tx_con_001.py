@@ -109,15 +109,18 @@ class SemanticsTests(unittest.TestCase):
         self.assertIn("NOT_CONTRACTOR", SNAP["tceq"]["semantics"])
 
     def test_13_no_texas_local_routes(self):
+        # TX-CON-001 snapshot flag is historical. TX-CON-LOCAL-002 publishes Austin only.
         self.assertTrue(SNAP["no_texas_local_routes"])
+        self.assertTrue((ROOT / "app/texas/austin").exists())
+        self.assertIn('path: "/texas/austin"', SITEMAP)
         self.assertFalse((ROOT / "app/texas/houston").exists())
         self.assertFalse((ROOT / "app/texas/dallas").exists())
-        self.assertFalse((ROOT / "app/texas/austin").exists())
         self.assertFalse((ROOT / "app/texas/san-antonio").exists())
         self.assertFalse((ROOT / "app/texas/fort-worth").exists())
         self.assertFalse((ROOT / "app/texas/harris").exists())
         self.assertNotIn("/texas/houston", SITEMAP)
         self.assertNotIn("/texas/dallas", SITEMAP)
+        self.assertNotIn("/texas/fort-worth", SITEMAP)
         self.assertEqual(SNAP["statewide_permits"]["coverage"], "LOCAL_FRAGMENTED")
 
     def test_14_no_trust_score(self):
