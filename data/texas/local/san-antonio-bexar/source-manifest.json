@@ -1,0 +1,43 @@
+{
+  "ticket": "TX-CON-LOCAL-001B",
+  "geography": "san-antonio-bexar",
+  "sources": [
+    {
+      "source": "Open Data SA Building Permits — PERMITS ISSUED",
+      "agency": "City of San Antonio Development Services",
+      "geographic_grain": "CITY_OF_SAN_ANTONIO_NOT_BEXAR_COUNTY",
+      "url": "https://data.sanantonio.gov/dataset/building-permits",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "format": "CKAN datastore dump CSV",
+      "as_of": "2026-08-30",
+      "rows": 139124,
+      "grain": "issued building/trade/garage-sale permit",
+      "identity": "PERMIT #; PRIMARY CONTACT name string",
+      "credential_fields": "none",
+      "contact_fields": "PRIMARY CONTACT",
+      "permit_fields": "type, number, work type, dates, valuation, area",
+      "property_fields": "ADDRESS, LOCATION, X_COORD, Y_COORD; no parcel",
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "No local registration / TDLR / TSBPE columns.",
+        "PRIMARY CONTACT is name-only and UNSAFE for adverse attach.",
+        "6,104 garage-sale rows are not contractor jobs."
+      ]
+    },
+    {
+      "source": "Contractor Connect / BuildSA",
+      "agency": "City of San Antonio Development Services",
+      "geographic_grain": "CITY_OF_SAN_ANTONIO",
+      "url": "https://www.sa.gov/Directory/Departments/DSD/Contractor/Find-a-Contractor",
+      "access_class": "OPEN_SEARCH_ONLY",
+      "format": "interactive search",
+      "rows": null,
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "Missing roster is unknown, not zero.",
+        "Do not scrape.",
+        "Insurance/bond is a program rule, not a bulk proof file."
+      ]
+    }
+  ]
+}

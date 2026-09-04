@@ -1,0 +1,40 @@
+{
+  "ticket": "TX-CON-LOCAL-001B",
+  "geography": "houston-harris",
+  "sources": [
+    {
+      "source": "HCAD CAMA Public Data 2026",
+      "agency": "Harris Central Appraisal District",
+      "geographic_grain": "HARRIS_COUNTY_CAD_NOT_CITY_OF_HOUSTON",
+      "url": "https://download.hcad.org/data/CAMA/2026/",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "format": "zipped tab-delimited text",
+      "as_of": "2026 Preliminary Values",
+      "rows": 1628241,
+      "grain": "real property account",
+      "identity": "acct",
+      "credential_fields": "none",
+      "contact_fields": "owner mailing on real_acct / phone on PP — not published as person dossier",
+      "permit_fields": "permits.txt is CAD notes, not City of Houston issued permits",
+      "property_fields": "situs, state_class, tot_appr_val, tot_mkt_val, yr_impr, land/building values",
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": [
+        "HCAD != City of Houston.",
+        "Appraisal value != sale price.",
+        "Houston situs 961,833 of 1,628,241 accounts."
+      ]
+    },
+    {
+      "source": "City of Houston Residential Building Permits by Month and Year",
+      "agency": "City of Houston Planning and Development",
+      "geographic_grain": "CITY_OF_HOUSTON_NOT_HARRIS_COUNTY",
+      "url": "https://data.houstontx.gov/dataset/residential-building-permits",
+      "access_class": "OPEN_BULK_DOWNLOAD",
+      "format": "XLS monthly summary",
+      "rows": null,
+      "grain": "month x year aggregate counts",
+      "publication_eligibility": "KEEP_DATA_ONLY",
+      "limitations": ["Not permit-level. Row-level Houston building permits remain SEARCH_ONLY."]
+    }
+  ]
+}

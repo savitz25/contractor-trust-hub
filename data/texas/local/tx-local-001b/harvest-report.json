@@ -1,0 +1,73 @@
+{
+  "ticket": "TX-CON-LOCAL-001B",
+  "retrieved_at": "2026-09-04T16:30:00Z",
+  "namespaces": ["tx-local-001b", "san-antonio-bexar", "houston-harris"],
+  "builder3_namespaces_untouched": ["austin-travis", "fort-worth-tarrant"],
+  "publication": "KEEP_DATA_ONLY",
+  "no_local_routes": true,
+  "routes_forbidden": [
+    "/texas/san-antonio",
+    "/texas/bexar",
+    "/texas/houston",
+    "/texas/harris"
+  ],
+  "san_antonio": {
+    "contractor_registration": "OPEN_SEARCH_ONLY",
+    "contractor_connect": "https://www.sa.gov/Directory/Departments/DSD/Contractor/Find-a-Contractor",
+    "open_data_roster": "NOT_FOUND",
+    "permits_issued_rows": 139124,
+    "permits_issued_2020_2024_rows": 368297,
+    "applications_submitted_rows": 52621,
+    "distinct_primary_contacts": 18482,
+    "garage_sale_rows": 6104,
+    "res_new_building_permit": 6543,
+    "credential_fields_in_permit_csv": "none",
+    "insurance_bond_grain": "PROGRAM_RULE"
+  },
+  "bexar": {
+    "cad_bulk": "PARKED_REQUEST_OR_NOT_IMMEDIATELY_DOWNLOADABLE",
+    "permit_property_join": "NOT_POSSIBLE_NO_PARCEL_IN_PERMIT_FILE",
+    "exact_join_coverage": 0
+  },
+  "houston": {
+    "building_permit_bulk": "SOURCE_NOT_ACQUIRED / SEARCH_ONLY",
+    "contractor_registration": "OPEN_SEARCH_ONLY / FORM",
+    "geography": "CITY_OF_HOUSTON_NOT_HARRIS_COUNTY",
+    "monthly_summary_only": "https://data.houstontx.gov/dataset/residential-building-permits",
+    "gis_permits_viewer": "address-assignment polygons, not permit rows"
+  },
+  "harris_county": {
+    "permit_bulk": "BOUNDED_PASS_NO_EASY_PERMIT_BULK",
+    "geography": "HARRIS_COUNTY_NOT_CITY_OF_HOUSTON"
+  },
+  "hcad": {
+    "result": "ACQUIRED",
+    "real_acct_rows": 1628241,
+    "pp_business_acct_rows": 203185,
+    "building_res_rows": 1300821,
+    "houston_situs_rows": 961833,
+    "yr_impr_populated": 1388577
+  },
+  "identity": {
+    "exact_local_registration": 0,
+    "exact_tdlr": 0,
+    "exact_tsbpe": 0,
+    "high_confidence_business": 0,
+    "unsafe_name_only_sa_contacts": 18482,
+    "no_tdlr_match_is_not_unlicensed": true
+  },
+  "skipped": [
+    "Dallas",
+    "Austin",
+    "Fort Worth",
+    "other Bexar municipalities",
+    "other Harris municipalities",
+    "county-clerk deeds",
+    "PRA waiting",
+    "paid CAD exports",
+    "Accela/BuildSA/iPermits scrape",
+    "Contractor Connect scrape",
+    "confidential sales",
+    "owner dossiers"
+  ]
+}

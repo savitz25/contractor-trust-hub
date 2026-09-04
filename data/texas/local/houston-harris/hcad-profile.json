@@ -1,0 +1,63 @@
+{
+  "ticket": "TX-CON-LOCAL-001B",
+  "agency": "Harris Central Appraisal District",
+  "geographic_grain": "HARRIS_COUNTY_CAD_NOT_CITY_OF_HOUSTON",
+  "official_page": "https://hcad.org/pdata/pdata-property-downloads.html",
+  "codebook": "https://hcad.org/assets/uploads/pdf/pdataCodebook.pdf",
+  "as_of": "2026 Preliminary Values",
+  "page_updated": "2026-08-30",
+  "download_base": "https://download.hcad.org/data/CAMA/2026/",
+  "acquired": {
+    "Real_acct_owner.zip": 211812293,
+    "Real_building_land.zip": 234592997,
+    "PP_files.zip": 34439820,
+    "pdataCodebook.pdf": 303839
+  },
+  "real_acct": {
+    "file": "real_acct.txt",
+    "rows": 1628241,
+    "identity": "acct",
+    "situs_populated": 1628241,
+    "tot_appr_val_populated": 1610550,
+    "yr_impr_populated": 1388577,
+    "state_class": {
+      "A1_residential": 1157740,
+      "X1": 78209,
+      "F1_commercial": 68818,
+      "C1_vacant": 59739,
+      "C3": 40982
+    },
+    "site_city": {
+      "HOUSTON": 961833,
+      "KATY": 96169,
+      "SPRING": 91395,
+      "CYPRESS": 85368,
+      "HUMBLE": 76228
+    },
+    "note": "961,833 Houston situs rows are still HCAD accounts, not City of Houston permits. Appraisal value is not a sale price."
+  },
+  "building_res": {
+    "rows": 1300821,
+    "distinct_acct": 1269710,
+    "date_erected_populated": 1300821
+  },
+  "building_other": {
+    "rows": 159120,
+    "distinct_acct": 68857
+  },
+  "personal_property_business": {
+    "file": "t_business_acct.txt",
+    "rows": 203185,
+    "fields": ["acct", "bus_name", "site_addr", "phone"],
+    "publication": "KEEP_DATA_ONLY; no owner-person dossier"
+  },
+  "cad_permits_txt": {
+    "file": "permits.txt inside Real_acct_owner.zip",
+    "bytes": 168358532,
+    "note": "HCAD permit notes on accounts, not City of Houston issued building permits."
+  },
+  "hubs": ["Lender", "Insurance", "Investor", "Contractor"],
+  "owner_dossiers": "NOT_BUILT",
+  "sales_inference": "NOT_DONE",
+  "publication_eligibility": "KEEP_DATA_ONLY"
+}
