@@ -1,0 +1,706 @@
+{
+  "ticket": "WA-CON-001",
+  "retrieved_at": "2026-09-04T16:28:01.509119+00:00",
+  "datasets": {
+    "general": {
+      "id": "m8qx-ubtq",
+      "title": "L&I Contractor License Data - General",
+      "url": "https://data.wa.gov/Labor/L-I-Contractor-License-Data-General/m8qx-ubtq",
+      "meta_name": "L&I Contractor License Data - General",
+      "rowsUpdatedAt_iso": "2026-09-04T15:11:18+00:00",
+      "columns": [
+        "businessname",
+        "contractorlicensenumber",
+        "contractorlicensetypecode",
+        "contractorlicensetypecodedesc",
+        "address1",
+        "address2",
+        "city",
+        "state",
+        "zip",
+        "phonenumber",
+        "licenseeffectivedate",
+        "licenseexpirationdate",
+        "businesstypecode",
+        "businesstypecodedesc",
+        "specialtycode1",
+        "specialtycode1desc",
+        "specialtycode2",
+        "specialtycode2desc",
+        "ubi",
+        "primaryprincipalname",
+        "statuscode",
+        "contractorlicensestatus",
+        "contractorlicensesuspenddate"
+      ],
+      "column_count": 23,
+      "download": {
+        "bytes": 35382044,
+        "sha256": "818c7f8df6ecb857aea6375c2b6ec884ae278cc6a89999c0bf8ad49f87285b20",
+        "url": "https://data.wa.gov/api/views/m8qx-ubtq/rows.csv?accessType=DOWNLOAD",
+        "path": "S:\\ath-raw\\wa-con-001\\general-m8qx-ubtq.csv"
+      }
+    },
+    "bond": {
+      "id": "bzff-4fmt",
+      "title": "L&I Contractor License Data - Bond",
+      "url": "https://data.wa.gov/Labor/L-I-Contractor-License-Data-Bond/bzff-4fmt",
+      "meta_name": "L&I Contractor License Data - Bond",
+      "rowsUpdatedAt_iso": "2026-09-04T14:33:23+00:00",
+      "columns": [
+        "businessname",
+        "contractorlicensenumber",
+        "contractorlicensetypecode",
+        "contractorlicensetypecodedesc",
+        "licensestatus",
+        "licensestatusdesc",
+        "ubi",
+        "bondfirmname",
+        "bondaccountid",
+        "bondamt",
+        "receivedbyl_i",
+        "bondeffectivedate",
+        "bondexpirationdate",
+        "bondcanceldate",
+        "bondimpaired",
+        "bondimpaireddate"
+      ],
+      "column_count": 16,
+      "download": {
+        "bytes": 28382948,
+        "sha256": "127d8788bc09df8774b54a2d770e38fde70633f3a7c6577a2b20f0b8f5e6d6a7",
+        "url": "https://data.wa.gov/api/views/bzff-4fmt/rows.csv?accessType=DOWNLOAD",
+        "path": "S:\\ath-raw\\wa-con-001\\bond-bzff-4fmt.csv"
+      }
+    },
+    "insurance": {
+      "id": "ciwg-agsx",
+      "title": "L&I Contractor License Data - Insurance",
+      "url": "https://data.wa.gov/Labor/L-I-Contractor-License-Data-Insurance/ciwg-agsx",
+      "meta_name": "L&I Contractor License Data - Insurance",
+      "rowsUpdatedAt_iso": "2026-09-04T14:39:32+00:00",
+      "columns": [
+        "businessname",
+        "contractorlicensenumber",
+        "contractorlicensetypecode",
+        "contractorlicensetypecodedesc",
+        "licensestatus",
+        "licensestatusdesc",
+        "ubi",
+        "insurancecompany",
+        "insurancepolicyno",
+        "insuranceamt",
+        "effectivedate",
+        "expirationdate",
+        "canceldate",
+        "createdate",
+        "createdby_waoic_id",
+        "lastupdatedate",
+        "updatedby_waoic_id",
+        "insuranceagencyname"
+      ],
+      "column_count": 18,
+      "download": {
+        "bytes": 15955496,
+        "sha256": "69108d87fbb6ac2eef9a3f33b36fa25296c59c2f0bcff9dd81da674971f99c35",
+        "url": "https://data.wa.gov/api/views/ciwg-agsx/rows.csv?accessType=DOWNLOAD",
+        "path": "S:\\ath-raw\\wa-con-001\\insurance-ciwg-agsx.csv"
+      }
+    },
+    "principal": {
+      "id": "4xk5-x9j6",
+      "title": "L&I Contractor License - Principal Data",
+      "url": "https://data.wa.gov/Labor/L-I-Contractor-License-Principal-Data/4xk5-x9j6",
+      "meta_name": "L&I Contractor License - Principal Data",
+      "rowsUpdatedAt_iso": "2026-09-04T14:42:58+00:00",
+      "columns": [
+        "businessname",
+        "contractorlicensenumber",
+        "contractorlicensetypecode",
+        "contractorlicensetypecodedesc",
+        "businesstypecode",
+        "businesstypecodedesc",
+        "ubi",
+        "principalname",
+        "startdate",
+        "enddate"
+      ],
+      "column_count": 10,
+      "download": {
+        "bytes": 32486964,
+        "sha256": "1ea04f6371d50bbec359f001ee281d8a86f91de2c2fa9ef10bbf3895ddad4b07",
+        "url": "https://data.wa.gov/api/views/4xk5-x9j6/rows.csv?accessType=DOWNLOAD",
+        "path": "S:\\ath-raw\\wa-con-001\\principal-4xk5-x9j6.csv"
+      }
+    }
+  },
+  "catalog_hits": [
+    {
+      "id": "jjnb-252w",
+      "name": "Washington State Insurers Dental Loss Ratios (2025 - Present)",
+      "category": "Procurements and Contracts",
+      "description": "This dataset serves as a dental insurance summary database. The dataset provides Washington-specific annual loss ratios for insurers that operate in Washington state. Loss ratios track payments to premiums and are an indicator of fiscal hea",
+      "rowsUpdatedAt": 1784763799,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "rm2n-vba3",
+      "name": "Pharmacy Benefit Manager Self-Funded Group Health Plan Opt-In",
+      "category": "health",
+      "description": "Effective January 1, 2026, private self-funded group health plans operating under the federal Employee Retirement Income Security Act (ERISA) may participate in E2SSB 5213.\n\nEach self-funded group health plan that elects to participate in t",
+      "rowsUpdatedAt": 1762280515,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "r9b2-b8ff",
+      "name": "WA Ground Ambulance Locally Set Rates",
+      "category": "health",
+      "description": "This dataset provides the locally established and contracted rates for local governmental ground ambulance service organizations. RCW 48.49.205 Requires the WA Office of the Insurance Commissioner to collect and post the local rate data.\n\nF",
+      "rowsUpdatedAt": 1780521858,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "fysr-7kwx",
+      "name": "Health Plan Prior Authorization Data",
+      "category": "health",
+      "description": "In 2020, the Washington State Legislature enacted Engrossed Substitute Senate Bill (ESSB) 6404 (Chapter 316, Laws of 2020, codified at RCW 48.43.0161), which requires that health carriers with at least one percent of the market share in Was",
+      "rowsUpdatedAt": 1778275124,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "h3gf-mr2n",
+      "name": "WA Office of the Insurance Commissioner",
+      "category": null,
+      "description": "Data sets shared by the WA Office of the Insurance Commissioner.",
+      "rowsUpdatedAt": 1702334906,
+      "displayType": "story",
+      "attribution": null
+    },
+    {
+      "id": "xq8n-6ry9",
+      "name": "Business License Type by License Status",
+      "category": "Employment",
+      "description": "This is a point-in-time list of business licenses within the transportation industries related to Washington State Department of Licensing. This dataset excludes business licenses associated with the trucking industry.\r\n\r\nLicense industry t",
+      "rowsUpdatedAt": 1787000813,
+      "displayType": "visualization_canvas_chart",
+      "attribution": null
+    },
+    {
+      "id": "4pvz-wrik",
+      "name": "Vehicle and Vessel Dealer Licenses with Department of Licensing",
+      "category": "Employment",
+      "description": "This data is a subset of \"Department of Licensing's Business Licenses Related to the Transportation Industry\", and is a list of vehicle and vessel dealers with their license status and contact information with the Washington State Departmen",
+      "rowsUpdatedAt": 1787000813,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "ucdg-xgbj",
+      "name": "Department of Licensing's Business Licenses Related to the Transportation Industry",
+      "category": "Employment",
+      "description": "This is a point-in-time list of business licenses within the transportation industries related to Washington State Department of Licensing. However, this does not include business licenses associated with the trucking industry.\n\nThis datase",
+      "rowsUpdatedAt": 1787000813,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "phsq-jp5d",
+      "name": "Clarkston School District Special Election Results, February 11, 2014",
+      "category": "education",
+      "description": "Election results for Clarkston School District Proposition #1, School Levy, Proposition #2, Program Replacement Levy, and Capital Improvement and School Construction General Obligation Bond.",
+      "rowsUpdatedAt": 1644353364,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "5t5b-7yy4",
+      "name": "Unified Business Identifiers for Entities Doing Business in Asotin County",
+      "category": "Economics",
+      "description": "UBIs (Unified Business Identifiers) issued by Washington State Department of Revenue to entities doing business in Asotin County.",
+      "rowsUpdatedAt": 1615937426,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "ez9k-2c5k",
+      "name": "City of Asotin Building Permits",
+      "category": "Labor",
+      "description": "This dataset shows building permits issued by the City of Asotin Public Works.",
+      "rowsUpdatedAt": 1645041254,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "ijvn-uemp",
+      "name": "L&I Public Works Apprentice Utilization",
+      "category": "Labor",
+      "description": "Updated daily based on weekly certified payroll reports filed for all projects where the prime\u2019s intent was filed on/after July 1, 2019. Use the Project ID as the unique identifier to link data from other L&I public works datasets. Importan",
+      "rowsUpdatedAt": 1788357904,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "qp8s-a5uf",
+      "name": "L&I Public Works Project Details",
+      "category": "Labor",
+      "description": "Updated daily for all projects where the prime\u2019s intent was filed on/after July 1, 2019. Fields beginning with \u201cFinal\u201d will only have data populated once the Notice of Completion is filed by the Awarding Agency for the project. Use the Proj",
+      "rowsUpdatedAt": 1788357924,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "uxv9-c2g9",
+      "name": "City of Clarkston Building Permits",
+      "category": "Economics",
+      "description": "This dataset shows the City of Clarkston building permit activity.  Data is compiled by City of Clarkston Public Works.",
+      "rowsUpdatedAt": 1600213044,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "w97i-wqxq",
+      "name": "Washington State Unemployment Insurance Claims & Benefits",
+      "category": "Employment",
+      "description": "This webpage features data and contextual information about Washington State unemployment insurance claims, benefits and funding.",
+      "rowsUpdatedAt": 1585261554,
+      "displayType": "href",
+      "attribution": null
+    },
+    {
+      "id": "uj9i-6c8i",
+      "name": "Top 20 Consumer Complaints By Business Category Bar Chart",
+      "category": "Consumer Protection",
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "visualization_canvas_chart",
+      "attribution": null
+    },
+    {
+      "id": "tswa-5xf8",
+      "name": "Top 20 Consumer Complaints By Business Category",
+      "category": "Consumer Protection",
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "visualization_canvas_chart",
+      "attribution": null
+    },
+    {
+      "id": "t9yi-d56z",
+      "name": "Consumer Savings By Year",
+      "category": "Consumer Protection",
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "visualization_canvas_chart",
+      "attribution": null
+    },
+    {
+      "id": "8suz-ii6t",
+      "name": "Total Complaints by Year",
+      "category": "Consumer Protection",
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "visualization_canvas_chart",
+      "attribution": null
+    },
+    {
+      "id": "8xvp-mkxj",
+      "name": "Top Complaints by Category",
+      "category": "Consumer Protection",
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "visualization_canvas_chart",
+      "attribution": null
+    },
+    {
+      "id": "isxq-iqdy",
+      "name": "Top Consumer Complaints",
+      "category": "Consumer Protection",
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "visualization_canvas_chart",
+      "attribution": null
+    },
+    {
+      "id": "vhe5-ishr",
+      "name": "Hoquiam Flood Depths 11-29-18",
+      "category": "Natural Resources & Environment",
+      "description": "1.  This dataset provides summary data needed to help determine the premium for a flood insurance policy.\n\n2.  The elevation and depth data come from approximate methods and could be one foot or more off. A FEMA Elevation Certificate is nee",
+      "rowsUpdatedAt": 1543588035,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "7yy6-89nx",
+      "name": "Aberdeen Flood Depths 11-27-18",
+      "category": "Natural Resources & Environment",
+      "description": "1.  This dataset provides summary data needed to help determine the premium for a flood insurance policy.\n\n2.  The elevation and depth data come from approximate methods and could be one foot or more off. A FEMA Elevation Certificate is nee",
+      "rowsUpdatedAt": 1543498743,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "tw6a-23eg",
+      "name": "WA-APCD Quality and Cost Summary Report: Facility Cost",
+      "category": "Health",
+      "description": "WA-APCD - Washington All Payers Claims Database\n\nThe WA-APCD is the state\u2019s most complete source of health care eligibility, medical claims, pharmacy claims, and dental claims insurance data. It contains claims from more than 50 data suppli",
+      "rowsUpdatedAt": 1537216104,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "4rfn-62je",
+      "name": "WA-APCD Quality and Cost Summary Report: County Cost",
+      "category": "Health",
+      "description": "WA-APCD - Washington All-Payer Claims Database\n\nThe WA-APCD is the state\u2019s most complete source of health care eligibility, medical claims, pharmacy claims, and dental claims insurance data. It contains claims from more than 50 data supplie",
+      "rowsUpdatedAt": 1536863420,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "ebwb-9rx9",
+      "name": "WA-APCD Quality and Cost Summary Report: Practice Quality",
+      "category": "Health",
+      "description": "WA-APCD - Washington All-Payer Claims Database\n\nThe WA-APCD is the state\u2019s most complete source of health care eligibility, medical claims, pharmacy claims, and dental claims insurance data. It contains claims from more than 50 data supplie",
+      "rowsUpdatedAt": 1536872247,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "q3qk-yy3p",
+      "name": "WA-APCD Quality and Cost Summary Report: Hospital Quality",
+      "category": "Health",
+      "description": "WA-APCD - Washington All-Payer Claims Database\n\nThe WA-APCD is the state\u2019s most complete source of health care eligibility, medical claims, pharmacy claims, and dental claims insurance data. It contains claims from more than 50 data supplie",
+      "rowsUpdatedAt": 1536872040,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "j78i-gfy5",
+      "name": "WA-APCD Quality and Cost Summary Report: ACH Quality",
+      "category": "Health",
+      "description": "WA-APCD - Washington All-Payer Claims Database\n\nThe WA-APCD is the state\u2019s most complete source of health care eligibility, medical claims, pharmacy claims, and dental claims insurance data. It contains claims from more than 50 data supplie",
+      "rowsUpdatedAt": 1536862152,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "gi9j-78eu",
+      "name": "Washington State Insurers Dental Loss Ratios (2014 - 2024)",
+      "category": "Procurements and Contracts",
+      "description": "This dataset is no longer actively updated. For WA-specific data from 2025 to the present, please use 'Washington State Insurers Dental Loss Ratios (2025 - Present)'.\n\nThis dataset serves as a dental insurance summary database. The dataset ",
+      "rowsUpdatedAt": 1753722043,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "mkt8-j3wx",
+      "name": "Untitled Visualization - Based on Attorney General Consumer Complaints",
+      "category": "Consumer Protection",
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "visualization_canvas_chart",
+      "attribution": null
+    },
+    {
+      "id": "d7di-4cvg",
+      "name": "Opengov Lobbyist Registrations",
+      "category": "Politics",
+      "description": "This dataset contains records indicating the employment of lobbyist firms by entities that employ lobbyists. Each record represents a registration by the lobbyist firm and employer (client) for one year. \r\n\r\nIn some cases, the lobbyist firm",
+      "rowsUpdatedAt": 1788445627,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "x2x6-7bd8",
+      "name": "Pre-2016 Lobbyist Employment Registrations",
+      "category": "Politics",
+      "description": "This dataset contains records indicating the employment of lobbyist firms by entities that employ lobbyists. Each record represents a registration by the lobbyist firm and employer (client) for one year. \r\n\r\nIn some cases, the lobbyist firm",
+      "rowsUpdatedAt": 1487951177,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "xhn7-64im",
+      "name": "Lobbyist Employment Registrations",
+      "category": "Politics",
+      "description": "This dataset contains annual registration records showing employment relationships between lobbyist firms and their clients. Each record represents one year of registration. When a firm is hired as a subcontractor, use the contractor fields",
+      "rowsUpdatedAt": 1788445627,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "bzff-4fmt",
+      "name": "L&I Contractor License Data - Bond",
+      "category": "Labor",
+      "description": "State of Washington, Labor & Industries contractor license and bond data.",
+      "rowsUpdatedAt": 1788532403,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "q7tj-pw7m",
+      "name": "Public Debt Database",
+      "category": "Economics",
+      "description": "Covers data on bonds issued in Washington State since 2000\r\nSearch by issuer name, user name, or date range\r\nMany official statements and bond covenants for bonds issued since 2008 can be viewed and downloaded\r\n    No password required",
+      "rowsUpdatedAt": 1472575954,
+      "displayType": "href",
+      "attribution": null
+    },
+    {
+      "id": "ymav-ra9m",
+      "name": "ComplaintCountByNaicsAndBusiness",
+      "category": null,
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.\r\nThis is a count, by year, of complaints filed against respondents with the Washington State A",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "n2ij-uduu",
+      "name": "ComplaintSavingsRollupByYearCategory",
+      "category": null,
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "b6zw-m7zs",
+      "name": "ComplaintRollupByDateOpened",
+      "category": null,
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "u5i2-5q6t",
+      "name": "Complaints By Practice, Business, and Year",
+      "category": null,
+      "description": "",
+      "rowsUpdatedAt": 1788487876,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "k5r7-nvip",
+      "name": "Complaints By Name and Year",
+      "category": null,
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "xawg-cey9",
+      "name": "ComplaintCountByPracticeAndBusiness",
+      "category": null,
+      "description": "",
+      "rowsUpdatedAt": 1788487876,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "qjpj-7bg6",
+      "name": "ComplaintsByBusinessAndPractice",
+      "category": null,
+      "description": "",
+      "rowsUpdatedAt": 1788487876,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "wsf2-vpuw",
+      "name": "Complaints By Name",
+      "category": null,
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "9ubj-qhc6",
+      "name": "[To be removed from public view] Active roofing Contractors in Marysville",
+      "category": "Labor",
+      "description": "[This item will be removed from public view after September 6, 2026. Community-created content will no longer be hosted on data.wa.gov publicly. Contact opendata@wa.gov with questions.] State of Washington, Labor & Industries contractor lic",
+      "rowsUpdatedAt": 1788534678,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "7c7d-g7ss",
+      "name": "[To be removed from public view] Marysville roofing contractors",
+      "category": "Labor",
+      "description": "[This item will be removed from public view after September 6, 2026. Community-created content will no longer be hosted on data.wa.gov publicly. Contact opendata@wa.gov with questions.] State of Washington, Labor & Industries contractor lic",
+      "rowsUpdatedAt": 1788534678,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "7cyv-xbef",
+      "name": "[To be removed from public view] WALLA WALLA CONTRACTORS",
+      "category": "Labor",
+      "description": "[This item will be removed from public view after September 6, 2026. Community-created content will no longer be hosted on data.wa.gov publicly. Contact opendata@wa.gov with questions.] State of Washington, Labor & Industries contractor lic",
+      "rowsUpdatedAt": 1788534678,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "f8in-e8mn",
+      "name": "Complaints Business Rollup",
+      "category": null,
+      "description": "",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "fvrz-yz45",
+      "name": "Complaint By Practice",
+      "category": "Consumer Protection",
+      "description": "This dataset contains codes which attempts to summarize the issues described in the complaints.",
+      "rowsUpdatedAt": 1788487876,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "6hhi-hcn2",
+      "name": "Attorney General - 2015 Consumer Complaints by Industry",
+      "category": null,
+      "description": "",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "ciwg-agsx",
+      "name": "L&I Contractor License Data - Insurance",
+      "category": "Labor",
+      "description": "State of Washington, Labor & Industries contractor license and insurance data",
+      "rowsUpdatedAt": 1788532772,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "gpri-47xz",
+      "name": "Attorney General Consumer Complaints",
+      "category": "Consumer Protection",
+      "description": "Complaint data from consumer complaints filed with the Consumer Protection Division.  The existence of a complaint is not evidence of wrongdoing.",
+      "rowsUpdatedAt": 1788487474,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "4wur-kfnr",
+      "name": "Business Lookup",
+      "category": "Consumer Protection",
+      "description": "The Business Lookup provides public information related to all current active accounts and five years of closed accounts for business licenses, excise tax accounts, and reseller permits issued by the Washington State Department of Revenue (",
+      "rowsUpdatedAt": 1460067876,
+      "displayType": "href",
+      "attribution": null
+    },
+    {
+      "id": "bdai-8ppi",
+      "name": "L&I Affidavits by Schools",
+      "category": "Labor",
+      "description": "Affidavit filed by an employer/contractor for work done on a public works project.",
+      "rowsUpdatedAt": 1788359569,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "72ja-e4r2",
+      "name": "L&I Intents for Enterprise Services",
+      "category": "Labor",
+      "description": "Intent filed by an employer/contractor for work on a public works project.",
+      "rowsUpdatedAt": 1788358121,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "2qvq-spdg",
+      "name": "L&I Intents by Schools",
+      "category": "Labor",
+      "description": "Intent filed by an employer/contractor for work on a public works project.",
+      "rowsUpdatedAt": 1788358121,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "g526-rd4x",
+      "name": "[To be removed from public view] Contractor Load",
+      "category": "Labor",
+      "description": "[This item will be removed from public view after September 6, 2026. Community-created content will no longer be hosted on data.wa.gov publicly. Contact opendata@wa.gov with questions.] State of Washington, Labor & Industries contractor lic",
+      "rowsUpdatedAt": 1788534678,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "h95x-vpyj",
+      "name": "L&I Intent Details - Journey Level Trades And Wages",
+      "category": "Labor",
+      "description": "Contractor filing intent details about their wages and trades",
+      "rowsUpdatedAt": 1788358765,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "t9je-9qwa",
+      "name": "L&I Intent Project Details",
+      "category": "Labor",
+      "description": "Intent filed by an employer/contractor for work on a public works project.",
+      "rowsUpdatedAt": 1788358121,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "9ncw-tqjn",
+      "name": "L&I Affidavit Project Details",
+      "category": "Labor",
+      "description": "Updated daily. Provide the project details for the Affidavit of Wages Paid filed by an employer/contractor for work performed on a public works project.",
+      "rowsUpdatedAt": 1788359569,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "eb82-e93u",
+      "name": "Eckstein Middle School Apprentice Reporting",
+      "category": "Education",
+      "description": "Contract B10422; Infrastructure Improvements At Eckstein Middle School,\nContractor: CDK Construction Services, Duvall, WA",
+      "rowsUpdatedAt": 1445975747,
+      "displayType": "blob",
+      "attribution": null
+    },
+    {
+      "id": "s7ge-wicw",
+      "name": "L&I Contractor Authorized Signer Data",
+      "category": "Labor",
+      "description": "Addendum to Labor & Industries Contractor License and Registration data. Authorized signers are those identified on the license as authorized signers for permits or affidavits.",
+      "rowsUpdatedAt": 1788532205,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "m8qx-ubtq",
+      "name": "L&I Contractor License Data - General",
+      "category": "Labor",
+      "description": "State of Washington, Labor & Industries contractor license and registration data",
+      "rowsUpdatedAt": 1788534678,
+      "displayType": "table",
+      "attribution": null
+    },
+    {
+      "id": "4xk5-x9j6",
+      "name": "L&I Contractor License - Principal Data",
+      "category": "Labor",
+      "description": "Addendum to L&I Contractor License Data - General. Principles are owners associated with a registered license number.",
+      "rowsUpdatedAt": 1788532978,
+      "displayType": "table",
+      "attribution": null
+    }
+  ]
+}

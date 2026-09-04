@@ -1,0 +1,51 @@
+{
+  "debar_page": {
+    "url": "https://secure.Lni.wa.gov/debarandstrike/ContractorDebarList.aspx",
+    "bytes": 7374,
+    "interesting_links": [],
+    "has_download_text": true
+  },
+  "debar_tries": [
+    {
+      "url": "https://lni.wa.gov/ContractorDebarList/Export",
+      "error": "HTTP Error 404: "
+    },
+    {
+      "url": "https://lni.wa.gov/ContractorDebarList?handler=Export",
+      "final": "https://secure.Lni.wa.gov/debarandstrike/ContractorDebarList.aspx?handler=Export",
+      "ctype": null,
+      "bytes": 7390
+    },
+    {
+      "url": "https://lni.wa.gov/ContractorDebarList/Download",
+      "error": "HTTP Error 404: "
+    },
+    {
+      "url": "https://secure.lni.wa.gov/debar/api/debar",
+      "final": "https://secure.lni.wa.gov/home/default.aspx?rfs=error",
+      "ctype": null,
+      "bytes": 20701
+    }
+  ],
+  "pw_project_details": {
+    "id": "qp8s-a5uf",
+    "count": [
+      {
+        "count": "347082"
+      }
+    ]
+  },
+  "affidavit_project_details": {
+    "id": "9ncw-tqjn",
+    "count": [
+      {
+        "count": "1192380"
+      }
+    ]
+  },
+  "affidavit_with_license": [
+    {
+      "count_primelicense": "1176254"
+    }
+  ]
+}

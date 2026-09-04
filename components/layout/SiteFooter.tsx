@@ -34,6 +34,7 @@ export function SiteFooter() {
   const verifyLinks = getLiveVerifyNavLinks();
   const researchLinks = [
     ...verifyLinks,
+    { href: "/washington", label: "Washington contractor research" },
     { href: "/texas", label: "Texas contractor research" },
     { href: "/texas/austin", label: "Austin contractor research" },
     { href: "/california", label: "California contractor research" },

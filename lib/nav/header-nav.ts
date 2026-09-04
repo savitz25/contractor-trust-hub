@@ -16,6 +16,7 @@ export const EXPLORE_GROUP: HeaderGroup = {
   id: "explore",
   label: "Explore",
   links: [
+    { href: "/washington", label: "Washington research", hint: "L&I registration, bond, and insurance" },
     { href: "/texas", label: "Texas research", hint: "Specialty trades — no statewide GC license" },
     { href: "/texas/austin", label: "Austin permits", hint: "City of Austin local intelligence" },
     { href: "/california", label: "California research", hint: "Acquired CSLB public-data rows" },
