@@ -1,5 +1,4 @@
 import Link from "next/link";
-import type { CSSProperties } from "react";
 import { AskContractorTrustHub } from "@/components/ask/AskContractorTrustHub";
 import { HomeBeyondLicense } from "@/components/home/HomeBeyondLicense";
 import { HomeContinuity } from "@/components/home/HomeContinuity";
@@ -241,11 +240,13 @@ export function ContractorHomeIntelligence({
         <p className="cth-intel-eyebrow">Exact-identity showcase</p>
         <h2 id="showcase-title">Washington: from registration to filed evidence</h2>
         <p className="cth-intel-section-lede">L&I publishes three files on the same contractor-number identity. This permits exact joins rather than name-only guesses.</p>
-        <div className="cth-intel-funnel" role="img" aria-label="160,923 registrations, 82,635 with bond evidence, 70,953 with insurance evidence, and 70,622 with both">
-          <div style={{"--size":"100%"} as CSSProperties}><strong>{wa.general.rows.toLocaleString("en-US")}</strong><span>registrations</span></div>
-          <div style={{"--size":"82%"} as CSSProperties}><strong>{wa.graph.ids_with_bond_evidence.toLocaleString("en-US")}</strong><span>with bond evidence</span></div>
-          <div style={{"--size":"71%"} as CSSProperties}><strong>{wa.graph.ids_with_insurance_evidence.toLocaleString("en-US")}</strong><span>with insurance evidence</span></div>
-          <div style={{"--size":"70%"} as CSSProperties}><strong>{wa.graph.ids_with_both.toLocaleString("en-US")}</strong><span>with both</span></div>
+        <div className="cth-intel-relationship" aria-label="Parallel Washington bond and insurance evidence sets with an exact-identity intersection">
+          <div className="cth-intel-relationship__universe"><strong>{wa.general.rows.toLocaleString("en-US")}</strong><span>L&amp;I registrations</span></div>
+          <div className="cth-intel-relationship__sets">
+            <div><small>Bond evidence set</small><strong>{wa.graph.ids_with_bond_evidence.toLocaleString("en-US")}</strong><span>exact contractor IDs</span></div>
+            <div><small>Insurance evidence set</small><strong>{wa.graph.ids_with_insurance_evidence.toLocaleString("en-US")}</strong><span>exact contractor IDs</span></div>
+            <div><small>Intersection—not a next stage</small><strong>{wa.graph.ids_with_both.toLocaleString("en-US")}</strong><span>IDs present in both sets</span></div>
+          </div>
         </div>
         <p className="cth-intel-caution">Registration is not quality. Bond is not endorsement. An insurance filing is not safety. Missing bond or insurance evidence is not proof of no coverage.</p>
         <Freshness date={wa.as_of} label="L&I sources as of" /> <Link href="/washington">Explore Washington intelligence →</Link>
