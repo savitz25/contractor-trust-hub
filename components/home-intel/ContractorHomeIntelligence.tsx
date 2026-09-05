@@ -6,6 +6,7 @@ import { HomeContinuity } from "@/components/home/HomeContinuity";
 import { HomeIntelHero } from "@/components/home/HomeIntelHero";
 import { HomeDiscoverySearch } from "@/components/home/HomeDiscoverySearch";
 import { HomeEvidenceLayers } from "@/components/home/HomeEvidenceLayers";
+import { HomeEvidenceInventory } from "@/components/home/HomeEvidenceInventory";
 import { HomeMethodology } from "@/components/home/HomeMethodology";
 import { HomeSearchBlock } from "@/components/home/HomeSearchBlock";
 import { ExplainDataDrawer } from "@/components/intel/ExplainDataDrawer";
@@ -114,30 +115,7 @@ export function ContractorHomeIntelligence({
       <HomeDiscoverySearch />
       <HomeEvidenceLayers />
 
-      <section id="scale" aria-labelledby="scale-title" className="cth-intel-scale-section">
-        <p className="cth-intel-eyebrow">Live network scale</p>
-        <h2 id="scale-title">Different evidence grains, kept separate</h2>
-        <p className="cth-intel-section-lede">These are accepted source and network measures—not one inflated “contractor records” total. Open each trace to see its denominator.</p>
-        <div className="cth-intel-scale">
-          {[
-            ["Contractor / business identities", scale.researchGraph.contractorIdentityRows, "Research-graph identity rows; not a U.S. contractor census.", "contractor-network-metrics-v1 · research_graph_contractor_identities"],
-            ["Live license / registration records", scale.publicCoverage.credentialRecords, "Credential rows in the live public cohort; a row is not necessarily a unique company.", "contractor-network-metrics-v1 · live_credential_records"],
-            ["Active / current credential records", scale.publicCoverage.activeCurrentCredentialRecords, "Source-normalized active or current rows; not recommendations.", "contractor-network-metrics-v1 · live_active_current_credential_records"],
-            ["Washington identities with bond evidence", wa.graph.ids_with_bond_evidence, "Exact L&I contractor-number joins; missing does not mean unbonded.", "WA-CON-001 · graph.ids_with_bond_evidence"],
-            ["Washington identities with insurance evidence", wa.graph.ids_with_insurance_evidence, "Exact L&I contractor-number joins; a filing does not establish safety.", "WA-CON-001 · graph.ids_with_insurance_evidence"],
-            ["Indexed permit source records", scale.permits.sourceRecords, "Selected production permit-source rows; not completed jobs.", "contractor-network-metrics-v1 · indexed_permit_source_records"],
-            ["Regulatory / enforcement source rows", scale.regulatoryEvidence.totalActionRows, "Distinct evidence families; not a count of bad contractors.", "contractor-network-metrics-v1 · regulatory_discipline_action_rows"],
-            ["Washington public business phones", wa.contacts.phone_public_eligible, "Source-published business phone fields; not verified service areas.", "WA-CON-001 · contacts.phone_public_eligible"],
-            ["State intelligence destinations", 6, "Completed state intelligence hubs featured on this page.", "Accepted FL, NJ, CA, TX, WA, and AZ publications"],
-          ].map(([label, value, note, trace]) => (
-            <article key={String(label)}>
-              <p className="cth-intel-metric-value">{Number(value).toLocaleString("en-US")}</p>
-              <h3>{label}</h3><p>{note}</p>
-              <details><summary>Trace this number</summary><p>{trace}</p></details>
-            </article>
-          ))}
-        </div>
-      </section>
+      <HomeEvidenceInventory />
 
       <section id="findings" aria-labelledby="findings-title">
         <span id="enforcement" className="sr-only">
