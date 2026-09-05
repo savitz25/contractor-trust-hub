@@ -27,6 +27,7 @@ import { loadContractorNetworkMetrics } from "@/lib/metrics/load-network-metrics
 const networkMetrics = loadContractorNetworkMetrics();
 const RETRIEVED = networkMetrics.generatedAt.slice(0, 10);
 const CONFIG_AS_OF = "product config live EvidenceState rows";
+const STATE_INTELLIGENCE_PATHS: Record<string, string> = { fl: "/florida", nj: "/new-jersey", ca: "/california", tx: "/texas", wa: "/washington", az: "/arizona" };
 
 function fmt(n: number): string {
   return n.toLocaleString("en-US");
@@ -53,6 +54,7 @@ function statewideGc(state: EvidenceState): boolean {
 function canVerify(state: EvidenceState): string {
   if (state.slug === "fl") return "Name/license Verify plus Florida Intelligence OS (state + selected county).";
   if (state.slug === "tx") return "Name/license Verify plus Texas specialty-trade intelligence (/texas). No statewide GC class.";
+  if (STATE_INTELLIGENCE_PATHS[state.slug]) return `Name/license Verify plus ${state.name} state intelligence (${STATE_INTELLIGENCE_PATHS[state.slug]}).`;
   if (state.depth === "specialty_verify") return `Name/license Verify for ${state.scopeHint}.`;
   if (state.slug === "ca") return "Name/license Verify against CSLB high-impact county extracts.";
   return `Name/license Verify against the ${state.boardShortLabel} extract.`;
@@ -61,7 +63,7 @@ function canVerify(state: EvidenceState): string {
 function cannotInfer(state: EvidenceState): string {
   const bits = ["License address is not service area", "Active credential is not endorsement"];
   if (!statewideGc(state)) bits.push("No statewide general-contractor license in this source");
-  if (state.slug !== "fl" && state.slug !== "tx") bits.push("No Intelligence OS state/county page on this hub yet");
+  if (!STATE_INTELLIGENCE_PATHS[state.slug]) bits.push("No dedicated state intelligence page on this hub yet");
   return bits.join(". ") + ".";
 }
 
@@ -80,7 +82,7 @@ function geoFrom(state: EvidenceState): GeoState {
     coverageNote: state.coverageNote,
     canVerify: canVerify(state),
     cannotInfer: cannotInfer(state),
-    href: ({ fl: "/florida", nj: "/new-jersey", ca: "/california", tx: "/texas", wa: "/washington", az: "/arizona" } as Record<string, string>)[state.slug] ?? verifyPathFor(state),
+    href: STATE_INTELLIGENCE_PATHS[state.slug] ?? verifyPathFor(state),
     hrefLabel: ["fl", "nj", "ca", "tx", "wa", "az"].includes(state.slug)
       ? `Explore ${state.name} Intelligence`
       : `${state.name} Verify`,
