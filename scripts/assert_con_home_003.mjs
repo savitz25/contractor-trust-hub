@@ -43,6 +43,7 @@ assert(inventory.includes("network.evidenceFamilies.filter") && inventory.includ
 assert(inventory.includes('id: "az-current"') && inventory.includes("az.current_posting.all_current"), "Arizona ROC intelligence represented");
 assert(!/grandTotal|evidenceTotal|totalEvidenceRows/.test(inventory), "inventory defines no collapsed evidence total");
 assert(inventoryUi.includes("Why there is no grand total") && inventoryUi.includes("homepageEvidenceByFamily"), "UI explains incompatible grains and consumes inventory projection");
+assert(shell.includes("Intersection—not a next stage") && !shell.includes("cth-intel-funnel"), "WA bond and insurance are parallel sets, not sequential funnel stages");
 
 if (failures.length) { console.error("CON-HOME-003 FAIL"); failures.forEach((f) => console.error(` - ${f}`)); process.exit(1); }
 console.log("CON-HOME-003 PASS homepage intelligence showcase");
