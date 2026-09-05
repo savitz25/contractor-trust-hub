@@ -7,6 +7,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "test:con-home-003": "node scripts/assert_con_home_003.mjs",
     "test": "node scripts/assert-brand-001.mjs && node scripts/assert-share-002.mjs && node scripts/assert-share-003.mjs && node scripts/assert-visual-007.mjs && node scripts/assert_homepage_intel.mjs && node scripts/assert_network_metrics_v1.mjs && npx --yes tsx --test scripts/test_contractor_network_metrics.ts && python -X utf8 scripts/assert_florida_state_intelligence.py && python -X utf8 scripts/assert_florida_p0_remediation.py && python -X utf8 scripts/assert_florida_intelligence_foundation.py && python -X utf8 scripts/assert_florida_qualifier_graph.py && npm run test:nj-con-004 && npm run test:nj-con-county-001 && npm run test:ca-con-002 && npm run test:ca-con-county-001a && npm run test:ca-con-county-001b && npm run test:ca-con-county-002 && npm run test:tx-con-001 && npm run test:tx-con-local-002 && npm run test:wa-con-001 && npm run test:az-con-001",
     "assert:florida-intelligence": "python -X utf8 scripts/assert_florida_state_intelligence.py && python -X utf8 scripts/assert_florida_p0_remediation.py && python -X utf8 scripts/assert_florida_intelligence_foundation.py && python -X utf8 scripts/assert_florida_qualifier_graph.py && python -X utf8 scripts/assert_florida_county_intelligence.py && python -X utf8 scripts/assert_intel_003_os.py",
     "assert:florida-county-intelligence": "python -X utf8 scripts/assert_florida_county_intelligence.py",

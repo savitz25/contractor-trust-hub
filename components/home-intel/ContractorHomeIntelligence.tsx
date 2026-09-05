@@ -1,9 +1,12 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { AskContractorTrustHub } from "@/components/ask/AskContractorTrustHub";
 import { HomeBeyondLicense } from "@/components/home/HomeBeyondLicense";
 import { HomeContinuity } from "@/components/home/HomeContinuity";
 import { HomeIntelHero } from "@/components/home/HomeIntelHero";
 import { HomeDiscoverySearch } from "@/components/home/HomeDiscoverySearch";
+import { HomeEvidenceLayers } from "@/components/home/HomeEvidenceLayers";
+import { HomeEvidenceInventory } from "@/components/home/HomeEvidenceInventory";
 import { HomeMethodology } from "@/components/home/HomeMethodology";
 import { HomeSearchBlock } from "@/components/home/HomeSearchBlock";
 import { ExplainDataDrawer } from "@/components/intel/ExplainDataDrawer";
@@ -14,6 +17,19 @@ import { researchDepthLabel } from "@/lib/home-intel/build";
 import type { ContractorHomeIntel, FeaturedStory } from "@/lib/home-intel/types";
 import type { JourneyModule } from "@/lib/network/journey-handoff";
 import { ContractorHomeChecklist } from "./contractor-home-checklist";
+import wa from "@/lib/washington-intelligence/accepted-snapshot.json";
+import az from "@/lib/arizona-intelligence/accepted-snapshot.json";
+import tx from "@/lib/texas-intelligence/accepted-snapshot.json";
+import txLocal from "@/lib/texas-intelligence/local/accepted-snapshot.json";
+import ca from "@/lib/california-intelligence/accepted-snapshot.json";
+import caLocal from "@/lib/california-intelligence/local/accepted-snapshot.json";
+import nj from "@/lib/new-jersey-intelligence/accepted-snapshot.json";
+
+const INTELLIGENCE_CODES = new Set(["FL", "NJ", "CA", "TX", "WA", "AZ"]);
+
+function Freshness({ date, label = "Source as of" }: { date: string; label?: string }) {
+  return <span className="cth-intel-freshness"><span aria-hidden="true" />{label} {date}</span>;
+}
 
 function Bar({ value, max, label, note }: { value: number; max: number; label: string; note?: string }) {
   const width = max > 0 ? Math.max(8, Math.round((100 * value) / max)) : 0;
@@ -97,18 +113,24 @@ export function ContractorHomeIntelligence({
       <HomeContinuity />
       <HomeIntelHero intel={scale} />
       <HomeDiscoverySearch />
+      <HomeEvidenceLayers />
+
+      <HomeEvidenceInventory />
 
       <section id="findings" aria-labelledby="findings-title">
         <span id="enforcement" className="sr-only">
           Regulatory evidence
         </span>
-        <p className="cth-intel-eyebrow">What the data says</p>
-        <h2 id="findings-title">Three things this research currently shows</h2>
-        <p>Two market findings from indexed records, and one coverage gap. None is a ranking of contractors.</p>
+        <p className="cth-intel-eyebrow">What the evidence teaches</p>
+        <h2 id="findings-title">The same word does not mean the same system everywhere</h2>
+        <p>Current, source-specific findings. None ranks contractors or predicts quality.</p>
         <div className="cth-intel-findings">
-          {intel.findings.map((finding) => (
-            <Story key={finding.storyId} finding={finding} />
-          ))}
+          {[
+            { title: "Washington connects three evidence layers", body: `${wa.general.rows.toLocaleString("en-US")} registrations can be joined by exact contractor number to bond and insurance filings; ${wa.graph.ids_with_both.toLocaleString("en-US")} identities have both evidence types.`, why: "Exact identity linkage helps distinguish a filing from a name match.", limit: "Bond is not endorsement; an insurance filing is not safety; missing is not zero.", source: "Washington L&I General, Bond, and Insurance files", asof: wa.as_of },
+            { title: "Arizona license files overlap", body: `ROC reports ${az.current_posting.all_current.toLocaleString("en-US")} current licenses. Commercial, Residential, and Dual posting files must not be added because Dual appears in both scope files.`, why: "The regulatory classification structure changes how totals must be read.", limit: "A license row is not a unique company, and a qualifying party is not necessarily an owner.", source: "Arizona ROC posting list", asof: az.current_posting.header_as_of },
+            { title: "Texas has no statewide general-contractor license class", body: `The statewide evidence covers regulated specialties and ${tx.tsbpe.responsible_master_plumber.credential_rows.toLocaleString("en-US")} Responsible Master Plumber credentials; Austin adds local permit history at permit grain.`, why: "Consumers must check the regulator and locality that govern the work.", limit: "Austin permit identities are not state-licensed contractors, and permit volume is not quality.", source: "Texas TDLR, TSBPE, and City of Austin", asof: txLocal.as_of },
+            { title: "Work history is separate from licensing", body: "California publishes CSLB identity and class evidence while San Francisco and Los Angeles publish distinct local permit/work-history sources.", why: "A credential answers a different question than attributable activity.", limit: "There is no single statewide California permit database; local activity is not contractor quality.", source: "California CSLB; SF and City of LA local sources", asof: caLocal.as_of },
+          ].map((finding) => <article className="cth-intel-card" key={finding.title}><h3>{finding.title}</h3><p>{finding.body}</p><p><strong>Why it matters:</strong> {finding.why}</p><p><strong>Does not mean:</strong> {finding.limit}</p><p className="cth-intel-kicker">{finding.source} · Source as of {finding.asof}</p></article>)}
         </div>
       </section>
 
@@ -201,18 +223,48 @@ export function ContractorHomeIntelligence({
         </ul>
       </section>
 
+      <section id="changes" aria-labelledby="changes-title" className="cth-intel-changes">
+        <p className="cth-intel-eyebrow">Recently added / updated</p>
+        <h2 id="changes-title">The research network has changed</h2>
+        <div className="cth-intel-timeline">
+          {[
+            ["Arizona", "Statewide ROC license, classification, discipline, unlicensed-activity, address, and qualifying-party evidence", az.current_posting.header_as_of, "/arizona"],
+            ["Washington", "Exact registration → bond → insurance relationships plus UBI and public business contacts", wa.as_of, "/washington"],
+            ["Texas · Austin", "Local permit/work-history evidence kept separate from state specialty credentials", txLocal.as_of, "/texas/austin"],
+            ["California · SF + LA", "Published city permit/work-history intelligence alongside CSLB identity evidence", caLocal.as_of, "/california"],
+            ["New Jersey", "State construction-source, public-works enforcement, specialty, and four-county research", nj.as_of, "/new-jersey"],
+          ].map(([place, change, date, href]) => <article key={place}><Freshness date={date} /><h3>{place}</h3><p>{change}</p><Link href={href}>Open the intelligence →</Link></article>)}
+        </div>
+      </section>
+
+      <section id="showcase" aria-labelledby="showcase-title" className="cth-intel-showcase">
+        <p className="cth-intel-eyebrow">Exact-identity showcase</p>
+        <h2 id="showcase-title">Washington: from registration to filed evidence</h2>
+        <p className="cth-intel-section-lede">L&I publishes three files on the same contractor-number identity. This permits exact joins rather than name-only guesses.</p>
+        <div className="cth-intel-funnel" role="img" aria-label="160,923 registrations, 82,635 with bond evidence, 70,953 with insurance evidence, and 70,622 with both">
+          <div style={{"--size":"100%"} as CSSProperties}><strong>{wa.general.rows.toLocaleString("en-US")}</strong><span>registrations</span></div>
+          <div style={{"--size":"82%"} as CSSProperties}><strong>{wa.graph.ids_with_bond_evidence.toLocaleString("en-US")}</strong><span>with bond evidence</span></div>
+          <div style={{"--size":"71%"} as CSSProperties}><strong>{wa.graph.ids_with_insurance_evidence.toLocaleString("en-US")}</strong><span>with insurance evidence</span></div>
+          <div style={{"--size":"70%"} as CSSProperties}><strong>{wa.graph.ids_with_both.toLocaleString("en-US")}</strong><span>with both</span></div>
+        </div>
+        <p className="cth-intel-caution">Registration is not quality. Bond is not endorsement. An insurance filing is not safety. Missing bond or insurance evidence is not proof of no coverage.</p>
+        <Freshness date={wa.as_of} label="L&I sources as of" /> <Link href="/washington">Explore Washington intelligence →</Link>
+      </section>
+
+      <section aria-labelledby="az-showcase-title" className="cth-intel-az-showcase">
+        <div><p className="cth-intel-eyebrow">Classification showcase</p><h2 id="az-showcase-title">Arizona: depth without double counting</h2><p>ROC’s statewide universe contains <strong>{az.current_posting.all_current.toLocaleString("en-US")}</strong> current license rows. Commercial, Residential, and Dual describe overlapping posting files.</p><p className="cth-intel-caution">Do not add the three files. License row ≠ unique company. Qualifying party ≠ owner unless the source establishes ownership.</p><Freshness date={az.current_posting.header_as_of} label="ROC posting list as of" /></div>
+        <div className="cth-intel-overlap" aria-label="Overlapping Arizona ROC posting files"><span>Commercial<br/><strong>{az.current_posting.commercial_file.toLocaleString("en-US")}</strong></span><span>Dual<br/><strong>{az.current_posting.dual_file.toLocaleString("en-US")}</strong></span><span>Residential<br/><strong>{az.current_posting.residential_file.toLocaleString("en-US")}</strong></span></div>
+      </section>
+
       <section id="states" aria-labelledby="explore-title">
         <span id="explore" className="sr-only">
           State explorer
         </span>
         <p className="cth-intel-eyebrow">Explore contractor research</p>
-        <h2 id="explore-title">Explore contractor research</h2>
-        <p>
-          Florida has state intelligence. Other live states have credential research and verification coverage.
-          Depth badges are TrustHub coverage, not safer contractors.
-        </p>
+        <h2 id="explore-title">Six state intelligence hubs</h2>
+        <p>Each destination reflects its own regulator, evidence families, and source clock. Research depth describes our coverage—not contractor quality.</p>
         <ul className="cth-intel-geo">
-          {intel.geography.slice(0, 4).map((row) => (
+          {intel.geography.filter((row) => INTELLIGENCE_CODES.has(row.code)).map((row) => (
             <li key={row.code} data-depth={row.depth}>
               <p>
                 <strong>
