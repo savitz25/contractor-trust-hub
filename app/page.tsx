@@ -10,9 +10,9 @@ const isProd = process.env.VERCEL_ENV === "production";
 
 export const metadata: Metadata = {
   ...pageMetadata({
-    title: "Understand contractor licensing before you hire",
+    title: "Contractor license, bond, insurance & permit research",
     description:
-      "Independent contractor-market intelligence: how state licensing systems differ, what TrustHub can verify, and what a credential does not prove. No ranking. You decide.",
+      "Research contractor identities through official licensing, bond, insurance, permit, enforcement, and public business records where available.",
     path: "/",
     noIndex: !isProd,
   }),
@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     "contractor verification",
     "state contractor licensing",
     "public regulatory evidence",
+    "contractor bond research",
+    "contractor insurance research",
+    "contractor permit history",
   ],
 };
 
@@ -40,15 +43,17 @@ export default async function HomePage({
           "@context": "https://schema.org",
           "@type": "WebPage",
           "@id": `${SHARE_HUB.origin}/#webpage`,
-          name: "Understand contractor licensing before you hire",
+          name: "Contractor license, bond, insurance, and permit research",
           url: SHARE_HUB.origin,
           description:
-            "Independent contractor-market intelligence from official public sources. TrustHub does not rank contractors.",
+            "Official-source contractor intelligence connecting identities to licensing, bonds, insurance, permits, enforcement, and public business records where available.",
           isPartOf: { "@id": `${SHARE_HUB.origin}/#website` },
           about: [
             { "@type": "Thing", name: "State contractor licensing" },
             { "@type": "Thing", name: "Contractor credential research" },
             { "@type": "Thing", name: "Public regulatory evidence" },
+            { "@type": "Thing", name: "Contractor bond and insurance research" },
+            { "@type": "Thing", name: "Contractor permit history" },
           ],
         }}
       />

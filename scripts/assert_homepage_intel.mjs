@@ -94,7 +94,7 @@ assert(shell.includes("HomeSearchBlock"), "verify search on homepage");
 assert(shell.includes("id=\"verify\"") || shell.includes('id="verify"'), "verify anchor");
 assert(shell.includes('id="states"'), "states coverage anchor");
 assert(!hero.includes("SearchForm"), "search is not the hero identity");
-assert(/Research contractor licensing/i.test(hero), "intelligence-first hero");
+assert(/Research the contractor/i.test(hero), "intelligence-first hero");
 assert(!hero.includes("payload") && !hero.includes("SHA") && !hero.includes("fingerprint"), "no SHA in hero");
 assert(!/1\.39\s*million|every licensed contractor in America|69,674 bad/i.test(hero + enforce + method), "forbidden copy");
 assert(/bad contractors/i.test(enforce), "enforcement wording");

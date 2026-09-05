@@ -1,84 +1,21 @@
-import Link from "next/link";
-
 const LAYERS = [
-  {
-    title: "Identity",
-    body: "Who is the contractor or business in the research graph?",
-  },
-  {
-    title: "License",
-    body: "What official credential appears in the regulatory source?",
-    href: "/#search",
-  },
-  {
-    title: "Status",
-    body: "Active, current, expired, inactive, suspended, revoked, and other source-normalized statuses.",
-  },
-  {
-    title: "Trade / classification",
-    body: "What type of work does the credential cover, using published occupation codes?",
-    href: "/#trades",
-  },
-  {
-    title: "Business relationships",
-    body: "Which business or entity links can be supported with exact evidence?",
-  },
-  {
-    title: "Regulatory history",
-    body: "Disciplinary, unlicensed-activity, stop-work, recovery-fund, and other source rows when present.",
-    href: "/#enforcement",
-  },
-  {
-    title: "Permit intelligence",
-    body: "Where supported, public permit-source records — not a national jobs count.",
-    href: "/#beyond-license",
-  },
-  {
-    title: "Public contact evidence",
-    body: "Source-backed business contact details when they are publication-eligible.",
-  },
+  ["01", "Identity", "License, registration, or official business identity", "All six intelligence states", "Distinguishes an exact public identity from a similar name.", "Identity does not establish quality or service area."],
+  ["02", "Credential", "Status, classification, and regulatory authority", "FL · NJ · CA · TX · WA · AZ", "Shows which authority and work class apply.", "Active or current does not mean recommended."],
+  ["03", "Financial responsibility", "Bond and liability-insurance filing evidence", "Washington; selected credential sources elsewhere", "Adds dated filing evidence to an exact identity.", "A filing is not endorsement, safety, or guaranteed present coverage."],
+  ["04", "Work history", "Permit, public-work, or attributable activity evidence", "Selected FL/NJ research; SF, LA, and Austin modules", "Separates performed or attributed activity from credential status.", "Permit activity does not prove quality or completion."],
+  ["05", "Regulatory history", "Discipline, enforcement, unlicensed activity, and debarment", "Depth varies across all six states", "Surfaces official records that merit direct review.", "No row is not a clean record; discipline is not a criminal conviction."],
+  ["06", "Business evidence", "Official contacts, addresses, qualifiers, and entity relationships", "Where source-published and safely attributable", "Helps connect the credential to the business behind it.", "A contact is not a verified service area; a qualifier is not necessarily an owner."],
 ] as const;
 
 export function HomeEvidenceLayers() {
   return (
-    <section id="why" className="border-b border-[var(--border)]">
-      <div className="th-shell py-10 sm:py-12">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
-          More than a directory
-        </p>
-        <h2 className="mt-1.5 max-w-2xl text-xl font-semibold tracking-tight text-[var(--text)] sm:text-2xl">
-          An evidence graph for investigating before you hire
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
-          ContractorTrustHub organizes public records so you can research identity, licensing,
-          status, and history. Not every contractor has every layer. Absence is not a clean record,
-          and we do not rank who is “good” or “safe.”
-        </p>
-        <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {LAYERS.map((layer) => {
-            const inner = (
-              <>
-                <p className="text-sm font-semibold text-[var(--text)]">{layer.title}</p>
-                <p className="mt-1.5 text-xs leading-relaxed text-[var(--muted)]">{layer.body}</p>
-              </>
-            );
-            return (
-              <li
-                key={layer.title}
-                className="rounded-2xl border border-[var(--border)] bg-white p-4"
-              >
-                {"href" in layer && layer.href ? (
-                  <Link href={layer.href} className="block no-underline">
-                    {inner}
-                  </Link>
-                ) : (
-                  inner
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+    <section id="layers" aria-labelledby="layers-title" className="cth-intel-layers">
+      <p className="cth-intel-eyebrow">What we can research</p>
+      <h2 id="layers-title">Six layers behind a contractor name</h2>
+      <p className="cth-intel-section-lede">Not every jurisdiction publishes every layer, and not every contractor has every record. Each layer answers a different question.</p>
+      <ol>
+        {LAYERS.map(([number, title, what, where, why, limit]) => <li key={number}><span>{number}</span><div><h3>{title}</h3><p className="cth-intel-layer-what">{what}</p><dl><div><dt>Where</dt><dd>{where}</dd></div><div><dt>Why care</dt><dd>{why}</dd></div><div><dt>Does not prove</dt><dd>{limit}</dd></div></dl></div></li>)}
+      </ol>
     </section>
   );
 }

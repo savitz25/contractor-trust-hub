@@ -1,88 +1,27 @@
-import Link from "next/link";
-import { formatIntelCount } from "@/lib/home/intel-v2";
 import type { ContractorHubIntelV2 } from "@/lib/home/intel-v2";
 import { loadContractorNetworkMetrics } from "@/lib/metrics/load-network-metrics";
 
-export function HomeIntelHero({ intel }: { intel: ContractorHubIntelV2 }) {
-  const live = intel.publicCoverage;
+export function HomeIntelHero({ intel: _intel }: { intel: ContractorHubIntelV2 }) {
   const network = loadContractorNetworkMetrics();
   const generatedDay = network.generatedAt.slice(0, 10);
-  const newestSource = network.newestDocumentedSourceAsOf;
-  const metrics = [
-    {
-      href: "#findings",
-      kicker: "Research universe",
-      value: formatIntelCount(live.credentialRecords),
-      label: "Credential records in live researched states",
-    },
-    {
-      href: "#findings",
-      kicker: "Currently active/current",
-      value: formatIntelCount(live.activeCurrentCredentialRecords),
-      label: "Credentials with status_normalized active or current",
-    },
-    {
-      href: "#findings",
-      kicker: "Evidence records",
-      value: formatIntelCount(intel.regulatoryEvidence.totalActionRows),
-      label: "Indexed regulatory and enforcement source rows",
-    },
-    {
-      href: "#states",
-      kicker: "Geographies researched",
-      value: formatIntelCount(live.liveStates),
-      label: "Live researched states in this product",
-    },
-    {
-      href: "#methodology",
-      kicker: "Network rollup generated",
-      value: generatedDay,
-      label: newestSource
-        ? `Newest documented official source date ${newestSource} — not Git or deploy time`
-        : "Board extract dates vary; this is rollup generatedAt, not an official regulator date",
-    },
-  ];
-
   return (
     <section className="cth-intel-hero" aria-labelledby="home-title">
-      <p className="cth-intel-eyebrow">Contractor market intelligence</p>
-      <h1 id="home-title">Research contractor licensing and regulatory records before you hire.</h1>
+      <p className="cth-intel-eyebrow">Official-source contractor intelligence</p>
+      <h1 id="home-title">Research the contractor. Then research the evidence behind them.</h1>
       <p className="cth-intel-lede">
-        ContractorTrustHub organizes public licensing, credential status, trade class, and
-        regulatory-history records. It is not a directory ranking and not a recommendation engine.
-        Understand the market, then research a specific contractor.
+        Connect a contractor identity to licensing, status, trade classifications, bonds, insurance,
+        permits, enforcement, and public business records—where each jurisdiction publishes them.
       </p>
-      <p className="mt-4 text-sm text-[var(--muted)]">
-        Network rollup generated{" "}
-        <strong className="font-medium text-[var(--text)]">{generatedDay}</strong>
-        {newestSource ? (
-          <>
-            . Newest documented official source date{" "}
-            <strong className="font-medium text-[var(--text)]">{newestSource}</strong>
-            {" "}(truncated CSLB stream as-of; live credential board dates vary)
-          </>
-        ) : null}
-        . Confirm live status on the official board before you hire.
-      </p>
+      <p className="cth-intel-signal">Licensing · Bonds · Insurance · Permits · Enforcement · Public records</p>
       <div className="cth-intel-actions">
-        <a className="cth-intel-btn cth-intel-btn--primary" href="#contractor-search">
-          Find and research contractors
-        </a>
-        <Link className="cth-intel-btn cth-intel-btn--secondary" href="/verify">Verify a known business</Link>
+        <a className="cth-intel-btn cth-intel-btn--primary" href="#contractor-search">Research a contractor</a>
+        <a className="cth-intel-btn cth-intel-btn--secondary" href="#states">Explore state intelligence</a>
       </div>
-      <ul className="cth-intel-metrics mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        {metrics.map((m) => (
-          <li key={m.kicker}>
-            <Link href={m.href} className="cth-intel-card block h-full no-underline">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--navy)]">
-                {m.kicker}
-              </p>
-              <p className="cth-intel-metric-value mt-2 text-[1.65rem] sm:text-2xl">{m.value}</p>
-              <p className="mt-1 text-xs leading-relaxed text-[var(--muted)]">{m.label}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <p className="mt-5 max-w-3xl text-sm text-[var(--muted)]">
+        Independent of contractors and built from public sources. Source dates vary by agency;
+        newest documented source date <strong>{network.newestDocumentedSourceAsOf ?? "varies"}</strong>.
+        Network rollup generated {generatedDay}. This generation date is not an agency source date. Confirm time-sensitive facts with the linked agency.
+      </p>
     </section>
   );
 }

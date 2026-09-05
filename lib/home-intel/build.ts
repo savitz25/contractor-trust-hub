@@ -80,13 +80,10 @@ function geoFrom(state: EvidenceState): GeoState {
     coverageNote: state.coverageNote,
     canVerify: canVerify(state),
     cannotInfer: cannotInfer(state),
-    href: state.slug === "fl" ? "/florida" : state.slug === "tx" ? "/texas" : verifyPathFor(state),
-    hrefLabel:
-      state.slug === "fl"
-        ? "Explore Florida Intelligence"
-        : state.slug === "tx"
-          ? "Explore Texas Intelligence"
-          : `${state.name} Verify`,
+    href: ({ fl: "/florida", nj: "/new-jersey", ca: "/california", tx: "/texas", wa: "/washington", az: "/arizona" } as Record<string, string>)[state.slug] ?? verifyPathFor(state),
+    hrefLabel: ["fl", "nj", "ca", "tx", "wa", "az"].includes(state.slug)
+      ? `Explore ${state.name} Intelligence`
+      : `${state.name} Verify`,
   };
 }
 
@@ -111,7 +108,8 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
   const geo = live.map(geoFrom);
   const specialty = geo.filter((s) => s.regulatoryClass === "specialty_only");
   const statewideBoard = geo.filter((s) => s.regulatoryClass !== "specialty_only");
-  const enhanced = geo.filter((s) => s.depth === "enhanced_intelligence");
+  const intelligenceDestinations = new Set(["FL", "NJ", "CA", "TX", "WA", "AZ"]);
+  const enhanced = geo.filter((s) => intelligenceDestinations.has(s.code));
   const noStatewideGc = geo.filter((s) => !s.statewideGc);
   const roofingCodes = INTELLIGENCE_TRADE_BUCKETS.roofing;
   const residentialCodes = INTELLIGENCE_TRADE_BUCKETS.residential;
@@ -143,8 +141,8 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
       display: fmt(enhanced.length),
       value: enhanced.length,
       grain: "states with full_journey Intelligence OS pages",
-      definition: "Florida currently has state and selected-county Intelligence OS pages. Other live states are Verify-first.",
-      method: "States where depth = full_journey",
+      definition: "Completed state intelligence destinations backed by accepted specialist artifacts.",
+      method: "Published routes for FL, NJ, CA, TX, WA, and AZ",
       payloadKey: "coverage.enhancedIntelligence",
       officialAsOf: CONFIG_AS_OF,
       retrievedAt: RETRIEVED,
@@ -152,8 +150,8 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
       limitations: ["Enhanced research depth is TrustHub coverage, not contractor quality."],
       components: enhanced.map((s) => ({
         label: s.name,
-        value: "/florida",
-        payloadKey: "coverage.enhancedIntelligence.FL",
+        value: s.href,
+        payloadKey: `coverage.enhancedIntelligence.${s.code}`,
       })),
       sourceIds: ["state-config", "florida-intel-003"],
     },
@@ -335,31 +333,31 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
     },
     {
       family: "Discipline / regulatory history",
-      display: "Florida families researched; other states vary",
+      display: "Published families across FL, NJ, CA, TX, WA, and AZ; depth varies",
       status: "limited",
       method: "Florida licensed discipline, ULA, Recovery Fund, DFS stop-work as observations.",
       limitations: ["Absence of a row is not a clean history. Observations are not violation totals."],
     },
     {
       family: "Corporate / entity relationship",
-      display: "Florida Sunbiz high-confidence links only",
+      display: "Official business and entity evidence where safely attributable",
       status: "limited",
       method: "Florida entity links where confidence is high. Other SOS registries are not invented.",
       limitations: ["Unknown ownership is not independent ownership."],
     },
     {
       family: "Qualifier relationship",
-      display: "Florida qualifier graph where published",
+      display: "Qualifier / principal relationships in FL, AZ, WA, and other publishing sources",
       status: "limited",
       method: "Florida qualifying-business relationships in the Intelligence OS.",
       limitations: ["Not a national qualifier directory."],
     },
     {
       family: "State-level intelligence",
-      display: "Florida /florida Intelligence OS",
+      display: "Six completed state intelligence destinations",
       status: "enhanced_in_selected_geographies",
       method: "INTEL-003 Florida state payload.",
-      limitations: ["Other live states do not have Intelligence OS state pages."],
+      limitations: ["Research depth varies and is not a rating."],
     },
     {
       family: "County-level intelligence",
