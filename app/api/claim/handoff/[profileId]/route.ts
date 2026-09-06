@@ -33,10 +33,10 @@ export async function GET(
     }
     const { token } = mintClaimHandoff(profile);
     logClaimHandoff("claim_handoff_minted", {
-      native_profile_id: profile.id,
       state: "FL",
       source_system: "fl_dbpr",
     });
+    console.info(JSON.stringify({ event: "claim_cta_clicked", hub: "contractor", profile_class: "contractor", state: "FL", acquisition_source: "organic" }));
     const target = new URL("https://www.asktrusthub.com/claim/continue");
     target.searchParams.set("handoff", token);
     return new Response(null, { status: 302, headers: { ...NO_STORE, Location: target.toString() } });
