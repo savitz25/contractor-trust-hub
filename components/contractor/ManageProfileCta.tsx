@@ -4,11 +4,11 @@ import { useEffect } from "react";
 
 type Props = { profileId: string; managed?: boolean };
 
-function track(event: "manage_profile_cta_view" | "manage_profile_cta_click", profileId: string) {
+function track(event: "manage_profile_cta_view" | "manage_profile_cta_click") {
   const payload = {
     event,
     hub: "contractor",
-    native_profile_id: profileId,
+    profile_class: "contractor",
     state: "FL",
     source_system: "fl_dbpr",
   };
@@ -25,13 +25,13 @@ function track(event: "manage_profile_cta_view" | "manage_profile_cta_click", pr
 }
 
 export function ManageProfileCta({ profileId, managed = false }: Props) {
-  useEffect(() => track("manage_profile_cta_view", profileId), [profileId]);
+  useEffect(() => track("manage_profile_cta_view"), []);
   return (
     <aside className="rounded-2xl border border-[var(--border)] bg-white p-5 shadow-sm sm:p-6 print:hidden">
       <p className="text-sm font-semibold text-[var(--text)]">{managed ? "Managed by the business" : "Is this your business?"}</p>
       <a
         href={managed ? "https://www.asktrusthub.com/manage" : `/api/claim/handoff/${encodeURIComponent(profileId)}`}
-        onClick={() => track("manage_profile_cta_click", profileId)}
+        onClick={() => track("manage_profile_cta_click")}
         className="mt-3 inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--accent)] px-4 text-sm font-semibold text-[var(--navy)] no-underline hover:bg-[var(--surface)]"
       >
         {managed ? "Manage on AskTrustHub" : "Manage this profile on AskTrustHub"}
