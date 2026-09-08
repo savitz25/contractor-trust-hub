@@ -38,9 +38,17 @@ export const SERVICE_AREA_UNSUPPORTED = [
 export const INSURANCE_UNSUPPORTED = ["insured contractors", "bonded and insured", "has insurance"];
 
 export const PERMIT_VOLUME_UNSUPPORTED = ["permit volume", "most permits", "compare permits"];
+export const PERMIT_SEARCH_UNAVAILABLE = ["permit records", "permit evidence", "with permits"];
 
 export function detectUnsupportedConcept(text: string): { key: string; message: string; alternatives: string[] } | null {
-  if (QUALITY_UNSUPPORTED.some((p) => phraseInText(text, p) || text.includes(p))) {
+  if (/\b(no|without)\s+(enforcement|discipline)\b/.test(text)) {
+    return {
+      key: "negative_evidence",
+      message: "The available sources cannot establish a complete absence of complaints or enforcement. Missing indexed evidence is not a clean-record finding.",
+      alternatives: ["Search for available regulatory evidence", "Confirm with the issuing agency"],
+    };
+  }
+  if (/\b(best|top|cheapest|safest|fastest)\b/.test(text) || QUALITY_UNSUPPORTED.some((p) => phraseInText(text, p) || text.includes(p))) {
     return {
       key: "quality",
       message:
@@ -76,6 +84,13 @@ export function detectUnsupportedConcept(text: string): { key: string; message: 
       message:
         "Permit volume is not compared here. Broward and Palm Beach do not share a comparable permit denominator on this Ask path.",
       alternatives: ["Compare contractor research in Broward and Palm Beach."],
+    };
+  }
+  if (PERMIT_SEARCH_UNAVAILABLE.some((p) => text.includes(p))) {
+    return {
+      key: "permit_coverage",
+      message: "Permit evidence is available only for supported local source contracts and is not yet joinable in this specialist search. Missing permit results are not zero permits.",
+      alternatives: ["Open the contractor Trust Report", "Research a supported local permit source"],
     };
   }
   return null;

@@ -6,8 +6,9 @@ export function suggestAskCompletions(raw: string): AskSuggestion[] {
   const q = normalizeAskText(raw);
   if (q.length < 3) return [];
   const out: AskSuggestion[] = [];
+  const matches = (phrase: string) => phrase.length >= 3 && (q === phrase || q.includes(phrase) || (q.length < phrase.length && phrase.startsWith(q)));
   for (const t of TRADE_ONTOLOGY) {
-    if (t.phrases.some((p) => p.startsWith(q) || q.startsWith(p.slice(0, Math.max(3, q.length))))) {
+    if (t.phrases.some(matches)) {
       out.push({ label: t.label, prompt: `Show active ${t.label.toLowerCase()} contractors in Florida.`, kind: "trade" });
       for (const code of t.exactClasses) {
         const name = CLASS_LABELS[code];
@@ -16,7 +17,7 @@ export function suggestAskCompletions(raw: string): AskSuggestion[] {
     }
   }
   for (const g of GEO_ONTOLOGY) {
-    if (g.phrases.some((p) => p.startsWith(q) || q.startsWith(p.slice(0, Math.max(3, q.length))))) {
+    if (g.phrases.some(matches)) {
       out.push({
         label: g.label,
         prompt: g.kind === "county" ? `Show active roofing contractors in ${g.label}.` : "Show active roofing contractors in Florida.",

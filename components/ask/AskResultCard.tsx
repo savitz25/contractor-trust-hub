@@ -26,9 +26,18 @@ export function AskResultCard({ card }: { card: AskEntityCard }) {
         ) : null}
       </ul>
       <p className="text-sm text-[var(--muted)]">{card.geographyNote}</p>
+      <section aria-label="Why this result matched">
+        <h4 className="text-sm font-semibold">Why this matched</h4>
+        <p className="mt-1 text-sm text-[var(--muted)]">{card.whyMatched}</p>
+      </section>
       <details>
-        <summary className="cursor-pointer text-sm font-semibold text-[var(--navy)]">Why this matched</summary>
-        <p className="mt-2 text-sm text-[var(--muted)]">{card.whyMatched}</p>
+        <summary className="cursor-pointer text-sm font-semibold text-[var(--navy)]">Trace this result</summary>
+        <dl className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
+          <div><dt className="text-[var(--muted)]">Source system</dt><dd>{card.sourceLabel}</dd></div>
+          <div><dt className="text-[var(--muted)]">Credential</dt><dd>{card.credentialKey || "Not published"}</dd></div>
+          <div><dt className="text-[var(--muted)]">Geography rule</dt><dd>{card.geographyNote}</dd></div>
+          <div><dt className="text-[var(--muted)]">Evidence coverage</dt><dd>{card.evidenceCount ? "Linked public-eligible records available" : "No positive evidence assertion; missing is not zero"}</dd></div>
+        </dl>
       </details>
       {card.evidenceCount > 0 ? (
         <details>
@@ -56,7 +65,7 @@ export function AskResultCard({ card }: { card: AskEntityCard }) {
       <div className="flex flex-wrap gap-3">
         {card.profileHref ? (
           <Link href={card.profileHref} className="font-semibold text-[var(--navy)] hover:underline">
-            View research report
+            Research this contractor
           </Link>
         ) : (
           <Link href="/verify" className="text-sm text-[var(--navy)] hover:underline">

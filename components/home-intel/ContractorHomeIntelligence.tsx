@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AskContractorTrustHub } from "@/components/ask/AskContractorTrustHub";
 import { HomeBeyondLicense } from "@/components/home/HomeBeyondLicense";
 import { HomeContinuity } from "@/components/home/HomeContinuity";
 import { HomeIntelHero } from "@/components/home/HomeIntelHero";
@@ -133,7 +132,6 @@ export function ContractorHomeIntelligence({
         </div>
       </section>
 
-      <AskContractorTrustHub intel={scale} />
       <MarketCompare />
 
       <section id="record" aria-labelledby="record-title">

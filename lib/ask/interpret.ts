@@ -18,6 +18,8 @@ import { ASK_CONTRACT_VERSION, type AskInterpretation, type AskResult } from "./
 import { detectContradiction, detectUnsupportedConcept } from "./unsupported";
 
 const EMPTY_INTERPRET: AskInterpretation = {
+  identifier: null,
+  entityQuery: null,
   location: "Not specified",
   trade: "Not specified",
   credentialStatus: "Not specified",
@@ -89,6 +91,30 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
       comparison: null,
       failMessage: unsupported.message,
       changeHints: unsupported.alternatives,
+    };
+  }
+
+  const identifier = query.toUpperCase().match(/\b(?:CCC|CBC|CGC|CAC|CMC|CFC|CRC|CPC|CVC|CUC|SCC|RC|RB|RG|RA|RM|RF|RR|RP|RV|RU|RX)\s*-?\s*\d{5,10}\b/)?.[0].replace(/[\s-]+/g, "") ?? "";
+  if (identifier) {
+    interpretation.identifier = identifier;
+    interpretation.location = "Florida credential corpus";
+    interpretation.notes.push("Exact credential lookup is resolved before broader name or cohort research.");
+    return {
+      version: ASK_CONTRACT_VERSION, query, mode: "entity", supported: true, interpretation,
+      href: `/verify?q=${encodeURIComponent(identifier)}`, count: null, aggregate: null, comparison: null,
+      failMessage: null, changeHints: ["Confirm with the issuing agency"],
+    };
+  }
+
+  const looksLikeCompany = /\b(llc|inc|corp|corporation|company|group|holdings)\b/i.test(query)
+    && !/\b(in|near|with|active|current|licensed)\b/i.test(query);
+  if (looksLikeCompany) {
+    interpretation.entityQuery = query.slice(0, 120);
+    interpretation.notes.push("Name matching identifies candidate records; it does not prove similarly named businesses are the same entity.");
+    return {
+      version: ASK_CONTRACT_VERSION, query, mode: "entity", supported: true, interpretation,
+      href: `/verify?q=${encodeURIComponent(query)}`, count: null, aggregate: null, comparison: null,
+      failMessage: null, changeHints: ["Add a credential number", "Confirm the exact identity"],
     };
   }
 
@@ -302,7 +328,7 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
     };
   }
 
-  if (evidence && !trade && (text.includes("show") || text.includes("find") || text.includes("with"))) {
+  if (evidence && !trade && (text.includes("show") || text.includes("find") || text.includes("with") || text.includes("records"))) {
     const family = intel.regulatoryEvidence.byEvidenceFamily.find((f) => {
       if (evidence.id === "stop_work") return f.key === "fl_dfs_stop_work";
       if (evidence.id === "unlicensed_activity") return f.key === "fl_dbpr_unlicensed";

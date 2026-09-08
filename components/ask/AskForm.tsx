@@ -46,31 +46,38 @@ export function AskForm({
     if (!query) return;
     saveRecent(query);
     setRecent(loadRecent());
+    window.dispatchEvent(new CustomEvent("specialist-search", { detail: { event: "specialist_search_submit", hub: "contractor", hasIdentifier: /[A-Z]{2,4}\d{5,10}/i.test(query) } }));
     router.push(askHref(query));
   }
 
   return (
     <form
+      data-compact={compact || undefined}
       className="space-y-3"
       action="/ask"
       method="get"
       onSubmit={(e) => {
-        e.preventDefault();
-        go(q);
+        const query = q.trim();
+        if (!query) { e.preventDefault(); return; }
+        saveRecent(query);
+        window.dispatchEvent(new CustomEvent("specialist-search", { detail: { event: "specialist_search_submit", hub: "contractor", hasIdentifier: /[A-Z]{2,4}\d{5,10}/i.test(query) } }));
       }}
     >
       <label htmlFor="ask-q" className="sr-only">
         Ask ContractorTrustHub
       </label>
-      <textarea
+      <div className="flex flex-col gap-3 sm:flex-row">
+      <input
         id="ask-q"
         name="q"
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        rows={compact ? 2 : 3}
-        className="th-field-hero w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-[16px] text-[var(--text)]"
-        placeholder="Show me active roofing contractors in Broward County."
+        maxLength={180}
+        className="th-field-hero min-w-0 flex-1 rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-[16px] text-[var(--text)]"
+        placeholder="Ask a question, enter a company, license, trade, city, county or state…"
       />
+      <button type="submit" className="th-btn-hero shrink-0 px-6">Research</button>
+      </div>
       {typos.length > 0 ? (
         <p className="text-sm text-[var(--muted)]">
           Did you mean{" "}
@@ -102,9 +109,6 @@ export function AskForm({
           ))}
         </ul>
       ) : null}
-      <button type="submit" className="th-btn-hero px-6">
-        Research this question
-      </button>
       <div className="flex flex-wrap gap-2" aria-label="Example research questions">
         {ASK_CHIPS.map((chip) => (
           <button
@@ -117,6 +121,15 @@ export function AskForm({
           </button>
         ))}
       </div>
+      <details className="rounded-xl border border-[var(--border)] bg-white p-4">
+        <summary className="cursor-pointer font-semibold text-[var(--navy)]">Advanced filters</summary>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <label className="text-sm">State<select name="geo" className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="fl">Florida</option></select></label>
+          <label className="text-sm">Trade<select name="trade" className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="roofing">Roofing</option><option value="plumbing">Plumbing</option><option value="hvac">HVAC</option><option value="general">General</option></select></label>
+          <label className="text-sm">Credential status<select name="status" className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="active_current">Active/current</option><option value="all">All published</option></select></label>
+          <label className="text-sm">Evidence<select name="evidence" className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="dbpr_discipline">DBPR discipline</option><option value="stop_work">Stop-work</option></select></label>
+        </div>
+      </details>
       {recent.length > 0 ? (
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">Recent research</p>

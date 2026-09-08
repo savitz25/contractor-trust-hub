@@ -225,6 +225,13 @@ export function AskResults({
         </ul>
       ) : null}
 
+      {execution.ok && execution.contractorCount === 0 ? (
+        <section className="rounded-xl border border-[var(--border)] bg-white p-5" role="status">
+          <h2 className="text-lg font-semibold">No matching published contractor record</h2>
+          <p className="mt-2 text-sm text-[var(--muted)]">We didn&apos;t find a match for these criteria in the current published corpus. Missing here does not prove that a credential or evidence does not exist; confirm identifiers with the issuing agency.</p>
+        </section>
+      ) : null}
+
       {execution.ok && execution.contractorCount != null && execution.contractorCount > plan.limit ? (
         <nav className="flex gap-4 text-sm" aria-label="Result pagination">
           {plan.page > 1 ? <Link href={prevPage}>Previous</Link> : <span className="text-[var(--muted)]">Previous</span>}

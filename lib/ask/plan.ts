@@ -46,6 +46,7 @@ export type ContractorResearchQuery = {
   planId: string;
   mode: ResearchMode;
   rawQuery: string;
+  identity: { identifier: string | null; entityQuery: string | null };
   geography: {
     state: "FL" | null;
     countySlug: string | null;
@@ -223,7 +224,7 @@ export function buildContractorResearchQuery(
       mode === "comparison" ||
       mode === "evidence" ||
       mode === "aggregate") &&
-    state === "FL";
+    (state === "FL" || Boolean(interpreted.interpretation.identifier || interpreted.interpretation.entityQuery));
 
   const grain: ContractorResearchQuery["grain"] =
     mode === "count" && !county && !evidence ? "credential_record" : mode === "evidence" && !trade ? "evidence_source_row" : mode === "entity" || mode === "evidence" ? "contractor_profile" : mode === "count" ? "credential_record" : "none";
@@ -232,6 +233,10 @@ export function buildContractorResearchQuery(
     version: RESEARCH_QUERY_VERSION,
     mode,
     rawQuery: interpreted.query,
+    identity: {
+      identifier: interpreted.interpretation.identifier,
+      entityQuery: interpreted.interpretation.entityQuery,
+    },
     geography: {
       state,
       countySlug: county?.slug ?? null,

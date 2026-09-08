@@ -71,6 +71,15 @@ export default async function ContractorSearchPage({ searchParams }: Props) {
 
       {response ? (
         <section className="mt-10" aria-live="polite">
+          <section aria-labelledby="search-understood" className="mb-5 rounded-2xl border border-[var(--border)] bg-white p-5">
+            <p className="cth-intel-eyebrow">Your research</p>
+            <h2 id="search-understood" className="sr-only">What the search understood</h2>
+            <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-3">
+              <div><dt className="text-[var(--muted)]">Trade</dt><dd className="font-medium">{plan.mode === "discovery" ? plan.interpretation.trade?.replaceAll("_", " ") || "Not specified" : "Not specified"}</dd></div>
+              <div><dt className="text-[var(--muted)]">Location</dt><dd className="font-medium">{plan.mode === "discovery" ? [plan.interpretation.city, plan.interpretation.county, plan.interpretation.state].filter(Boolean).join(", ") || "Not specified" : "Not specified"}</dd></div>
+              <div><dt className="text-[var(--muted)]">Geography basis</dt><dd className="font-medium">Recorded credential geography—not service territory</dd></div>
+            </dl>
+          </section>
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5">
             <p className="text-xs font-semibold uppercase tracking-wider text-[var(--navy)]">{response.resultState.replaceAll("_", " ")}</p>
             <h2 className="mt-1">{response.resultState === "SUPPORTED_RESULTS" ? `${total.toLocaleString("en-US")} matching credential records` : response.resultState === "ZERO_MATCHING_ROWS" ? "No records match this supported intersection" : response.resultState === "BACKEND_UNAVAILABLE" ? "Contractor research is temporarily unavailable" : "A more precise research choice is needed"}</h2>
@@ -91,7 +100,8 @@ export default async function ContractorSearchPage({ searchParams }: Props) {
                 <dt className="font-medium">Source</dt><dd>{row.source.label}{row.source.observedAt ? ` · ${row.source.observedAt.slice(0, 10)}` : ""}</dd>
               </dl>
               <p className="mt-4 text-sm text-[var(--muted)]">{row.whyShown}</p>
-              <div className="mt-4 flex flex-wrap gap-3"><Link href={row.destination} className="font-semibold text-[var(--navy)]">Open Trust Report</Link>{row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY") ? <Link href={row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY")!.url} className="font-medium">Verify credential</Link> : null}</div>
+              <details className="mt-4"><summary className="cursor-pointer font-semibold text-[var(--navy)]">Trace this result</summary><dl className="mt-2 grid gap-2 text-sm"><div><dt className="text-[var(--muted)]">Why matched</dt><dd>{row.whyShown}</dd></div><div><dt className="text-[var(--muted)]">Source</dt><dd>{row.source.label}</dd></div><div><dt className="text-[var(--muted)]">Coverage limit</dt><dd>Recorded regulator geography is not service territory. Missing evidence is not zero.</dd></div></dl></details>
+              <div className="mt-4 flex flex-wrap gap-3"><Link href={row.destination} className="font-semibold text-[var(--navy)]">Research this contractor</Link>{row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY") ? <Link href={row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY")!.url} className="font-medium">Verify credential</Link> : null}</div>
             </article>
           ))}</div> : null}
 
