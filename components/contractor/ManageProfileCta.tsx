@@ -28,7 +28,7 @@ export function ManageProfileCta({ profileId, managed = false }: Props) {
   useEffect(() => track("manage_profile_cta_view"), []);
   return (
     <aside className="rounded-2xl border border-[var(--border)] bg-white p-5 shadow-sm sm:p-6 print:hidden">
-      <p className="text-sm font-semibold text-[var(--text)]">{managed ? "Managed by the business" : "Is this your business?"}</p>
+      <p className="text-sm font-semibold text-[var(--text)]">{managed ? "Profile managed by an authorized representative" : "Is this your business?"}</p>
       <a
         href={managed ? "https://www.asktrusthub.com/manage" : `/api/claim/handoff/${encodeURIComponent(profileId)}`}
         onClick={() => track("manage_profile_cta_click")}

@@ -38,11 +38,12 @@ test("success redirect and every failure are non-cacheable and non-indexable", (
   assert.doesNotMatch(route, /Response\.redirect\(/);
 });
 
-test("one rollout decision gates CTA, Layer C, and replies", () => {
+test("claim rollout gates only intake while exact-profile Layer C and replies remain publishable", () => {
   const page = readFileSync("app/contractors/[slug]/page.tsx", "utf8");
   assert.match(page, /const customerRolloutEnabled = Boolean\(claimProfile && claimCtaEnabledFor/);
   assert.match(page, /const showClaimCta = customerRolloutEnabled/);
-  assert.match(page, /\[businessProfile, businessReplies\] = customerRolloutEnabled && claimProfile/);
+  assert.match(page, /\[businessProfile, businessReplies\] = claimProfile/);
+  assert.doesNotMatch(page, /\[businessProfile, businessReplies\] = customerRolloutEnabled/);
   assert.match(page, /getPublicBusinessProfile\(claimProfile\.id\)/);
   assert.match(page, /getPublicBusinessReplies\(claimProfile\.id\)/);
 });

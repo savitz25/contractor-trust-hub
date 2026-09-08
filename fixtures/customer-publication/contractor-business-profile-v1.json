@@ -1,0 +1,11 @@
+{
+  "contractVersion": 1,
+  "hub": "contractor",
+  "nativeProfileId": "11111111-1111-4111-8111-111111111111",
+  "managed": true,
+  "source": "BUSINESS_SUPPLIED",
+  "freshness": { "state": "CURRENT", "lastConfirmedAt": "2026-09-07T12:00:00.000Z", "label": "Last confirmed Sep 7, 2026", "mayBeOutdated": false },
+  "fields": { "description": "Synthetic contractor profile for contract validation.", "website": "https://example.test", "public_phone": "+1 (555) 555-0100", "public_email": "public@example.test", "founded_year": "2005", "emergency_service": "false" },
+  "services": ["Roofing"], "serviceAreas": ["Orange County"], "languages": ["English"],
+  "hours": [{ "weekday": 1, "closed": false, "opensAt": "09:00", "closesAt": "17:00" }]
+}
