@@ -384,6 +384,14 @@ header img[data-brand-logo] {
   gap: 8px;
   margin-left: auto;
 }
+@media (max-width: 359px) {
+  .th-header-mobile-actions {
+    gap: 4px;
+  }
+  .th-header-mobile-actions .th-btn-primary {
+    padding-inline: 8px;
+  }
+}
 @media (min-width: 1024px) {
   .th-header-mobile-actions {
     display: none;
