@@ -4,6 +4,7 @@
 import { asLicenseStatus } from "@/lib/contractors/format";
 import type { LicenseStatus } from "@/lib/contractors/types";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
+import { searchContractors } from "@/lib/contractors/queries";
 import { dbUserFacingError, query, queryOne } from "@/lib/db";
 import { getCounty, getDiscoveryState } from "@/lib/discovery/config";
 import { loadContractorHubIntel } from "@/lib/home/load-intel-v2";
@@ -428,10 +429,66 @@ export async function executeContractorResearchQuery(plan: ContractorResearchQue
   const key = `${plan.planId}:${plan.page}:${plan.sort.field}:${plan.mode}:${intel.sourceFingerprint}`;
   const hit = EXEC_MEMO.get(key);
   if (hit) return hit;
-  const out = await executeUncached(plan);
+  const lookup = plan.identity.identifier || plan.identity.entityQuery;
+  const out = lookup
+    ? await executeIdentityLookup(lookup, plan, intel.generatedAt.slice(0, 10), intel.sourceFingerprint)
+    : await executeUncached(plan);
   if (EXEC_MEMO.size > 48) EXEC_MEMO.clear();
   EXEC_MEMO.set(key, out);
   return out;
+}
+
+async function executeIdentityLookup(
+  lookup: string,
+  plan: ContractorResearchQuery,
+  asOf: string,
+  fingerprint: string
+): Promise<AskExecution> {
+  let found: Awaited<ReturnType<typeof searchContractors>>;
+  try {
+    found = await searchContractors(lookup, { stateSlug: "fl", limit: ASK_PAGE_SIZE });
+  } catch {
+    return emptyExecution({
+      blocked: true,
+      blockMessage: "Contractor identity research is temporarily unavailable. No result was inferred or substituted.",
+      asOf,
+      snapshotFingerprint: fingerprint,
+      sqlContract: "parameterized exact credential / normalized name search",
+    });
+  }
+  const exactIdentifier = Boolean(plan.identity.identifier);
+  return emptyExecution({
+    ok: true,
+    contractorCount: found.results.length,
+    credentialCount: found.results.length,
+    grainLabel: "contractor profile",
+    asOf,
+    snapshotFingerprint: fingerprint,
+    sqlContract: "parameterized exact credential / normalized name search",
+    results: found.results.map((row) => ({
+      contractorId: row.id,
+      slug: row.slug,
+      displayName: row.displayName,
+      credentialKey: row.primaryLicenseKey,
+      occupationCode: row.occupationCode,
+      occupationLabel: classLabel(row.occupationCode),
+      statusNormalized: row.licenseStatus,
+      statusLabel: row.primaryStatus || row.licenseStatus || "Status not reported",
+      city: row.city,
+      county: row.county,
+      state: row.state,
+      sourceLabel: SOURCE_LABEL[row.sourceSystem || ""] || found.state.boardShortLabel,
+      sourceSystem: row.sourceSystem || null,
+      geographyNote: "Recorded licensing address; not service territory or current availability.",
+      evidenceCount: row.hasDiscipline ? 1 : 0,
+      newestEvidenceDate: null,
+      whyMatched: exactIdentifier
+        ? "Matches the submitted credential identifier in the published licensing corpus."
+        : "Matches the submitted company name using the bounded normalized identity search.",
+      evidence: [],
+      profileHref: `/contractors/${row.slug}`,
+    })),
+  });
 }
 
 export { EVIDENCE_META, SOURCE_LABEL };

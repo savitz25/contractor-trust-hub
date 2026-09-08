@@ -17,6 +17,8 @@ export type AskQueryMode =
 export type AskSort = "default" | "count_desc" | "unsupported_rate";
 
 export type AskInterpretation = {
+  identifier: string | null;
+  entityQuery: string | null;
   location: string;
   trade: string;
   credentialStatus: string;

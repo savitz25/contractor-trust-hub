@@ -69,7 +69,7 @@ export const TRADE_ONTOLOGY: Array<{
   {
     id: "roofing",
     label: "Roofing",
-    phrases: ["roofing", "roofer", "roofers", "roof contractor", "roofing contractor", "certified roofing"],
+    phrases: ["roofing", "roofer", "roofers", "roof contractor", "roofing contractor", "certified roofing", "replace my roof"],
     exactClasses: ["CCC", "RC"],
     familyNote: "Florida CILB roofing is CCC (certified) and RC (registered). RR is registered residential, not roofing.",
     href: "/florida/roofers",
@@ -183,7 +183,7 @@ export const GEO_ONTOLOGY: Array<{
   {
     id: "broward",
     label: "Broward County, Florida",
-    phrases: ["broward", "broward county", "fort lauderdale"],
+    phrases: ["broward", "broward county", "fort lauderdale", "deerfield beach"],
     href: "/florida/broward",
     kind: "county",
     intelligence: "county_intelligence",
@@ -215,7 +215,7 @@ export const EVIDENCE_ONTOLOGY: Array<{
   {
     id: "dbpr_discipline",
     label: "Florida DBPR licensing discipline",
-    phrases: ["dbpr discipline", "licensing discipline", "disciplinary", "discipline records"],
+    phrases: ["dbpr discipline", "licensing discipline", "disciplinary", "discipline records", "enforcement records", "regulatory problems"],
     failIfComplaint: false,
   },
   {

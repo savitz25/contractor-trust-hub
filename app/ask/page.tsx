@@ -6,6 +6,10 @@ import { buildContractorResearchQuery, parseAskOverrides } from "@/lib/ask/plan"
 import { executeContractorResearchQuery } from "@/lib/ask/execute";
 import { loadContractorHubIntel } from "@/lib/home/load-intel-v2";
 import { pageMetadata } from "@/lib/seo/page-meta";
+import { planContractorSearch } from "@/lib/search/contractor-discovery";
+import { redirect } from "next/navigation";
+import { SearchAnalytics } from "@/components/specialist-search/SearchAnalytics";
+import { searchResultCountBucket } from "@/lib/specialist-search/analytics";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +29,10 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 export default async function AskPage({ searchParams }: Props) {
   const sp = await searchParams;
   const q = (sp.q || "").trim();
+  const multiStatePlan = planContractorSearch(q);
+  if (multiStatePlan.mode === "discovery" && multiStatePlan.request.state && multiStatePlan.request.state !== "FL") {
+    redirect(`/search?q=${encodeURIComponent(q)}`);
+  }
   const intel = loadContractorHubIntel();
   const interpreted = interpretAskQuery(q, intel);
   const plan = buildContractorResearchQuery(interpreted, parseAskOverrides({
@@ -55,16 +63,17 @@ export default async function AskPage({ searchParams }: Props) {
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
-      <p className="cth-intel-eyebrow">Ask ContractorTrustHub</p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--navy)]">Structured contractor research</h1>
+      <p className="cth-intel-eyebrow">Research contractors</p>
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--navy)]">What do you want to find out?</h1>
       <p className="mt-2 max-w-2xl text-sm text-[var(--muted)]">
-        We interpret your question, then query indexed licensing records. This is not a generic web search and not an AI that invents license facts.
+        Ask in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.
       </p>
       <div className="mt-6">
         <AskForm initialQuery={q || undefined} compact />
       </div>
       {q ? (
         <div className="mt-10">
+          <SearchAnalytics dimensions={{ hub: "contractor", intent: interpreted.mode, state: plan.geography.state || undefined, classification: plan.trade.familyId || undefined, hasIdentifier: Boolean(plan.identity.identifier), hasEvidenceFilter: Boolean(plan.evidenceFamily), resultCountBucket: searchResultCountBucket(execution.contractorCount || 0), coverageState: execution.blocked ? "PARTIAL" : "KNOWN" }} hasResults={execution.results.length > 0} />
           <AskResults interpreted={interpreted} plan={plan} execution={execution} />
         </div>
       ) : (
