@@ -197,7 +197,9 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const claimProfile = eligibleClaimProfile(contractor);
   const customerRolloutEnabled = Boolean(claimProfile && claimCtaEnabledFor(claimProfile.id));
   const showClaimCta = customerRolloutEnabled;
-  const [businessProfile, businessReplies] = customerRolloutEnabled && claimProfile
+  // Publication is governed by Ask's active-authority projection. Claim-intake
+  // rollout only controls whether a new claim CTA is offered.
+  const [businessProfile, businessReplies] = claimProfile
     ? await Promise.all([
         getPublicBusinessProfile(claimProfile.id),
         getPublicBusinessReplies(claimProfile.id),
