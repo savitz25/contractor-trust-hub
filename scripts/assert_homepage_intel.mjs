@@ -82,13 +82,13 @@ for (const fam of snap.tradeFamilies.families) {
 }
 
 const build = read("lib/home-intel/build.ts");
-const askUi = read("components/ask/AskContractorTrustHub.tsx") + read("components/ask/AskResults.tsx");
+const askUi = read("components/home/HomeDiscoverySearch.tsx") + read("components/ask/AskForm.tsx") + read("components/ask/AskResults.tsx");
 const compareUi = read("components/intel/MarketCompare.tsx");
 const interpret = read("lib/ask/interpret.ts");
 
 assert(page.includes("ContractorHomeIntelligence") && page.includes("getContractorHomeIntel"), "003C shell");
 assert(shell.includes("HomeIntelHero") && shell.includes("loadContractorHubIntel"), "hero wired");
-assert(shell.includes("AskContractorTrustHub"), "ask on homepage");
+assert(shell.includes("HomeDiscoverySearch") && askUi.includes('action="/ask"'), "canonical Ask search on homepage");
 assert(shell.includes("MarketCompare"), "compare on homepage");
 assert(shell.includes("HomeSearchBlock"), "verify search on homepage");
 assert(shell.includes("id=\"verify\"") || shell.includes('id="verify"'), "verify anchor");
