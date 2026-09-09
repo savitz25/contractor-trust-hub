@@ -10,12 +10,17 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const snap = JSON.parse(readFileSync(join(root, "lib/colorado-intelligence/accepted-snapshot.json"), "utf8"));
 const prev = JSON.parse(readFileSync(join(root, "data/home/contractor-network-metrics-v1.json"), "utf8"));
+const prevIntel = JSON.parse(readFileSync(join(root, "data/home/contractor-hub-intel-v2.json"), "utf8"));
 const { computeContractorNetworkMetrics } = await import(
   pathToFileURL(join(root, "lib/metrics/compute-contractor-network-metrics.ts")).href
 );
 const { projectIntelV2FromNetworkMetrics } = await import(
   pathToFileURL(join(root, "lib/metrics/project-intel-v2.ts")).href
 );
+
+if (prev.liveCohort.liveStateCodes.includes("CO") || prev.liveCohort.liveSourceSystems.includes("co_dora")) {
+  throw new Error("CO already present in network metrics; reset v1/intel-v2 from main before overlay");
+}
 
 const byKey = Object.fromEntries(prev.metrics.map((m) => [m.key, m]));
 const ecAll = snap.business_credentials.EC.all_rows;
@@ -87,12 +92,47 @@ const input = {
   caCityLocalPages: byKey.published_ca_city_local_intelligence_pages.value,
 };
 
+function graphStatusDelta(business) {
+  const delta = {
+    active: 0,
+    current: 0,
+    inactive: 0,
+    expired: 0,
+    suspended: 0,
+    revoked: 0,
+    unlicensed: 0,
+    other: 0,
+  };
+  for (const cred of [business.EC, business.PC]) {
+    for (const [status, n] of Object.entries(cred.status_counts)) {
+      const key = String(status).toLowerCase();
+      if (key === "active" || key.startsWith("active")) delta.active += n;
+      else if (key === "current") delta.current += n;
+      else if (key === "inactive") delta.inactive += n;
+      else if (key === "expired") delta.expired += n;
+      else if (key.includes("suspend")) delta.suspended += n;
+      else if (key === "revoked") delta.revoked += n;
+      else if (key === "unlicensed") delta.unlicensed += n;
+      else delta.other += n;
+    }
+  }
+  return delta;
+}
+
 const next = computeContractorNetworkMetrics(input);
+const intelV2 = projectIntelV2FromNetworkMetrics(next);
+const graphDelta = graphStatusDelta(snap.business_credentials);
+const prevGraph = prevIntel.licensingStatus.graph;
+intelV2.licensingStatus.graph = Object.fromEntries(
+  Object.keys(prevGraph).map((k) => [k, (prevGraph[k] || 0) + (graphDelta[k] || 0)]),
+);
 writeFileSync(join(root, "data/home/contractor-network-metrics-v1.json"), `${JSON.stringify(next, null, 2)}\n`);
-writeFileSync(join(root, "data/home/contractor-hub-intel-v2.json"), `${JSON.stringify(projectIntelV2FromNetworkMetrics(next), null, 2)}\n`);
+writeFileSync(join(root, "data/home/contractor-hub-intel-v2.json"), `${JSON.stringify(intelV2, null, 2)}\n`);
 console.log("overlay", {
   fingerprint: next.sourceFingerprint,
   liveStates: next.liveCohort.liveStates,
   co_dora: coLive,
   live_credentials: next.metrics.find((m) => m.key === "live_credential_records").value,
+  graph_active: intelV2.licensingStatus.graph.active,
+  live_active: intelV2.licensingStatus.liveCohort.active,
 });

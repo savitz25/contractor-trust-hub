@@ -147,14 +147,14 @@
   "licensingStatus": {
     "denominator": "research_graph_licenses",
     "graph": {
-      "active": 471354,
+      "active": 836388,
       "current": 36579,
-      "inactive": 58880,
-      "expired": 65877,
-      "suspended": 9822,
-      "revoked": 14,
+      "inactive": 177863,
+      "expired": 208905,
+      "suspended": 10956,
+      "revoked": 1724,
       "unlicensed": 257,
-      "other": 9574
+      "other": 11452
     },
     "liveCohort": {
       "active": 471354,

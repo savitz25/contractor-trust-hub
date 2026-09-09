@@ -117,6 +117,14 @@ class PageTests(unittest.TestCase):
         self.assertEqual(SNAP["source"]["master_rows"], 1606852)
         self.assertLess(SNAP["business_credentials"]["EC"]["all_rows"] + SNAP["business_credentials"]["PC"]["all_rows"], 30000)
 
+    def test_homepage_graph_status_is_not_live_cohort(self):
+        intel = json.loads((ROOT / "data/home/contractor-hub-intel-v2.json").read_text(encoding="utf-8"))
+        overlay = (ROOT / "scripts/colorado/overlay_network_metrics.mjs").read_text(encoding="utf-8")
+        self.assertIn("licensingStatus.graph", overlay)
+        self.assertNotEqual(intel["licensingStatus"]["graph"]["active"], intel["licensingStatus"]["liveCohort"]["active"])
+        self.assertEqual(sum(intel["licensingStatus"]["graph"].values()), intel["researchGraph"]["licenseRows"])
+        self.assertEqual(intel["sourceFingerprint"], json.loads((ROOT / "data/home/contractor-network-metrics-v1.json").read_text(encoding="utf-8"))["sourceFingerprint"])
+
 
 if __name__ == "__main__":
     unittest.main()

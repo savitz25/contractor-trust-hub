@@ -24,4 +24,7 @@ assert metrics["liveCohort"]["licensesBySource"]["co_dora"] == (
     snap["business_credentials"]["EC"]["all_rows"] + snap["business_credentials"]["PC"]["all_rows"]
 )
 assert metrics["liveCohort"]["licensesBySource"]["co_dora"] != snap["source"]["master_rows"]
+intel = json.loads((ROOT / "data/home/contractor-hub-intel-v2.json").read_text(encoding="utf-8"))
+assert intel["licensingStatus"]["graph"]["active"] != intel["licensingStatus"]["liveCohort"]["active"]
+assert sum(intel["licensingStatus"]["graph"].values()) == intel["researchGraph"]["licenseRows"]
 print("assert_co_con_001 PASS", snap["fingerprint"])

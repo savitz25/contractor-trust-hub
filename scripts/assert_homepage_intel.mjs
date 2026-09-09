@@ -75,6 +75,10 @@ assert(/are not a U\.S\.\s+contractor census/.test(snap.researchGraph.note), "ce
 
 const liveStatus = snap.licensingStatus.liveCohort;
 assert(liveStatus.active + liveStatus.current === live.activeCurrentCredentialRecords, "status sum");
+assert(snap.licensingStatus.denominator === "research_graph_licenses", "graph status denominator");
+assert(snap.licensingStatus.graph.active !== liveStatus.active, "research-graph status is not the live cohort");
+const graphStatusSum = Object.values(snap.licensingStatus.graph).reduce((n, v) => n + v, 0);
+assert(graphStatusSum === graph.licenseRows, "graph status sums to research-graph license rows");
 
 for (const fam of snap.tradeFamilies.families) {
   assert(fam.activeCurrentRows <= fam.credentialRows, `trade subset ${fam.id}`);
