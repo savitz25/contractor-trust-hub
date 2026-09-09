@@ -32,7 +32,7 @@ assert(!hero.includes("Last official update"), "no ambiguous last official updat
 
 const byKey = Object.fromEntries(v1.metrics.map((m) => [m.key, m]));
 const live = snap.publicCoverage;
-assert(live.liveStates === 10, "10 live states");
+assert(live.liveStates === 11, "11 live states");
 assert(live.credentialRecords === byKey.live_credential_records.value, "live credentials match v1");
 assert(live.activeCurrentCredentialRecords === byKey.live_active_current_credential_records.value, "live active/current match v1");
 assert(live.activeCurrentCredentialRecords <= live.credentialRecords, "active subset of credentials");
@@ -43,11 +43,11 @@ assert(v1.californiaReconciliation.productionCslbCredentialRows !== v1.californi
 
 const order = [...config.match(/LIVE_STATE_ORDER = \[([^\]]+)\]/)[1].matchAll(/"([a-z]+)"/g)].map((m) => m[1]);
 assert(order.length >= 10, "LIVE_STATE_ORDER");
-assert(live.liveStateCodes.join(",") === "FL,TX,NJ,OR,WA,CA,AZ,LA,MS,KY", "state codes from config order");
+assert(live.liveStateCodes.join(",") === "FL,TX,NJ,OR,WA,CA,AZ,LA,MS,KY,CO", "state codes from config order");
 
 const ev = snap.regulatoryEvidence;
 const famSum = ev.byEvidenceFamily.reduce((s, f) => s + f.rows, 0);
-assert(ev.totalActionRows === 69674, "discipline actions");
+assert(ev.totalActionRows === 75664, "discipline actions");
 assert(famSum === ev.totalActionRows, "family sum equals actions");
 assert(ev.canonicalObservations === 68081, "observations grain");
 assert(ev.occurrences === 68087, "occurrences grain");
@@ -57,10 +57,10 @@ assert(ev.byEvidenceFamily.find((f) => f.key === "fl_dbpr_unlicensed")?.rows ===
 
 const graph = snap.researchGraph;
 assert(graph.contractorIdentityRows === 1392730, "contractor rows");
-assert(graph.licenseRows === 1266214, "license rows");
-assert(graph.populatedLicenseSourceSystems === 18, "populated source systems");
-assert(graph.populatedLicenseSourceSystemKeys.length === 18, "18 keys");
-assert(live.liveSourceSystems.length === 11, "live 11 sources");
+assert(graph.licenseRows === 1284124, "license rows");
+assert(graph.populatedLicenseSourceSystems === 19, "populated source systems");
+assert(graph.populatedLicenseSourceSystemKeys.length === 19, "19 keys");
+assert(live.liveSourceSystems.length === 12, "live 12 sources");
 assert(graph.populatedLicenseSourceSystems !== live.liveSourceSystems.length, "no cohort mix");
 assert(graph.licenseRows !== live.credentialRecords, "graph licenses != live credentials");
 assert(graph.contractorIdentityRows !== live.credentialRecords, "public vs graph split");
@@ -70,7 +70,7 @@ assert(snap.permits.sourceRecords === 139586, "permits");
 assert(!method.includes("13 enumerated"), "no 13-system license-row association");
 assert(method.includes("populatedLicenseSourceSystems"), "methodology uses populated count");
 assert(method.includes("broader research graph"), "broader graph wording");
-assert(live.liveStates === 10 && live.liveSourceSystems.length === 11, "live 10/11");
+assert(live.liveStates === 11 && live.liveSourceSystems.length === 12, "live 11/12");
 assert(/are not a U\.S\.\s+contractor census/.test(snap.researchGraph.note), "census disclaimer");
 
 const liveStatus = snap.licensingStatus.liveCohort;

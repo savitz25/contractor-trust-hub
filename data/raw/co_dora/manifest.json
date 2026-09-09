@@ -1,0 +1,10 @@
+{
+  "ticket": "CO-CON-001",
+  "dataset_id": "7s5z-vewr",
+  "retrieved_at": "2026-09-09T14:51:20+00:00",
+  "csv": "professional-occupational-licenses.csv",
+  "sha256": "b5aedc8b2abb9686ecd711a9a43cde02e529719d9770acd62c28aa2bc357f0a0",
+  "bytes": 473894743,
+  "rows": 1606852,
+  "source": "https://data.colorado.gov/api/views/7s5z-vewr/rows.csv?accessType=DOWNLOAD"
+}

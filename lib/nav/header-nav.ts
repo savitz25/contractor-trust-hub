@@ -18,6 +18,7 @@ export const EXPLORE_GROUP: HeaderGroup = {
   links: [
     { href: "/washington", label: "Washington research", hint: "L&I registration, bond, and insurance" },
     { href: "/arizona", label: "Arizona research", hint: "ROC current licenses and class overlap" },
+    { href: "/colorado", label: "Colorado research", hint: "DORA electrical and plumbing — no statewide GC" },
     { href: "/texas", label: "Texas research", hint: "Specialty trades — no statewide GC license" },
     { href: "/texas/austin", label: "Austin permits", hint: "City of Austin local intelligence" },
     { href: "/california", label: "California research", hint: "Acquired CSLB public-data rows" },

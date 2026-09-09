@@ -1,9 +1,9 @@
 {
   "schemaVersion": "contractor-hub-intel-v2",
-  "generatedAt": "2026-09-03T21:22:06.870Z",
-  "sourceFingerprint": "0a99e8a1cf53590d01506d57072f4a320aa6c0060476a779193d8af1dd8034b3",
+  "generatedAt": "2026-09-09T15:03:08.529Z",
+  "sourceFingerprint": "bfb7fa097a6c3d79a0d69f099690fb4c22db84c1166748790fc3e6409e7640c8",
   "publicCoverage": {
-    "liveStates": 10,
+    "liveStates": 11,
     "liveStateCodes": [
       "FL",
       "TX",
@@ -14,11 +14,13 @@
       "AZ",
       "LA",
       "MS",
-      "KY"
+      "KY",
+      "CO"
     ],
     "liveSourceSystems": [
       "az_roc",
       "ca_cslb",
+      "co_dora",
       "fl_dbpr",
       "ky_dhbc",
       "la_lslbc",
@@ -29,15 +31,15 @@
       "tx_tsbpe",
       "wa_lni"
     ],
-    "credentialRecords": 644421,
-    "activeCurrentCredentialRecords": 499997,
+    "credentialRecords": 662331,
+    "activeCurrentCredentialRecords": 507933,
     "cohortRule": "licenses.source_system IN live sources parsed from lib/states/config.ts (EVIDENCE_STATES live:true + licenseSource/licenseSources, LIVE_STATE_ORDER)",
     "activeCurrentRule": "status_normalized IN ('active','current') within the live source cohort"
   },
   "researchGraph": {
     "contractorIdentityRows": 1392730,
-    "licenseRows": 1266214,
-    "populatedLicenseSourceSystems": 18,
+    "licenseRows": 1284124,
+    "populatedLicenseSourceSystems": 19,
     "populatedLicenseSourceSystemKeys": [
       "az_roc",
       "ca_cslb",
@@ -50,6 +52,7 @@
       "tx_tdlr",
       "tx_tsbpe",
       "wa_lni",
+      "co_dora",
       "ct_dcp",
       "id_dopl",
       "mn_dli",
@@ -58,7 +61,7 @@
       "tn_blc",
       "va_dpor"
     ],
-    "licenseSourceSystems": 18,
+    "licenseSourceSystems": 19,
     "licenseSourceSystemKeys": [
       "az_roc",
       "ca_cslb",
@@ -71,6 +74,7 @@
       "tx_tdlr",
       "tx_tsbpe",
       "wa_lni",
+      "co_dora",
       "ct_dcp",
       "id_dopl",
       "mn_dli",
@@ -84,7 +88,7 @@
     "note": "Research-graph totals are not currently public live coverage and are not a U.S. contractor census."
   },
   "regulatoryEvidence": {
-    "totalActionRows": 69674,
+    "totalActionRows": 75664,
     "canonicalObservations": 68081,
     "occurrences": 68087,
     "byEvidenceFamily": [
@@ -129,6 +133,13 @@
         "sourceSystem": "az_roc",
         "sourceDataset": "",
         "rows": 459
+      },
+      {
+        "key": "co_dora_discipline",
+        "label": "Colorado DORA contractor-relevant discipline observations",
+        "sourceSystem": "co_dora",
+        "sourceDataset": "7s5z-vewr",
+        "rows": 5990
       }
     ],
     "grainNote": "totalActionRows is discipline_actions. Observations and occurrences are different grains and are not added to the action total."
@@ -136,17 +147,17 @@
   "licensingStatus": {
     "denominator": "research_graph_licenses",
     "graph": {
-      "active": 828446,
+      "active": 471354,
       "current": 36579,
-      "inactive": 177863,
-      "expired": 199397,
-      "suspended": 10954,
-      "revoked": 1674,
+      "inactive": 58880,
+      "expired": 65877,
+      "suspended": 9822,
+      "revoked": 14,
       "unlicensed": 257,
-      "other": 11044
+      "other": 9574
     },
     "liveCohort": {
-      "active": 463418,
+      "active": 471354,
       "current": 36579,
       "inactive": 58880,
       "expired": 65877,

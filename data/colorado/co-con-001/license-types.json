@@ -1,0 +1,2825 @@
+[
+  {
+    "licensecategory": "Accountancy",
+    "licensetype": "Certified Public Accountant",
+    "licenseprefix": "CPA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Accountancy",
+    "licensetype": "Military Spouse - Certified Public Accountant",
+    "licenseprefix": "MSCPA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "odd",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Accountancy",
+    "licensetype": "Public Accounting Firm",
+    "licenseprefix": "FRM",
+    "businessorindividual": "Business",
+    "renewalcycle": "Three Year",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Accountancy",
+    "licensetype": "Temporary CPA Permit (Historic Only)",
+    "licenseprefix": "TPA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Acupuncture",
+    "licensetype": "Acupuncturist",
+    "licenseprefix": "ACU",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Dec"
+  },
+  {
+    "licensecategory": "Acupuncture",
+    "licensetype": "Military Spouse - Acupuncturist",
+    "licenseprefix": "MSACU",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Dec"
+  },
+  {
+    "licensecategory": "Addiction Counselors",
+    "licensetype": "Addiction Counselor Candidate",
+    "licenseprefix": "ADDC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year"
+  },
+  {
+    "licensecategory": "Addiction Counselors",
+    "licensetype": "Certified Addiction Counselor II",
+    "licenseprefix": "ACB",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Addiction Counselors",
+    "licensetype": "Certified Addiction Specialist",
+    "licenseprefix": "ACC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Addiction Counselors",
+    "licensetype": "Certified Addiction Technician",
+    "licenseprefix": "ACA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Addiction Counselors",
+    "licensetype": "Licensed Addiction Counselor",
+    "licenseprefix": "ACD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Addiction Counselors",
+    "licensetype": "Military Spouse - Addiction Counselor Candidate",
+    "licenseprefix": "MSADDC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year"
+  },
+  {
+    "licensecategory": "Addiction Counselors",
+    "licensetype": "Military Spouse - Certified Addiction Specialist",
+    "licenseprefix": "MSACC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Addiction Counselors",
+    "licensetype": "Military Spouse - Certified Addiction Technician",
+    "licenseprefix": "MSACA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Addiction Counselors",
+    "licensetype": "Military Spouse - Licensed Addiction Counselor",
+    "licenseprefix": "MSACD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Architects, Engineers and Land Surveyors",
+    "licensetype": "Architect",
+    "licenseprefix": "ARC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Architects, Engineers and Land Surveyors",
+    "licensetype": "Military Spouse - Architect",
+    "licenseprefix": "MSARC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Architects, Engineers and Land Surveyors",
+    "licensetype": "Military Spouse - Professional Engineer",
+    "licenseprefix": "MSPE",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Architects, Engineers and Land Surveyors",
+    "licensetype": "Military Spouse - Professional Land Surveyor",
+    "licenseprefix": "MSPLS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Architects, Engineers and Land Surveyors",
+    "licensetype": "Professional Engineer",
+    "licenseprefix": "PE",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Architects, Engineers and Land Surveyors",
+    "licensetype": "Professional Land Surveyor",
+    "licenseprefix": "PLS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Athletic Trainers",
+    "licensetype": "Athletic Trainers",
+    "licenseprefix": "AT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Athletic Trainers",
+    "licensetype": "Military Spouse - Athletic Trainers",
+    "licenseprefix": "MSAT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Audiology",
+    "licensetype": "Audiologist",
+    "licenseprefix": "AUD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Audiology",
+    "licensetype": "Clinical Fellow in Audiology (Historic Only)",
+    "licenseprefix": "CFY",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Audiology",
+    "licensetype": "Military Spouse - Audiologist",
+    "licenseprefix": "MSAUD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Barber/Cosmetology",
+    "licensetype": "Barber",
+    "licenseprefix": "BAR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Barber/Cosmetology",
+    "licensetype": "Cosmetologist",
+    "licenseprefix": "COS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Apr"
+  },
+  {
+    "licensecategory": "Barber/Cosmetology",
+    "licensetype": "Esthetician",
+    "licenseprefix": "COZ",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Barber/Cosmetology",
+    "licensetype": "Hair Stylist",
+    "licenseprefix": "HST",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Barber/Cosmetology",
+    "licensetype": "Military Spouse - Barber",
+    "licenseprefix": "MSBAR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Barber/Cosmetology",
+    "licensetype": "Military Spouse - Cosmetologist",
+    "licenseprefix": "MSCOS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Apr"
+  },
+  {
+    "licensecategory": "Barber/Cosmetology",
+    "licensetype": "Military Spouse - Esthetician",
+    "licenseprefix": "MSCOZ",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Barber/Cosmetology",
+    "licensetype": "Military Spouse - Hair Stylist",
+    "licenseprefix": "MSHST",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Barber/Cosmetology",
+    "licensetype": "Military Spouse - Nail Technician",
+    "licenseprefix": "MSMAN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Barber/Cosmetology",
+    "licensetype": "Nail Technician",
+    "licenseprefix": "MAN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Barber/Cosmetology",
+    "licensetype": "Shop Registration",
+    "licenseprefix": "REG",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Chiropractic",
+    "licensetype": "Acupuncture Chiorpractic (CHR Authority)",
+    "licenseprefix": "AC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Chiropractic",
+    "licensetype": "Animal Chiropractic (CHR Authority)",
+    "licenseprefix": "ANI",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Chiropractic",
+    "licensetype": "Chiropractor",
+    "licenseprefix": "CHR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Chiropractic",
+    "licensetype": "Electrotherapy - Chiropractic (CHR Authority)",
+    "licenseprefix": "EL",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Chiropractic",
+    "licensetype": "Military Spouse - Acupuncture - Chiropractic",
+    "licenseprefix": "MSAC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Chiropractic",
+    "licensetype": "Military Spouse - Animal Chiropractic",
+    "licenseprefix": "MSANI",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Chiropractic",
+    "licensetype": "Military Spouse - Chiropractic",
+    "licenseprefix": "MSCHR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Chiropractic",
+    "licensetype": "Military Spouse - Electrotherapy - Chiropractic",
+    "licenseprefix": "MSEL",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Chiropractic",
+    "licensetype": "Temporary - Chiropractor (Historic Only)",
+    "licenseprefix": "T-CHR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Combative Sports",
+    "licensetype": "Boxing Contestant (Historic Only)",
+    "licenseprefix": "CST",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Combative Sports",
+    "licensetype": "Boxing Corner",
+    "licenseprefix": "COR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Jun"
+  },
+  {
+    "licensecategory": "Combative Sports",
+    "licensetype": "Boxing Official",
+    "licenseprefix": "OFC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Jun"
+  },
+  {
+    "licensecategory": "Combative Sports",
+    "licensetype": "Boxing Participant",
+    "licenseprefix": "PAR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Jun"
+  },
+  {
+    "licensecategory": "Combative Sports",
+    "licensetype": "Boxing Promoter",
+    "licenseprefix": "PRO",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Jun"
+  },
+  {
+    "licensecategory": "Combative Sports",
+    "licensetype": "Boxing Second (Historic Only)",
+    "licenseprefix": "SEC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Combative Sports",
+    "licensetype": "Military Spouse - Boxing Official",
+    "licenseprefix": "MSOFC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Jun"
+  },
+  {
+    "licensecategory": "Combative Sports",
+    "licensetype": "Military Spouse - Boxing Promoter",
+    "licenseprefix": "MSPRO",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Jun"
+  },
+  {
+    "licensecategory": "Combative Sports",
+    "licensetype": "Military Spouse - Corner",
+    "licenseprefix": "MSCOR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Jun"
+  },
+  {
+    "licensecategory": "Combative Sports",
+    "licensetype": "Military Spouse - Participant",
+    "licenseprefix": "MSPAR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Jun"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Academic Dentist",
+    "licenseprefix": "AD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Conscious / Deep Sedation (Historic Only)",
+    "licenseprefix": "CDS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Deep Sedation/General Anesthesia (DEN Authority)",
+    "licenseprefix": "GEN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Varies"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Dental Hygienist",
+    "licenseprefix": "DH",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Dental Therapist",
+    "licenseprefix": "DT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Dentist",
+    "licenseprefix": "DEN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Enteral Conscious Sedation (Historic Only)",
+    "licenseprefix": "ECS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Interim Therapeutic Restorations Permit",
+    "licenseprefix": "ITR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Local Anesthesia (DH Authority)",
+    "licenseprefix": "LOCAL",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Military Spouse - Academic Dentist",
+    "licenseprefix": "MSAD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Military Spouse - Deep Sedation/General Anesthesia",
+    "licenseprefix": "MSGEN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Varies"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Military Spouse - Dental Hygienist",
+    "licenseprefix": "MSDH",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Military Spouse - Dentist",
+    "licenseprefix": "MSDEN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Military Spouse - Interim Therapeutic Restorations Permit",
+    "licenseprefix": "MSITR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Military Spouse - Local Anesthesia",
+    "licenseprefix": "MSLOC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Military Spouse - Minimal Sedation",
+    "licenseprefix": "MSMINS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Varies"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Military Spouse - Moderate Sedation",
+    "licenseprefix": "MSMODS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Varies"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Minimal Sedation (DEN Authority)",
+    "licenseprefix": "MINS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Varies"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Moderate Sedation (DEN Authority)",
+    "licenseprefix": "MODS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Varies"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Parenteral/Enteral Conscious Sedation (Historic Only)",
+    "licenseprefix": "PCS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Temporary - Dental Hygienist (Historic Only)",
+    "licenseprefix": "T-DH",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Temporary - Dentist (Historic Only)",
+    "licenseprefix": "T-DEN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Temporary Deep Sedation/General Anesthesia Permit",
+    "licenseprefix": "TMPGEN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Dental",
+    "licensetype": "Temporary Moderate Sedation Privleges",
+    "licenseprefix": "TMPMOD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Electrical Apprentice",
+    "licenseprefix": "APE",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Electrical Contractor",
+    "licenseprefix": "EC",
+    "businessorindividual": "Business",
+    "renewalcycle": "Three Year",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Journeyman Electrician",
+    "licenseprefix": "JW",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Journeyman Electrician Work Permit",
+    "licenseprefix": "JEWP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Master Electrician",
+    "licenseprefix": "ME",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Master Electrician Temporary Permit for Emergency Situations (Historic Only)",
+    "licenseprefix": "METPE",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Master Electrician Work Permit",
+    "licenseprefix": "MEWP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Military Spouse - Electrical Apprentice",
+    "licenseprefix": "MSAPE",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Military Spouse - Journeyman Electrician",
+    "licenseprefix": "MSJW",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Military Spouse - Master Electrician",
+    "licenseprefix": "MSME",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Military Spouse - Residential Wireman",
+    "licenseprefix": "MSRW",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Residential Wireman",
+    "licenseprefix": "RW",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Electrical",
+    "licensetype": "Residential Wireman Work Permit",
+    "licenseprefix": "RWWP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Crematory",
+    "licenseprefix": "CM",
+    "businessorindividual": "Business",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Funeral Home",
+    "licenseprefix": "FH",
+    "businessorindividual": "Business",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Cremationist",
+    "licenseprefix": "CRM",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Provisional Cremationist",
+    "licenseprefix": "CRMP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Embalmer",
+    "licenseprefix": "EMB",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Provisional Embalmer",
+    "licenseprefix": "EMBP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Funeral Director",
+    "licenseprefix": "FD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Provisional Funeral Director",
+    "licenseprefix": "FDP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Mortuary Science Practitioner",
+    "licenseprefix": "MSP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Provisional Mortuary Science Practitioner",
+    "licenseprefix": "MSPP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Natural Reductionist",
+    "licenseprefix": "NR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Funeral and Mortuary Science",
+    "licensetype": "Provisional Natural Reductionist",
+    "licenseprefix": "NRP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Hearing Aid Providers",
+    "licensetype": "Hearing Aid Apprentice",
+    "licenseprefix": "HAAP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Hearing Aid Providers",
+    "licensetype": "Hearing Aid Associate",
+    "licenseprefix": "HAA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Hearing Aid Providers",
+    "licensetype": "Hearing Aid Provider",
+    "licenseprefix": "HAD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Hearing Aid Providers",
+    "licensetype": "Hearing Aid Provider - Trainee",
+    "licenseprefix": "HAT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Hearing Aid Providers",
+    "licensetype": "Military Spouse - Hearing Aid Apprentice",
+    "licenseprefix": "MSHAAP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Hearing Aid Providers",
+    "licensetype": "Military Spouse - Hearing Aid Provider",
+    "licenseprefix": "MSHAD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Landscape Architects",
+    "licensetype": "Landscape Architects",
+    "licenseprefix": "LA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Landscape Architects",
+    "licensetype": "Military Spouse - Landscape Architect",
+    "licenseprefix": "MSLA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Marriage and Family Therapists",
+    "licensetype": "Marriage and Family Therapist",
+    "licenseprefix": "MFT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Marriage and Family Therapists",
+    "licensetype": "Marriage and Family Therapist Candidate",
+    "licenseprefix": "MFTC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year"
+  },
+  {
+    "licensecategory": "Marriage and Family Therapists",
+    "licensetype": "Military Spouse - Marriage and Family Therapist",
+    "licenseprefix": "MSMFT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Marriage and Family Therapists",
+    "licensetype": "Military Spouse - Marriage and Family Therapist Candidate",
+    "licenseprefix": "MSMFTC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year"
+  },
+  {
+    "licensecategory": "Marriage and Family Therapists",
+    "licensetype": "Military Spouse - Provisional Marriage and Family Therapist",
+    "licenseprefix": "MSMFP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Marriage and Family Therapists",
+    "licensetype": "Provisional Marriage and Family Therapist",
+    "licenseprefix": "MFP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Massage Therapists",
+    "licensetype": "Massage Therapist",
+    "licenseprefix": "MT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Massage Therapists",
+    "licensetype": "Military Spouse - Massage Therapist",
+    "licenseprefix": "MSMT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Massage Therapists",
+    "licensetype": "Provisional Massage Therapist (Historic Only)",
+    "licenseprefix": "PMT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Anesthesiologist Assistants",
+    "licenseprefix": "ANT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Compact Physician",
+    "licenseprefix": "CDR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "30-May"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Compact Physician Home",
+    "licenseprefix": "CDRH",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "30-May"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Foreign Teaching Physician",
+    "licenseprefix": "TDP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Military Spouse - Anesthesiologist Assistant",
+    "licenseprefix": "MSANT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Military Spouse - Physician",
+    "licenseprefix": "MSDR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "30-Apr"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Military Spouse - Physician Assistant",
+    "licenseprefix": "MSPA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Military Spouse - Physician Training License",
+    "licenseprefix": "MSTL",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Physician",
+    "licenseprefix": "DR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "30-Apr"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Physician Assistant",
+    "licenseprefix": "PA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Physician in a Training Program",
+    "licenseprefix": "TLTP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Physician Training License",
+    "licenseprefix": "TL",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Pro Bono Physician",
+    "licenseprefix": "DRP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "30-Apr"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Temporary - Anesthesiologist Assistant (Historic Only)",
+    "licenseprefix": "T-ANT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Temporary - Physician (Historic Only)",
+    "licenseprefix": "T-DR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Medical",
+    "licensetype": "Temporary - Physician Assistant (Historic Only)",
+    "licenseprefix": "T-PA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Direct Entry Midwives",
+    "licensetype": "Direct Entry Midwife",
+    "licenseprefix": "MWR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Direct Entry Midwives",
+    "licensetype": "Midwife Intravenous Authority",
+    "licenseprefix": "MIV",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Direct Entry Midwives",
+    "licensetype": "Midwife Medication Authority",
+    "licenseprefix": "MWM",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Direct Entry Midwives",
+    "licensetype": "Midwife Suturing Authority",
+    "licenseprefix": "MWS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Direct Entry Midwives",
+    "licensetype": "Military Spouse - Direct Entry Midwife",
+    "licenseprefix": "MSMWR",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Direct Entry Midwives",
+    "licensetype": "Military Spouse - Midwife Intravenous Authority",
+    "licenseprefix": "MSMIV",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Direct Entry Midwives",
+    "licensetype": "Military Spouse - Midwife Medication Authority",
+    "licenseprefix": "MSMWM",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Direct Entry Midwives",
+    "licensetype": "Military Spouse - Midwife Suturing Authority",
+    "licenseprefix": "MSMWS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Natural Medicine",
+    "licensetype": "Clinical Facilitator",
+    "licenseprefix": "NMCF",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Natural Medicine",
+    "licensetype": "Distinguished Educator",
+    "licenseprefix": "NMDE",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Natural Medicine",
+    "licensetype": "Facilitator",
+    "licenseprefix": "NMF",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Natural Medicine",
+    "licensetype": "Facilitator in Training",
+    "licenseprefix": "NMIT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Natural Medicine",
+    "licensetype": "Facilitator Training Program",
+    "licenseprefix": "NMTP",
+    "businessorindividual": "Business",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Naturopathy",
+    "licensetype": "Military Spouse - Naturopathic Doctor",
+    "licenseprefix": "MSND",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Jun"
+  },
+  {
+    "licensecategory": "Naturopathy",
+    "licensetype": "Naturopathic Doctor",
+    "licenseprefix": "ND",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Jun"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Certified Midwife",
+    "licenseprefix": "CMW",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Certified Midwife Prescriptive Authority",
+    "licenseprefix": "CMWRX",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Certified Nurse Aide",
+    "licenseprefix": "NA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Certified Nurse Midwife - APN",
+    "licenseprefix": "APN CNM",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Certified Nurse Midwife - RXN",
+    "licenseprefix": "RXN CNM",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Certified Registered Nurse Anesthetist - APN",
+    "licenseprefix": "APN CRNA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Certified Registered Nurse Anesthetist - RXN",
+    "licenseprefix": "RXN CRNA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Clinical Nurse Specialist - APN",
+    "licenseprefix": "APN CNS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Clinical Nurse Specialist - RXN",
+    "licenseprefix": "RXN CNS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Compact Certified Nurse Midwife - C-APN",
+    "licenseprefix": "C-APN C-CNM",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Compact Certified Nurse Midwife - C-RXN",
+    "licenseprefix": "C-RXN C-CNM",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Compact Certified Registered Nurse Anesthetist - C-APN",
+    "licenseprefix": "C-APN C-CRNA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Compact Certified Registered Nurse Anesthetist - C-RXN",
+    "licenseprefix": "C-RXN C-CRNA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Compact Clinical Nurse Specialist - C-APN",
+    "licenseprefix": "C-APN C-CNS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Compact Clinical Nurse Specialist - C-RXN",
+    "licenseprefix": "C-RXN C-CNS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Compact Intravenous Certification",
+    "licenseprefix": "C-IV",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Compact Nurse Practitioner - C-APN",
+    "licenseprefix": "C-APN C-NP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Compact Nurse Practitioner - C-RXN",
+    "licenseprefix": "C-RXN C-NP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "DOC - Certified Nurse Aide (Historic Only)",
+    "licenseprefix": "DOC-NA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "DOC - Certified Nurse Midwife - RXN (Historic Only)",
+    "licenseprefix": "DOCRXN CNM",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "DOC - Certified Nurse Midwife -APN (Historic Only)",
+    "licenseprefix": "DOCAPN CNM",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "DOC - Certified Registered Nurse Anesthetist - APN (Historic Only)",
+    "licenseprefix": "DOCAPN CRNA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "DOC - Certified Registered Nurse Anesthetist - RXN (Historic Only)",
+    "licenseprefix": "DOCRXN CRNA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "DOC - Clinical Nurse Specialist - APN (Historic Only)",
+    "licenseprefix": "DOCAPN CNS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "DOC - Clinical Nurse Specialist - RXN (Historic Only)",
+    "licenseprefix": "DOCRXN CNS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "DOC - Licensed Practical Nurse (Historic Only)",
+    "licenseprefix": "DOC-PN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "DOC - Nurse Practitioner - APN (Historic Only)",
+    "licenseprefix": "DOCAPN NP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "DOC - Nurse Practitioner - RXN (Historic Only)",
+    "licenseprefix": "DOCRXN NP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "DOC - Registered Nurse (Historic Only)",
+    "licenseprefix": "DOC-RN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Intravenous Certification",
+    "licenseprefix": "IV",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Licensed Practical Nurse",
+    "licenseprefix": "PN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Medication Aide Authority",
+    "licenseprefix": "MAA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Certified Nurse Aide",
+    "licenseprefix": "MSNA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Certified Nurse Midwife - APN",
+    "licenseprefix": "MSAPN CNM",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Certified Nurse Midwife - RXN",
+    "licenseprefix": "MSRXN CNM",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Certified Registered Nurse Anesthetist - APN",
+    "licenseprefix": "MSAPN CRNA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Certified Registered Nurse Anesthetist - RXN",
+    "licenseprefix": "MSRXN CRNA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Clinical Nurse Specialist - APN",
+    "licenseprefix": "MSAPN CNS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Clinical Nurse Specialist - RXN",
+    "licenseprefix": "MSRXN CNS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Intravenous Certification",
+    "licenseprefix": "MSIV",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Licensed Practical Nurse Single State",
+    "licenseprefix": "MSPN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Medication Aide Authority",
+    "licenseprefix": "MSMAA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Nurse Practitioner - APN",
+    "licenseprefix": "MSAPN NP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Nurse Practitioner - RXN",
+    "licenseprefix": "MSRXN NP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Psychiatric Technician - Developmentally Disabled",
+    "licenseprefix": "MSDD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Psychiatric Technician - Mentally Ill",
+    "licenseprefix": "MSMI",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Military Spouse - Registered Nurse Single State",
+    "licenseprefix": "MSRN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Nurse Practitioner - APN",
+    "licenseprefix": "APN NP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Nurse Practitioner - RXN",
+    "licenseprefix": "RXN NP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Psychiatric Technician - Developmentally Disabled",
+    "licenseprefix": "DD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Psychiatric Technician - Mentally Ill",
+    "licenseprefix": "MI",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Registered Nurse",
+    "licenseprefix": "RN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd and Even",
+    "renewalexpirationdate": "30-Sep"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Special Student Permit - LPN",
+    "licenseprefix": "SPN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Special Student Permit - RN",
+    "licenseprefix": "SRN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Temporary - Advanced Practice Nurse (Historic Only)",
+    "licenseprefix": "T-APN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Temporary - Certified Nurse Aide (Historic Only)",
+    "licenseprefix": "T-NA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Temporary - Licensed Practical Nurse (Historic Only)",
+    "licenseprefix": "T-PN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Temporary - Registered Nurse (Historic Only)",
+    "licenseprefix": "T-RN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Temporary Compact Practical Nurse (Historic Only)",
+    "licenseprefix": "TCPN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Temporary Compact Registered Nurse (Historic Only)",
+    "licenseprefix": "TCRN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Temporary Graduate Practical Nurse Permit (Historic Only)",
+    "licenseprefix": "TGPNP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Temporary Graduate Professional Nurse Permit (Historic Only)",
+    "licenseprefix": "TGRNP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Temporary Practical Nurse Permit (Historic Only)",
+    "licenseprefix": "TPNP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing",
+    "licensetype": "Temporary Professional Nurse Permit (Historic Only)",
+    "licenseprefix": "TRNP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing Home Administrators",
+    "licensetype": "Military Spouse - NHA - In Training",
+    "licenseprefix": "MSAIT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing Home Administrators",
+    "licensetype": "Military Spouse - Nursing Home Administrator",
+    "licenseprefix": "MSNHA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Nursing Home Administrators",
+    "licensetype": "NHA Temporary Permit for Emergency Situations",
+    "licenseprefix": "NHATPE",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing Home Administrators",
+    "licensetype": "Nursing Home Administrator",
+    "licenseprefix": "NHA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Nursing Home Administrators",
+    "licensetype": "Nursing Home Administrator - In Training",
+    "licenseprefix": "AIT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Nursing Home Administrators",
+    "licensetype": "Temporary Hosptial Administrator Permit",
+    "licenseprefix": "TNHAP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Occupational Therapy",
+    "licensetype": "Military Spouse - Occupational Therapist",
+    "licenseprefix": "MSOT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Occupational Therapy",
+    "licensetype": "Military Spouse - Occupational Therapy Assistant",
+    "licenseprefix": "MSOTA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Occupational Therapy",
+    "licensetype": "Occupational Therapist",
+    "licenseprefix": "OT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Occupational Therapy",
+    "licensetype": "Occupational Therapist Provisional",
+    "licenseprefix": "OTP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Occupational Therapy",
+    "licensetype": "Occupational Therapy Assistant",
+    "licenseprefix": "OTA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Jan"
+  },
+  {
+    "licensecategory": "Occupational Therapy",
+    "licensetype": "Occupational Therapy Assistant Provisional",
+    "licenseprefix": "OTAP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Occupational Therapy",
+    "licensetype": "Temporary - Occupational Therapist (Historic Only)",
+    "licenseprefix": "T-OT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Occupational Therapy",
+    "licensetype": "Temporary - Occupational Therapy Assistant (Historic Only)",
+    "licenseprefix": "T-OTA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Optometric",
+    "licensetype": "Military Spouse - Optometrist",
+    "licenseprefix": "MSOPT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Optometric",
+    "licensetype": "Optometrist",
+    "licenseprefix": "OPT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Optometric",
+    "licensetype": "Optometrist Volunteer",
+    "licenseprefix": "OPV",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Optometric",
+    "licensetype": "Temporary - Optometrist (Historic Only)",
+    "licenseprefix": "T-OPT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Outfitters",
+    "licensetype": "Military Spouse - Outfitter",
+    "licenseprefix": "MSOUT",
+    "businessorindividual": "Either",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Outfitters",
+    "licensetype": "Outfitter",
+    "licenseprefix": "OUT",
+    "businessorindividual": "Either",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Mar"
+  },
+  {
+    "licensecategory": "Passenger Tramway",
+    "licensetype": "Tramway Lift",
+    "licenseprefix": "TRM",
+    "businessorindividual": "Business",
+    "renewalcycle": "Annual",
+    "year": "Relative Date"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Automated Pharmacy Dispensing System",
+    "licenseprefix": "APDS",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Compounding Authority",
+    "licenseprefix": "CMPD",
+    "businessorindividual": "Business",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Hospital Satellite Pharmacy",
+    "licenseprefix": "HSP",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Limited License",
+    "licenseprefix": "LTD",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Manufacturer",
+    "licenseprefix": "MFR",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Military Spouse - Pharmacist",
+    "licenseprefix": "MSPHA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Military Spouse - Pharmacist Intern",
+    "licenseprefix": "MSIN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Military Spouse - Pharmacy Technician",
+    "licenseprefix": "MSPHAT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Non-Resident 503B Outsourcing Facility",
+    "licenseprefix": "NOF",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Other Outlet",
+    "licenseprefix": "OO",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Pharmacist",
+    "licenseprefix": "PHA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Pharmacist Intern",
+    "licenseprefix": "IN",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Parmacist MOUD",
+    "licenseprefix": "PHACS",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Pharmacy Technician",
+    "licenseprefix": "PHAT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Pharmacy Technician Provisional",
+    "licenseprefix": "PHATP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Prescription Drug Outlet- In-State",
+    "licenseprefix": "PDO",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Prescription Drug Outlet-Out-of-State",
+    "licenseprefix": "OSP",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Provisional Pharmacy Technician",
+    "licenseprefix": "PHATP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Specialized Prescription Drug Outlet",
+    "licenseprefix": "SPDO",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Telepharmacy Outlet",
+    "licenseprefix": "TPDO",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Third Party Logistics Provider",
+    "licenseprefix": "TPLP",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Wholesaler In-State",
+    "licenseprefix": "WHI",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Pharmacy",
+    "licensetype": "Wholesaler Out-of-State",
+    "licenseprefix": "WHO",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Physical Therapy",
+    "licensetype": "Animal Physical Therapy",
+    "licenseprefix": "APT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Physical Therapy",
+    "licensetype": "Military Spouse - Animal Physical Therapy",
+    "licenseprefix": "MSAPT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Physical Therapy",
+    "licensetype": "Military Spouse - Physical Therapist",
+    "licenseprefix": "MSPTL",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Physical Therapy",
+    "licensetype": "Military Spouse - Physical Therapist Assistant",
+    "licenseprefix": "MSPTA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Physical Therapy",
+    "licensetype": "Physical Therapist",
+    "licenseprefix": "PTL",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Physical Therapy",
+    "licensetype": "Physical Therapist Assistant",
+    "licenseprefix": "PTA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Physical Therapy",
+    "licensetype": "Physical Therapy Provisional",
+    "licenseprefix": "PTLP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Physical Therapy",
+    "licensetype": "Temporary - Physical Therapist (Historic Only)",
+    "licenseprefix": "T-PTL",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Physical Therapy",
+    "licensetype": "Temporary - Physical Therapist Assistant (Historic Only)",
+    "licenseprefix": "T-PTA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Journeyworker Plumber",
+    "licenseprefix": "JP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Journeyworker Plumber Work Permit",
+    "licenseprefix": "JPWP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Master Plumber",
+    "licenseprefix": "MP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Master Plumber Temporary Permit for Emergency Situations (Historic Only)",
+    "licenseprefix": "MPTE",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Master Plumber Work Permit",
+    "licenseprefix": "MPWP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Military Spouse - Journeyworker Plumber",
+    "licenseprefix": "MSJP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Military Spouse - Master Plumber",
+    "licenseprefix": "MSMP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Military Spouse - Plumbing Apprentice",
+    "licenseprefix": "MSAP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Military Spouse - Residential Plumber",
+    "licenseprefix": "MSRP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Military Spouse - Water Conditioning Installer",
+    "licenseprefix": "MSWI",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Military Spouse - Water Conditioning Principal",
+    "licenseprefix": "MSWP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Plumbing Apprentice",
+    "licenseprefix": "AP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Plumbing Contractor",
+    "licenseprefix": "PC",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Residential Plumber",
+    "licenseprefix": "RP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Residential Plumber Work Permit",
+    "licenseprefix": "RPWP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Water Conditioning Contractor",
+    "licenseprefix": "WC",
+    "businessorindividual": "Business",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Water Conditioning Installer",
+    "licenseprefix": "WI",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Plumbing",
+    "licensetype": "Water Conditioning Principal",
+    "licenseprefix": "WP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "28-Feb"
+  },
+  {
+    "licensecategory": "Podiatry",
+    "licensetype": "Military Spouse - Podiatrist",
+    "licenseprefix": "MSPOD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Podiatry",
+    "licensetype": "Military Spouse - Podiatrist Training License",
+    "licenseprefix": "MSPDT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Podiatry",
+    "licensetype": "Podiatrist",
+    "licenseprefix": "POD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Podiatry",
+    "licensetype": "Podiatrist Training License",
+    "licenseprefix": "PDT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Podiatry",
+    "licensetype": "Podiatrist Volunteer License",
+    "licenseprefix": "PDV",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Podiatry",
+    "licensetype": "Temporary - Podiatrist (Historic Only)",
+    "licenseprefix": "T-POD",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Professional Counselors",
+    "licensetype": "Licensed Professional Counselor",
+    "licenseprefix": "LPC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Professional Counselors",
+    "licensetype": "Licensed Professional Counselor Candidate",
+    "licenseprefix": "LPCC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year"
+  },
+  {
+    "licensecategory": "Professional Counselors",
+    "licensetype": "Military Spouse - Licensed Professional Counselor",
+    "licenseprefix": "MSLPC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Professional Counselors",
+    "licensetype": "Military Spouse - Licensed Professional Counselor Candidate",
+    "licenseprefix": "MSLPCC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year"
+  },
+  {
+    "licensecategory": "Professional Counselors",
+    "licensetype": "Military Spouse - Provisional Licensed Professional Counselor",
+    "licenseprefix": "MSLPP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Professional Counselors",
+    "licensetype": "Provisional Licensed Professional Counselor",
+    "licenseprefix": "LPP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Psychology",
+    "licensetype": "Licensed Psychologist",
+    "licenseprefix": "PSY",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Psychology",
+    "licensetype": "Licensed Psychologist Candidate",
+    "licenseprefix": "PSYC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year"
+  },
+  {
+    "licensecategory": "Psychology",
+    "licensetype": "Military Spouse - Licensed Psychologist",
+    "licenseprefix": "MSPSY",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Psychology",
+    "licensetype": "Military Spouse - Provisional Psychologist",
+    "licenseprefix": "MSPSP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Psychology",
+    "licensetype": "Prescribing Psychologist",
+    "licenseprefix": "PSYRX",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Psychology",
+    "licensetype": "Military Spouse - Psychologist Candidate",
+    "licenseprefix": "MSPSYC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year"
+  },
+  {
+    "licensecategory": "Psychology",
+    "licensetype": "Provisional Psychologist",
+    "licenseprefix": "PSP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Psychology",
+    "licensetype": "Psychologist Candidate",
+    "licenseprefix": "PSYC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year"
+  },
+  {
+    "licensecategory": "Radon Professionals",
+    "licensetype": "Radon Measurement Professional",
+    "licenseprefix": "RMT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-May"
+  },
+  {
+    "licensecategory": "Radon Professionals",
+    "licensetype": "Radon Mitigation Professional",
+    "licenseprefix": "RME",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-May"
+  },
+  {
+    "licensecategory": "Radon Professionals",
+    "licensetype": "Military Spouse - Radon Measurement Professional",
+    "licenseprefix": "MSRME",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-May"
+  },
+  {
+    "licensecategory": "Radon Professionals",
+    "licensetype": "Military Spouse - Radon Mitigation Professional",
+    "licenseprefix": "MSRMT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-May"
+  },
+  {
+    "licensecategory": "Respiratory Therapy",
+    "licensetype": "Military Spouse - Respiratory Therapist",
+    "licenseprefix": "MSRTL",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Respiratory Therapy",
+    "licensetype": "Respiratory Therapist",
+    "licenseprefix": "RTL",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Respiratory Therapy",
+    "licensetype": "Temporary - Respiratory Therapist (Historic Only)",
+    "licenseprefix": "T-RTL",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Social Work",
+    "licensetype": "Clinical Social Worker Candidate",
+    "licenseprefix": "SWC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year"
+  },
+  {
+    "licensecategory": "Social Work",
+    "licensetype": "Licensed Clinical Social Worker",
+    "licenseprefix": "CSW",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Social Work",
+    "licensetype": "Licensed Social Worker",
+    "licenseprefix": "LSW",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Social Work",
+    "licensetype": "Military Spouse - Cliinical Social Worker Candidate",
+    "licenseprefix": "MSSWC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Three Year"
+  },
+  {
+    "licensecategory": "Social Work",
+    "licensetype": "Military Spouse - Licensed Clinical Social Worker",
+    "licenseprefix": "MSCSW",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Social Work",
+    "licensetype": "Military Spouse - Licensed Social Worker",
+    "licenseprefix": "MSLSW",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Social Work",
+    "licensetype": "Military Spouse - Provisional Social Worker",
+    "licenseprefix": "MSSWP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Social Work",
+    "licensetype": "Provisional Social Worker",
+    "licenseprefix": "SWP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Speech Language Pathology",
+    "licensetype": "Military Spouse - Speech Language - Pathologist",
+    "licenseprefix": "MSSLP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Speech Language Pathology",
+    "licensetype": "Provisional Speech Language Pathologist",
+    "licenseprefix": "PSLP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Speech Language Pathology",
+    "licensetype": "Speech Language - Pathologist",
+    "licenseprefix": "SLP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "30-Nov"
+  },
+  {
+    "licensecategory": "Speech Language Pathology",
+    "licensetype": "Temporary - Speech-Language Pathologist (Historic Only)",
+    "licenseprefix": "T-SLP",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Surgical Assistant and Surgical Technologist",
+    "licensetype": "Military Spouse - Surgical Assistant",
+    "licenseprefix": "MSSA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Surgical Assistant and Surgical Technologist",
+    "licensetype": "Military Spouse - Surgical Technologist",
+    "licenseprefix": "MSST",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Surgical Assistant and Surgical Technologist",
+    "licensetype": "Surgical Assistant",
+    "licenseprefix": "SA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Surgical Assistant and Surgical Technologist",
+    "licensetype": "Surgical Technologist",
+    "licenseprefix": "ST",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Tissue Banks",
+    "licensetype": "Nontransplant Tissue Bank",
+    "licenseprefix": "NTTB",
+    "businessorindividual": "Business",
+    "renewalcycle": "Annual",
+    "renewalexpirationdate": "30-Jun"
+  },
+  {
+    "licensecategory": "Unlicensed  Psychotherapist",
+    "licensetype": "Military Spouse - Unlicensed Psychotherapist",
+    "licenseprefix": "MSNLC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Unlicensed  Psychotherapist",
+    "licensetype": "Unlicensed Psychotherapist",
+    "licenseprefix": "NLC",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Odd",
+    "renewalexpirationdate": "31-Aug"
+  },
+  {
+    "licensecategory": "Veterinary",
+    "licensetype": "Academic Veterinarian",
+    "licenseprefix": "AV",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Veterinary",
+    "licensetype": "Military Spouse - Academic Vet",
+    "licenseprefix": "MSAV",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Veterinary",
+    "licensetype": "Military Spouse - Veterinarian",
+    "licenseprefix": "MSVET",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Veterinary",
+    "licensetype": "Military Spouse - Provisional Veterinarian Technician",
+    "licenseprefix": "MSPVT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Veterinary",
+    "licensetype": "Military Spouse Veterinarian Technician",
+    "licenseprefix": "MSVT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Veterinary",
+    "licensetype": "Temporary - Veterinarian (Historic Only)",
+    "licenseprefix": "T-VET",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Do not renew"
+  },
+  {
+    "licensecategory": "Veterinary",
+    "licensetype": "Veterinarian",
+    "licenseprefix": "VET",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Veterinary",
+    "licensetype": "Veterinarian Technician",
+    "licenseprefix": "VT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Veterinary",
+    "licensetype": "Veterinarian Technician Provisional",
+    "licenseprefix": "PVT",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  },
+  {
+    "licensecategory": "Veterinary",
+    "licensetype": "Veterinary Professional Associate",
+    "licenseprefix": "VPA",
+    "businessorindividual": "Individual",
+    "renewalcycle": "Two Year",
+    "year": "Even",
+    "renewalexpirationdate": "31-Oct"
+  }
+]

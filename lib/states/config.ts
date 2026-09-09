@@ -9,6 +9,7 @@
  * Louisiana: LSLBC statewide contractor licenses — see docs/DATA_SOURCES_LA.md.
  * Mississippi: MSBOC statewide contractor licenses — see docs/DATA_SOURCES_MS.md.
  * Kentucky: DHBC specialty trades only (no statewide GC) — see docs/DATA_SOURCES_KY.md.
+ * Colorado: DORA electrical/plumbing contractor registrations (no statewide GC) — see docs/DATA_SOURCES_CO.md.
  * Wisconsin: DSPS dwelling + trade credentials (no statewide commercial GC) — see docs/DATA_SOURCES_WI.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
@@ -25,7 +26,7 @@ import { msSbcPlainLabel } from "./ms-sbc";
 import { kyDhbcPlainLabel } from "./ky-dhbc";
 import { wiDspsPlainLabel } from "./wi-dsps";
 
-export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY" | "WI";
+export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY" | "WI" | "CO";
 
 /**
  * Product depth — single source of truth for homepage badges, Verify, and coverage copy.
@@ -339,6 +340,26 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     coverageNote:
       "Kentucky: DHBC specialty trades only (electrical, HVAC, plumbing) — no statewide general contractor license.",
   },
+  co: {
+    code: "CO",
+    slug: "co",
+    name: "Colorado",
+    shortName: "CO",
+    boardLabel: "Colorado Division of Professions and Occupations (DORA)",
+    boardShortLabel: "DORA EC/PC",
+    boardUrl: "https://dpo.colorado.gov/",
+    entityRegistryLabel: "Colorado Secretary of State (not ingested this ticket)",
+    entityRegistryUrl: "https://www.sos.state.co.us/",
+    licenseSource: "co_dora",
+    entitySource: "co_sos",
+    live: true,
+    depth: "specialty_verify",
+    badge: "Specialty",
+    scopeHint: "Electrical + plumbing contractor registrations",
+    browseEnabled: false,
+    coverageNote:
+      "Colorado: statewide DORA electrical contractor (EC) and plumbing contractor (PC) registrations — no statewide general contractor license. Confirm on DORA lookup.",
+  },
   wi: {
     code: "WI",
     slug: "wi",
@@ -364,7 +385,7 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
 export const DEFAULT_STATE_SLUG = "fl";
 
 /** Stable display order for homepage + Verify tabs */
-export const LIVE_STATE_ORDER = ["fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms", "ky"] as const;
+export const LIVE_STATE_ORDER = ["fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms", "ky", "co"] as const;
 
 export function getStateBySlug(slug: string): EvidenceState | null {
   const key = slug.toLowerCase();
@@ -383,7 +404,9 @@ export function getStateBySlug(slug: string): EvidenceState | null {
                 ? "ms"
                 : key === "kentucky"
                   ? "ky"
-                  : key === "wisconsin"
+                  : key === "colorado"
+                    ? "co"
+                    : key === "wisconsin"
                     ? "wi"
                     : key;
   const s = EVIDENCE_STATES[mapped] ?? null;

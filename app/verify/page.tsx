@@ -12,6 +12,7 @@ import { TexasCoverageBanner } from "@/components/search/TexasCoverageBanner";
 import { LouisianaCoverageBanner } from "@/components/search/LouisianaCoverageBanner";
 import { MississippiCoverageBanner } from "@/components/search/MississippiCoverageBanner";
 import { KentuckyCoverageBanner } from "@/components/search/KentuckyCoverageBanner";
+import { ColoradoCoverageBanner } from "@/components/search/ColoradoCoverageBanner";
 import { LegalNotice } from "@/components/trust/LegalNotice";
 import { VerifyWorkChips } from "@/components/verify/VerifyWorkChips";
 import { searchContractors } from "@/lib/contractors/queries";
@@ -51,7 +52,8 @@ export default async function VerifyPage({ searchParams }: Props) {
   const isLa = state.slug === "la";
   const isMs = state.slug === "ms";
   const isKy = state.slug === "ky";
-  const isSpecialty = isTx || isNj || isOr || isCa || isAz || isWa || isLa || isMs || isKy;
+  const isCo = state.slug === "co";
+  const isSpecialty = isTx || isNj || isOr || isCa || isAz || isWa || isLa || isMs || isKy || isCo;
   const q = (sp.q || "").trim();
   const discoveryHandoff = q.length >= 2 && isDiscoveryQuery(q);
   const intent = sp.intent === "have" || sp.intent === "research" ? sp.intent : null;
@@ -102,6 +104,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                   ? "Mississippi · MSBOC statewide licenses"
                   : isKy
                     ? "Kentucky · DHBC specialty trades"
+                    : isCo
+                      ? "Colorado · DORA EC/PC specialty"
             : "Florida · DBPR + Sunbiz";
 
   const heading = isNj
@@ -122,6 +126,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                   ? "Verify a Mississippi contractor"
                   : isKy
                     ? "Verify a Kentucky specialty contractor"
+                    : isCo
+                      ? "Verify a Colorado electrical or plumbing contractor"
             : "Verify a Florida contractor";
 
   const lead = isNj
@@ -142,6 +148,8 @@ export default async function VerifyPage({ searchParams }: Props) {
                   ? "Search MSBOC licenses by number or business name. Result cards show commercial / residential type, published status, and MC / SC when on the number."
                   : isKy
                     ? "Search DHBC electrical, HVAC, and plumbing contractor credentials by number or name. Kentucky has no statewide GC license — a miss does not mean unlicensed."
+                    : isCo
+                      ? "Colorado has no statewide general-contractor license. Exact EC/PC lookup is on the Colorado research page. Always confirm on DORA."
             : "Search by license number or business name. Result cards show license status, entity status, and location first — then open a full Trust Report.";
 
   const helpCards = isNj
@@ -277,6 +285,21 @@ export default async function VerifyPage({ searchParams }: Props) {
                       {
                         t: "What you’ll see",
                         d: "Published specialty type, Active status, and dates — then a Trust Report. Not a statewide GC directory.",
+                      },
+                    ]
+                : isCo
+                  ? [
+                      {
+                        t: "EC or PC credential",
+                        d: "Use prefix plus number, such as EC 12345. licenseNumber alone is not globally unique.",
+                      },
+                      {
+                        t: "Business name",
+                        d: "Exact EC/PC lookup is on /colorado. This Verify tab does not invent a statewide GC directory.",
+                      },
+                      {
+                        t: "What you’ll see",
+                        d: "Colorado has no statewide general-contractor license. Confirm on DORA.",
                       },
                     ]
       : [
@@ -418,6 +441,11 @@ export default async function VerifyPage({ searchParams }: Props) {
       {isKy ? (
         <div className="mt-4 max-w-3xl sm:mt-5">
           <KentuckyCoverageBanner showFloridaLink={!q} />
+        </div>
+      ) : null}
+      {isCo ? (
+        <div className="mt-4 max-w-3xl sm:mt-5">
+          <ColoradoCoverageBanner showFloridaLink={!q} />
         </div>
       ) : null}
 
@@ -593,6 +621,11 @@ export default async function VerifyPage({ searchParams }: Props) {
               {isKy ? (
                 <div className="pt-2 sm:pt-3">
                   <KentuckyCoverageBanner compact showFloridaLink={false} />
+                </div>
+              ) : null}
+              {isCo ? (
+                <div className="pt-2 sm:pt-3">
+                  <ColoradoCoverageBanner compact showFloridaLink={false} />
                 </div>
               ) : null}
             </div>
