@@ -1,0 +1,581 @@
+{
+  "version": "contractor-co-state-intel-v1",
+  "ticket": "CO-CON-001",
+  "as_of": "2026-09-09",
+  "generated_at": "2026-09-09T14:54:10.340517+00:00",
+  "no_trust_score": true,
+  "no_ranking": true,
+  "no_colorado_local_intel_routes_this_ticket": true,
+  "no_statewide_general_contractor_universe": true,
+  "publication": {
+    "indexable": true,
+    "robots": "index,follow",
+    "canonical": "https://www.contractortrusthub.com/colorado",
+    "route": "/colorado",
+    "h1": "Colorado Contractor License & Regulatory Intelligence"
+  },
+  "hero": {
+    "ec_active_value": 4789,
+    "ec_active_label": "Active electrical contractor registrations",
+    "ec_active_hint": "DORA prefix EC. Business-grain. Not unique companies. Not a general-contractor count.",
+    "pc_active_value": 3147,
+    "pc_active_label": "Active plumbing contractor registrations",
+    "pc_active_hint": "DORA prefix PC. Business-grain. Do not add to EC as unique companies.",
+    "discipline_rows_value": 5990,
+    "discipline_rows_label": "Contractor-relevant discipline observations",
+    "discipline_rows_hint": "Rows with caseNumber on EC/PC/trade/AELS prefixes. One case may appear on more than one row. Not quality.",
+    "discipline_cases_value": 5198,
+    "discipline_cases_label": "Distinct case numbers on those rows",
+    "discipline_cases_hint": "Deduplicated caseNumber values. Still not a ranking or Trust Score.",
+    "as_of_value": "2026-09-09",
+    "as_of_label": "DORA CIM extract retrievedAt date"
+  },
+  "source": {
+    "dataset_id": "7s5z-vewr",
+    "types_dataset_id": "349y-twqi",
+    "source_url": "https://data.colorado.gov/Regulations/Professional-and-Occupational-Licenses-in-Colorado/7s5z-vewr",
+    "csv_url": "https://data.colorado.gov/api/views/7s5z-vewr/rows.csv?accessType=DOWNLOAD",
+    "soda_resource": "https://data.colorado.gov/resource/7s5z-vewr.json",
+    "retrieved_at": "2026-09-09T14:51:20+00:00",
+    "update_description": "Official CIM/DORA extract. Dataset metadata: nightly after midnight. CIM 'Expected Update Frequency: Never' is catalog noise.",
+    "license": "Public Domain",
+    "access": "SOCRATA_API / BULK_CSV",
+    "raw_sha256": "b5aedc8b2abb9686ecd711a9a43cde02e529719d9770acd62c28aa2bc357f0a0",
+    "raw_bytes": 473894743,
+    "master_rows": 1606852,
+    "type_rows": 344,
+    "distinct_prefixes_in_master": 313,
+    "discipline_flagged_rows_all_prefixes": 59624,
+    "distinct_case_numbers_all_prefixes": 48154,
+    "do_not_headline_master_as_contractors": true
+  },
+  "regulatory_map": {
+    "model": "CO_DORA_SPECIALTY_NOT_GC",
+    "primary_regulator": {
+      "id": "dora_dpo",
+      "name": "Colorado Division of Professions and Occupations (DORA)",
+      "url": "https://dpo.colorado.gov/",
+      "verify": "https://apps2.colorado.gov/dora/licensing/Lookup/LicenseLookup.aspx",
+      "roster": "https://apps2.colorado.gov/dora/licensing/lookup/generateroster.aspx",
+      "cim": "https://data.colorado.gov/Regulations/Professional-and-Occupational-Licenses-in-Colorado/7s5z-vewr",
+      "role": "Statewide electrical and plumbing contractor registration plus individual trade and AELS professional licenses. Does not issue a statewide general-contractor license."
+    },
+    "terminology": {
+      "identity": "CO-DORA:{licensePrefix}:{licenseNumber}",
+      "active": "licenseStatusDescription equals Active",
+      "active_family": "status begins with Active (includes restricted/conditions)"
+    },
+    "what_it_establishes": [
+      "An official DORA license identity (prefix + number)",
+      "Whether an electrical or plumbing contractor registration is Active",
+      "Source-native license status, issue/expiration dates, and verify URL",
+      "Disciplinary observations attached only by exact prefix + number"
+    ],
+    "what_it_does_not_establish": [
+      "A statewide general-contractor license",
+      "That absence from EC/PC means an unlicensed general contractor",
+      "Quality, safety, or a Trust Score",
+      "That a license row is a unique company",
+      "That an architect, engineer, surveyor, or landscape architect is a contractor business",
+      "That an apprentice is a contractor business",
+      "Bond, insurance, or statewide permit evidence",
+      "A clean record from missing discipline"
+    ]
+  },
+  "identity": {
+    "namespace": "CO-DORA:{licensePrefix}:{licenseNumber}",
+    "license_number_alone_not_globally_unique": true,
+    "license_row_ne_person": true,
+    "license_row_ne_business": true,
+    "ec_ne_me": true,
+    "pc_ne_mp": true,
+    "pe_ne_general_contractor": true,
+    "architect_ne_contractor_business": true,
+    "apprentice_ne_contractor_business": true,
+    "discipline_row_ne_unique_case": true,
+    "case_ne_criminal_conviction": true,
+    "active_ne_recommended": true,
+    "licensed_ne_trusted": true,
+    "missing_ne_zero": true,
+    "contractor_identity_keys": 314407,
+    "duplicate_contractor_identity_rows": 1572,
+    "ec_pc_index_rows": 17910,
+    "ec_pc_distinct_normalized_names": 16878,
+    "ec_pc_names_with_multiple_credentials": 784,
+    "license_row_ne_unique_company": true
+  },
+  "business_credentials": {
+    "EC": {
+      "prefix": "EC",
+      "type": "Electrical Contractor",
+      "category": "Electrical",
+      "business_or_individual": "Business",
+      "all_rows": 12495,
+      "active_exact": 4789,
+      "active_family": 4791,
+      "status_counts": {
+        "Expired": 7321,
+        "Active": 4789,
+        "Need Master Hire - Cannot Practice": 321,
+        "Voluntary Surrender": 10,
+        "Revoked": 28,
+        "Cancelled": 21,
+        "Active - With Conditions": 2,
+        "Surrendered": 1,
+        "Suspended": 2
+      },
+      "publication": "PUBLIC",
+      "grain": "business_contractor_registration"
+    },
+    "PC": {
+      "prefix": "PC",
+      "type": "Plumbing Contractor",
+      "category": "Plumbing",
+      "business_or_individual": "Business",
+      "all_rows": 5415,
+      "active_exact": 3147,
+      "active_family": 3151,
+      "status_counts": {
+        "Expired": 2187,
+        "Active": 3147,
+        "Voluntary Surrender": 17,
+        "Revoked": 22,
+        "Need Master Hire - Cannot Practice": 36,
+        "Active - With Conditions": 4,
+        "Cancelled": 1,
+        "Surrendered": 1
+      },
+      "publication": "PUBLIC",
+      "grain": "business_contractor_registration"
+    },
+    "do_not_headline_ec_plus_pc_as_colorado_contractors": true,
+    "combined_active_exact_if_shown": {
+      "value": 7936,
+      "label": "Colorado active electrical + plumbing contractor credential rows",
+      "not": "unique contractor companies"
+    }
+  },
+  "individual_trades": {
+    "publication": "PUBLIC_RESEARCH_GRAPH",
+    "no_automatic_person_profiles": true,
+    "prefixes": {
+      "ME": {
+        "prefix": "ME",
+        "type": "Master Electrician",
+        "category": "Electrical",
+        "business_or_individual": "Individual",
+        "all_rows": 13419,
+        "active_exact": 7441,
+        "active_family": 7448,
+        "status_counts": {
+          "Active": 7441,
+          "Expired": 5865,
+          "Revoked": 54,
+          "Voluntary Surrender": 24,
+          "Inactive": 19,
+          "Active - With Conditions": 7,
+          "Suspended": 2,
+          "Surrendered": 4,
+          "Suspended Due to Child Support": 1,
+          "Cancelled": 2
+        }
+      },
+      "JW": {
+        "prefix": "JW",
+        "type": "Journeyman Electrician",
+        "category": "Electrical",
+        "business_or_individual": "Individual",
+        "all_rows": 33029,
+        "active_exact": 12549,
+        "active_family": 12576,
+        "status_counts": {
+          "Expired": 20325,
+          "Active": 12549,
+          "Revoked": 72,
+          "Active - With Conditions": 27,
+          "Voluntary Surrender": 20,
+          "Surrendered": 14,
+          "Suspended Due to Child Support": 12,
+          "Suspended": 3,
+          "Inactive": 7
+        }
+      },
+      "RW": {
+        "prefix": "RW",
+        "type": "Residential Wireman",
+        "category": "Electrical",
+        "business_or_individual": "Individual",
+        "all_rows": 6513,
+        "active_exact": 2031,
+        "active_family": 2040,
+        "status_counts": {
+          "Active": 2031,
+          "Expired": 4438,
+          "Revoked": 29,
+          "Active - With Conditions": 9,
+          "Voluntary Surrender": 3,
+          "Suspended Due to Child Support": 3
+        }
+      },
+      "MP": {
+        "prefix": "MP",
+        "type": "Master Plumber",
+        "category": "Plumbing",
+        "business_or_individual": "Individual",
+        "all_rows": 9359,
+        "active_exact": 4954,
+        "active_family": 4965,
+        "status_counts": {
+          "Active": 4954,
+          "Expired": 4301,
+          "Inactive": 28,
+          "Suspended Due to Child Support": 4,
+          "Revoked": 51,
+          "Active - With Conditions": 9,
+          "Voluntary Surrender": 10,
+          "Active - Restricted": 2
+        }
+      },
+      "JP": {
+        "prefix": "JP",
+        "type": "Journeyworker Plumber",
+        "category": "Plumbing",
+        "business_or_individual": "Individual",
+        "all_rows": 11878,
+        "active_exact": 2911,
+        "active_family": 2927,
+        "status_counts": {
+          "Expired": 8862,
+          "Active": 2911,
+          "Revoked": 53,
+          "Cancelled": 19,
+          "Surrendered": 6,
+          "Active - With Conditions": 16,
+          "Suspended Due to Child Support": 2,
+          "Inactive": 7,
+          "Voluntary Surrender": 2
+        }
+      },
+      "RP": {
+        "prefix": "RP",
+        "type": "Residential Plumber",
+        "category": "Plumbing",
+        "business_or_individual": "Individual",
+        "all_rows": 2617,
+        "active_exact": 546,
+        "active_family": 549,
+        "status_counts": {
+          "Expired": 2051,
+          "Active": 546,
+          "Active - With Conditions": 3,
+          "Revoked": 10,
+          "Cancelled": 6,
+          "Inactive": 1
+        }
+      }
+    }
+  },
+  "apprentices": {
+    "publication": "INTERNAL",
+    "omit_from_public_directory_metrics": true,
+    "prefixes": {
+      "APE": {
+        "prefix": "APE",
+        "type": "Electrical Apprentice",
+        "category": "Electrical",
+        "business_or_individual": "Individual",
+        "all_rows": 92007,
+        "active_exact": 15520,
+        "active_family": 15526,
+        "status_counts": {
+          "Expired": 44049,
+          "Cancelled": 32304,
+          "Active": 15520,
+          "Surrendered": 7,
+          "Suspended Due to Child Support": 34,
+          "Revoked": 68,
+          "Voluntary Surrender": 10,
+          "Suspended": 7,
+          "Active - With Conditions": 6,
+          "Inactive": 1,
+          "Summary Suspension": 1
+        }
+      },
+      "AP": {
+        "prefix": "AP",
+        "type": "Plumbing Apprentice",
+        "category": "Plumbing",
+        "business_or_individual": "Individual",
+        "all_rows": 41315,
+        "active_exact": 9787,
+        "active_family": 9790,
+        "status_counts": {
+          "Cancelled": 12974,
+          "Active": 9787,
+          "Expired": 18429,
+          "Revoked": 35,
+          "Suspended Due to Child Support": 80,
+          "Voluntary Surrender": 2,
+          "Active - With Conditions": 3,
+          "Suspended": 5
+        }
+      }
+    }
+  },
+  "aels": {
+    "publication": "PUBLIC_RESEARCH_GRAPH",
+    "not_general_contractors": true,
+    "not_construction_businesses": true,
+    "not_project_performance": true,
+    "prefixes": {
+      "PE": {
+        "prefix": "PE",
+        "type": "Professional Engineer",
+        "category": "Architects, Engineers and Land Surveyors",
+        "business_or_individual": "Individual",
+        "all_rows": 63299,
+        "active_exact": 32967,
+        "active_family": 32977,
+        "status_counts": {
+          "Active": 32967,
+          "Expired": 29809,
+          "Surrendered": 24,
+          "Retired": 377,
+          "Active - Restricted": 5,
+          "Revoked": 60,
+          "Suspended": 12,
+          "Voluntary Surrender": 37,
+          "Active - With Conditions": 5,
+          "Suspended Due to Child Support": 1,
+          "Cancelled": 2
+        }
+      },
+      "ARC": {
+        "prefix": "ARC",
+        "type": "Architect",
+        "category": "Architects, Engineers and Land Surveyors",
+        "business_or_individual": "Individual",
+        "all_rows": 18910,
+        "active_exact": 8710,
+        "active_family": 8712,
+        "status_counts": {
+          "Active": 8710,
+          "Expired": 9963,
+          "Retired": 108,
+          "Revoked": 10,
+          "Surrendered": 2,
+          "Voluntary Surrender": 42,
+          "Inactive": 65,
+          "Suspended": 8,
+          "Active - With Conditions": 1,
+          "Active - Restricted": 1
+        }
+      },
+      "PLS": {
+        "prefix": "PLS",
+        "type": "Professional Land Surveyor",
+        "category": "Architects, Engineers and Land Surveyors",
+        "business_or_individual": "Individual",
+        "all_rows": 4048,
+        "active_exact": 1548,
+        "active_family": 1556,
+        "status_counts": {
+          "Expired": 2300,
+          "Active": 1548,
+          "Retired": 52,
+          "Revoked": 43,
+          "Suspended": 29,
+          "Surrendered": 26,
+          "Inactive": 2,
+          "Voluntary Surrender": 40,
+          "Active - With Conditions": 8
+        }
+      },
+      "LA": {
+        "prefix": "LA",
+        "type": "Landscape Architects",
+        "category": "Landscape Architects",
+        "business_or_individual": "Individual",
+        "all_rows": 1821,
+        "active_exact": 1298,
+        "active_family": 1298,
+        "status_counts": {
+          "Active": 1298,
+          "Expired": 523
+        }
+      }
+    }
+  },
+  "discipline": {
+    "attach": "EXACT_OFFICIAL_ID licensePrefix + licenseNumber",
+    "name_only": "UNSAFE",
+    "all_prefix_flagged_rows": 59624,
+    "contractor_relevant_rows": 5990,
+    "contractor_distinct_cases": 5198,
+    "row_ne_case": true,
+    "action_ne_quality": true,
+    "no_action_ne_clean": true,
+    "complaint_ne_discipline": true,
+    "top_actions_all_prefixes": [
+      [
+        "CLS Stipulation",
+        19896
+      ],
+      [
+        "CLS Letter of Admonition",
+        14267
+      ],
+      [
+        "CLS Combined w/other case for action",
+        3533
+      ],
+      [
+        "CLS Voluntary Surrender/Relinquishment",
+        3197
+      ],
+      [
+        "CLS Revocation",
+        3018
+      ],
+      [
+        "ID Hearing Formal Complaint/Charges Filed with OAC",
+        2619
+      ],
+      [
+        "CLS Suspension",
+        2099
+      ],
+      [
+        "CLS Cease & Desist Order",
+        1683
+      ],
+      [
+        "ITRM Cessation of Practice",
+        1582
+      ],
+      [
+        "ITRM Summary Suspension",
+        1197
+      ],
+      [
+        "CLS Citation Issued",
+        851
+      ],
+      [
+        "ITRM Suspension",
+        851
+      ],
+      [
+        "Formal Complaint-Charges with OAC",
+        784
+      ],
+      [
+        "CLS Application Denied",
+        633
+      ],
+      [
+        "CLS Final Agency Order",
+        630
+      ]
+    ],
+    "publication": "PUBLIC_RESEARCH_GRAPH"
+  },
+  "sos_enrichment": {
+    "acquired": false,
+    "reason": "ATH-CO-000 reserves the 3.11M SOS entity file as a shared identity layer. CO-CON-001 does not ingest it.",
+    "name_only": "REVIEW / UNSAFE"
+  },
+  "bond_insurance": {
+    "acquired": false,
+    "coverage": "UNKNOWN / NOT_ACQUIRED",
+    "missing_ne_zero": true,
+    "note": "Electrical contractor applications may require workers' compensation/unemployment evidence. No accepted bulk filing graph."
+  },
+  "permits": {
+    "statewide_bulk": "NOT_IDENTIFIED",
+    "denver_ingested": false,
+    "local_routes": false,
+    "note": "Building permits are generally local/AHJ evidence in Colorado. Denver Accela remains parked."
+  },
+  "public_works_debarment": {
+    "access": "VERIFY / SEARCH / REQUEST",
+    "bulk_file": "NOT_CONFIRMED",
+    "do_not_claim_zero_debarred": true,
+    "destination": "https://www.colorado.gov/pacific/dpa/procurement"
+  },
+  "search": {
+    "channels": [
+      "/colorado",
+      "/verify?state=co",
+      "https://apps2.colorado.gov/dora/licensing/Lookup/LicenseLookup.aspx",
+      "https://apps2.colorado.gov/dora/licensing/lookup/generateroster.aspx"
+    ],
+    "fields": [
+      "EC or PC prefix + number",
+      "business name",
+      "city"
+    ],
+    "no_rank_by_discipline_or_license_count": true,
+    "person_trades_not_claimable": true
+  },
+  "claim": {
+    "individual_trades_claimable": false,
+    "apprentices_claimable": false,
+    "aels_claimable": false,
+    "business_follows_existing_public_profile_rules": true,
+    "dora_record_ne_claim_eligibility": true,
+    "claimed_ne_verified": true
+  },
+  "expansion_ledger": {
+    "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
+    "NET_NEW_STATE_IDENTITIES": 0,
+    "EXISTING_ORGANIZATIONS_ENRICHED": 0,
+    "NEW_EVIDENCE_ROWS": 5990,
+    "NEW_PUBLIC_RESEARCH_SURFACES": 1,
+    "note": "EC/PC credential rows are source identities, not net-new canonical companies. Do not treat Active EC+PC as unique businesses. SOS graph was not ingested."
+  },
+  "findings": [
+    {
+      "id": "no-statewide-gc",
+      "text": "Colorado does not issue a statewide general-contractor license. DORA statewide contractor-business evidence is electrical contractor (EC) and plumbing contractor (PC) registration. Absence from EC/PC is not proof that a general contractor is unlicensed \u2014 general contracting is primarily local."
+    },
+    {
+      "id": "business-first",
+      "text": "Active EC registrations 4,789 and Active PC registrations 3,147 are separate specialty credential populations. They are not additive unique companies. Combined they are electrical + plumbing contractor credential rows, not \u201cColorado contractors.\u201d"
+    },
+    {
+      "id": "master-not-contractors",
+      "text": "The DORA master extract has 1,606,852 license rows across 313 prefixes. That file includes nurses, pharmacists, and other professions. It is not a contractor universe."
+    },
+    {
+      "id": "discipline-exact-id",
+      "text": "Contractor-relevant prefixes carry 5,990 discipline observations and 5,198 distinct case numbers. Attach only with licensePrefix + licenseNumber. Name-only is unsafe. A discipline row is not a unique case. A case is not a criminal conviction."
+    },
+    {
+      "id": "aels-not-gc",
+      "text": "Professional engineer, architect, land surveyor, and landscape architect licenses are statewide professional credentials. They are not general contractors, construction businesses, or proof of project performance."
+    }
+  ],
+  "coverage_gaps": [
+    "No statewide general-contractor license.",
+    "No Denver/local contractor licenses or permits in this ticket.",
+    "No SOS 3.11M entity ingest.",
+    "No bond/insurance bulk graph.",
+    "No statewide building-permit bulk.",
+    "Debarment list not confirmed as a free bulk file.",
+    "Apprentice records are internal.",
+    "Individual trade professionals are not automatic public profiles."
+  ],
+  "gate": {
+    "passed": true,
+    "blocker": null,
+    "required": [
+      "official DORA SODA/CSV acquired once",
+      "prefix+number identity",
+      "EC/PC business grain",
+      "no statewide GC claim",
+      "no Denver routes"
+    ]
+  },
+  "fingerprint": "d4895200fa822677843095ce1e4e216ecab7bf267a5d7945f7a1feabbc365b30"
+}

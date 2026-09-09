@@ -1,0 +1,403 @@
+{
+  "ticket": "CO-CON-001",
+  "retrieved_at": "2026-09-09T14:51:20+00:00",
+  "dataset_id": "7s5z-vewr",
+  "types_dataset_id": "349y-twqi",
+  "source_url": "https://data.colorado.gov/Regulations/Professional-and-Occupational-Licenses-in-Colorado/7s5z-vewr",
+  "csv_url": "https://data.colorado.gov/api/views/7s5z-vewr/rows.csv?accessType=DOWNLOAD",
+  "types_url": "https://data.colorado.gov/Regulations/Professional-and-Occupational-License-Types-in-Col/349y-twqi",
+  "soda_resource": "https://data.colorado.gov/resource/7s5z-vewr.json",
+  "update_description": "Official CIM/DORA extract. Dataset metadata: nightly after midnight. CIM 'Expected Update Frequency: Never' is catalog noise.",
+  "license": "Public Domain",
+  "access": "SOCRATA_API / BULK_CSV",
+  "raw_csv": "data/raw/co_dora/professional-occupational-licenses.csv",
+  "raw_bytes": 473894743,
+  "raw_sha256": "b5aedc8b2abb9686ecd711a9a43cde02e529719d9770acd62c28aa2bc357f0a0",
+  "master_rows": 1606852,
+  "type_rows": 344,
+  "distinct_prefixes_in_master": 313,
+  "discipline_flagged_rows": 59624,
+  "distinct_case_numbers_all": 48154,
+  "contractor_relevant": {
+    "EC": {
+      "prefix": "EC",
+      "type": "Electrical Contractor",
+      "category": "Electrical",
+      "business_or_individual": "Business",
+      "all_rows": 12495,
+      "active_exact": 4789,
+      "active_family": 4791,
+      "status_counts": {
+        "Expired": 7321,
+        "Active": 4789,
+        "Need Master Hire - Cannot Practice": 321,
+        "Voluntary Surrender": 10,
+        "Revoked": 28,
+        "Cancelled": 21,
+        "Active - With Conditions": 2,
+        "Surrendered": 1,
+        "Suspended": 2
+      }
+    },
+    "PC": {
+      "prefix": "PC",
+      "type": "Plumbing Contractor",
+      "category": "Plumbing",
+      "business_or_individual": "Business",
+      "all_rows": 5415,
+      "active_exact": 3147,
+      "active_family": 3151,
+      "status_counts": {
+        "Expired": 2187,
+        "Active": 3147,
+        "Voluntary Surrender": 17,
+        "Revoked": 22,
+        "Need Master Hire - Cannot Practice": 36,
+        "Active - With Conditions": 4,
+        "Cancelled": 1,
+        "Surrendered": 1
+      }
+    },
+    "ME": {
+      "prefix": "ME",
+      "type": "Master Electrician",
+      "category": "Electrical",
+      "business_or_individual": "Individual",
+      "all_rows": 13419,
+      "active_exact": 7441,
+      "active_family": 7448,
+      "status_counts": {
+        "Active": 7441,
+        "Expired": 5865,
+        "Revoked": 54,
+        "Voluntary Surrender": 24,
+        "Inactive": 19,
+        "Active - With Conditions": 7,
+        "Suspended": 2,
+        "Surrendered": 4,
+        "Suspended Due to Child Support": 1,
+        "Cancelled": 2
+      }
+    },
+    "JW": {
+      "prefix": "JW",
+      "type": "Journeyman Electrician",
+      "category": "Electrical",
+      "business_or_individual": "Individual",
+      "all_rows": 33029,
+      "active_exact": 12549,
+      "active_family": 12576,
+      "status_counts": {
+        "Expired": 20325,
+        "Active": 12549,
+        "Revoked": 72,
+        "Active - With Conditions": 27,
+        "Voluntary Surrender": 20,
+        "Surrendered": 14,
+        "Suspended Due to Child Support": 12,
+        "Suspended": 3,
+        "Inactive": 7
+      }
+    },
+    "RW": {
+      "prefix": "RW",
+      "type": "Residential Wireman",
+      "category": "Electrical",
+      "business_or_individual": "Individual",
+      "all_rows": 6513,
+      "active_exact": 2031,
+      "active_family": 2040,
+      "status_counts": {
+        "Active": 2031,
+        "Expired": 4438,
+        "Revoked": 29,
+        "Active - With Conditions": 9,
+        "Voluntary Surrender": 3,
+        "Suspended Due to Child Support": 3
+      }
+    },
+    "MP": {
+      "prefix": "MP",
+      "type": "Master Plumber",
+      "category": "Plumbing",
+      "business_or_individual": "Individual",
+      "all_rows": 9359,
+      "active_exact": 4954,
+      "active_family": 4965,
+      "status_counts": {
+        "Active": 4954,
+        "Expired": 4301,
+        "Inactive": 28,
+        "Suspended Due to Child Support": 4,
+        "Revoked": 51,
+        "Active - With Conditions": 9,
+        "Voluntary Surrender": 10,
+        "Active - Restricted": 2
+      }
+    },
+    "JP": {
+      "prefix": "JP",
+      "type": "Journeyworker Plumber",
+      "category": "Plumbing",
+      "business_or_individual": "Individual",
+      "all_rows": 11878,
+      "active_exact": 2911,
+      "active_family": 2927,
+      "status_counts": {
+        "Expired": 8862,
+        "Active": 2911,
+        "Revoked": 53,
+        "Cancelled": 19,
+        "Surrendered": 6,
+        "Active - With Conditions": 16,
+        "Suspended Due to Child Support": 2,
+        "Inactive": 7,
+        "Voluntary Surrender": 2
+      }
+    },
+    "RP": {
+      "prefix": "RP",
+      "type": "Residential Plumber",
+      "category": "Plumbing",
+      "business_or_individual": "Individual",
+      "all_rows": 2617,
+      "active_exact": 546,
+      "active_family": 549,
+      "status_counts": {
+        "Expired": 2051,
+        "Active": 546,
+        "Active - With Conditions": 3,
+        "Revoked": 10,
+        "Cancelled": 6,
+        "Inactive": 1
+      }
+    },
+    "APE": {
+      "prefix": "APE",
+      "type": "Electrical Apprentice",
+      "category": "Electrical",
+      "business_or_individual": "Individual",
+      "all_rows": 92007,
+      "active_exact": 15520,
+      "active_family": 15526,
+      "status_counts": {
+        "Expired": 44049,
+        "Cancelled": 32304,
+        "Active": 15520,
+        "Surrendered": 7,
+        "Suspended Due to Child Support": 34,
+        "Revoked": 68,
+        "Voluntary Surrender": 10,
+        "Suspended": 7,
+        "Active - With Conditions": 6,
+        "Inactive": 1,
+        "Summary Suspension": 1
+      }
+    },
+    "AP": {
+      "prefix": "AP",
+      "type": "Plumbing Apprentice",
+      "category": "Plumbing",
+      "business_or_individual": "Individual",
+      "all_rows": 41315,
+      "active_exact": 9787,
+      "active_family": 9790,
+      "status_counts": {
+        "Cancelled": 12974,
+        "Active": 9787,
+        "Expired": 18429,
+        "Revoked": 35,
+        "Suspended Due to Child Support": 80,
+        "Voluntary Surrender": 2,
+        "Active - With Conditions": 3,
+        "Suspended": 5
+      }
+    },
+    "PE": {
+      "prefix": "PE",
+      "type": "Professional Engineer",
+      "category": "Architects, Engineers and Land Surveyors",
+      "business_or_individual": "Individual",
+      "all_rows": 63299,
+      "active_exact": 32967,
+      "active_family": 32977,
+      "status_counts": {
+        "Active": 32967,
+        "Expired": 29809,
+        "Surrendered": 24,
+        "Retired": 377,
+        "Active - Restricted": 5,
+        "Revoked": 60,
+        "Suspended": 12,
+        "Voluntary Surrender": 37,
+        "Active - With Conditions": 5,
+        "Suspended Due to Child Support": 1,
+        "Cancelled": 2
+      }
+    },
+    "ARC": {
+      "prefix": "ARC",
+      "type": "Architect",
+      "category": "Architects, Engineers and Land Surveyors",
+      "business_or_individual": "Individual",
+      "all_rows": 18910,
+      "active_exact": 8710,
+      "active_family": 8712,
+      "status_counts": {
+        "Active": 8710,
+        "Expired": 9963,
+        "Retired": 108,
+        "Revoked": 10,
+        "Surrendered": 2,
+        "Voluntary Surrender": 42,
+        "Inactive": 65,
+        "Suspended": 8,
+        "Active - With Conditions": 1,
+        "Active - Restricted": 1
+      }
+    },
+    "PLS": {
+      "prefix": "PLS",
+      "type": "Professional Land Surveyor",
+      "category": "Architects, Engineers and Land Surveyors",
+      "business_or_individual": "Individual",
+      "all_rows": 4048,
+      "active_exact": 1548,
+      "active_family": 1556,
+      "status_counts": {
+        "Expired": 2300,
+        "Active": 1548,
+        "Retired": 52,
+        "Revoked": 43,
+        "Suspended": 29,
+        "Surrendered": 26,
+        "Inactive": 2,
+        "Voluntary Surrender": 40,
+        "Active - With Conditions": 8
+      }
+    },
+    "LA": {
+      "prefix": "LA",
+      "type": "Landscape Architects",
+      "category": "Landscape Architects",
+      "business_or_individual": "Individual",
+      "all_rows": 1821,
+      "active_exact": 1298,
+      "active_family": 1298,
+      "status_counts": {
+        "Active": 1298,
+        "Expired": 523
+      }
+    }
+  },
+  "ec_pc_index_rows": 17910,
+  "ec_pc_distinct_normalized_names": 16878,
+  "ec_pc_names_with_multiple_credentials": 784,
+  "contractor_identity_keys": 314407,
+  "duplicate_contractor_identity_rows": 1572,
+  "contractor_discipline_rows": 5990,
+  "contractor_distinct_cases": 5198,
+  "top_discipline_actions": [
+    [
+      "CLS Stipulation",
+      19896
+    ],
+    [
+      "CLS Letter of Admonition",
+      14267
+    ],
+    [
+      "CLS Combined w/other case for action",
+      3533
+    ],
+    [
+      "CLS Voluntary Surrender/Relinquishment",
+      3197
+    ],
+    [
+      "CLS Revocation",
+      3018
+    ],
+    [
+      "ID Hearing Formal Complaint/Charges Filed with OAC",
+      2619
+    ],
+    [
+      "CLS Suspension",
+      2099
+    ],
+    [
+      "CLS Cease & Desist Order",
+      1683
+    ],
+    [
+      "ITRM Cessation of Practice",
+      1582
+    ],
+    [
+      "ITRM Summary Suspension",
+      1197
+    ],
+    [
+      "CLS Citation Issued",
+      851
+    ],
+    [
+      "ITRM Suspension",
+      851
+    ],
+    [
+      "Formal Complaint-Charges with OAC",
+      784
+    ],
+    [
+      "CLS Application Denied",
+      633
+    ],
+    [
+      "CLS Final Agency Order",
+      630
+    ],
+    [
+      "ITRM Stipulation in Abeyance",
+      583
+    ],
+    [
+      "Stipulation",
+      383
+    ],
+    [
+      "Probation",
+      369
+    ],
+    [
+      "Fine",
+      208
+    ],
+    [
+      "CLS Agreement",
+      192
+    ],
+    [
+      "CLS Injunction",
+      161
+    ],
+    [
+      "Voluntary Surrender",
+      136
+    ],
+    [
+      "Revocation",
+      118
+    ],
+    [
+      "Suspension",
+      105
+    ],
+    [
+      "Stipulation - Cannot Practice",
+      76
+    ]
+  ],
+  "no_statewide_gc": true
+}

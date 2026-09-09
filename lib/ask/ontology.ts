@@ -181,6 +181,14 @@ export const GEO_ONTOLOGY: Array<{
     intelligence: "state_intelligence",
   },
   {
+    id: "co",
+    label: "Colorado",
+    phrases: ["colorado", "co statewide", "in colorado"],
+    href: "/colorado",
+    kind: "state",
+    intelligence: "state_intelligence",
+  },
+  {
     id: "broward",
     label: "Broward County, Florida",
     phrases: ["broward", "broward county", "fort lauderdale", "deerfield beach"],

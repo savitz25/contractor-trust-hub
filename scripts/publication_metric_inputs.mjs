@@ -13,7 +13,7 @@ const read = (rel) => readFileSync(join(root, rel), "utf8");
 export function publicationMetricInputs() {
   const config = read("lib/states/config.ts");
   const order = [...config.match(/LIVE_STATE_ORDER = \[([^\]]+)\]/)[1].matchAll(/"([a-z]+)"/g)].map((m) => m[1]);
-  const slugToCode = { fl: "FL", tx: "TX", nj: "NJ", or: "OR", wa: "WA", ca: "CA", az: "AZ", la: "LA", ms: "MS", ky: "KY", wi: "WI" };
+  const slugToCode = { fl: "FL", tx: "TX", nj: "NJ", or: "OR", wa: "WA", ca: "CA", az: "AZ", la: "LA", ms: "MS", ky: "KY", co: "CO", wi: "WI" };
   const liveStateCodes = [];
   const liveSourceSystems = [];
   for (const slug of order) {
