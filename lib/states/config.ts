@@ -10,6 +10,7 @@
  * Mississippi: MSBOC statewide contractor licenses — see docs/DATA_SOURCES_MS.md.
  * Kentucky: DHBC specialty trades only (no statewide GC) — see docs/DATA_SOURCES_KY.md.
  * Colorado: DORA electrical/plumbing contractor registrations (no statewide GC) — see docs/DATA_SOURCES_CO.md.
+ * Virginia: DPOR Board for Contractors Class A/B/C business licenses — see /virginia.
  * Wisconsin: DSPS dwelling + trade credentials (no statewide commercial GC) — see docs/DATA_SOURCES_WI.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
@@ -26,7 +27,7 @@ import { msSbcPlainLabel } from "./ms-sbc";
 import { kyDhbcPlainLabel } from "./ky-dhbc";
 import { wiDspsPlainLabel } from "./wi-dsps";
 
-export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY" | "WI" | "CO";
+export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY" | "WI" | "CO" | "VA";
 
 /**
  * Product depth — single source of truth for homepage badges, Verify, and coverage copy.
@@ -360,6 +361,26 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     coverageNote:
       "Colorado: statewide DORA electrical contractor (EC) and plumbing contractor (PC) registrations — no statewide general contractor license. Confirm on DORA lookup.",
   },
+  va: {
+    code: "VA",
+    slug: "va",
+    name: "Virginia",
+    shortName: "VA",
+    boardLabel: "Virginia Department of Professional and Occupational Regulation — Board for Contractors",
+    boardShortLabel: "DPOR Board for Contractors",
+    boardUrl: "https://www.dpor.virginia.gov/LicenseLookup",
+    entityRegistryLabel: "Virginia SCC business filings (not ingested this ticket)",
+    entityRegistryUrl: "https://cis.scc.virginia.gov/",
+    licenseSource: "va_dpor",
+    entitySource: "va_scc",
+    live: false,
+    depth: "verify",
+    badge: "Research",
+    scopeHint: "Class A · B · C contractor businesses",
+    browseEnabled: false,
+    coverageNote:
+      "Virginia: statewide DPOR contractor-business licenses (Class A/B/C plus classification/specialty). Tradesmen are a separate person grain. Confirm on DPOR License Lookup. Not live in Verify SQL this ticket.",
+  },
   wi: {
     code: "WI",
     slug: "wi",
@@ -406,6 +427,8 @@ export function getStateBySlug(slug: string): EvidenceState | null {
                   ? "ky"
                   : key === "colorado"
                     ? "co"
+                    : key === "virginia"
+                      ? "va"
                     : key === "wisconsin"
                     ? "wi"
                     : key;

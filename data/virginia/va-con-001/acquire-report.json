@@ -1,0 +1,1153 @@
+{
+  "ticket": "VA-CON-001A",
+  "retrieved_at": "2026-09-10T12:59:41.003456+00:00",
+  "regulant_lists_source_as_of_label": "Tuesday, September 8, 2026",
+  "regulant_lists_updated_page": "https://www.dpor.virginia.gov/node/10230",
+  "downloads": {
+    "2701_class_a_legacy": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/2701__crnt.txt",
+      "http_status": 200,
+      "bytes": 503321,
+      "sha256": "37feb4587db8a7109f675f36ef3224ad29398a82b4014d73877b8b0f9543e5f6",
+      "last_modified": "Tue, 08 Sep 2026 12:33:33 GMT",
+      "path": "data\\raw\\virginia\\2701_class_a_legacy.txt"
+    },
+    "2705a_class_a": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/2705a__crnt.txt",
+      "http_status": 200,
+      "bytes": 4329889,
+      "sha256": "305f51ba1af02ff3754e3a0569dfafc2d636a19e77d4b826b91c3643d9849767",
+      "last_modified": "Tue, 08 Sep 2026 12:33:36 GMT",
+      "path": "data\\raw\\virginia\\2705a_class_a.txt"
+    },
+    "2705b_class_b": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/2705b__crnt.txt",
+      "http_status": 200,
+      "bytes": 1129047,
+      "sha256": "68b237229984bd6bf17e6e069ab7cc7aefae5cca1dc49d940aeb9bcf74bb743f",
+      "last_modified": "Tue, 08 Sep 2026 12:33:38 GMT",
+      "path": "data\\raw\\virginia\\2705b_class_b.txt"
+    },
+    "2705c_class_c": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/2705c__crnt.txt",
+      "http_status": 200,
+      "bytes": 1505430,
+      "sha256": "7df7955e539050a229edc0fdc6e8133f91774167f5726f17f5ea897c89455215",
+      "last_modified": "Tue, 08 Sep 2026 12:33:39 GMT",
+      "path": "data\\raw\\virginia\\2705c_class_c.txt"
+    },
+    "2703_temporary": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/2703__crnt.txt",
+      "http_status": 200,
+      "bytes": 576,
+      "sha256": "2965972dfebfafca9a3d236f0d61b352fe6f8f2c6b250725b484fd305a5d1c22",
+      "last_modified": "Tue, 08 Sep 2026 12:33:33 GMT",
+      "path": "data\\raw\\virginia\\2703_temporary.txt"
+    },
+    "2710_tradesman_person": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/2710__crnt.txt",
+      "http_status": 200,
+      "bytes": 4048033,
+      "sha256": "cc0a69b85b76e5ddbfd80badf682d273340a89853c62bb7079d1d88141abc4dd",
+      "last_modified": "Tue, 08 Sep 2026 12:33:45 GMT",
+      "path": "data\\raw\\virginia\\2710_tradesman_person.txt"
+    },
+    "2709_residential_tradesman": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/2709__crnt.txt",
+      "http_status": 200,
+      "bytes": 2684,
+      "sha256": "3f26f95036d21497c4f46c8ce865126fa952e6dbd20998c1ee16f36d5bd016f8",
+      "last_modified": "Tue, 08 Sep 2026 12:33:40 GMT",
+      "path": "data\\raw\\virginia\\2709_residential_tradesman.txt"
+    },
+    "2707_rbea_firm": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/2707__crnt.txt",
+      "http_status": 200,
+      "bytes": 6523,
+      "sha256": "1f57a54455c8afaffc50f604fa542a29a05c065929b86cf8dc60c1d264035b7b",
+      "last_modified": "Tue, 08 Sep 2026 12:33:39 GMT",
+      "path": "data\\raw\\virginia\\2707_rbea_firm.txt"
+    },
+    "2722_rbea_person": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/2722__crnt.txt",
+      "http_status": 200,
+      "bytes": 10006,
+      "sha256": "fa8ce864ff8a3e3aec0f8bd6a7c8266acb916545cd83eafb35612dcb62855b8b",
+      "last_modified": "Tue, 08 Sep 2026 12:33:48 GMT",
+      "path": "data\\raw\\virginia\\2722_rbea_person.txt"
+    },
+    "classifications_pdf": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/VA%20Contractors%20Classifications%20%26%20Specialties.pdf",
+      "http_status": 200,
+      "bytes": 809873,
+      "sha256": "a5f0dd58256e8707569215b6d95bf1ab7cf6891a6f80eb3632af44600c2ebdca",
+      "last_modified": "Tue, 14 Oct 2025 04:47:58 GMT",
+      "path": "data\\raw\\virginia\\classifications_pdf.pdf"
+    },
+    "tradesman_designations_pdf": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/tradesman%20designations.pdf",
+      "http_status": 200,
+      "bytes": 9548,
+      "sha256": "0bae8f417c365b6c431d478163de5ce42a7879bf33c42051faf26506c8ec69f0",
+      "last_modified": "Tue, 14 Oct 2025 04:47:58 GMT",
+      "path": "data\\raw\\virginia\\tradesman_designations_pdf.pdf"
+    },
+    "population_pdf": {
+      "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/reg_pop.pdf",
+      "http_status": 200,
+      "bytes": 140563,
+      "sha256": "69989348398d61b52b82ded71140c0f7ac3b3410449742013556ba2f0dc3eca2",
+      "last_modified": "Fri, 25 Jul 2025 14:24:00 GMT",
+      "path": "data\\raw\\virginia\\population_pdf.pdf"
+    },
+    "regulant_lists_page": {
+      "url": "https://www.dpor.virginia.gov/node/10230",
+      "http_status": 200,
+      "bytes": 80766,
+      "sha256": "1736ada40fbeba5fc9470fad624a182177fa0616357e6b0c5a09ea033aa61a0d",
+      "last_modified": "Tue, 08 Sep 2026 13:28:45 GMT",
+      "path": "data\\raw\\virginia\\regulant_lists_page.bin"
+    },
+    "board_page": {
+      "url": "https://www.dpor.virginia.gov/Boards/Contractors",
+      "http_status": 200,
+      "bytes": 142181,
+      "sha256": "6d1d23cd605301df7617f2fa2de155a2adf621b9b54446744eb00b080fcb77b2",
+      "last_modified": "Sat, 05 Sep 2026 00:39:46 GMT",
+      "path": "data\\raw\\virginia\\board_page.bin"
+    },
+    "lookup_page": {
+      "url": "https://www.dpor.virginia.gov/LicenseLookup",
+      "http_status": 200,
+      "bytes": 50224,
+      "sha256": "69d2a1d005a1d1389e3750387577c4613cd06024c4ee203fdcfee18e8808b673",
+      "last_modified": "Sat, 05 Sep 2026 00:38:09 GMT",
+      "path": "data\\raw\\virginia\\lookup_page.bin"
+    },
+    "complaint_page": {
+      "url": "https://www.dpor.virginia.gov/Report-Licensee/",
+      "http_status": 200,
+      "bytes": 77016,
+      "sha256": "357209b35ff6306d0bbbf143b28a37896d9fa9d85e59cb78488a5b2cbe8820af",
+      "last_modified": "Sat, 05 Sep 2026 01:20:40 GMT",
+      "path": "data\\raw\\virginia\\complaint_page.bin"
+    },
+    "recovery_fund_page": {
+      "url": "https://www.dpor.virginia.gov/Boards/Contractors_Recovery_Fund/",
+      "http_status": 200,
+      "bytes": 61286,
+      "sha256": "c6f446026725d70931b0caec56109a0d26e97d5f64aacbca53bd53569b74d6cc",
+      "last_modified": "Sat, 05 Sep 2026 01:31:39 GMT",
+      "path": "data\\raw\\virginia\\recovery_fund_page.bin"
+    },
+    "news_releases_page": {
+      "url": "https://www.dpor.virginia.gov/NewsReleases",
+      "http_status": 200,
+      "bytes": 62864,
+      "sha256": "a684d6e4a030e5c67aa18849e1ba481947de89415439c6ce396186c2bd4f5158",
+      "last_modified": "Sat, 05 Sep 2026 00:40:37 GMT",
+      "path": "data\\raw\\virginia\\news_releases_page.bin"
+    },
+    "town_hall_meetings": {
+      "url": "https://townhall.virginia.gov/L/Meetings.cfm?BoardID=10",
+      "http_status": 200,
+      "bytes": 55268,
+      "sha256": "ad9e12f3d80afa2cde89ffc0943dcb56507cae7a8d7d762fa49b4bfe5e8eb407",
+      "last_modified": "",
+      "path": "data\\raw\\virginia\\town_hall_meetings.cfm"
+    },
+    "regs_18vac50_22": {
+      "url": "https://law.lis.virginia.gov/admincode/title18/agency50/chapter22/",
+      "http_status": 200,
+      "bytes": 43643,
+      "sha256": "9d0273b0865a3cd4fe201fd91ceb49d3d823d8a2cfb24cb520236ea0879511f8",
+      "last_modified": "",
+      "path": "data\\raw\\virginia\\regs_18vac50_22.bin"
+    }
+  },
+  "profiles": {
+    "2705a_class_a.txt": {
+      "grain": "contractor_business_class_a",
+      "rows": 30476,
+      "distinct_license_numbers": 30476,
+      "duplicate_license_rows": 0,
+      "rank_counts": {
+        "A": 30476
+      },
+      "parse_audit": {
+        "total_rows": 30476,
+        "valid_expected_or_source_native_rank_rows": 30461,
+        "structurally_repaired_rows": 15,
+        "unresolved_malformed_rows": 0
+      },
+      "rows_with_specialty": 30474,
+      "rows_with_multiple_specialties": 16069,
+      "top_specialties": [
+        [
+          "RBC",
+          15768
+        ],
+        [
+          "CBC",
+          12424
+        ],
+        [
+          "HIC",
+          4622
+        ],
+        [
+          "ELE",
+          3696
+        ],
+        [
+          "CIC",
+          3573
+        ],
+        [
+          "H/H",
+          2973
+        ],
+        [
+          "HVA",
+          2229
+        ],
+        [
+          "PLB",
+          2055
+        ],
+        [
+          "GFC",
+          1514
+        ],
+        [
+          "LSC",
+          883
+        ],
+        [
+          "ROC",
+          863
+        ],
+        [
+          "CEM",
+          856
+        ],
+        [
+          "PTC",
+          723
+        ],
+        [
+          "ESC",
+          714
+        ],
+        [
+          "BRK",
+          535
+        ],
+        [
+          "EMC",
+          487
+        ],
+        [
+          "AES",
+          301
+        ],
+        [
+          "FAS",
+          292
+        ],
+        [
+          "ISC",
+          273
+        ],
+        [
+          "ASB",
+          252
+        ],
+        [
+          "IBC",
+          239
+        ],
+        [
+          "PAV",
+          234
+        ],
+        [
+          "SPR",
+          190
+        ],
+        [
+          "POL",
+          183
+        ],
+        [
+          "ENV",
+          182
+        ]
+      ],
+      "blank_business_name": 0,
+      "row_ne_unique_business": true,
+      "specialty_row_ne_unique_contractor": true,
+      "acquired": true
+    },
+    "2705b_class_b.txt": {
+      "grain": "contractor_business_class_b",
+      "rows": 8374,
+      "distinct_license_numbers": 8374,
+      "duplicate_license_rows": 0,
+      "rank_counts": {
+        "B": 8374
+      },
+      "parse_audit": {
+        "total_rows": 8374,
+        "valid_expected_or_source_native_rank_rows": 8373,
+        "structurally_repaired_rows": 1,
+        "unresolved_malformed_rows": 0
+      },
+      "rows_with_specialty": 8374,
+      "rows_with_multiple_specialties": 4203,
+      "top_specialties": [
+        [
+          "RBC",
+          2624
+        ],
+        [
+          "HIC",
+          2158
+        ],
+        [
+          "CBC",
+          2075
+        ],
+        [
+          "ELE",
+          1441
+        ],
+        [
+          "CIC",
+          1059
+        ],
+        [
+          "HVA",
+          1033
+        ],
+        [
+          "PLB",
+          952
+        ],
+        [
+          "GFC",
+          704
+        ],
+        [
+          "LSC",
+          429
+        ],
+        [
+          "H/H",
+          420
+        ],
+        [
+          "PTC",
+          334
+        ],
+        [
+          "ROC",
+          267
+        ],
+        [
+          "CEM",
+          262
+        ],
+        [
+          "BRK",
+          198
+        ],
+        [
+          "ESC",
+          181
+        ],
+        [
+          "ISC",
+          124
+        ],
+        [
+          "EMC",
+          115
+        ],
+        [
+          "FIC",
+          109
+        ],
+        [
+          "FAS",
+          99
+        ],
+        [
+          "PAV",
+          83
+        ],
+        [
+          "BSC",
+          69
+        ],
+        [
+          "POL",
+          68
+        ],
+        [
+          "WWP",
+          66
+        ],
+        [
+          "RFC",
+          62
+        ],
+        [
+          "IBC",
+          61
+        ]
+      ],
+      "blank_business_name": 0,
+      "row_ne_unique_business": true,
+      "specialty_row_ne_unique_contractor": true,
+      "acquired": true
+    },
+    "2705c_class_c.txt": {
+      "grain": "contractor_business_class_c",
+      "rows": 11253,
+      "distinct_license_numbers": 11253,
+      "duplicate_license_rows": 0,
+      "rank_counts": {
+        "C": 11253
+      },
+      "parse_audit": {
+        "total_rows": 11253,
+        "valid_expected_or_source_native_rank_rows": 11247,
+        "structurally_repaired_rows": 6,
+        "unresolved_malformed_rows": 0
+      },
+      "rows_with_specialty": 11253,
+      "rows_with_multiple_specialties": 3713,
+      "top_specialties": [
+        [
+          "HIC",
+          4658
+        ],
+        [
+          "RBC",
+          1604
+        ],
+        [
+          "ELE",
+          1310
+        ],
+        [
+          "CBC",
+          1227
+        ],
+        [
+          "PTC",
+          1203
+        ],
+        [
+          "CIC",
+          1202
+        ],
+        [
+          "HVA",
+          1009
+        ],
+        [
+          "PLB",
+          905
+        ],
+        [
+          "LSC",
+          733
+        ],
+        [
+          "ROC",
+          494
+        ],
+        [
+          "CEM",
+          417
+        ],
+        [
+          "GFC",
+          409
+        ],
+        [
+          "BRK",
+          407
+        ],
+        [
+          "H/H",
+          345
+        ],
+        [
+          "ESC",
+          202
+        ],
+        [
+          "FIC",
+          152
+        ],
+        [
+          "PAV",
+          138
+        ],
+        [
+          "EMC",
+          138
+        ],
+        [
+          "ISC",
+          136
+        ],
+        [
+          "BSC",
+          124
+        ],
+        [
+          "REF",
+          107
+        ],
+        [
+          "IBC",
+          93
+        ],
+        [
+          "FIN",
+          93
+        ],
+        [
+          "FAS",
+          66
+        ],
+        [
+          "MHC",
+          66
+        ]
+      ],
+      "blank_business_name": 0,
+      "row_ne_unique_business": true,
+      "specialty_row_ne_unique_contractor": true,
+      "acquired": true
+    },
+    "2701_class_a_legacy.txt": {
+      "grain": "contractor_business_class_a_legacy_file",
+      "rows": 3737,
+      "distinct_license_numbers": 3737,
+      "duplicate_license_rows": 0,
+      "rank_counts": {
+        "A": 3733,
+        "B": 2,
+        "C": 2
+      },
+      "parse_audit": {
+        "total_rows": 3737,
+        "valid_expected_or_source_native_rank_rows": 3736,
+        "structurally_repaired_rows": 1,
+        "unresolved_malformed_rows": 0
+      },
+      "rows_with_specialty": 3736,
+      "rows_with_multiple_specialties": 3033,
+      "top_specialties": [
+        [
+          "CBC",
+          2257
+        ],
+        [
+          "RBC",
+          2219
+        ],
+        [
+          "ELE",
+          640
+        ],
+        [
+          "H/H",
+          620
+        ],
+        [
+          "CIC",
+          494
+        ],
+        [
+          "HVA",
+          491
+        ],
+        [
+          "PLB",
+          466
+        ],
+        [
+          "GFC",
+          426
+        ],
+        [
+          "HIC",
+          399
+        ],
+        [
+          "EMC",
+          79
+        ],
+        [
+          "FAS",
+          67
+        ],
+        [
+          "SPR",
+          62
+        ],
+        [
+          "ESC",
+          53
+        ],
+        [
+          "FSP",
+          50
+        ],
+        [
+          "ASB",
+          44
+        ],
+        [
+          "LAC",
+          41
+        ],
+        [
+          "LSC",
+          40
+        ],
+        [
+          "RFC",
+          37
+        ],
+        [
+          "VCC",
+          22
+        ],
+        [
+          "ISC",
+          22
+        ],
+        [
+          "ADS",
+          21
+        ],
+        [
+          "WWP",
+          21
+        ],
+        [
+          "CEM",
+          20
+        ],
+        [
+          "NGF",
+          19
+        ],
+        [
+          "FIC",
+          19
+        ]
+      ],
+      "blank_business_name": 0,
+      "row_ne_unique_business": true,
+      "specialty_row_ne_unique_contractor": true,
+      "acquired": true
+    },
+    "2703_temporary.txt": {
+      "grain": "temporary_contractor_business",
+      "rows": 2,
+      "distinct_license_numbers": 2,
+      "duplicate_license_rows": 0,
+      "rank_counts": {
+        "A": 2
+      },
+      "parse_audit": {
+        "total_rows": 2,
+        "valid_expected_or_source_native_rank_rows": 2,
+        "structurally_repaired_rows": 0,
+        "unresolved_malformed_rows": 0
+      },
+      "rows_with_specialty": 2,
+      "rows_with_multiple_specialties": 0,
+      "top_specialties": [
+        [
+          "ROC",
+          1
+        ],
+        [
+          "CBC",
+          1
+        ]
+      ],
+      "blank_business_name": 0,
+      "row_ne_unique_business": true,
+      "specialty_row_ne_unique_contractor": true,
+      "acquired": true
+    },
+    "2710_tradesman_person.txt": {
+      "grain": "tradesman_person",
+      "rows": 30120,
+      "distinct_license_numbers": 30120,
+      "duplicate_license_rows": 0,
+      "rank_counts": {
+        "TRAD": 30120
+      },
+      "parse_audit": {
+        "total_rows": 30120,
+        "valid_expected_or_source_native_rank_rows": 30120,
+        "structurally_repaired_rows": 0,
+        "unresolved_malformed_rows": 0
+      },
+      "rows_with_specialty": 30120,
+      "rows_with_multiple_specialties": 10713,
+      "top_specialties": [
+        [
+          "MELE",
+          11924
+        ],
+        [
+          "JELE",
+          9591
+        ],
+        [
+          "MHVA",
+          7731
+        ],
+        [
+          "MPLB",
+          5976
+        ],
+        [
+          "MGFC",
+          3855
+        ],
+        [
+          "JHVA",
+          3089
+        ],
+        [
+          "JPLB",
+          1813
+        ],
+        [
+          "JGFC",
+          429
+        ],
+        [
+          "MLPG",
+          309
+        ],
+        [
+          "MNGF",
+          279
+        ],
+        [
+          "JLPG",
+          49
+        ],
+        [
+          "JNGF",
+          25
+        ]
+      ],
+      "blank_business_name": 0,
+      "row_ne_unique_business": true,
+      "specialty_row_ne_unique_contractor": true,
+      "acquired": true
+    },
+    "2709_residential_tradesman.txt": {
+      "grain": "residential_tradesman_person",
+      "rows": 18,
+      "distinct_license_numbers": 18,
+      "duplicate_license_rows": 0,
+      "rank_counts": {
+        "RETR": 18
+      },
+      "parse_audit": {
+        "total_rows": 18,
+        "valid_expected_or_source_native_rank_rows": 18,
+        "structurally_repaired_rows": 0,
+        "unresolved_malformed_rows": 0
+      },
+      "rows_with_specialty": 18,
+      "rows_with_multiple_specialties": 1,
+      "top_specialties": [
+        [
+          "RPLB",
+          12
+        ],
+        [
+          "RHVA",
+          7
+        ]
+      ],
+      "blank_business_name": 0,
+      "row_ne_unique_business": true,
+      "specialty_row_ne_unique_contractor": true,
+      "acquired": true
+    },
+    "2707_rbea_firm.txt": {
+      "grain": "rbea_firm",
+      "rows": 44,
+      "distinct_license_numbers": 44,
+      "duplicate_license_rows": 0,
+      "rank_counts": {
+        "RBEA": 44
+      },
+      "parse_audit": {
+        "total_rows": 44,
+        "valid_expected_or_source_native_rank_rows": 44,
+        "structurally_repaired_rows": 0,
+        "unresolved_malformed_rows": 0
+      },
+      "rows_with_specialty": 0,
+      "rows_with_multiple_specialties": 0,
+      "top_specialties": [],
+      "blank_business_name": 0,
+      "row_ne_unique_business": true,
+      "specialty_row_ne_unique_contractor": true,
+      "acquired": true
+    },
+    "2722_rbea_person.txt": {
+      "grain": "rbea_person",
+      "rows": 74,
+      "distinct_license_numbers": 74,
+      "duplicate_license_rows": 0,
+      "rank_counts": {
+        "RBEA": 74
+      },
+      "parse_audit": {
+        "total_rows": 74,
+        "valid_expected_or_source_native_rank_rows": 74,
+        "structurally_repaired_rows": 0,
+        "unresolved_malformed_rows": 0
+      },
+      "rows_with_specialty": 0,
+      "rows_with_multiple_specialties": 0,
+      "top_specialties": [],
+      "blank_business_name": 0,
+      "row_ne_unique_business": true,
+      "specialty_row_ne_unique_contractor": true,
+      "acquired": true
+    }
+  },
+  "business_roster": {
+    "file_2705a_distinct": 30476,
+    "file_2701_distinct": 3737,
+    "file_2705a_intersect_2701": 0,
+    "class_a_union": 34213,
+    "class_a_union_method": "set union of 2705A licenses and 2701 licenses (DPOR labels both files Class A Contractor)",
+    "class_b_distinct": 8374,
+    "class_c_distinct": 11253,
+    "overlap_ab": 0,
+    "overlap_ac": 0,
+    "overlap_bc": 0,
+    "distinct_class_abc_licenses": 53840,
+    "class_a_plus_b_plus_c_if_summed": 53840,
+    "classes_are_disjoint": true,
+    "2701_source_native_rank_a": 3733,
+    "2701_source_native_rank_not_a": 4,
+    "temporary_not_added_to_abc": true,
+    "tradesman_not_added": true,
+    "class_a_distinct": 34213,
+    "class_a_2705a_rows": 30476,
+    "class_a_2701_legacy_rows": 3737,
+    "class_b_rows": 8374,
+    "class_c_rows": 11253,
+    "duplicate_license_rows_2705a": 0,
+    "duplicate_license_rows_2705b": 0,
+    "duplicate_license_rows_2705c": 0,
+    "class_a_rows_with_multiple_specialties": 16069,
+    "one_row_one_license": true,
+    "multiple_specialties_may_appear_on_one_license": true,
+    "do_not_sum_specialty_tokens_as_contractors": true,
+    "temporary_rows": 2,
+    "sha256": {
+      "2705a": "305f51ba1af02ff3754e3a0569dfafc2d636a19e77d4b826b91c3643d9849767",
+      "2705b": "68b237229984bd6bf17e6e069ab7cc7aefae5cca1dc49d940aeb9bcf74bb743f",
+      "2705c": "7df7955e539050a229edc0fdc6e8133f91774167f5726f17f5ea897c89455215",
+      "2701": "37feb4587db8a7109f675f36ef3224ad29398a82b4014d73877b8b0f9543e5f6"
+    },
+    "status": "ACQUIRED",
+    "source": "https://www.dpor.virginia.gov/node/10230",
+    "refresh_cadence": "Updated to the website every 5 business days (usually Mondays)"
+  },
+  "identity_index_rows": 53840,
+  "revocations": {
+    "files": {
+      "2026-08-25": {
+        "url": "https://www.dpor.virginia.gov/sites/default/files/News/Contractors%20license%20revocation%20August%2025.txt",
+        "http_status": 200,
+        "bytes": 1379,
+        "sha256": "501573a15e0f6d2c1eda3861fa325090580e06061be8643d47c41f27501cf2f9",
+        "year": "2026"
+      },
+      "2026-06-23": {
+        "url": "https://www.dpor.virginia.gov/sites/default/files/boards/Contractors/license%20revocation%20June%2023.txt",
+        "http_status": 200,
+        "bytes": 914,
+        "sha256": "e342da48db6a28bffed18e23934482e9557b375f472965f079db021352774568",
+        "year": "2026"
+      },
+      "2026-04-28": {
+        "url": "https://www.dpor.virginia.gov/sites/default/files/News/4.28.26%20Contractor%20Revocation%20List.txt",
+        "http_status": 200,
+        "bytes": 1705,
+        "sha256": "f06001991f93db940044bcaa6caa836407ce335c30f03ab2d9f57d825632eaa6",
+        "year": "2026"
+      },
+      "2026-02-24": {
+        "url": "https://www.dpor.virginia.gov/sites/default/files/News/2.24.26%20license%20revocation%20list.txt",
+        "http_status": 200,
+        "bytes": 201,
+        "sha256": "44955155df8a4c697fcbf24cfc6911808b859b987c1fe3264720993c46993c76",
+        "year": "2026"
+      },
+      "2025-12-09": {
+        "url": "https://www.dpor.virginia.gov/sites/default/files/News/12.9.2025%20license%20revocation%20list.txt",
+        "http_status": 200,
+        "bytes": 840,
+        "sha256": "65312baaa45a07dea924ef95182145ddf7c88851853cd70fab5063f126f8d7f0",
+        "year": "2025"
+      },
+      "2025-10-07": {
+        "url": "https://www.dpor.virginia.gov/sites/default/files/News/10.7.2025%20license%20revocation%20list.txt",
+        "http_status": 200,
+        "bytes": 984,
+        "sha256": "b09ae4b64516edfd0bba030a46ae8d496b04447d343e73b7f1d3b96dd55e2bbf",
+        "year": "2025"
+      },
+      "2025-08-19": {
+        "url": "https://www.dpor.virginia.gov/sites/default/files/News/08.19.25%20license%20revocation%20template%20for%20website.txt",
+        "http_status": 200,
+        "bytes": 1645,
+        "sha256": "087b1a127b535e4952b5944ae404e8bed214d395dc4b7a86b7dd6aaf7d394490",
+        "year": "2025"
+      },
+      "2025-06-24": {
+        "url": "https://www.dpor.virginia.gov/sites/default/files/News/06.24.25%20license%20revocation%20template%20for%20website.txt",
+        "http_status": 200,
+        "bytes": 1867,
+        "sha256": "f5154a36c24f653998898913183f54fceac0eb41cbdcbfb5b8a414e3c6252cf5",
+        "year": "2025"
+      },
+      "2025-04-29": {
+        "url": "https://www.dpor.virginia.gov/sites/default/files/News/Revocated%20Licenses%20-%204.29.25%20BFC%20Mtg.txt",
+        "http_status": 200,
+        "bytes": 1815,
+        "sha256": "6497f13be54537cdcd6776841b757315ec3a374887c6466df133f98ecd79a849",
+        "year": "2025"
+      },
+      "2025-03-11-addtl": {
+        "url": "https://www.dpor.virginia.gov/sites/default/files/2025-07/Revocated%20Licenses%20-%203.11.25%20addtl%20BFC%20Mtg.txt",
+        "http_status": 200,
+        "bytes": 179,
+        "sha256": "b60c5ac39bb2c3027092da72445564c2c44001c1c0a3533070ef1b31e95f2248",
+        "year": "2025"
+      },
+      "2025-03-11": {
+        "url": "https://www.dpor.virginia.gov/sites/default/files/News/Revocated%20Licenses%20-%203.11.25d%20BFC%20Mtg.txt",
+        "http_status": 200,
+        "bytes": 1107,
+        "sha256": "4167c231a635c3e2cda6049af21489ab300ac50e21bde5e554c351ac2d8e16ac",
+        "year": "2025"
+      }
+    },
+    "observation_blocks": 124,
+    "exact_license_observations": 110,
+    "unsafe_name_only_blocks": 14,
+    "distinct_licenses": 104,
+    "distinct_cases": 126,
+    "coverage": "DPOR contractor revocation news releases, not all Board discipline",
+    "subset_of_all_discipline": true
+  },
+  "no_license_lookup_scrape": true,
+  "regulant_lists_source_as_of_iso": "2026-09-08",
+  "regulant_lists_html_path": "data\\raw\\virginia\\regulant_lists_page.bin",
+  "regulant_lists_file_last_modified": "2026-09-08",
+  "parser": {
+    "root_cause": "A minority of official TSV rows contain an extra tab inside BUSINESS NAME, producing 21 columns and shifting CITY/STATE/ZIP/dates/rank/specialty. License-number fields are unshifted.",
+    "repair": "Merge the split business-name fields and realign remaining columns. Do not overwrite rank from the filename.",
+    "2705a": {
+      "total_rows": 30476,
+      "valid_expected_or_source_native_rank_rows": 30461,
+      "structurally_repaired_rows": 15,
+      "unresolved_malformed_rows": 0
+    },
+    "2705b": {
+      "total_rows": 8374,
+      "valid_expected_or_source_native_rank_rows": 8373,
+      "structurally_repaired_rows": 1,
+      "unresolved_malformed_rows": 0
+    },
+    "2705c": {
+      "total_rows": 11253,
+      "valid_expected_or_source_native_rank_rows": 11247,
+      "structurally_repaired_rows": 6,
+      "unresolved_malformed_rows": 0
+    },
+    "2701": {
+      "total_rows": 3737,
+      "valid_expected_or_source_native_rank_rows": 3736,
+      "structurally_repaired_rows": 1,
+      "unresolved_malformed_rows": 0
+    }
+  },
+  "revocation_audit": {
+    "source_observation_rows_before_dedupe": 121,
+    "exact_duplicate_rows_removed": 1,
+    "observation_rows": 120,
+    "distinct_cases": 119,
+    "distinct_licenses": 100,
+    "license_ids_appearing_in_multiple_observations": [
+      "2705006690",
+      "2705079762",
+      "2705094568",
+      "2705102033",
+      "2705145752",
+      "2705149854",
+      "2705153719",
+      "2705154724",
+      "2705167688",
+      "2705168223",
+      "2705172884",
+      "2705176943",
+      "2705181272",
+      "2705183165",
+      "2705185004",
+      "2705186682"
+    ],
+    "license_ids_with_multiple_respondent_labels": [
+      {
+        "license_number": "2705154724",
+        "respondents": [
+          "ADVANCE ELECTRICAL TECHNOLOGY",
+          "W & W LCP, LLC"
+        ],
+        "cases": [
+          "2026-00186",
+          "2026-02731"
+        ],
+        "meetings": [
+          "2026-08-25"
+        ],
+        "assessment": "SOURCE_NATIVE_LICENSE_SHARED_ACROSS_RESPONDENT_LABELS"
+      }
+    ],
+    "note": "Shared license numbers across different respondents are preserved as source-native observations. They are not collapsed and are not treated as canonical profile attachments."
+  },
+  "revocation_roster_crosswalk": {
+    "REVOCATION_DISTINCT_LICENSES": 100,
+    "CURRENT_ROSTER_EXACT_MATCHES": 3,
+    "NOT_IN_CURRENT_ROSTER": 97,
+    "not_in_current_roster_ids": [
+      "2701028099",
+      "2705006690",
+      "2705007300",
+      "2705011904",
+      "2705044953",
+      "2705050236",
+      "2705055277",
+      "2705075547",
+      "2705079762",
+      "2705084203",
+      "2705094568",
+      "2705095499",
+      "2705096830",
+      "2705102033",
+      "2705104981",
+      "2705105163",
+      "2705110305",
+      "2705118638",
+      "2705122413",
+      "2705127480",
+      "2705129080",
+      "2705131494",
+      "2705132544",
+      "2705132851",
+      "2705135164",
+      "2705137148",
+      "2705138756",
+      "2705142532",
+      "2705144233",
+      "2705145752",
+      "2705149465",
+      "2705149854",
+      "2705152093",
+      "2705153017",
+      "2705153719",
+      "2705153969",
+      "2705154243",
+      "2705154312",
+      "2705154724",
+      "2705155833",
+      "2705157899",
+      "2705158179",
+      "2705158686",
+      "2705158944",
+      "2705163435",
+      "2705163483",
+      "2705165955",
+      "2705166662",
+      "2705167068",
+      "2705167599",
+      "2705167688",
+      "2705168223",
+      "2705168474",
+      "2705169101",
+      "2705170621",
+      "2705171451",
+      "2705171748",
+      "2705172059",
+      "2705172763",
+      "2705172860",
+      "2705172884",
+      "2705172974",
+      "2705173191",
+      "2705173254",
+      "2705173764",
+      "2705173955",
+      "2705174557",
+      "2705175405",
+      "2705176707",
+      "2705176943",
+      "2705177313",
+      "2705178169",
+      "2705178808",
+      "2705179168",
+      "2705179209",
+      "2705179280",
+      "2705180751",
+      "2705180880",
+      "2705181272",
+      "2705181442",
+      "2705181456",
+      "2705182851",
+      "2705183165",
+      "2705184445",
+      "2705184885",
+      "2705185004",
+      "2705185307",
+      "2705186682",
+      "2705187243",
+      "2705187329",
+      "2705187414",
+      "2705187438",
+      "2705188919",
+      "2705190094",
+      "2705191421",
+      "2710066413",
+      "2723000219"
+    ],
+    "absence_from_current_roster_ne_bad_identity": true,
+    "do_not_infer_current_status_from_historical_revocation": true
+  },
+  "reparsed_at": "2026-09-10T13:58:16.141801+00:00"
+}

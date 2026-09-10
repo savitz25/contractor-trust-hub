@@ -132,6 +132,7 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/arizona/projects/roofing", priority: 0.78, changefreq: "weekly" },
     { path: "/arizona/roofing", priority: 0.78, changefreq: "weekly" },
     { path: "/colorado", priority: 0.9, changefreq: "weekly" },
+    { path: "/virginia", priority: 0.9, changefreq: "weekly" },
     { path: "/about", priority: 0.75, changefreq: "weekly" },
     { path: "/methodology", priority: 0.75, changefreq: "weekly" },
     { path: "/independence", priority: 0.7, changefreq: "monthly" },
