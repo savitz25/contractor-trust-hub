@@ -28,6 +28,12 @@ export function assertVirginiaSnapshot(
   if (value.business_roster.do_not_sum_specialty_tokens_as_contractors !== true) {
     throw new Error("Specialty tokens must not be summed as contractors");
   }
+  if (value.classifications.do_not_assume_examples_exhaustive !== true) {
+    throw new Error("Do not treat example specialties as the official dictionary");
+  }
+  if (value.expansion_ledger.EXACT_PROFILE_ATTACHMENTS !== 0) {
+    throw new Error("Virginia public profile attachments must remain 0");
+  }
   if (value.discipline.name_only !== "UNSAFE") {
     throw new Error("Name-only discipline attach must be unsafe");
   }

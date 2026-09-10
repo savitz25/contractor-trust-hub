@@ -1,6 +1,6 @@
 export const VA_STATE_INTEL_VERSION = "contractor-va-state-intel-v1" as const;
 export const VA_STATE_PUBLIC_FINGERPRINT =
-  "92560f784baab595177aa96daa437f105f4bf5f288967e7e9f68ed1bd8a73d26";
+  "f758a837d397d7480eb80ff57889a9dd845a016b86edc95a0b4d8f457022eaa3";
 
 export const VIRGINIA_INTELLIGENCE_GATE = {
   path: "/virginia",

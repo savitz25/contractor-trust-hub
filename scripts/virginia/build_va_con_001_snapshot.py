@@ -8,6 +8,7 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
+from email.utils import parsedate_to_datetime
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -38,73 +39,36 @@ def fingerprint(body: dict) -> str:
     return hashlib.sha256(dump({k: v for k, v in body.items() if k not in skip}).encode("utf-8")).hexdigest()
 
 
-def parse_revocation_file(path: Path, meeting: str, url: str) -> list[dict]:
-    text = path.read_text(encoding="latin-1", errors="replace")
-    pat = re.compile(
-        r"(?P<name>[^\n]+)\n(?P<loc>[^\n]+)\nCase No\.\s*(?P<case>[\d-]+)\nLic[e]?nse Number\s+(?P<lic>\d+)",
-        re.I,
-    )
-    rows = []
-    for m in pat.finditer(text):
-        loc = m.group("loc").strip()
-        city, st = loc, ""
-        if "," in loc:
-            city, st = [p.strip() for p in loc.rsplit(",", 1)]
-        lic = m.group("lic")
-        grain = "contractor_business_license"
-        if lic.startswith("2710") or lic.startswith("2709"):
-            grain = "tradesman_person"
-        elif lic.startswith("2722"):
-            grain = "rbea_person"
-        rows.append(
-            {
-                "meeting_date": meeting,
-                "respondent": m.group("name").strip(),
-                "city": city,
-                "state": st,
-                "case_number": m.group("case"),
-                "license_number": lic,
-                "identity": f"VA-DPOR:{lic}",
-                "attach": "EXACT_CONTRACTOR_LICENSE",
-                "grain": grain,
-                "source_url": url,
-            }
-        )
-    return rows
+def http_date_iso(value: str | None) -> str | None:
+    if not value:
+        return None
+    try:
+        return parsedate_to_datetime(value).date().isoformat()
+    except (TypeError, ValueError, IndexError):
+        return None
 
 
 def main() -> None:
     acq = json.loads((STAGE / "acquire-report.json").read_text(encoding="utf-8"))
     retrieved = acq["retrieved_at"]
-    lists_as_of = "2026-09-08"
-    class_pdf_as_of = "2025-10-14"
+    lists_as_of = acq.get("regulant_lists_source_as_of_iso") or acq.get("regulant_lists_file_last_modified")
+    if not lists_as_of:
+        raise SystemExit("STOP: no derived regulant-list clock in acquire-report")
+    updated_label = acq.get("regulant_lists_source_as_of_label")
+    file_lm = acq.get("regulant_lists_file_last_modified") or http_date_iso(
+        acq.get("downloads", {}).get("2705a_class_a", {}).get("last_modified")
+    )
+    class_pdf_as_of = http_date_iso(acq.get("downloads", {}).get("classifications_pdf", {}).get("last_modified"))
+    pop_file_modified = http_date_iso(acq.get("downloads", {}).get("population_pdf", {}).get("last_modified"))
     pop_as_of = "2025-06-01"
-    pop_file_modified = "2025-07-25"
 
     class_text = "\n".join((p.extract_text() or "") for p in PdfReader(RAW / "classifications_pdf.pdf").pages)
     class_found = re.findall(r'"([^"]+)"\s*\(Abbr:\s*([A-Z0-9/]+)[}\) ]', class_text)
     classifications = [{"code": code, "official_name": name.strip()} for name, code in class_found]
 
-    rev_meta = {
-        "2026-08-25": acq["revocations"]["files"]["2026-08-25"]["url"],
-        "2026-06-23": acq["revocations"]["files"]["2026-06-23"]["url"],
-        "2026-04-28": acq["revocations"]["files"]["2026-04-28"]["url"],
-        "2026-02-24": acq["revocations"]["files"]["2026-02-24"]["url"],
-        "2025-12-09": acq["revocations"]["files"]["2025-12-09"]["url"],
-        "2025-10-07": acq["revocations"]["files"]["2025-10-07"]["url"],
-        "2025-08-19": acq["revocations"]["files"]["2025-08-19"]["url"],
-        "2025-06-24": acq["revocations"]["files"]["2025-06-24"]["url"],
-        "2025-04-29": acq["revocations"]["files"]["2025-04-29"]["url"],
-        "2025-03-11": acq["revocations"]["files"]["2025-03-11"]["url"],
-        "2025-03-11-addtl": acq["revocations"]["files"]["2025-03-11-addtl"]["url"],
-    }
-    rev_rows = []
-    for meeting, url in rev_meta.items():
-        path = RAW / f"revocation_{meeting}.txt"
-        if path.exists():
-            rev_rows.extend(parse_revocation_file(path, meeting, url))
-
-    exact_rows = [r for r in rev_rows if r["attach"] == "EXACT_CONTRACTOR_LICENSE"]
+    exact_rows = json.loads((STAGE / "revocation-observations.json").read_text(encoding="utf-8"))
+    rev_audit = acq["revocation_audit"]
+    crosswalk = acq["revocation_roster_crosswalk"]
     person_rows = [r for r in exact_rows if r["grain"] != "contractor_business_license"]
     business_rows = [r for r in exact_rows if r["grain"] == "contractor_business_license"]
     licenses = sorted({r["license_number"] for r in exact_rows})
@@ -139,23 +103,28 @@ def main() -> None:
             "h1": "Virginia Contractor License & Regulatory Intelligence",
         },
         "clocks": {
-            "regulant_lists_sourceAsOf": lists_as_of,
-            "regulant_lists_sourceAsOf_label": "Updated Tuesday, September 8, 2026 on DPOR Regulant Lists",
-            "regulant_lists_file_last_modified": "2026-09-08",
+            "regulant_lists_sourceAsOf": lists_as_of if updated_label else None,
+            "regulant_lists_sourceAsOf_label": (
+                f"Updated {updated_label} on DPOR Regulant Lists" if updated_label else None
+            ),
+            "regulant_lists_sourceAsOf_text": updated_label,
+            "regulant_lists_file_last_modified": file_lm,
             "regulant_lists_retrievedAt": retrieved,
             "classifications_pdf_last_modified": class_pdf_as_of,
             "population_list_sourceAsOf": pop_as_of,
             "population_list_file_last_modified": pop_file_modified,
             "population_list_retrievedAt": retrieved,
-            "statute_class_thresholds_as_of": "2026-09-10",
+            "statute_class_thresholds_retrievedAt": retrieved[:10],
             "snapshotAsOf": lists_as_of,
             "generatedAt_excluded_from_fingerprint": True,
             "retrievedAt_is_not_sourceAsOf": True,
+            "clock_derivation": "sourceAsOf parsed from official Regulant Lists Updated label in acquired HTML; fileLastModified from HTTP Last-Modified of 2705A; retrievedAt from acquisition timestamp. No hard-coded list date.",
         },
+        "parser_audit": acq["parser"],
         "hero": {
             "universe_value": br["distinct_class_abc_licenses"],
             "universe_label": "Distinct Class A/B/C contractor-business licenses",
-            "universe_hint": "Official DPOR regulant lists 2705A + 2701 + 2705B + 2705C as of 2026-09-08. One row is one license number. Not unique companies if a firm holds more than one license. Not tradesmen.",
+            "universe_hint": f"Official DPOR regulant lists 2705A ∪ 2701 ∪ 2705B ∪ 2705C. sourceAsOf {lists_as_of}. One row is one license number. Not unique companies if a firm holds more than one license. Not tradesmen.",
             "class_a_value": br["class_a_distinct"],
             "class_a_label": "Class A contractor licenses",
             "class_a_hint": "License class is a contract-value threshold, not a quality score.",
@@ -213,20 +182,37 @@ def main() -> None:
         },
         "business_roster": {
             "status": "ACQUIRED",
+            "grain": "contractor_business_license_number",
+            "entity_type": "contractor_business",
             "source": DPOR_LISTS,
             "sourceAsOf": lists_as_of,
             "retrievedAt": retrieved,
             "refresh_cadence": "Updated to the website every 5 business days (usually Mondays)",
             "class_a_2705a_rows": a["rows"],
             "class_a_2701_legacy_rows": a_legacy["rows"],
-            "class_a_distinct": br["class_a_distinct"],
+            "file_2705a_distinct": br["file_2705a_distinct"],
+            "file_2701_distinct": br["file_2701_distinct"],
+            "file_2705a_intersect_2701": br["file_2705a_intersect_2701"],
+            "class_a_union_method": br["class_a_union_method"],
+            "class_a_distinct": br["class_a_union"],
             "class_b_rows": b["rows"],
             "class_b_distinct": br["class_b_distinct"],
             "class_c_rows": c["rows"],
             "class_c_distinct": br["class_c_distinct"],
             "distinct_class_abc_licenses": br["distinct_class_abc_licenses"],
             "sum_if_classes_added": br["class_a_plus_b_plus_c_if_summed"],
-            "classes_are_disjoint": br["overlap_ab"] == 0 and br["overlap_ac"] == 0 and br["overlap_bc"] == 0,
+            "overlap_ab": br["overlap_ab"],
+            "overlap_ac": br["overlap_ac"],
+            "overlap_bc": br["overlap_bc"],
+            "classes_are_disjoint": br["classes_are_disjoint"],
+            "2701_source_native_rank_a": br["2701_source_native_rank_a"],
+            "2701_source_native_rank_not_a": br["2701_source_native_rank_not_a"],
+            "parse_audit": {
+                "2705a": a["parse_audit"],
+                "2705b": b["parse_audit"],
+                "2705c": c["parse_audit"],
+                "2701": a_legacy["parse_audit"],
+            },
             "duplicate_license_rows_2705a": a["duplicate_license_rows"],
             "duplicate_license_rows_2705b": b["duplicate_license_rows"],
             "duplicate_license_rows_2705c": c["duplicate_license_rows"],
@@ -249,7 +235,8 @@ def main() -> None:
             "sourceAsOf": pop_as_of,
             "file_last_modified": pop_file_modified,
             "retrievedAt": retrieved,
-            "note": "Official monthly Regulant Population List through June 1, 2025. Not the September 8, 2026 row-level roster. Not a public profile directory.",
+            "note": f"Official monthly Regulant Population List through {pop_as_of}. Grain is a dated aggregate by license type, not the row-level regulant list (sourceAsOf {lists_as_of}). Not a public profile directory.",
+            "grain": "monthly_regulant_population_aggregate",
             "contractors_class_a": 34221,
             "contractors_class_b": 8998,
             "contractors_class_c": 11864,
@@ -264,7 +251,7 @@ def main() -> None:
         "license_class": {
             "statute": STATUTE,
             "regulations": REGS,
-            "effective_for_snapshot": "Current Code of Virginia § 54.1-1100 as retrieved 2026-09-10. 2025 cc. 127, 133.",
+            "effective_for_snapshot": f"Current Code of Virginia § 54.1-1100 as retrieved {retrieved[:10]}. 2025 cc. 127, 133.",
             "class_a": {
                 "label": "Class A",
                 "single_contract": "$150,000 or more",
@@ -294,11 +281,14 @@ def main() -> None:
             "items": classifications,
             "credential_relationship": "Classification/specialty is the permitted work scope on a Class A/B/C contractor license. Some designations require a separate DPOR credential.",
             "specialty_ne_tradesman_person": True,
-            "do_not_assume_examples_exhaustive": False,
+            "do_not_assume_examples_exhaustive": True,
+            "official_acquired_dictionary_complete": True,
             "official_list_used": True,
         },
         "tradesmen": {
             "grain": "person",
+            "entity_type": "tradesman_person",
+            "license_type": "2710_combined_tradesman",
             "status": "ACQUIRED_AS_RESEARCH_EVIDENCE",
             "combined_license_rows": trad["rows"],
             "residential_tradesman_rows": acq["profiles"]["2709_residential_tradesman.txt"]["rows"],
@@ -344,20 +334,27 @@ def main() -> None:
         },
         "discipline": {
             "status": "ACQUIRED_PARTIAL_RELEASE_INDEX",
+            "grain": "revocation_release_observation",
+            "entity_type": "disciplinary_observation",
             "coverage": "DPOR contractor revocation news releases. Not all Board disciplinary actions. Town Hall minutes remain OPEN_SEARCH_ONLY.",
             "subset_of_all_discipline": True,
             "earliest_meeting_this_index": "2025-03-11",
             "latest_meeting_this_index": "2026-08-25",
             "release_files_2026": 4,
             "release_files_2025_contractor": 7,
-            "observation_rows": len(exact_rows),
+            "observation_rows": rev_audit["observation_rows"],
             "observation_rows_2026": len(y2026),
             "observation_rows_2025": len(y2025),
-            "distinct_licenses": len(licenses),
-            "distinct_cases": len(cases),
+            "distinct_licenses": rev_audit["distinct_licenses"],
+            "distinct_cases": rev_audit["distinct_cases"],
             "business_license_observations": len(business_rows),
             "person_grain_observations": len(person_rows),
-            "exact_license_attachments": len(exact_rows),
+            "exact_license_linked_evidence_rows": rev_audit["observation_rows"],
+            "exact_source_identity_matched_observations": rev_audit["observation_rows"],
+            "exact_duplicate_rows_removed": rev_audit["exact_duplicate_rows_removed"],
+            "license_ids_appearing_in_multiple_observations": rev_audit["license_ids_appearing_in_multiple_observations"],
+            "license_ids_with_multiple_respondent_labels": rev_audit["license_ids_with_multiple_respondent_labels"],
+            "roster_crosswalk": crosswalk,
             "review_required_name_city": 0,
             "unsafe_name_only_rejected": 0,
             "attach": "EXACT_CONTRACTOR_LICENSE",
@@ -413,11 +410,12 @@ def main() -> None:
             "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
             "EXISTING_ORGANIZATIONS_ENRICHED": 0,
             "CREDENTIAL_ROWS": br["distinct_class_abc_licenses"],
-            "DISCIPLINE_EVIDENCE_ROWS": len(exact_rows),
+            "DISCIPLINE_EVIDENCE_ROWS": rev_audit["observation_rows"],
             "RECOVERY_FUND_EVIDENCE_ROWS": 0,
+            "EXACT_LICENSE_LINKED_EVIDENCE_ROWS": rev_audit["observation_rows"],
             "EXACT_PROFILE_ATTACHMENTS": 0,
             "REJECTED_UNSAFE_JOINS": 0,
-            "note": "Exact DPOR license identities are acquired as research state identities. They are not automatically published as claimable ContractorTrustHub profiles this ticket.",
+            "note": "Exact DPOR license identities are acquired as research state identities. EXACT_LICENSE_LINKED_EVIDENCE_ROWS are revocation observations matched by source-native license number. EXACT_PROFILE_ATTACHMENTS remain 0 because no public Virginia contractor profiles were created.",
         },
         "search_v1": {
             "bulk_discovery": "FAIL_CLOSED",

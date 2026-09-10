@@ -75,53 +75,21 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def parse_tsv(text: str) -> list[dict]:
-    lines = [ln for ln in text.splitlines() if ln.strip()]
-    if not lines:
-        return []
-    header = lines[0].split("\t")
-    # Some files have no header and start with board code "27"
-    has_header = any(tok.upper() in {"BOARD", "OCCUPATION", "CERTIFICATE #", "BUSINESS NAME"} for tok in header)
-    rows = []
-    start = 1 if has_header else 0
-    for ln in lines[start:]:
-        parts = ln.split("\t")
-        if len(parts) < 10:
-            continue
-        if has_header:
-            rec = {header[i].strip(): (parts[i].strip() if i < len(parts) else "") for i in range(len(header))}
-        else:
-            rec = {
-                "BOARD": parts[0].strip(),
-                "OCCUPATION": parts[1].strip(),
-                "CERTIFICATE #": parts[2].strip(),
-                "INDIVIDUAL NAME": parts[3].strip() if len(parts) > 3 else "",
-                "BUSINESS NAME": parts[4].strip() if len(parts) > 4 else "",
-                "FIRST LINE ADDRESS": parts[5].strip() if len(parts) > 5 else "",
-                "SECOND LINE ADDRESS": parts[6].strip() if len(parts) > 6 else "",
-                "P O BOX #": parts[7].strip() if len(parts) > 7 else "",
-                "CITY": parts[8].strip() if len(parts) > 8 else "",
-                "STATE": parts[9].strip() if len(parts) > 9 else "",
-                "FIVE DIGIT ZIP CODE": parts[10].strip() if len(parts) > 10 else "",
-                "EXPIRATION DATE": parts[15].strip() if len(parts) > 15 else "",
-                "CERTIFICATION DATE": parts[16].strip() if len(parts) > 16 else "",
-                "LICENSE RANK": parts[17].strip() if len(parts) > 17 else "",
-                "LICENSE SPECIALTY": parts[18].strip() if len(parts) > 18 else "",
-            }
-        rows.append(rec)
-    return rows
+from dpor_tsv import license_number as tsv_license_number
+from dpor_tsv import parse_tsv as parse_tsv_impl
+from dpor_tsv import specialties as tsv_specialties
+
+
+def parse_tsv(text: str, expected_rank: str | None = None) -> list[dict]:
+    return parse_tsv_impl(text, expected_rank=expected_rank)
 
 
 def license_number(rec: dict) -> str:
-    board = rec.get("BOARD", "").zfill(2)
-    occ = rec.get("OCCUPATION", "").zfill(2)
-    cert = rec.get("CERTIFICATE #", "").zfill(6)
-    return f"{board}{occ}{cert}"
+    return tsv_license_number(rec)
 
 
 def specialties(rec: dict) -> list[str]:
-    raw = rec.get("LICENSE SPECIALTY", "") or rec.get("LICENSE SPECIALTY ", "")
-    return [p for p in re.split(r"\s+", raw.strip()) if p]
+    return tsv_specialties(rec)
 
 
 def profile_file(key: str, rows: list[dict], grain: str) -> dict:
@@ -196,7 +164,12 @@ def main() -> None:
     downloads = {}
     for key, url in FILES.items():
         data, status, last_mod = fetch(url)
-        path = RAW / f"{key}{Path(url.split('?')[0]).suffix or '.bin'}"
+        suffix = Path(url.split("?")[0]).suffix
+        if key.endswith("_page") or key in {"regs_18vac50_22", "town_hall_meetings"}:
+            suffix = ".html" if "html" in (url.lower() + "text/html") or suffix in {"", ".cfm"} else suffix
+            if key == "regulant_lists_page":
+                suffix = ".html"
+        path = RAW / f"{key}{suffix or '.bin'}"
         if data:
             path.write_bytes(data)
         downloads[key] = {
@@ -235,7 +208,8 @@ def main() -> None:
         if not path.exists() or path.stat().st_size == 0:
             profiles[key] = {"acquired": False, "grain": grain}
             continue
-        rows = parse_tsv(path.read_text(encoding="latin-1", errors="replace"))
+        expected = "A" if "class_a" in key else "B" if "class_b" in key else "C" if "class_c" in key else None
+        rows = parse_tsv(path.read_text(encoding="latin-1", errors="replace"), expected_rank=expected)
         prof = profile_file(key, rows, grain)
         prof["acquired"] = True
         profiles[key] = prof
