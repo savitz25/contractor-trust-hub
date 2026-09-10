@@ -60,6 +60,7 @@ import { orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { txTradePlainLabel } from "@/lib/states/tx-trades";
 import { parseHandoffQuery } from "@/lib/studios/handoff";
 import { ManageProfileCta } from "@/components/contractor/ManageProfileCta";
+import { MyTrustHubSave } from "@/components/contractor/MyTrustHubSave";
 import { eligibleClaimProfile } from "@/lib/claim/eligibility";
 import { claimCtaEnabledFor } from "@/lib/claim/server";
 import { getPublicBusinessProfile } from "@/lib/business-profile/server";
@@ -219,6 +220,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
       }`}
     >
       <ContractorJsonLd contractor={contractor} path={path} />
+      <MyTrustHubSave profileId={contractor.id} />
       <BreadcrumbJsonLd
         items={[
           { name: "Home", path: "/" },
