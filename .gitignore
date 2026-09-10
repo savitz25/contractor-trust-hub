@@ -36,6 +36,9 @@ data/raw/**
 # TX-CON-001 compact identity index (rebuild from raw; do not commit)
 artifacts/tx-con-001/business-identity-index.json
 
+# VA-CON-001A full DPOR identity index (rebuild from raw; do not commit)
+data/virginia/va-con-001/identity-index.json
+
 # TX-CON-LOCAL giant local extracts (keep manifests/summaries/samples)
 data/texas/local/**/*.csv
 data/texas/local/**/*.tsv

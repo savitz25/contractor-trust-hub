@@ -1,0 +1,526 @@
+{
+  "version": "contractor-va-state-intel-v1",
+  "ticket": "VA-CON-001A",
+  "as_of": "2026-09-08",
+  "generated_at": "2026-09-10T13:03:41.640700+00:00",
+  "no_trust_score": true,
+  "no_ranking": true,
+  "no_virginia_local_intel_routes_this_ticket": true,
+  "statewide_contractor_business_licensing": true,
+  "publication": {
+    "indexable": true,
+    "robots": "index,follow",
+    "canonical": "https://www.contractortrusthub.com/virginia",
+    "route": "/virginia",
+    "h1": "Virginia Contractor License & Regulatory Intelligence"
+  },
+  "clocks": {
+    "regulant_lists_sourceAsOf": "2026-09-08",
+    "regulant_lists_sourceAsOf_label": "Updated Tuesday, September 8, 2026 on DPOR Regulant Lists",
+    "regulant_lists_file_last_modified": "2026-09-08",
+    "regulant_lists_retrievedAt": "2026-09-10T12:59:41.003456+00:00",
+    "classifications_pdf_last_modified": "2025-10-14",
+    "population_list_sourceAsOf": "2025-06-01",
+    "population_list_file_last_modified": "2025-07-25",
+    "population_list_retrievedAt": "2026-09-10T12:59:41.003456+00:00",
+    "statute_class_thresholds_as_of": "2026-09-10",
+    "snapshotAsOf": "2026-09-08",
+    "generatedAt_excluded_from_fingerprint": true,
+    "retrievedAt_is_not_sourceAsOf": true
+  },
+  "hero": {
+    "universe_value": 53840,
+    "universe_label": "Distinct Class A/B/C contractor-business licenses",
+    "universe_hint": "Official DPOR regulant lists 2705A + 2701 + 2705B + 2705C as of 2026-09-08. One row is one license number. Not unique companies if a firm holds more than one license. Not tradesmen.",
+    "class_a_value": 34213,
+    "class_a_label": "Class A contractor licenses",
+    "class_a_hint": "License class is a contract-value threshold, not a quality score.",
+    "class_b_value": 8374,
+    "class_b_label": "Class B contractor licenses",
+    "class_c_value": 11253,
+    "class_c_label": "Class C contractor licenses",
+    "discipline_value": 83,
+    "discipline_label": "Revocation-release observations with exact license numbers",
+    "discipline_hint": "DPOR contractor revocation news releases. Not all Board discipline. Case count is not violation count.",
+    "as_of_value": "2026-09-08",
+    "as_of_label": "DPOR regulant-list update"
+  },
+  "regulatory_map": {
+    "model": "VA_DPOR_BOARD_FOR_CONTRACTORS",
+    "primary_regulator": {
+      "id": "dpor",
+      "name": "Virginia Department of Professional and Occupational Regulation",
+      "board": "Virginia Board for Contractors",
+      "url": "https://www.dpor.virginia.gov/Boards/Contractors",
+      "lists": "https://www.dpor.virginia.gov/node/10230",
+      "verify": "https://www.dpor.virginia.gov/LicenseLookup",
+      "role": "Licenses contractor businesses statewide in Class A, B, or C plus a classification/specialty. Also licenses tradesmen as a separate person grain."
+    },
+    "what_it_establishes": [
+      "An official DPOR contractor-business license identity",
+      "License class A, B, or C as a statutory contract-value threshold",
+      "Classification/specialty as the permitted work scope",
+      "A live License Lookup verification path"
+    ],
+    "what_it_does_not_establish": [
+      "Quality, safety, or a Trust Score",
+      "That Class A is safer or better than Class C",
+      "That a specialty token is a unique contractor",
+      "That a tradesman is a contractor business",
+      "A clean record from missing discipline",
+      "That a Recovery Fund claim is Board discipline"
+    ]
+  },
+  "identity": {
+    "namespace": "VA-DPOR:{licenseNumber}",
+    "license_number_is_source_identity": true,
+    "class_is_not_entity_id": true,
+    "specialty_is_not_entity_id": true,
+    "license_row_ne_unique_company": true,
+    "contractor_business_ne_tradesman_person": true,
+    "contractor_business_ne_qualified_individual": true,
+    "contractor_business_ne_designated_employee": true,
+    "contractor_business_ne_home_inspector": true,
+    "contractor_business_ne_architect": true,
+    "contractor_business_ne_engineer": true,
+    "contractor_business_ne_building_official": true,
+    "active_ne_recommended": true,
+    "current_license_ne_clean_history": true
+  },
+  "business_roster": {
+    "status": "ACQUIRED",
+    "source": "https://www.dpor.virginia.gov/node/10230",
+    "sourceAsOf": "2026-09-08",
+    "retrievedAt": "2026-09-10T12:59:41.003456+00:00",
+    "refresh_cadence": "Updated to the website every 5 business days (usually Mondays)",
+    "class_a_2705a_rows": 30476,
+    "class_a_2701_legacy_rows": 3737,
+    "class_a_distinct": 34213,
+    "class_b_rows": 8374,
+    "class_b_distinct": 8374,
+    "class_c_rows": 11253,
+    "class_c_distinct": 11253,
+    "distinct_class_abc_licenses": 53840,
+    "sum_if_classes_added": 53840,
+    "classes_are_disjoint": true,
+    "duplicate_license_rows_2705a": 0,
+    "duplicate_license_rows_2705b": 0,
+    "duplicate_license_rows_2705c": 0,
+    "temporary_rows": 2,
+    "temporary_not_added_to_abc": true,
+    "one_row_one_license": true,
+    "multiple_specialties_may_appear_on_one_license": true,
+    "class_a_rows_with_multiple_specialties": 16066,
+    "do_not_sum_specialty_tokens_as_contractors": true,
+    "sha256": {
+      "2705a": "305f51ba1af02ff3754e3a0569dfafc2d636a19e77d4b826b91c3643d9849767",
+      "2705b": "68b237229984bd6bf17e6e069ab7cc7aefae5cca1dc49d940aeb9bcf74bb743f",
+      "2705c": "7df7955e539050a229edc0fdc6e8133f91774167f5726f17f5ea897c89455215",
+      "2701": "37feb4587db8a7109f675f36ef3224ad29398a82b4014d73877b8b0f9543e5f6"
+    }
+  },
+  "population_list": {
+    "status": "ACQUIRED_DATED_AGGREGATE",
+    "url": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/reg_pop.pdf",
+    "sourceAsOf": "2025-06-01",
+    "file_last_modified": "2025-07-25",
+    "retrievedAt": "2026-09-10T12:59:41.003456+00:00",
+    "note": "Official monthly Regulant Population List through June 1, 2025. Not the September 8, 2026 row-level roster. Not a public profile directory.",
+    "contractors_class_a": 34221,
+    "contractors_class_b": 8998,
+    "contractors_class_c": 11864,
+    "contractors_tradesman": 30029,
+    "temporary_contractor": 9,
+    "rbea_firms": 58,
+    "rbea_analysts": 106,
+    "ne_row_level_roster": true,
+    "ne_unique_current_contractors_from_roster": true,
+    "do_not_create_profiles_from_this_count": true
+  },
+  "license_class": {
+    "statute": "https://law.lis.virginia.gov/vacode/title54.1/chapter11/section54.1-1100/",
+    "regulations": "https://law.lis.virginia.gov/admincode/title18/agency50/chapter22/",
+    "effective_for_snapshot": "Current Code of Virginia \u00a7 54.1-1100 as retrieved 2026-09-10. 2025 cc. 127, 133.",
+    "class_a": {
+      "label": "Class A",
+      "single_contract": "$150,000 or more",
+      "twelve_month": "$1 million or more",
+      "not_quality": true
+    },
+    "class_b": {
+      "label": "Class B",
+      "single_contract": "$30,000 or more, but less than $150,000",
+      "twelve_month": "$250,000 or more, but less than $1 million",
+      "not_quality": true
+    },
+    "class_c": {
+      "label": "Class C",
+      "single_contract": "over $1,000 but less than $30,000",
+      "twelve_month": "less than $250,000",
+      "not_quality": true
+    },
+    "class_ne_classification": true,
+    "class_a_ne_best": true,
+    "class_c_ne_worse": true
+  },
+  "classifications": {
+    "source": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/VA%20Contractors%20Classifications%20%26%20Specialties.pdf",
+    "sourceAsOf": "2025-10-14",
+    "count": 45,
+    "items": [
+      {
+        "code": "CBC",
+        "official_name": "Commercial building contractors"
+      },
+      {
+        "code": "ELE",
+        "official_name": "Electrical contractors"
+      },
+      {
+        "code": "H/H",
+        "official_name": "Highway/heavy contractors"
+      },
+      {
+        "code": "HVA",
+        "official_name": "HVAC\n contractors"
+      },
+      {
+        "code": "PLB",
+        "official_name": "Plumbing contractors"
+      },
+      {
+        "code": "RBC",
+        "official_name": "Residential building contractors"
+      },
+      {
+        "code": "ASL",
+        "official_name": "Accessibility services contracting - LULA"
+      },
+      {
+        "code": "AES",
+        "official_name": "Alternative energy system contracting"
+      },
+      {
+        "code": "ADS",
+        "official_name": "Alternative sewage disposal system contracting"
+      },
+      {
+        "code": "ASB",
+        "official_name": "Asbestos contracting"
+      },
+      {
+        "code": "PAV",
+        "official_name": "Asphalt paving and  sealcoating contracting"
+      },
+      {
+        "code": "BSC",
+        "official_name": "Billboard/sign contracting"
+      },
+      {
+        "code": "BEC",
+        "official_name": "Blast/explosive contracting"
+      },
+      {
+        "code": "CIC",
+        "official_name": "Commercial improvement contracting"
+      },
+      {
+        "code": "CEM",
+        "official_name": "Concrete contracting"
+      },
+      {
+        "code": "CDS",
+        "official_name": "Conventional sewage disposal systems contracting"
+      },
+      {
+        "code": "DLR",
+        "official_name": "Drug lab remediation contracting"
+      },
+      {
+        "code": "DRY",
+        "official_name": "Drywall contracting"
+      },
+      {
+        "code": "ESC",
+        "official_name": "Electronic/communication service contracting"
+      },
+      {
+        "code": "EEC",
+        "official_name": "Elevator/escalator contracting"
+      },
+      {
+        "code": "FLR",
+        "official_name": "Flooring and floor covering contracting"
+      },
+      {
+        "code": "GFC",
+        "official_name": "Gas fitting contracting"
+      },
+      {
+        "code": "GLZ",
+        "official_name": "Glass and glazing contracting"
+      },
+      {
+        "code": "HIC",
+        "official_name": "Home improvement contracting"
+      },
+      {
+        "code": "IBC",
+        "official_name": "Industrialized building contracting"
+      },
+      {
+        "code": "INS",
+        "official_name": "Insulation and weather stripping contracting"
+      },
+      {
+        "code": "ISC",
+        "official_name": "Landscape irrigation contracting"
+      },
+      {
+        "code": "LSC",
+        "official_name": "Landscape service contracting"
+      },
+      {
+        "code": "LAC",
+        "official_name": "Lead abatement contracting"
+      },
+      {
+        "code": "LPG",
+        "official_name": "Liquefied\n petroleum gas contracting"
+      },
+      {
+        "code": "MHC",
+        "official_name": "Manufactured home contracting"
+      },
+      {
+        "code": "MCC",
+        "official_name": "Marine facility contracting"
+      },
+      {
+        "code": "BRK",
+        "official_name": "Masonry contracting"
+      },
+      {
+        "code": "MSC",
+        "official_name": "Miscellaneous contracting"
+      },
+      {
+        "code": "NGF",
+        "official_name": "Natural gas fitting provider contracting"
+      },
+      {
+        "code": "PTC",
+        "official_name": "Painting and wallcovering contracting"
+      },
+      {
+        "code": "RMC",
+        "official_name": "Radon mitigation contracting"
+      },
+      {
+        "code": "RFC",
+        "official_name": "Recreational facility contracting"
+      },
+      {
+        "code": "REF",
+        "official_name": "Refrigeration contracting"
+      },
+      {
+        "code": "ROC",
+        "official_name": "Roofing contracting"
+      },
+      {
+        "code": "STL",
+        "official_name": "Steel erection contracting"
+      },
+      {
+        "code": "POL",
+        "official_name": "Swimming pool construction contracting"
+      },
+      {
+        "code": "TMC",
+        "official_name": "Tile, marble, ceramic, and terrazzo contracting"
+      },
+      {
+        "code": "UUC",
+        "official_name": "Underground utility and excavating contracting"
+      },
+      {
+        "code": "VCC",
+        "official_name": "Vessel construction contracting"
+      }
+    ],
+    "credential_relationship": "Classification/specialty is the permitted work scope on a Class A/B/C contractor license. Some designations require a separate DPOR credential.",
+    "specialty_ne_tradesman_person": true,
+    "do_not_assume_examples_exhaustive": false,
+    "official_list_used": true
+  },
+  "tradesmen": {
+    "grain": "person",
+    "status": "ACQUIRED_AS_RESEARCH_EVIDENCE",
+    "combined_license_rows": 30120,
+    "residential_tradesman_rows": 18,
+    "not_added_to_contractor_business_denominator": true,
+    "no_public_person_directory_this_ticket": true,
+    "no_employer_string_inference": true,
+    "sourceAsOf": "2026-09-08",
+    "designations_source": "https://www.dpor.virginia.gov/sites/default/files/Records%20and%20Documents/Regulant%20List/tradesman%20designations.pdf",
+    "designations": [
+      "JELE",
+      "JPLB",
+      "JNGF",
+      "JLPG",
+      "JHVA",
+      "JGFC",
+      "MELE",
+      "MPLB",
+      "MNGF",
+      "MLPG",
+      "MHVA",
+      "MGFC"
+    ]
+  },
+  "adjacent_credentials": {
+    "rbea_firm_rows": 44,
+    "rbea_person_rows": 74,
+    "not_added_to_class_abc_denominator": true,
+    "home_inspector_not_in_contractor_denominator": true
+  },
+  "lookup": {
+    "status": "OFFICIAL_VERIFICATION_PATH",
+    "url": "https://www.dpor.virginia.gov/LicenseLookup",
+    "search_only_ne_zero": true,
+    "lookup_result_ne_trusthub_profile": true,
+    "capabilities_documented": [
+      "business license number",
+      "class",
+      "specialty",
+      "status",
+      "expiration",
+      "final orders and consent orders for disciplinary cases"
+    ]
+  },
+  "discipline": {
+    "status": "ACQUIRED_PARTIAL_RELEASE_INDEX",
+    "coverage": "DPOR contractor revocation news releases. Not all Board disciplinary actions. Town Hall minutes remain OPEN_SEARCH_ONLY.",
+    "subset_of_all_discipline": true,
+    "earliest_meeting_this_index": "2025-03-11",
+    "latest_meeting_this_index": "2026-08-25",
+    "release_files_2026": 4,
+    "release_files_2025_contractor": 7,
+    "observation_rows": 83,
+    "observation_rows_2026": 38,
+    "observation_rows_2025": 45,
+    "distinct_licenses": 78,
+    "distinct_cases": 82,
+    "business_license_observations": 83,
+    "person_grain_observations": 0,
+    "exact_license_attachments": 83,
+    "review_required_name_city": 0,
+    "unsafe_name_only_rejected": 0,
+    "attach": "EXACT_CONTRACTOR_LICENSE",
+    "name_only": "UNSAFE",
+    "name_plus_city": "REVIEW_REQUIRED",
+    "row_ne_case": true,
+    "case_ne_violation_count": true,
+    "revocation_ne_criminal_conviction": true,
+    "complaint_ne_discipline": true,
+    "no_result_ne_clean_history": true,
+    "town_hall": {
+      "url": "https://townhall.virginia.gov/L/Meetings.cfm?BoardID=10",
+      "status": "OPEN_SEARCH_ONLY",
+      "publication": "PUBLIC_RESEARCH_PATH"
+    },
+    "lookup_orders": "Final orders and consent orders available through License Lookup \u2014 not bulk-harvested this ticket."
+  },
+  "recovery_fund": {
+    "status": "PUBLIC_RESEARCH_PATH",
+    "url": "https://www.dpor.virginia.gov/Boards/Contractors_Recovery_Fund/",
+    "structured_bulk": "SOURCE_NOT_ACQUIRED",
+    "filing_ne_payment": true,
+    "approved_ne_revocation": true,
+    "fund_case_ne_board_discipline": true,
+    "court_judgment_ne_criminal_conviction": true,
+    "payment_ne_total_consumer_loss": true,
+    "single_claim_limit": 30000,
+    "same_contractor_biennium_limit": 100000,
+    "attach": "EXACT_CONTRACTOR_LICENSE"
+  },
+  "complaints": {
+    "status": "PUBLIC_RESEARCH_PATH",
+    "url": "https://www.dpor.virginia.gov/Report-Licensee/",
+    "bulk": "SOURCE_NOT_ACQUIRED",
+    "complaint_ne_disciplinary_case": true,
+    "complaint_ne_violation": true,
+    "filed_ne_substantiated": true,
+    "no_result_ne_clean_history": true
+  },
+  "bond_insurance": {
+    "coverage": "UNKNOWN / VERIFY_PATH / NOT_ACQUIRED",
+    "missing_ne_zero": true,
+    "class_a_b_financial_verification_or_surety_bond_at_application": true,
+    "class_c_same_bond_not_assumed": true,
+    "no_boolean_bonded_from_license_status": true,
+    "bond_form": "https://www.dpor.virginia.gov/sites/default/files/boards/Contractors/A501-27BOND.pdf",
+    "financial_statement_form": "https://www.dpor.virginia.gov/sites/default/files/boards/Contractors/A501-27FINST.pdf"
+  },
+  "permits": {
+    "local_routes": false
+  },
+  "expansion_ledger": {
+    "NEW_STATE_IDENTITIES": 53840,
+    "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
+    "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
+    "EXISTING_ORGANIZATIONS_ENRICHED": 0,
+    "CREDENTIAL_ROWS": 53840,
+    "DISCIPLINE_EVIDENCE_ROWS": 83,
+    "RECOVERY_FUND_EVIDENCE_ROWS": 0,
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "REJECTED_UNSAFE_JOINS": 0,
+    "note": "Exact DPOR license identities are acquired as research state identities. They are not automatically published as claimable ContractorTrustHub profiles this ticket."
+  },
+  "search_v1": {
+    "bulk_discovery": "FAIL_CLOSED",
+    "do_not_return_tradesmen_as_companies": true,
+    "class_is_not_ranking": true
+  },
+  "claim_safety": {
+    "claim_eligibility_unchanged": true,
+    "still_florida_dbpr_only": true,
+    "tradesmen_not_claimable": true,
+    "disciplinary_respondents_not_automatically_claimable": true,
+    "recovery_fund_respondents_not_automatically_claimable": true
+  },
+  "gaps": {
+    "ACQUIRED": [
+      "Class A/B/C contractor-business regulant lists",
+      "Official classification/specialty dictionary",
+      "Tradesman combined-license file as person-grain evidence",
+      "2025-2026 contractor revocation releases with exact license numbers",
+      "Dated June 1, 2025 Regulant Population List"
+    ],
+    "OPEN_SEARCH_ONLY": [
+      "DPOR License Lookup live verification",
+      "Virginia Regulatory Town Hall Board minutes/actions",
+      "Final/consent orders inside License Lookup"
+    ],
+    "SOURCE_NOT_ACQUIRED": [
+      "Structured Recovery Fund payment/claim bulk file",
+      "Bulk complaint dataset",
+      "Current contractor-specific bond/insurance proof file",
+      "Complete Board discipline corpus beyond revocation releases"
+    ],
+    "SOURCE_AVAILABLE_BY_REQUEST": [],
+    "UNKNOWN": [
+      "Complete current monthly population list after June 1, 2025"
+    ],
+    "NOT_APPLICABLE": [
+      "Colorado-style no-statewide-GC model"
+    ]
+  },
+  "gate": {
+    "passed": true,
+    "statewide_only": true,
+    "no_local_routes": true
+  },
+  "fingerprint": "92560f784baab595177aa96daa437f105f4bf5f288967e7e9f68ed1bd8a73d26"
+}
