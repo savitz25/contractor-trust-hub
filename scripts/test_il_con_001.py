@@ -61,6 +61,23 @@ class GrainTests(unittest.TestCase):
         self.assertGreater(SNAP["geography"]["out_of_state_mailing_rows"], 0)
         self.assertTrue(SNAP["identity"]["blank_id_mints_no_identity"])
         self.assertEqual(SNAP["roofing"]["rows_without_license_id"], 48)
+        self.assertEqual(SNAP["discipline"]["flag_rows"], 1393)
+        self.assertEqual(SNAP["discipline"]["flag_distinct_license_ids"], 836)
+        rows = json.loads((ROOT / "data/illinois/il-con-001/roofing-rows.json").read_text(encoding="utf-8"))
+        def nid(r):
+            return (r.get("license_number") or "").strip()
+        flagged = [r for r in rows if (r.get("ever_disciplined") or "").upper() == "Y"]
+        flagged_with_blank = {nid(r) for r in flagged}
+        flagged_nonempty = {i for i in flagged_with_blank if i}
+        self.assertIn("", flagged_with_blank)
+        self.assertEqual(len(flagged_nonempty), 836)
+        self.assertEqual(len(flagged_with_blank), 837)
+        biz = {nid(r) for r in rows if (r.get("description") or "").strip().upper() == "LICENSED ROOFING CONTRACTOR" and nid(r)}
+        qp = {nid(r) for r in rows if (r.get("description") or "").strip().upper() == "QUALIFYING PARTY ROOFING CONTRACTOR" and nid(r)}
+        self.assertEqual(len(biz & qp), 0)
+        inspect = (ROOT / "scripts/illinois/inspect_il_roofing.py").read_text(encoding="utf-8")
+        self.assertIn("if not i:", inspect)
+        self.assertIn("distinct nonempty ids", inspect)
 
     def test_no_local_claim_live(self):
         self.assertTrue(SNAP["no_local_illinois_routes"])

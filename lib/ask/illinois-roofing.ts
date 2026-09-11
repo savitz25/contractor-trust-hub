@@ -77,11 +77,49 @@ function namedCompany(text: string): boolean {
   return /\b(llc|inc|corp|corporation|ltd|limited)\b/.test(text);
 }
 
-function unsupportedFilter(text: string): boolean {
+function qualifyingPartyGrain(text: string): boolean {
+  return /\bqualifying[- ]part/.test(text);
+}
+
+function sourceRowGrain(text: string): boolean {
+  return /\bsource rows?\b/.test(text) || /\btransaction rows?\b/.test(text);
+}
+
+function otherStatusGrain(text: string): boolean {
+  return /\b(suspended|revoked|inactive|expired|cancelled|canceled|not renewed|terminated)\b/.test(text);
+}
+
+function extraRestriction(text: string): boolean {
   return (
-    /\b(issued|inactive|expired|chicago|cook|wage|debar|complaint|202\d)\b/.test(text) ||
+    /\bissued\b/.test(text) ||
+    /\b20\d{2}\b/.test(text) ||
+    /\b(chicago|cook|wage|debar|complaint)\b/.test(text) ||
     /\bserv(?:e|es|ing)\b/.test(text)
   );
+}
+
+function activeBusinessLicenseGrain(text: string): boolean {
+  if (!countIntent(text) || !roofingContext(text)) return false;
+  if (qualifyingPartyGrain(text) || sourceRowGrain(text) || otherStatusGrain(text) || extraRestriction(text)) {
+    return false;
+  }
+  const active = /\bactive\b/.test(text);
+  const business = /\bbusiness licen/.test(text) || /\blicensed roofing contractor/.test(text);
+  return active && business;
+}
+
+function activeQualifyingPartyGrain(text: string): boolean {
+  if (!countIntent(text) || !roofingContext(text) || !qualifyingPartyGrain(text)) return false;
+  if (sourceRowGrain(text) || otherStatusGrain(text) || extraRestriction(text)) return false;
+  return /\bactive\b/.test(text);
+}
+
+function sourceRowsGrain(text: string): boolean {
+  if (!countIntent(text) || !roofingContext(text) || !sourceRowGrain(text)) return false;
+  if (qualifyingPartyGrain(text) || otherStatusGrain(text) || extraRestriction(text) || /\bactive\b/.test(text)) {
+    return false;
+  }
+  return true;
 }
 
 export function interpretIllinoisRoofing(query: string, text: string): AskResult | null {
@@ -128,35 +166,77 @@ export function interpretIllinoisRoofing(query: string, text: string): AskResult
   }
 
   if (countIntent(text) && roofingContext(text)) {
-    if (unsupportedFilter(text)) {
-      interpretation.notes.push("il-roofing-filtered-count-unsupported");
-      return closed(
+    if (activeBusinessLicenseGrain(text)) {
+      interpretation.evidenceFamily = "IDFPR roofing business licenses";
+      interpretation.notes.push("il-roofing-active-business-aggregate");
+      return {
+        version: ASK_CONTRACT_VERSION,
         query,
+        mode: "count",
+        supported: true,
         interpretation,
-        "A filtered Illinois roofing count is not supported. The dated snapshot total is not an answer to a filtered question. Mailing geography is not service territory.",
-        ["Ask for the unfiltered active roofing business-license count", "Open /illinois"],
-        "/illinois",
-      );
+        href: "/illinois",
+        count: {
+          value: ILLINOIS_SNAPSHOT.business_licenses.active_business_y_distinct_license_ids,
+          grain: "distinct ACTIVE licensed roofing contractor license_number with business=Y",
+          caveat: "Dated IDFPR Open Data snapshot. Not unique companies, not qualifying parties, and not live Verify SQL.",
+        },
+        aggregate: null,
+        comparison: null,
+        failMessage: null,
+        changeHints: ["Open /illinois", "Confirm on IDFPR License Look Up"],
+      };
     }
-    interpretation.evidenceFamily = "IDFPR roofing business licenses";
-    interpretation.notes.push("il-roofing-active-business-aggregate");
-    return {
-      version: ASK_CONTRACT_VERSION,
+    if (activeQualifyingPartyGrain(text)) {
+      interpretation.evidenceFamily = "IDFPR roofing qualifying-party credentials";
+      interpretation.notes.push("il-roofing-active-qp-aggregate");
+      return {
+        version: ASK_CONTRACT_VERSION,
+        query,
+        mode: "count",
+        supported: true,
+        interpretation,
+        href: "/illinois",
+        count: {
+          value: ILLINOIS_SNAPSHOT.qualifying_parties.active_distinct_license_ids,
+          grain: "distinct ACTIVE qualifying-party roofing license_number (person grain)",
+          caveat: "Person credentials, not roofing businesses. Dated snapshot, not a public person directory.",
+        },
+        aggregate: null,
+        comparison: null,
+        failMessage: null,
+        changeHints: ["Open /illinois"],
+      };
+    }
+    if (sourceRowsGrain(text)) {
+      interpretation.evidenceFamily = "IDFPR roofing source rows";
+      interpretation.notes.push("il-roofing-source-row-aggregate");
+      return {
+        version: ASK_CONTRACT_VERSION,
+        query,
+        mode: "count",
+        supported: true,
+        interpretation,
+        href: "/illinois",
+        count: {
+          value: ILLINOIS_SNAPSHOT.roofing.source_rows,
+          grain: "IDFPR roofing license-transaction source rows",
+          caveat: "Rows are not distinct licenses and not unique companies.",
+        },
+        aggregate: null,
+        comparison: null,
+        failMessage: null,
+        changeHints: ["Open /illinois"],
+      };
+    }
+    interpretation.notes.push("il-roofing-count-grain-unspecified");
+    return closed(
       query,
-      mode: "count",
-      supported: true,
       interpretation,
-      href: "/illinois",
-      count: {
-        value: ILLINOIS_SNAPSHOT.business_licenses.active_business_y_distinct_license_ids,
-        grain: "distinct ACTIVE licensed roofing contractor license_number with business=Y",
-        caveat: "Dated IDFPR Open Data snapshot. Not unique companies, not qualifying parties, and not live Verify SQL.",
-      },
-      aggregate: null,
-      comparison: null,
-      failMessage: null,
-      changeHints: ["Open /illinois", "Confirm on IDFPR License Look Up"],
-    };
+      "This snapshot can answer the unfiltered count of ACTIVE licensed roofing business IDs, or explicitly requested qualifying-party IDs or source rows. It does not substitute one grain for another, and it does not run filtered status, date, geography, or discipline queries.",
+      ["Ask how many active roofing business licenses are in the Illinois snapshot", "Open /illinois"],
+      "/illinois",
+    );
   }
 
   if (roofingContext(text) && /\b(chicago|cook|serv)/.test(text)) {
