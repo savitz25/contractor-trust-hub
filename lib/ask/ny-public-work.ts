@@ -88,7 +88,11 @@ function certificateId(text: string): string | null {
 }
 
 function unsupportedAggregateFilter(text: string): boolean {
-  return /\b(wage|debar|mold|asbestos|mwbe|complaint|expired|out[- ]of[- ]state)\b/.test(text);
+  return (
+    /\b(wage|debar|mold|asbestos|mwbe|complaint|expired|inactive|out[- ]of[- ]state)\b/.test(text) ||
+    /\bissued\b/.test(text) ||
+    /\b20\d{2}\b/.test(text)
+  );
 }
 
 export function interpretNewYorkPublicWork(query: string, text: string): AskResult | null {
@@ -97,6 +101,27 @@ export function interpretNewYorkPublicWork(query: string, text: string): AskResu
   const interpretation: AskInterpretation = { ...EMPTY, notes: [] };
 
   if (/\bdebar/.test(text)) {
+    if (others.length > 0 && ny) {
+      interpretation.notes.push("debarment-requested-jurisdiction-not-ny-location");
+      const requested = others[0];
+      const href =
+        requested === "fl"
+          ? "/florida"
+          : requested === "nj"
+            ? "/new-jersey"
+            : requested === "va"
+              ? "/virginia"
+              : requested === "co"
+                ? "/colorado"
+                : null;
+      return closed(
+        query,
+        interpretation,
+        "Debarment is checked in the requested jurisdiction, not a contractor's New York business location. This path does not substitute NY DOL EDList.",
+        ["Name one issuing jurisdiction", href ? `Open ${href}` : "Open the relevant state research page"],
+        href,
+      );
+    }
     if (others.length > 0 && !ny) return null;
     if (!ny) {
       interpretation.notes.push("debarment-jurisdiction-unspecified");

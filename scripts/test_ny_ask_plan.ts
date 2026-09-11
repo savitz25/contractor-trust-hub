@@ -59,6 +59,15 @@ test("complaints, ranking, and discovery do not become the unfiltered total", ()
   assert.equal(filtered.supported, false);
   assert.equal(filtered.count, null);
   assert.match(filtered.failMessage || "", /filtered/i);
+  const inactive = ask("How many inactive New York public-work registry certificates are in the snapshot?");
+  assert.equal(inactive.supported, false);
+  assert.equal(inactive.mode, "fail_closed");
+  assert.equal(inactive.count, null);
+  assert.match(inactive.failMessage || "", /filtered/i);
+  const issued = ask("How many New York public-work registry certificates were issued in 2025?");
+  assert.equal(issued.supported, false);
+  assert.equal(issued.count, null);
+  assert.match(issued.failMessage || "", /filtered/i);
 });
 
 test("debarment routing does not assume New York", () => {
@@ -76,6 +85,13 @@ test("debarment routing does not assume New York", () => {
   assert.equal(unspecified.supported, false);
   assert.equal(unspecified.href, null);
   assert.match(unspecified.failMessage || "", /does not assume New York/i);
+  const mixed = ask("Is a New York contractor debarred in Florida?");
+  assert.equal(mixed.supported, false);
+  assert.equal(mixed.count, null);
+  assert.equal(mixed.href, "/florida");
+  assert.notEqual(mixed.href, "/new-york");
+  assert.doesNotMatch(mixed.failMessage || "", /Use the official NY DOL EDList/);
+  assert.match(mixed.failMessage || "", /requested jurisdiction/i);
 });
 
 test("existing exact-credential and VA/CO phrasing remain unchanged", () => {
