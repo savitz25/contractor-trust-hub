@@ -17,7 +17,7 @@ const inventoryUi = read("components/home/HomeEvidenceInventory.tsx");
 const failures = [];
 const assert = (condition, message) => { if (!condition) failures.push(message); };
 
-for (const [code, path] of Object.entries({ fl: "/florida", nj: "/new-jersey", ca: "/california", tx: "/texas", wa: "/washington", az: "/arizona", va: "/virginia" })) {
+for (const [code, path] of Object.entries({ fl: "/florida", nj: "/new-jersey", ca: "/california", tx: "/texas", wa: "/washington", az: "/arizona", va: "/virginia", ny: "/new-york" })) {
   assert(build.includes(`${code}: "${path}"`), `${code} state intelligence destination`);
 }
 assert(!shell.includes("Florida has state intelligence. Other live states"), "no Florida-only worldview");

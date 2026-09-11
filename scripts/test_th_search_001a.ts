@@ -13,7 +13,7 @@ const intel = loadContractorHubIntel();
 
 test("Specialist Search V1 portable contract and safe capability states are stable", () => {
   assert.equal(SPECIALIST_SEARCH_VERSION, "trusthub-specialist-search-v1");
-  assert.deepEqual(CONTRACTOR_SEARCH_CAPABILITIES.map((x) => x.supportState), ["KNOWN", "PARTIAL", "PARTIAL", "NOT_ACQUIRED", "UNKNOWN"]);
+  assert.deepEqual(CONTRACTOR_SEARCH_CAPABILITIES.map((x) => x.supportState), ["KNOWN", "PARTIAL", "PARTIAL", "NOT_ACQUIRED", "UNKNOWN", "PARTIAL"]);
   assert.equal(SPECIALIST_SEARCH_ANALYTICS_EVENTS.length, 7);
 });
 
@@ -66,4 +66,27 @@ test("analytics contract contains no raw query or exact identity dimensions", ()
 
 test("short AC synonym does not create an HVAC suggestion from the word active", () => {
   assert.equal(suggestAskCompletions("active roofers in Broward").some((x) => x.label.includes("Air Conditioning")), false);
+});
+
+test("New York public-work registry is not a HIC roster and does not rank", () => {
+  const pw = interpretAskQuery("public work contractors registered in New York", intel);
+  assert.equal(pw.supported, true);
+  assert.equal(pw.href, "/new-york");
+  assert.equal(pw.count?.value, 14665);
+  assert.match(pw.count?.caveat || "", /not a residential HIC/i);
+  const hic = interpretAskQuery("is my New York home-improvement contractor licensed?", intel);
+  assert.equal(hic.supported, false);
+  assert.match(hic.failMessage || "", /not a statewide home-improvement/i);
+  const mold = interpretAskQuery("New York mold remediation contractor", intel);
+  assert.equal(mold.supported, false);
+  assert.match(mold.failMessage || "", /Mold Program/i);
+  const asb = interpretAskQuery("New York asbestos contractor", intel);
+  assert.equal(asb.supported, false);
+  assert.match(asb.failMessage || "", /certificate of competence/i);
+  const debar = interpretAskQuery("is this contractor debarred?", intel);
+  assert.equal(debar.supported, false);
+  assert.match(debar.failMessage || "", /not a criminal conviction/i);
+  const best = interpretAskQuery("best contractor in New York", intel);
+  assert.equal(best.supported, false);
+  assert.match(best.failMessage || "", /does not rank/i);
 });

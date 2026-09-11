@@ -197,6 +197,14 @@ export const GEO_ONTOLOGY: Array<{
     intelligence: "state_intelligence",
   },
   {
+    id: "ny",
+    label: "New York",
+    phrases: ["new york", "nysdol", "in new york"],
+    href: "/new-york",
+    kind: "state",
+    intelligence: "state_intelligence",
+  },
+  {
     id: "broward",
     label: "Broward County, Florida",
     phrases: ["broward", "broward county", "fort lauderdale", "deerfield beach"],

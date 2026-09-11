@@ -11,6 +11,7 @@
  * Kentucky: DHBC specialty trades only (no statewide GC) — see docs/DATA_SOURCES_KY.md.
  * Colorado: DORA electrical/plumbing contractor registrations (no statewide GC) — see docs/DATA_SOURCES_CO.md.
  * Virginia: DPOR Board for Contractors Class A/B/C business licenses — see /virginia.
+ * New York: NYSDOL public-work contractor registry — see /new-york. Not a statewide GC/HIC license.
  * Wisconsin: DSPS dwelling + trade credentials (no statewide commercial GC) — see docs/DATA_SOURCES_WI.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
@@ -27,7 +28,7 @@ import { msSbcPlainLabel } from "./ms-sbc";
 import { kyDhbcPlainLabel } from "./ky-dhbc";
 import { wiDspsPlainLabel } from "./wi-dsps";
 
-export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY" | "WI" | "CO" | "VA";
+export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY" | "WI" | "CO" | "VA" | "NY";
 
 /**
  * Product depth — single source of truth for homepage badges, Verify, and coverage copy.
@@ -381,6 +382,26 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     coverageNote:
       "Virginia: statewide DPOR contractor-business licenses (Class A/B/C plus classification/specialty). Tradesmen are a separate person grain. Confirm on DPOR License Lookup. Not live in Verify SQL this ticket.",
   },
+  ny: {
+    code: "NY",
+    slug: "ny",
+    name: "New York",
+    shortName: "NY",
+    boardLabel: "New York State Department of Labor — Bureau of Public Work",
+    boardShortLabel: "NYSDOL public-work registry",
+    boardUrl: "https://dol.ny.gov/public-work-contractor-and-subcontractor-registry-landing",
+    entityRegistryLabel: "New York Department of State (not ingested this ticket)",
+    entityRegistryUrl: "https://dos.ny.gov/",
+    licenseSource: "ny_dol_pw",
+    entitySource: "ny_dos",
+    live: false,
+    depth: "verify",
+    badge: "Research",
+    scopeHint: "Public-work registration — not a HIC roster",
+    browseEnabled: false,
+    coverageNote:
+      "New York: NYSDOL public-work contractor and subcontractor registration. Not a statewide general-contractor or home-improvement license. Confirm on NYSDOL / Open Data. Not live in Verify SQL this ticket.",
+  },
   wi: {
     code: "WI",
     slug: "wi",
@@ -429,6 +450,8 @@ export function getStateBySlug(slug: string): EvidenceState | null {
                     ? "co"
                     : key === "virginia"
                       ? "va"
+                      : key === "new-york" || key === "newyork" || key === "new york"
+                        ? "ny"
                     : key === "wisconsin"
                     ? "wi"
                     : key;
