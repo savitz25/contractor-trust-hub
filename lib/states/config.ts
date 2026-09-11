@@ -12,6 +12,7 @@
  * Colorado: DORA electrical/plumbing contractor registrations (no statewide GC) — see docs/DATA_SOURCES_CO.md.
  * Virginia: DPOR Board for Contractors Class A/B/C business licenses — see /virginia.
  * New York: NYSDOL public-work contractor registry — see /new-york. Not a statewide GC/HIC license.
+ * Illinois: IDFPR roofing contractor licenses — see /illinois. Not a statewide GC/HIC license.
  * Wisconsin: DSPS dwelling + trade credentials (no statewide commercial GC) — see docs/DATA_SOURCES_WI.md.
  * Adding a state: extend this map + ingest adapters; UI reads from here.
  */
@@ -28,7 +29,7 @@ import { msSbcPlainLabel } from "./ms-sbc";
 import { kyDhbcPlainLabel } from "./ky-dhbc";
 import { wiDspsPlainLabel } from "./wi-dsps";
 
-export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY" | "WI" | "CO" | "VA" | "NY";
+export type StateCode = "FL" | "TX" | "NJ" | "OR" | "WA" | "CA" | "AZ" | "LA" | "MS" | "KY" | "WI" | "CO" | "VA" | "NY" | "IL";
 
 /**
  * Product depth — single source of truth for homepage badges, Verify, and coverage copy.
@@ -402,6 +403,26 @@ export const EVIDENCE_STATES: Record<string, EvidenceState> = {
     coverageNote:
       "New York: NYSDOL public-work contractor and subcontractor registration. Not a statewide general-contractor or home-improvement license. Confirm on NYSDOL / Open Data. Not live in Verify SQL this ticket.",
   },
+  il: {
+    code: "IL",
+    slug: "il",
+    name: "Illinois",
+    shortName: "IL",
+    boardLabel: "Illinois Department of Financial and Professional Regulation — Roofing",
+    boardShortLabel: "IDFPR roofing",
+    boardUrl: "https://idfpr.illinois.gov/checklicense.html",
+    entityRegistryLabel: "Illinois Secretary of State (not ingested this ticket)",
+    entityRegistryUrl: "https://www.ilsos.gov/",
+    licenseSource: "il_idfpr_roofing",
+    entitySource: "il_sos",
+    live: false,
+    depth: "verify",
+    badge: "Research",
+    scopeHint: "Roofing licenses — not a statewide GC",
+    browseEnabled: false,
+    coverageNote:
+      "Illinois: IDFPR licensed roofing contractor credentials only. Qualifying parties are a person grain. Not a statewide general-contractor license. Confirm on IDFPR License Look Up. Not live in Verify SQL this ticket.",
+  },
   wi: {
     code: "WI",
     slug: "wi",
@@ -452,6 +473,8 @@ export function getStateBySlug(slug: string): EvidenceState | null {
                       ? "va"
                       : key === "new-york" || key === "newyork" || key === "new york"
                         ? "ny"
+                        : key === "illinois"
+                          ? "il"
                     : key === "wisconsin"
                     ? "wi"
                     : key;

@@ -13,7 +13,7 @@ const intel = loadContractorHubIntel();
 
 test("Specialist Search V1 portable contract and safe capability states are stable", () => {
   assert.equal(SPECIALIST_SEARCH_VERSION, "trusthub-specialist-search-v1");
-  assert.deepEqual(CONTRACTOR_SEARCH_CAPABILITIES.map((x) => x.supportState), ["KNOWN", "PARTIAL", "PARTIAL", "NOT_ACQUIRED", "UNKNOWN", "PARTIAL"]);
+  assert.deepEqual(CONTRACTOR_SEARCH_CAPABILITIES.map((x) => x.supportState), ["KNOWN", "PARTIAL", "PARTIAL", "NOT_ACQUIRED", "UNKNOWN", "PARTIAL", "PARTIAL"]);
   assert.equal(SPECIALIST_SEARCH_ANALYTICS_EVENTS.length, 7);
 });
 

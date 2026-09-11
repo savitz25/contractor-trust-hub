@@ -1,0 +1,236 @@
+{
+  "ticket": "IL-CON-001",
+  "dataset_id": "pzzh-kp68",
+  "filter": "upper(license_type)='ROOFING CONTRACTOR'",
+  "order": "license_number,description,license_status,case_number,lastmodifieddate",
+  "page_size": 1000,
+  "soda": "https://data.illinois.gov/resource/pzzh-kp68.json",
+  "dataset_page": "https://data.illinois.gov/Business-and-Workforce/Professional-Licensing/pzzh-kp68",
+  "full_professional_csv_access": "CONFIRMED",
+  "full_professional_dataset_acquisition": "NOT_PERFORMED",
+  "roofing_only_acquisition": true,
+  "http_status_meta": 200,
+  "http_status_count_start": 200,
+  "http_status_count_end": 200,
+  "rowsUpdatedAt_unix": 1789119422,
+  "sourceAsOf": "2026-09-11",
+  "sourceUpdatedAt": "2026-09-11T09:37:02Z",
+  "retrievedAt_start": "2026-09-11T20:16:10Z",
+  "retrievedAt_end": "2026-09-11T20:16:45Z",
+  "retrievedAt": "2026-09-11T20:16:10Z",
+  "retrievedAt_precision": "second",
+  "count_at_start": 33891,
+  "count_at_end": 33891,
+  "count_consistent": true,
+  "acquired_rows": 33891,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 2,
+      "offset": 1000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 3,
+      "offset": 2000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 4,
+      "offset": 3000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 5,
+      "offset": 4000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 6,
+      "offset": 5000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 7,
+      "offset": 6000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 8,
+      "offset": 7000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 9,
+      "offset": 8000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 10,
+      "offset": 9000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 11,
+      "offset": 10000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 12,
+      "offset": 11000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 13,
+      "offset": 12000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 14,
+      "offset": 13000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 15,
+      "offset": 14000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 16,
+      "offset": 15000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 17,
+      "offset": 16000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 18,
+      "offset": 17000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 19,
+      "offset": 18000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 20,
+      "offset": 19000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 21,
+      "offset": 20000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 22,
+      "offset": 21000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 23,
+      "offset": 22000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 24,
+      "offset": 23000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 25,
+      "offset": 24000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 26,
+      "offset": 25000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 27,
+      "offset": 26000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 28,
+      "offset": 27000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 29,
+      "offset": 28000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 30,
+      "offset": 29000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 31,
+      "offset": 30000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 32,
+      "offset": 31000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 33,
+      "offset": 32000,
+      "http_status": 200,
+      "rows": 1000
+    },
+    {
+      "page": 34,
+      "offset": 33000,
+      "http_status": 200,
+      "rows": 891
+    }
+  ],
+  "page_count": 34,
+  "raw_bytes": 17854974,
+  "raw_sha256": "6c811de47cf003f19a422d66623e9af2cff1414a7628f237a8ed02bb82275bdb",
+  "raw_path": "data/illinois/il-con-001/roofing-rows.json"
+}

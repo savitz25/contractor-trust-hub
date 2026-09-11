@@ -1,0 +1,256 @@
+{
+  "version": "contractor-il-state-intel-v1",
+  "ticket": "IL-CON-001",
+  "as_of": "2026-09-11",
+  "no_trust_score": true,
+  "no_ranking": true,
+  "no_local_illinois_routes": true,
+  "not_statewide_gc_or_hic_license": true,
+  "roofing_only": true,
+  "publication": {
+    "indexable": true,
+    "robots": "index,follow",
+    "canonical": "https://www.contractortrusthub.com/illinois",
+    "route": "/illinois",
+    "h1": "Illinois Roofing License Research"
+  },
+  "clocks": {
+    "sourceAsOf": "2026-09-11",
+    "sourceUpdatedAt": "2026-09-11T09:37:02Z",
+    "sourceAsOf_meaning": "IDFPR Open Data rowsUpdatedAt for pzzh-kp68, not per-license re-verification",
+    "retrievedAt": "2026-09-11T20:16:10Z",
+    "retrievedAt_end": "2026-09-11T20:16:45Z",
+    "retrievedAt_precision": "second",
+    "retrievedAt_meaning": "Wall-clock of the successful roofing-only SODA retrieval",
+    "snapshotAsOf": "2026-09-11",
+    "snapshotAsOf_meaning": "Accepted capture date aligned to source update date",
+    "generatedAt": "2026-09-11T20:20:00Z",
+    "clocks_are_semantically_distinct": true,
+    "do_not_treat_matching_calendar_dates_as_the_same_clock": true
+  },
+  "hero": {
+    "universe_value": 4675,
+    "universe_label": "Active Illinois roofing business licenses",
+    "universe_hint": "Distinct license_number on LICENSED ROOFING CONTRACTOR + ACTIVE + business=Y. Repeated rows are extra disciplinary actions, not extra licenses. Not unique companies and not qualifying parties.",
+    "rows_value": 33891,
+    "rows_label": "Roofing source rows",
+    "rows_hint": "IDFPR license-transaction rows for ROOFING CONTRACTOR only. Rows are not distinct licenses.",
+    "qp_value": 12042,
+    "qp_label": "Active qualifying-party credentials",
+    "qp_hint": "Person grain. Do not add to business licenses.",
+    "as_of_value": "2026-09-11",
+    "as_of_label": "Open Data rows-updated date"
+  },
+  "roofing": {
+    "program": "IDFPR Roofing Industry Licensing Act credentials in Professional Licensing Open Data",
+    "dataset_id": "pzzh-kp68",
+    "filter": "upper(license_type)='ROOFING CONTRACTOR'",
+    "coverage_state": "ACQUIRED_CURRENT_SNAPSHOT",
+    "classification": "VISIBLE_PUBLIC_METRIC",
+    "grain": "idfpr_roofing_license_transaction_row",
+    "source_rows": 33891,
+    "distinct_license_ids": 33290,
+    "rows_without_license_id": 48,
+    "duplicate_license_ids": 415,
+    "repeat_reason": "Same license_number repeated when additional disciplinary action values (for example Fine vs Reprimand) appear. Status does not conflict on those IDs.",
+    "descriptions": {
+      "LICENSED ROOFING CONTRACTOR": 21533,
+      "QUALIFYING PARTY ROOFING CONTRACTOR": 12358
+    },
+    "other_description_rows": 0,
+    "count_consistent": true,
+    "raw_sha256": "6c811de47cf003f19a422d66623e9af2cff1414a7628f237a8ed02bb82275bdb",
+    "raw_bytes": 17854974,
+    "full_professional_csv_access": "CONFIRMED",
+    "full_professional_dataset_acquisition": "NOT_PERFORMED",
+    "not_statewide_gc": true,
+    "absence_ne_illegal_residential_gc": true
+  },
+  "business_licenses": {
+    "rows": 21533,
+    "distinct_license_ids": 21097,
+    "rows_without_license_id": 9,
+    "duplicate_license_ids": 335,
+    "status_conflict_ids": 0,
+    "business_flag_conflict_ids": 0,
+    "active_rows": 4918,
+    "active_distinct_license_ids": 4702,
+    "status_counts": {
+      "DECEASED": 9,
+      "NOT RENEWED": 10644,
+      "CANCELLED": 5371,
+      "ACTIVE": 4918,
+      "CLOSED": 179,
+      "INACTIVE": 66,
+      "EXPIRED": 11,
+      "SUSPENDED": 77,
+      "REFUSE TO RENEW": 89,
+      "REVOKED": 107,
+      "TERMINATED": 10,
+      "Non Sufficient Fund Check Terminated": 24,
+      "Non Sufficient Fund Check": 1,
+      "CHANGE OF OWNERSHIP": 8,
+      "INOPERATIVE": 17,
+      "PROBATION": 2
+    },
+    "business_flag_counts": {
+      "Y": 21484,
+      "N": 49
+    },
+    "description": "LICENSED ROOFING CONTRACTOR",
+    "classification": "VISIBLE_PUBLIC_METRIC",
+    "active_business_y_rows": 4891,
+    "active_business_y_distinct_license_ids": 4675,
+    "headline_definition": "distinct nonempty license_number where description=LICENSED ROOFING CONTRACTOR AND license_status=ACTIVE AND business=Y",
+    "license_ne_unique_company": true,
+    "did_not_use_row_count_as_headline": true
+  },
+  "qualifying_parties": {
+    "rows": 12358,
+    "distinct_license_ids": 12193,
+    "rows_without_license_id": 39,
+    "duplicate_license_ids": 80,
+    "status_conflict_ids": 0,
+    "business_flag_conflict_ids": 0,
+    "active_rows": 12128,
+    "active_distinct_license_ids": 12042,
+    "status_counts": {
+      "ACTIVE": 12128,
+      "DECEASED": 38,
+      "INACTIVE": 12,
+      "REVOKED": 75,
+      "SUSPENDED": 51,
+      "TERMINATED": 1,
+      "REFUSE TO RENEW": 3,
+      "CANCELLED": 38,
+      "PROBATION": 12
+    },
+    "business_flag_counts": {
+      "N": 12336,
+      "Y": 22
+    },
+    "description": "QUALIFYING PARTY ROOFING CONTRACTOR",
+    "classification": "VISIBLE_SUPPORTING_CONTEXT",
+    "person_grain": true,
+    "no_public_person_directory": true,
+    "not_added_to_business_denominator": true
+  },
+  "identity": {
+    "namespace": "IL-IDFPR:{licenseNumber}",
+    "unique_across_roofing_business_and_qp": true,
+    "preserve_raw_text_and_leading_zeros": true,
+    "blank_id_mints_no_identity": true,
+    "conflicting_id_does_not_merge_subjects": true,
+    "license_ne_unique_legal_organization": true,
+    "name_only": "UNSAFE",
+    "no_inferred_business_qp_join": true
+  },
+  "geography": {
+    "registration_jurisdiction_ne_mailing_address": true,
+    "mailing_address_ne_service_territory": true,
+    "il_mailing_rows": 30825,
+    "out_of_state_mailing_rows": 3066,
+    "blank_state_rows": 0,
+    "state_distribution_top": [
+      [
+        "IL",
+        30825
+      ],
+      [
+        "MO",
+        647
+      ],
+      [
+        "IN",
+        579
+      ],
+      [
+        "WI",
+        460
+      ],
+      [
+        "IA",
+        414
+      ],
+      [
+        "TX",
+        147
+      ],
+      [
+        "MN",
+        119
+      ],
+      [
+        "FL",
+        87
+      ]
+    ],
+    "did_not_filter_to_il_addresses": true
+  },
+  "discipline": {
+    "classification": "VISIBLE_SUPPORTING_CONTEXT",
+    "flag_rows": 1393,
+    "flag_distinct_license_ids": 836,
+    "case_rows": 1410,
+    "distinct_case_ids": 789,
+    "flag_ne_case": true,
+    "case_ne_violation_count": true,
+    "observation_ne_conviction": true,
+    "historical_ne_current_restriction": true,
+    "missing_ne_clean_history": true,
+    "name_only_attachment": "UNSAFE",
+    "exact_profile_attachments": 0,
+    "no_pdf_corpus": true,
+    "not_master_dataset_discipline_counts": true
+  },
+  "plumbing_and_local": {
+    "idph_plumbing": "OPEN_SEARCH_ONLY",
+    "chicago_cook": "NOT_STARTED",
+    "classification": "VISIBLE_SUPPORTING_CONTEXT"
+  },
+  "grain_classification": {
+    "active_business_license_ids": "VISIBLE_PUBLIC_METRIC",
+    "roofing_source_rows": "VISIBLE_SUPPORTING_CONTEXT",
+    "qualifying_party_ids": "VISIBLE_SUPPORTING_CONTEXT",
+    "discipline_observations": "VISIBLE_SUPPORTING_CONTEXT",
+    "blank_and_duplicate_diagnostics": "INTERNAL_DIAGNOSTIC_ONLY"
+  },
+  "claim_eligibility": {
+    "broadened": false
+  },
+  "expansion_ledger": {
+    "IL_ROOFING_SOURCE_ROWS": 33891,
+    "IL_ROOFING_DISTINCT_LICENSE_IDS": 33290,
+    "IL_ROOFING_BUSINESS_LICENSE_ROWS": 21533,
+    "IL_ROOFING_BUSINESS_DISTINCT_LICENSE_IDS": 21097,
+    "IL_ROOFING_ACTIVE_BUSINESS_ROWS": 4891,
+    "IL_ROOFING_ACTIVE_BUSINESS_DISTINCT_LICENSE_IDS": 4675,
+    "IL_ROOFING_QUALIFYING_PARTY_ROWS": 12358,
+    "IL_ROOFING_QUALIFYING_PARTY_DISTINCT_LICENSE_IDS": 12193,
+    "IL_ROOFING_DISCIPLINE_FLAG_ROWS": 1393,
+    "IL_ROOFING_DISTINCT_CASE_IDS": 789,
+    "NET_NEW_STATE_RESEARCH_IDENTITIES": 33290,
+    "NET_NEW_STATE_RESEARCH_IDENTITIES_definition": "Distinct nonempty IL-IDFPR roofing license_number values in this accepted snapshot that were absent from prior accepted research artifacts in this repository.",
+    "NET_NEW_STATE_RESEARCH_IDENTITIES_baseline": {
+      "reviewed_base_sha": "862da0d952275a99e4214b6e88b2082581cb837b",
+      "namespace": "IL-IDFPR:{licenseNumber}",
+      "prior_accepted_certificate_ids": 0,
+      "method": "Searched accepted research artifacts at the reviewed base for IL-IDFPR, pzzh-kp68, and ROOFING CONTRACTOR identity files. None existed. Names were not compared.",
+      "scope": "Exact source license_number values in the roofing slice only.",
+      "baseline_status": "ESTABLISHED_EMPTY"
+    },
+    "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
+    "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
+    "EXISTING_ORGANIZATIONS_ENRICHED": 0,
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "GRAPH_WRITES": 0
+  },
+  "gate": {
+    "passed": true,
+    "no_combined_illinois_contractor_total": true,
+    "live_cohort_not_inflated": true,
+    "did_not_headline_matching_row_count": true
+  },
+  "generated_at": "2026-09-11T20:20:00Z",
+  "fingerprint": "a9f63e7625d25fd64e4fe95b15f558a49fc719376154be481fdd062042dd0235"
+}
