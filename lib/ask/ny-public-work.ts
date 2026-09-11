@@ -56,6 +56,7 @@ const OTHER_STATE_PHRASES: Array<[string, string]> = [
   ["california", "ca"],
   ["washington", "wa"],
   ["oregon", "or"],
+  ["illinois", "il"],
 ];
 
 export function otherStateIntents(text: string): string[] {

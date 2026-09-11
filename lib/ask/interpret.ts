@@ -17,6 +17,7 @@ import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { ASK_CONTRACT_VERSION, type AskInterpretation, type AskResult } from "./types";
 import { detectContradiction, detectUnsupportedConcept } from "./unsupported";
 import { interpretNewYorkPublicWork } from "./ny-public-work";
+import { interpretIllinoisRoofing } from "./illinois-roofing";
 
 const EMPTY_INTERPRET: AskInterpretation = {
   identifier: null,
@@ -140,6 +141,8 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
 
   const nyResult = interpretNewYorkPublicWork(query, text);
   if (nyResult) return nyResult;
+  const ilResult = interpretIllinoisRoofing(query, text);
+  if (ilResult) return ilResult;
 
   const wantsRate = includesAny(text, RATE_PHRASES);
   const wantsMost = includesAny(text, MOST_PHRASES) && !wantsRate;

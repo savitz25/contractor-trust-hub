@@ -63,6 +63,9 @@ export const CONTRACTOR_SEARCH_GOLDEN_QUESTIONS: GoldenQuestion[] = [
   ["New York asbestos contractor", "UNSUPPORTED_SAFE", "asbestos contractor license vs worker cert"],
   ["is this contractor debarred?", "UNSUPPORTED_SAFE", "debarment is jurisdiction-specific"],
   ["best contractor in New York", "UNSUPPORTED_SAFE", "no ranking"],
+  ["How many active roofing business licenses are in the Illinois snapshot?", "PASS", "IDFPR distinct active roofing business IDs"],
+  ["How many Illinois contractors are there?", "UNSUPPORTED_SAFE", "roofing-only scope"],
+  ["best roofer in Illinois", "UNSUPPORTED_SAFE", "no ranking"],
 ] .map(([query, expected, note]) => ({ query, expected, note })) as GoldenQuestion[];
 
 export const GOLDEN_SCORE = CONTRACTOR_SEARCH_GOLDEN_QUESTIONS.reduce(

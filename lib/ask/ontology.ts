@@ -205,6 +205,14 @@ export const GEO_ONTOLOGY: Array<{
     intelligence: "state_intelligence",
   },
   {
+    id: "il",
+    label: "Illinois",
+    phrases: ["illinois", "idfpr", "in illinois", "in il", "il statewide"],
+    href: "/illinois",
+    kind: "state",
+    intelligence: "state_intelligence",
+  },
+  {
     id: "broward",
     label: "Broward County, Florida",
     phrases: ["broward", "broward county", "fort lauderdale", "deerfield beach"],

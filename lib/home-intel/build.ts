@@ -27,7 +27,7 @@ import { loadContractorNetworkMetrics } from "@/lib/metrics/load-network-metrics
 const networkMetrics = loadContractorNetworkMetrics();
 const RETRIEVED = networkMetrics.generatedAt.slice(0, 10);
 const CONFIG_AS_OF = "product config live EvidenceState rows";
-const STATE_INTELLIGENCE_PATHS: Record<string, string> = { fl: "/florida", nj: "/new-jersey", ca: "/california", tx: "/texas", wa: "/washington", az: "/arizona", va: "/virginia", ny: "/new-york" };
+const STATE_INTELLIGENCE_PATHS: Record<string, string> = { fl: "/florida", nj: "/new-jersey", ca: "/california", tx: "/texas", wa: "/washington", az: "/arizona", va: "/virginia", ny: "/new-york", il: "/illinois" };
 
 function fmt(n: number): string {
   return n.toLocaleString("en-US");
