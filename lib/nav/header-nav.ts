@@ -20,6 +20,7 @@ export const EXPLORE_GROUP: HeaderGroup = {
     { href: "/arizona", label: "Arizona research", hint: "ROC current licenses and class overlap" },
     { href: "/colorado", label: "Colorado research", hint: "DORA electrical and plumbing — no statewide GC" },
     { href: "/virginia", label: "Virginia research", hint: "DPOR Class A/B/C contractor businesses" },
+    { href: "/new-york", label: "New York research", hint: "Public-work contractor registration — not a HIC roster" },
     { href: "/texas", label: "Texas research", hint: "Specialty trades — no statewide GC license" },
     { href: "/texas/austin", label: "Austin permits", hint: "City of Austin local intelligence" },
     { href: "/california", label: "California research", hint: "Acquired CSLB public-data rows" },
