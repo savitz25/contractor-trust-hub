@@ -37,6 +37,15 @@ export function assertNewYorkSnapshot(
   if (value.expansion_ledger.NET_NEW_CANONICAL_ORGANIZATIONS !== 0) {
     throw new Error("Do not mint canonical organizations");
   }
+  if (value.expansion_ledger.NET_NEW_STATE_RESEARCH_IDENTITIES !== 14665) {
+    throw new Error("Research-identity count must remain the distinct certificate IDs over an empty prior baseline");
+  }
+  if (value.expansion_ledger.NET_NEW_STATE_RESEARCH_IDENTITIES_baseline.prior_accepted_certificate_ids !== 0) {
+    throw new Error("Prior NY-DOL-PW baseline must remain empty at the reviewed base");
+  }
+  if (value.clocks.clocks_are_semantically_distinct !== true) {
+    throw new Error("Source and retrieval clocks remain distinct even when calendar dates match");
+  }
   if (value.expansion_ledger.NET_NEW_PUBLIC_CONTRACTOR_PROFILES !== 0) {
     throw new Error("Do not mint public contractor profiles");
   }

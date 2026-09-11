@@ -10,11 +10,13 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-ART = ROOT / "artifacts" / "ny-con-001"
 STAGE = ROOT / "data" / "new-york" / "ny-con-001"
 LIB = ROOT / "lib" / "new-york-intelligence"
-CSV_PATH = ART / "i4jv-zkey.csv"
-META_PATH = ART / "socrata-meta.json"
+CSV_PATH = STAGE / "i4jv-zkey.csv"
+ACQUIRE_PATH = STAGE / "acquire-report.json"
+FROZEN_SNAPSHOT_AS_OF = "2026-09-11"
+FROZEN_BASE_SHA = "e3168916ea437af20147aff0ebe31df77acc34a4"
+ACCEPTED_RAW_SHA = "4070cf175286d2fcbbfa260c8e34fa7d2ba62746e8b219b0dfff3c48bd203ecb"
 
 DATASET_PAGE = "https://data.ny.gov/Government-Finance/Contractor-Registry-Certificate/i4jv-zkey"
 CSV_URL = "https://data.ny.gov/api/views/i4jv-zkey/rows.csv?accessType=DOWNLOAD"
@@ -38,9 +40,43 @@ def dump(obj: object) -> str:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
 
 
+VOLATILE_TOP_LEVEL = frozenset({"fingerprint", "generated_at"})
+
+
+def semantic_body(obj: dict) -> dict:
+    """Drop only generation timestamps. Keep source clocks, ledger, and counts."""
+    out: dict = {}
+    for key, value in obj.items():
+        if key in VOLATILE_TOP_LEVEL:
+            continue
+        if key == "clocks" and isinstance(value, dict):
+            out[key] = {ck: cv for ck, cv in value.items() if ck != "generatedAt"}
+        else:
+            out[key] = value
+    return out
+
+
 def fingerprint(body: dict) -> str:
-    skip = {"fingerprint", "generated_at"}
-    return sha256_bytes(dump({k: v for k, v in body.items() if k not in skip}).encode("utf-8"))
+    return sha256_bytes(dump(semantic_body(body)).encode("utf-8"))
+
+
+def load_frozen_acquisition() -> dict:
+    if not CSV_PATH.is_file():
+        raise SystemExit(f"missing frozen CSV {CSV_PATH}")
+    if not ACQUIRE_PATH.is_file():
+        raise SystemExit(f"missing frozen acquire-report {ACQUIRE_PATH}")
+    acquire = json.loads(ACQUIRE_PATH.read_text(encoding="utf-8"))
+    raw = CSV_PATH.read_bytes()
+    raw_sha = sha256_bytes(raw)
+    if raw_sha != ACCEPTED_RAW_SHA:
+        raise SystemExit(f"CSV checksum drifted: {raw_sha}")
+    if acquire.get("raw_sha256") != ACCEPTED_RAW_SHA:
+        raise SystemExit("acquire-report checksum does not match accepted CSV")
+    if int(acquire.get("raw_bytes") or 0) != len(raw):
+        raise SystemExit("acquire-report byte size does not match frozen CSV")
+    if acquire.get("rowsUpdatedAt_unix") in (None, ""):
+        raise SystemExit("acquire-report is missing rowsUpdatedAt_unix")
+    return acquire
 
 
 def parse_mdy(value: str) -> date | None:
@@ -57,16 +93,19 @@ def iso_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def main() -> None:
+def main(generated_at: str | None = None) -> dict:
     STAGE.mkdir(parents=True, exist_ok=True)
     LIB.mkdir(parents=True, exist_ok=True)
-    retrieved_at = iso_now()
-    generated_at = retrieved_at
-    snapshot_as_of = retrieved_at[:10]
+    acquire = load_frozen_acquisition()
+    generated_at = generated_at or iso_now()
+    snapshot_as_of = FROZEN_SNAPSHOT_AS_OF
     raw = CSV_PATH.read_bytes()
-    raw_sha = sha256_bytes(raw)
-    meta = json.loads(META_PATH.read_text(encoding="utf-8"))
-    source_as_of = datetime.fromtimestamp(int(meta["rowsUpdatedAt"]), tz=timezone.utc).date().isoformat()
+    raw_sha = acquire["raw_sha256"]
+    source_as_of = datetime.fromtimestamp(int(acquire["rowsUpdatedAt_unix"]), tz=timezone.utc).date().isoformat()
+    retrieved_at = acquire.get("retrievedAt")
+    retrieved_precision = acquire.get("retrievedAt_precision") or "date"
+    if not retrieved_at:
+        raise SystemExit("frozen acquire-report is missing retrievedAt")
 
     with CSV_PATH.open(encoding="utf-8-sig", newline="") as fh:
         rows = list(csv.DictReader(fh))
@@ -93,7 +132,7 @@ def main() -> None:
     exp_dates: list[date] = []
     cert_format_other = 0
 
-    as_of_day = date.fromisoformat(snapshot_as_of)
+    as_of_day = date.fromisoformat(FROZEN_SNAPSHOT_AS_OF)
 
     for i, row in enumerate(rows):
         cert = (row.get("Certificate Number") or "").strip()
@@ -152,36 +191,10 @@ def main() -> None:
     rejected = 0
     parsed = len(rows)
 
-    acquire = {
-        "ticket": "NY-CON-001",
-        "dataset_id": "i4jv-zkey",
-        "source_url": DATASET_PAGE,
-        "csv_url": CSV_URL,
-        "soda_resource": SODA,
-        "access": "SOCRATA_BULK_CSV",
-        "http_status": 200,
-        "raw_bytes": len(raw),
-        "raw_sha256": raw_sha,
-        "rowsUpdatedAt_unix": meta["rowsUpdatedAt"],
-        "sourceAsOf": source_as_of,
-        "retrievedAt": retrieved_at,
-        "raw_rows": len(rows),
-        "parsed_rows": parsed,
-        "rejected_rows": rejected,
-        "no_tableau_reverse_engineer": True,
-        "no_nyc_local_acquisition": True,
-        "mold_bulk": "SOURCE_NOT_ACQUIRED",
-        "asbestos_bulk": "SOURCE_NOT_ACQUIRED",
-        "edlist_bulk": "SOURCE_NOT_ACQUIRED",
-        "columns": [c["name"] for c in meta["columns"]],
-    }
-    (STAGE / "acquire-report.json").write_text(json.dumps(acquire, indent=2) + "\n", encoding="utf-8")
-    (STAGE / "i4jv-zkey.sha256").write_text(raw_sha + "\n", encoding="utf-8")
-
     body = {
         "version": CONTRACT,
         "ticket": "NY-CON-001",
-        "as_of": snapshot_as_of,
+        "as_of": FROZEN_SNAPSHOT_AS_OF,
         "no_trust_score": True,
         "no_ranking": True,
         "no_local_new_york_routes": True,
@@ -198,13 +211,18 @@ def main() -> None:
         },
         "clocks": {
             "sourceAsOf": source_as_of,
+            "sourceAsOf_meaning": "Official Socrata rowsUpdatedAt converted to a UTC calendar date",
             "retrievedAt": retrieved_at,
-            "snapshotAsOf": snapshot_as_of,
+            "retrievedAt_precision": retrieved_precision,
+            "retrievedAt_meaning": "Accepted capture calendar date. Instant-level retrieval time was not independently retained.",
+            "snapshotAsOf": FROZEN_SNAPSHOT_AS_OF,
+            "snapshotAsOf_meaning": "Immutable reference date for this accepted capture; rebuilds must not advance it",
             "generatedAt": generated_at,
-            "sourceAsOf_derivation": "Socrata rowsUpdatedAt converted to UTC date",
-            "retrievedAt_is_not_sourceAsOf": retrieved_at[:10] != source_as_of,
+            "clocks_are_semantically_distinct": True,
+            "sourceAsOf_derivation": "acquire-report.rowsUpdatedAt_unix",
             "certificate_issue_date_is_not_sourceAsOf": True,
             "certificate_expiration_date_is_not_status": True,
+            "do_not_treat_matching_calendar_dates_as_the_same_clock": True,
         },
         "hero": {
             "universe_value": parsed,
@@ -297,6 +315,7 @@ def main() -> None:
             "dol_ne_wcb_context": True,
             "no_ownership_successor_reconstruction": True,
             "same_row_flag_is_not_edlist_census": True,
+            "do_not_infer_zero_currently_debarred_contractors": True,
         },
         "wage_and_labor_flags": {
             "classification": "INTERNAL_DIAGNOSTIC_ONLY",
@@ -352,8 +371,16 @@ def main() -> None:
             "NY_ASBESTOS_CONTRACTOR_LICENSE_ROWS": None,
             "NY_DEBARMENT_OBSERVATIONS": debar_yes,
             "NY_DEBARMENT_EXACT_ID_RESEARCH_MATCHES": 0,
-            "NET_NEW_STATE_RESEARCH_IDENTITIES": 0,
-            "NET_NEW_STATE_RESEARCH_IDENTITIES_definition": "New canonical contractor identities written from this ticket. Zero because this is a publication-only state snapshot.",
+            "NET_NEW_STATE_RESEARCH_IDENTITIES": len(by_cert),
+            "NET_NEW_STATE_RESEARCH_IDENTITIES_definition": "Distinct NY-DOL-PW:{certificateNumber} values in this accepted snapshot that were absent from prior accepted research artifacts. Not canonical organizations and not public profiles.",
+            "NET_NEW_STATE_RESEARCH_IDENTITIES_baseline": {
+                "reviewed_base_sha": FROZEN_BASE_SHA,
+                "namespace": NAMESPACE,
+                "prior_accepted_certificate_ids": 0,
+                "method": "Enumerated accepted research artifacts at the reviewed base SHA. No i4jv-zkey, NY-DOL-PW, or New York intelligence identity files existed.",
+                "scope": "Exact source Certificate Number values only. Business names and corporate identity were not compared.",
+                "baseline_status": "ESTABLISHED_EMPTY",
+            },
             "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
             "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
             "EXISTING_ORGANIZATIONS_ENRICHED": 0,
@@ -388,19 +415,46 @@ def main() -> None:
             "LEFT_TOO_MUCH_WORK": ["EDList reconstruction", "person mold/asbestos credentials", "project notifications"],
         },
     }
-    fp1 = fingerprint(body)
-    fp2 = fingerprint(body)
-    if fp1 != fp2:
-        raise SystemExit("fingerprint not deterministic")
     body["generated_at"] = generated_at
+    fp1 = fingerprint(body)
+    alt = dict(body)
+    alt["generated_at"] = "2099-01-01T00:00:00Z"
+    alt_clocks = dict(body["clocks"])
+    alt_clocks["generatedAt"] = "2099-01-01T00:00:00Z"
+    alt["clocks"] = alt_clocks
+    if fingerprint(alt) != fp1:
+        raise SystemExit("generation timestamps leaked into the semantic fingerprint")
     body["fingerprint"] = fp1
-    if fingerprint(body) != fp1:
-        raise SystemExit("fingerprint changed after generated_at")
 
-    (LIB / "accepted-snapshot.json").write_text(json.dumps(body, indent=2) + "\n", encoding="utf-8")
-    (STAGE / "accepted-snapshot.json").write_text(json.dumps(body, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"fingerprint": fp1, "rows": parsed, "distinct": len(by_cert), "ny_addr": ny_addr, "out": out_addr, "debar_yes": debar_yes, "debar_hist": debar_historical, "debar_cur": debar_current, "sourceAsOf": source_as_of, "retrievedAt": retrieved_at}, indent=2))
+    payload = json.dumps(body, indent=2) + "\n"
+    (LIB / "accepted-snapshot.json").write_text(payload, encoding="utf-8")
+    (STAGE / "accepted-snapshot.json").write_text(payload, encoding="utf-8")
+    print(
+        json.dumps(
+            {
+                "fingerprint": fp1,
+                "rows": parsed,
+                "distinct": len(by_cert),
+                "ny_addr": ny_addr,
+                "out": out_addr,
+                "debar_yes": debar_yes,
+                "debar_hist": debar_historical,
+                "debar_cur": debar_current,
+                "sourceAsOf": source_as_of,
+                "retrievedAt": retrieved_at,
+                "generatedAt": generated_at,
+                "wrote_acquire_report": False,
+            },
+            indent=2,
+        )
+    )
+    return body
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--generated-at", default=None)
+    args = parser.parse_args()
+    main(generated_at=args.generated_at)

@@ -16,6 +16,7 @@ import {
 import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { ASK_CONTRACT_VERSION, type AskInterpretation, type AskResult } from "./types";
 import { detectContradiction, detectUnsupportedConcept } from "./unsupported";
+import { interpretNewYorkPublicWork } from "./ny-public-work";
 
 const EMPTY_INTERPRET: AskInterpretation = {
   identifier: null,
@@ -73,102 +74,6 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
       comparison: null,
       failMessage: "Enter a question we can map to licensing, trade, geography, or indexed regulatory evidence.",
       changeHints: ["Try an example prompt under Ask ContractorTrustHub."],
-    };
-  }
-
-  const ny = /\bnew york\b|\bnysdol\b/.test(text);
-  if (ny && /\bmold\b/.test(text)) {
-    interpretation.location = "New York";
-    interpretation.notes.push("ny-mold-search-only");
-    return {
-      version: ASK_CONTRACT_VERSION,
-      query,
-      mode: "fail_closed",
-      supported: false,
-      interpretation,
-      href: "/new-york",
-      count: null,
-      aggregate: null,
-      comparison: null,
-      failMessage:
-        "New York mold credentials were not acquired as a bulk business roster. Assessment businesses are not remediation businesses, and individual assessor/supervisor/worker credentials are a person grain. Confirm on the official NY DOL Mold Program. Missing is not zero.",
-      changeHints: ["Open /new-york", "Use the official NY DOL Mold Program"],
-    };
-  }
-  if (ny && /\basbestos\b/.test(text)) {
-    interpretation.location = "New York";
-    interpretation.notes.push("ny-asbestos-search-only");
-    return {
-      version: ASK_CONTRACT_VERSION,
-      query,
-      mode: "fail_closed",
-      supported: false,
-      interpretation,
-      href: "/new-york",
-      count: null,
-      aggregate: null,
-      comparison: null,
-      failMessage:
-        "New York asbestos contractor licenses were not acquired as a bulk list. An asbestos contractor license is not a worker certificate of competence. Confirm on the official NY DOL Asbestos Control Bureau. Missing is not zero.",
-      changeHints: ["Open /new-york", "Use the official Asbestos Control Bureau"],
-    };
-  }
-  if (/\bdebar/.test(text)) {
-    interpretation.notes.push("ny-debarment-path");
-    return {
-      version: ASK_CONTRACT_VERSION,
-      query,
-      mode: "fail_closed",
-      supported: false,
-      interpretation,
-      href: ny ? "/new-york" : "/new-york",
-      count: null,
-      aggregate: null,
-      comparison: null,
-      failMessage:
-        "Debarment is source-specific. Exact official identity is required for a research association. Name-only matching is unsafe. Historical debarment is not current exclusion, and a public-work exclusion is not a ban on ordinary private work. Use the official NY DOL EDList search. A debarment is not a criminal conviction.",
-      changeHints: ["Open /new-york", "Search the official NY DOL EDList"],
-    };
-  }
-  if (ny && /\bhome[- ]improvement\b/.test(text) && /\blicens/.test(text)) {
-    interpretation.location = "New York";
-    interpretation.notes.push("ny-hic-local-not-pw-registry");
-    return {
-      version: ASK_CONTRACT_VERSION,
-      query,
-      mode: "fail_closed",
-      supported: false,
-      interpretation,
-      href: "/new-york",
-      count: null,
-      aggregate: null,
-      comparison: null,
-      failMessage:
-        "New York public-work contractor registration is not a statewide home-improvement contractor license. Local licensing, including New York City, may apply to ordinary private residential work. Absence from the public-work registry does not automatically mean a residential contractor is illegal.",
-      changeHints: ["Open /new-york", "Check the local home-improvement licensing authority"],
-    };
-  }
-  if (ny && /\b(public[- ]work|registered|registry|certificate)\b/.test(text)) {
-    interpretation.location = "New York";
-    interpretation.evidenceFamily = "NYSDOL public-work contractor registry";
-    interpretation.notes.push("ny-pw-registry");
-    return {
-      version: ASK_CONTRACT_VERSION,
-      query,
-      mode: "count",
-      supported: true,
-      interpretation,
-      href: "/new-york",
-      count: {
-        value: 14665,
-        grain: "public-work contractor registry certificate row",
-        caveat:
-          "Static NYSDOL Open Data snapshot. Not live company discovery, not all New York contractors, and not a residential HIC roster.",
-      },
-      aggregate: null,
-      comparison: null,
-      failMessage: null,
-      changeHints: ["Open /new-york", "Confirm on NYSDOL / New York Open Data"],
     };
   }
 
@@ -232,6 +137,9 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
       changeHints: ["DBPR discipline", "Unlicensed activity", "Stop-work"],
     };
   }
+
+  const nyResult = interpretNewYorkPublicWork(query, text);
+  if (nyResult) return nyResult;
 
   const wantsRate = includesAny(text, RATE_PHRASES);
   const wantsMost = includesAny(text, MOST_PHRASES) && !wantsRate;

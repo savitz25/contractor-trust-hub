@@ -199,7 +199,7 @@ export const GEO_ONTOLOGY: Array<{
   {
     id: "ny",
     label: "New York",
-    phrases: ["new york", "nysdol", "in new york"],
+    phrases: ["new york", "nysdol", "in new york", "in ny", "ny statewide", "ny"],
     href: "/new-york",
     kind: "state",
     intelligence: "state_intelligence",

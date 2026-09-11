@@ -69,7 +69,7 @@ test("short AC synonym does not create an HVAC suggestion from the word active",
 });
 
 test("New York public-work registry is not a HIC roster and does not rank", () => {
-  const pw = interpretAskQuery("public work contractors registered in New York", intel);
+  const pw = interpretAskQuery("How many public-work registry certificates are in the New York snapshot?", intel);
   assert.equal(pw.supported, true);
   assert.equal(pw.href, "/new-york");
   assert.equal(pw.count?.value, 14665);
@@ -85,7 +85,8 @@ test("New York public-work registry is not a HIC roster and does not rank", () =
   assert.match(asb.failMessage || "", /certificate of competence/i);
   const debar = interpretAskQuery("is this contractor debarred?", intel);
   assert.equal(debar.supported, false);
-  assert.match(debar.failMessage || "", /not a criminal conviction/i);
+  assert.equal(debar.href, null);
+  assert.match(debar.failMessage || "", /does not assume New York/i);
   const best = interpretAskQuery("best contractor in New York", intel);
   assert.equal(best.supported, false);
   assert.match(best.failMessage || "", /does not rank/i);

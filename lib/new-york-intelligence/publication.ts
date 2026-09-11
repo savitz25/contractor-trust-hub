@@ -1,6 +1,6 @@
 export const NY_STATE_INTEL_VERSION = "contractor-ny-state-intel-v1" as const;
 export const NY_STATE_PUBLIC_FINGERPRINT =
-  "fac09b35e5329c3f55e2b2baea5554e22bc3814dd4f0fd4762e97df657ec1de6";
+  "27f39aad84544a1ecfb4db74934ddbac55f94bd087b2a9cf3b5de20305685f14";
 
 export const NEW_YORK_INTELLIGENCE_GATE = {
   path: "/new-york",

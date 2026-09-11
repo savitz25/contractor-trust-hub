@@ -18,7 +18,8 @@ HEADER = (ROOT / "lib/nav/header-nav.ts").read_text(encoding="utf-8")
 CLAIM = (ROOT / "lib/claim/eligibility.ts").read_text(encoding="utf-8")
 JSONLD = (ROOT / "lib/new-york-intelligence/jsonld.ts").read_text(encoding="utf-8")
 INTERPRET = (ROOT / "lib/ask/interpret.ts").read_text(encoding="utf-8")
-FINGERPRINT = "fac09b35e5329c3f55e2b2baea5554e22bc3814dd4f0fd4762e97df657ec1de6"
+FINGERPRINT = "27f39aad84544a1ecfb4db74934ddbac55f94bd087b2a9cf3b5de20305685f14"
+OLD_FINGERPRINT = "fac09b35e5329c3f55e2b2baea5554e22bc3814dd4f0fd4762e97df657ec1de6"
 
 
 def dump(obj: object) -> str:
@@ -26,8 +27,15 @@ def dump(obj: object) -> str:
 
 
 def fingerprint(body: dict) -> str:
-    skip = {"fingerprint", "generated_at"}
-    return hashlib.sha256(dump({k: v for k, v in body.items() if k not in skip}).encode("utf-8")).hexdigest()
+    out = {}
+    for key, value in body.items():
+        if key in {"fingerprint", "generated_at"}:
+            continue
+        if key == "clocks" and isinstance(value, dict):
+            out[key] = {ck: cv for ck, cv in value.items() if ck != "generatedAt"}
+        else:
+            out[key] = value
+    return hashlib.sha256(dump(out).encode("utf-8")).hexdigest()
 
 
 class SourceTests(unittest.TestCase):
@@ -39,6 +47,10 @@ class SourceTests(unittest.TestCase):
         self.assertGreater(ACQ["raw_bytes"], 1_000_000)
         self.assertTrue(ACQ["no_tableau_reverse_engineer"])
         self.assertTrue(ACQ["no_nyc_local_acquisition"])
+        self.assertEqual(ACQ["raw_sha256"], "4070cf175286d2fcbbfa260c8e34fa7d2ba62746e8b219b0dfff3c48bd203ecb")
+        self.assertEqual(ACQ["retrievedAt"], "2026-09-11")
+        self.assertEqual(ACQ["retrievedAt_precision"], "date")
+        self.assertTrue(ACQ["acquisition_frozen"])
         self.assertEqual(ACQ["mold_bulk"], "SOURCE_NOT_ACQUIRED")
         self.assertEqual(ACQ["asbestos_bulk"], "SOURCE_NOT_ACQUIRED")
         self.assertEqual(ACQ["edlist_bulk"], "SOURCE_NOT_ACQUIRED")
@@ -149,7 +161,49 @@ class GrainTests(unittest.TestCase):
         self.assertNotEqual(fingerprint(mut4), FINGERPRINT)
         self.assertIn("WebPage", JSONLD)
         self.assertIn("nyJsonLdHasForbiddenRatings", JSONLD)
-        self.assertIn("ny-pw-registry", INTERPRET + "public-work")
+        ny_ask = (ROOT / "lib/ask/ny-public-work.ts").read_text(encoding="utf-8")
+        self.assertIn("ny-pw-registry-aggregate", ny_ask)
+        self.assertIn("does not assume New York", ny_ask)
+        self.assertNotIn('href: ny ? "/new-york" : "/new-york"', INTERPRET)
+        mut5 = copy.deepcopy(SNAP)
+        mut5["clocks"]["sourceAsOf"] = "1999-01-01"
+        self.assertNotEqual(fingerprint(mut5), FINGERPRINT)
+        mut6 = copy.deepcopy(SNAP)
+        mut6["identity"]["namespace"] = "OTHER"
+        self.assertNotEqual(fingerprint(mut6), FINGERPRINT)
+        mut7 = copy.deepcopy(SNAP)
+        mut7["registry"]["coverage_state"] = "OPEN_SEARCH_ONLY"
+        self.assertNotEqual(fingerprint(mut7), FINGERPRINT)
+        mut8 = copy.deepcopy(SNAP)
+        mut8["expansion_ledger"]["NY_PW_REGISTRY_ROWS"] = 1
+        self.assertNotEqual(fingerprint(mut8), FINGERPRINT)
+        self.assertNotEqual(FINGERPRINT, OLD_FINGERPRINT)
+
+    def test_independent_rebuild_ignores_generation_time(self):
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location(
+            "ny_build", ROOT / "scripts" / "new-york" / "build_ny_con_001_snapshot.py"
+        )
+        assert spec and spec.loader
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        first = dict(SNAP)
+        second = copy.deepcopy(SNAP)
+        second["generated_at"] = "2099-01-01T00:00:00Z"
+        second["clocks"] = dict(SNAP["clocks"])
+        second["clocks"]["generatedAt"] = "2099-01-01T00:00:00Z"
+        self.assertEqual(mod.fingerprint(first), FINGERPRINT)
+        self.assertEqual(mod.fingerprint(second), FINGERPRINT)
+        self.assertEqual(ACQ["raw_sha256"], "4070cf175286d2fcbbfa260c8e34fa7d2ba62746e8b219b0dfff3c48bd203ecb")
+        self.assertTrue(ACQ["acquisition_frozen"])
+        self.assertEqual(SNAP["clocks"]["retrievedAt"], "2026-09-11")
+        self.assertEqual(SNAP["clocks"]["snapshotAsOf"], "2026-09-11")
+        self.assertEqual(SNAP["debarment"]["registry_field_has_been_debarred_yes"], 36)
+        self.assertEqual(SNAP["debarment"]["registry_debarment_current_by_end_date"], 0)
+        self.assertTrue(SNAP["debarment"]["do_not_infer_zero_currently_debarred_contractors"])
+        self.assertEqual(SNAP["expansion_ledger"]["NET_NEW_STATE_RESEARCH_IDENTITIES"], 14665)
+        self.assertEqual(SNAP["expansion_ledger"]["NET_NEW_CANONICAL_ORGANIZATIONS"], 0)
 
 
 if __name__ == "__main__":

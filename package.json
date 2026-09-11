@@ -45,7 +45,7 @@
     "test:co-con-001": "python -X utf8 -m unittest scripts.test_co_con_001 && python -X utf8 scripts/assert_co_con_001.py",
     "test:va-con-001": "python -X utf8 -m unittest scripts.test_va_con_001 && python -X utf8 scripts/assert_va_con_001.py",
     "assert:va-con-001": "python -X utf8 scripts/assert_va_con_001.py",
-    "test:ny-con-001": "python -X utf8 -m unittest scripts.test_ny_con_001 && python -X utf8 scripts/assert_ny_con_001.py",
+    "test:ny-con-001": "python -X utf8 -m unittest scripts.test_ny_con_001 && python -X utf8 scripts/assert_ny_con_001.py && npx --yes tsx --test scripts/test_ny_ask_plan.ts",
     "assert:ny-con-001": "python -X utf8 scripts/assert_ny_con_001.py",
     "test:funnel": "node scripts/test_funnel_smoke.mjs",
     "verify:stage6": "node scripts/verify_stage6_migration.mjs",

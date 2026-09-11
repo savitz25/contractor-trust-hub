@@ -56,11 +56,12 @@ export const CONTRACTOR_SEARCH_GOLDEN_QUESTIONS: GoldenQuestion[] = [
   ["<script>alert(1)</script>", "UNSUPPORTED_SAFE", "garbage is not executable"],
   ["x".repeat(250), "UNSUPPORTED_SAFE", "input is bounded to 180 characters at UI/planner"],
   ["active expired roofers in Broward", "UNSUPPORTED_SAFE", "contradictory statuses"],
-  ["public work contractors registered in New York", "PASS", "NYSDOL public-work registry snapshot"],
+  ["How many public-work registry certificates are in the New York snapshot?", "PASS", "NYSDOL dated snapshot count"],
+  ["public work contractors registered in New York", "UNSUPPORTED_SAFE", "snapshot page is not a live company directory"],
   ["is my New York home-improvement contractor licensed?", "UNSUPPORTED_SAFE", "local HIC vs public-work registration"],
   ["New York mold remediation contractor", "UNSUPPORTED_SAFE", "mold bulk not acquired"],
   ["New York asbestos contractor", "UNSUPPORTED_SAFE", "asbestos contractor license vs worker cert"],
-  ["is this contractor debarred?", "UNSUPPORTED_SAFE", "exact-id debarment path only"],
+  ["is this contractor debarred?", "UNSUPPORTED_SAFE", "debarment is jurisdiction-specific"],
   ["best contractor in New York", "UNSUPPORTED_SAFE", "no ranking"],
 ] .map(([query, expected, note]) => ({ query, expected, note })) as GoldenQuestion[];
 

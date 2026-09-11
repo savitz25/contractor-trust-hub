@@ -18,13 +18,18 @@
   },
   "clocks": {
     "sourceAsOf": "2026-09-11",
-    "retrievedAt": "2026-09-11T17:42:39Z",
+    "sourceAsOf_meaning": "Official Socrata rowsUpdatedAt converted to a UTC calendar date",
+    "retrievedAt": "2026-09-11",
+    "retrievedAt_precision": "date",
+    "retrievedAt_meaning": "Accepted capture calendar date. Instant-level retrieval time was not independently retained.",
     "snapshotAsOf": "2026-09-11",
-    "generatedAt": "2026-09-11T17:42:39Z",
-    "sourceAsOf_derivation": "Socrata rowsUpdatedAt converted to UTC date",
-    "retrievedAt_is_not_sourceAsOf": false,
+    "snapshotAsOf_meaning": "Immutable reference date for this accepted capture; rebuilds must not advance it",
+    "generatedAt": "2026-09-11T18:30:00Z",
+    "clocks_are_semantically_distinct": true,
+    "sourceAsOf_derivation": "acquire-report.rowsUpdatedAt_unix",
     "certificate_issue_date_is_not_sourceAsOf": true,
-    "certificate_expiration_date_is_not_status": true
+    "certificate_expiration_date_is_not_status": true,
+    "do_not_treat_matching_calendar_dates_as_the_same_clock": true
   },
   "hero": {
     "universe_value": 14665,
@@ -176,7 +181,8 @@
     "exact_profile_attachments": 0,
     "dol_ne_wcb_context": true,
     "no_ownership_successor_reconstruction": true,
-    "same_row_flag_is_not_edlist_census": true
+    "same_row_flag_is_not_edlist_census": true,
+    "do_not_infer_zero_currently_debarred_contractors": true
   },
   "wage_and_labor_flags": {
     "classification": "INTERNAL_DIAGNOSTIC_ONLY",
@@ -236,8 +242,16 @@
     "NY_ASBESTOS_CONTRACTOR_LICENSE_ROWS": null,
     "NY_DEBARMENT_OBSERVATIONS": 36,
     "NY_DEBARMENT_EXACT_ID_RESEARCH_MATCHES": 0,
-    "NET_NEW_STATE_RESEARCH_IDENTITIES": 0,
-    "NET_NEW_STATE_RESEARCH_IDENTITIES_definition": "New canonical contractor identities written from this ticket. Zero because this is a publication-only state snapshot.",
+    "NET_NEW_STATE_RESEARCH_IDENTITIES": 14665,
+    "NET_NEW_STATE_RESEARCH_IDENTITIES_definition": "Distinct NY-DOL-PW:{certificateNumber} values in this accepted snapshot that were absent from prior accepted research artifacts. Not canonical organizations and not public profiles.",
+    "NET_NEW_STATE_RESEARCH_IDENTITIES_baseline": {
+      "reviewed_base_sha": "e3168916ea437af20147aff0ebe31df77acc34a4",
+      "namespace": "NY-DOL-PW:{certificateNumber}",
+      "prior_accepted_certificate_ids": 0,
+      "method": "Enumerated accepted research artifacts at the reviewed base SHA. No i4jv-zkey, NY-DOL-PW, or New York intelligence identity files existed.",
+      "scope": "Exact source Certificate Number values only. Business names and corporate identity were not compared.",
+      "baseline_status": "ESTABLISHED_EMPTY"
+    },
     "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
     "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
     "EXISTING_ORGANIZATIONS_ENRICHED": 0,
@@ -286,6 +300,6 @@
       "project notifications"
     ]
   },
-  "generated_at": "2026-09-11T17:42:39Z",
-  "fingerprint": "fac09b35e5329c3f55e2b2baea5554e22bc3814dd4f0fd4762e97df657ec1de6"
+  "generated_at": "2026-09-11T18:30:00Z",
+  "fingerprint": "27f39aad84544a1ecfb4db74934ddbac55f94bd087b2a9cf3b5de20305685f14"
 }
