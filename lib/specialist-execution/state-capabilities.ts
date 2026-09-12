@@ -81,7 +81,7 @@ function configuredState(slug: string): EvidenceState {
   return state;
 }
 
-export const CONTRACTOR_STATE_CAPABILITIES: Record<"FL" | "NJ", StateExecutionCapability> = {
+export const CONTRACTOR_STATE_CAPABILITIES: Record<"FL" | "NJ" | "TX", StateExecutionCapability> = {
   FL: {
     state: configuredState("fl"),
     executable: true,
@@ -90,6 +90,11 @@ export const CONTRACTOR_STATE_CAPABILITIES: Record<"FL" | "NJ", StateExecutionCa
     trades: FL_TRADES,
     generalClassAvailable: true,
     verifyDestination: "/verify",
+  },
+  TX: {
+    state: configuredState("tx"), executable:true, sourceSystems:["tx_tdlr"], geography:["state"],
+    trades:[{id:"hvac",label:"A/C Contractor (Texas TDLR)",occupationCodes:["TAC"],publicationLevel:"PUBLIC_PROFILE",limitation:"Existing Texas TDLR A/C Contractor mapping. Indexed status is derived from expiration, not a live authority check. Recorded city fields are not populated in this cohort."}],
+    generalClassAvailable:false,verifyDestination:"/verify?state=tx",
   },
   NJ: {
     state: configuredState("nj"),
@@ -103,11 +108,11 @@ export const CONTRACTOR_STATE_CAPABILITIES: Record<"FL" | "NJ", StateExecutionCa
 };
 
 export function getExecutionCapability(stateCode: string): StateExecutionCapability | null {
-  return CONTRACTOR_STATE_CAPABILITIES[stateCode.toUpperCase() as "FL" | "NJ"] ?? null;
+  return CONTRACTOR_STATE_CAPABILITIES[stateCode.toUpperCase() as "FL" | "NJ" | "TX"] ?? null;
 }
 
 export function getTradeCapability(
-  stateCode: "FL" | "NJ",
+  stateCode: "FL" | "NJ" | "TX",
   rawTrade: string | null
 ): TradeCapability | null {
   if (!rawTrade) return null;

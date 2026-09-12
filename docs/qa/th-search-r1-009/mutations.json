@@ -1,0 +1,16 @@
+{
+  "testedAt": "2026-09-12T13:35:07.197155+00:00",
+  "restored": true,
+  "results": [
+    {
+      "mutation": "drop-city-predicate",
+      "exitCode": 1,
+      "detected": true
+    },
+    {
+      "mutation": "auto-broaden-typo",
+      "exitCode": 1,
+      "detected": true
+    }
+  ]
+}

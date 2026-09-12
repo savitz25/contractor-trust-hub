@@ -1,0 +1,61 @@
+
+> contractor-trust-hub@0.1.0 check:th-search-r1-009
+> npx --yes tsx --test scripts/test_th_search_r1_009.ts
+
+✔ Austin city survives before capability selection (7.0711ms)
+✔ Dallas city survives before capability selection (2.2955ms)
+✔ Houston city survives before capability selection (0.3697ms)
+✔ El Paso city survives before capability selection (0.2901ms)
+✔ ordinary explicit city/state forms use one extraction (0.7009ms)
+✔ Browrd typo cannot authorize Florida execution (5.486ms)
+✔ accepted correction equals exact county query, including real SQL (3.0206ms)
+✔ invalid or cross-state correction cannot execute (2.5038ms)
+✔ explicit broadening preserves original city, trade and status with TX native class (1.1737ms)
+✔ broadening cannot change state or unsupported trade (0.6069ms)
+✔ business names do not become geography or correction (1.0717ms)
+✔ ambiguous, unknown, radius and multiple places remain unresolved (2.6943ms)
+✔ other filters and requested text survive action URLs and pagination (0.9667ms)
+✔ full input/duplicate/action/page validation before parsing (0.1914ms)
+✔ native/canonical route policy shares full interpreted geography (2.0143ms)
+✔ FL predicates apply county/city before pagination and retain source identity (1.1963ms)
+✔ NJ Master Plumber is PLB, not Florida plumbing classes (0.3555ms)
+✔ exact credential routing remains intact (0.2967ms)
+✔ actual V2 execution uses source/class/county predicates before limit and builds truthful rows (2.5748ms)
+✖ actual V2 city equality is executed with state, not a statewide window (4.4036ms)
+✔ actual NJ and TX positive execution remains useful and source-native (0.4629ms)
+✔ unsupported local scope blocks source calls; valid zero differs from source failure (0.6685ms)
+✔ pagination retains source scope and count independently of displayed row count (0.2631ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 22
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 925.7047
+
+✖ failing tests:
+
+test at scripts\test_th_search_r1_009.ts:2:13089
+✖ actual V2 city equality is executed with state, not a statewide window (4.4036ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /LOWER\(TRIM\(COALESCE\(l.city/. Input:
+  
+  "SELECT COUNT(*)::text AS total FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE l.source_system = ANY($1::text[]) AND c.is_thin_profile = FALSE AND c.slug IS NOT NULL AND c.slug <> '' AND (c.home_state = $2 OR l.state = $2) AND UPPER(TRIM(l.occupation_code)) = ANY($3::text[]) AND l.status_normalized IN ('active', 'current')"
+  
+      at <anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:367:12)
+      at Object.queryOne (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:324:9)
+      at executeContractorSpecialistQuery (C:\Users\makei\th-search-r1-009-work\lib\specialist-execution\contractor-v2.ts:326:26)
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:372:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: "SELECT COUNT(*)::text AS total FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE l.source_system = ANY($1::text[]) AND c.is_thin_profile = FALSE AND c.slug IS NOT NULL AND c.slug <> '' AND (c.home_state = $2 OR l.state = $2) AND UPPER(TRIM(l.occupation_code)) = ANY($3::text[]) AND l.status_normalized IN ('active', 'current')",
+    expected: /LOWER\(TRIM\(COALESCE\(l.city/,
+    operator: 'match',
+    diff: 'simple'
+  }

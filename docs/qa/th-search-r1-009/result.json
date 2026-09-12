@@ -1,0 +1,49 @@
+{
+  "ticket": "TH-SEARCH-R1-009",
+  "status": "CANDIDATE_VALIDATED_RELEASE_PENDING",
+  "model": "GPT-6 Astra / High",
+  "modelConfirmation": "USER-CONFIRMED",
+  "baseline": "11fd0b6fd8f6a1fe5e40e48a34f6a578b67334f4",
+  "recordedAt": "2026-09-12T13:44:44.690696+00:00",
+  "candidate": "pending first implementation commit",
+  "merge": null,
+  "deployment": null,
+  "tests": {
+    "focused": {
+      "pass": 24,
+      "fail": 0
+    },
+    "mutationsDetected": 2,
+    "typecheck": "PASS",
+    "build": "PASS",
+    "npmTest": "PASS",
+    "conCap002": {
+      "pass": 12,
+      "fail": 0
+    },
+    "customer": {
+      "pass": 23,
+      "fail": 0
+    },
+    "claim": {
+      "pass": 11,
+      "fail": 0
+    },
+    "flPublicationSafety": "PASS",
+    "configuredLint": "NOT_CONFIGURED",
+    "baselineFailures": [
+      "P2 stale hardcoded network-total assertion",
+      "con-search-001 obsolete homepage heading assertion"
+    ],
+    "databaseIntegrationTests": "SKIP locally: production DATABASE_URL is sensitive and unavailable through env pull"
+  },
+  "browser": {
+    "local": "16 cases PASS; source-positive cases explicitly unavailable locally",
+    "preview": null,
+    "production": null
+  },
+  "sourceOracle": "source-oracle.json",
+  "reviewMethod": "Separate self-review plus automated behavioral/mutation checks; not independent human review",
+  "otherRepositoriesModified": false,
+  "productionDataWrites": false
+}

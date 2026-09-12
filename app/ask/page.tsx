@@ -2,22 +2,24 @@ import type { Metadata } from "next";
 import { AskForm } from "@/components/ask/AskForm";
 import { AskResults } from "@/components/ask/AskResults";
 import { interpretAskQuery } from "@/lib/ask/interpret";
-import { buildContractorResearchQuery, parseAskOverrides } from "@/lib/ask/plan";
+import { buildContractorResearchQuery } from "@/lib/ask/plan";
 import { executeContractorResearchQuery } from "@/lib/ask/execute";
 import { loadContractorHubIntel } from "@/lib/home/load-intel-v2";
 import { pageMetadata } from "@/lib/seo/page-meta";
 import { planContractorSearch } from "@/lib/search/contractor-discovery";
+import { readAskRequest,researchRoute } from "@/lib/ask/request";
+import { askHref } from "@/lib/ask/url";
 import { redirect } from "next/navigation";
 import { SearchAnalytics } from "@/components/specialist-search/SearchAnalytics";
 import { searchResultCountBucket } from "@/lib/specialist-search/analytics";
 
 export const dynamic = "force-dynamic";
 
-type Props = { searchParams: Promise<{ q?: string; geo?: string; trade?: string; status?: string; evidence?: string; sort?: string; page?: string }> };
+type Props = { searchParams: Promise<Record<string,string|string[]|undefined>> };
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const sp = await searchParams;
-  const q = (sp.q || "").trim();
+  const {query:q}=readAskRequest(sp);
   return pageMetadata({
     title: q ? `Ask: ${q.slice(0, 60)}` : "Ask ContractorTrustHub",
     description: "Structured contractor research questions over indexed licensing records. Not a ranking.",
@@ -28,21 +30,13 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
 export default async function AskPage({ searchParams }: Props) {
   const sp = await searchParams;
-  const q = (sp.q || "").trim();
-  const multiStatePlan = planContractorSearch(q);
-  if (multiStatePlan.mode === "discovery" && multiStatePlan.request.state && multiStatePlan.request.state !== "FL") {
-    redirect(`/search?q=${encodeURIComponent(q)}`);
-  }
+  const {query:q,overrides,error}=readAskRequest(sp);
+  if(error)return <main className="th-shell py-10"><h1>Check your search</h1><p role="alert">{error}</p><AskForm initialQuery={q} compact /></main>;
+  const multiStatePlan = planContractorSearch(q,overrides);
+  if(researchRoute(q,multiStatePlan)==='/search')redirect(askHref(q,overrides).replace(/^\/ask/,'/search'));
   const intel = loadContractorHubIntel();
   const interpreted = interpretAskQuery(q, intel);
-  const plan = buildContractorResearchQuery(interpreted, parseAskOverrides({
-    geo: sp.geo,
-    trade: sp.trade,
-    status: sp.status,
-    evidence: sp.evidence,
-    sort: sp.sort,
-    page: sp.page,
-  }));
+  const plan = buildContractorResearchQuery(interpreted, overrides);
   const execution = q ? await executeContractorResearchQuery(plan) : {
     ok: false,
     blocked: false,
@@ -69,7 +63,7 @@ export default async function AskPage({ searchParams }: Props) {
         Ask in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.
       </p>
       <div className="mt-6">
-        <AskForm initialQuery={q || undefined} compact />
+        <AskForm key={q} initialQuery={q || undefined} overrides={overrides} compact />
       </div>
       {q ? (
         <div className="mt-10">
