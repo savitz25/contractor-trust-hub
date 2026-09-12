@@ -54,6 +54,18 @@ export function interpretNycDob(query: string, text: string): AskResult | null {
   if (!nyc && !permitish) return null;
   if (/\bhome[- ]improvement\b/.test(text) && /\blicens/.test(text)) return null;
   if (/\bpublic[- ]work\b/.test(text) || /\bnysdol\b/.test(text)) return null;
+  if (
+    (/\bacris\b/.test(text) ||
+      /\bdeed/.test(text) ||
+      /\bmortgage/.test(text) ||
+      /\brecorded document/.test(text) ||
+      /\bproperty document/.test(text)) &&
+    !/\bpermit/.test(text) &&
+    !/\bdob\b/.test(text) &&
+    !/\bpluto\b/.test(text)
+  ) {
+    return null;
+  }
 
   const interpretation: AskInterpretation = { ...EMPTY, notes: [], location: nyc ? "New York City" : "Not specified" };
 

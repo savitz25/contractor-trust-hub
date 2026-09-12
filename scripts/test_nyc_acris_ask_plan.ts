@@ -15,6 +15,8 @@ test("ACRIS document questions stay on the NYC page without ownership claims", (
   assert.match(a.failMessage || "", /not a title search/i);
   const b = ask("what property documents were recorded for this BBL?");
   assert.equal(b.href, "/new-york/new-york-city");
+  assert.match(b.failMessage || "", /not a title search/i);
+  assert.doesNotMatch(b.failMessage || "", /DOB NOW approved-permit/i);
 });
 
 test("sale and ownership questions fail closed", () => {
