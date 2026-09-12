@@ -52,7 +52,7 @@ export function projectIntelV2FromNetworkMetrics(m: ContractorNetworkMetricsV1):
     },
     licensingStatus: {
       denominator: "research_graph_licenses",
-      graph: m.licensingStatus.liveCohort,
+      graph: m.licensingStatus.graph ?? m.licensingStatus.liveCohort,
       liveCohort: m.licensingStatus.liveCohort,
     },
     permits: {

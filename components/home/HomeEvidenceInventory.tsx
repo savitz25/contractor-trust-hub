@@ -22,7 +22,7 @@ export function HomeEvidenceInventory() {
             <summary><span>{String(groupIndex + 1).padStart(2, "0")}</span><strong>{group.family}</strong><small>{group.items.length} distinct measures</small></summary>
             <div className="cth-intel-table-scroll" tabIndex={0} role="region" aria-label={`${group.family} evidence inventory`}>
               <table><thead><tr><th>Evidence</th><th>Count</th><th>Grain / geography</th><th>Source clock</th><th>Meaning and limit</th></tr></thead>
-                <tbody>{group.items.map((item) => <tr key={item.id}><th scope="row">{item.href ? <Link href={item.href}>{item.label}</Link> : item.label}<small>{item.artifact}</small></th><td className="cth-intel-inventory-count">{fmt(item.count)}</td><td>{item.grain}<small>{item.geography}</small></td><td>{item.sourceAsOf}</td><td>{item.counts}<small><strong>Does not count:</strong> {item.doesNotCount}</small></td></tr>)}</tbody>
+                <tbody>{group.items.map((item) => <tr key={item.id}><th scope="row">{item.href ? <Link href={item.href}>{item.label}</Link> : item.label}<small>{item.artifact}</small></th><td className="cth-intel-inventory-count">{fmt(item.count)}</td><td>{item.grain}<small>{item.geography}</small></td><td>{item.sourceAsOf ?? "Official date unknown"}{item.retrievedAt && <small>Retrieved {item.retrievedAt}</small>}{item.snapshotAsOf && <small>Snapshot {item.snapshotAsOf}</small>}</td><td>{item.counts}<small><strong>Does not count:</strong> {item.doesNotCount}</small></td></tr>)}</tbody>
               </table>
             </div>
           </details>

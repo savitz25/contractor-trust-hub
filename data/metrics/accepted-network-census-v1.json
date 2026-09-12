@@ -1,0 +1,5749 @@
+{
+  "schemaVersion": "accepted-network-census-v1",
+  "snapshotAsOf": "2026-09-12T21:07:57.126Z",
+  "retrievedAt": "2026-09-12T21:08:12.298Z",
+  "sourceAsOf": null,
+  "acquisition": "PostgreSQL REPEATABLE READ READ ONLY; aggregates only, no identity rows",
+  "licenseGroups": [
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1648
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-11",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 216
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-12",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 123
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-14",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 94
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-15",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 53
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-16",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 17
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-17",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 229
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-17",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-19",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-4",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 116
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-5",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 245
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-5",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-5",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-7",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 30
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "A-9",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 48
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3965
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 9
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-1",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3042
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-1",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-1",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-10",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 18
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-2",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 721
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-3",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1013
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-3",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 13
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-4",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 132
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-4",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 3
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-4R",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-5",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 268
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-5",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-5R",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-6",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "B-6",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-1",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 26
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-10",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 57
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-11",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1264
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-12",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 11
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-14",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 17
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-15",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-16",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 144
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-21",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 28
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-24",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 19
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-27",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 18
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-3",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 15
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-31",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 13
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-34",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 68
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-36",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 14
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-37",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 398
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-38",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 156
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-38",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-39",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 564
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-4",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 162
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-40",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 39
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-41",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-42",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 56
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-45",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 36
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-48",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 23
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-49",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 65
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-53",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 14
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-54",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-56",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 28
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-57",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 26
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-58",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 34
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-6",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 26
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-60",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 123
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-60",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-61",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 92
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-65",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 28
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-67",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 199
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-7",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 19
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-70",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 10
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-74",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 9
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-77",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 26
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-78",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 4
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-79",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 24
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-8",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 42
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "C-9",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 215
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-1",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 50
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-10",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 762
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-10",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-10",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-11",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3018
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-11",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 8
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-11",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 8
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-12",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 24
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-14",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 274
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-14",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-15",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 13
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-16",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 189
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-17",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 213
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-17",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-2",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 571
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-2",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-21",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1997
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-21",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 3
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-24",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 246
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-29",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 56
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-3",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 174
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-31",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 383
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-31",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-34",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1955
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-34",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 3
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-34",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-36",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 481
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-36",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-37",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2122
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-37",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 6
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-37",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-38",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 124
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-39",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2975
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-39",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 5
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-39",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 5
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-4",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 12
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-40",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 186
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-40",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-41",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 195
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-41",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-42",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1372
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-42",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 10
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-42",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 3
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-45",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 131
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-48",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 775
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-48",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-48",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-5",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 939
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-53",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 73
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-53",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-54",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 117
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-56",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 136
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-57",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 285
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-57",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-58",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 12
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-6",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 378
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-60",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1562
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-60",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 6
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-61",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1179
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-61",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 6
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-61",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-63",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 34
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-65",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 510
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-65",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-65",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-66",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 22
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-67",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1154
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-67",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-69",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 140
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-7",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 289
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-70",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 60
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-74",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 5
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-77",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 101
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-78",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-79",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 67
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-8",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1169
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-80",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 150
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-80",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-9",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 720
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-9",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 3
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "CR-9",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KA",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 570
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KA-5",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 411
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KA-5",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KA-5",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KA-6",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 11
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KB-1",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3589
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KB-1",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 11
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KB-1",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 9
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KB-2",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 4361
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KB-2",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 19
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KB-2",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 8
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KE",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 99
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "KO",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 27
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-10",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 46
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-11",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 752
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-11",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-12",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-13",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 29
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-14",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 68
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-16",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 32
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-17",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 24
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-2",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 272
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-21",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 59
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-22",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-24",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 9
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-3",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 104
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-3",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-31",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 11
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-34",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 81
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-34",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-36",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 42
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-37",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 66
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-37R",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 726
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-37R",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-39",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 55
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-39",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-39R",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 519
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-4",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-40",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 54
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-41",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 15
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-42",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 50
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-45",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-48",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 30
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-53",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 55
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-54",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 25
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-56",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 18
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-57",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 39
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-6",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 200
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-60",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 281
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-61",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 81
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-62",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1624
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-62",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 5
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-63",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-65",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 21
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-67",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 9
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-7",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 21
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-8",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 32
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-9",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 144
+    },
+    {
+      "source_system": "az_roc",
+      "occupation_code": "R-9",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "A",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 12843
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "ASB",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 59
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "B",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 6354
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "B2",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 20
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C10",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 15609
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C11",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C12",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 12
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C13",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 41
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C15",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C16",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 38
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C17",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 16
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C2",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 74
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C20",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 567
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C21",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 4
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C23",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 677
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C27",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 204
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C29",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 29
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C32",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C33",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 4
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C34",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 16
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C35",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 20
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C36",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 1811
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C38",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 344
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C39",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C4",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 105
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C42",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C43",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 5
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C46",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C47",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C49",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C5",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 131
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C50",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 8
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C51",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 124
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C53",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 1418
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C54",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C57",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C6",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 6
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C7",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 544
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C8",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 80
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "C9",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 1440
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D06",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 15
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D09",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 27
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D10",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 8
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D12",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D16",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D21",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 6
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D24",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 5
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D28",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D30",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D31",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D34",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 104
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D35",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 932
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D53",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "ca_cslb",
+      "occupation_code": "D56",
+      "primary_status": "CLEAR",
+      "status_normalized": "active",
+      "rows": 41
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "ACTIVE",
+      "status_normalized": "active",
+      "rows": 22943
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "ACTIVE UNDER REVIEW",
+      "status_normalized": "active",
+      "rows": 15
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "APPROVED",
+      "status_normalized": "other",
+      "rows": 64
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "CLOSED",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "DENIED",
+      "status_normalized": "inactive",
+      "rows": 984
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "EXPIRED APPLICATION",
+      "status_normalized": "inactive",
+      "rows": 126
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "INACTIVE",
+      "status_normalized": "inactive",
+      "rows": 109228
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "LAPSED",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "PENDING",
+      "status_normalized": "other",
+      "rows": 114
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "QUALIFIED",
+      "status_normalized": "other",
+      "rows": 1292
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "REVOKED",
+      "status_normalized": "inactive",
+      "rows": 3
+    },
+    {
+      "source_system": "ct_dcp",
+      "occupation_code": "HIC",
+      "primary_status": "SUSPENDED",
+      "status_normalized": "inactive",
+      "rows": 92
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CAC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 11104
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CAC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 1246
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CAC",
+      "primary_status": "P",
+      "status_normalized": "active",
+      "rows": 11
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CAC",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 3
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CAC",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 10
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CAC",
+      "primary_status": "S",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CBC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 17195
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CBC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 2452
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CBC",
+      "primary_status": "P",
+      "status_normalized": "active",
+      "rows": 17
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CBC",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 18
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CBC",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 30
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CBC",
+      "primary_status": "S",
+      "status_normalized": "inactive",
+      "rows": 9
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CBC",
+      "primary_status": "S",
+      "status_normalized": "other",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CCC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 10042
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CCC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 1162
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CCC",
+      "primary_status": "P",
+      "status_normalized": "active",
+      "rows": 29
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CCC",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 8
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CCC",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 22
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CCC",
+      "primary_status": "S",
+      "status_normalized": "inactive",
+      "rows": 12
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CFC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 8425
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CFC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 864
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CFC",
+      "primary_status": "P",
+      "status_normalized": "active",
+      "rows": 9
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CFC",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 5
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CFC",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 6
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CFC",
+      "primary_status": "S",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CGC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 32957
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CGC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 5830
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CGC",
+      "primary_status": "P",
+      "status_normalized": "active",
+      "rows": 51
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CGC",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 19
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CGC",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 48
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CGC",
+      "primary_status": "S",
+      "status_normalized": "inactive",
+      "rows": 17
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CGC",
+      "primary_status": "S",
+      "status_normalized": "other",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CMC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 2408
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CMC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 361
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CMC",
+      "primary_status": "P",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CMC",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CMC",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CMC",
+      "primary_status": "S",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CPC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 4241
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CPC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 358
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CPC",
+      "primary_status": "P",
+      "status_normalized": "active",
+      "rows": 15
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CPC",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CPC",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 4
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CPC",
+      "primary_status": "S",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CRC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 7261
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CRC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 1271
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CRC",
+      "primary_status": "P",
+      "status_normalized": "active",
+      "rows": 11
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CRC",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CRC",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 11
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CRS1",
+      "primary_status": "C",
+      "status_normalized": "current",
+      "rows": 4895
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CSC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 78
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CSC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 19
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CUC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 2632
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CUC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 368
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CUC",
+      "primary_status": "P",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CUC",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 3
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CVC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 437
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "CVC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 76
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "FRO",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "FRO",
+      "primary_status": "C",
+      "status_normalized": "current",
+      "rows": 19018
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "FRO",
+      "primary_status": "S",
+      "status_normalized": "other",
+      "rows": 66
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "PCC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 290
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "PCC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 86
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "PVDR",
+      "primary_status": "C",
+      "status_normalized": "current",
+      "rows": 303
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RA",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 285
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RA",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 40
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RB",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 384
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RB",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 42
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RB",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 464
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RC",
+      "primary_status": "C",
+      "status_normalized": "current",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 51
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RC",
+      "primary_status": "P",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RC",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RC",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RF",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 533
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RF",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 56
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RG",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 379
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RG",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 43
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RG",
+      "primary_status": "S",
+      "status_normalized": "other",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RM",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 71
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RM",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 12
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RP",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 451
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RP",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 25
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RP",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RP",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RQ",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 28
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RR",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 588
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RR",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 84
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RS",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 9
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RU",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 57
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RU",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 8
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RX",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 206
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RX",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 9
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "RX",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "SCC",
+      "primary_status": "C",
+      "status_normalized": "active",
+      "rows": 3625
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "SCC",
+      "primary_status": "C",
+      "status_normalized": "inactive",
+      "rows": 209
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "SCC",
+      "primary_status": "P",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "SCC",
+      "primary_status": "P",
+      "status_normalized": "inactive",
+      "rows": 5
+    },
+    {
+      "source_system": "fl_dbpr",
+      "occupation_code": "SCC",
+      "primary_status": "S",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "id_dopl",
+      "occupation_code": "CREG",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 25419
+    },
+    {
+      "source_system": "id_dopl",
+      "occupation_code": "ELEC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 24766
+    },
+    {
+      "source_system": "id_dopl",
+      "occupation_code": "HVAC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7754
+    },
+    {
+      "source_system": "id_dopl",
+      "occupation_code": "PLB",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 11155
+    },
+    {
+      "source_system": "id_dopl",
+      "occupation_code": "PWC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3550
+    },
+    {
+      "source_system": "ky_dhbc",
+      "occupation_code": "ELEC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3884
+    },
+    {
+      "source_system": "ky_dhbc",
+      "occupation_code": "HVAC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2699
+    },
+    {
+      "source_system": "ky_dhbc",
+      "occupation_code": "PLB",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1777
+    },
+    {
+      "source_system": "la_lslbc",
+      "occupation_code": "CLC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 19993
+    },
+    {
+      "source_system": "la_lslbc",
+      "occupation_code": "HIR",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1462
+    },
+    {
+      "source_system": "la_lslbc",
+      "occupation_code": "MRL",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 264
+    },
+    {
+      "source_system": "la_lslbc",
+      "occupation_code": "RLC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 4579
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "BOILER",
+      "primary_status": "Denied",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "BOILER",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 4881
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "BOILER",
+      "primary_status": "Issued",
+      "status_normalized": "active",
+      "rows": 29620
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "BOILER",
+      "primary_status": "Licensed",
+      "status_normalized": "active",
+      "rows": 4
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "BOILER",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 156
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "BOILER",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 231
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "BOILER",
+      "primary_status": "Voluntary Termination",
+      "status_normalized": "inactive",
+      "rows": 91
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "BOILER",
+      "primary_status": "Withdrawn",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "CREG",
+      "primary_status": "Denied",
+      "status_normalized": "inactive",
+      "rows": 29
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "CREG",
+      "primary_status": "Denied- Duplicate",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "CREG",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 5639
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "CREG",
+      "primary_status": "Issued",
+      "status_normalized": "active",
+      "rows": 14560
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "CREG",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 116
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "CREG",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 288
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "CREG",
+      "primary_status": "Voluntary Termination",
+      "status_normalized": "inactive",
+      "rows": 387
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "CREG",
+      "primary_status": "Withdrawn",
+      "status_normalized": "inactive",
+      "rows": 47
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEC",
+      "primary_status": "Denied",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEC",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 58087
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEC",
+      "primary_status": "Issued",
+      "status_normalized": "active",
+      "rows": 44053
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEC",
+      "primary_status": "Licensed",
+      "status_normalized": "active",
+      "rows": 4887
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEC",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 197
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEC",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 148
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEC",
+      "primary_status": "Voluntary Termination",
+      "status_normalized": "inactive",
+      "rows": 1750
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEC",
+      "primary_status": "Withdrawn",
+      "status_normalized": "inactive",
+      "rows": 10
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEV",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 839
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEV",
+      "primary_status": "Issued",
+      "status_normalized": "active",
+      "rows": 858
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEV",
+      "primary_status": "Licensed",
+      "status_normalized": "active",
+      "rows": 216
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEV",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 2
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "ELEV",
+      "primary_status": "Voluntary Termination",
+      "status_normalized": "inactive",
+      "rows": 17
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "HPP",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 3416
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "HPP",
+      "primary_status": "Issued",
+      "status_normalized": "active",
+      "rows": 3730
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "HPP",
+      "primary_status": "Licensed",
+      "status_normalized": "active",
+      "rows": 188
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "HPP",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 36
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "HPP",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 40
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "HPP",
+      "primary_status": "Voluntary Termination",
+      "status_normalized": "inactive",
+      "rows": 38
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "MECH",
+      "primary_status": "Denied",
+      "status_normalized": "inactive",
+      "rows": 10
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "MECH",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 2376
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "MECH",
+      "primary_status": "Issued",
+      "status_normalized": "active",
+      "rows": 2558
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "MECH",
+      "primary_status": "Voluntary Termination",
+      "status_normalized": "inactive",
+      "rows": 381
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "MFS",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 11
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "MFS",
+      "primary_status": "Issued",
+      "status_normalized": "active",
+      "rows": 162
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "MFS",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 6
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "MFS",
+      "primary_status": "Voluntary Termination",
+      "status_normalized": "inactive",
+      "rows": 61
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "PLB",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 17305
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "PLB",
+      "primary_status": "Issued",
+      "status_normalized": "active",
+      "rows": 14590
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "PLB",
+      "primary_status": "Licensed",
+      "status_normalized": "active",
+      "rows": 3372
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "PLB",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 44
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "PLB",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 173
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "PLB",
+      "primary_status": "Voluntary Termination",
+      "status_normalized": "inactive",
+      "rows": 1139
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "PLB",
+      "primary_status": "Withdrawn",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "RC",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 29408
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "RC",
+      "primary_status": "Issued",
+      "status_normalized": "active",
+      "rows": 25020
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "RC",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 1082
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "RC",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 243
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "RC",
+      "primary_status": "Voluntary Termination",
+      "status_normalized": "inactive",
+      "rows": 3236
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "RC",
+      "primary_status": "Withdrawn",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "WC",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 468
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "WC",
+      "primary_status": "Issued",
+      "status_normalized": "active",
+      "rows": 482
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "WC",
+      "primary_status": "Licensed",
+      "status_normalized": "active",
+      "rows": 77
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "WC",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 1
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "WC",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 4
+    },
+    {
+      "source_system": "mn_dli",
+      "occupation_code": "WC",
+      "primary_status": "Voluntary Termination",
+      "status_normalized": "inactive",
+      "rows": 13
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "COM",
+      "primary_status": "Licensed",
+      "status_normalized": "active",
+      "rows": 5
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "COM",
+      "primary_status": "Licensed Expired",
+      "status_normalized": "expired",
+      "rows": 918
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "COM",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 3
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "COM",
+      "primary_status": "Unlicensed",
+      "status_normalized": "unlicensed",
+      "rows": 85
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "COM",
+      "primary_status": "Unlicensed Expired",
+      "status_normalized": "unlicensed",
+      "rows": 79
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "MC",
+      "primary_status": "Licensed",
+      "status_normalized": "active",
+      "rows": 1191
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "MC",
+      "primary_status": "Licensed Expired",
+      "status_normalized": "expired",
+      "rows": 1029
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "RES",
+      "primary_status": "Licensed",
+      "status_normalized": "active",
+      "rows": 1350
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "RES",
+      "primary_status": "Licensed Expired",
+      "status_normalized": "expired",
+      "rows": 1586
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "RES",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 11
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "RES",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 2
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "RES",
+      "primary_status": "Unlicensed",
+      "status_normalized": "unlicensed",
+      "rows": 67
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "RES",
+      "primary_status": "Unlicensed Expired",
+      "status_normalized": "unlicensed",
+      "rows": 26
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "SC",
+      "primary_status": "Licensed",
+      "status_normalized": "active",
+      "rows": 879
+    },
+    {
+      "source_system": "ms_sbc",
+      "occupation_code": "SC",
+      "primary_status": "Licensed Expired",
+      "status_normalized": "expired",
+      "rows": 1011
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ALM",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2081
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ALM",
+      "primary_status": "Closed",
+      "status_normalized": "inactive",
+      "rows": 16
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ALM",
+      "primary_status": "Deceased",
+      "status_normalized": "inactive",
+      "rows": 38
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ALM",
+      "primary_status": "Expired",
+      "status_normalized": "inactive",
+      "rows": 2149
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ALM",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 557
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ALM",
+      "primary_status": "Out of Business",
+      "status_normalized": "inactive",
+      "rows": 5
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ALM",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ALM",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 8
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ALM",
+      "primary_status": "Voluntary Surrender",
+      "status_normalized": "inactive",
+      "rows": 5
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ELE",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 13091
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ELE",
+      "primary_status": "Closed",
+      "status_normalized": "inactive",
+      "rows": 366
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ELE",
+      "primary_status": "Deceased",
+      "status_normalized": "inactive",
+      "rows": 1412
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ELE",
+      "primary_status": "Expired",
+      "status_normalized": "inactive",
+      "rows": 12321
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ELE",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 4946
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ELE",
+      "primary_status": "Out of Business",
+      "status_normalized": "inactive",
+      "rows": 16
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ELE",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 84
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ELE",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 9
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ELE",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 56
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "ELE",
+      "primary_status": "Voluntary Surrender",
+      "status_normalized": "inactive",
+      "rows": 3
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "HIC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 25111
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "HRT",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 59
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "HRT",
+      "primary_status": "Expired",
+      "status_normalized": "inactive",
+      "rows": 7
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "HVAC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 6654
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "HVAC",
+      "primary_status": "Deceased",
+      "status_normalized": "inactive",
+      "rows": 71
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "HVAC",
+      "primary_status": "Expired",
+      "status_normalized": "inactive",
+      "rows": 2193
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "HVAC",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 563
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "HVAC",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 36
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "HVAC",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "HVAC",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "HVAC",
+      "primary_status": "Voluntary Surrender",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "LCK",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 392
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "LCK",
+      "primary_status": "Closed",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "LCK",
+      "primary_status": "Deceased",
+      "status_normalized": "inactive",
+      "rows": 11
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "LCK",
+      "primary_status": "Expired",
+      "status_normalized": "inactive",
+      "rows": 441
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "LCK",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 143
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "LCK",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "LCK",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "LCK",
+      "primary_status": "Voluntary Surrender",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "PLB",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 4903
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "PLB",
+      "primary_status": "Deceased",
+      "status_normalized": "inactive",
+      "rows": 730
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "PLB",
+      "primary_status": "Expired",
+      "status_normalized": "inactive",
+      "rows": 3997
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "PLB",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 1458
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "PLB",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 308
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "PLB",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 8
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "PLB",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 48
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "PLB",
+      "primary_status": "Voluntary Surrender",
+      "status_normalized": "inactive",
+      "rows": 3
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "TEL",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3018
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "TEL",
+      "primary_status": "Closed",
+      "status_normalized": "inactive",
+      "rows": 16
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "TEL",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "TEL",
+      "primary_status": "Out of Business",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "TEL",
+      "primary_status": "Revoked",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "TEL",
+      "primary_status": "Suspended",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "nj_dca",
+      "occupation_code": "TEL",
+      "primary_status": "Voluntary Surrender",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 920
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-1",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 4
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-10",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 103
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-10A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 22
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-10C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-10D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-10E",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 71
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-10F",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-11",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 5
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-12",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 153
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-13",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 143
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-14",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 54
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-15",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 86
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-16",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 38
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-17",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 35
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-18",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 4
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-19",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 42
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-19A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 24
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-19B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 5
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-19C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 43
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-2",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 9
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-20",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 33
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-21",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 60
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-22",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 169
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-23",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 44
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-24",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 8
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-25",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 55
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-3",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-4",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 6
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-5",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 46
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-6",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 22
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-7",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 143
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-8",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 70
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "A-9",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 66
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "AB",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 112
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1125
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "B-1",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 15
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "B-2",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2631
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "B-3",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 16
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "B-4",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 11
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "B-5",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 18
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "B-6",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 34
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "B-7",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 77
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-1",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 385
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-10",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 741
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-11",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 20
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-13",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 62
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-14",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 101
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-14A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 38
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-14B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 142
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-14C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 130
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-14D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 4
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-14E",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 22
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-14G",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 104
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-14H",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 88
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-14I",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 43
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-14J",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 53
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-15",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 165
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-15A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 199
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-15B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 20
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-15C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 21
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-15D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 18
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-16",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 254
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-16A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 140
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-16B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-16C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-17",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 119
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-17A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-17B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-17C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-17D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-17E",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 23
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-18",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 367
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-19",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 253
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-19A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 4
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-19B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 16
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-19C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 9
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-1A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 24
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-1B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-1C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 34
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-1D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 550
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-1E",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 4
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-1F",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 12
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-1G",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-1H",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 39
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-1K",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 8
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-2",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1568
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-2",
+      "primary_status": "Active Probation",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-20",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 392
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-20A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 14
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-20B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-21",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 633
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-21A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 61
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-21B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 437
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-21C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 23
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-21D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 13
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-21F",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 4
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-21G",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-23",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 89
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-24",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 50
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-25",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 100
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-26",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 14
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-26A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 34
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-26B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 87
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-26C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-27",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 14
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-28",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 35
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-28A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 5
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-28B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 9
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-2A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 68
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-2B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-2C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 65
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-2D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 444
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-2E",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 12
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-2F",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 61
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-2G",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 15
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-3",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 719
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-30",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 47
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-31",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-33",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 52
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-36",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 27
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-37",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 5
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-37A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-37D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-38",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 9
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-38B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-39",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 19
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-3A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 133
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-3B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 387
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-3C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 69
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-3D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 159
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-3E",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 32
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-4",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 473
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-40",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 114
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-41",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 69
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-41A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 46
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-41B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 15
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-41C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-41D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-42",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-4A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 374
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-4B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-4C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-4D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 6
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-4E",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 100
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-4F",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-4G",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-5",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 702
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-6",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 74
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-6A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 39
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-6B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 20
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-6C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 5
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-6D",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-7",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 36
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-7A",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 16
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-7B",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 15
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-7C",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 3
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-8",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 268
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "C-9",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "E-1",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2
+    },
+    {
+      "source_system": "nv_nscb",
+      "occupation_code": "E-2",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 13
+    },
+    {
+      "source_system": "ok_cib",
+      "occupation_code": "ROOF",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 280
+    },
+    {
+      "source_system": "ok_cib",
+      "occupation_code": "ROOF",
+      "primary_status": "Expired - for non-renewal",
+      "status_normalized": "expired",
+      "rows": 3050
+    },
+    {
+      "source_system": "ok_cib",
+      "occupation_code": "ROOF",
+      "primary_status": "In Good Standing",
+      "status_normalized": "active",
+      "rows": 1690
+    },
+    {
+      "source_system": "ok_cib",
+      "occupation_code": "ROOF",
+      "primary_status": "Not In Good Standing",
+      "status_normalized": "inactive",
+      "rows": 395
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "CD",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 50
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "CF",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 41
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "CGC1",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2258
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "CGC2",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 5479
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "CSC1",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 975
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "CSC2",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2467
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "LBPR",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 4400
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "OCHI",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 616
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "OCLS",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 484
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "RD",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 107
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "RGC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 30262
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "RHEPSC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 22
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "RHISC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 260
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "RHSC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 45
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "RLC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 910
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "RLSC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 103
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "RRC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 13
+    },
+    {
+      "source_system": "or_ccb",
+      "occupation_code": "RSC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 7488
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "BC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 13616
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "BC",
+      "primary_status": "Active - Temp",
+      "status_normalized": "active",
+      "rows": 1
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "BC",
+      "primary_status": "App Denied",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "BC",
+      "primary_status": "Closed",
+      "status_normalized": "inactive",
+      "rows": 179
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "BC",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 4097
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "BC",
+      "primary_status": "Expired-Grace",
+      "status_normalized": "expired",
+      "rows": 1150
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "BC",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "BC",
+      "primary_status": "Invalid",
+      "status_normalized": "inactive",
+      "rows": 14
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "BC",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 511
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "BC",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 17
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "BC",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 3
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CE",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2229
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CE",
+      "primary_status": "Closed",
+      "status_normalized": "inactive",
+      "rows": 33
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CE",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 611
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CE",
+      "primary_status": "Expired-Grace",
+      "status_normalized": "expired",
+      "rows": 158
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CE",
+      "primary_status": "Invalid",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CE",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 45
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CE",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 2
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CMC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2001
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CMC",
+      "primary_status": "Closed",
+      "status_normalized": "inactive",
+      "rows": 31
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CMC",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 544
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CMC",
+      "primary_status": "Expired-Grace",
+      "status_normalized": "expired",
+      "rows": 145
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CMC",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CMC",
+      "primary_status": "Invalid",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CMC",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 43
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "CMC",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 2
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 426
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HC",
+      "primary_status": "Closed",
+      "status_normalized": "inactive",
+      "rows": 8
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HC",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 146
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HC",
+      "primary_status": "Expired-Grace",
+      "status_normalized": "expired",
+      "rows": 48
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HC",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HC",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 6
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HRA",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 417
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HRA",
+      "primary_status": "Closed",
+      "status_normalized": "inactive",
+      "rows": 5
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HRA",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 120
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HRA",
+      "primary_status": "Expired-Grace",
+      "status_normalized": "expired",
+      "rows": 27
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HRA",
+      "primary_status": "Invalid",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "HRA",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 3
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "MU",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 713
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "MU",
+      "primary_status": "Closed",
+      "status_normalized": "inactive",
+      "rows": 14
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "MU",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 218
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "MU",
+      "primary_status": "Expired-Grace",
+      "status_normalized": "expired",
+      "rows": 60
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "MU",
+      "primary_status": "Invalid",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "MU",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 9
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "SPEC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 724
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "SPEC",
+      "primary_status": "App Denied",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "SPEC",
+      "primary_status": "Closed",
+      "status_normalized": "inactive",
+      "rows": 14
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "SPEC",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 322
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "SPEC",
+      "primary_status": "Expired-Grace",
+      "status_normalized": "expired",
+      "rows": 79
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "SPEC",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "SPEC",
+      "primary_status": "Revoked",
+      "status_normalized": "revoked",
+      "rows": 1
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "TN",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 6
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "TN",
+      "primary_status": "Applicant",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "TN",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 35
+    },
+    {
+      "source_system": "tn_blc",
+      "occupation_code": "TN",
+      "primary_status": "Retired",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TAC",
+      "primary_status": "active",
+      "status_normalized": "active",
+      "rows": 17757
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TAC",
+      "primary_status": "inactive",
+      "status_normalized": "inactive",
+      "rows": 2566
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TAP",
+      "primary_status": "active",
+      "status_normalized": "active",
+      "rows": 670
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TAP",
+      "primary_status": "inactive",
+      "status_normalized": "inactive",
+      "rows": 165
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TEC",
+      "primary_status": "active",
+      "status_normalized": "active",
+      "rows": 11425
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TEC",
+      "primary_status": "inactive",
+      "status_normalized": "inactive",
+      "rows": 2492
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TEL",
+      "primary_status": "active",
+      "status_normalized": "active",
+      "rows": 241
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TEL",
+      "primary_status": "inactive",
+      "status_normalized": "inactive",
+      "rows": 124
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TES",
+      "primary_status": "active",
+      "status_normalized": "active",
+      "rows": 558
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TES",
+      "primary_status": "inactive",
+      "status_normalized": "inactive",
+      "rows": 96
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TWW",
+      "primary_status": "active",
+      "status_normalized": "active",
+      "rows": 1490
+    },
+    {
+      "source_system": "tx_tdlr",
+      "occupation_code": "TWW",
+      "primary_status": "inactive",
+      "status_normalized": "inactive",
+      "rows": 250
+    },
+    {
+      "source_system": "tx_tsbpe",
+      "occupation_code": "TMP",
+      "primary_status": "Current",
+      "status_normalized": "current",
+      "rows": 3716
+    },
+    {
+      "source_system": "tx_tsbpe",
+      "occupation_code": "TMP",
+      "primary_status": "Expired",
+      "status_normalized": "inactive",
+      "rows": 594
+    },
+    {
+      "source_system": "tx_tsbpe",
+      "occupation_code": "TRMP",
+      "primary_status": "Current",
+      "status_normalized": "current",
+      "rows": 8646
+    },
+    {
+      "source_system": "tx_tsbpe",
+      "occupation_code": "TRMP",
+      "primary_status": "Expired",
+      "status_normalized": "inactive",
+      "rows": 695
+    },
+    {
+      "source_system": "va_dpor",
+      "occupation_code": "A",
+      "primary_status": "Current",
+      "status_normalized": "active",
+      "rows": 34175
+    },
+    {
+      "source_system": "va_dpor",
+      "occupation_code": "B",
+      "primary_status": "Current",
+      "status_normalized": "active",
+      "rows": 8414
+    },
+    {
+      "source_system": "va_dpor",
+      "occupation_code": "C",
+      "primary_status": "Current",
+      "status_normalized": "active",
+      "rows": 11293
+    },
+    {
+      "source_system": "va_dpor",
+      "occupation_code": "TRAD",
+      "primary_status": "Current",
+      "status_normalized": "active",
+      "rows": 30224
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "CC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 67703
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "CC",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 58258
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "CC",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 117
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "CC",
+      "primary_status": "Out Of Business",
+      "status_normalized": "inactive",
+      "rows": 4255
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "CC",
+      "primary_status": "Passed Away",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "CC",
+      "primary_status": "Re-Licensed",
+      "status_normalized": "other",
+      "rows": 9002
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "CC",
+      "primary_status": "Restored From Archived",
+      "status_normalized": "other",
+      "rows": 3
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "CC",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 9309
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "EC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 5510
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "EC",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 2556
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "EC",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 12
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "EC",
+      "primary_status": "Out Of Business",
+      "status_normalized": "inactive",
+      "rows": 392
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "EC",
+      "primary_status": "Passed Away",
+      "status_normalized": "inactive",
+      "rows": 13
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "EC",
+      "primary_status": "Re-Licensed",
+      "status_normalized": "other",
+      "rows": 394
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "EC",
+      "primary_status": "Restored From Archived",
+      "status_normalized": "other",
+      "rows": 3
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "EC",
+      "primary_status": "Revoked Due Dept Err",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "EC",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 318
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "LC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 80
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "LC",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 35
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "LC",
+      "primary_status": "Out Of Business",
+      "status_normalized": "inactive",
+      "rows": 2
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "LC",
+      "primary_status": "Re-Licensed",
+      "status_normalized": "other",
+      "rows": 1
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "LC",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 4
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "PC",
+      "primary_status": "Active",
+      "status_normalized": "active",
+      "rows": 2190
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "PC",
+      "primary_status": "Expired",
+      "status_normalized": "expired",
+      "rows": 484
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "PC",
+      "primary_status": "Inactive",
+      "status_normalized": "inactive",
+      "rows": 4
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "PC",
+      "primary_status": "Out Of Business",
+      "status_normalized": "inactive",
+      "rows": 59
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "PC",
+      "primary_status": "Passed Away",
+      "status_normalized": "inactive",
+      "rows": 1
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "PC",
+      "primary_status": "Re-Licensed",
+      "status_normalized": "other",
+      "rows": 8
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "PC",
+      "primary_status": "Superceded",
+      "status_normalized": "other",
+      "rows": 94
+    },
+    {
+      "source_system": "wa_lni",
+      "occupation_code": "PC",
+      "primary_status": "Suspended",
+      "status_normalized": "suspended",
+      "rows": 189
+    }
+  ],
+  "evidenceGroups": [
+    {
+      "source_system": "az_roc",
+      "source_dataset": "roc_disciplinary_actions",
+      "rows": 459
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "rows": 6457
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_rf",
+      "rows": 1679
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_ula",
+      "rows": 11691
+    },
+    {
+      "source_system": "fl_dfs",
+      "source_dataset": "fl_dfs_workers_comp_stop_work",
+      "rows": 48254
+    },
+    {
+      "source_system": "nj_enforcement",
+      "source_dataset": "dca_standard_files_discipline_flag",
+      "rows": 1134
+    }
+  ],
+  "totals": {
+    "licenses": 1266214,
+    "contractors": 1392730,
+    "contractor_entities": 281255,
+    "public_contact_observations": 16009,
+    "discipline_actions": 69674,
+    "regulatory_source_observations": 68081,
+    "regulatory_source_occurrences": 68087,
+    "permit_source_records": 139586
+  }
+}

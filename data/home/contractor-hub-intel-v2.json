@@ -1,7 +1,7 @@
 {
   "schemaVersion": "contractor-hub-intel-v2",
-  "generatedAt": "2026-09-12T14:01:13.275Z",
-  "sourceFingerprint": "a975a9c0a247ea0a57d8674e4aad91bc90c20adc02f7d5e8b2ead85088104a78",
+  "generatedAt": "2026-09-12T21:37:54.518Z",
+  "sourceFingerprint": "22c4ccf3f53d78c37ad6f19f9303af2676c69bf1fe8c45d9fad3f06c6b3502cb",
   "publicCoverage": {
     "liveStates": 11,
     "liveStateCodes": [
@@ -33,7 +33,7 @@
     ],
     "credentialRecords": 662331,
     "activeCurrentCredentialRecords": 507933,
-    "cohortRule": "licenses.source_system IN live sources parsed from lib/states/config.ts (EVIDENCE_STATES live:true + licenseSource/licenseSources, LIVE_STATE_ORDER)",
+    "cohortRule": "Accepted database census for configured Verify sources plus non-overlapping accepted local CO EC/PC business credentials. Supplemental VA/NY/IL cohorts remain separate.",
     "activeCurrentRule": "status_normalized IN ('active','current') within the live source cohort"
   },
   "researchGraph": {
@@ -43,45 +43,45 @@
     "populatedLicenseSourceSystemKeys": [
       "az_roc",
       "ca_cslb",
-      "co_dora",
+      "ct_dcp",
       "fl_dbpr",
+      "id_dopl",
       "ky_dhbc",
       "la_lslbc",
+      "mn_dli",
       "ms_sbc",
       "nj_dca",
-      "or_ccb",
-      "tx_tdlr",
-      "tx_tsbpe",
-      "wa_lni",
-      "ct_dcp",
-      "id_dopl",
-      "mn_dli",
       "nv_nscb",
       "ok_cib",
+      "or_ccb",
       "tn_blc",
-      "va_dpor"
+      "tx_tdlr",
+      "tx_tsbpe",
+      "va_dpor",
+      "wa_lni",
+      "co_dora"
     ],
     "licenseSourceSystems": 19,
     "licenseSourceSystemKeys": [
       "az_roc",
       "ca_cslb",
-      "co_dora",
+      "ct_dcp",
       "fl_dbpr",
+      "id_dopl",
       "ky_dhbc",
       "la_lslbc",
+      "mn_dli",
       "ms_sbc",
       "nj_dca",
-      "or_ccb",
-      "tx_tdlr",
-      "tx_tsbpe",
-      "wa_lni",
-      "ct_dcp",
-      "id_dopl",
-      "mn_dli",
       "nv_nscb",
       "ok_cib",
+      "or_ccb",
       "tn_blc",
-      "va_dpor"
+      "tx_tdlr",
+      "tx_tsbpe",
+      "va_dpor",
+      "wa_lni",
+      "co_dora"
     ],
     "entityLinks": 281255,
     "publicContactObservations": 16009,
@@ -93,52 +93,52 @@
     "occurrences": 68087,
     "byEvidenceFamily": [
       {
-        "key": "fl_dfs_stop_work",
-        "label": "Florida DFS workers' compensation stop-work records",
-        "sourceSystem": "fl_dfs",
-        "sourceDataset": "fl_dfs_workers_comp_stop_work",
-        "rows": 48254
-      },
-      {
-        "key": "fl_dbpr_unlicensed",
-        "label": "Florida DBPR unlicensed activity",
-        "sourceSystem": "fl_dbpr",
-        "sourceDataset": "contractor_disc_ula",
-        "rows": 11691
+        "key": "az_roc_discipline",
+        "label": "Arizona ROC disciplinary actions",
+        "sourceSystem": "az_roc",
+        "sourceDataset": "roc_disciplinary_actions",
+        "rows": 459
       },
       {
         "key": "fl_dbpr_discipline",
-        "label": "Florida DBPR licensing discipline",
+        "label": "Florida DBPR licensed discipline",
         "sourceSystem": "fl_dbpr",
         "sourceDataset": "contractor_disc_lic",
         "rows": 6457
       },
       {
         "key": "fl_recovery_fund",
-        "label": "Florida Construction Recovery Fund",
+        "label": "Florida recovery fund",
         "sourceSystem": "fl_dbpr",
         "sourceDataset": "contractor_disc_rf",
         "rows": 1679
       },
       {
+        "key": "fl_dbpr_unlicensed",
+        "label": "Florida unlicensed activity",
+        "sourceSystem": "fl_dbpr",
+        "sourceDataset": "contractor_disc_ula",
+        "rows": 11691
+      },
+      {
+        "key": "fl_dfs_stop_work",
+        "label": "Florida workers compensation stop-work",
+        "sourceSystem": "fl_dfs",
+        "sourceDataset": "fl_dfs_workers_comp_stop_work",
+        "rows": 48254
+      },
+      {
         "key": "nj_enforcement",
-        "label": "New Jersey enforcement / discipline flags",
+        "label": "New Jersey discipline flags",
         "sourceSystem": "nj_enforcement",
-        "sourceDataset": "",
+        "sourceDataset": "dca_standard_files_discipline_flag",
         "rows": 1134
       },
       {
-        "key": "az_roc_discipline",
-        "label": "Arizona ROC disciplinary actions",
-        "sourceSystem": "az_roc",
-        "sourceDataset": "",
-        "rows": 459
-      },
-      {
         "key": "co_dora_discipline",
-        "label": "Colorado DORA contractor-relevant discipline observations",
+        "label": "Colorado credential-linked discipline observations",
         "sourceSystem": "co_dora",
-        "sourceDataset": "7s5z-vewr",
+        "sourceDataset": "co_dora_discipline",
         "rows": 5990
       }
     ],
@@ -147,24 +147,24 @@
   "licensingStatus": {
     "denominator": "research_graph_licenses",
     "graph": {
-      "active": 836388,
+      "active": 836382,
       "current": 36579,
       "inactive": 177863,
       "expired": 208905,
       "suspended": 10956,
       "revoked": 1724,
       "unlicensed": 257,
-      "other": 11452
+      "other": 11458
     },
     "liveCohort": {
       "active": 471354,
       "current": 36579,
       "inactive": 58880,
-      "expired": 65877,
-      "suspended": 9822,
-      "revoked": 14,
+      "expired": 75385,
+      "suspended": 9824,
+      "revoked": 64,
       "unlicensed": 257,
-      "other": 9574
+      "other": 9988
     }
   },
   "permits": {
@@ -188,19 +188,19 @@
           "wa_lni"
         ],
         "occupationCodes": [
-          "fl_dbpr:CGC",
-          "fl_dbpr:RG",
-          "fl_dbpr:CBC",
-          "fl_dbpr:RB",
-          "az_roc:KB-1",
-          "az_roc:KB-2",
-          "az_roc:KA",
-          "az_roc:B-1",
-          "az_roc:B-2",
-          "az_roc:A",
-          "or_ccb:CGC1",
-          "or_ccb:CGC2",
-          "wa_lni:CC"
+          "CGC",
+          "RG",
+          "CBC",
+          "RB",
+          "KB-1",
+          "KB-2",
+          "KA",
+          "B-1",
+          "B-2",
+          "A",
+          "CGC1",
+          "CGC2",
+          "CC"
         ],
         "origin": [
           "FLORIDA_TRADES",
@@ -221,14 +221,14 @@
           "or_ccb"
         ],
         "occupationCodes": [
-          "fl_dbpr:CRC",
-          "fl_dbpr:RR",
-          "az_roc:B",
-          "az_roc:B-3",
-          "az_roc:R-62",
-          "or_ccb:RGC",
-          "or_ccb:RSC",
-          "or_ccb:RLC"
+          "CRC",
+          "RR",
+          "B",
+          "B-3",
+          "R-62",
+          "RGC",
+          "RSC",
+          "RLC"
         ],
         "origin": [
           "FLORIDA_TRADES",
@@ -248,10 +248,10 @@
           "or_ccb"
         ],
         "occupationCodes": [
-          "fl_dbpr:CCC",
-          "fl_dbpr:RC",
-          "az_roc:CR-42",
-          "or_ccb:RRC"
+          "CCC",
+          "RC",
+          "CR-42",
+          "RRC"
         ],
         "origin": [
           "FLORIDA_TRADES",
@@ -263,66 +263,70 @@
         "id": "electrical",
         "label": "Electrical",
         "href": "/verify?work=electrical",
-        "credentialRows": 64168,
-        "activeCurrentRows": 38636,
+        "credentialRows": 76663,
+        "activeCurrentRows": 43425,
         "contributingSources": [
           "tx_tdlr",
           "nj_dca",
           "wa_lni",
-          "az_roc"
+          "az_roc",
+          "co_dora"
         ],
         "occupationCodes": [
-          "tx_tdlr:TEC",
-          "tx_tdlr:TES",
-          "tx_tdlr:TME",
-          "tx_tdlr:TJE",
-          "tx_tdlr:TAE",
-          "nj_dca:ELE",
-          "nj_dca:TEL",
-          "wa_lni:EC",
-          "az_roc:CR-11",
-          "az_roc:C-11",
-          "az_roc:R-11"
+          "TEC",
+          "TES",
+          "TME",
+          "TJE",
+          "TAE",
+          "ELE",
+          "TEL",
+          "EC",
+          "CR-11",
+          "C-11",
+          "R-11"
         ],
         "origin": [
           "work-intents TX class chip",
           "work-intents NJ class chip",
           "WASHINGTON_TRADES",
-          "ARIZONA_TRADES electrical"
+          "ARIZONA_TRADES electrical",
+          "Accepted CO business EC/PC"
         ]
       },
       {
         "id": "plumbing",
         "label": "Plumbing",
         "href": "/florida/plumbing",
-        "credentialRows": 41290,
-        "activeCurrentRows": 31674,
+        "credentialRows": 46705,
+        "activeCurrentRows": 34821,
         "contributingSources": [
           "fl_dbpr",
           "tx_tsbpe",
           "nj_dca",
           "wa_lni",
-          "az_roc"
+          "az_roc",
+          "co_dora"
         ],
         "occupationCodes": [
-          "fl_dbpr:CFC",
-          "fl_dbpr:RF",
-          "tx_tsbpe:TRMP",
-          "tx_tsbpe:TMP",
-          "tx_tsbpe:TJP",
-          "tx_tsbpe:TTP",
-          "nj_dca:PLB",
-          "wa_lni:PC",
-          "az_roc:CR-37",
-          "az_roc:C-37",
-          "az_roc:R-37R"
+          "CFC",
+          "RF",
+          "TRMP",
+          "TMP",
+          "TJP",
+          "TTP",
+          "PLB",
+          "PC",
+          "CR-37",
+          "C-37",
+          "R-37R"
         ],
         "origin": [
           "FLORIDA_TRADES",
           "work-intents TX plumbing codes",
           "work-intents NJ class chip",
           "WASHINGTON_TRADES",
-          "ARIZONA_TRADES plumbing"
+          "ARIZONA_TRADES plumbing",
+          "Accepted CO business EC/PC"
         ]
       },
       {
@@ -338,15 +342,15 @@
           "az_roc"
         ],
         "occupationCodes": [
-          "fl_dbpr:CAC",
-          "fl_dbpr:RA",
-          "fl_dbpr:CMC",
-          "fl_dbpr:RM",
-          "tx_tdlr:TAC",
-          "nj_dca:HVAC",
-          "az_roc:CR-39",
-          "az_roc:C-39",
-          "az_roc:R-39R"
+          "CAC",
+          "RA",
+          "CMC",
+          "RM",
+          "TAC",
+          "HVAC",
+          "CR-39",
+          "C-39",
+          "R-39R"
         ],
         "origin": [
           "FLORIDA_TRADES AC + mechanical",
@@ -365,8 +369,8 @@
           "fl_dbpr"
         ],
         "occupationCodes": [
-          "fl_dbpr:CPC",
-          "fl_dbpr:RP"
+          "CPC",
+          "RP"
         ],
         "origin": [
           "FLORIDA_TRADES"
