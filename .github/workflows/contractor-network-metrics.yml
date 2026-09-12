@@ -27,3 +27,6 @@ jobs:
 
       - name: Contractor guidance and recovery integrity (R1-010)
         run: npm run check:th-search-r1-010
+
+      - name: Reproduce accepted metrics and validate reconciliation
+        run: npm run check:metrics-r2

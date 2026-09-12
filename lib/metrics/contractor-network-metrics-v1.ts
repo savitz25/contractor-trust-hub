@@ -1,3 +1,5 @@
+import type { AcceptedSource, StateCapability } from "./accepted-contract";
+import type { HomepageEvidenceItem } from "./accepted-homepage-evidence";
 /**
  * contractor-network-metrics-v1
  * Specialist-owned public metric contract. Grains never mix.
@@ -6,6 +8,7 @@
 export const CONTRACTOR_NETWORK_METRICS_VERSION = "contractor-network-metrics-v1" as const;
 
 export type MetricGrain =
+  | (string & {})
   | "license_credential_record"
   | "license_credential_record_active_current"
   | "live_researched_state"
@@ -28,6 +31,7 @@ export type PublicationStatus =
   | "PUBLIC_RESEARCH_GRAPH"
   | "PUBLIC_PARTIAL"
   | "INTERNAL"
+  | "PUBLIC_UNKNOWN"
   | "REJECTED";
 
 export type MetricTrace = {
@@ -43,7 +47,7 @@ export type MetricTrace = {
 export type ContractorNetworkMetric = {
   key: string;
   label: string;
-  value: number;
+  value: number | null;
   unit: "count";
   grain: MetricGrain;
   denominator: string;
@@ -51,6 +55,8 @@ export type ContractorNetworkMetric = {
   coverage: string;
   contributingSourceSystems: string[];
   sourceAsOf: string | null;
+  retrievedAt?: string | null;
+  snapshotAsOf?: string | null;
   generatedAt: string;
   trace: MetricTrace;
   publicationStatus: PublicationStatus;
@@ -66,6 +72,11 @@ export type EvidenceFamilyMetric = {
 };
 
 export type ContractorNetworkMetricsV1 = {
+  contractRevision?: 'ATH-METRICS-R2-02';
+  acceptedSources?: AcceptedSource[];
+  stateCapabilities?: StateCapability[];
+  homepageEvidence?: HomepageEvidenceItem[];
+  statusReconciliation?: {sourceUniverse:number; includedUniverse:number; explicitExclusions:number; partitionSum:number; unexplainedRemainder:number; groups:Array<{source:string; credentialClass:string|null; nativeStatus:string|null; normalizedStatus:string|null; bucket:string; rows:number}>};
   schemaVersion: typeof CONTRACTOR_NETWORK_METRICS_VERSION;
   generatedAt: string;
   newestDocumentedSourceAsOf: string | null;
@@ -104,6 +115,7 @@ export type ContractorNetworkMetricsV1 = {
     regulatoryOccurrences: number;
   };
   licensingStatus: {
+    graph?: Record<"active"|"current"|"inactive"|"expired"|"suspended"|"revoked"|"unlicensed"|"other",number>;
     liveCohort: {
       active: number;
       current: number;
@@ -134,8 +146,9 @@ export type ContractorNetworkMetricsV1 = {
 export function metricByKey(
   manifest: ContractorNetworkMetricsV1,
   key: string
-): ContractorNetworkMetric {
+): ContractorNetworkMetric & { value: number } {
   const found = manifest.metrics.find((m) => m.key === key);
   if (!found) throw new Error(`metric missing: ${key}`);
-  return found;
+  if (found.value === null) throw new Error(`Metric is unknown: ${key}`);
+  return found as ContractorNetworkMetric & { value: number };
 }

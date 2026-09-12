@@ -1,3 +1,4 @@
+import network from "@/data/home/contractor-network-metrics-v1.json";
 import Link from "next/link";
 import { HomeBeyondLicense } from "@/components/home/HomeBeyondLicense";
 import { HomeContinuity } from "@/components/home/HomeContinuity";
@@ -15,15 +16,15 @@ import { researchDepthLabel } from "@/lib/home-intel/build";
 import type { ContractorHomeIntel, FeaturedStory } from "@/lib/home-intel/types";
 import type { JourneyModule } from "@/lib/network/journey-handoff";
 import { ContractorHomeChecklist } from "./contractor-home-checklist";
-import wa from "@/lib/washington-intelligence/accepted-snapshot.json";
-import az from "@/lib/arizona-intelligence/accepted-snapshot.json";
-import tx from "@/lib/texas-intelligence/accepted-snapshot.json";
-import txLocal from "@/lib/texas-intelligence/local/accepted-snapshot.json";
-import ca from "@/lib/california-intelligence/accepted-snapshot.json";
-import caLocal from "@/lib/california-intelligence/local/accepted-snapshot.json";
-import nj from "@/lib/new-jersey-intelligence/accepted-snapshot.json";
+const wa = network.acceptedStateDatasets["lib/washington-intelligence/accepted-snapshot.json"].snapshot;
+const az = network.acceptedStateDatasets["lib/arizona-intelligence/accepted-snapshot.json"].snapshot;
+const tx = network.acceptedStateDatasets["lib/texas-intelligence/accepted-snapshot.json"].snapshot;
+const txLocal = network.acceptedStateDatasets["lib/texas-intelligence/local/accepted-snapshot.json"].snapshot;
+const ca = network.acceptedStateDatasets["lib/california-intelligence/accepted-snapshot.json"].snapshot;
+const caLocal = network.acceptedStateDatasets["lib/california-intelligence/local/accepted-snapshot.json"].snapshot;
+const nj = network.acceptedStateDatasets["lib/new-jersey-intelligence/accepted-snapshot.json"].snapshot;
 
-const INTELLIGENCE_CODES = new Set(["FL", "NJ", "CA", "TX", "WA", "AZ"]);
+const INTELLIGENCE_CODES = new Set(network.stateCapabilities.filter(s => s.route).map(s => s.state));
 
 function Freshness({ date, label = "Source as of" }: { date: string; label?: string }) {
   return <span className="cth-intel-freshness"><span aria-hidden="true" />{label} {date}</span>;
@@ -260,7 +261,7 @@ export function ContractorHomeIntelligence({
           State explorer
         </span>
         <p className="cth-intel-eyebrow">Explore contractor research</p>
-        <h2 id="explore-title">Six state intelligence hubs</h2>
+        <h2 id="explore-title">{network.stateCapabilities.filter(s => s.route).length} state intelligence pages</h2>
         <p>Each destination reflects its own regulator, evidence families, and source clock. Research depth describes our coverage—not contractor quality.</p>
         <ul className="cth-intel-geo">
           {intel.geography.filter((row) => INTELLIGENCE_CODES.has(row.code)).map((row) => (
@@ -283,6 +284,7 @@ export function ContractorHomeIntelligence({
               <Link href={row.href}>{row.hrefLabel}</Link>
             </li>
           ))}
+          {network.stateCapabilities.filter(s => s.route && !intel.geography.some(g => g.code === s.state)).map(s => <li key={s.state}><p><strong>{s.state} ? {s.route!.slice(1).split("-").map(word => word[0].toUpperCase() + word.slice(1)).join(" ")}</strong></p><p>Accepted state licensing or registration evidence, with source-specific scope.</p><p>Credential numbers are not unique companies. Evidence coverage does not assert specialist completion.</p><Link href={s.route!}>Explore state intelligence</Link></li>)}
         </ul>
         <details className="mt-4">
           <summary className="cursor-pointer font-semibold text-[var(--navy)]">

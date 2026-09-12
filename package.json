@@ -18,7 +18,7 @@
     "check:ath-cap-pilot-001": "npx --yes tsx --test scripts/test_ath_cap_pilot_001.ts",
     "check:con-cap-002": "npx --yes tsx --test scripts/test_con_cap_002.ts",
     "check:con-search-001": "npx --yes tsx --test scripts/test_con_search_001.ts",
-    "home:intel": "node scripts/build_homepage_intel.mjs",
+    "home:intel": "node --import tsx scripts/build_homepage_intel.mjs",
     "home:metrics": "node --import tsx scripts/build_network_metrics_v1.mjs",
     "assert:home-intel": "node scripts/assert_homepage_intel.mjs",
     "assert:network-metrics": "node scripts/assert_network_metrics_v1.mjs && npx --yes tsx --test scripts/test_contractor_network_metrics.ts",
@@ -74,7 +74,8 @@
     "check:ath-claim-publish-001": "npx --yes tsx --test scripts/test_ath_claim_publish_001.tsx scripts/test_ath_cust_005.tsx scripts/test_ath_cust_007.tsx",
     "report:ath-cust-003": "node scripts/report_ath_cust_003_cohort.mjs",
     "check:th-search-r1-009": "npx --yes tsx --test scripts/test_th_search_r1_009.ts",
-    "check:th-search-r1-010": "npx --yes tsx --test scripts/test_th_search_r1_010.ts"
+    "check:th-search-r1-010": "npx --yes tsx --test scripts/test_th_search_r1_010.ts",
+    "check:metrics-r2": "node --import tsx scripts/build_network_metrics_v1.mjs --check && tsx --test scripts/test_metrics_r2.ts scripts/test_metrics_homepage_r2.tsx"
   },
   "dependencies": {
     "next": "16.3.3",
@@ -90,6 +91,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "tailwindcss": "^4",
+    "tsx": "4.20.5",
     "typescript": "^5"
   },
   "engines": {

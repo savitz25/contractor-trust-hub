@@ -25,9 +25,9 @@ import {
 import { loadContractorNetworkMetrics } from "@/lib/metrics/load-network-metrics";
 
 const networkMetrics = loadContractorNetworkMetrics();
-const RETRIEVED = networkMetrics.generatedAt.slice(0, 10);
+const RETRIEVED = networkMetrics.acceptedSources?.find(s => s.path.includes("accepted-network-census"))?.retrievedAt ?? "Unknown";
 const CONFIG_AS_OF = "product config live EvidenceState rows";
-const STATE_INTELLIGENCE_PATHS: Record<string, string> = { fl: "/florida", nj: "/new-jersey", ca: "/california", tx: "/texas", wa: "/washington", az: "/arizona", va: "/virginia", ny: "/new-york", il: "/illinois" };
+const STATE_INTELLIGENCE_PATHS: Record<string, string> = Object.fromEntries((networkMetrics.stateCapabilities ?? []).filter(s => s.route).map(s => [s.state.toLowerCase(), s.route!]));
 
 function fmt(n: number): string {
   return n.toLocaleString("en-US");
@@ -83,7 +83,7 @@ function geoFrom(state: EvidenceState): GeoState {
     canVerify: canVerify(state),
     cannotInfer: cannotInfer(state),
     href: STATE_INTELLIGENCE_PATHS[state.slug] ?? verifyPathFor(state),
-    hrefLabel: ["fl", "nj", "ca", "tx", "wa", "az"].includes(state.slug)
+    hrefLabel: Boolean(STATE_INTELLIGENCE_PATHS[state.slug])
       ? `Explore ${state.name} Intelligence`
       : `${state.name} Verify`,
   };
@@ -104,14 +104,14 @@ function depthLabel(d: ResearchDepth): string {
   }
 }
 
-export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z"): ContractorHomeIntel {
+export function buildContractorHomeIntel(generatedAt = networkMetrics.generatedAt): ContractorHomeIntel {
   const live = getLiveStates();
   const wisconsin = EVIDENCE_STATES.wi;
   const geo = live.map(geoFrom);
   const specialty = geo.filter((s) => s.regulatoryClass === "specialty_only");
   const statewideBoard = geo.filter((s) => s.regulatoryClass !== "specialty_only");
-  const intelligenceDestinations = new Set(["FL", "NJ", "CA", "TX", "WA", "AZ"]);
-  const enhanced = geo.filter((s) => intelligenceDestinations.has(s.code));
+  const intelligenceDestinations = new Set(Object.keys(STATE_INTELLIGENCE_PATHS).map(s => s.toUpperCase()));
+  const enhanced = networkMetrics.stateCapabilities!.filter(s => s.route).map(s => ({code:s.state,name:s.state,href:s.route!}));
   const noStatewideGc = geo.filter((s) => !s.statewideGc);
   const roofingCodes = INTELLIGENCE_TRADE_BUCKETS.roofing;
   const residentialCodes = INTELLIGENCE_TRADE_BUCKETS.residential;
@@ -139,12 +139,12 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
     },
     {
       id: "enhanced-intel",
-      label: "States with enhanced Intelligence OS research",
+      label: "Published state intelligence pages",
       display: fmt(enhanced.length),
       value: enhanced.length,
-      grain: "states with full_journey Intelligence OS pages",
-      definition: "Completed state intelligence destinations backed by accepted specialist artifacts.",
-      method: "Published routes for FL, NJ, CA, TX, WA, and AZ",
+      grain: "published state intelligence route",
+      definition: "Published state intelligence destinations backed by accepted specialist artifacts; completion is not asserted.",
+      method: "Generated accepted state capability contract",
       payloadKey: "coverage.enhancedIntelligence",
       officialAsOf: CONFIG_AS_OF,
       retrievedAt: RETRIEVED,
@@ -228,7 +228,7 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
           label: f.label,
           value: f.rows,
           note: f.sourceSystem,
-          states: f.sourceSystem.startsWith("fl") ? ["FL"] : f.sourceSystem.startsWith("nj") ? ["NJ"] : ["AZ"],
+          states: f.sourceSystem.startsWith("fl") ? ["FL"] : f.sourceSystem.startsWith("nj") ? ["NJ"] : f.sourceSystem.startsWith("co") ? ["CO"] : ["AZ"],
         })),
         unit: "count",
         max: actionTotal,
@@ -240,8 +240,8 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
         "These families can be added into one risk or guilt score.",
       ],
       sourceIds: ["contractor-hub-intel-v2", "discipline_actions"],
-      officialAsOf: scale.generatedAt.slice(0, 10),
-      retrievedAt: scale.generatedAt.slice(0, 10),
+      officialAsOf: "Unknown; source clocks vary",
+      retrievedAt: RETRIEVED,
       payloadKeys: ["regulatoryEvidence.byEvidenceFamily", "regulatoryEvidence.totalActionRows"],
     },
     {
@@ -270,8 +270,8 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
         "Occupation codes mean the same legal scope in every state.",
       ],
       sourceIds: ["contractor-hub-intel-v2", "trade-families"],
-      officialAsOf: scale.generatedAt.slice(0, 10),
-      retrievedAt: scale.generatedAt.slice(0, 10),
+      officialAsOf: "Unknown; source clocks vary",
+      retrievedAt: RETRIEVED,
       payloadKeys: ["tradeFamilies.families", "publicCoverage.activeCurrentCredentialRecords"],
     },
     {
@@ -356,7 +356,7 @@ export function buildContractorHomeIntel(generatedAt = "2026-08-28T00:00:00.000Z
     },
     {
       family: "State-level intelligence",
-      display: "Six completed state intelligence destinations",
+      display: `${enhanced.length} published state intelligence destinations`,
       status: "enhanced_in_selected_geographies",
       method: "INTEL-003 Florida state payload.",
       limitations: ["Research depth varies and is not a rating."],

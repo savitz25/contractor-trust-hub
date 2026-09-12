@@ -1,3 +1,4 @@
+import { count } from "./accepted-contract";
 import { createHash } from "node:crypto";
 import type {
   ContractorNetworkMetric,
@@ -40,11 +41,12 @@ export type NetworkMetricsInput = {
 };
 
 function metric(partial: Omit<ContractorNetworkMetric, "unit" | "generatedAt"> & { generatedAt: string }): ContractorNetworkMetric {
+  count(partial.value, partial.key);
   return { unit: "count", ...partial };
 }
 
 function sumLive(input: NetworkMetricsInput): number {
-  return input.liveSourceSystems.reduce((n, src) => n + Number(input.licensesBySource[src] || 0), 0);
+  return input.liveSourceSystems.reduce((n, src) => n + count(input.licensesBySource[src], src), 0);
 }
 
 export function assertGrainSafety(input: NetworkMetricsInput): void {
@@ -54,6 +56,9 @@ export function assertGrainSafety(input: NetworkMetricsInput): void {
     }
   }
   const live = sumLive(input);
+  const statusSum = Object.values(input.liveStatus).reduce((n,v)=>n+count(v,'status bucket'),0);
+  if(statusSum !== live) throw new Error(`Credential status partition ${statusSum} !== accepted universe ${live}`);
+  if(input.liveStatus.active+input.liveStatus.current !== input.liveActiveCurrentCredentialRecords) throw new Error('Active/current partition disagrees');
   if (input.liveActiveCurrentCredentialRecords > live) {
     throw new Error("active/current exceeds live credentials");
   }
@@ -424,7 +429,7 @@ export function computeContractorNetworkMetrics(input: NetworkMetricsInput): Con
       liveStates: input.liveStateCodes.length,
       liveStateCodes: input.liveStateCodes,
       liveSourceSystems: input.liveSourceSystems,
-      licensesBySource: Object.fromEntries(input.liveSourceSystems.map((s) => [s, input.licensesBySource[s] || 0])),
+      licensesBySource: Object.fromEntries(input.liveSourceSystems.map((s) => [s, count(input.licensesBySource[s], s)])),
       cohortRule:
         "licenses.source_system IN live sources parsed from lib/states/config.ts (EVIDENCE_STATES live:true + licenseSource/licenseSources, LIVE_STATE_ORDER)",
       activeCurrentRule: "status_normalized IN ('active','current') within the live source cohort",
@@ -438,7 +443,7 @@ export function computeContractorNetworkMetrics(input: NetworkMetricsInput): Con
         "Fail closed. Keep production licenses.ca_cslb as the live California credential contribution. The 75,572 License Master extract is a truncated stream powering /california intelligence and is not merged into the live credential denominator.",
     },
     newJerseyReconciliation: {
-      dcaCredentialRows: input.licensesBySource.nj_dca || 0,
+      dcaCredentialRows: count(input.licensesBySource.nj_dca, "nj_dca"),
       constructionSourceRecords: input.njConstructionSourceRecords,
       constructionGrain: "municipal_permit_or_certificate_source_record",
       constructionMarketOnly: true,

@@ -119,7 +119,7 @@ class PageTests(unittest.TestCase):
 
     def test_homepage_graph_status_is_not_live_cohort(self):
         intel = json.loads((ROOT / "data/home/contractor-hub-intel-v2.json").read_text(encoding="utf-8"))
-        overlay = (ROOT / "scripts/colorado/overlay_network_metrics.mjs").read_text(encoding="utf-8")
+        overlay = (ROOT / "scripts/build_network_metrics_v1.mjs").read_text(encoding="utf-8")
         self.assertIn("licensingStatus.graph", overlay)
         self.assertNotEqual(intel["licensingStatus"]["graph"]["active"], intel["licensingStatus"]["liveCohort"]["active"])
         self.assertEqual(sum(intel["licensingStatus"]["graph"].values()), intel["researchGraph"]["licenseRows"])
