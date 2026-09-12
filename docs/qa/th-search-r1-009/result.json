@@ -4,13 +4,13 @@
   "model": "GPT-6 Astra / High",
   "modelConfirmation": "USER-CONFIRMED",
   "baseline": "11fd0b6fd8f6a1fe5e40e48a34f6a578b67334f4",
-  "recordedAt": "2026-09-12T13:44:44.690696+00:00",
-  "candidate": "pending first implementation commit",
+  "recordedAt": "2026-09-12T13:51:50.019852+00:00",
+  "candidate": "3689a481c63acb48918b747958a3cb28d7a51c79",
   "merge": null,
   "deployment": null,
   "tests": {
     "focused": {
-      "pass": 24,
+      "pass": 26,
       "fail": 0
     },
     "mutationsDetected": 2,
@@ -39,11 +39,18 @@
   },
   "browser": {
     "local": "16 cases PASS; source-positive cases explicitly unavailable locally",
-    "preview": null,
+    "preview": {
+      "deployment": "dpl_AM8U2jZCZbiMK5vsooXk3RQF2BKe",
+      "cases": 16,
+      "pass": true,
+      "evidence": "preview-browser.json",
+      "note": "Runtime follow-up improves county/source labels and typed-input validation; retest pending on that head."
+    },
     "production": null
   },
   "sourceOracle": "source-oracle.json",
   "reviewMethod": "Separate self-review plus automated behavioral/mutation checks; not independent human review",
   "otherRepositoriesModified": false,
-  "productionDataWrites": false
+  "productionDataWrites": false,
+  "pr": 59
 }

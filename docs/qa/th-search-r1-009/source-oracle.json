@@ -38,5 +38,7 @@
   ],
   "sourceClockMeaning": "licenses.updated_at is stored update time, not live regulator verification or official effective date",
   "texasMapping": "ingest/adapters/tx_tdlr.py maps A/C CONTRACTOR to TAC; indexed status is expiration-derived",
-  "texasIntelligenceSnapshotFingerprint": "25d00ad3f4547ba212f4e2304177f788898c48d4750d1483944301eb1accadc6"
+  "texasIntelligenceSnapshotFingerprint": "25d00ad3f4547ba212f4e2304177f788898c48d4750d1483944301eb1accadc6",
+  "boundedOracleFingerprint": "29d71da0eeac29761b2da3a0025c3b35812d001528dba0cdd1acfc686ac269a7",
+  "fingerprintMeaning": "SHA-256 of the bounded public-field observation rows, not a fingerprint of the complete live database."
 }

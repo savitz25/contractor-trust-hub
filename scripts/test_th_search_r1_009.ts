@@ -434,3 +434,7 @@ test("pagination retains source scope and count independently of displayed row c
 });
 
 test('form resubmission field contract avoids duplicated select parameters',async()=>{const {readFileSync}=await import('node:fs');const form=readFileSync('components/ask/AskForm.tsx','utf8');assert.match(form,/\["page","geo","trade","status","evidence"\]\.includes/);assert.match(form,/defaultValue=\{overrides.status/);assert.ok(readAskRequest({q:typo,geoAction:'correct',geoChoice:'broward',trade:'roofing',status:'all'}).error===null);assert.ok(readAskRequest({q:typo,status:['all','']}).error);});
+
+test('cleared status means all and Texas source attribution remains TDLR only',()=>{const p=discovery('HVAC contractors in Texas',{status:'-'});assert.equal(p.request.credentialStatus,'all');const n=normalizeContractorExecutionRequest(p.request);assert.equal(n.capability?.state.boardShortLabel,'TDLR');assert.doesNotMatch(n.capability?.state.boardLabel??'',/plumbing|TSBPE/i);});
+
+test('structured source entry cannot discard malformed or oversized city',()=>{for(const city of ['Austin'.repeat(20),42,'Austin\u0000'])assert.throws(()=>normalizeContractorExecutionRequest({state:'TX',trade:'hvac',city}),/invalid_text_field/);});

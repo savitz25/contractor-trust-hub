@@ -92,7 +92,7 @@ export const CONTRACTOR_STATE_CAPABILITIES: Record<"FL" | "NJ" | "TX", StateExec
     verifyDestination: "/verify",
   },
   TX: {
-    state: configuredState("tx"), executable:true, sourceSystems:["tx_tdlr"], geography:["state"],
+    state: {...configuredState("tx"),boardLabel:"Texas Department of Licensing and Regulation",boardShortLabel:"TDLR",boardUrl:"https://www.tdlr.texas.gov/LicenseSearch/"}, executable:true, sourceSystems:["tx_tdlr"], geography:["state"],
     trades:[{id:"hvac",label:"A/C Contractor (Texas TDLR)",occupationCodes:["TAC"],publicationLevel:"PUBLIC_PROFILE",limitation:"Existing Texas TDLR A/C Contractor mapping. Indexed status is derived from expiration, not a live authority check. Recorded city fields are not populated in this cohort."}],
     generalClassAvailable:false,verifyDestination:"/verify?state=tx",
   },

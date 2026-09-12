@@ -101,7 +101,7 @@ export default async function ContractorSearchPage({ searchParams }: Props) {
               <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-3 gap-y-2 text-sm">
                 <dt className="font-medium">Credential</dt><dd className="break-all">{row.credentialNumber}</dd>
                 <dt className="font-medium">Status</dt><dd>{row.status ?? "Not reported"}</dd>
-                <dt className="font-medium">Recorded place</dt><dd>{[row.recordedGeography.city, row.recordedGeography.county, row.recordedGeography.state].filter(Boolean).join(", ") || "Not reported"}</dd>
+                <dt className="font-medium">Recorded place</dt><dd>{[row.recordedGeography.city, row.recordedGeography.county ? `${row.recordedGeography.county.replace(/\s+county$/i, "")} County` : null, row.recordedGeography.state].filter(Boolean).join(", ") || "Not reported"}</dd>
                 <dt className="font-medium">Source</dt><dd>{row.source.label}{row.source.observedAt ? ` · ${row.source.observedAt.slice(0, 10)}` : ""}</dd>
               </dl>
               <p className="mt-4 text-sm text-[var(--muted)]">{row.whyShown}</p>

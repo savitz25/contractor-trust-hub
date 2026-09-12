@@ -135,7 +135,7 @@ const SCHEMA_DESCRIPTOR = {
   resultStates: ["SUPPORTED_RESULTS", "ZERO_MATCHING_ROWS", "CLARIFICATION_REQUIRED", "INVALID_GEOGRAPHY", "UNSUPPORTED_STATE_CAPABILITY", "UNSUPPORTED_TRADE_CAPABILITY", "PUBLICATION_RESTRICTED", "INVALID_QUERY", "BACKEND_UNAVAILABLE", "TIMEOUT", "EXACT_IDENTITY"],
 };
 const CONTRACT_DESCRIPTOR = {
-  family: SPECIALIST_EXECUTION_VERSION, version: CONTRACT_VERSION, states: ["FL", "NJ"],
+  family: SPECIALIST_EXECUTION_VERSION, version: CONTRACT_VERSION, states: ["FL", "NJ", "TX"],
   publicationGate: "existing_non_thin_profile_with_slug",
   ordering: "normalized_name_then_credential_then_source_record",
   geography: "recorded_credential_address_never_service_territory",
@@ -147,9 +147,10 @@ function baseEnvelope() {
   return { contract: SPECIALIST_EXECUTION_VERSION, contractVersion: CONTRACT_VERSION, schemaFingerprint: CONTRACTOR_SCHEMA_FINGERPRINT, contractFingerprint: CONTRACTOR_CONTRACT_FINGERPRINT, hub: "contractor" as const };
 }
 function cleanText(value: unknown, max: number): string | null {
-  if (typeof value !== "string") return null;
+  if(value==null)return null;
+  if(typeof value!=="string"||value.length>max||/[\u0000-\u001f]/.test(value))throw new Error("invalid_text_field");
   const clean = value.trim().replace(/\s+/g, " ");
-  return clean && clean.length <= max ? clean : null;
+  return clean || null;
 }
 function normalizeState(value: unknown): string {
   if (value === undefined || value === null || value === "") return "FL";
@@ -331,7 +332,7 @@ export async function executeContractorSpecialistQuery(raw: unknown, db: {query:
      ORDER BY LOWER(c.display_name), UPPER(COALESCE(l.license_number, l.external_key, '')), l.id
      LIMIT $${built.params.length + 1}::int OFFSET $${built.params.length + 2}::int`, params, { statementTimeoutMs: 15_000 });
   const total = Number(count?.total);
-  if(!count || !Number.isSafeInteger(total)||total<0)throw new Error("invalid_source_count");
+  if(!count || !Number.isSafeInteger(total)||total<0)throw new Error("source_count_unavailable");
   const totalPages = Math.ceil(total / input.limit);
   const pageOutOfRange = totalPages > 0 && input.page > totalPages;
   const resultState: ContractorExecutionResponse["resultState"] = pageOutOfRange ? "INVALID_QUERY" : input.identifier && total === 1 ? "EXACT_IDENTITY" : total === 0 ? "ZERO_MATCHING_ROWS" : "SUPPORTED_RESULTS";

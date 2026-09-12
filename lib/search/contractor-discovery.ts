@@ -180,7 +180,7 @@ export function planContractorSearch(
       city: geo.city ?? undefined,
       intent: geographyIntent,
     },
-    credentialStatus: ["active_current", "expired", "all"].includes(
+    credentialStatus: overrides.status==="-"?"all": ["active_current", "expired", "all"].includes(
       overrides.status ?? "",
     )
       ? (overrides.status as "active_current" | "expired" | "all")
