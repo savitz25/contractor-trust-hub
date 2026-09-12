@@ -1,0 +1,163 @@
+
+> contractor-trust-hub@0.1.0 build
+> next build
+
+▲ Next.js 16.3.3 (Turbopack)
+- Environments: .env.production.local
+✓ Running next.config.ts took 53ms
+
+node.exe : ⚠ The Edge Runtime is deprecated. You can use the "nodejs" runtime instead. Learn more:
+https://nextjs.org/docs/messages/edge-runtime-deprecated
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (⚠ The Edge Runt...time-deprecated:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.5s
+  Running TypeScript ...
+
+  We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+  The following mandatory changes were made to your tsconfig.json:
+
+    - jsx was set to react-jsx (next.js uses the React automatic runtime)
+
+  Finished TypeScript in 6.7s ...
+  Collecting page data using 7 workers ...
+⚠ Using edge runtime on a page currently disables static generation for that page
+  Generating static pages using 7 workers (0/73) ...
+  Generating static pages using 7 workers (18/73)
+  Generating static pages using 7 workers (36/73)
+  Generating static pages using 7 workers (54/73)
+✓ Generating static pages using 7 workers (73/73) in 4.1s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /account
+├ ○ /account/verify
+├ ƒ /api/account/import-local
+├ ƒ /api/account/preferences
+├ ƒ /api/account/sync
+├ ƒ /api/alerts/check
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/me
+├ ƒ /api/auth/request-link
+├ ƒ /api/auth/verify
+├ ƒ /api/claim/handoff/[profileId]
+├ ƒ /api/internal/monitoring/events
+├ ƒ /api/my-trusthub/issue
+├ ƒ /api/plan/match
+├ ƒ /api/plan/quote-request
+├ ƒ /api/property/coverage
+├ ƒ /api/property/lookup
+├ ƒ /api/specialist-execution/v2
+├ ƒ /api/studios/match
+├ ○ /apple-icon.png
+├ ○ /arizona
+├ ƒ /arizona/[segment]
+├ ƒ /arizona/[segment]/[facet]
+├ ƒ /arizona/[segment]/[facet]/share-og
+├ ƒ /arizona/[segment]/share-og
+├ ƒ /arizona/projects/[project]
+├ ƒ /arizona/share-og
+├ ƒ /ask
+├ ○ /california
+├ ƒ /california/los-angeles
+├ ƒ /california/san-francisco
+├ ƒ /colorado
+├ ƒ /compare
+├ ƒ /contractors/[slug]
+├ ƒ /contractors/[slug]/share-og
+├ ƒ /contractors/[slug]/summary
+├ ƒ /corrections
+├ ○ /disclaimer
+├ ƒ /florida
+├ ƒ /florida/[segment]
+├ ƒ /florida/[segment]/[facet]
+├ ƒ /florida/[segment]/[facet]/[trade]
+├ ƒ /florida/[segment]/[facet]/[trade]/share-og
+├ ƒ /florida/[segment]/[facet]/share-og
+├ ƒ /florida/[segment]/share-og
+├ ƒ /florida/share-og
+├ ○ /guides
+├ ƒ /guides/[slug]/share-og
+├ ○ /guides/florida-contractor-license-types
+├ ○ /guides/florida-contractor-red-flags
+├ ○ /guides/how-to-verify-florida-contractor
+├ ○ /icon.png
+├ ○ /illinois
+├ ○ /independence
+├ ○ /methodology
+├ ○ /new-jersey
+├   /new-jersey/[county]
+│ ├ ● /new-jersey/monmouth-county
+│ ├ ● /new-jersey/middlesex-county
+│ ├ ● /new-jersey/somerset-county
+│ └ ● /new-jersey/union-county
+├ ○ /new-york
+├ ƒ /opengraph-image
+├ ƒ /oregon
+├ ƒ /oregon/[segment]
+├ ƒ /oregon/[segment]/[facet]
+├ ƒ /oregon/[segment]/[facet]/share-og
+├ ƒ /oregon/[segment]/share-og
+├ ƒ /oregon/projects/[project]
+├ ƒ /oregon/share-og
+├ ○ /passport
+├ ƒ /passport/[propertyId]
+├ ƒ /plan
+├ ƒ /plan/results
+├ ○ /plan/start
+├ ○ /projects
+├ ƒ /projects/[id]
+├ ƒ /projects/[id]/payments
+├ ƒ /property
+├ ƒ /property/[id]
+├ ƒ /property/results
+├ ƒ /robots.txt
+├ ƒ /search
+├ ƒ /sitemap.xml
+├ ƒ /sitemap/[id]
+├ ○ /studio/bathroom
+├ ○ /studio/cost
+├ ○ /studio/kitchen
+├ ○ /studio/roofing
+├ ○ /studios
+├   /studios/[slug]
+│ ├ ● /studios/kitchen
+│ ├ ● /studios/bathroom
+│ ├ ● /studios/roofing
+│ └ ● [+4 more paths]
+├ ƒ /studios/[slug]/results
+├ ○ /texas
+├ ƒ /texas/austin
+├ ○ /tools
+├ ○ /tools/check-address
+├ ○ /tools/compare-bids
+├ ○ /tools/contract-analyzer
+├ ○ /tools/coverage
+├ ○ /tools/permit-planner
+├ ○ /tools/pre-hire-checklist
+├ ○ /tools/property
+├ ○ /tools/quote-analyzer
+├ ○ /tools/scope-builder
+├ ○ /twitter-image
+├ ƒ /verify
+├ ○ /virginia
+├ ƒ /washington
+├ ƒ /washington/[segment]
+├ ƒ /washington/[segment]/[facet]
+├ ƒ /washington/[segment]/[facet]/share-og
+├ ƒ /washington/[segment]/share-og
+├ ƒ /washington/projects/[project]
+├ ƒ /washington/share-og
+└ ○ /watch
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
