@@ -222,8 +222,10 @@ export function decideGeography(
   let state = r.requestedState,
     city = r.requestedCity,
     county = r.requestedCounty;
-  if (overrides.geoAction === "correct") {
-    if (!r.correction || overrides.geoChoice !== r.correction.id)
+  if(overrides.geoCorrection&&(!r.correction||overrides.geoCorrection!==r.correction.id))return {...r,message:"That prior county correction does not belong to this request. Choose a valid correction or edit the question."};
+  const confirmedThenBroadened=overrides.geoAction==="broaden"&&r.correction&&overrides.geoCorrection===r.correction.id&&overrides.geoChoice===r.correction.state.toLowerCase();
+  if (overrides.geoAction === "correct" || confirmedThenBroadened) {
+    if (!r.correction || (!confirmedThenBroadened && overrides.geoChoice !== r.correction.id))
       return {
         ...r,
         message:

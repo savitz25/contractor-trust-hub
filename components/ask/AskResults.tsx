@@ -81,22 +81,22 @@ export function AskResults({
 
       <div className="flex flex-wrap gap-2" aria-label="Active filters">
         {plan.geography.countySlug ? (
-          <Link className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs" href={chipHref(plan.rawQuery, plan, "geo")}>
+          <Link prefetch={false} className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs" href={chipHref(plan.rawQuery, plan, "geo")}>
             Broaden from {plan.geography.countyLabel} to Florida ×
           </Link>
         ) : null}
         {plan.trade.familyId ? (
-          <Link className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs" href={chipHref(plan.rawQuery, plan, "trade")}>
+          <Link prefetch={false} className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs" href={chipHref(plan.rawQuery, plan, "trade")}>
             Trade: {plan.trade.label} ×
           </Link>
         ) : null}
         {plan.credentialStatus === "active_current" ? (
-          <Link className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs" href={chipHref(plan.rawQuery, plan, "status")}>
+          <Link prefetch={false} className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs" href={chipHref(plan.rawQuery, plan, "status")}>
             Status: Active/current ×
           </Link>
         ) : null}
         {plan.evidenceFamily ? (
-          <Link className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs" href={chipHref(plan.rawQuery, plan, "evidence")}>
+          <Link prefetch={false} className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs" href={chipHref(plan.rawQuery, plan, "evidence")}>
             Evidence: {interpreted.interpretation.evidenceFamily} ×
           </Link>
         ) : null}
@@ -135,7 +135,7 @@ export function AskResults({
               {interpreted.aggregate.map((row) => (
                 <tr key={row.label}>
                   <td>
-                    <Link href={row.href} className="text-[var(--navy)] hover:underline">
+                    <Link prefetch={false} href={row.href} className="text-[var(--navy)] hover:underline">
                       {row.label}
                     </Link>
                   </td>
@@ -156,12 +156,12 @@ export function AskResults({
               <tr>
                 <th className="text-left">Metric</th>
                 <th>
-                  <Link href={execution.compare.left.href} className="hover:underline">
+                  <Link prefetch={false} href={execution.compare.left.href} className="hover:underline">
                     {execution.compare.left.label}
                   </Link>
                 </th>
                 <th>
-                  <Link href={execution.compare.right.href} className="hover:underline">
+                  <Link prefetch={false} href={execution.compare.right.href} className="hover:underline">
                     {execution.compare.right.label}
                   </Link>
                 </th>
@@ -236,11 +236,11 @@ export function AskResults({
 
       {execution.ok && execution.contractorCount != null && execution.contractorCount > plan.limit ? (
         <nav className="flex gap-4 text-sm" aria-label="Result pagination">
-          {plan.page > 1 ? <Link href={prevPage}>Previous</Link> : <span className="text-[var(--muted)]">Previous</span>}
+          {plan.page > 1 ? <Link prefetch={false} href={prevPage}>Previous</Link> : <span className="text-[var(--muted)]">Previous</span>}
           <span>
             Page {plan.page} of {totalPages}
           </span>
-          {plan.page < totalPages ? <Link href={nextPage}>Next</Link> : <span className="text-[var(--muted)]">Next</span>}
+          {plan.page < totalPages ? <Link prefetch={false} href={nextPage}>Next</Link> : <span className="text-[var(--muted)]">Next</span>}
         </nav>
       ) : null}
 

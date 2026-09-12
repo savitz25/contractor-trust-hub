@@ -1,0 +1,40 @@
+{
+  "at": "2026-09-12T14:21:01.840Z",
+  "base": "https://contractor-trust-397l83w6w-savitz25-s-projects.vercel.app",
+  "phase": "preview-chained",
+  "sha": "3c1419e7bdfb903c7b3588b25fbb2ed0b78f13c2",
+  "cases": [
+    {
+      "q": "roofers in browrd county fl",
+      "beforeClick": [],
+      "afterClick": [
+        {
+          "path": "/ask",
+          "action": "correct",
+          "prefetch": null
+        }
+      ],
+      "ms": 1691,
+      "beforeSecondChoice": [],
+      "afterSecondChoice": [
+        {
+          "path": "/ask",
+          "action": "broaden",
+          "prefetch": null
+        }
+      ]
+    },
+    {
+      "q": "HVAC contractors in Austin Texas",
+      "beforeClick": [],
+      "afterClick": [
+        {
+          "path": "/search",
+          "action": "broaden",
+          "prefetch": null
+        }
+      ],
+      "ms": 1024
+    }
+  ]
+}

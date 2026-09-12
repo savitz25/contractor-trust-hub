@@ -49,7 +49,7 @@ export function AskForm({
     saveRecent(query);
     setRecent(loadRecent());
     window.dispatchEvent(new CustomEvent("specialist-search", { detail: { event: "specialist_search_submit", hub: "contractor", hasIdentifier: /[A-Z]{2,4}\d{5,10}/i.test(query) } }));
-    router.push(askHref(query, Object.fromEntries(Object.entries(overrides).filter(([key])=>key!=="page"&&(q===initialQuery||!["geoAction","geoChoice","geo"].includes(key))))));
+    router.push(askHref(query, Object.fromEntries(Object.entries(overrides).filter(([key])=>key!=="page"&&(query===initialQuery||!["geoAction","geoChoice","geoCorrection","geo"].includes(key))))));
   }
 
   return (
@@ -65,7 +65,7 @@ export function AskForm({
         window.dispatchEvent(new CustomEvent("specialist-search", { detail: { event: "specialist_search_submit", hub: "contractor", hasIdentifier: /[A-Z]{2,4}\d{5,10}/i.test(query) } }));
       }}
     >
-      {Object.entries(overrides).filter(([key])=>!["page","geo","trade","status","evidence"].includes(key)&&(q===initialQuery||!["geoAction","geoChoice"].includes(key))).map(([key,value])=>value?<input key={key} type="hidden" name={key} value={value}/>:null)}
+      {Object.entries(overrides).filter(([key])=>!["page","geo","trade","status","evidence"].includes(key)&&(q===initialQuery||!["geoAction","geoChoice","geoCorrection"].includes(key))).map(([key,value])=>value?<input key={key} type="hidden" name={key} value={value}/>:null)}
       <label htmlFor="ask-q" className="sr-only">
         Ask ContractorTrustHub
       </label>
@@ -81,7 +81,7 @@ export function AskForm({
       />
       <button type="submit" className="th-btn-hero shrink-0 px-6">Research</button>
       </div>
-      {typos.length > 0 && !(overrides.geoAction==="correct"&&q===initialQuery) ? (
+      {typos.length > 0 && !((overrides.geoAction==="correct"||overrides.geoCorrection)&&q===initialQuery) ? (
         <p className="text-sm text-[var(--muted)]">
           Did you mean{" "}
           {typos.map((t) => (

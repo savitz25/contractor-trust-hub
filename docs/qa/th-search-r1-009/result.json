@@ -1,17 +1,19 @@
 {
   "ticket": "TH-SEARCH-R1-009",
-  "status": "CANDIDATE_VALIDATED_RELEASE_PENDING",
+  "status": "RELEASED_AND_VERIFIED",
   "model": "GPT-6 Astra / High",
   "modelConfirmation": "USER-CONFIRMED",
   "baseline": "11fd0b6fd8f6a1fe5e40e48a34f6a578b67334f4",
-  "recordedAt": "2026-09-12T13:57:50.397629+00:00",
-  "candidate": "67cedb4962c5b241559142b40b28c779e434ea04",
-  "merge": null,
-  "deployment": null,
+  "recordedAt": "2026-09-12T14:29:04.790798+00:00",
+  "candidate": "3c1419e7bdfb903c7b3588b25fbb2ed0b78f13c2",
+  "merge": "ca77548a762b07618c8a33b91c7a9eb81bc38a05",
+  "deployment": "dpl_ixtozAw9Vo2yM1WzrMDMp6AiL1Mo",
   "tests": {
     "focused": {
-      "pass": 27,
-      "fail": 0
+      "pass": 30,
+      "fail": 0,
+      "skip": 0,
+      "testedHead": "3c1419e7bdfb903c7b3588b25fbb2ed0b78f13c2"
     },
     "mutationsDetected": 2,
     "typecheck": "PASS",
@@ -35,24 +37,117 @@
       "P2 stale hardcoded network-total assertion",
       "con-search-001 obsolete homepage heading assertion"
     ],
-    "databaseIntegrationTests": "SKIP locally: production DATABASE_URL is sensitive and unavailable through env pull"
+    "databaseIntegrationTests": "SKIP locally: production DATABASE_URL is sensitive and unavailable through env pull",
+    "mutationEvidence": "mutations.json",
+    "automatedReview": {
+      "pr": 61,
+      "check": "Vercel Agent Review",
+      "conclusion": "SUCCESS",
+      "completedAt": "2026-09-12T14:20:11Z",
+      "humanReviewClaimed": false
+    }
   },
   "browser": {
     "local": "16 cases PASS; source-positive cases explicitly unavailable locally",
     "preview": {
-      "deployment": "dpl_FJmQYxUgZ2UGLxCNhXAxCciwcNJU",
+      "deployment": "dpl_2dAoiusGABNax4dBC3pjh2MnBYcc",
+      "sha": "3c1419e7bdfb903c7b3588b25fbb2ed0b78f13c2",
       "desktopCases": 16,
-      "desktopPass": true,
-      "apiCases": 13,
-      "apiPass": true,
-      "mobilePass": false,
-      "mobileFailure": "Texas COUNT timed out; explicit unavailable state rendered. Narrow existing-index query fix pending final preview."
+      "mobileCases": 16,
+      "apiRouteCases": 13,
+      "allPass": true,
+      "consentAndChainedChoice": "PASS",
+      "evidence": [
+        "preview-chained-browser.json",
+        "preview-chained-mobile-browser.json",
+        "preview-chained-api.json",
+        "preview-chained-prefetch.json"
+      ]
     },
-    "production": null
+    "production": {
+      "sha": "ca77548a762b07618c8a33b91c7a9eb81bc38a05",
+      "deployment": "dpl_ixtozAw9Vo2yM1WzrMDMp6AiL1Mo",
+      "desktopCases": 16,
+      "mobileCases": 16,
+      "apiRouteCases": 13,
+      "recordLevelCases": 5,
+      "rowsCheckedPerCase": 24,
+      "allPass": true,
+      "networkConsentPass": true,
+      "exactAndCorrectedBrowardDisplayedRowsEqual": true,
+      "widths": [
+        320,
+        390,
+        768,
+        1280
+      ],
+      "keyboardEnter": true,
+      "refreshAndHistory": true,
+      "editsClearPriorCards": true,
+      "noOverflow": true,
+      "noBrowserPageErrors": true,
+      "browserMsRange": [
+        115,
+        3688
+      ],
+      "evidence": [
+        "production-final-browser.json",
+        "production-final-mobile-browser.json",
+        "production-final-prefetch.json",
+        "production-final-api.json",
+        "production-final-records.json"
+      ]
+    }
   },
   "sourceOracle": "source-oracle.json",
   "reviewMethod": "Separate self-review plus automated behavioral/mutation checks; not independent human review",
   "otherRepositoriesModified": false,
   "productionDataWrites": false,
-  "pr": 59
+  "pr": 59,
+  "runtimeMerge": "ca77548a762b07618c8a33b91c7a9eb81bc38a05",
+  "canonicalAlias": "https://www.contractortrusthub.com",
+  "prs": [
+    59,
+    61
+  ],
+  "implementationHistory": [
+    "3689a481c63acb48918b747958a3cb28d7a51c79",
+    "70e59ea046a8efa5c3c3faa71448650d338d4612",
+    "cb087c44473ac363f15c175e1e70f7be401edb94",
+    "c996903b4b42d6347d19c57b8f5195d7cd88308e",
+    "3c1419e7bdfb903c7b3588b25fbb2ed0b78f13c2"
+  ],
+  "initialRuntimeMerge": "1e07521e5aa18b4ea8a6c99da5251b6d08ecd2a5",
+  "documentationFollowup": "This containing QA-only commit is subsequent to the tested runtime merge. Its future merge/deployment ID is not asserted here.",
+  "remainingBlockers": [],
+  "historicalFailuresRetained": [
+    "preview-mobile-browser.json: Texas count timeout; fixed using existing indexed source-native TAC equality",
+    "production-before-consent-fix-prefetch.json: pre-click requests; fixed in PR61",
+    "chained-choice-red.log: prior correction lost on second choice; fixed before PR61 merge"
+  ],
+  "sourceFingerprint": "29d71da0eeac29761b2da3a0025c3b35812d001528dba0cdd1acfc686ac269a7",
+  "sourceFingerprintMeaning": "Bounded publication-safe observation rows, not the complete database",
+  "observedCounts": {
+    "browardRoofingAllCredentials": 1013,
+    "njMasterPlumberActiveCredentials": 4903,
+    "txTacActiveStateCredentials": 17757,
+    "palmBeachHvacNativeObserved": 851,
+    "notPermanentAssertions": true
+  },
+  "runtimeLogReview": {
+    "deployment": "dpl_ixtozAw9Vo2yM1WzrMDMp6AiL1Mo",
+    "checkedAt": "2026-09-12T14:26:01Z",
+    "selectedLevels": [
+      "error",
+      "warning"
+    ],
+    "searchFailuresObserved": 0,
+    "otherObservation": "One unrelated public profile entity-lineage query timed out at 14:24:43 UTC with HTTP 200. That code is unchanged by this ticket; no claim that all production logs are error-free."
+  },
+  "remainingDefects": [
+    "Texas recorded-city fields unavailable for the inspected TAC cohort; local service territory remains unsupported",
+    "Unrelated baseline network-total and obsolete homepage-heading assertions remain failing",
+    "Contractor verification/how-to recovery, other hubs and wider R1 work remain outside scope"
+  ],
+  "rollback": "Reviewed Contractor-only corrective revert/deployment preserving blocked unresolved geography and explicit consent. No database rollback; do not restore the known unsafe fallback or revert other tickets."
 }

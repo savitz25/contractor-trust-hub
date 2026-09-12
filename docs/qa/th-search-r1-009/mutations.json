@@ -1,6 +1,7 @@
 {
-  "testedAt": "2026-09-12T13:35:07.197155+00:00",
-  "restored": true,
+  "testedAt": "2026-09-12T14:23:28.854588+00:00",
+  "candidate": "3c1419e7bdfb903c7b3588b25fbb2ed0b78f13c2",
+  "restoredByteIdentically": true,
   "results": [
     {
       "mutation": "drop-city-predicate",
@@ -12,5 +13,6 @@
       "exitCode": 1,
       "detected": true
     }
-  ]
+  ],
+  "cleanExitCode": 0
 }
