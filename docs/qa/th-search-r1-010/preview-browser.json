@@ -1,0 +1,9 @@
+{
+  "at": "2026-09-12T15:20:57.381Z",
+  "base": "https://contractor-trust-3v32rea6b-savitz25-s-projects.vercel.app",
+  "phase": "preview",
+  "sha": "5466eb9c5b0ec25f027e99469c3b6272f10dffd2",
+  "cases": [],
+  "pageErrors": [],
+  "failure": "TimeoutError: locator.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#ask-q')\u001b[22m\n"
+}

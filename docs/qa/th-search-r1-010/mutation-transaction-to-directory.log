@@ -1,0 +1,195 @@
+> contractor-trust-hub@0.1.0 check:th-search-r1-010
+> npx --yes tsx --test scripts/test_th_search_r1_010.ts
+
+✔ New York certificate verification remains in its existing source-specific operation (4.3107ms)
+✔ licensed policy wording and cleared trade do not become a cohort (12.0226ms)
+✔ other live internal Verify jurisdictions never fall back to Florida (3.0547ms)
+✔ original recovery: how do I verify a contractor license in Florida? (3.5853ms)
+✔ original recovery: Does Texas license general contractors statewide? (1.6888ms)
+✖ original recovery: hire a contractor for tomorrow (6.1402ms)
+✔ original recovery: elevator contractor Alaska (3.1335ms)
+✔ original recovery: general contractors in Los Angeles California (2.4296ms)
+✔ guidance paraphrase: How can I check a Florida contractor? (1.7624ms)
+✔ guidance paraphrase: check a Florida contractor license (1.4551ms)
+✔ guidance paraphrase: Where can I verify a Florida license? (0.985ms)
+✔ guidance paraphrase: Please verify a Florida contractor license (0.9592ms)
+✔ unqualified license guidance requests jurisdiction, never default Florida (1.407ms)
+✔ credential precedence: verify CCC1332036 (0.5759ms)
+✔ credential precedence: How do I check CCC1332036 in Florida? (0.2665ms)
+✔ Texas policy paraphrase: Do I need a state GC license in Texas? (0.6652ms)
+✔ Texas policy paraphrase: Who licenses general contractors in Texas? (0.5301ms)
+✔ Texas policy paraphrase: Does Texas license general contractors statewide? (0.3073ms)
+✔ Texas HVAC discovery and GC policy remain separate; conflicting override clarifies (0.7699ms)
+✖ transaction boundary: hire a contractor for tomorrow (0.7059ms)
+✖ transaction boundary: book a roofer (2.9486ms)
+✖ transaction boundary: schedule an electrician (0.36ms)
+✖ transaction boundary: can you send me a plumber? (0.3071ms)
+✖ transaction boundary: I need someone today (0.5649ms)
+✖ transaction research continuation: book a roofer in Broward County (0.6292ms)
+✖ transaction research continuation: I need a roofer in Broward tomorrow (0.4335ms)
+✖ transaction research continuation: need a plumber today in Palm Beach (0.4853ms)
+✖ booking typo cannot bypass R1-009 correction consent (1.4056ms)
+✔ California preserves Los Angeles and offers separate Verify, not a broad cohort (0.5555ms)
+✔ CA unsupported explicit broadening cannot manufacture a supported cohort (1.2148ms)
+✔ Alaska equipment-specific official recovery: elevator contractor Alaska (0.5883ms)
+✔ Alaska equipment-specific official recovery: elevator contractors in Alaska (0.4188ms)
+✔ no verified source for the requested trade means clarification, not a guessed regulator (0.3734ms)
+✔ Florida electrical guidance does not assert CILB electrical coverage (0.4911ms)
+✔ ordinary discovery, names, definitions, NY and IL keep their operations (2.1546ms)
+✖ native and canonical routes use the same recovery selection before retrieval (3.9125ms)
+✔ actual recovery renderer finishes without provider cards, false totals or lookup claims (16.5617ms)
+✔ official destination manifest has exact official hosts/purpose and no arbitrary deep links (0.4542ms)
+✔ input limits and malformed params still fail before guidance (0.387ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 28
+ℹ fail 11
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 935.3906
+
+✖ failing tests:
+
+test at scripts\test_th_search_r1_010.ts:2:3102
+✖ original recovery: hire a contractor for tomorrow (6.1402ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + undefined
+  - 'TRANSACTION'
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:37:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'TRANSACTION',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_th_search_r1_010.ts:2:6376
+✖ transaction boundary: hire a contractor for tomorrow (0.7059ms)
+  TypeError: Cannot read properties of null (reading 'requestedTask')
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:112:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_th_search_r1_010.ts:2:6376
+✖ transaction boundary: book a roofer (2.9486ms)
+  TypeError: Cannot read properties of null (reading 'requestedTask')
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:112:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_th_search_r1_010.ts:2:6376
+✖ transaction boundary: schedule an electrician (0.36ms)
+  TypeError: Cannot read properties of null (reading 'requestedTask')
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:112:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_th_search_r1_010.ts:2:6376
+✖ transaction boundary: can you send me a plumber? (0.3071ms)
+  TypeError: Cannot read properties of null (reading 'requestedTask')
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:112:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_th_search_r1_010.ts:2:6376
+✖ transaction boundary: I need someone today (0.5649ms)
+  TypeError: Cannot read properties of null (reading 'requestedTask')
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:112:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_th_search_r1_010.ts:2:6933
+✖ transaction research continuation: book a roofer in Broward County (0.6292ms)
+  TypeError: Cannot read properties of null (reading 'requestedTrade')
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:130:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_th_search_r1_010.ts:2:6933
+✖ transaction research continuation: I need a roofer in Broward tomorrow (0.4335ms)
+  TypeError: Cannot read properties of null (reading 'requestedTrade')
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:130:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_th_search_r1_010.ts:2:6933
+✖ transaction research continuation: need a plumber today in Palm Beach (0.4853ms)
+  TypeError: Cannot read properties of null (reading 'requestedTrade')
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:130:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_th_search_r1_010.ts:2:8114
+✖ booking typo cannot bypass R1-009 correction consent (1.4056ms)
+  TypeError: Cannot read properties of null (reading 'actions')
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:153:7)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts\test_th_search_r1_010.ts:2:12113
+✖ native and canonical routes use the same recovery selection before retrieval (3.9125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  '/search' !== '/ask'
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:253:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/search',
+    expected: '/ask',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

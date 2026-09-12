@@ -1,0 +1,121 @@
+{
+  "ticket": "TH-SEARCH-R1-010",
+  "status": "RELEASED_AND_VERIFIED",
+  "recordedAt": "2026-09-12T15:29:17.762936+00:00",
+  "baseline": "88075e4de4aac53a83a2235dd524d6e93fc46235",
+  "model": "GPT-6 Astra previously USER-CONFIRMED; Medium recommended for this ticket; running setting not independently verifiable or switched",
+  "candidate": "Containing implementation commit; future merge/deployment not asserted",
+  "sourceCodeFingerprint": "b12795609fe8289e68812e2072d9e828e690aefbcd4de15f293db59400c6a4e7",
+  "fingerprintFiles": [
+    "lib/ask/recovery.ts",
+    "lib/ask/recovery-sources.ts",
+    "components/ask/RecoveryAnswer.tsx",
+    "lib/ask/interpret.ts",
+    "lib/ask/plan.ts",
+    "lib/ask/request.ts",
+    "lib/ask/execute.ts",
+    "lib/ask/types.ts",
+    "components/ask/AskResults.tsx",
+    "app/ask/page.tsx"
+  ],
+  "tests": {
+    "focused": {
+      "pass": 39,
+      "fail": 0
+    },
+    "r1_009": {
+      "pass": 30,
+      "fail": 0
+    },
+    "npmTest": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS on reconciled candidate",
+    "capability": {
+      "pass": 12,
+      "fail": 0
+    },
+    "customer": {
+      "pass": 23,
+      "fail": 0
+    },
+    "claims": {
+      "pass": 11,
+      "fail": 0
+    },
+    "flPublicationSafety": "PASS",
+    "mutationsDetected": 2,
+    "lint": "NOT_CONFIGURED",
+    "baselineLimitations": [
+      "Stale network-total assertion (662331 actual vs 644421 expected)",
+      "Obsolete homepage heading assertion"
+    ],
+    "localDb": "Unavailable; source-positive browser checks skipped locally, live checks required"
+  },
+  "officialSources": "official-sources.json",
+  "officialBrowser": "official-browser.json",
+  "localBrowser": "local-reconciled-browser.json",
+  "reviewMethod": "Separate self-review with behavioral/mutation automation; no independent human review",
+  "productionDataChanges": false,
+  "otherReposModified": false,
+  "runtimeMerge": "caee317880aaa1701b274b617f52f5f452abf8ce",
+  "deployment": {
+    "id": "dpl_5Fn38cbYvxyAD7VXaMyr4tSQjqJA",
+    "sha": "caee317880aaa1701b274b617f52f5f452abf8ce",
+    "canonicalAlias": "https://www.contractortrusthub.com",
+    "verifiedReady": true
+  },
+  "reconciledWith": "b694663796700f8f95b9c18d144b0a57e64d98ec",
+  "testedCandidate": "bb817cb759d48af53397d8472e9bde099059d9bc",
+  "preview": {
+    "sha": "5466eb9c5b0ec25f027e99469c3b6272f10dffd2",
+    "deployment": "dpl_E3XjcZjDd1hsEzSA4A98jS7fz7Fk",
+    "desktop": "preview-ready-browser.json",
+    "mobile": "preview-mobile-browser.json",
+    "casesPerRun": 18,
+    "pageErrors": 0,
+    "runtimeWarningErrorGroups": 0,
+    "initialAttempt": "preview-browser.json began while deployment was initializing and failed before homepage input; rerun on READY passed"
+  },
+  "implementation": "98462b8ac48ea764e973ced53fb60ad3c8876987",
+  "pr": 63,
+  "prHead": "9c8c06a669b697a822ef53a9fbd17c13d5cb8163",
+  "finalEvidenceMerge": null,
+  "production": {
+    "desktop": "production-desktop-browser.json",
+    "mobile": "production-mobile-browser.json",
+    "routeSmoke": "production-route-smoke.json",
+    "casesPerBrowserRun": 18,
+    "layoutChecksPerRun": 24,
+    "pageErrors": 0,
+    "routesPass": 8,
+    "allSixGuidanceCasesWidths": [
+      320,
+      390,
+      768,
+      1280
+    ],
+    "maxMeasuredBrowserFlowMs": 4670,
+    "timingScope": "Navigation/settled result for core cases and controls; width-only/edits have separate shorter screenshot measurements, not full latency."
+  },
+  "logs": {
+    "checkedAt": "2026-09-12T15:29:17.762936+00:00",
+    "scopedDeployment": "dpl_5Fn38cbYvxyAD7VXaMyr4tSQjqJA",
+    "previewWarningErrorGroups": 0,
+    "productionObservedErrors": 1,
+    "error": "Public-profile entity-lineage related-query timeout, HTTP 200, at 15:26:53 UTC. Search/guidance checks passed. Same category documented by R1-009; entity-lineage/profile code unchanged. No claim of all-log cleanliness."
+  },
+  "closure": [
+    "CTH-06 Florida verification guidance",
+    "CTH-07 Texas general-contractor policy",
+    "CTH-09 transaction boundary and deliberate research continuation",
+    "CTH-10 Alaska elevator recovery",
+    "CTH-05 California recovery only"
+  ],
+  "rollback": "Reviewed Contractor-only revert of R1-010 runtime changes; preserve R1-009 consent, NYC and state work. No database rollback.",
+  "remaining": [
+    "Existing profile-lineage timeout",
+    "Two reproduced legacy assertion failures",
+    "Broader Contractor how-to/policy/name/locality coverage outside certified cases",
+    "Other Search Reliability R1 tickets; no network-wide closure"
+  ]
+}

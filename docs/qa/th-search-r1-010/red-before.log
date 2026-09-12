@@ -1,0 +1,128 @@
+✖ original recovery: how do I verify a contractor license in Florida? (5.4311ms)
+✖ original recovery: Does Texas license general contractors statewide? (1.1271ms)
+✖ original recovery: hire a contractor for tomorrow (0.4592ms)
+✖ original recovery: elevator contractor Alaska (0.3109ms)
+✖ original recovery: general contractors in Los Angeles California (0.323ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 0
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1225.3902
+
+✖ failing tests:
+
+test at scripts\test_th_search_r1_010.ts:2:1522
+✖ original recovery: how do I verify a contractor license in Florida? (5.4311ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + undefined
+  - 'VERIFY_GUIDANCE'
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:13:90)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'VERIFY_GUIDANCE',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_th_search_r1_010.ts:2:1522
+✖ original recovery: Does Texas license general contractors statewide? (1.1271ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + undefined
+  - 'REGULATORY_EXPLANATION'
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:13:90)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'REGULATORY_EXPLANATION',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_th_search_r1_010.ts:2:1522
+✖ original recovery: hire a contractor for tomorrow (0.4592ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + undefined
+  - 'TRANSACTION'
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:13:90)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'TRANSACTION',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_th_search_r1_010.ts:2:1522
+✖ original recovery: elevator contractor Alaska (0.3109ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + undefined
+  - 'UNSUPPORTED_JURISDICTION_RESEARCH'
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:13:90)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'UNSUPPORTED_JURISDICTION_RESEARCH',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_th_search_r1_010.ts:2:1522
+✖ original recovery: general contractors in Los Angeles California (0.323ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + undefined
+  - 'UNSUPPORTED_JURISDICTION_RESEARCH'
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:13:90)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'UNSUPPORTED_JURISDICTION_RESEARCH',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

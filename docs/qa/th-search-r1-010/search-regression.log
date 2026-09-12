@@ -1,0 +1,57 @@
+> contractor-trust-hub@0.1.0 check:con-search-001
+> npx --yes tsx --test scripts/test_con_search_001.ts
+
+✔ discovery and identity routes are deterministic (12.3937ms)
+✔ capability outcomes stay distinct without running cohort SQL (3.9925ms)
+✖ UI uses V2, separates Verify, and preserves safety metrics (4.7906ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 706.0747
+
+✖ failing tests:
+
+test at scripts\test_con_search_001.ts:2:4724
+✖ UI uses V2, separates Verify, and preserves safety metrics (4.7906ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Find and research a contractor/. Input:
+
+  'import Link from "next/link";\n' +
+    'import { AskForm } from "@/components/ask/AskForm";\n' +
+    '\n' +
+    'const examples = ["roofers in Broward County", "home improvement contractors in New Jersey", "HVAC contractors in Florida", "plumbers in New Jersey", "CCC1332036"];\n' +
+    '\n' +
+    'export function HomeDiscoverySearch() {\n' +
+    '  return (\n' +
+    '    <section id="contractor-search" aria-labelledby="contractor-search-title" className="scroll-mt-24">\n' +
+    '      <div className="rounded-3xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)] sm:p-8">\n' +
+    '        <p className="cth-intel-eyebrow">Research contractors</p>\n' +
+    '        <h2 id="contractor-search-title">What do you want to find out?</h2>\n' +
+    '        <p className="mt-2 max-w-3xl text-[var(--muted)]">Describe a trade and place. Results use source-backed credential classes and recorded regulatory geography—not rankings, recommendations, or proof of service territory.</p>\n' +
+    '        <div className="mt-5"><AskForm initialQuery="" compact /></div>\n' +
+    '        <div className="mt-4 flex flex-wrap gap-2" aria-label="Example contractor research queries">\n' +
+    '          {examples.map((example) => <Link key={example} href={`/ask?q=${encodeURIComponent(example)}`} className="rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-sm no-underline hover:border-[var(--navy)]/40">{example}</Link>)}\n' +
+    '        </div>\n' +
+    '        <div className="mt-6 border-t border-[var(--border)] pt-4 text-sm">Already know the business or license? <Link href="/verify" className="font-semibold text-[var(--navy)]">Verify a known business or license</Link>.</div>\n' +
+    '      </div>\n' +
+    '    </section>\n' +
+    '  );\n' +
+    '}\n'
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_con_search_001.ts:51:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import Link from "next/link";\nimport { AskForm } from "@/components/ask/AskForm";\n\nconst examples = ["roofers in Broward County", "home improvement contractors in New Jersey", "HVAC contractors in Florida", "plumbers in New Jersey", "CCC1332036"];\n\nexport function HomeDiscoverySearch() {\n  return (\n    <section id="contractor-search" aria-labelledby="contractor-search-title" className="scroll-mt-24">\n      <div className="rounded-3xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)] sm:p-8">\n        <p className="cth-intel-eyebrow">Research contractors</p>\n        <h2 id="contractor-search-title">What do you want to find out?</h2>\n        <p className="mt-2 max-w-3xl text-[var(--muted)]">Describe a trade and place. Results use source-backed credential classes and recorded regulatory geography—not rankings, recommendations, or proof of service territory.</p>\n        <div className="mt-5"><AskForm initialQuery="" compact /></div>\n        <div className="mt-4 flex flex-wrap gap-2" aria-label="Example contractor research queries">\n          {examples.map((example) => <Link key={example} href={`/ask?q=${encodeURIComponent(example)}`} className="rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-sm no-underline hover:border-[var(--navy)]/40">{example}</Link>)}\n        </div>\n        <div className="mt-6 border-t border-[var(--border)] pt-4 text-sm">Already know the business or license? <Link href="/verify" className="font-semibold text-[var(--navy)]">Verify a known business or license</Link>.</div>\n      </div>\n    </section>\n  );\n}\n',
+    expected: /Find and research a contractor/,
+    operator: 'match',
+    diff: 'simple'
+  }

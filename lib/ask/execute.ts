@@ -429,6 +429,7 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
 const EXEC_MEMO = new Map<string, AskExecution>();
 
 export async function executeContractorResearchQuery(plan: ContractorResearchQuery): Promise<AskExecution> {
+  if(plan.mode === "guidance") return emptyExecution({ok:true,grainLabel:"Guidance; no provider retrieval or count",sqlContract:"No query: guidance/recovery operation."});
   const intel = loadContractorHubIntel();
   const key = `${plan.planId}:${plan.page}:${plan.sort.field}:${plan.mode}:${intel.sourceFingerprint}`;
   if(plan.geographyRequirement&&!plan.geographyRequirement.executionGeography)return emptyExecution({blocked:true,blockMessage:plan.geographyRequirement.message,sqlContract:"No query: requested geography not authorized for execution."});

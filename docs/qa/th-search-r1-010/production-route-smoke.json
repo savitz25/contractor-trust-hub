@@ -1,0 +1,62 @@
+{
+  "at": "2026-09-12T15:26:48.565Z",
+  "sha": "caee317880aaa1701b274b617f52f5f452abf8ce",
+  "cases": [
+    {
+      "path": "/texas",
+      "status": 200,
+      "ms": 321,
+      "url": "https://www.contractortrusthub.com/texas",
+      "assertion": "/Texas/i"
+    },
+    {
+      "path": "/new-jersey",
+      "status": 200,
+      "ms": 95,
+      "url": "https://www.contractortrusthub.com/new-jersey",
+      "assertion": "/Jersey/i"
+    },
+    {
+      "path": "/new-york",
+      "status": 200,
+      "ms": 100,
+      "url": "https://www.contractortrusthub.com/new-york",
+      "assertion": "/New York/i"
+    },
+    {
+      "path": "/new-york/new-york-city",
+      "status": 200,
+      "ms": 96,
+      "url": "https://www.contractortrusthub.com/new-york/new-york-city",
+      "assertion": "/DCWP/i"
+    },
+    {
+      "path": "/illinois",
+      "status": 200,
+      "ms": 97,
+      "url": "https://www.contractortrusthub.com/illinois",
+      "assertion": "/Illinois/i"
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "ms": 277,
+      "url": "https://www.contractortrusthub.com/robots.txt",
+      "assertion": "/Sitemap/i"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "ms": 7620,
+      "url": "https://www.contractortrusthub.com/sitemap.xml",
+      "assertion": "/urlset|sitemapindex/i"
+    },
+    {
+      "path": "/ask?q=how+do+I+verify+a+Florida+contractor",
+      "status": 200,
+      "ms": 242,
+      "url": "https://www.contractortrusthub.com/ask?q=how+do+I+verify+a+Florida+contractor",
+      "assertion": "/noindex/i"
+    }
+  ]
+}

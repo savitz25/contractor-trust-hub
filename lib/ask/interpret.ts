@@ -1,6 +1,7 @@
 /**
  * Deterministic Ask interpreter. No LLM facts. Fail closed on unsupported grains.
  */
+import { interpretRecovery } from "./recovery";
 import type { ContractorHubIntelV2 } from "@/lib/home/intel-v2";
 import {
   COMPLAINT_PHRASES,
@@ -109,6 +110,9 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
       failMessage: null, changeHints: ["Confirm with the issuing agency"],
     };
   }
+
+  const recovery = interpretRecovery(query);
+  if (recovery) return { version: ASK_CONTRACT_VERSION, query, mode: "guidance", supported: true, interpretation: {...interpretation, location: recovery.locationLabel, trade: recovery.requestedTrade ?? "Not specified", entityType: recovery.requestedTask}, recovery, href: recovery.actions[0]?.destination ?? null, count: null, aggregate: null, comparison: null, failMessage: null, changeHints: [] };
 
   const looksLikeCompany = /\b(llc|inc|corp|corporation|company|group|holdings)\b/i.test(query)
     && !/\b(in|near|with|active|current|licensed)\b/i.test(query);
