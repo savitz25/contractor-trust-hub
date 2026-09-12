@@ -17,6 +17,8 @@ test("property permit questions stay on the NYC page without contractor attribut
   const b = ask("permits at 123 Main Street Brooklyn");
   assert.equal(b.href, "/new-york/new-york-city");
   assert.match(b.failMessage || "", /not automatic|BBL/i);
+  const c = ask("what permits exist at this NYC BBL?");
+  assert.match(c.failMessage || "", /DOB NOW|permit/i);
 });
 
 test("permit actor roles are not relabeled as contractor", () => {

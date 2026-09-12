@@ -20,6 +20,7 @@ import { detectContradiction, detectUnsupportedConcept } from "./unsupported";
 import { interpretNewYorkPublicWork } from "./ny-public-work";
 import { interpretNycDcwp } from "./nyc-dcwp";
 import { interpretNycDob } from "./nyc-dob";
+import { interpretNycAcris } from "./nyc-acris";
 import { interpretIllinoisRoofing } from "./illinois-roofing";
 
 const EMPTY_INTERPRET: AskInterpretation = {
@@ -130,6 +131,8 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
   if (nycResult) return nycResult;
   const nycDob = interpretNycDob(query, text);
   if (nycDob) return nycDob;
+  const nycAcris = interpretNycAcris(query, text);
+  if (nycAcris) return nycAcris;
 
   if (includesAny(text, COMPLAINT_PHRASES)) {
     interpretation.evidenceFamily = "Consumer complaints (not in this hub)";

@@ -1,0 +1,290 @@
+{
+  "version": "contractor-nyc-acris-intel-v1",
+  "ticket": "NYC-CON-003A",
+  "as_of": "2026-09-12",
+  "no_trust_score": true,
+  "no_ranking": true,
+  "no_borough_pages": true,
+  "no_hpd_dob_violations": true,
+  "no_title_chain": true,
+  "no_beneficial_ownership": true,
+  "not_a_second_nyc_page": true,
+  "extends_existing_route": "/new-york/new-york-city",
+  "publication": {
+    "indexable": true,
+    "robots": "index,follow",
+    "canonical": "https://www.contractortrusthub.com/new-york/new-york-city",
+    "route": "/new-york/new-york-city",
+    "module": "Recorded Property Documents"
+  },
+  "clocks": {
+    "generatedAt": "2026-09-12T17:25:34Z",
+    "snapshotAsOf": "2026-09-12",
+    "master": {
+      "sourceUpdatedAt": "2026-09-08",
+      "sourceAsOf": "2026-09-08",
+      "retrievedAt": "2026-09-12T17:05:27Z"
+    },
+    "legals": {
+      "sourceUpdatedAt": "2026-09-08",
+      "sourceAsOf": "2026-09-08",
+      "retrievedAt": "2026-09-12T17:05:27Z"
+    },
+    "window_date_basis": "recorded_datetime",
+    "do_not_use_one_master_date": true
+  },
+  "window": {
+    "start": "2024-09-12",
+    "end": "2026-09-12",
+    "date_field": "recorded_datetime",
+    "why": "Official RECORDED / FILED timestamp is the consumer-relevant recording date. document_date can predate recording and is not the window basis.",
+    "recorded_min": "2024-09-12",
+    "recorded_max": "2026-08-31",
+    "missing_older_history_ne_no_older_documents": true
+  },
+  "hero": {
+    "master_value": 581566,
+    "master_label": "ACRIS Master document observations (recorded in 24-month window)",
+    "master_hint": "Recorded/filed documents. Not sales, not current owners, not a title search.",
+    "docs_value": 580444,
+    "docs_label": "Distinct ACRIS document IDs",
+    "bbl_value": 258026,
+    "bbl_label": "Distinct exact BBLs on ACRIS legal rows",
+    "spine_value": 25792,
+    "spine_label": "Exact BBL overlap with NYC permit/property spine",
+    "deed_value": 139675,
+    "deed_label": "Deed-type document observations",
+    "deed_hint": "A deed-type document is not automatically an arm\u2019s-length sale or current ownership.",
+    "mtge_value": 90438,
+    "mtge_label": "Mortgage-type document observations",
+    "mtge_hint": "A recorded mortgage document is not current balance, holder, or NMLS identity."
+  },
+  "master": {
+    "dataset_id": "bnx9-e6tj",
+    "official_title": "ACRIS - Real Property Master",
+    "agency": "Department of Finance (DOF)",
+    "source_url": "https://data.cityofnewyork.us/City-Government/ACRIS-Real-Property-Master/bnx9-e6tj",
+    "grain": "acris_real_property_master_observation",
+    "parsed_rows": 581566,
+    "distinct_document_ids": 580444,
+    "doc_type_counts": {
+      "DEED": 111951,
+      "MTGE": 86256,
+      "SAT": 77553,
+      "PAT": 66111,
+      "ASST": 51839,
+      "RPTT&RET": 35963,
+      "AGMT": 22370,
+      "DEED, TS": 21472,
+      "RPTT": 16841,
+      "TL&R": 13907,
+      "AL&R": 13652,
+      "AALR": 7333,
+      "PREL": 6768,
+      "REL": 4901,
+      "CERT": 4449,
+      "ZONE": 4349,
+      "SMIS": 3957,
+      "LOCC": 3425,
+      "M&CON": 3183,
+      "DEED, LE": 3083,
+      "DTL": 2738,
+      "SAGE": 2410,
+      "TOLCC": 1804,
+      "DECL": 1657,
+      "CTOR": 1378,
+      "TODD": 1372,
+      "CORRD": 1364,
+      "EASE": 1044,
+      "MAPS": 1000,
+      "TERA": 838,
+      "MLEA": 799,
+      "CDEC": 713,
+      "SUBM": 657,
+      "CORRM": 651,
+      "ADEC": 517,
+      "DEEDO": 433,
+      "MCON": 348,
+      "ASPM": 293,
+      "RTXL": 280,
+      "TERL": 274
+    },
+    "display_group_counts": {
+      "deed": 139675,
+      "other": 210099,
+      "mortgage": 90438,
+      "release": 11669,
+      "assignment": 52132,
+      "satisfaction": 77553
+    },
+    "recorded_borough_counts": {
+      "1": 535771,
+      "3": 9767,
+      "4": 17466,
+      "2": 18562
+    },
+    "raw_sha256": "c501b975ba900ab3046ad598b89b6037e2777122e02cf57b94436c8150236bd6",
+    "master_row_ne_legal_row": true,
+    "document_amt_ne_market_value": true,
+    "recorded_ne_completed_transaction": true
+  },
+  "legals": {
+    "dataset_id": "8h5j-fqxa",
+    "official_title": "ACRIS - Real Property Legals",
+    "agency": "Department of Finance (DOF)",
+    "source_url": "https://data.cityofnewyork.us/City-Government/ACRIS-Real-Property-Legals/8h5j-fqxa",
+    "grain": "acris_real_property_legal_observation",
+    "parsed_rows": 829724,
+    "invalid_bbl_rows": 0,
+    "staten_island_property_rows": 18658,
+    "rows_with_unit": 410466,
+    "property_type_counts": {
+      "SC": 242138,
+      "D1": 101486,
+      "D2": 79790,
+      "CR": 61499,
+      "CC": 61118,
+      "AP": 55414,
+      "SP": 36700,
+      "D3": 29578,
+      "RG": 28171,
+      "OT": 23096,
+      "TS": 23066,
+      "PS": 19070,
+      "F1": 12484,
+      "D4": 8388,
+      "SR": 8270,
+      "VR": 7848,
+      "D6": 6629,
+      "VN": 5437,
+      "OF": 3340,
+      "FS": 2787,
+      "MC": 2408,
+      "BS": 1676,
+      "RS": 1673,
+      "RV": 1512,
+      "IB": 1375,
+      "F5": 979,
+      "GR": 933,
+      "CK": 797,
+      "D5": 714,
+      "RB": 402
+    },
+    "raw_sha256": "52316d8cee6a6914f85b4b72e684582cbcb4673a81e16c5adddaff6cc07444c9",
+    "legal_row_ne_document": true
+  },
+  "identity": {
+    "bbl_namespace": "NYC-BBL:{bbl}",
+    "document_namespace": "NYC-ACRIS-DOC:{document_id}",
+    "document_ne_property_ne_person_ne_company": true,
+    "name_only": "UNSAFE",
+    "address_only_auto_attach": "REJECTED",
+    "normalized_address": "REVIEW_REQUIRED",
+    "precedence": [
+      "exact BBL",
+      "exact legal borough/block/lot",
+      "property-search candidate",
+      "normalized address REVIEW_REQUIRED",
+      "address-only rejected"
+    ]
+  },
+  "document_type_display": {
+    "keeps_source_labels": true,
+    "mapping": {
+      "deed": [
+        "DEED",
+        "DEED, TS",
+        "DEED, LE",
+        "DEEDO",
+        "CORRD",
+        "TODD"
+      ],
+      "mortgage": [
+        "MTGE",
+        "M&CON",
+        "MCON",
+        "CORRM"
+      ],
+      "assignment": [
+        "ASST",
+        "ASPM"
+      ],
+      "satisfaction": [
+        "SAT"
+      ],
+      "release": [
+        "REL",
+        "PREL"
+      ]
+    },
+    "unmapped_remain_other": true,
+    "do_not_collapse_to_sale_mortgage_lien": true
+  },
+  "linking": {
+    "documents_with_legal_rows": 577863,
+    "documents_without_legal_rows": 2581,
+    "distinct_bbls": 258026,
+    "documents_with_bbl": 577863,
+    "documents_with_1_bbl": 536285,
+    "documents_with_gt1_bbl": 41578,
+    "max_bbls_per_document": 1241,
+    "documents_with_gt1_legal_row": 45842,
+    "max_legal_rows_per_document": 1318,
+    "documents_with_unit_legal_row": 229652,
+    "addresses_with_gt1_bbl": 9826,
+    "max_bbls_per_address": 740,
+    "no_source_native_condo_flag": true,
+    "exact_acris_to_existing_nyc_bbl_identities": 25792,
+    "acris_bbls_not_in_permit_spine": 232234,
+    "permit_bbls_with_acris": 25792,
+    "do_not_infer_permit_plus_deed_is_same_project": true,
+    "review_required_address_associations": 0,
+    "review_required_address_associations_meaning": "No address-only ACRIS crosswalk was attempted or applied.",
+    "rejected_name_only_party_associations": 0,
+    "rejected_name_only_party_associations_meaning": "ACRIS party names were not acquired. This is not a clearance of party names."
+  },
+  "coverage": {
+    "state": "PARTIAL",
+    "staten_island_recording_office": "ABSENT",
+    "recorded_borough_5": 0,
+    "staten_island_property_legal_rows": 18658,
+    "note": "ACRIS recorded_borough has no Richmond County (5) filings in this window. Some legal rows reference borough 5 properties recorded elsewhere. Not a Richmond County Clerk extract."
+  },
+  "claim_eligibility": {
+    "broadened": false,
+    "document_identity_is_not_business_identity": true,
+    "party_names_are_not_customer_identities": true
+  },
+  "expansion_ledger": {
+    "NYC_ACRIS_MASTER_ROWS": 581566,
+    "NYC_ACRIS_DISTINCT_DOCUMENT_IDS": 580444,
+    "NYC_ACRIS_LEGAL_ROWS": 829724,
+    "NYC_ACRIS_DISTINCT_BBLS": 258026,
+    "NYC_ACRIS_DOCUMENTS_WITH_BBL": 577863,
+    "NYC_ACRIS_MULTI_BBL_DOCUMENTS": 41578,
+    "NYC_ACRIS_DEED_TYPE_DOCUMENTS": 139675,
+    "NYC_ACRIS_MORTGAGE_TYPE_DOCUMENTS": 90438,
+    "EXACT_ACRIS_BBL_ASSOCIATIONS": 577863,
+    "EXACT_ACRIS_TO_EXISTING_NYC_BBL_IDENTITIES": 25792,
+    "REVIEW_REQUIRED_ADDRESS_ASSOCIATIONS": 0,
+    "REJECTED_NAME_ONLY_PARTY_ASSOCIATIONS": 0,
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "NET_NEW_ACRIS_DOCUMENT_IDENTITIES": 580444,
+    "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
+    "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
+    "EXISTING_ORGANIZATIONS_ENRICHED": 0,
+    "GRAPH_WRITES": 0,
+    "do_not_sum_master_and_legal_rows": true,
+    "do_not_sum_with_permits_or_pluto": true,
+    "baselines": {
+      "prior_accepted_nyc_acris_document_ids": 0
+    }
+  },
+  "gate": {
+    "passed": true,
+    "not_a_second_nyc_local_page": true,
+    "live_cohort_not_inflated": true
+  },
+  "generated_at": "2026-09-12T17:25:34Z",
+  "fingerprint": "d02fa51c886bbe434703cd0bd0fe5446c08f27c10e9f540c062cb54c37a85135"
+}

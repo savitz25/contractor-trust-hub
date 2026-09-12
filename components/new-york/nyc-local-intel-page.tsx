@@ -16,6 +16,12 @@ import {
   NYC_DOB_VERIFY,
   NYC_PLUTO,
 } from "@/lib/new-york-city-dob-intelligence/publication";
+import {
+  NYC_ACRIS_LEGALS,
+  NYC_ACRIS_MASTER,
+  NYC_ACRIS_SEARCH,
+} from "@/lib/new-york-city-acris-intelligence/publication";
+import { fmtInt as fmtAcris, type NycAcrisSnapshot } from "@/lib/new-york-city-acris-intelligence/snapshot";
 import { fmtInt as fmtDob, type NycDobPlutoSnapshot } from "@/lib/new-york-city-dob-intelligence/snapshot";
 import { fmtInt, type NycContractorSnapshot } from "@/lib/new-york-city-intelligence/snapshot";
 
@@ -37,7 +43,15 @@ function Official({ href, label }: { href: string; label: string }) {
   );
 }
 
-export function NycIntelPage({ snapshot, dob }: { snapshot: NycContractorSnapshot; dob?: NycDobPlutoSnapshot }) {
+export function NycIntelPage({
+  snapshot,
+  dob,
+  acris,
+}: {
+  snapshot: NycContractorSnapshot;
+  dob?: NycDobPlutoSnapshot;
+  acris?: NycAcrisSnapshot;
+}) {
   const s = snapshot;
   const L = s.licenses;
   const status = Object.entries(L.license_status_counts);
@@ -222,6 +236,53 @@ export function NycIntelPage({ snapshot, dob }: { snapshot: NycContractorSnapsho
         </section>
       ) : null}
 
+      {acris ? (
+        <section className="mt-10" aria-labelledby="recorded-docs">
+          <h2 id="recorded-docs" className="text-xl font-semibold">Recorded Property Documents</h2>
+          <p className="mt-2 text-sm leading-relaxed">
+            Bounded {acris.window.start} to {acris.window.recorded_max}{" "}
+            <Official href={NYC_ACRIS_MASTER} label="ACRIS Real Property Master" /> documents joined to lots
+            through <Official href={NYC_ACRIS_LEGALS} label="ACRIS Legals" /> borough/block/lot. Confirm
+            current recordings in <Official href={NYC_ACRIS_SEARCH} label="official ACRIS search" />. This is
+            not a title search, title insurance, chain of title, or current-ownership guarantee.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <Metric value={fmtAcris(acris.hero.master_value)} label={acris.hero.master_label} hint={acris.hero.master_hint} />
+            <Metric value={fmtAcris(acris.hero.docs_value)} label={acris.hero.docs_label} hint="Document identity is not a property, person, or company." />
+            <Metric value={fmtAcris(acris.hero.bbl_value)} label={acris.hero.bbl_label} hint="Exact 10-digit BBL from legal borough/block/lot. Address-only attachment is rejected." />
+            <Metric value={fmtAcris(acris.hero.spine_value)} label={acris.hero.spine_label} hint="Recent ACRIS documents do not prove a construction-related transaction or contractor relationship." />
+            <Metric value={fmtAcris(acris.hero.deed_value)} label={acris.hero.deed_label} hint={acris.hero.deed_hint} />
+            <Metric value={fmtAcris(acris.hero.mtge_value)} label={acris.hero.mtge_label} hint={acris.hero.mtge_hint} />
+          </div>
+          <h3 className="mt-6 text-base font-semibold">Exact BBL linkage and multi-lot documents</h3>
+          <p className="mt-2 text-sm leading-relaxed">
+            {fmtAcris(acris.linking.documents_with_1_bbl)} documents map to one BBL.{" "}
+            {fmtAcris(acris.linking.documents_with_gt1_bbl)} map to more than one BBL (max{" "}
+            {fmtAcris(acris.linking.max_bbls_per_document)}). {fmtAcris(acris.linking.documents_with_gt1_legal_row)}{" "}
+            documents have more than one legal row (max {fmtAcris(acris.linking.max_legal_rows_per_document)}).
+            One document is not one property. ACRIS has no source-native condo flag;{" "}
+            {fmtAcris(acris.linking.documents_with_unit_legal_row)} documents have at least one legal row
+            with a unit field ({fmtAcris(acris.legals.rows_with_unit)} unit-populated legal rows).{" "}
+            {fmtAcris(acris.linking.addresses_with_gt1_bbl)} street addresses (borough + street number +
+            street name) attach to more than one BBL (max {fmtAcris(acris.linking.max_bbls_per_address)}).
+            Condo/unit BBLs are not collapsed.
+          </p>
+          <h3 className="mt-6 text-base font-semibold">What recorded documents do not prove</h3>
+          <p className="mt-2 text-sm leading-relaxed">
+            A deed-type document is not an arm’s-length sale. Recorded amount is not market value. Party
+            names were not acquired and are not owners, lenders, or contractors. ACRIS is not ACRIS+permits
+            one records total.
+          </p>
+          <h3 className="mt-6 text-base font-semibold">Coverage / Staten Island</h3>
+          <p className="mt-2 text-sm leading-relaxed">
+            ACRIS recording coverage in this window is PARTIAL. No documents used recorded_borough 5
+            (Richmond County Clerk). {fmtAcris(acris.coverage.staten_island_property_legal_rows)} legal rows
+            reference borough 5 property identifiers recorded elsewhere. This is not a Richmond County
+            Clerk extract. Missing older history is not proof that older documents do not exist.
+          </p>
+        </section>
+      ) : null}
+
       <section className="mt-10">
         <h2 className="text-xl font-semibold">Current official verification</h2>
         <p className="mt-2 text-sm leading-relaxed">
@@ -260,7 +321,7 @@ export function NycIntelPage({ snapshot, dob }: { snapshot: NycContractorSnapsho
           Official <Official href={NYC_WALL_OF_SHAME} label="Wall of Shame" /> is an HTML warning list
           (as of {s.wall_of_shame.sourceAsOf}, {s.wall_of_shame.name_count} names). It is not a
           TrustHub blacklist and is not name-matched into licensed-business records. Historical
-          archives, ACRIS, HPD/DOB violations, and suburban counties were not acquired in this ticket.
+          archives, HPD/DOB violations, and suburban counties were not acquired in this ticket.
         </p>
         <Trace
           source={NYC_ISSUED_LICENSES}
