@@ -1,18 +1,17 @@
-
 > contractor-trust-hub@0.1.0 build
 > next build
 
 ▲ Next.js 16.3.3 (Turbopack)
 ✓ Running next.config.ts took 36ms
 
-node.exe : ⚠ The Edge Runtime is deprecated. You can use the "nodejs" runtime instead. Learn more: 
+node.exe : ⚠ The Edge Runtime is deprecated. You can use the "nodejs" runtime instead. Learn more:
 https://nextjs.org/docs/messages/edge-runtime-deprecated
 At line:1 char:1
 + & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
 + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: (⚠ The Edge Runt...time-deprecated:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
- 
+
   Creating an optimized production build ...
 ✓ Compiled successfully in 6.3s
   Running TypeScript ...
@@ -20,15 +19,15 @@ At line:1 char:1
   We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
   The following mandatory changes were made to your tsconfig.json:
 
-  	- jsx was set to react-jsx (next.js uses the React automatic runtime)
+    - jsx was set to react-jsx (next.js uses the React automatic runtime)
 
   Finished TypeScript in 21.8s ...
   Collecting page data using 7 workers ...
 ⚠ Using edge runtime on a page currently disables static generation for that page
   Generating static pages using 7 workers (0/74) ...
-  Generating static pages using 7 workers (18/74) 
-  Generating static pages using 7 workers (36/74) 
-  Generating static pages using 7 workers (55/74) 
+  Generating static pages using 7 workers (18/74)
+  Generating static pages using 7 workers (36/74)
+  Generating static pages using 7 workers (55/74)
 ✓ Generating static pages using 7 workers (74/74) in 2.3s
   Finalizing page optimization ...
 
@@ -161,4 +160,3 @@ Route (app)
 ○  (Static)   prerendered as static content
 ●  (SSG)      prerendered as static HTML (uses generateStaticParams)
 ƒ  (Dynamic)  server-rendered on demand
-

@@ -53,12 +53,22 @@
   },
   "officialSources": "official-sources.json",
   "officialBrowser": "official-browser.json",
-  "localBrowser": "local-browser.json",
+  "localBrowser": "local-reconciled-browser.json",
   "reviewMethod": "Separate self-review with behavioral/mutation automation; no independent human review",
   "productionDataChanges": false,
   "otherReposModified": false,
   "runtimeMerge": null,
   "deployment": null,
   "reconciledWith": "b694663796700f8f95b9c18d144b0a57e64d98ec",
-  "testedCandidate": "bb817cb759d48af53397d8472e9bde099059d9bc"
+  "testedCandidate": "bb817cb759d48af53397d8472e9bde099059d9bc",
+  "preview": {
+    "sha": "5466eb9c5b0ec25f027e99469c3b6272f10dffd2",
+    "deployment": "dpl_E3XjcZjDd1hsEzSA4A98jS7fz7Fk",
+    "desktop": "preview-ready-browser.json",
+    "mobile": "preview-mobile-browser.json",
+    "casesPerRun": 18,
+    "pageErrors": 0,
+    "runtimeWarningErrorGroups": 0,
+    "initialAttempt": "preview-browser.json began while deployment was initializing and failed before homepage input; rerun on READY passed"
+  }
 }

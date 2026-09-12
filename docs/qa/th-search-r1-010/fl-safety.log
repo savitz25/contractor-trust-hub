@@ -1,4 +1,3 @@
-
 > contractor-trust-hub@0.1.0 test:fl-safety
 > python -m unittest scripts.test_fl_dbpr_identity scripts.test_regulatory_source_observation scripts.test_regulatory_source_migration && node --experimental-strip-types scripts/test_fl_regulatory_publication.ts
 

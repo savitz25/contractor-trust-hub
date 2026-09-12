@@ -1,4 +1,3 @@
-
 > contractor-trust-hub@0.1.0 check:ath-claim-publish-001
 > npx --yes tsx --test scripts/test_ath_claim_publish_001.tsx scripts/test_ath_cust_005.tsx scripts/test_ath_cust_007.tsx
 

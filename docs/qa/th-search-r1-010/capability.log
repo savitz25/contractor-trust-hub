@@ -1,4 +1,3 @@
-
 > contractor-trust-hub@0.1.0 check:con-cap-002
 > npx --yes tsx --test scripts/test_con_cap_002.ts
 

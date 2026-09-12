@@ -1,4 +1,3 @@
-
 > contractor-trust-hub@0.1.0 check:th-search-r1-010
 > npx --yes tsx --test scripts/test_th_search_r1_010.ts
 
