@@ -21,6 +21,7 @@ export const EXPLORE_GROUP: HeaderGroup = {
     { href: "/colorado", label: "Colorado research", hint: "DORA electrical and plumbing — no statewide GC" },
     { href: "/virginia", label: "Virginia research", hint: "DPOR Class A/B/C contractor businesses" },
     { href: "/new-york", label: "New York research", hint: "Public-work contractor registration — not a HIC roster" },
+    { href: "/new-york/new-york-city", label: "New York City HIC", hint: "DCWP home-improvement contractor licenses" },
     { href: "/illinois", label: "Illinois research", hint: "IDFPR roofing licenses — not a statewide GC" },
     { href: "/texas", label: "Texas research", hint: "Specialty trades — no statewide GC license" },
     { href: "/texas/austin", label: "Austin permits", hint: "City of Austin local intelligence" },

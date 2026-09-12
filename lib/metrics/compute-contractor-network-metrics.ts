@@ -36,6 +36,7 @@ export type NetworkMetricsInput = {
   njPublicWorksRegulatoryRows: number;
   floridaCountyIntelligencePages: number;
   caCityLocalPages: number;
+  nycLocalPages: number;
 };
 
 function metric(partial: Omit<ContractorNetworkMetric, "unit" | "generatedAt"> & { generatedAt: string }): ContractorNetworkMetric {
@@ -350,6 +351,26 @@ export function computeContractorNetworkMetrics(input: NetworkMetricsInput): Con
       ),
     }),
     metric({
+      key: "published_nyc_local_intelligence_pages",
+      label: "Published New York City local intelligence pages",
+      value: input.nycLocalPages,
+      grain: "published_city_local_intelligence_page",
+      denominator: "NYC-CON-001A DCWP HIC publication gate",
+      description: "NYC DCWP Home Improvement Contractor local page. Not a statewide New York page and not a live credential denominator.",
+      coverage: "New York City",
+      contributingSourceSystems: ["nyc-dcwp-hic"],
+      sourceAsOf: "2026-08-20",
+      generatedAt,
+      publicationStatus: "PUBLIC",
+      trace: commonTrace(
+        "Indexed NYC local intelligence route /new-york/new-york-city.",
+        "Not NYSDOL public-work certificates, not borough pages, not live credentials, not unique companies.",
+        ["nyc-dcwp-hic"],
+        "New York City DCWP HIC",
+        "Issued Licenses Home Improvement Contractor slice rowsUpdatedAt 2026-08-20"
+      ),
+    }),
+    metric({
       key: "ca_acquired_cslb_license_master_rows_truncated",
       label: "Acquired CSLB License Master rows (truncated stream)",
       value: input.caAcquiredTruncatedRows,
@@ -389,6 +410,7 @@ export function computeContractorNetworkMetrics(input: NetworkMetricsInput): Con
     caProduction: input.caProductionCslbRows,
     countyPages,
     caCityLocalPages: input.caCityLocalPages,
+    nycLocalPages: input.nycLocalPages,
   };
 
   return {
@@ -452,6 +474,7 @@ export function requiredPublicKeys(): string[] {
     "research_graph_contractor_identities",
     "ca_acquired_cslb_license_master_rows_truncated",
     "published_ca_city_local_intelligence_pages",
+    "published_nyc_local_intelligence_pages",
   ];
 }
 

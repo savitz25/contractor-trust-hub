@@ -90,6 +90,7 @@ const input = {
   njPublicWorksRegulatoryRows: prev.newJerseyReconciliation.publicWorksRegulatorySourceRows,
   floridaCountyIntelligencePages: byKey.published_county_intelligence_pages.value - prev.newJerseyReconciliation.publishedCountyPages,
   caCityLocalPages: byKey.published_ca_city_local_intelligence_pages.value,
+  nycLocalPages: byKey.published_nyc_local_intelligence_pages?.value ?? 0,
 };
 
 function graphStatusDelta(business) {

@@ -102,6 +102,7 @@ async function main() {
     njPublicWorksRegulatoryRows: nj.hero.observations_value,
     floridaCountyIntelligencePages: pub.floridaCountyIntelligencePages.length,
     caCityLocalPages: pub.caCityLocalPages.length,
+    nycLocalPages: pub.nycLocalPages.length,
   };
 
   const manifest = computeContractorNetworkMetrics(input);
