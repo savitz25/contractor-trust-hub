@@ -1,0 +1,124 @@
+> contractor-trust-hub@0.1.0 check:th-search-r1-010
+> npx --yes tsx --test scripts/test_th_search_r1_010.ts
+
+✔ New York certificate verification remains in its existing source-specific operation (5.5583ms)
+✔ licensed policy wording and cleared trade do not become a cohort (10.6382ms)
+✔ other live internal Verify jurisdictions never fall back to Florida (3.1123ms)
+✔ original recovery: how do I verify a contractor license in Florida? (3.8568ms)
+✔ original recovery: Does Texas license general contractors statewide? (1.2659ms)
+✔ original recovery: hire a contractor for tomorrow (0.9403ms)
+✔ original recovery: elevator contractor Alaska (1.1307ms)
+✔ original recovery: general contractors in Los Angeles California (0.8706ms)
+✔ guidance paraphrase: How can I check a Florida contractor? (1.0378ms)
+✔ guidance paraphrase: check a Florida contractor license (0.7734ms)
+✔ guidance paraphrase: Where can I verify a Florida license? (1.1173ms)
+✔ guidance paraphrase: Please verify a Florida contractor license (1.018ms)
+✔ unqualified license guidance requests jurisdiction, never default Florida (0.9163ms)
+✔ credential precedence: verify CCC1332036 (0.2744ms)
+✔ credential precedence: How do I check CCC1332036 in Florida? (0.2063ms)
+✔ Texas policy paraphrase: Do I need a state GC license in Texas? (0.3731ms)
+✔ Texas policy paraphrase: Who licenses general contractors in Texas? (0.2517ms)
+✔ Texas policy paraphrase: Does Texas license general contractors statewide? (0.2108ms)
+✔ Texas HVAC discovery and GC policy remain separate; conflicting override clarifies (0.3821ms)
+✔ transaction boundary: hire a contractor for tomorrow (0.2261ms)
+✔ transaction boundary: book a roofer (0.1559ms)
+✔ transaction boundary: schedule an electrician (2.3162ms)
+✔ transaction boundary: can you send me a plumber? (0.2406ms)
+✔ transaction boundary: I need someone today (0.1468ms)
+✔ transaction research continuation: book a roofer in Broward County (2.0109ms)
+✔ transaction research continuation: I need a roofer in Broward tomorrow (0.6821ms)
+✔ transaction research continuation: need a plumber today in Palm Beach (0.6756ms)
+✔ booking typo cannot bypass R1-009 correction consent (0.9873ms)
+✖ California preserves Los Angeles and offers separate Verify, not a broad cohort (2.6058ms)
+✔ CA unsupported explicit broadening cannot manufacture a supported cohort (0.712ms)
+✖ Alaska equipment-specific official recovery: elevator contractor Alaska (0.6744ms)
+✖ Alaska equipment-specific official recovery: elevator contractors in Alaska (0.3587ms)
+✔ no verified source for the requested trade means clarification, not a guessed regulator (0.2339ms)
+✔ Florida electrical guidance does not assert CILB electrical coverage (0.2753ms)
+✔ ordinary discovery, names, definitions, NY and IL keep their operations (0.7102ms)
+✔ native and canonical routes use the same recovery selection before retrieval (4.2048ms)
+✔ actual recovery renderer finishes without provider cards, false totals or lookup claims (9.5924ms)
+✔ official destination manifest has exact official hosts/purpose and no arbitrary deep links (0.2984ms)
+✔ input limits and malformed params still fail before guidance (0.1365ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 36
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1269.9407
+
+✖ failing tests:
+
+test at scripts\test_th_search_r1_010.ts:2:8693
+✖ California preserves Los Angeles and offers separate Verify, not a broad cohort (2.6058ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    [
+      '/verify?state=ca',
+  +   '/verify'
+  -   'https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx'
+    ]
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:169:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ '/verify?state=ca', '/verify' ],
+    expected: [ '/verify?state=ca', 'https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_th_search_r1_010.ts:2:10091
+✖ Alaska equipment-specific official recovery: elevator contractor Alaska (0.6744ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + '/verify'
+  - 'https://labor.alaska.gov/lss/elevators.htm'
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:203:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/verify',
+    expected: 'https://labor.alaska.gov/lss/elevators.htm',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_th_search_r1_010.ts:2:10091
+✖ Alaska equipment-specific official recovery: elevator contractors in Alaska (0.3587ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + '/verify'
+  - 'https://labor.alaska.gov/lss/elevators.htm'
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-010-work\scripts\test_th_search_r1_010.ts:203:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/verify',
+    expected: 'https://labor.alaska.gov/lss/elevators.htm',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

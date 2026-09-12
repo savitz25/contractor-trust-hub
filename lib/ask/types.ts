@@ -11,6 +11,7 @@ export type AskQueryMode =
   | "aggregate"
   | "comparison"
   | "evidence"
+  | "guidance"
   | "definition"
   | "fail_closed";
 
@@ -45,5 +46,6 @@ export type AskResult = {
   } | null;
   failMessage: string | null;
   changeHints: string[];
+  recovery?: import("./recovery").ContractorRecovery | null;
   definition?: { title: string; body: string; href: string } | null;
 };

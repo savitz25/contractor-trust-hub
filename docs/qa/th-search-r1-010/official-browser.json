@@ -1,0 +1,60 @@
+{
+  "at": "2026-09-12T15:02:39.682Z",
+  "cases": [
+    {
+      "id": "florida",
+      "url": "https://www.myfloridalicense.com/wl11.asp?mode=0&search=contractors",
+      "finalUrl": "https://www.myfloridalicense.com/wl11.asp?mode=0&search=contractors",
+      "http": 200,
+      "title": "Licensing Portal - License Search",
+      "ms": 375,
+      "purposeVisible": true,
+      "screenshot": "docs/qa/th-search-r1-010/official-florida.png",
+      "challenge": false
+    },
+    {
+      "id": "texas",
+      "url": "https://www.tdlr.texas.gov/LicenseSearch/",
+      "finalUrl": "https://www.tdlr.texas.gov/LicenseSearch/",
+      "http": 200,
+      "title": "TDLR Active License Search",
+      "ms": 944,
+      "purposeVisible": true,
+      "screenshot": "docs/qa/th-search-r1-010/official-texas.png",
+      "challenge": false
+    },
+    {
+      "id": "texasGc",
+      "url": "https://www.austintexas.gov/development-services/contractor-registration",
+      "finalUrl": "https://www.austintexas.gov/development-services/contractor-registration",
+      "http": 200,
+      "title": "Contractor Registration | Austin Development Services | AustinTexas.gov",
+      "ms": 2674,
+      "purposeVisible": true,
+      "screenshot": "docs/qa/th-search-r1-010/official-texasGc.png",
+      "challenge": false
+    },
+    {
+      "id": "california",
+      "url": "https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx",
+      "finalUrl": "https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx",
+      "http": 200,
+      "title": "Check A License - CSLB",
+      "ms": 10034,
+      "purposeVisible": true,
+      "screenshot": "docs/qa/th-search-r1-010/official-california.png",
+      "challenge": false
+    },
+    {
+      "id": "alaskaElevator",
+      "url": "https://labor.alaska.gov/lss/elevators.htm",
+      "finalUrl": "https://labor.alaska.gov/lss/elevators.htm",
+      "http": 200,
+      "title": "Elevators, Escalators, Wheel-Chair Lifts, and Dumbwaiter",
+      "ms": 1495,
+      "purposeVisible": true,
+      "screenshot": "docs/qa/th-search-r1-010/official-alaskaElevator.png",
+      "challenge": false
+    }
+  ]
+}

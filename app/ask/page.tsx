@@ -60,14 +60,14 @@ export default async function AskPage({ searchParams }: Props) {
       <p className="cth-intel-eyebrow">Research contractors</p>
       <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--navy)]">What do you want to find out?</h1>
       <p className="mt-2 max-w-2xl text-sm text-[var(--muted)]">
-        Ask in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.
+        Ask in normal language or enter a company or credential. Get indexed research, verification guidance, or an official next step.
       </p>
       <div className="mt-6">
         <AskForm key={q} initialQuery={q || undefined} overrides={overrides} compact />
       </div>
       {q ? (
         <div className="mt-10">
-          <SearchAnalytics dimensions={{ hub: "contractor", intent: interpreted.mode, state: plan.geography.state || undefined, classification: plan.trade.familyId || undefined, hasIdentifier: Boolean(plan.identity.identifier), hasEvidenceFilter: Boolean(plan.evidenceFamily), resultCountBucket: searchResultCountBucket(execution.contractorCount || 0), coverageState: execution.blocked ? "PARTIAL" : "KNOWN" }} hasResults={execution.results.length > 0} />
+          {!plan.recovery && <SearchAnalytics dimensions={{ hub: "contractor", intent: interpreted.mode, state: plan.geography.state || undefined, classification: plan.trade.familyId || undefined, hasIdentifier: Boolean(plan.identity.identifier), hasEvidenceFilter: Boolean(plan.evidenceFamily), resultCountBucket: searchResultCountBucket(execution.contractorCount || 0), coverageState: execution.blocked ? "PARTIAL" : "KNOWN" }} hasResults={execution.results.length > 0} />}
           <AskResults interpreted={interpreted} plan={plan} execution={execution} />
         </div>
       ) : (

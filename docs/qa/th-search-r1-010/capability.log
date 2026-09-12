@@ -1,0 +1,23 @@
+> contractor-trust-hub@0.1.0 check:con-cap-002
+> npx --yes tsx --test scripts/test_con_cap_002.ts
+
+✔ contract family/version/fingerprints are deterministic (1.856ms)
+✔ state/source selection is exact (1.3593ms)
+✔ New Jersey class matrix is source-native (0.2795ms)
+✔ generic and General NJ requests never invent a population (0.962ms)
+✔ New Jersey statewide and authoritative Summit geography normalize safely (0.2942ms)
+✔ invalid and conflicting New Jersey geography fails closed (0.3431ms)
+✔ statewide fallback is explicit (0.2307ms)
+✔ service territory is never inferred (0.1991ms)
+✔ publication gate, row privacy, ordering, and exact lookup remain deterministic (0.2636ms)
+✔ pagination is bounded and stable by contract (0.3092ms)
+✔ Florida accepted behavior remains locked (0.5077ms)
+✔ route and contract expose safe state distinctions without writes (0.2453ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 653.0772

@@ -1,3 +1,4 @@
+import { interpretRecovery } from "./recovery";
 import type { AskUrlOverrides } from "./url";
 export const ASK_QUERY_LIMIT = 180;
 /** Full input is validated before any parser. No suffix truncation. */
@@ -42,6 +43,7 @@ export function researchRoute(
   query: string,
   discovery: import("../search/contractor-discovery").ContractorSearchPlan,
 ) {
+  if (interpretRecovery(query)) return "/ask" as const;
   if (
     /\b(?:new york|illinois|NY|IL)\b/i.test(query) ||
     /\bcompar(?:e|ison)\b/i.test(query)
