@@ -1,0 +1,19 @@
+{
+  "at": "2026-09-12T15:10:45.658555+00:00",
+  "baseline": "88075e4de4aac53a83a2235dd524d6e93fc46235",
+  "testedCandidate": "uncommitted implementation, source fingerprint in release receipt",
+  "restoredByteIdentically": true,
+  "results": [
+    {
+      "mutation": "transaction-to-directory",
+      "exitCode": 1,
+      "detected": true
+    },
+    {
+      "mutation": "unrelated-generic-verify",
+      "exitCode": 1,
+      "detected": true
+    }
+  ],
+  "cleanExitCode": 0
+}

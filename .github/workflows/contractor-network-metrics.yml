@@ -24,3 +24,6 @@ jobs:
 
       - name: Contractor geography integrity (R1-009)
         run: npm run check:th-search-r1-009
+
+      - name: Contractor guidance and recovery integrity (R1-010)
+        run: npm run check:th-search-r1-010

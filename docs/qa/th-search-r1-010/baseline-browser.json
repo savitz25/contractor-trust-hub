@@ -1,0 +1,46 @@
+{
+  "at": "2026-09-12T14:52:57.916Z",
+  "sha": "88075e4de4aac53a83a2235dd524d6e93fc46235",
+  "cases": [
+    {
+      "q": "how do I verify a contractor license in Florida?",
+      "url": "https://www.contractortrusthub.com/ask?q=how+do+I+verify+a+contractor+license+in+Florida%3F",
+      "ms": 737,
+      "text": "RESEARCH CONTRACTORS\n\nWhat do you want to find out?\n\nAsk in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.\n\nAsk ContractorTrustHub\nResearch\nFlorida\nLicense status\nRoofing\nHVAC\nGeneral contractors\nDBPR discipline\nCounts\nTrade families\nBroward\nPalm Beach\nCompare markets\nAdvanced filters\nYour requested place\n\nYou asked for: Florida\n\nApplied geography: Florida\n\nRequested recorded geography applied before pagination.\n\nState credential jurisdiction, not service territory or availability.\n\nGeography Trace\n\nWE INTERPRETED YOUR QUESTION AS\n\nQuery interpretation\nLocation\nFlorida\nGeography basis\nIndexed DBPR address county — not service territory\nTrade\nNot specified\nIncluded credential classes\nNot specified\nStatus\nall\nEvidence\nNot specified\nSort\nname\n\nChange interpretation: Research a specific contractor · Try an example question\n\nWe could not map that question onto a supported licensing, trade, geography, or indexed-evidence query. Try an example prompt, or search a company name / license number.\n\nTrace this query",
+      "screenshot": "docs/qa/th-search-r1-010/before-0.png",
+      "articles": 0
+    },
+    {
+      "q": "Does Texas license general contractors statewide?",
+      "url": "https://www.contractortrusthub.com/search?q=Does+Texas+license+general+contractors+statewide%3F",
+      "ms": 590,
+      "text": "FIND / RESEARCH CONTRACTORS\n\nContractor discovery research\n\nSearch source-backed credential records by trade and supported recorded geography. Results are neutral research—not rankings or proof that a contractor serves an area.\n\nDescribe the contractor research you need\nResearch contractors\n\nYOUR RESEARCH\n\nWhat the search understood\nTrade\ngeneral\nLocation\nTX\nGeography basis\nRecorded credential geography—not service territory\n\nUNSUPPORTED TRADE CAPABILITY\n\nA more precise research choice is needed\n\nTexas TDLR credential jurisdiction. Recorded city is unavailable in this published cohort; not service territory.\n\nThis path supports only the existing Texas TDLR A/C Contractor (TAC) cohort. No other Texas class is substituted.\n\nHave an exact company or credential? Use Verify. Recorded regulatory geography does not establish service territory or current availability.",
+      "screenshot": "docs/qa/th-search-r1-010/before-1.png",
+      "articles": 0
+    },
+    {
+      "q": "hire a contractor for tomorrow",
+      "url": "https://www.contractortrusthub.com/search?q=hire+a+contractor+for+tomorrow",
+      "ms": 675,
+      "text": "FIND / RESEARCH CONTRACTORS\n\nContractor discovery research\n\nSearch source-backed credential records by trade and supported recorded geography. Results are neutral research—not rankings or proof that a contractor serves an area.\n\nDescribe the contractor research you need\nResearch contractors\nYour requested place\n\nYou asked for: For Tomorrow\n\nLocal scope: Not executed\n\nClarify the requested city, county and state. No broader search has run.\n\nGeography Trace\n\nTrade: Not specified. No broader credential list has been executed. Edit the place or select an available choice above.\n\nHave an exact company or credential? Use Verify. Recorded regulatory geography does not establish service territory or current availability.",
+      "screenshot": "docs/qa/th-search-r1-010/before-2.png",
+      "articles": 0
+    },
+    {
+      "q": "elevator contractor Alaska",
+      "url": "https://www.contractortrusthub.com/search?q=elevator+contractor+Alaska",
+      "ms": 506,
+      "text": "FIND / RESEARCH CONTRACTORS\n\nContractor discovery research\n\nSearch source-backed credential records by trade and supported recorded geography. Results are neutral research—not rankings or proof that a contractor serves an area.\n\nDescribe the contractor research you need\nResearch contractors\nYour requested place\n\nYou asked for: Alaska\n\nLocal scope: Not executed\n\nThis credential-list path does not support the requested trade in Alaska. No other state or trade was substituted.\n\nGeography Trace\n\nTrade: Not specified. No broader credential list has been executed. Edit the place or select an available choice above.\n\nHave an exact company or credential? Use Verify. Recorded regulatory geography does not establish service territory or current availability.",
+      "screenshot": "docs/qa/th-search-r1-010/before-3.png",
+      "articles": 0
+    },
+    {
+      "q": "general contractors in Los Angeles California",
+      "url": "https://www.contractortrusthub.com/search?q=general+contractors+in+Los+Angeles+California",
+      "ms": 517,
+      "text": "FIND / RESEARCH CONTRACTORS\n\nContractor discovery research\n\nSearch source-backed credential records by trade and supported recorded geography. Results are neutral research—not rankings or proof that a contractor serves an area.\n\nDescribe the contractor research you need\nResearch contractors\nYour requested place\n\nYou asked for: Los Angeles, California\n\nLocal scope: Not executed\n\nThis credential-list path does not support the requested trade in California. No other state or trade was substituted.\n\nGeography Trace\n\nTrade: general. No broader credential list has been executed. Edit the place or select an available choice above.\n\nHave an exact company or credential? Use Verify. Recorded regulatory geography does not establish service territory or current availability.",
+      "screenshot": "docs/qa/th-search-r1-010/before-4.png",
+      "articles": 0
+    }
+  ]
+}

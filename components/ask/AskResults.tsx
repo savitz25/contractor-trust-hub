@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RecoveryAnswer } from "./RecoveryAnswer";
 import { GeographyNotice } from "./GeographyNotice";
 import type { AskResult } from "@/lib/ask/types";
 import type { ContractorResearchQuery } from "@/lib/ask/plan";
@@ -16,6 +17,7 @@ export function AskResults({
   plan: ContractorResearchQuery;
   execution: AskExecution;
 }) {
+  if(plan.recovery) return <RecoveryAnswer recovery={plan.recovery} />;
   const overrides = planToOverrides(plan);
   const nextPage = askHref(plan.rawQuery, { ...overrides, page: String(plan.page + 1) });
   const prevPage = askHref(plan.rawQuery, { ...overrides, page: String(Math.max(1, plan.page - 1)) });

@@ -1,0 +1,51 @@
+
+> contractor-trust-hub@0.1.0 check:th-search-r1-010
+> npx --yes tsx --test scripts/test_th_search_r1_010.ts
+
+✔ New York certificate verification remains in its existing source-specific operation (3.7084ms)
+✔ licensed policy wording and cleared trade do not become a cohort (11.7763ms)
+✔ other live internal Verify jurisdictions never fall back to Florida (2.8588ms)
+✔ original recovery: how do I verify a contractor license in Florida? (2.6479ms)
+✔ original recovery: Does Texas license general contractors statewide? (0.9368ms)
+✔ original recovery: hire a contractor for tomorrow (1.8666ms)
+✔ original recovery: elevator contractor Alaska (0.9596ms)
+✔ original recovery: general contractors in Los Angeles California (0.6538ms)
+✔ guidance paraphrase: How can I check a Florida contractor? (0.8664ms)
+✔ guidance paraphrase: check a Florida contractor license (0.72ms)
+✔ guidance paraphrase: Where can I verify a Florida license? (0.6939ms)
+✔ guidance paraphrase: Please verify a Florida contractor license (0.8233ms)
+✔ unqualified license guidance requests jurisdiction, never default Florida (0.9287ms)
+✔ credential precedence: verify CCC1332036 (0.2852ms)
+✔ credential precedence: How do I check CCC1332036 in Florida? (0.1157ms)
+✔ Texas policy paraphrase: Do I need a state GC license in Texas? (0.3212ms)
+✔ Texas policy paraphrase: Who licenses general contractors in Texas? (0.2272ms)
+✔ Texas policy paraphrase: Does Texas license general contractors statewide? (0.1847ms)
+✔ Texas HVAC discovery and GC policy remain separate; conflicting override clarifies (0.3342ms)
+✔ transaction boundary: hire a contractor for tomorrow (0.1969ms)
+✔ transaction boundary: book a roofer (0.1311ms)
+✔ transaction boundary: schedule an electrician (0.1311ms)
+✔ transaction boundary: can you send me a plumber? (0.1474ms)
+✔ transaction boundary: I need someone today (0.1265ms)
+✔ transaction research continuation: book a roofer in Broward County (2.3967ms)
+✔ transaction research continuation: I need a roofer in Broward tomorrow (1.0885ms)
+✔ transaction research continuation: need a plumber today in Palm Beach (1.0203ms)
+✔ booking typo cannot bypass R1-009 correction consent (1.1053ms)
+✔ California preserves Los Angeles and offers separate Verify, not a broad cohort (0.3101ms)
+✔ CA unsupported explicit broadening cannot manufacture a supported cohort (0.6569ms)
+✔ Alaska equipment-specific official recovery: elevator contractor Alaska (0.2921ms)
+✔ Alaska equipment-specific official recovery: elevator contractors in Alaska (0.2283ms)
+✔ no verified source for the requested trade means clarification, not a guessed regulator (0.2062ms)
+✔ Florida electrical guidance does not assert CILB electrical coverage (0.2234ms)
+✔ ordinary discovery, names, definitions, NY and IL keep their operations (0.7234ms)
+✔ native and canonical routes use the same recovery selection before retrieval (5.0442ms)
+✔ actual recovery renderer finishes without provider cards, false totals or lookup claims (9.8822ms)
+✔ official destination manifest has exact official hosts/purpose and no arbitrary deep links (0.2974ms)
+✔ input limits and malformed params still fail before guidance (0.1323ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 892.75

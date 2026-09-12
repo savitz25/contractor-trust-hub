@@ -1,0 +1,62 @@
+{
+  "ticket": "TH-SEARCH-R1-010",
+  "status": "READY_FOR_REVIEW",
+  "recordedAt": "2026-09-12T15:14:27.149209+00:00",
+  "baseline": "88075e4de4aac53a83a2235dd524d6e93fc46235",
+  "model": "GPT-6 Astra previously USER-CONFIRMED; Medium recommended for this ticket; running setting not independently verifiable or switched",
+  "candidate": "Containing implementation commit; future merge/deployment not asserted",
+  "sourceCodeFingerprint": "277e6485cb71da91aef0139d6d3dbaf53b495f0d05db0cdac2b884b2cfb14026",
+  "fingerprintFiles": [
+    "lib/ask/recovery.ts",
+    "lib/ask/recovery-sources.ts",
+    "components/ask/RecoveryAnswer.tsx",
+    "lib/ask/interpret.ts",
+    "lib/ask/plan.ts",
+    "lib/ask/request.ts",
+    "lib/ask/execute.ts",
+    "lib/ask/types.ts",
+    "components/ask/AskResults.tsx",
+    "app/ask/page.tsx"
+  ],
+  "tests": {
+    "focused": {
+      "pass": 39,
+      "fail": 0
+    },
+    "r1_009": {
+      "pass": 30,
+      "fail": 0
+    },
+    "npmTest": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS before final intro-only copy change; reconciled candidate build required",
+    "capability": {
+      "pass": 12,
+      "fail": 0
+    },
+    "customer": {
+      "pass": 23,
+      "fail": 0
+    },
+    "claims": {
+      "pass": 11,
+      "fail": 0
+    },
+    "flPublicationSafety": "PASS",
+    "mutationsDetected": 2,
+    "lint": "NOT_CONFIGURED",
+    "baselineLimitations": [
+      "Stale network-total assertion (662331 actual vs 644421 expected)",
+      "Obsolete homepage heading assertion"
+    ],
+    "localDb": "Unavailable; source-positive browser checks skipped locally, live checks required"
+  },
+  "officialSources": "official-sources.json",
+  "officialBrowser": "official-browser.json",
+  "localBrowser": "local-browser.json",
+  "reviewMethod": "Separate self-review with behavioral/mutation automation; no independent human review",
+  "productionDataChanges": false,
+  "otherReposModified": false,
+  "runtimeMerge": null,
+  "deployment": null
+}

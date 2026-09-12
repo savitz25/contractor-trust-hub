@@ -1,0 +1,35 @@
+
+> contractor-trust-hub@0.1.0 check:ath-cust-v1-repair-001-contractor
+> npx --yes tsx --test scripts/test_ath_cust_v1_repair_001.ts scripts/test_ath_cust_003.ts scripts/test_ath_cust_005.tsx scripts/test_ath_cust_007.tsx
+
+✔ FL non-thin fl_dbpr profile is eligible (2.0277ms)
+✔ thin profile is ineligible (0.2302ms)
+✔ non-FL profile is ineligible (0.1739ms)
+✔ unsupported source is ineligible (0.1408ms)
+✔ missing external key is ineligible (0.1727ms)
+✔ eligible profile mints a production-compatible Ask token (1.083ms)
+✔ minting creates a fresh nonce (0.513ms)
+✔ Ask contract rejects UUID, slug, and credential swaps (6.8763ms)
+✔ expired token is rejected by Ask contract (7.4481ms)
+✔ secret and token remain server-side and claim route is non-indexable (3.6205ms)
+✔ claim code has no Layer A mutation or ranking/publication dependency (1.8018ms)
+✔ public contract accepts only the exact UUID and public allowlist (1.9473ms)
+✔ public overlay escapes text and keeps self-reported service area distinct (28.1411ms)
+✔ Ask outage, rejection, malformed response, and invalid UUID fail closed (23.975ms)
+✔ strict public reply allowlist excludes private moderation data (1.2805ms)
+✔ evidence-first business response card is neutral and safely escaped (25.2768ms)
+✔ Ask outage, rejection and malformed DTO fail closed (28.6611ms)
+✔ new Contractor handoffs are complete exact v2 payloads (2.8498ms)
+✔ new mints use independent secure nonces (0.6989ms)
+✔ success redirect and every failure are non-cacheable and non-indexable (1.4449ms)
+✔ claim rollout gates only intake while exact-profile Layer C and replies remain publishable (1.1447ms)
+✔ handoff failures provide bounded safe recovery without leaking internals (1.0221ms)
+✔ repair contains no DB writes, ranking, publication, or token-in-HTML path (3.0973ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 731.1148

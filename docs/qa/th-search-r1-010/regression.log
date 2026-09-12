@@ -1,0 +1,428 @@
+
+> contractor-trust-hub@0.1.0 test
+> node scripts/assert-brand-001.mjs && node scripts/assert-share-002.mjs && node scripts/assert-share-003.mjs && node scripts/assert-visual-007.mjs && node scripts/assert_homepage_intel.mjs && node scripts/assert_network_metrics_v1.mjs && npx --yes tsx --test scripts/test_contractor_network_metrics.ts && python -X utf8 scripts/assert_florida_state_intelligence.py && python -X utf8 scripts/assert_florida_p0_remediation.py && python -X utf8 scripts/assert_florida_intelligence_foundation.py && python -X utf8 scripts/assert_florida_qualifier_graph.py && npm run test:nj-con-004 && npm run test:nj-con-county-001 && npm run test:ca-con-002 && npm run test:ca-con-county-001a && npm run test:ca-con-county-001b && npm run test:ca-con-county-002 && npm run test:tx-con-001 && npm run test:tx-con-local-002 && npm run test:wa-con-001 && npm run test:az-con-001 && npm run test:co-con-001 && npm run test:va-con-001 && npm run test:ny-con-001 && npm run test:il-con-001
+
+PASS: mark viewBox 0 0 36 36
+PASS: mark canonical stroke 2.4
+PASS: mark outer dots r=2.5
+PASS: mark center r=2.1
+PASS: mark Contractor gold
+PASS: mark node palette
+PASS: mark has no legacy heavy path
+PASS: mark brackets are stroke not heavy fill
+PASS: full logo locked slogan
+PASS: full logo canonical stroke
+PASS: slogan not sentence-case variant in SVG
+PASS: compact logo canonical stroke
+PASS: compact omits slogan
+PASS: dark full has slogan
+PASS: dark lifts navy text
+PASS: BrandLogo references compact
+PASS: BrandLogo lockup prop
+PASS: process_logo_mockup retired
+PASS: process_logo_mockup exits 2
+PASS: export script knows canonical stroke
+PASS: export script no longer draws heavy brackets
+PASS: raster exists: contractor-trust-hub-mark.png
+PASS: raster exists: favicon-192.png
+PASS: raster exists: favicon-512.png
+PASS: raster exists: apple-touch-icon.png
+PASS: raster exists: contractor-trust-hub-logo.png
+PASS: raster exists: contractor-trust-hub-og.png
+PASS: OG PNG non-trivial
+PASS: OG is PNG
+CONTRACTOR-BRAND-001 assertions passed.
+SHARE-002 Contractor assertions passed (PNG 1200×630, summary_large_image, SVG social fallback gone).
+SHARE-003 Contractor assertions passed.
+VISUAL-007 Contractor network-shell assertions passed.
+CON-HOME-INTEL-004 PASS homepage intel denominators
+ATH-METRICS-001A PASS network metric grain and staleness gates
+▶ contractor-network-metrics-v1 grain safety
+  ✔ computes live credentials as the sum of live sources only (5.9842ms)
+  ✔ rejects a live source omitted from the credential denominator (1.2379ms)
+  ✔ rejects truncated CSLB extract as the production ca_cslb denominator (0.445ms)
+  ✔ keeps NJ construction source records out of live credentials and indexed permits (0.865ms)
+  ✔ keeps contacts out of contractor identity counts (0.769ms)
+  ✔ keeps county pages out of live state counts (0.8485ms)
+  ✔ does not treat Git/deploy time as NJ official source date (0.6532ms)
+  ✔ fails closed on California live-cohort join (1.0776ms)
+  ✔ does not sum observations into discipline actions (0.7918ms)
+✔ contractor-network-metrics-v1 grain safety (16.9568ms)
+▶ checked-in manifest vs homepage wiring
+  ✔ keeps homepage consumers on the v1 artifact path (3.1187ms)
+✔ checked-in manifest vs homepage wiring (3.4763ms)
+ℹ tests 10
+ℹ suites 2
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 794.7545
+PASS: UI has no hard-coded 104444
+PASS: UI has no hard-coded 104,444
+PASS: UI has no hard-coded 143516
+PASS: UI has no hard-coded 143,516
+PASS: UI has no hard-coded 119231
+PASS: UI has no hard-coded 119,231
+PASS: UI has no hard-coded 68081
+PASS: UI has no hard-coded 68,081
+PASS: UI has no hard-coded 64863
+PASS: UI has no hard-coded 64,863
+PASS: UI has no hard-coded 138081
+PASS: UI has no hard-coded 138,081
+PASS: no active contractors census
+PASS: no verified companies
+PASS: no violations list
+PASS: no worst contractors
+PASS: no bad contractors
+PASS: no pilot resolution rate
+PASS: pilot edges not in consumer UI
+PASS: versioned payload
+PASS: active uses canonical status
+PASS: education/FRO excluded from trade universe
+PASS: payload documents version
+PASS: operating county not invented as HQ
+PASS: snapshot labeled credentials
+PASS: not companies
+PASS: trade universe is primary snapshot
+PASS: active trade credentials in snapshot
+PASS: HQ/base labeled
+PASS: operating distinction visible
+PASS: coverage labels
+PASS: observations not findings
+PASS: not a blacklist
+PASS: funnel stage 1 only
+PASS: category cards link
+PASS: RR not roofing
+PASS: ResearchBrowse roofing CCC/RC
+PASS: ResearchBrowse no CCC/RR
+PASS: browse stats not labeled firms
+PASS: listing count not labeled firms
+PASS: listing count labeled profiles
+PASS: profiles disclosed as not businesses
+PASS: county HQ/base wording
+PASS: roofer click-through
+PASS: HVAC click-through
+PASS: GC click-through
+PASS: search destination
+PASS: no best contractors
+PASS: not a marketplace
+PASS: page uses intelligence payload
+PASS: no competing intelligence route
+PASS: roofers CCC+RC
+PASS: roofers exclude RR
+PASS: HVAC includes registered RA
+PASS: general includes RG
+PASS: solar CVC+RV
+PASS: roofing bucket
+PASS: RR not in roofing bucket
+PASS: excluded statewide_qualifier_count
+PASS: excluded operating_county
+PASS: excluded distinct_legal_businesses
+PASS: excluded pilot_qualifier_edges
+PASS: excluded contractors_affected_by_discipline
+PASS: no premature enhanced counties
+PASS: Broward not enhanced
+PASS: no statewide qualifier counts
+PASS: no pilot edge count in education
+PASS: no pilot rate in education
+PASS: deregulation caveat
+PASS: Sunbiz not CONFIRMED census
+PASS: Sunbiz limitation
+PASS: publication matrix intact
+PASS: credentials from licenses SQL
+PASS: observations from discipline_actions SQL
+PASS: cached payload
+
+Florida State Intelligence assertions passed.
+PASS: discipline PUBLIC gate intact
+PASS: NULL publication is INTERNAL
+PASS: Sunbiz public 0.95 intact
+PASS: city-only remains review
+PASS: no adverse inheritance in attribution rules
+PASS: no adverse inherit constant
+PASS: DBA listed name is not QA role
+PASS: primary vs secondary preserved
+PASS: FRO role preserved
+PASS: numeric core never public
+PASS: non-final stays internal
+PASS: PUBLIC requires explicit validation
+PASS: full occupation+license identity gate
+PASS: landing credentials label
+PASS: landing active credentials label
+PASS: landing does not say searchable contractors
+PASS: landing discloses not businesses
+PASS: no hard-coded 104444
+PASS: landing excludes FRO/education
+PASS: active is secondary A only
+PASS: RR residential
+PASS: roofers CCC/RC
+PASS: solar CVC/RV
+PASS: FRO not trade
+PASS: holder table
+PASS: no person merge
+PASS: qualifier edges
+PASS: listed name distinct from QA
+PASS: unique portal licid
+PASS: no invented end dates
+PASS: Dade=Miami-Dade
+PASS: Volusia 74
+PASS: 701-799 out of state
+PASS: Intelligence discipline PUBLIC gate
+PASS: production regulatory publication gate intact
+PASS: full type+key CONFIRMED
+PASS: numeric core collision not CONFIRMED
+PASS: numeric unique still not CONFIRMED without type
+PASS: shared qualifier does not copy discipline
+PASS: same business keeps its own record
+
+P0 remediation assertions passed.
+PASS: RR official residential
+PASS: RC official roofing
+PASS: RR not roofing invariant
+PASS: RR excluded from roofing bucket
+PASS: solar bucket CVC/RV
+PASS: roofing bucket CCC/RC
+PASS: browse roofers CCC/RC
+PASS: browse solar CVC/RV
+PASS: UI RR label
+PASS: UI RC label
+PASS: Sunbiz public 0.95
+PASS: city-only review required
+PASS: no guilt by association
+PASS: profile/search gated
+PASS: florida browse gated
+PASS: landing does not hard-code 104444
+PASS: landing queries DB
+PASS: active license = credential
+PASS: active contractor not yet calculable
+PASS: statewide ≠ county operating sum
+PASS: county 16 Broward
+PASS: county 74 Volusia
+PASS: 701-799 out of state
+PASS: multiple contacts
+PASS: contacts do not overwrite
+PASS: extract active credentials = 104444
+PASS: extract credential rows = 143516
+PASS: QB shells = 126666
+PASS: numeric core collisions documented
+PASS: zero PUBLIC discipline rows
+PASS: DFS rows
+PASS: ULA not attached to contractors
+PASS: qualifier graph empty
+PASS: no FL phones
+PASS: live active = 104444
+
+Florida intelligence foundation assertions passed.
+PASS: SPA hidden ID = licid 6402354
+PASS: CBI page discloses tracking record
+PASS: page footer is agency contact, not licensee
+PASS: no distinct licensee phone field on sampled CBI detail
+PASS: unique licid index
+PASS: no invented end dates in schema
+PASS: no person merge
+PASS: currentness enum documented
+PASS: no adverse inherit
+PASS: listed name != QA
+PASS: P/S distinct
+PASS: INTEL-004 currentness
+PASS: INTEL-004 adverse
+PASS: primary
+PASS: secondary
+PASS: secondary syn
+PASS: FRO
+PASS: primary != secondary
+PASS: current from status
+PASS: void is historical
+PASS: missing end date is not historical
+PASS: blank status unknown
+PASS: business key
+PASS: holder key
+PASS: numeric core holder rejected
+PASS: name compat
+PASS: name reject
+PASS: parse one row got 1
+PASS: full license key
+PASS: canon
+PASS: effective iso
+PASS: no invented end
+PASS: credential expiration retained separately
+PASS: current from Current, Active
+
+Qualifier graph assertions passed.
+
+> contractor-trust-hub@0.1.0 test:nj-con-004
+> python -m unittest scripts.test_nj_con_004 && python -X utf8 scripts/assert_nj_con_004.py
+
+node.exe : ...........................................
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (.................................:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+----------------------------------------------------------------------
+Ran 43 tests in 0.002s
+
+OK
+assert_nj_con_004 PASS 6039233bf1748bf9e994818a9d38add1ca2f47c7140fd98809e55e6de11f1729
+
+> contractor-trust-hub@0.1.0 test:nj-con-county-001
+> python -m unittest scripts.test_nj_con_county_001 && python -X utf8 scripts/assert_nj_con_county_001.py
+
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.019s
+
+OK
+assert_nj_con_county_001 PASS
+
+> contractor-trust-hub@0.1.0 test:ca-con-002
+> python -m unittest scripts.test_ca_con_002 && python -X utf8 scripts/assert_ca_con_002.py
+
+...........................
+----------------------------------------------------------------------
+Ran 27 tests in 0.002s
+
+OK
+assert_ca_con_002 PASS 22a16cc508a54cfb2ccd302a4ca41427557834bdf5c2024ab3ee5059c26c8f19
+
+> contractor-trust-hub@0.1.0 test:ca-con-county-001a
+> python -m unittest scripts.test_ca_con_county_001a && python -X utf8 scripts/assert_ca_con_county_001a.py
+
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.001s
+
+OK
+assert_ca_con_county_001a PASS
+
+> contractor-trust-hub@0.1.0 test:ca-con-county-001b
+> python -X utf8 -m unittest scripts.test_ca_con_county_001b
+
+...............
+----------------------------------------------------------------------
+Ran 15 tests in 0.006s
+
+OK
+
+> contractor-trust-hub@0.1.0 test:ca-con-county-002
+> python -m unittest scripts.test_ca_con_county_002 && python -X utf8 scripts/assert_ca_con_county_002.py
+
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.001s
+
+OK
+assert_ca_con_county_002 PASS 8bda38b1d8a365d832331b9a5168a1e7429eb7c764e0665c2a040493b8e54373
+
+> contractor-trust-hub@0.1.0 test:tx-con-001
+> python -X utf8 -m unittest scripts.test_tx_con_001 && python -X utf8 scripts/assert_tx_con_001.py
+
+..................
+----------------------------------------------------------------------
+Ran 18 tests in 0.002s
+
+OK
+assert_tx_con_001 PASS 25d00ad3f4547ba212f4e2304177f788898c48d4750d1483944301eb1accadc6
+
+> contractor-trust-hub@0.1.0 test:tx-con-local-002
+> python -X utf8 -m unittest scripts.test_tx_con_local_002 scripts.test_tx_con_local_001a && python -X utf8 scripts/texas/local/tx-local-001b/test_tx_local_001b.py && python -X utf8 scripts/assert_tx_con_local_002.py
+
+..........................
+----------------------------------------------------------------------
+Ran 26 tests in 0.005s
+
+OK
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+OK
+assert_tx_con_local_002 PASS 417adb3cec14ce3849e0ca92b992f557693ce96a3d98f32f56afa2932a39889f
+
+> contractor-trust-hub@0.1.0 test:wa-con-001
+> python -X utf8 -m unittest scripts.test_wa_con_001 && python -X utf8 scripts/assert_wa_con_001.py
+
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.003s
+
+OK
+assert_wa_con_001 PASS 031f999a27459dee36ba4dd2ee8b766c3f1166629146f8e798edb04cbb910803
+
+> contractor-trust-hub@0.1.0 test:az-con-001
+> python -X utf8 -m unittest scripts.test_az_con_001 && python -X utf8 scripts/assert_az_con_001.py
+
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.001s
+
+OK
+assert_az_con_001 PASS ac2bfa07ef7e65f7cfa1527cd4564161f989d27371166636e0cc012091db2cd1
+
+> contractor-trust-hub@0.1.0 test:co-con-001
+> python -X utf8 -m unittest scripts.test_co_con_001 && python -X utf8 scripts/assert_co_con_001.py
+
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.003s
+
+OK
+assert_co_con_001 PASS d4895200fa822677843095ce1e4e216ecab7bf267a5d7945f7a1feabbc365b30
+
+> contractor-trust-hub@0.1.0 test:va-con-001
+> python -X utf8 -m unittest scripts.test_va_con_001 && python -X utf8 scripts/assert_va_con_001.py
+
+...............
+----------------------------------------------------------------------
+Ran 15 tests in 0.006s
+
+OK
+assert_va_con_001 PASS f758a837d397d7480eb80ff57889a9dd845a016b86edc95a0b4d8f457022eaa3
+
+> contractor-trust-hub@0.1.0 test:ny-con-001
+> python -X utf8 -m unittest scripts.test_ny_con_001 && python -X utf8 scripts/assert_ny_con_001.py && npx --yes tsx --test scripts/test_ny_ask_plan.ts
+
+............
+----------------------------------------------------------------------
+Ran 12 tests in 0.008s
+
+OK
+assert_ny_con_001 PASS 27f39aad84544a1ecfb4db74934ddbac55f94bd087b2a9cf3b5de20305685f14
+✔ explicit NY registry aggregate succeeds from the accepted snapshot (5.8552ms)
+✔ named-company and certificate questions do not become the statewide total (0.7725ms)
+✔ complaints, ranking, and discovery do not become the unfiltered total (0.5586ms)
+✔ debarment routing does not assume New York (6.7052ms)
+✔ existing exact-credential and VA/CO phrasing remain unchanged (1.057ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 409.9685
+
+> contractor-trust-hub@0.1.0 test:il-con-001
+> python -X utf8 -m unittest scripts.test_il_con_001 && python -X utf8 scripts/assert_il_con_001.py && npx --yes tsx --test scripts/test_il_ask_plan.ts
+
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.203s
+
+OK
+assert_il_con_001 PASS a9f63e7625d25fd64e4fe95b15f558a49fc719376154be481fdd062042dd0235
+✔ Illinois active roofing business count is the distinct ID headline (3.8235ms)
+✔ Illinois contractor total, entity, and filtered questions do not receive unfiltered counts (2.0567ms)
+✔ qualifying-party, source-row, and other-status counts never receive 4675 (1.6837ms)
+✔ mixed-jurisdiction and NY/VA/FL regressions stay off Illinois totals (0.9183ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 619.9953

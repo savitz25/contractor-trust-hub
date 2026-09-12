@@ -1,0 +1,5 @@
+
+> contractor-trust-hub@0.1.0 typecheck
+> tsc --noEmit
+
+lib/ask/recovery.ts(65,20): error TS2367: This comparison appears to be unintentional because the types 'TradeFamilyId | null' and '"elevator"' have no overlap.

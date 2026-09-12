@@ -3,6 +3,7 @@
  * Natural-language interpretation and database execution are separate layers.
  * Free-text never becomes SQL.
  */
+import { interpretRecovery, type ContractorRecovery } from "./recovery";
 import { intelligenceFingerprint } from "@/lib/intelligence/fingerprint";
 import {extractGeographyRequirement,decideGeography,type GeographyRequirement} from './geography';
 import {FLORIDA_COUNTIES} from '../discovery/counties';
@@ -28,6 +29,7 @@ export type ResearchMode =
   | "aggregate"
   | "comparison"
   | "evidence"
+  | "guidance"
   | "definition"
   | "fail_closed";
 
@@ -48,6 +50,7 @@ export type ContractorResearchQuery = {
   planId: string;
   mode: ResearchMode;
   rawQuery: string;
+  recovery?: ContractorRecovery | null;
   geographyRequirement?: GeographyRequirement | null;
   geographyAction?: string | null;
   geographyChoice?: string | null;
@@ -228,7 +231,8 @@ export function buildContractorResearchQuery(
   const compareCountySlugs =
     interpreted.mode === "comparison" ? ["broward", "palm-beach"] : [];
 
-  const mode = interpreted.mode as ResearchMode;
+  const recovery = interpreted.recovery ? interpretRecovery(interpreted.query, overrides) : null;
+  const mode = recovery ? "guidance" : interpreted.mode as ResearchMode;
   const executable =
     (!geographyRequirement || Boolean(geographyRequirement.executionGeography)) && interpreted.supported &&
     (mode === "entity" ||
@@ -245,6 +249,7 @@ export function buildContractorResearchQuery(
     version: RESEARCH_QUERY_VERSION,
     mode,
     rawQuery: interpreted.query,
+    recovery,
     geographyRequirement,
     geographyAction: overrides.geoAction,
     geographyChoice: overrides.geoChoice,
