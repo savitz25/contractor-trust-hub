@@ -54,7 +54,7 @@ export type ContractorExecutionRequest = {
 };
 
 type NormalizedGeography = {
-  state: "FL" | "NJ";
+  state: "FL" | "NJ" | "TX";
   county: { slug: string; label: string; code: string | null } | null;
   city: string | null;
   zip: string | null;
@@ -135,7 +135,7 @@ const SCHEMA_DESCRIPTOR = {
   resultStates: ["SUPPORTED_RESULTS", "ZERO_MATCHING_ROWS", "CLARIFICATION_REQUIRED", "INVALID_GEOGRAPHY", "UNSUPPORTED_STATE_CAPABILITY", "UNSUPPORTED_TRADE_CAPABILITY", "PUBLICATION_RESTRICTED", "INVALID_QUERY", "BACKEND_UNAVAILABLE", "TIMEOUT", "EXACT_IDENTITY"],
 };
 const CONTRACT_DESCRIPTOR = {
-  family: SPECIALIST_EXECUTION_VERSION, version: CONTRACT_VERSION, states: ["FL", "NJ"],
+  family: SPECIALIST_EXECUTION_VERSION, version: CONTRACT_VERSION, states: ["FL", "NJ", "TX"],
   publicationGate: "existing_non_thin_profile_with_slug",
   ordering: "normalized_name_then_credential_then_source_record",
   geography: "recorded_credential_address_never_service_territory",
@@ -147,9 +147,10 @@ function baseEnvelope() {
   return { contract: SPECIALIST_EXECUTION_VERSION, contractVersion: CONTRACT_VERSION, schemaFingerprint: CONTRACTOR_SCHEMA_FINGERPRINT, contractFingerprint: CONTRACTOR_CONTRACT_FINGERPRINT, hub: "contractor" as const };
 }
 function cleanText(value: unknown, max: number): string | null {
-  if (typeof value !== "string") return null;
+  if(value==null)return null;
+  if(typeof value!=="string"||value.length>max||/[\u0000-\u001f]/.test(value))throw new Error("invalid_text_field");
   const clean = value.trim().replace(/\s+/g, " ");
-  return clean && clean.length <= max ? clean : null;
+  return clean || null;
 }
 function normalizeState(value: unknown): string {
   if (value === undefined || value === null || value === "") return "FL";
@@ -168,7 +169,7 @@ function normalizeFloridaGeography(city: string | null, countyRaw: string | null
     ? FLORIDA_COUNTIES.find((row) => row.slug === countyRaw.toLowerCase() || row.name.toLowerCase() === countyRaw.toLowerCase().replace(/ county$/, ""))
     : cityCounty ? FLORIDA_COUNTIES.find((row) => row.slug === cityCounty.slug) : null;
   if (countyRaw && !county) throw new Error("invalid_geography:unsupported_florida_county");
-  if (city && !cityCounty && !countyRaw) throw new Error("clarification_required:city_requires_supported_county_mapping");
+  // Explicit FL city uses the existing recorded licenses.city equality predicate; no service-area inference.
   if (cityCounty && county && cityCounty.slug !== county.slug) throw new Error("invalid_geography:city_county_mismatch");
   return {
     state: "FL", county: county ? { slug: county.slug, label: county.name, code: county.matchCodes?.[0] ?? null } : null,
@@ -219,7 +220,7 @@ export function normalizeContractorExecutionRequest(value: unknown): NormalizedC
   const state = normalizeState(input.state ?? geo.stateCode);
   if (geo.stateCode && normalizeState(geo.stateCode) !== state) throw new Error("invalid_geography:state_conflict");
   const capability = getExecutionCapability(state);
-  if (!capability || (state !== "FL" && state !== "NJ")) throw new Error("unsupported_state");
+  if (!capability || (state !== "FL" && state !== "NJ" && state !== "TX")) throw new Error("unsupported_state");
   const queryTypeRaw = input.queryType ?? (input.identifier ? "identifier" : "cohort");
   if (!new Set(["cohort", "identifier", "identity", "capability"]).has(String(queryTypeRaw))) throw new Error("invalid_query_type");
   const status = input.credentialStatus ?? "active_current";
@@ -230,7 +231,7 @@ export function normalizeContractorExecutionRequest(value: unknown): NormalizedC
   const intent = (geo.intent ?? input.geographyIntent ?? "RECORDED_CREDENTIAL_GEOGRAPHY") as GeographyIntent;
   if (!new Set(["RECORDED_CREDENTIAL_GEOGRAPHY", "SERVICE_TERRITORY"]).has(intent)) throw new Error("invalid_geography_intent");
   const confirmStatewide = input.confirmStatewide === true;
-  const geography = state === "FL" ? normalizeFloridaGeography(city, county, intent) : state === "NJ" ? normalizeNewJerseyGeography(city, county, zip, intent, confirmStatewide) : null;
+  const geography = state === "FL" ? normalizeFloridaGeography(city, county, intent) : state === "NJ" ? normalizeNewJerseyGeography(city, county, zip, intent, confirmStatewide) : {state:"TX" as const,county:null,city:confirmStatewide?null:city,zip:confirmStatewide?null:zip,intent,meaning:"Texas TDLR credential jurisdiction. Recorded city is unavailable in this published cohort; not service territory.",authoritativeSource:null,requiresStatewideConfirmation:Boolean((city||county||zip)&&!confirmStatewide),fallbackApplied:Boolean((city||county||zip)&&confirmStatewide)};
   const tradeRaw = cleanText(input.trade, 64)?.toLowerCase() ?? null;
   const tradeCapability = getTradeCapability(state, tradeRaw);
   const credentialClass = cleanText(input.credentialClass, 32)?.toUpperCase() ?? null;
@@ -262,7 +263,7 @@ function capabilityResponse(input: NormalizedContractorExecutionRequest, resultS
 }
 
 function semanticCapabilityResult(input: NormalizedContractorExecutionRequest): ContractorCapabilityResponse | null {
-  if (!input.capability || (input.state !== "FL" && input.state !== "NJ")) {
+  if (!input.capability || (input.state !== "FL" && input.state !== "NJ" && input.state !== "TX")) {
     return capabilityResponse(input, "UNSUPPORTED_STATE_CAPABILITY", "unsupported_capability", "unsupported_state_capability", [`${input.state} is not an implemented specialist-execution state in this release. No other state source is substituted.`], stateChoices());
   }
   if (!input.geography) throw new Error("invalid_geography");
@@ -272,6 +273,7 @@ function semanticCapabilityResult(input: NormalizedContractorExecutionRequest): 
       { id: "verify", label: "Verify an exact business or credential", supported: true, destination: absoluteUrl(input.capability.verifyDestination) },
     ]);
   }
+  if(input.state==='TX'&&(!input.tradeCapability && input.credentialClass!=='TAC' || input.credentialClass&&input.credentialClass!=='TAC'))return capabilityResponse(input,'UNSUPPORTED_TRADE_CAPABILITY','unsupported_capability','unsupported_texas_class',['This path supports only the existing Texas TDLR A/C Contractor (TAC) cohort. No other Texas class is substituted.']);
   if (input.geography.requiresStatewideConfirmation) {
     return capabilityResponse(input, "CLARIFICATION_REQUIRED", "clarification_required", "statewide_fallback_confirmation_required", ["The requested local geography cannot be applied at an authoritative grain. Confirm statewide research instead; no silent broadening occurred."], [
       { id: "statewide", label: `Show statewide ${input.capability.state.name} credential records`, supported: true, request: { state: input.state, trade: input.tradeCapability?.id ?? input.tradeRaw ?? undefined, confirmStatewide: true } },
@@ -296,40 +298,42 @@ function semanticCapabilityResult(input: NormalizedContractorExecutionRequest): 
   return null;
 }
 
-function buildWhere(input: NormalizedContractorExecutionRequest) {
+export function buildWhere(input: NormalizedContractorExecutionRequest) {
   if (!input.capability || !input.geography) throw new Error("unsupported_state_capability");
   const params: unknown[] = [input.capability.sourceSystems];
   const terms = ["l.source_system = ANY($1::text[])", "c.is_thin_profile = FALSE", "c.slug IS NOT NULL AND c.slug <> ''"];
-  if (input.state === "FL") { params.push("FL"); terms.push(`(c.home_state = $${params.length} OR l.state = $${params.length})`); }
+  if (input.state === "FL") { params.push(input.state); terms.push(`(c.home_state = $${params.length} OR l.state = $${params.length})`); }
+  if (input.state === "TX") { params.push(input.state); terms.push(`l.state = $${params.length}`); }
   const occupationCodes = input.credentialClass ? [input.credentialClass] : input.tradeCapability?.occupationCodes ?? [];
-  if (occupationCodes.length) { params.push(occupationCodes); terms.push(`UPPER(TRIM(l.occupation_code)) = ANY($${params.length}::text[])`); }
+  if (occupationCodes.length) { params.push(occupationCodes); terms.push(input.state === "TX" ? `l.occupation_code = ANY($${params.length}::text[])` : `UPPER(TRIM(l.occupation_code)) = ANY($${params.length}::text[])`); }
   if (input.credentialStatus === "active_current") terms.push("l.status_normalized IN ('active', 'current')");
   if (input.credentialStatus === "expired") terms.push("l.status_normalized IN ('expired', 'inactive')");
   if (input.geography.county) {
     if (input.state === "NJ") { params.push(input.geography.county.label.toLowerCase()); terms.push(`LOWER(REGEXP_REPLACE(TRIM(COALESCE(l.county_name, '')), '\\s+county$', '', 'i')) = $${params.length}`); terms.push("l.state = 'NJ'"); }
-    else { params.push(input.geography.county.code ?? input.geography.county.label); terms.push(input.geography.county.code ? `l.county_code = $${params.length}` : `l.county_name ILIKE $${params.length}`); }
+    else { params.push(input.geography.county.code ?? input.geography.county.label); terms.push(input.geography.county.code ? `l.county_code = $${params.length}` : `l.county_name = $${params.length}`); }
   }
-  if (input.geography.city) { params.push(input.geography.city.toLowerCase()); terms.push(`LOWER(TRIM(COALESCE(l.city, ''))) = $${params.length}`); }
+  if (input.geography.city) { params.push(input.state); terms.push(`l.state = $${params.length}`); params.push(input.geography.city.toLowerCase()); terms.push(`LOWER(TRIM(COALESCE(l.city, ''))) = $${params.length}`); }
   if (input.identifier) { params.push(input.identifier.toUpperCase().replace(/[\s-]+/g, "")); terms.push(`(UPPER(REGEXP_REPLACE(COALESCE(l.external_key, ''), '[\\s-]+', '', 'g')) = $${params.length} OR UPPER(REGEXP_REPLACE(COALESCE(l.license_number, ''), '[\\s-]+', '', 'g')) = $${params.length})`); }
   return { sql: terms.join(" AND "), params, occupationCodes };
 }
 
-export async function executeContractorSpecialistQuery(raw: unknown): Promise<ContractorExecutionResponse | ContractorCapabilityResponse> {
+export async function executeContractorSpecialistQuery(raw: unknown, db: {query:typeof query;queryOne:typeof queryOne} = {query,queryOne}): Promise<ContractorExecutionResponse | ContractorCapabilityResponse> {
   const input = normalizeContractorExecutionRequest(raw);
   if (input.state === "FL" && input.tradeRaw === "electrical") throw new Error("unsupported_florida_electrical_source");
   const semantic = semanticCapabilityResult(input);
   if (semantic) return semantic;
-  if (!input.capability || !input.geography || (input.state !== "FL" && input.state !== "NJ")) throw new Error("unsupported_state_capability");
+  if (!input.capability || !input.geography || (input.state !== "FL" && input.state !== "NJ" && input.state !== "TX")) throw new Error("unsupported_state_capability");
   const built = buildWhere(input);
   const offset = (input.page - 1) * input.limit;
-  const count = await queryOne<{ total: string }>(`SELECT COUNT(*)::text AS total FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE ${built.sql}`, built.params, { statementTimeoutMs: 10_000 });
+  const count = await db.queryOne<{ total: string }>(`SELECT COUNT(*)::text AS total FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE ${built.sql}`, built.params, { statementTimeoutMs: 10_000 });
   const params = [...built.params, input.limit, offset];
-  const rows = await query<{ slug: string; display_name: string; license_number: string | null; external_key: string | null; occupation_code: string | null; occupation_description: string | null; status_normalized: string | null; primary_status: string | null; city: string | null; county: string | null; state: string | null; updated_at: Date | string | null }>(
+  const rows = await db.query<{ slug: string; display_name: string; license_number: string | null; external_key: string | null; occupation_code: string | null; occupation_description: string | null; status_normalized: string | null; primary_status: string | null; city: string | null; county: string | null; state: string | null; updated_at: Date | string | null }>(
     `SELECT c.slug, c.display_name, l.license_number, l.external_key, l.occupation_code, l.occupation_description, l.status_normalized, l.primary_status, l.city, l.county_name AS county, l.state, l.updated_at
      FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE ${built.sql}
      ORDER BY LOWER(c.display_name), UPPER(COALESCE(l.license_number, l.external_key, '')), l.id
      LIMIT $${built.params.length + 1}::int OFFSET $${built.params.length + 2}::int`, params, { statementTimeoutMs: 15_000 });
-  const total = Number(count?.total ?? 0);
+  const total = Number(count?.total);
+  if(!count || !Number.isSafeInteger(total)||total<0)throw new Error("source_count_unavailable");
   const totalPages = Math.ceil(total / input.limit);
   const pageOutOfRange = totalPages > 0 && input.page > totalPages;
   const resultState: ContractorExecutionResponse["resultState"] = pageOutOfRange ? "INVALID_QUERY" : input.identifier && total === 1 ? "EXACT_IDENTITY" : total === 0 ? "ZERO_MATCHING_ROWS" : "SUPPORTED_RESULTS";
@@ -364,13 +368,14 @@ export async function executeContractorSpecialistQuery(raw: unknown): Promise<Co
     availableRefinements: [
       { field: "trade", values: input.capability.trades.map((trade) => trade.id) },
       { field: "credentialStatus", values: ["active_current", "expired", "all"] },
-      ...(input.state === "FL" ? [{ field: "county", values: FLORIDA_COUNTIES.map((county) => county.slug) }] : [{ field: "county", values: [...NJ_COUNTIES] }]),
+      ...(input.state === "FL" ? [{ field: "county", values: FLORIDA_COUNTIES.map((county) => county.slug) }] : input.state === "NJ" ? [{ field: "county", values: [...NJ_COUNTIES] }] : []),
     ],
     provenance: { source: input.capability.state.boardLabel, sourceSystem: input.capability.sourceSystems[0], sourceClockField: "licenses.updated_at", queryGrain: `${input.capability.state.code} source-native credential row joined to an existing public non-thin ContractorTrustHub identity`, publicationSemantics: "Research-row inclusion reuses the existing non-thin public profile relationship; this endpoint creates no identity or profile." },
     limitations: [
       "Rows are neutral regulatory research results, not rankings, recommendations, or proof of workmanship.",
       "Recorded credential/address geography is not service territory or current availability.",
       `Credential status and source clock reflect the indexed ${input.capability.state.boardShortLabel} source and should be confirmed with the official board.`,
+      ...(input.state === "TX" ? ["Texas TAC is the existing A/C Contractor mapping. Indexed active/expired status is derived from source expiration dates, not a current TDLR authority approval. City/address coverage is unavailable here."] : []),
       "Only existing public, non-thin ContractorTrustHub profiles are returned; this contract does not expand publication.",
       ...(input.state === "NJ" ? ["New Jersey has no single statewide General contractor license class; HIC and each specialty remain separate."] : []),
       ...(pageOutOfRange ? [`Requested page ${input.page} exceeds the current last page ${totalPages}; no broader or fallback query was executed.`] : []),

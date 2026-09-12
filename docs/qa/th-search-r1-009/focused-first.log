@@ -1,0 +1,31 @@
+✔ Austin city survives before capability selection (7.0923ms)
+✔ Dallas city survives before capability selection (3.9744ms)
+✔ Houston city survives before capability selection (0.5867ms)
+✔ El Paso city survives before capability selection (0.4146ms)
+✔ ordinary explicit city/state forms use one extraction (0.6983ms)
+✔ Browrd typo cannot authorize Florida execution (5.8428ms)
+✔ accepted correction equals exact county query, including real SQL (1.9681ms)
+✔ invalid or cross-state correction cannot execute (2.6289ms)
+✔ explicit broadening preserves original city, trade and status with TX native class (1.1091ms)
+✔ broadening cannot change state or unsupported trade (0.6645ms)
+✔ business names do not become geography or correction (0.2575ms)
+✔ ambiguous, unknown, radius and multiple places remain unresolved (3.0231ms)
+✔ other filters and requested text survive action URLs and pagination (1.1112ms)
+✔ full input/duplicate/action/page validation before parsing (0.2096ms)
+✔ native/canonical route policy shares full interpreted geography (2.2808ms)
+✔ FL predicates apply county/city before pagination and retain source identity (1.7897ms)
+✔ NJ Master Plumber is PLB, not Florida plumbing classes (0.384ms)
+✔ exact credential routing remains intact (0.31ms)
+✔ actual V2 execution uses source/class/county predicates before limit and builds truthful rows (1.7957ms)
+✔ actual V2 city equality is executed with state, not a statewide window (0.3079ms)
+✔ actual NJ and TX positive execution remains useful and source-native (0.4221ms)
+✔ unsupported local scope blocks source calls; valid zero differs from source failure (0.6657ms)
+✔ pagination retains source scope and count independently of displayed row count (0.2654ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2416.0843

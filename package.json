@@ -70,7 +70,8 @@
     "test:ath-cust-008": "python -m unittest scripts.test_ath_cust_008",
     "check:ath-cust-v1-repair-001-contractor": "npx --yes tsx --test scripts/test_ath_cust_v1_repair_001.ts scripts/test_ath_cust_003.ts scripts/test_ath_cust_005.tsx scripts/test_ath_cust_007.tsx",
     "check:ath-claim-publish-001": "npx --yes tsx --test scripts/test_ath_claim_publish_001.tsx scripts/test_ath_cust_005.tsx scripts/test_ath_cust_007.tsx",
-    "report:ath-cust-003": "node scripts/report_ath_cust_003_cohort.mjs"
+    "report:ath-cust-003": "node scripts/report_ath_cust_003_cohort.mjs",
+    "check:th-search-r1-009": "npx --yes tsx --test scripts/test_th_search_r1_009.ts"
   },
   "dependencies": {
     "next": "16.3.3",

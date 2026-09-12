@@ -1,0 +1,79 @@
+
+> contractor-trust-hub@0.1.0 check:th-search-r1-009
+> npx --yes tsx --test scripts/test_th_search_r1_009.ts
+
+✔ Austin city survives before capability selection (5.2763ms)
+✔ Dallas city survives before capability selection (2.4001ms)
+✔ Houston city survives before capability selection (0.3336ms)
+✔ El Paso city survives before capability selection (0.2801ms)
+✔ ordinary explicit city/state forms use one extraction (0.6511ms)
+✖ Browrd typo cannot authorize Florida execution (5.6222ms)
+✔ accepted correction equals exact county query, including real SQL (3.6732ms)
+✖ invalid or cross-state correction cannot execute (3.3321ms)
+✔ explicit broadening preserves original city, trade and status with TX native class (1.1894ms)
+✔ broadening cannot change state or unsupported trade (0.7487ms)
+✔ business names do not become geography or correction (0.2419ms)
+✔ ambiguous, unknown, radius and multiple places remain unresolved (2.8117ms)
+✔ other filters and requested text survive action URLs and pagination (0.9352ms)
+✔ full input/duplicate/action/page validation before parsing (0.1979ms)
+✔ native/canonical route policy shares full interpreted geography (1.6419ms)
+✔ FL predicates apply county/city before pagination and retain source identity (1.7689ms)
+✔ NJ Master Plumber is PLB, not Florida plumbing classes (0.5147ms)
+✔ exact credential routing remains intact (0.3642ms)
+✔ actual V2 execution uses source/class/county predicates before limit and builds truthful rows (1.8574ms)
+✔ actual V2 city equality is executed with state, not a statewide window (0.3217ms)
+✔ actual NJ and TX positive execution remains useful and source-native (0.3794ms)
+✔ unsupported local scope blocks source calls; valid zero differs from source failure (0.6087ms)
+✔ pagination retains source scope and count independently of displayed row count (0.2945ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 21
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 657.8396
+
+✖ failing tests:
+
+test at scripts\test_th_search_r1_009.ts:2:2822
+✖ Browrd typo cannot authorize Florida execution (5.6222ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:47:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\test_th_search_r1_009.ts:2:3893
+✖ invalid or cross-state correction cannot execute (3.3321ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:77:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

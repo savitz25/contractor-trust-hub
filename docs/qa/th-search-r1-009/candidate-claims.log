@@ -1,0 +1,23 @@
+
+> contractor-trust-hub@0.1.0 check:ath-claim-publish-001
+> npx --yes tsx --test scripts/test_ath_claim_publish_001.tsx scripts/test_ath_cust_005.tsx scripts/test_ath_cust_007.tsx
+
+✔ canonical V1 fixture parses and renders unmistakable provenance without completeness or endorsement (23.6199ms)
+✔ claim intake flag is decoupled from profile and response publication (0.2074ms)
+✔ profile contract rejects private, malformed, unsafe, oversized, and mismatched data (0.5329ms)
+✔ business response contract rejects wrong identity and private or malformed data (0.5108ms)
+✔ source-derived SEO remains separate and account failure cannot replace the Trust Report (0.202ms)
+✔ public contract accepts only the exact UUID and public allowlist (1.8436ms)
+✔ public overlay escapes text and keeps self-reported service area distinct (34.5149ms)
+✔ Ask outage, rejection, malformed response, and invalid UUID fail closed (40.914ms)
+✔ strict public reply allowlist excludes private moderation data (1.274ms)
+✔ evidence-first business response card is neutral and safely escaped (27.0705ms)
+✔ Ask outage, rejection and malformed DTO fail closed (37.9647ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 553.8721

@@ -4,6 +4,8 @@
  * Free-text never becomes SQL.
  */
 import { intelligenceFingerprint } from "@/lib/intelligence/fingerprint";
+import {extractGeographyRequirement,decideGeography,type GeographyRequirement} from './geography';
+import {FLORIDA_COUNTIES} from '../discovery/counties';
 import type { AskResult } from "./types";
 import { ASK_CLEARED, askHref, type AskUrlOverrides } from "./url";
 export { askHref, type AskUrlOverrides };
@@ -46,9 +48,13 @@ export type ContractorResearchQuery = {
   planId: string;
   mode: ResearchMode;
   rawQuery: string;
+  geographyRequirement?: GeographyRequirement | null;
+  geographyAction?: string | null;
+  geographyChoice?: string | null;
   identity: { identifier: string | null; entityQuery: string | null };
   geography: {
     state: "FL" | null;
+    city?: string | null;
     countySlug: string | null;
     countyLabel: string | null;
     evidenceType: GeographyEvidenceType;
@@ -108,6 +114,8 @@ export function parseAskOverrides(sp: URLSearchParams | AskUrlOverrides): AskUrl
   if (sp instanceof URLSearchParams) {
     return {
       geo: sp.get("geo"),
+      geoAction: sp.get("geoAction"),
+      geoChoice: sp.get("geoChoice"),
       trade: sp.get("trade"),
       status: sp.get("status"),
       evidence: sp.get("evidence"),
@@ -134,9 +142,9 @@ function tradeFromId(id: string | null): ContractorResearchQuery["trade"] {
 
 function countyFromSlug(slug: string | null): { slug: string; label: string } | null {
   if (!slug) return null;
-  const geo = GEO_ONTOLOGY.find((g) => g.id === slug && g.kind === "county");
+  const geo = FLORIDA_COUNTIES.find((g) => g.slug === slug);
   if (!geo) return null;
-  return { slug: geo.id, label: geo.label };
+  return { slug: geo.slug, label: `${geo.name} County, Florida` };
 }
 
 function evidenceFromInterpreted(label: string): EvidenceFamilyId | null {
@@ -210,15 +218,17 @@ export function buildContractorResearchQuery(
     sortField = "evidence_count";
   }
 
+  const geographyRequirement = interpreted.mode==='comparison'||interpreted.interpretation.identifier||interpreted.interpretation.entityQuery ? null : decideGeography(extractGeographyRequirement(interpreted.query),tradeId,overrides);
+  if(geographyRequirement?.executionGeography)countySlug=geographyRequirement.executionGeography.countySlug??null;
   const county = countyFromSlug(countySlug);
-  const state = county || forceFlorida ? "FL" : stateFromInterpreted(interpreted.interpretation.location);
+  const state = geographyRequirement ? geographyRequirement.executionGeography?.state==="FL"?"FL":null : county || forceFlorida ? "FL" : stateFromInterpreted(interpreted.interpretation.location);
   const trade = tradeFromId(tradeId);
   const compareCountySlugs =
     interpreted.mode === "comparison" ? ["broward", "palm-beach"] : [];
 
   const mode = interpreted.mode as ResearchMode;
   const executable =
-    interpreted.supported &&
+    (!geographyRequirement || Boolean(geographyRequirement.executionGeography)) && interpreted.supported &&
     (mode === "entity" ||
       mode === "count" ||
       mode === "comparison" ||
@@ -233,12 +243,16 @@ export function buildContractorResearchQuery(
     version: RESEARCH_QUERY_VERSION,
     mode,
     rawQuery: interpreted.query,
+    geographyRequirement,
+    geographyAction: overrides.geoAction,
+    geographyChoice: overrides.geoChoice,
     identity: {
       identifier: interpreted.interpretation.identifier,
       entityQuery: interpreted.interpretation.entityQuery,
     },
     geography: {
       state,
+      city:geographyRequirement?.executionGeography?.city??null,
       countySlug: county?.slug ?? null,
       countyLabel: county?.label ?? (state === "FL" ? "Florida (statewide in this extract)" : null),
       evidenceType: county || state === "FL" ? "mailing_address" : "unknown",
@@ -264,7 +278,7 @@ export function buildContractorResearchQuery(
     page,
     offset: (page - 1) * ASK_PAGE_SIZE,
     executable: Boolean(executable),
-    failMessage: interpreted.failMessage,
+    failMessage: geographyRequirement&&!geographyRequirement.executionGeography?geographyRequirement.message:interpreted.failMessage,
     changeHints: interpreted.changeHints,
     notes: [
       ...interpreted.interpretation.notes,
@@ -279,6 +293,8 @@ export function buildContractorResearchQuery(
 
 export function planToOverrides(plan: ContractorResearchQuery): AskUrlOverrides {
   return {
+    geoAction:plan.geographyAction,
+    geoChoice:plan.geographyChoice,
     geo: plan.geography.countySlug ?? (plan.geography.state === "FL" ? "fl" : undefined),
     trade: plan.trade.familyId ?? undefined,
     status: plan.credentialStatus,
@@ -295,6 +311,7 @@ export function chipHref(
 ): string {
   const o = planToOverrides(plan);
   o[clear] = ASK_CLEARED;
+  if(clear==='geo'&&plan.geographyRequirement?.requestedState){o.geo=undefined;o.geoAction='broaden';o.geoChoice=plan.geographyRequirement.requestedState.toLowerCase();}
   o.page = "1";
   return askHref(q, o);
 }

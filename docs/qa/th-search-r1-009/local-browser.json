@@ -1,0 +1,185 @@
+{
+  "at": "2026-09-12T13:42:57.484Z",
+  "base": "http://localhost:3099",
+  "phase": "local",
+  "sha": "uncommitted candidate",
+  "cases": [
+    {
+      "name": "typo-first-enter",
+      "url": "http://localhost:3099/ask?q=roofers+in+browrd+county+fl&geo=&trade=&status=&evidence=",
+      "ms": 668,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "RESEARCH CONTRACTORS\n\nWhat do you want to find out?\n\nAsk in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.\n\nAsk ContractorTrustHub\nResearch\n\nDid you mean Broward County, Florida? We will not silently change the query.\n\nRoofing\nCertified Roofing Contractor\nRegistered Roofing Contractor\nLicense status\nRoofing\nHVAC\nGeneral contractors\nDBPR discipline\nCounts\nTrade families\nBroward\nPalm Beach\nCompare markets\nAdvanced filters\n\nRECENT RESEARCH\n\nroofers in browrd county fl\nConfirm the county\n\nYou asked for: Browrd County, Florida\n\nLocal scope: Not executed\n\nDid you mean Broward County, Florida? Apply the correction before research runs.\n\nApply Broward County\nGeography Trace\n\nWE INTERPRETED YOUR QUESTION AS\n\nQuery interpretation\nLocation\nBrowrd County, Florida\nGeography basis\nIndexed DBPR address county — not service territory\nTrade\nRoofing\nIncluded credential classes\nCertified Roofing Contractor, Registered Roofing Contractor\nStatus\nall\nEvidence\nNot specified\nSort\nname\nIncludes credential classes\n\nFlorida CILB roofing is CCC (certified) and RC (registered). RR is registered residential, not roofing.\n\nTrade: Roofing ×\n\nChange interpretation: Open Verify · Open Florida trade page\n\nDid you mean Broward County, Florida? Apply the correction before research runs.\n\nTrace this query",
+      "screenshot": "docs/qa/th-search-r1-009/local-typo-first-enter.png"
+    },
+    {
+      "name": "accepted-correction",
+      "url": "http://localhost:3099/ask?q=roofers+in+browrd+county+fl&geoAction=correct&geoChoice=broward&trade=roofing&status=all&sort=name",
+      "ms": 187,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "RESEARCH CONTRACTORS\n\nWhat do you want to find out?\n\nAsk in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.\n\nAsk ContractorTrustHub\nResearch\nRoofing\nCertified Roofing Contractor\nRegistered Roofing Contractor\nLicense status\nRoofing\nHVAC\nGeneral contractors\nDBPR discipline\nCounts\nTrade families\nBroward\nPalm Beach\nCompare markets\nAdvanced filters\n\nRECENT RESEARCH\n\nroofers in browrd county fl\nYour requested place\n\nYou asked for: Browrd County, Florida\n\nApplied geography: Broward County, Florida\n\nUser accepted the county correction.\n\nRecorded credential address, not service territory or availability.\n\nResearch Florida statewide instead\nGeography Trace\n\nWE INTERPRETED YOUR QUESTION AS\n\nQuery interpretation\nLocation\nBrowrd County, Florida\nGeography basis\nIndexed DBPR address county — not service territory\nTrade\nRoofing\nIncluded credential classes\nCertified Roofing Contractor, Registered Roofing Contractor\nStatus\nall\nEvidence\nNot specified\nSort\nname\nIncludes credential classes\n\nFlorida CILB roofing is CCC (certified) and RC (registered). RR is registered residential, not roofing.\n\nThese results have a recorded county location/address in the indexed licensing record. That does not establish their complete service area.\n\nBroaden from Broward County, Florida to Florida ×\nTrade: Roofing ×\n\nChange interpretation: Open Verify · Open Florida trade page\n\nThe source query could not be completed. Retry this same research request; no broader scope or zero-result count was inferred.\n\nTrace this query",
+      "screenshot": "docs/qa/th-search-r1-009/local-accepted-correction.png"
+    },
+    {
+      "name": "austin",
+      "url": "http://localhost:3099/search?q=HVAC+contractors+in+Austin+Texas",
+      "ms": 419,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "FIND / RESEARCH CONTRACTORS\n\nContractor discovery research\n\nSearch source-backed credential records by trade and supported recorded geography. Results are neutral research—not rankings or proof that a contractor serves an area.\n\nDescribe the contractor research you need\nResearch contractors\nYour requested place\n\nYou asked for: Austin, Texas\n\nLocal scope: Not executed\n\nThe requested local geography cannot be applied in this credential path. You can explicitly choose Texas statewide research instead.\n\nResearch Texas statewide instead\n\nTexas A/C status is derived from indexed expiration dates; confirm with TDLR. Texas intelligence is a separate source overview.\n\nGeography Trace\n\nTrade: hvac. No broader credential list has been executed. Edit the place or select an available choice above.\n\nHave an exact company or credential? Use Verify. Recorded regulatory geography does not establish service territory or current availability.",
+      "screenshot": "docs/qa/th-search-r1-009/local-austin.png"
+    },
+    {
+      "name": "dallas",
+      "url": "http://localhost:3099/search?q=HVAC+contractors+in+Dallas+Texas",
+      "ms": 304,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "FIND / RESEARCH CONTRACTORS\n\nContractor discovery research\n\nSearch source-backed credential records by trade and supported recorded geography. Results are neutral research—not rankings or proof that a contractor serves an area.\n\nDescribe the contractor research you need\nResearch contractors\nYour requested place\n\nYou asked for: Dallas, Texas\n\nLocal scope: Not executed\n\nThe requested local geography cannot be applied in this credential path. You can explicitly choose Texas statewide research instead.\n\nResearch Texas statewide instead\n\nTexas A/C status is derived from indexed expiration dates; confirm with TDLR. Texas intelligence is a separate source overview.\n\nGeography Trace\n\nTrade: hvac. No broader credential list has been executed. Edit the place or select an available choice above.\n\nHave an exact company or credential? Use Verify. Recorded regulatory geography does not establish service territory or current availability.",
+      "screenshot": "docs/qa/th-search-r1-009/local-dallas.png"
+    },
+    {
+      "name": "explicit-texas",
+      "url": "http://localhost:3099/search?q=HVAC+contractors+in+Dallas+Texas&geoAction=broaden&geoChoice=tx",
+      "ms": 123,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "FIND / RESEARCH CONTRACTORS\n\nContractor discovery research\n\nSearch source-backed credential records by trade and supported recorded geography. Results are neutral research—not rankings or proof that a contractor serves an area.\n\nDescribe the contractor research you need\nResearch contractors\nYour requested place\n\nYou asked for: Dallas, Texas\n\nApplied geography: Texas\n\nUser selected broader state research; the original local requirement was not applied.\n\nState credential jurisdiction, not service territory or availability.\n\nTexas A/C status is derived from indexed expiration dates; confirm with TDLR. Texas intelligence is a separate source overview.\n\nGeography Trace\n\nYOUR RESEARCH\n\nWhat the search understood\nTrade\nhvac\nLocation\nTX\nGeography basis\nRecorded credential geography—not service territory\n\nBACKEND UNAVAILABLE\n\nContractor research is temporarily unavailable\n\nRecorded credential geography; not service territory or current availability.\n\nContractor credential research is temporarily unavailable. Your query was not broadened or replaced.\n\nHave an exact company or credential? Use Verify. Recorded regulatory geography does not establish service territory or current availability.",
+      "screenshot": "docs/qa/th-search-r1-009/local-explicit-texas.png"
+    },
+    {
+      "name": "control-0",
+      "url": "http://localhost:3099/ask?q=roofers+in+Broward+County",
+      "ms": 223,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "RESEARCH CONTRACTORS\n\nWhat do you want to find out?\n\nAsk in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.\n\nAsk ContractorTrustHub\nResearch\nRoofing\nCertified Roofing Contractor\nRegistered Roofing Contractor\nBroward County, Florida\nLicense status\nRoofing\nHVAC\nGeneral contractors\nDBPR discipline\nCounts\nTrade families\nBroward\nPalm Beach\nCompare markets\nAdvanced filters\n\nRECENT RESEARCH\n\nroofers in browrd county fl\nYour requested place\n\nYou asked for: Broward County, Florida\n\nApplied geography: Broward County, Florida\n\nRequested recorded geography applied before pagination.\n\nRecorded credential address, not service territory or availability.\n\nResearch Florida statewide instead\nGeography Trace\n\nWE INTERPRETED YOUR QUESTION AS\n\nQuery interpretation\nLocation\nBroward County, Florida\nGeography basis\nIndexed DBPR address county — not service territory\nTrade\nRoofing\nIncluded credential classes\nCertified Roofing Contractor, Registered Roofing Contractor\nStatus\nall\nEvidence\nNot specified\nSort\nname\nIncludes credential classes\n\nFlorida CILB roofing is CCC (certified) and RC (registered). RR is registered residential, not roofing.\n\nCounty pages use mailing/HQ county on the credential. That is not service territory.\n\nThese results have a recorded county location/address in the indexed licensing record. That does not establish their complete service area.\n\nBroaden from Broward County, Florida to Florida ×\nTrade: Roofing ×\n\nChange interpretation: Open Verify · Open Florida trade page\n\nThe source query could not be completed. Retry this same research request; no broader scope or zero-result count was inferred.\n\nTrace this query",
+      "screenshot": "docs/qa/th-search-r1-009/local-control-0.png"
+    },
+    {
+      "name": "control-1",
+      "url": "http://localhost:3099/ask?q=HVAC+contractors+in+Palm+Beach+County",
+      "ms": 188,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "RESEARCH CONTRACTORS\n\nWhat do you want to find out?\n\nAsk in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.\n\nAsk ContractorTrustHub\nResearch\nHVAC / air conditioning\nCertified Air Conditioning Contractor\nRegistered Air Conditioning Contractor\nPalm Beach County, Florida\nLicense status\nRoofing\nHVAC\nGeneral contractors\nDBPR discipline\nCounts\nTrade families\nBroward\nPalm Beach\nCompare markets\nAdvanced filters\n\nRECENT RESEARCH\n\nroofers in browrd county fl\nYour requested place\n\nYou asked for: Palm Beach County, Florida\n\nApplied geography: Palm Beach County, Florida\n\nRequested recorded geography applied before pagination.\n\nRecorded credential address, not service territory or availability.\n\nResearch Florida statewide instead\nGeography Trace\n\nWE INTERPRETED YOUR QUESTION AS\n\nQuery interpretation\nLocation\nPalm Beach County, Florida\nGeography basis\nIndexed DBPR address county — not service territory\nTrade\nHVAC / air conditioning\nIncluded credential classes\nCertified Air Conditioning Contractor, Registered Air Conditioning Contractor\nStatus\nall\nEvidence\nNot specified\nSort\nname\nIncludes credential classes\n\nFlorida air-conditioning class is CAC/RA. Mechanical (CMC/RM) is a distinct class.\n\nCounty pages use mailing/HQ county on the credential. That is not service territory.\n\nThese results have a recorded county location/address in the indexed licensing record. That does not establish their complete service area.\n\nBroaden from Palm Beach County, Florida to Florida ×\nTrade: HVAC / air conditioning ×\n\nChange interpretation: Open Verify · Open Florida trade page\n\nThe source query could not be completed. Retry this same research request; no broader scope or zero-result count was inferred.\n\nTrace this query",
+      "screenshot": "docs/qa/th-search-r1-009/local-control-1.png"
+    },
+    {
+      "name": "control-2",
+      "url": "http://localhost:3099/search?q=plumbers+in+New+Jersey",
+      "ms": 256,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "FIND / RESEARCH CONTRACTORS\n\nContractor discovery research\n\nSearch source-backed credential records by trade and supported recorded geography. Results are neutral research—not rankings or proof that a contractor serves an area.\n\nDescribe the contractor research you need\nResearch contractors\nYour requested place\n\nYou asked for: New Jersey\n\nApplied geography: New Jersey\n\nRequested recorded geography applied before pagination.\n\nState credential jurisdiction, not service territory or availability.\n\nGeography Trace\n\nYOUR RESEARCH\n\nWhat the search understood\nTrade\nplumbing\nLocation\nNJ\nGeography basis\nRecorded credential geography—not service territory\n\nBACKEND UNAVAILABLE\n\nContractor research is temporarily unavailable\n\nRecorded credential geography; not service territory or current availability.\n\nContractor credential research is temporarily unavailable. Your query was not broadened or replaced.\n\nHave an exact company or credential? Use Verify. Recorded regulatory geography does not establish service territory or current availability.",
+      "screenshot": "docs/qa/th-search-r1-009/local-control-2.png"
+    },
+    {
+      "name": "control-3",
+      "url": "http://localhost:3099/search?q=HVAC+contractors+in+Springfield",
+      "ms": 296,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "FIND / RESEARCH CONTRACTORS\n\nContractor discovery research\n\nSearch source-backed credential records by trade and supported recorded geography. Results are neutral research—not rankings or proof that a contractor serves an area.\n\nDescribe the contractor research you need\nResearch contractors\nYour requested place\n\nYou asked for: Springfield\n\nLocal scope: Not executed\n\nClarify the requested city, county and state. No broader search has run.\n\nGeography Trace\n\nTrade: hvac. No broader credential list has been executed. Edit the place or select an available choice above.\n\nHave an exact company or credential? Use Verify. Recorded regulatory geography does not establish service territory or current availability.",
+      "screenshot": "docs/qa/th-search-r1-009/local-control-3.png"
+    },
+    {
+      "name": "control-4",
+      "url": "http://localhost:3099/ask?q=roofers+in+Zzzyx+County+Florida",
+      "ms": 190,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "RESEARCH CONTRACTORS\n\nWhat do you want to find out?\n\nAsk in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.\n\nAsk ContractorTrustHub\nResearch\nRoofing\nCertified Roofing Contractor\nRegistered Roofing Contractor\nFlorida\nLicense status\nRoofing\nHVAC\nGeneral contractors\nDBPR discipline\nCounts\nTrade families\nBroward\nPalm Beach\nCompare markets\nAdvanced filters\n\nRECENT RESEARCH\n\nroofers in browrd county fl\nYour requested place\n\nYou asked for: Zzzyx County, Florida\n\nLocal scope: Not executed\n\nThe requested local geography cannot be applied in this credential path. You can explicitly choose Florida statewide research instead.\n\nResearch Florida statewide instead\nGeography Trace\n\nWE INTERPRETED YOUR QUESTION AS\n\nQuery interpretation\nLocation\nZzzyx County, Florida\nGeography basis\nIndexed DBPR address county — not service territory\nTrade\nRoofing\nIncluded credential classes\nCertified Roofing Contractor, Registered Roofing Contractor\nStatus\nall\nEvidence\nNot specified\nSort\nname\nIncludes credential classes\n\nFlorida CILB roofing is CCC (certified) and RC (registered). RR is registered residential, not roofing.\n\nTrade: Roofing ×\n\nChange interpretation: Open Verify · Open Florida trade page\n\nThe requested local geography cannot be applied in this credential path. You can explicitly choose Florida statewide research instead.\n\nTrace this query",
+      "screenshot": "docs/qa/th-search-r1-009/local-control-4.png"
+    },
+    {
+      "name": "control-5",
+      "url": "http://localhost:3099/ask?q=CCC1332036",
+      "ms": 203,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "RESEARCH CONTRACTORS\n\nWhat do you want to find out?\n\nAsk in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.\n\nAsk ContractorTrustHub\nResearch\nLicense status\nRoofing\nHVAC\nGeneral contractors\nDBPR discipline\nCounts\nTrade families\nBroward\nPalm Beach\nCompare markets\nAdvanced filters\n\nRECENT RESEARCH\n\nroofers in browrd county fl\n\nWE INTERPRETED YOUR QUESTION AS\n\nQuery interpretation\nLocation\nFlorida (statewide in this extract)\nGeography basis\nIndexed DBPR address county — not service territory\nTrade\nNot specified\nIncluded credential classes\nNot specified\nStatus\nall\nEvidence\nNot specified\nSort\nname\n\nExact credential lookup is resolved before broader name or cohort research.\n\nChange interpretation: Confirm with the issuing agency\n\nContractor identity research is temporarily unavailable. No result was inferred or substituted.\n\nTrace this query",
+      "screenshot": "docs/qa/th-search-r1-009/local-control-5.png"
+    },
+    {
+      "name": "edit-clears-old-results",
+      "url": "http://localhost:3099/search?q=HVAC+contractors+in+Austin+Texas",
+      "ms": 104,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "FIND / RESEARCH CONTRACTORS\n\nContractor discovery research\n\nSearch source-backed credential records by trade and supported recorded geography. Results are neutral research—not rankings or proof that a contractor serves an area.\n\nDescribe the contractor research you need\nResearch contractors\nYour requested place\n\nYou asked for: Austin, Texas\n\nLocal scope: Not executed\n\nThe requested local geography cannot be applied in this credential path. You can explicitly choose Texas statewide research instead.\n\nResearch Texas statewide instead\n\nTexas A/C status is derived from indexed expiration dates; confirm with TDLR. Texas intelligence is a separate source overview.\n\nGeography Trace\n\nTrade: hvac. No broader credential list has been executed. Edit the place or select an available choice above.\n\nHave an exact company or credential? Use Verify. Recorded regulatory geography does not establish service territory or current availability.",
+      "screenshot": "docs/qa/th-search-r1-009/local-edit-clears-old-results.png"
+    },
+    {
+      "name": "width-320",
+      "url": "http://localhost:3099/ask?q=roofers+in+browrd+county+fl",
+      "ms": 167,
+      "overflow": {
+        "width": 320,
+        "scroll": 320
+      },
+      "text": "RESEARCH CONTRACTORS\n\nWhat do you want to find out?\n\nAsk in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.\n\nAsk ContractorTrustHub\nResearch\n\nDid you mean Broward County, Florida? We will not silently change the query.\n\nRoofing\nCertified Roofing Contractor\nRegistered Roofing Contractor\nLicense status\nRoofing\nHVAC\nGeneral contractors\nDBPR discipline\nCounts\nTrade families\nBroward\nPalm Beach\nCompare markets\nAdvanced filters\n\nRECENT RESEARCH\n\nroofers in browrd county fl\nConfirm the county\n\nYou asked for: Browrd County, Florida\n\nLocal scope: Not executed\n\nDid you mean Broward County, Florida? Apply the correction before research runs.\n\nApply Broward County\nGeography Trace\n\nWE INTERPRETED YOUR QUESTION AS\n\nQuery interpretation\nLocation\nBrowrd County, Florida\nGeography basis\nIndexed DBPR address county — not service territory\nTrade\nRoofing\nIncluded credential classes\nCertified Roofing Contractor, Registered Roofing Contractor\nStatus\nall\nEvidence\nNot specified\nSort\nname\nIncludes credential classes\n\nFlorida CILB roofing is CCC (certified) and RC (registered). RR is registered residential, not roofing.\n\nTrade: Roofing ×\n\nChange interpretation: Open Verify · Open Florida trade page\n\nDid you mean Broward County, Florida? Apply the correction before research runs.\n\nTrace this query",
+      "screenshot": "docs/qa/th-search-r1-009/local-width-320.png"
+    },
+    {
+      "name": "width-390",
+      "url": "http://localhost:3099/ask?q=roofers+in+browrd+county+fl",
+      "ms": 175,
+      "overflow": {
+        "width": 390,
+        "scroll": 390
+      },
+      "text": "RESEARCH CONTRACTORS\n\nWhat do you want to find out?\n\nAsk in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.\n\nAsk ContractorTrustHub\nResearch\n\nDid you mean Broward County, Florida? We will not silently change the query.\n\nRoofing\nCertified Roofing Contractor\nRegistered Roofing Contractor\nLicense status\nRoofing\nHVAC\nGeneral contractors\nDBPR discipline\nCounts\nTrade families\nBroward\nPalm Beach\nCompare markets\nAdvanced filters\n\nRECENT RESEARCH\n\nroofers in browrd county fl\nConfirm the county\n\nYou asked for: Browrd County, Florida\n\nLocal scope: Not executed\n\nDid you mean Broward County, Florida? Apply the correction before research runs.\n\nApply Broward County\nGeography Trace\n\nWE INTERPRETED YOUR QUESTION AS\n\nQuery interpretation\nLocation\nBrowrd County, Florida\nGeography basis\nIndexed DBPR address county — not service territory\nTrade\nRoofing\nIncluded credential classes\nCertified Roofing Contractor, Registered Roofing Contractor\nStatus\nall\nEvidence\nNot specified\nSort\nname\nIncludes credential classes\n\nFlorida CILB roofing is CCC (certified) and RC (registered). RR is registered residential, not roofing.\n\nTrade: Roofing ×\n\nChange interpretation: Open Verify · Open Florida trade page\n\nDid you mean Broward County, Florida? Apply the correction before research runs.\n\nTrace this query",
+      "screenshot": "docs/qa/th-search-r1-009/local-width-390.png"
+    },
+    {
+      "name": "width-768",
+      "url": "http://localhost:3099/ask?q=roofers+in+browrd+county+fl",
+      "ms": 187,
+      "overflow": {
+        "width": 768,
+        "scroll": 768
+      },
+      "text": "RESEARCH CONTRACTORS\n\nWhat do you want to find out?\n\nAsk in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.\n\nAsk ContractorTrustHub\nResearch\n\nDid you mean Broward County, Florida? We will not silently change the query.\n\nRoofing\nCertified Roofing Contractor\nRegistered Roofing Contractor\nLicense status\nRoofing\nHVAC\nGeneral contractors\nDBPR discipline\nCounts\nTrade families\nBroward\nPalm Beach\nCompare markets\nAdvanced filters\n\nRECENT RESEARCH\n\nroofers in browrd county fl\nConfirm the county\n\nYou asked for: Browrd County, Florida\n\nLocal scope: Not executed\n\nDid you mean Broward County, Florida? Apply the correction before research runs.\n\nApply Broward County\nGeography Trace\n\nWE INTERPRETED YOUR QUESTION AS\n\nQuery interpretation\nLocation\nBrowrd County, Florida\nGeography basis\nIndexed DBPR address county — not service territory\nTrade\nRoofing\nIncluded credential classes\nCertified Roofing Contractor, Registered Roofing Contractor\nStatus\nall\nEvidence\nNot specified\nSort\nname\nIncludes credential classes\n\nFlorida CILB roofing is CCC (certified) and RC (registered). RR is registered residential, not roofing.\n\nTrade: Roofing ×\n\nChange interpretation: Open Verify · Open Florida trade page\n\nDid you mean Broward County, Florida? Apply the correction before research runs.\n\nTrace this query",
+      "screenshot": "docs/qa/th-search-r1-009/local-width-768.png"
+    },
+    {
+      "name": "width-1280",
+      "url": "http://localhost:3099/ask?q=roofers+in+browrd+county+fl",
+      "ms": 184,
+      "overflow": {
+        "width": 1280,
+        "scroll": 1280
+      },
+      "text": "RESEARCH CONTRACTORS\n\nWhat do you want to find out?\n\nAsk in normal language or enter a company or credential. We interpret the request, then query source-backed records—never a provider-quality ranking.\n\nAsk ContractorTrustHub\nResearch\n\nDid you mean Broward County, Florida? We will not silently change the query.\n\nRoofing\nCertified Roofing Contractor\nRegistered Roofing Contractor\nLicense status\nRoofing\nHVAC\nGeneral contractors\nDBPR discipline\nCounts\nTrade families\nBroward\nPalm Beach\nCompare markets\nAdvanced filters\n\nRECENT RESEARCH\n\nroofers in browrd county fl\nConfirm the county\n\nYou asked for: Browrd County, Florida\n\nLocal scope: Not executed\n\nDid you mean Broward County, Florida? Apply the correction before research runs.\n\nApply Broward County\nGeography Trace\n\nWE INTERPRETED YOUR QUESTION AS\n\nQuery interpretation\nLocation\nBrowrd County, Florida\nGeography basis\nIndexed DBPR address county — not service territory\nTrade\nRoofing\nIncluded credential classes\nCertified Roofing Contractor, Registered Roofing Contractor\nStatus\nall\nEvidence\nNot specified\nSort\nname\nIncludes credential classes\n\nFlorida CILB roofing is CCC (certified) and RC (registered). RR is registered residential, not roofing.\n\nTrade: Roofing ×\n\nChange interpretation: Open Verify · Open Florida trade page\n\nDid you mean Broward County, Florida? Apply the correction before research runs.\n\nTrace this query",
+      "screenshot": "docs/qa/th-search-r1-009/local-width-1280.png"
+    }
+  ],
+  "errors": []
+}

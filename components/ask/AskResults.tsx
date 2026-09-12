@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { GeographyNotice } from "./GeographyNotice";
 import type { AskResult } from "@/lib/ask/types";
 import type { ContractorResearchQuery } from "@/lib/ask/plan";
 import { askHref, chipHref, planToOverrides } from "@/lib/ask/plan";
@@ -23,6 +24,7 @@ export function AskResults({
 
   return (
     <div className="space-y-8">
+      <GeographyNotice requirement={plan.geographyRequirement} query={plan.rawQuery} overrides={overrides} />
       <section aria-labelledby="ask-interpreted">
         <p className="cth-intel-eyebrow">We interpreted your question as</p>
         <h2 id="ask-interpreted" className="sr-only">
@@ -31,7 +33,7 @@ export function AskResults({
         <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
           <div>
             <dt className="text-[var(--muted)]">Location</dt>
-            <dd className="font-medium">{plan.geography.countyLabel || plan.geography.state || "Not specified"}</dd>
+            <dd className="font-medium">{plan.geographyRequirement?.normalizedPlace || plan.geography.countyLabel || plan.geography.state || "Not specified"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Geography basis</dt>
@@ -80,7 +82,7 @@ export function AskResults({
       <div className="flex flex-wrap gap-2" aria-label="Active filters">
         {plan.geography.countySlug ? (
           <Link className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs" href={chipHref(plan.rawQuery, plan, "geo")}>
-            Location: {plan.geography.countyLabel} ×
+            Broaden from {plan.geography.countyLabel} to Florida ×
           </Link>
         ) : null}
         {plan.trade.familyId ? (
@@ -106,7 +108,7 @@ export function AskResults({
 
       {interpreted.failMessage || execution.blockMessage ? (
         <p className="rounded-xl border border-[var(--border)] bg-white p-4" role="status">
-          {interpreted.failMessage || execution.blockMessage}
+          {execution.blockMessage || interpreted.failMessage}
         </p>
       ) : null}
 
@@ -117,7 +119,7 @@ export function AskResults({
         </article>
       ) : null}
 
-      {interpreted.aggregate ? (
+      {interpreted.aggregate && !execution.blocked ? (
         <div>
           <table className="w-full text-sm">
             <caption className="text-left text-sm text-[var(--muted)]">
@@ -255,7 +257,7 @@ export function AskResults({
           </div>
           <div>
             <dt className="text-[var(--muted)]">Source datasets</dt>
-            <dd>fl_dbpr construction licenses; optional public-eligible discipline_actions</dd>
+            <dd>{execution.blocked ? "No provider query executed" : "fl_dbpr construction licenses; optional public-eligible discipline_actions"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Snapshot / as-of</dt>

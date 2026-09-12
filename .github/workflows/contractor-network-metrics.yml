@@ -21,3 +21,6 @@ jobs:
         run: node scripts/assert_homepage_intel.mjs
       - name: Grain-safety unit tests
         run: npx --yes tsx --test scripts/test_contractor_network_metrics.ts
+
+      - name: Contractor geography integrity (R1-009)
+        run: npm run check:th-search-r1-009
