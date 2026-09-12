@@ -17,6 +17,7 @@ import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { ASK_CONTRACT_VERSION, type AskInterpretation, type AskResult } from "./types";
 import { detectContradiction, detectUnsupportedConcept } from "./unsupported";
 import { interpretNewYorkPublicWork } from "./ny-public-work";
+import { interpretNycDcwp } from "./nyc-dcwp";
 import { interpretIllinoisRoofing } from "./illinois-roofing";
 
 const EMPTY_INTERPRET: AskInterpretation = {
@@ -119,6 +120,9 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
       failMessage: null, changeHints: ["Add a credential number", "Confirm the exact identity"],
     };
   }
+
+  const nycResult = interpretNycDcwp(query, text);
+  if (nycResult) return nycResult;
 
   if (includesAny(text, COMPLAINT_PHRASES)) {
     interpretation.evidenceFamily = "Consumer complaints (not in this hub)";

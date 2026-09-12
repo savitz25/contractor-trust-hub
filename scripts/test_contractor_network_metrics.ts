@@ -93,6 +93,7 @@ function baseInput(over: Partial<NetworkMetricsInput> = {}): NetworkMetricsInput
     njPublicWorksRegulatoryRows: 1898,
     floridaCountyIntelligencePages: 4,
     caCityLocalPages: 2,
+    nycLocalPages: 1,
     ...over,
   };
 }
@@ -144,8 +145,10 @@ describe("contractor-network-metrics-v1 grain safety", () => {
     const m = computeContractorNetworkMetrics(baseInput());
     assert.equal(metricByKey(m, "published_county_intelligence_pages").value, 8);
     assert.equal(metricByKey(m, "published_ca_city_local_intelligence_pages").value, 2);
+    assert.equal(metricByKey(m, "published_nyc_local_intelligence_pages").value, 1);
     assert.notEqual(metricByKey(m, "published_county_intelligence_pages").value, metricByKey(m, "live_researched_states").value);
     assert.notEqual(metricByKey(m, "published_ca_city_local_intelligence_pages").value, metricByKey(m, "published_county_intelligence_pages").value);
+    assert.notEqual(metricByKey(m, "published_nyc_local_intelligence_pages").value, metricByKey(m, "live_researched_states").value);
     assert.throws(() => computeContractorNetworkMetrics(baseInput({ floridaCountyIntelligencePages: 6 })), /county pages/);
   });
 

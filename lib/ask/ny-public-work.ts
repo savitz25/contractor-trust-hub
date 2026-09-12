@@ -174,9 +174,9 @@ export function interpretNewYorkPublicWork(query: string, text: string): AskResu
     return closed(
       query,
       interpretation,
-      "New York public-work contractor registration is not a statewide home-improvement contractor license. Local licensing, including New York City, may apply to ordinary private residential work. Absence from the public-work registry does not automatically mean a residential contractor is illegal.",
-      ["Open /new-york", "Check the local home-improvement licensing authority"],
-      "/new-york",
+      "New York public-work contractor registration is not a statewide home-improvement contractor license. Local licensing, including New York City DCWP, may apply to ordinary private residential work. Absence from the public-work registry does not automatically mean a residential contractor is illegal.",
+      ["Open /new-york/new-york-city", "Open /new-york"],
+      "/new-york/new-york-city",
     );
   }
 

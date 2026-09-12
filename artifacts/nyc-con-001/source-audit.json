@@ -1,0 +1,1608 @@
+{
+  "datasets": {
+    "licenses": {
+      "id": "w7w3-xahh",
+      "name": "Issued Licenses",
+      "attribution": "Department of Consumer and Worker Protection (DCWP)",
+      "rowsUpdatedAt": 1787232293,
+      "viewLastModified": 1789155021,
+      "createdAt": 1425675688,
+      "columns": [
+        {
+          "fieldName": "license_nbr",
+          "name": "License Number",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "business_name",
+          "name": "Business Name",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "dba_trade_name",
+          "name": "DBA/Trade Name",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "business_unique_id",
+          "name": "Business Unique ID",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "business_category",
+          "name": "Business Category",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "license_type",
+          "name": "License Type",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "license_status",
+          "name": "License Status",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "license_creation_date",
+          "name": "Initial Issuance Date",
+          "dataTypeName": "calendar_date"
+        },
+        {
+          "fieldName": "lic_expir_dd",
+          "name": "Expiration Date",
+          "dataTypeName": "calendar_date"
+        },
+        {
+          "fieldName": "detail",
+          "name": "Details",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "contact_phone",
+          "name": "Contact Phone",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "address_type",
+          "name": "Address Type",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "address_building",
+          "name": "Building Number",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "address_street_name",
+          "name": "Street1",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "address_street_name_2",
+          "name": "Street2",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "street3",
+          "name": "Street3",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "unit_type",
+          "name": "Unit Type",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "apt_suite",
+          "name": "Apt/Suite",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "address_city",
+          "name": "City",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "address_state",
+          "name": "State",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "address_zip",
+          "name": "ZIP Code",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "address_borough",
+          "name": "Borough",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "community_board",
+          "name": "Community Board",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "council_district",
+          "name": "Council District",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "bin",
+          "name": "BIN",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "bbl",
+          "name": "BBL",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "nta",
+          "name": "NTA",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "census_block_2010_",
+          "name": "Census Block (2010)",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "census_tract",
+          "name": "Census Tract (2010)",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "latitude",
+          "name": "Latitude",
+          "dataTypeName": "number"
+        },
+        {
+          "fieldName": "longitude",
+          "name": "Longitude",
+          "dataTypeName": "number"
+        }
+      ],
+      "sample": [
+        {
+          "license_nbr": "0016371-DCA",
+          "business_name": "JAMES ROBINSON, INC.",
+          "business_unique_id": "BA-1322274-2022",
+          "business_category": "Secondhand Dealer - General",
+          "license_type": "Premises",
+          "license_status": "Active",
+          "license_creation_date": "2003-10-31T00:00:00.000",
+          "lic_expir_dd": "2027-07-31T00:00:00.000",
+          "contact_phone": "2127526166",
+          "address_type": "Complete Address",
+          "address_building": "480",
+          "address_street_name": "PARK AVENUE",
+          "address_city": "NEW YORK",
+          "address_state": "NY",
+          "address_zip": "10022",
+          "address_borough": "Manhattan",
+          "community_board": "105",
+          "council_district": "04",
+          "bin": "1036083",
+          "bbl": "1012940033",
+          "nta": "MN17",
+          "census_block_2010_": "1000",
+          "census_tract": "11202",
+          "latitude": "40.76248502732357",
+          "longitude": "-73.97012500177938"
+        },
+        {
+          "license_nbr": "0157941-DCA",
+          "business_name": "T & J SALVAGE CORP.",
+          "business_unique_id": "BA-1518146-2022",
+          "business_category": "Secondhand Dealer - General",
+          "license_type": "Premises",
+          "license_status": "Surrendered",
+          "license_creation_date": "2003-06-12T00:00:00.000",
+          "lic_expir_dd": "2023-07-31T00:00:00.000",
+          "contact_phone": "7189466200",
+          "address_type": "Complete Address",
+          "address_building": "2647",
+          "address_street_name": "STILLWELL AVE",
+          "address_city": "BROOKLYN",
+          "address_state": "NY",
+          "address_zip": "11223",
+          "address_borough": "Brooklyn",
+          "community_board": "313",
+          "council_district": "47",
+          "bin": "3412640",
+          "bbl": "3072470203",
+          "nta": "BK21",
+          "census_block_2010_": "1014",
+          "census_tract": "348",
+          "latitude": "40.58288601226079",
+          "longitude": "-73.9826293833634"
+        }
+      ]
+    },
+    "complaints": {
+      "id": "nre2-6m2s",
+      "name": "DCWP Consumer Complaints",
+      "attribution": "Department of Consumer and Worker Protection (DCWP)",
+      "rowsUpdatedAt": 1788353140,
+      "viewLastModified": 1788353120,
+      "createdAt": 1425674360,
+      "columns": [
+        {
+          "fieldName": "record_id",
+          "name": "Record ID",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "intake_date",
+          "name": "Intake Date",
+          "dataTypeName": "calendar_date"
+        },
+        {
+          "fieldName": "intake_channel",
+          "name": "Intake Channel",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "_311_sr_number",
+          "name": "311 SR Number",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "business_category",
+          "name": "Business Category",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "complaint_code",
+          "name": "Complaint Code",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "business_unique_id",
+          "name": "Business Unique ID",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "business_name",
+          "name": "Business Name",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "result_date",
+          "name": "Result Date",
+          "dataTypeName": "calendar_date"
+        },
+        {
+          "fieldName": "result",
+          "name": "Result",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "referred_to",
+          "name": "Referred To",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "contract_cancelled_amount",
+          "name": "Contract Cancelled Amount",
+          "dataTypeName": "number"
+        },
+        {
+          "fieldName": "refund_amount",
+          "name": "Refund Amount",
+          "dataTypeName": "number"
+        },
+        {
+          "fieldName": "address_type",
+          "name": "Address Type",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "building_nbr",
+          "name": "Building Nbr",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "street1",
+          "name": "Street1",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "street2",
+          "name": "Street2",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "street3",
+          "name": "Street3",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "unit_type",
+          "name": "Unit Type",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "apt_suite",
+          "name": "Apt/Suite",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "city",
+          "name": "City",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "state",
+          "name": "State",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "postcode",
+          "name": "Postcode",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "borough",
+          "name": "Borough",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "community_board",
+          "name": "Community Board",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "council_district",
+          "name": "Council District",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "bin",
+          "name": "BIN",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "bbl",
+          "name": "BBL",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "nta",
+          "name": "NTA",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "census_block_2010_",
+          "name": "Census Block (2010)",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "census_tract_2010_",
+          "name": "Census Tract (2010)",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "latitude",
+          "name": "Latitude",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "longitude",
+          "name": "Longitude",
+          "dataTypeName": "text"
+        }
+      ],
+      "sample": [
+        {
+          "record_id": "000001-2026-CMPL",
+          "intake_date": "2026-01-01T00:00:00.000",
+          "intake_channel": "311",
+          "_311_sr_number": "311-25776008",
+          "business_category": "Garage & Parking Lot",
+          "complaint_code": "Non-Delivery of Goods - N01",
+          "business_unique_id": "BA-1758638-2026",
+          "business_name": "PLATINUM PLUS GARAGE",
+          "result_date": "2026-02-01T00:00:00.000",
+          "result": "Requested Information Not Provided",
+          "address_type": "Complete Address",
+          "building_nbr": "350",
+          "street1": "E 30TH ST",
+          "city": "NEW YORK",
+          "state": "NY",
+          "postcode": "10016",
+          "borough": "Manhattan",
+          "community_board": "106",
+          "council_district": "04",
+          "bin": "1020634",
+          "bbl": "1009357501",
+          "nta": "MN20",
+          "census_block_2010_": "3000",
+          "census_tract_2010_": "70",
+          "latitude": "40.741635",
+          "longitude": "-73.976219"
+        },
+        {
+          "record_id": "000002-2026-CMPL",
+          "intake_date": "2026-01-01T00:00:00.000",
+          "intake_channel": "311",
+          "_311_sr_number": "311-25776542",
+          "business_category": "Tow Truck Company",
+          "complaint_code": "Lost/Stolen/Damaged Property",
+          "business_unique_id": "BA-1758639-2026",
+          "business_name": "Legacy Towing",
+          "result_date": "2026-02-01T00:00:00.000",
+          "result": "Requested Information Not Provided",
+          "address_type": "Complete Address",
+          "building_nbr": "13101",
+          "street1": "39TH AVE",
+          "city": "FLUSHING",
+          "state": "NY",
+          "postcode": "11354",
+          "borough": "Queens",
+          "community_board": "407",
+          "council_district": "20",
+          "bin": "4112199",
+          "bbl": "4049630065",
+          "nta": "QN22",
+          "census_block_2010_": "2008",
+          "census_tract_2010_": "871",
+          "latitude": "40.758836",
+          "longitude": "-73.835231"
+        }
+      ]
+    },
+    "charges": {
+      "id": "5fn4-dr26",
+      "name": "DCWP Charges",
+      "attribution": "Department of Consumer and Worker Protection (DCWP)",
+      "rowsUpdatedAt": 1788355923,
+      "viewLastModified": 1788355819,
+      "createdAt": 1453831987,
+      "columns": [
+        {
+          "fieldName": "record_id",
+          "name": "Record ID",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "related_record_type",
+          "name": "Related Record Type",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "business_unique_id",
+          "name": "Business Unique ID",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "business_name",
+          "name": "Business Name",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "dba_trade_name",
+          "name": "DBA/Trade Name",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "business_category",
+          "name": "Business Category",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "certificate_of_inspection",
+          "name": "Certificate of Inspection",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "inspection_number",
+          "name": "Inspection Number",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "noh_number",
+          "name": "NOH Number",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "violation_date",
+          "name": "Violation Date",
+          "dataTypeName": "calendar_date"
+        },
+        {
+          "fieldName": "charge",
+          "name": "Charge",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "charge_count",
+          "name": "Charge Count",
+          "dataTypeName": "number"
+        },
+        {
+          "fieldName": "cure_eligible",
+          "name": "Cure Eligible",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "cured",
+          "name": "Cured",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "outcome",
+          "name": "Outcome",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "guilty",
+          "name": "Guilty",
+          "dataTypeName": "number"
+        },
+        {
+          "fieldName": "not_guilty",
+          "name": "Not Guilty",
+          "dataTypeName": "number"
+        },
+        {
+          "fieldName": "dismissed",
+          "name": "Dismissed",
+          "dataTypeName": "number"
+        }
+      ],
+      "sample": [
+        {
+          "record_id": "0001-2026-ADJC",
+          "related_record_type": "dcwp_InspectionRequest",
+          "business_unique_id": "BA-1684832-2024",
+          "business_name": "OFERTAS Y REBAJAS INC.",
+          "business_category": "Electronics Store",
+          "certificate_of_inspection": "A0257582",
+          "inspection_number": "INS-000910592",
+          "noh_number": "25Q03570",
+          "violation_date": "2025-12-04T00:00:00.000",
+          "charge": "NYC Admin Code \u00a7 20-610(a) - Business unlawfully distributes, sells, leases, rents, or offers for sale, lease, or rent, a powered bicycle without an accredited safety certification.",
+          "charge_count": "3",
+          "cure_eligible": "No",
+          "outcome": "Pleaded",
+          "guilty": "3"
+        },
+        {
+          "record_id": "0001-2026-ADJC",
+          "related_record_type": "dcwp_InspectionRequest",
+          "business_unique_id": "BA-1684832-2024",
+          "business_name": "OFERTAS Y REBAJAS INC.",
+          "business_category": "Electronics Store",
+          "certificate_of_inspection": "A0257582",
+          "inspection_number": "INS-000910592",
+          "noh_number": "25Q03570",
+          "violation_date": "2025-12-04T00:00:00.000",
+          "charge": "NYC Admin Code \u00a7 20-610(b) - Business unlawfully distributes, sells, leases, rents, or offers for sale, lease, or rent, a powered mobility device without an accredited safety certification.",
+          "charge_count": "2",
+          "cure_eligible": "No",
+          "outcome": "Pleaded",
+          "guilty": "2"
+        }
+      ]
+    },
+    "inspections": {
+      "id": "jzhd-m6uv",
+      "name": "DCWP Inspections",
+      "attribution": "Department of Consumer and Worker Protection (DCWP)",
+      "rowsUpdatedAt": 1788553909,
+      "viewLastModified": 1789158619,
+      "createdAt": 1453819608,
+      "columns": [
+        {
+          "fieldName": "certificate_of_inspection",
+          "name": "Certificate of Inspection",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "inspection_number",
+          "name": "Inspection Number",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "date_of_occurrence",
+          "name": "Date of Occurrence",
+          "dataTypeName": "calendar_date"
+        },
+        {
+          "fieldName": "business_unique_id",
+          "name": "Business Unique ID",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "business_name",
+          "name": "Business Name",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "dba_trade_name",
+          "name": "DBA/Trade Name",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "business_category",
+          "name": "Business Category",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "dcwp_license_number",
+          "name": "DCWP License Number",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "inspection_type",
+          "name": "Inspection Type",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "inspection_status",
+          "name": "Inspection Status",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "noh_number",
+          "name": "NOH Number",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "address_type",
+          "name": "Address Type",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "building_no",
+          "name": "Building_No",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "street_1",
+          "name": "Street Name",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "street_2",
+          "name": "Street Name 2",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "unit_type",
+          "name": "Unit Type",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "apt_suite",
+          "name": "Unit",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "city",
+          "name": "City",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "state",
+          "name": "State",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "zip_code",
+          "name": "Postcode",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "borough",
+          "name": "Borough",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "community_district",
+          "name": "Community Board",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "city_council_district",
+          "name": "Council District",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "bin",
+          "name": "BIN",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "bbl",
+          "name": "BBL",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "nta",
+          "name": "NTA",
+          "dataTypeName": "text"
+        },
+        {
+          "fieldName": "latitude",
+          "name": "Latitude",
+          "dataTypeName": "number"
+        },
+        {
+          "fieldName": "longitude",
+          "name": "Longitude",
+          "dataTypeName": "number"
+        }
+      ],
+      "sample": [
+        {
+          "certificate_of_inspection": "A0273783",
+          "inspection_number": "INS-000938916",
+          "date_of_occurrence": "2026-03-25T00:00:00.000",
+          "business_unique_id": "BA-1534934-2022",
+          "business_name": "WILSON FOOD MARKET CORP",
+          "business_category": "Tobacco Retail Dealer",
+          "dcwp_license_number": "2057300-2-DCA",
+          "inspection_type": "Tobacco - Sale to Minor",
+          "inspection_status": "Out of Business",
+          "address_type": "Complete Address",
+          "street_1": "WILSON AVE",
+          "city": "BROOKLYN",
+          "state": "NY",
+          "zip_code": "11207",
+          "borough": "Brooklyn",
+          "community_district": "304",
+          "city_council_district": "37",
+          "bin": "3079777",
+          "bbl": "3034360008",
+          "nta": "BK77",
+          "latitude": "40.689734",
+          "longitude": "-73.906423"
+        },
+        {
+          "certificate_of_inspection": "A0278099",
+          "inspection_number": "INS-000947669",
+          "date_of_occurrence": "2026-04-22T00:00:00.000",
+          "business_unique_id": "BA-1188775-2022",
+          "business_name": "C & N GROCERY STORE INC.",
+          "business_category": "Grocery-Retail - 808",
+          "inspection_type": "Patrol",
+          "inspection_status": "Violation Issued",
+          "noh_number": "26M01413",
+          "address_type": "Complete Address",
+          "street_1": "AMSTERDAM AVE",
+          "city": "NEW YORK",
+          "state": "NY",
+          "zip_code": "10023",
+          "borough": "Manhattan",
+          "community_district": "107",
+          "city_council_district": "06",
+          "bin": "1030038",
+          "bbl": "1011450061",
+          "nta": "MN14",
+          "latitude": "40.77977641",
+          "longitude": "-73.98076902"
+        }
+      ]
+    }
+  },
+  "license_business_categories": [
+    {
+      "business_category": "Home Improvement Contractor",
+      "n": "18931"
+    },
+    {
+      "business_category": "Tobacco Retail Dealer",
+      "n": "6707"
+    },
+    {
+      "business_category": "Secondhand Dealer - General",
+      "n": "5661"
+    },
+    {
+      "business_category": "Electronics Store",
+      "n": "4302"
+    },
+    {
+      "business_category": "Sightseeing Guide",
+      "n": "3974"
+    },
+    {
+      "business_category": "Tow Truck Driver",
+      "n": "3170"
+    },
+    {
+      "business_category": "Locksmith",
+      "n": "2995"
+    },
+    {
+      "business_category": "Stoop Line Stand",
+      "n": "2800"
+    },
+    {
+      "business_category": "Electronic Cigarette Dealer",
+      "n": "2773"
+    },
+    {
+      "business_category": "Garage & Parking Lot",
+      "n": "2762"
+    },
+    {
+      "business_category": "General Vendor",
+      "n": "2581"
+    },
+    {
+      "business_category": "Dealer In Products For The Disabled",
+      "n": "2433"
+    },
+    {
+      "business_category": "Debt Collection Agency",
+      "n": "2161"
+    },
+    {
+      "business_category": "Pedicab Driver",
+      "n": "2093"
+    },
+    {
+      "business_category": "Electronic & Home Appliance Service Dealer",
+      "n": "1921"
+    },
+    {
+      "business_category": "Ticket Seller Individual",
+      "n": "1178"
+    },
+    {
+      "business_category": "Process Server Individual",
+      "n": "899"
+    },
+    {
+      "business_category": "Hotel",
+      "n": "826"
+    },
+    {
+      "business_category": "Secondhand Dealer - Auto",
+      "n": "695"
+    },
+    {
+      "business_category": "Newsstand",
+      "n": "399"
+    },
+    {
+      "business_category": "Pawnbroker",
+      "n": "388"
+    },
+    {
+      "business_category": "Tow Truck Company",
+      "n": "381"
+    },
+    {
+      "business_category": "Pedicab Business",
+      "n": "362"
+    },
+    {
+      "business_category": "Employment Agency",
+      "n": "360"
+    },
+    {
+      "business_category": "Car Wash",
+      "n": "274"
+    },
+    {
+      "business_category": "Horse Drawn Cab Driver",
+      "n": "267"
+    },
+    {
+      "business_category": "Self-Storage Facility",
+      "n": "242"
+    },
+    {
+      "business_category": "Process Serving Agency",
+      "n": "146"
+    },
+    {
+      "business_category": "Scrap Metal Processor",
+      "n": "120"
+    },
+    {
+      "business_category": "Horse Drawn Cab Owner",
+      "n": "91"
+    },
+    {
+      "business_category": "Construction Labor Provider",
+      "n": "73"
+    },
+    {
+      "business_category": "Third Party Food Delivery Service",
+      "n": "70"
+    },
+    {
+      "business_category": "Industrial Laundry",
+      "n": "64"
+    },
+    {
+      "business_category": "Storage Warehouse",
+      "n": "55"
+    },
+    {
+      "business_category": "Industrial Laundry Delivery",
+      "n": "48"
+    },
+    {
+      "business_category": "Ticket Seller Business",
+      "n": "45"
+    },
+    {
+      "business_category": "Scale Dealer/Repairer",
+      "n": "39"
+    },
+    {
+      "business_category": "Bingo Game Operator",
+      "n": "38"
+    },
+    {
+      "business_category": "Games of Chance - Raffle with Net Proceeds Under $30,000",
+      "n": "32"
+    },
+    {
+      "business_category": "Games of Chance - Raffle with Net Proceeds Over $30,000",
+      "n": "19"
+    },
+    {
+      "business_category": "Locksmith Apprentice",
+      "n": "15"
+    },
+    {
+      "business_category": "Booting Company",
+      "n": "14"
+    },
+    {
+      "business_category": "Games of Chance - Bell Jar",
+      "n": "14"
+    },
+    {
+      "business_category": "Sightseeing Bus",
+      "n": "11"
+    },
+    {
+      "business_category": "Specialized Vending License - MFV",
+      "n": "7"
+    },
+    {
+      "business_category": "Laundries",
+      "n": "6"
+    },
+    {
+      "business_category": "Games of Chance - Las Vegas / Casino Nights",
+      "n": "4"
+    },
+    {
+      "business_category": "Commercial Lessor - Bingo",
+      "n": "4"
+    },
+    {
+      "business_category": "General Vendor Distributor",
+      "n": "2"
+    }
+  ],
+  "home_improvement_category_candidates": [
+    {
+      "business_category": "Home Improvement Contractor",
+      "n": "18931"
+    },
+    {
+      "business_category": "Electronic & Home Appliance Service Dealer",
+      "n": "1921"
+    }
+  ],
+  "complaints_has_business_category": true,
+  "complaints_business_category_top": [
+    {
+      "business_category": "Other",
+      "n": "11105"
+    },
+    {
+      "business_category": "Misc Non-Food Retail",
+      "n": "6077"
+    },
+    {
+      "business_category": "Tow Truck Company",
+      "n": "5587"
+    },
+    {
+      "business_category": "Restaurant",
+      "n": "3835"
+    },
+    {
+      "business_category": "Supermarket",
+      "n": "3460"
+    },
+    {
+      "business_category": "Grocery-Retail",
+      "n": "3367"
+    },
+    {
+      "business_category": "Home Improvement Contractor",
+      "n": "3341"
+    },
+    {
+      "business_category": "Garage & Parking Lot",
+      "n": "3054"
+    },
+    {
+      "business_category": "Secondhand Dealer - Auto",
+      "n": "2422"
+    },
+    {
+      "business_category": "Tobacco Retail Dealer",
+      "n": "2305"
+    },
+    {
+      "business_category": "Landlord or Real Estate Agent",
+      "n": "2244"
+    },
+    {
+      "business_category": "Car Wash",
+      "n": "2239"
+    },
+    {
+      "business_category": "Specialized Vending License - MFV",
+      "n": "1912"
+    },
+    {
+      "business_category": "Electronics Store",
+      "n": "1813"
+    },
+    {
+      "n": "1398"
+    },
+    {
+      "business_category": "Drug Store Retail",
+      "n": "1353"
+    },
+    {
+      "business_category": "Salons And Barbershop",
+      "n": "1173"
+    },
+    {
+      "business_category": "General Vendor",
+      "n": "1163"
+    },
+    {
+      "business_category": "Furniture Sales",
+      "n": "1063"
+    },
+    {
+      "business_category": "Debt Collection Agency",
+      "n": "990"
+    },
+    {
+      "business_category": "Hotel",
+      "n": "886"
+    },
+    {
+      "business_category": "Wearing Apparel",
+      "n": "875"
+    },
+    {
+      "business_category": "Electronic Cigarette Dealer",
+      "n": "789"
+    },
+    {
+      "business_category": "Hotel/Motel",
+      "n": "762"
+    },
+    {
+      "business_category": "Gas Station-Retail",
+      "n": "756"
+    },
+    {
+      "business_category": "Stoop Line Stand",
+      "n": "708"
+    },
+    {
+      "business_category": "Retail Laundry",
+      "n": "686"
+    },
+    {
+      "business_category": "Auto Rental",
+      "n": "643"
+    },
+    {
+      "business_category": "Dry Cleaners",
+      "n": "582"
+    },
+    {
+      "business_category": "Storage Warehouse",
+      "n": "539"
+    },
+    {
+      "business_category": "Pedicab Business",
+      "n": "513"
+    },
+    {
+      "business_category": "Retail Store",
+      "n": "470"
+    },
+    {
+      "business_category": "Employment Agency",
+      "n": "427"
+    },
+    {
+      "business_category": "Appliances",
+      "n": "425"
+    },
+    {
+      "business_category": "Third Party Food Delivery Service",
+      "n": "403"
+    },
+    {
+      "business_category": "Temporary Street Fair Vendor Permit",
+      "n": "402"
+    },
+    {
+      "business_category": "Laundries",
+      "n": "394"
+    },
+    {
+      "business_category": "Electronic & Home Appliance Service Dealer",
+      "n": "375"
+    },
+    {
+      "business_category": "Tax Preparers",
+      "n": "328"
+    },
+    {
+      "business_category": "Megastore",
+      "n": "305"
+    },
+    {
+      "business_category": "Locksmith",
+      "n": "277"
+    },
+    {
+      "business_category": "Jewelry Store-Retail",
+      "n": "261"
+    },
+    {
+      "business_category": "Mailorder Misc - 319",
+      "n": "246"
+    },
+    {
+      "business_category": "Funeral Homes",
+      "n": "210"
+    },
+    {
+      "business_category": "Health Spa",
+      "n": "206"
+    },
+    {
+      "business_category": "Travel Agency",
+      "n": "202"
+    },
+    {
+      "business_category": "Mini-Storage Company",
+      "n": "197"
+    },
+    {
+      "business_category": "Sightseeing Bus",
+      "n": "193"
+    },
+    {
+      "business_category": "Secondhand Dealer - General",
+      "n": "192"
+    },
+    {
+      "business_category": "Garage",
+      "n": "188"
+    }
+  ],
+  "inspections_has_business_category": true,
+  "inspections_business_category_top": [
+    {
+      "business_category": "Tobacco Retail Dealer",
+      "n": "61275"
+    },
+    {
+      "business_category": "Electronic Cigarette Dealer",
+      "n": "54333"
+    },
+    {
+      "business_category": "Grocery-Retail - 808",
+      "n": "39072"
+    },
+    {
+      "business_category": "Misc Non-Food Retail - 817",
+      "n": "18668"
+    },
+    {
+      "business_category": "Salons And Barbershop - 841",
+      "n": "10313"
+    },
+    {
+      "business_category": "Unlicensed Cannabis Retailer",
+      "n": "9621"
+    },
+    {
+      "business_category": "Supermarket - 819",
+      "n": "7506"
+    },
+    {
+      "business_category": "Secondhand Dealer [General] - 006",
+      "n": "7033"
+    },
+    {
+      "business_category": "Retail Laundry",
+      "n": "6785"
+    },
+    {
+      "business_category": "Gas Station-Retail - 815",
+      "n": "5989"
+    },
+    {
+      "business_category": "Garage & Parking Lot - 098",
+      "n": "5942"
+    },
+    {
+      "business_category": "Electronic Store - 001",
+      "n": "5917"
+    },
+    {
+      "business_category": "Stoop Line Stand - 033",
+      "n": "5801"
+    },
+    {
+      "business_category": "Wearing Apparel - 450",
+      "n": "4355"
+    },
+    {
+      "business_category": "Drug Store Retail - 810",
+      "n": "3008"
+    },
+    {
+      "business_category": "Electronic & Home Appliance Service Dealer - 115",
+      "n": "2767"
+    },
+    {
+      "business_category": "Tow Truck Company - 124",
+      "n": "2574"
+    },
+    {
+      "business_category": "Restaurant - 818",
+      "n": "2339"
+    },
+    {
+      "business_category": "Tax Preparers - 891",
+      "n": "2069"
+    },
+    {
+      "business_category": "Dealer In Products For The Disabled - 119",
+      "n": "1970"
+    },
+    {
+      "business_category": "Fuel Oil Dealer - 814",
+      "n": "1687"
+    },
+    {
+      "business_category": "Garage - 049",
+      "n": "1439"
+    },
+    {
+      "business_category": "Micromobility Device Store",
+      "n": "1422"
+    },
+    {
+      "business_category": "Hotel",
+      "n": "1379"
+    },
+    {
+      "business_category": "Car Wash",
+      "n": "1301"
+    },
+    {
+      "business_category": "Secondhand Dealer Auto - 005",
+      "n": "1281"
+    },
+    {
+      "business_category": "Pedicab Business - 130",
+      "n": "1276"
+    },
+    {
+      "business_category": "Jewelry Store-Retail - 823",
+      "n": "1053"
+    },
+    {
+      "business_category": "Sightseeing Bus - 078",
+      "n": "984"
+    },
+    {
+      "business_category": "Immigration Svc Prv - 893",
+      "n": "912"
+    },
+    {
+      "business_category": "Hardware-Retail - 811",
+      "n": "848"
+    },
+    {
+      "business_category": "Employment Agency - 034",
+      "n": "779"
+    },
+    {
+      "business_category": "Newsstand - 024",
+      "n": "744"
+    },
+    {
+      "business_category": "Furniture Sales - 242",
+      "n": "734"
+    },
+    {
+      "business_category": "Mobile Food Vendor - 881",
+      "n": "672"
+    },
+    {
+      "business_category": "Dry Cleaners - 230",
+      "n": "621"
+    },
+    {
+      "business_category": "Horse Drawn Cab Owner - 087",
+      "n": "609"
+    },
+    {
+      "business_category": "Pawnbroker - 080",
+      "n": "609"
+    },
+    {
+      "business_category": "Parking Lot - 050",
+      "n": "457"
+    },
+    {
+      "business_category": "Funeral Homes - 888",
+      "n": "288"
+    },
+    {
+      "business_category": "Auto Rental - 213",
+      "n": "209"
+    },
+    {
+      "business_category": "Retail Store - 820",
+      "n": "197"
+    },
+    {
+      "business_category": "Megastore - 821",
+      "n": "171"
+    },
+    {
+      "business_category": "Industrial Laundry",
+      "n": "145"
+    },
+    {
+      "business_category": "Sidewalk Cafe - 013",
+      "n": "114"
+    },
+    {
+      "business_category": "Scrap Metal Processor - 118",
+      "n": "109"
+    },
+    {
+      "business_category": "Home Improvement Contractor - 100",
+      "n": "102"
+    },
+    {
+      "business_category": "Gasoline Truck-Retail - 822",
+      "n": "91"
+    },
+    {
+      "business_category": "Wholesale Food Market - 718",
+      "n": "84"
+    },
+    {
+      "business_category": "Air Conditioning Law - 899",
+      "n": "65"
+    }
+  ],
+  "charges_has_business_category": true,
+  "charges_business_category_top": [
+    {
+      "business_category": "Tobacco Retail Dealer",
+      "n": "49092"
+    },
+    {
+      "business_category": "Electronic Cigarette Dealer",
+      "n": "32835"
+    },
+    {
+      "business_category": "Grocery-Retail",
+      "n": "22192"
+    },
+    {
+      "business_category": "Supermarket",
+      "n": "5775"
+    },
+    {
+      "business_category": "Garage & Parking Lot",
+      "n": "4417"
+    },
+    {
+      "business_category": "Misc Non-Food Retail",
+      "n": "3558"
+    },
+    {
+      "business_category": "Stoop Line Stand",
+      "n": "2264"
+    },
+    {
+      "business_category": "Salons And Barbershop",
+      "n": "2201"
+    },
+    {
+      "business_category": "Retail Laundry",
+      "n": "1990"
+    },
+    {
+      "business_category": "Tax Preparers",
+      "n": "1802"
+    },
+    {
+      "business_category": "Drug Store Retail",
+      "n": "1085"
+    },
+    {
+      "business_category": "Micromobility Device Store",
+      "n": "970"
+    },
+    {
+      "business_category": "Restaurant",
+      "n": "940"
+    },
+    {
+      "business_category": "Electronics Store",
+      "n": "764"
+    },
+    {
+      "business_category": "Secondhand Dealer - General",
+      "n": "740"
+    },
+    {
+      "business_category": "Gas Station-Retail",
+      "n": "600"
+    },
+    {
+      "business_category": "Car Wash",
+      "n": "598"
+    },
+    {
+      "business_category": "Home Improvement Contractor",
+      "n": "558"
+    },
+    {
+      "business_category": "Secondhand Dealer - Auto",
+      "n": "550"
+    },
+    {
+      "business_category": "Wearing Apparel",
+      "n": "525"
+    },
+    {
+      "business_category": "Immigration Service Provider",
+      "n": "427"
+    },
+    {
+      "business_category": "Garage",
+      "n": "398"
+    },
+    {
+      "business_category": "Process Server Individual",
+      "n": "371"
+    },
+    {
+      "business_category": "Newsstand",
+      "n": "364"
+    },
+    {
+      "business_category": "Tow Truck Company",
+      "n": "296"
+    },
+    {
+      "business_category": "Electronic & Home Appliance Service Dealer",
+      "n": "269"
+    },
+    {
+      "business_category": "Hotel",
+      "n": "201"
+    },
+    {
+      "business_category": "Hardware-Retail",
+      "n": "165"
+    },
+    {
+      "business_category": "Specialized Vending License - MFV",
+      "n": "154"
+    },
+    {
+      "business_category": "Dry Cleaners",
+      "n": "124"
+    },
+    {
+      "business_category": "Landlord or Real Estate Agent",
+      "n": "120"
+    },
+    {
+      "business_category": "Parking Lot",
+      "n": "105"
+    },
+    {
+      "business_category": "Furniture Sales",
+      "n": "102"
+    },
+    {
+      "business_category": "Pawnbroker",
+      "n": "101"
+    },
+    {
+      "business_category": "Auto Rental",
+      "n": "95"
+    },
+    {
+      "business_category": "Fuel Oil Dealer",
+      "n": "83"
+    },
+    {
+      "business_category": "Jewelry Store-Retail",
+      "n": "75"
+    },
+    {
+      "business_category": "Employment Agency",
+      "n": "53"
+    },
+    {
+      "business_category": "Dealer In Products For The Disabled",
+      "n": "50"
+    },
+    {
+      "business_category": "Megastore",
+      "n": "39"
+    },
+    {
+      "business_category": "Sightseeing Bus",
+      "n": "38"
+    },
+    {
+      "business_category": "Industrial Laundry",
+      "n": "35"
+    },
+    {
+      "business_category": "Retail Store",
+      "n": "29"
+    },
+    {
+      "business_category": "Funeral Homes",
+      "n": "23"
+    },
+    {
+      "business_category": "Debt Collection Agency",
+      "n": "22"
+    },
+    {
+      "business_category": "Movie Theater/Entertainment Venue",
+      "n": "17"
+    },
+    {
+      "business_category": "Booting Company",
+      "n": "17"
+    },
+    {
+      "business_category": "Construction Labor Provider",
+      "n": "12"
+    },
+    {
+      "business_category": "Third Party Food Delivery Service",
+      "n": "8"
+    },
+    {
+      "business_category": "Pedicab Business",
+      "n": "7"
+    }
+  ]
+}

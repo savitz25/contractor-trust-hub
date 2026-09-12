@@ -38,6 +38,8 @@ export function publicationMetricInputs() {
 
   const caLocal = read("lib/california-intelligence/local/publication.ts");
   const caCityLocalPages = [...caLocal.matchAll(/path:\s*"(\/california\/[^"]+)"/g)].map((m) => m[1]);
+  const nycPub = read("lib/new-york-city-intelligence/publication.ts");
+  const nycLocalPages = [...nycPub.matchAll(/path:\s*"(\/new-york\/[^"]+)"/g)].map((m) => m[1]);
 
   return {
     liveStateCodes,
@@ -45,6 +47,7 @@ export function publicationMetricInputs() {
     floridaCountyIntelligencePages,
     njPublishedCountyPages,
     caCityLocalPages,
+    nycLocalPages,
     publishedCountyIntelligencePageCount:
       floridaCountyIntelligencePages.length + njPublishedCountyPages.length,
   };

@@ -41,7 +41,7 @@ export function NewYorkIntelPage({ snapshot }: { snapshot: NewYorkContractorSnap
         <span>New York research</span>
       </nav>
       <p className="text-xs font-semibold uppercase tracking-wider text-[var(--navy)]">
-        Independent research · New York · statewide only · no city or county pages
+        Independent research · New York · public-work registry · NYC DCWP is a separate local page
       </p>
       <h1 className="mt-1 text-2xl font-bold text-[var(--navy)] sm:text-3xl">
         New York Public-Work Contractor Registration Intelligence
@@ -67,7 +67,11 @@ export function NewYorkIntelPage({ snapshot }: { snapshot: NewYorkContractorSnap
           subcontractors. Confirm current registration on{" "}
           <Official href={NY_PW_LANDING} label="the official NYSDOL registry landing page" /> and the{" "}
           <Official href={NY_OPEN_DATA} label="New York Open Data dataset" />. Local home-improvement
-          licensing, including New York City, is a separate check.
+          licensing, including{" "}
+          <Link href="/new-york/new-york-city" className="font-medium underline underline-offset-2">
+            New York City DCWP Home Improvement Contractor research
+          </Link>
+          , is a separate check.
         </p>
       </section>
 
