@@ -284,7 +284,7 @@ export function ContractorHomeIntelligence({
               <Link href={row.href}>{row.hrefLabel}</Link>
             </li>
           ))}
-          {network.stateCapabilities.filter(s => s.route && !intel.geography.some(g => g.code === s.state)).map(s => <li key={s.state}><p><strong>{s.state} ? {s.route!.slice(1).split("-").map(word => word[0].toUpperCase() + word.slice(1)).join(" ")}</strong></p><p>Accepted state licensing or registration evidence, with source-specific scope.</p><p>Credential numbers are not unique companies. Evidence coverage does not assert specialist completion.</p><Link href={s.route!}>Explore state intelligence</Link></li>)}
+          {network.stateCapabilities.filter(s => s.route && !intel.geography.some(g => g.code === s.state)).map(s => <li key={s.state}><p><strong>{s.state} &middot; {s.route!.slice(1).split("-").map(word => word[0].toUpperCase() + word.slice(1)).join(" ")}</strong></p><p>Accepted state licensing or registration evidence, with source-specific scope.</p><p>Credential numbers are not unique companies. Evidence coverage does not assert specialist completion.</p><Link href={s.route!}>Explore state intelligence</Link></li>)}
         </ul>
         <details className="mt-4">
           <summary className="cursor-pointer font-semibold text-[var(--navy)]">
