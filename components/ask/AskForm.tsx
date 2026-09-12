@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ASK_CHIPS, ASK_EXAMPLES } from "@/lib/ask/interpret";
-import { askHref } from "@/lib/ask/url";
+import { askHref, type AskUrlOverrides } from "@/lib/ask/url";
 import { suggestAskCompletions } from "@/lib/ask/suggest";
 import { applyTypoSuggestion, suggestTypos } from "@/lib/ask/typos";
 
@@ -27,9 +27,11 @@ function saveRecent(q: string) {
 export function AskForm({
   initialQuery = ASK_EXAMPLES[0],
   compact = false,
+  overrides={},
 }: {
   initialQuery?: string;
   compact?: boolean;
+  overrides?:AskUrlOverrides;
 }) {
   const router = useRouter();
   const [q, setQ] = useState(initialQuery);
@@ -47,7 +49,7 @@ export function AskForm({
     saveRecent(query);
     setRecent(loadRecent());
     window.dispatchEvent(new CustomEvent("specialist-search", { detail: { event: "specialist_search_submit", hub: "contractor", hasIdentifier: /[A-Z]{2,4}\d{5,10}/i.test(query) } }));
-    router.push(askHref(query));
+    router.push(askHref(query, Object.fromEntries(Object.entries(overrides).filter(([key])=>key!=="page"&&(q===initialQuery||!["geoAction","geoChoice","geo"].includes(key))))));
   }
 
   return (
@@ -63,6 +65,7 @@ export function AskForm({
         window.dispatchEvent(new CustomEvent("specialist-search", { detail: { event: "specialist_search_submit", hub: "contractor", hasIdentifier: /[A-Z]{2,4}\d{5,10}/i.test(query) } }));
       }}
     >
+      {Object.entries(overrides).filter(([key])=>!["page","geo","trade","status","evidence"].includes(key)&&(q===initialQuery||!["geoAction","geoChoice"].includes(key))).map(([key,value])=>value?<input key={key} type="hidden" name={key} value={value}/>:null)}
       <label htmlFor="ask-q" className="sr-only">
         Ask ContractorTrustHub
       </label>
@@ -78,7 +81,7 @@ export function AskForm({
       />
       <button type="submit" className="th-btn-hero shrink-0 px-6">Research</button>
       </div>
-      {typos.length > 0 ? (
+      {typos.length > 0 && !(overrides.geoAction==="correct"&&q===initialQuery) ? (
         <p className="text-sm text-[var(--muted)]">
           Did you mean{" "}
           {typos.map((t) => (
@@ -124,10 +127,10 @@ export function AskForm({
       <details className="rounded-xl border border-[var(--border)] bg-white p-4">
         <summary className="cursor-pointer font-semibold text-[var(--navy)]">Advanced filters</summary>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <label className="text-sm">State<select name="geo" className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="fl">Florida</option></select></label>
-          <label className="text-sm">Trade<select name="trade" className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="roofing">Roofing</option><option value="plumbing">Plumbing</option><option value="hvac">HVAC</option><option value="general">General</option></select></label>
-          <label className="text-sm">Credential status<select name="status" className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="active_current">Active/current</option><option value="all">All published</option></select></label>
-          <label className="text-sm">Evidence<select name="evidence" className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="dbpr_discipline">DBPR discipline</option><option value="stop_work">Stop-work</option></select></label>
+          <label className="text-sm">State<select name="geo" defaultValue={overrides.geo??""} className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="fl">Florida</option>{overrides.geo&&overrides.geo!=="fl"?<option value={overrides.geo}>{overrides.geo.replaceAll("-"," ")}</option>:null}</select></label>
+          <label className="text-sm">Trade<select name="trade" defaultValue={overrides.trade??""} className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="roofing">Roofing</option><option value="plumbing">Plumbing</option><option value="hvac">HVAC</option><option value="general">General</option>{["building","residential","pool_spa","mechanical","home_improvement","solar","alarm","telecom","locksmith","hearth","-"].map(value=><option key={value} value={value}>{value==="-"?"Any trade":value.replaceAll("_"," ")}</option>)}</select></label>
+          <label className="text-sm">Credential status<select name="status" defaultValue={overrides.status??""} className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="active_current">Active/current</option><option value="all">All published</option><option value="expired">Expired/inactive</option><option value="-">Any status</option></select></label>
+          <label className="text-sm">Evidence<select name="evidence" defaultValue={overrides.evidence??""} className="mt-1 w-full rounded-lg border p-2"><option value="">From question</option><option value="dbpr_discipline">DBPR discipline</option><option value="stop_work">Stop-work</option><option value="unlicensed_activity">Unlicensed activity</option><option value="recovery_fund">Recovery fund</option><option value="-">No evidence filter</option></select></label>
         </div>
       </details>
       {recent.length > 0 ? (

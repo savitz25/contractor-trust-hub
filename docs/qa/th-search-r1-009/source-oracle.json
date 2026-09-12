@@ -1,0 +1,44 @@
+{
+  "retrievedAt": "2026-09-12",
+  "method": "Read-only SELECT of source-native public credential fields, independently of research parser/executor. Counts are observations, not permanent test constants.",
+  "publication": "c.is_thin_profile=false and non-null slug",
+  "rows": [
+    {
+      "source": "tx_tdlr",
+      "class": "TAC",
+      "publishedCredentials": 20323,
+      "activeCurrent": 17757,
+      "populatedCity": 0,
+      "latestStoredUpdate": "2026-08-12T21:22:00.149747Z"
+    },
+    {
+      "source": "nj_dca",
+      "class": "PLB",
+      "publishedCredentials": 11455,
+      "activeCurrent": 4903,
+      "populatedCity": 11455,
+      "latestStoredUpdate": "2026-08-13T17:21:07.557366Z"
+    },
+    {
+      "source": "fl_dbpr",
+      "class": "CCC",
+      "countyCode": "16",
+      "publishedCredentials": 964,
+      "activeCurrent": 878,
+      "populatedCity": 964
+    },
+    {
+      "source": "fl_dbpr",
+      "class": "RC",
+      "countyCode": "16",
+      "publishedCredentials": 49,
+      "activeCurrent": 46,
+      "populatedCity": 49
+    }
+  ],
+  "sourceClockMeaning": "licenses.updated_at is stored update time, not live regulator verification or official effective date",
+  "texasMapping": "ingest/adapters/tx_tdlr.py maps A/C CONTRACTOR to TAC; indexed status is expiration-derived",
+  "texasIntelligenceSnapshotFingerprint": "25d00ad3f4547ba212f4e2304177f788898c48d4750d1483944301eb1accadc6",
+  "boundedOracleFingerprint": "29d71da0eeac29761b2da3a0025c3b35812d001528dba0cdd1acfc686ac269a7",
+  "fingerprintMeaning": "SHA-256 of the bounded public-field observation rows, not a fingerprint of the complete live database."
+}

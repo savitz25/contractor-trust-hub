@@ -1,0 +1,58 @@
+{
+  "ticket": "TH-SEARCH-R1-009",
+  "status": "CANDIDATE_VALIDATED_RELEASE_PENDING",
+  "model": "GPT-6 Astra / High",
+  "modelConfirmation": "USER-CONFIRMED",
+  "baseline": "11fd0b6fd8f6a1fe5e40e48a34f6a578b67334f4",
+  "recordedAt": "2026-09-12T13:57:50.397629+00:00",
+  "candidate": "67cedb4962c5b241559142b40b28c779e434ea04",
+  "merge": null,
+  "deployment": null,
+  "tests": {
+    "focused": {
+      "pass": 27,
+      "fail": 0
+    },
+    "mutationsDetected": 2,
+    "typecheck": "PASS",
+    "build": "PASS",
+    "npmTest": "PASS",
+    "conCap002": {
+      "pass": 12,
+      "fail": 0
+    },
+    "customer": {
+      "pass": 23,
+      "fail": 0
+    },
+    "claim": {
+      "pass": 11,
+      "fail": 0
+    },
+    "flPublicationSafety": "PASS",
+    "configuredLint": "NOT_CONFIGURED",
+    "baselineFailures": [
+      "P2 stale hardcoded network-total assertion",
+      "con-search-001 obsolete homepage heading assertion"
+    ],
+    "databaseIntegrationTests": "SKIP locally: production DATABASE_URL is sensitive and unavailable through env pull"
+  },
+  "browser": {
+    "local": "16 cases PASS; source-positive cases explicitly unavailable locally",
+    "preview": {
+      "deployment": "dpl_FJmQYxUgZ2UGLxCNhXAxCciwcNJU",
+      "desktopCases": 16,
+      "desktopPass": true,
+      "apiCases": 13,
+      "apiPass": true,
+      "mobilePass": false,
+      "mobileFailure": "Texas COUNT timed out; explicit unavailable state rendered. Narrow existing-index query fix pending final preview."
+    },
+    "production": null
+  },
+  "sourceOracle": "source-oracle.json",
+  "reviewMethod": "Separate self-review plus automated behavioral/mutation checks; not independent human review",
+  "otherRepositoriesModified": false,
+  "productionDataWrites": false,
+  "pr": 59
+}

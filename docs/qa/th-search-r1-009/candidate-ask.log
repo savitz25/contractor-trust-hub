@@ -1,0 +1,69 @@
+
+> contractor-trust-hub@0.1.0 check:th-search-001a
+> npx --yes tsx --test scripts/test_th_search_001a.ts scripts/test_ask_interpret.ts scripts/test_ask_prompt2.ts scripts/test_ask_execute.ts
+
+﹣ P2 execute Broward active roofing against production graph (0.7741ms) # SKIP
+﹣ P2 execute stop-work does not list unpublished contractor joins (0.1124ms) # SKIP
+✔ short ontology tokens do not match inside longer words (2.1163ms)
+✔ entity query: active roofing in Broward (4.1177ms)
+✔ count query uses mapped family rows, not a Florida-only census (0.8497ms)
+✔ aggregate trade-family query is snapshot-backed (1.3588ms)
+✔ comparison is Broward vs Palm Beach coverage only, no permits (0.5485ms)
+✔ evidence query uses indexed family rows and does not mean guilt (0.3552ms)
+✔ consumer complaints fail closed and do not substitute discipline (0.2ms)
+✔ highest rate fails closed; most is not treated as a rate (0.3736ms)
+✔ unsupported query fails closed instead of inventing a count (0.3829ms)
+✔ definitional active/current question is interpreted, not invented (1.0474ms)
+✔ P2 entity: active Broward roofing maps trade/geo/status and is executable (9.5206ms)
+✔ P2 entity: active Palm Beach general (3.2451ms)
+✔ P2 entity: Florida HVAC does not include mechanical classes (1.1842ms)
+✔ P2 entity: Florida roofing + DBPR discipline keeps both filters (0.6523ms)
+✔ P2 evidence families parse without becoming complaints (0.7544ms)
+✔ P2 count and aggregate (0.6029ms)
+✔ P2 comparison is Broward vs Palm Beach coverage/address, not permits (0.6301ms)
+✔ P2 fail closed: complaints, BBB, rate, best, cheapest, insured, service area, permits (0.3892ms)
+✔ P2 semantic safety: active ≠ HVAC, florida ≠ stray FL token, grain notes, no clean record (0.9362ms)
+✔ P2 contradictions: active+expired and two counties without compare (0.4237ms)
+✔ P2 typos suggest and do not silently rewrite (0.8993ms)
+✖ P2 snapshot fingerprint is unchanged by Ask plan construction (3.2535ms)
+✔ P2 filter override can clear evidence without rewriting the sentence (0.7407ms)
+✔ Specialist Search V1 portable contract and safe capability states are stable (1.7276ms)
+✔ golden corpus has at least 50 classified questions and no accepted FAIL (0.284ms)
+✔ every golden PASS reaches a deterministic Ask or state-specialist plan (21.0411ms)
+✔ exact identity precedes broad research and public facts remain source-backed (1.8659ms)
+✔ unsupported quality, complaint, service-area and permit claims fail safely (0.7025ms)
+✔ execution is bounded and advanced enums reject arbitrary values (0.7045ms)
+✔ analytics contract contains no raw query or exact identity dimensions (0.1573ms)
+✔ short AC synonym does not create an HVAC suggestion from the word active (0.3184ms)
+✔ New York public-work registry is not a HIC roster and does not rank (0.7058ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 31
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 2
+ℹ todo 0
+ℹ duration_ms 1787.8821
+
+✖ failing tests:
+
+test at scripts\test_ask_prompt2.ts:2:7532
+✖ P2 snapshot fingerprint is unchanged by Ask plan construction (3.2535ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  662331 !== 644421
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_ask_prompt2.ts:110:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 662331,
+    expected: 644421,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

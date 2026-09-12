@@ -1,0 +1,397 @@
+{
+  "at": "2026-09-12T13:53:53.015Z",
+  "base": "https://contractor-trust-4ak3de960-savitz25-s-projects.vercel.app",
+  "phase": "preview-final",
+  "sha": "67cedb4962c5b241559142b40b28c779e434ea04",
+  "cases": [
+    {
+      "request": {
+        "state": "FL",
+        "trade": "roofing",
+        "county": "Broward",
+        "credentialStatus": "all",
+        "limit": 2
+      },
+      "status": 200,
+      "ms": 1755,
+      "expected": 1013,
+      "resultState": "SUPPORTED_RESULTS",
+      "total": 1013,
+      "interpretation": {
+        "state": "FL",
+        "trade": "Roofing",
+        "occupationCodes": [
+          "CCC",
+          "RC"
+        ],
+        "identifier": null,
+        "geography": {
+          "state": "FL",
+          "county": {
+            "slug": "broward",
+            "label": "Broward",
+            "code": "16"
+          },
+          "city": null,
+          "zip": null,
+          "intent": "RECORDED_CREDENTIAL_GEOGRAPHY",
+          "meaning": "Broward County recorded credential/address geography; not service territory or current availability.",
+          "authoritativeSource": null,
+          "requiresStatewideConfirmation": false,
+          "fallbackApplied": false
+        },
+        "credentialStatus": "all",
+        "ordering": "Normalized public name, then exact credential identifier, then stable source record. Neutral regulatory ordering; not recommendation."
+      },
+      "provenance": {
+        "source": "Florida DBPR — Construction Industry Licensing Board",
+        "sourceSystem": "fl_dbpr",
+        "sourceClockField": "licenses.updated_at",
+        "queryGrain": "FL source-native credential row joined to an existing public non-thin ContractorTrustHub identity",
+        "publicationSemantics": "Research-row inclusion reuses the existing non-thin public profile relationship; this endpoint creates no identity or profile."
+      },
+      "rows": [
+        {
+          "credential": "29027885",
+          "name": "123 ROOFING, INC.",
+          "geography": {
+            "city": "CORAL SPRINGS",
+            "county": "Broward",
+            "state": "FL"
+          },
+          "source": {
+            "system": "fl_dbpr",
+            "label": "DBPR",
+            "observedAt": "2026-08-10T22:49:58.721Z"
+          },
+          "why": "RC row from DBPR matching the selected credential class and status."
+        },
+        {
+          "credential": "1337629",
+          "name": "2R BUILDERS CORP",
+          "geography": {
+            "city": "HALLANDALE BEACH",
+            "county": "Broward",
+            "state": "FL"
+          },
+          "source": {
+            "system": "fl_dbpr",
+            "label": "DBPR",
+            "observedAt": "2026-08-10T22:49:58.721Z"
+          },
+          "why": "CCC row from DBPR matching the selected credential class and status."
+        }
+      ]
+    },
+    {
+      "request": {
+        "state": "NJ",
+        "trade": "plumbing",
+        "limit": 2
+      },
+      "status": 200,
+      "ms": 903,
+      "expected": 4903,
+      "resultState": "SUPPORTED_RESULTS",
+      "total": 4903,
+      "interpretation": {
+        "state": "NJ",
+        "trade": "Master plumber",
+        "occupationCodes": [
+          "PLB"
+        ],
+        "identifier": null,
+        "geography": {
+          "state": "NJ",
+          "county": null,
+          "city": null,
+          "zip": null,
+          "intent": "RECORDED_CREDENTIAL_GEOGRAPHY",
+          "meaning": "Statewide New Jersey DCA credential jurisdiction; credential-holder address may be outside New Jersey and does not prove service territory.",
+          "authoritativeSource": null,
+          "requiresStatewideConfirmation": false,
+          "fallbackApplied": false
+        },
+        "credentialStatus": "active_current",
+        "ordering": "Normalized public name, then exact credential identifier, then stable source record. Neutral regulatory ordering; not recommendation."
+      },
+      "provenance": {
+        "source": "New Jersey Division of Consumer Affairs (DCA) — HIC + specialty boards",
+        "sourceSystem": "nj_dca",
+        "sourceClockField": "licenses.updated_at",
+        "queryGrain": "NJ source-native credential row joined to an existing public non-thin ContractorTrustHub identity",
+        "publicationSemantics": "Research-row inclusion reuses the existing non-thin public profile relationship; this endpoint creates no identity or profile."
+      },
+      "rows": [
+        {
+          "credential": "36BI00990600",
+          "name": "A BRUCE RYDH",
+          "geography": {
+            "city": "WILLIAMSTOWN",
+            "county": "Gloucester",
+            "state": "NJ"
+          },
+          "source": {
+            "system": "nj_dca",
+            "label": "DCA HIC + specialty",
+            "observedAt": "2026-08-13T16:59:16.749Z"
+          },
+          "why": "Master Plumber (NJ) row from DCA HIC + specialty matching the selected credential class and status."
+        },
+        {
+          "credential": "36BI00852300",
+          "name": "A MICHAEL CANDIDO",
+          "geography": {
+            "city": "Livingston",
+            "county": "Essex",
+            "state": "NJ"
+          },
+          "source": {
+            "system": "nj_dca",
+            "label": "DCA HIC + specialty",
+            "observedAt": "2026-08-13T17:20:59.157Z"
+          },
+          "why": "Master Plumber (NJ) row from DCA HIC + specialty matching the selected credential class and status."
+        }
+      ]
+    },
+    {
+      "request": {
+        "state": "TX",
+        "trade": "hvac",
+        "city": "Austin"
+      },
+      "status": 422,
+      "ms": 88,
+      "expected": null,
+      "resultState": "CLARIFICATION_REQUIRED",
+      "total": null,
+      "interpretation": {
+        "state": "TX",
+        "trade": "hvac",
+        "credentialClass": null,
+        "identifier": null,
+        "geography": {
+          "state": "TX",
+          "county": null,
+          "city": "Austin",
+          "zip": null,
+          "intent": "RECORDED_CREDENTIAL_GEOGRAPHY",
+          "meaning": "Texas TDLR credential jurisdiction. Recorded city is unavailable in this published cohort; not service territory.",
+          "authoritativeSource": null,
+          "requiresStatewideConfirmation": true,
+          "fallbackApplied": false
+        },
+        "credentialStatus": "active_current"
+      },
+      "provenance": {
+        "sourceSystems": [
+          "tx_tdlr"
+        ],
+        "board": "Texas Department of Licensing and Regulation",
+        "publicationSemantics": "Existing public non-thin profile gate only; no publication expansion."
+      }
+    },
+    {
+      "request": {
+        "state": "TX",
+        "trade": "hvac",
+        "city": "Austin",
+        "confirmStatewide": true,
+        "limit": 2
+      },
+      "status": 200,
+      "ms": 2769,
+      "expected": 17757,
+      "resultState": "SUPPORTED_RESULTS",
+      "total": 17757,
+      "interpretation": {
+        "state": "TX",
+        "trade": "A/C Contractor (Texas TDLR)",
+        "occupationCodes": [
+          "TAC"
+        ],
+        "identifier": null,
+        "geography": {
+          "state": "TX",
+          "county": null,
+          "city": null,
+          "zip": null,
+          "intent": "RECORDED_CREDENTIAL_GEOGRAPHY",
+          "meaning": "Texas TDLR credential jurisdiction. Recorded city is unavailable in this published cohort; not service territory.",
+          "authoritativeSource": null,
+          "requiresStatewideConfirmation": false,
+          "fallbackApplied": true
+        },
+        "credentialStatus": "active_current",
+        "ordering": "Normalized public name, then exact credential identifier, then stable source record. Neutral regulatory ordering; not recommendation."
+      },
+      "provenance": {
+        "source": "Texas Department of Licensing and Regulation",
+        "sourceSystem": "tx_tdlr",
+        "sourceClockField": "licenses.updated_at",
+        "queryGrain": "TX source-native credential row joined to an existing public non-thin ContractorTrustHub identity",
+        "publicationSemantics": "Research-row inclusion reuses the existing non-thin public profile relationship; this endpoint creates no identity or profile."
+      },
+      "rows": [
+        {
+          "credential": "164239",
+          "name": "#1 ALLY AIR PRO LLC",
+          "geography": {
+            "city": null,
+            "county": "Dallas",
+            "state": "TX"
+          },
+          "source": {
+            "system": "tx_tdlr",
+            "label": "TDLR",
+            "observedAt": "2026-08-12T21:22:00.149Z"
+          },
+          "why": "A/C Contractor row from TDLR matching the selected credential class and status."
+        },
+        {
+          "credential": "132852",
+          "name": "#1 ANC LLC",
+          "geography": {
+            "city": null,
+            "county": "Dallas",
+            "state": "TX"
+          },
+          "source": {
+            "system": "tx_tdlr",
+            "label": "TDLR",
+            "observedAt": "2026-08-12T21:22:00.149Z"
+          },
+          "why": "A/C Contractor row from TDLR matching the selected credential class and status."
+        }
+      ]
+    },
+    {
+      "request": {
+        "state": "FL",
+        "identifier": "CCC1332036",
+        "credentialStatus": "all",
+        "limit": 2
+      },
+      "status": 200,
+      "ms": 5570,
+      "expected": 1,
+      "resultState": "EXACT_IDENTITY",
+      "total": 1,
+      "interpretation": {
+        "state": "FL",
+        "trade": null,
+        "occupationCodes": [],
+        "identifier": "CCC1332036",
+        "geography": {
+          "state": "FL",
+          "county": null,
+          "city": null,
+          "zip": null,
+          "intent": "RECORDED_CREDENTIAL_GEOGRAPHY",
+          "meaning": "Florida credential jurisdiction and recorded address geography; not service territory.",
+          "authoritativeSource": null,
+          "requiresStatewideConfirmation": false,
+          "fallbackApplied": false
+        },
+        "credentialStatus": "all",
+        "ordering": "Normalized public name, then exact credential identifier, then stable source record. Neutral regulatory ordering; not recommendation."
+      },
+      "provenance": {
+        "source": "Florida DBPR — Construction Industry Licensing Board",
+        "sourceSystem": "fl_dbpr",
+        "sourceClockField": "licenses.updated_at",
+        "queryGrain": "FL source-native credential row joined to an existing public non-thin ContractorTrustHub identity",
+        "publicationSemantics": "Research-row inclusion reuses the existing non-thin public profile relationship; this endpoint creates no identity or profile."
+      },
+      "rows": [
+        {
+          "credential": "1332036",
+          "name": "INFINITE CONSTRUCTION SERVICES LLC",
+          "geography": {
+            "city": "MIRAMAR",
+            "county": "Broward",
+            "state": "FL"
+          },
+          "source": {
+            "system": "fl_dbpr",
+            "label": "DBPR",
+            "observedAt": "2026-08-10T22:49:58.721Z"
+          },
+          "why": "CCC row from DBPR matching the selected credential class and status."
+        }
+      ]
+    },
+    {
+      "request": {
+        "state": "FL",
+        "trade": "roofing",
+        "city": "Zzzyxville",
+        "limit": 2
+      },
+      "status": 200,
+      "ms": 761,
+      "expected": 0,
+      "resultState": "ZERO_MATCHING_ROWS",
+      "total": 0,
+      "interpretation": {
+        "state": "FL",
+        "trade": "Roofing",
+        "occupationCodes": [
+          "CCC",
+          "RC"
+        ],
+        "identifier": null,
+        "geography": {
+          "state": "FL",
+          "county": null,
+          "city": "Zzzyxville",
+          "zip": null,
+          "intent": "RECORDED_CREDENTIAL_GEOGRAPHY",
+          "meaning": "Florida credential jurisdiction and recorded address geography; not service territory.",
+          "authoritativeSource": null,
+          "requiresStatewideConfirmation": false,
+          "fallbackApplied": false
+        },
+        "credentialStatus": "active_current",
+        "ordering": "Normalized public name, then exact credential identifier, then stable source record. Neutral regulatory ordering; not recommendation."
+      },
+      "provenance": {
+        "source": "Florida DBPR — Construction Industry Licensing Board",
+        "sourceSystem": "fl_dbpr",
+        "sourceClockField": "licenses.updated_at",
+        "queryGrain": "FL source-native credential row joined to an existing public non-thin ContractorTrustHub identity",
+        "publicationSemantics": "Research-row inclusion reuses the existing non-thin public profile relationship; this endpoint creates no identity or profile."
+      },
+      "rows": []
+    },
+    {
+      "route": "/new-york",
+      "status": 200
+    },
+    {
+      "route": "/illinois",
+      "status": 200
+    },
+    {
+      "route": "/texas",
+      "status": 200
+    },
+    {
+      "route": "/new-jersey",
+      "status": 200
+    },
+    {
+      "route": "/florida",
+      "status": 200
+    },
+    {
+      "route": "/robots.txt",
+      "status": 200
+    },
+    {
+      "route": "/sitemap.xml",
+      "status": 200
+    }
+  ]
+}

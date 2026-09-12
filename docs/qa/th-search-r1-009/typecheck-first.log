@@ -1,0 +1,10 @@
+
+> contractor-trust-hub@0.1.0 typecheck
+> tsc --noEmit
+
+lib/search/contractor-discovery.ts(85,92): error TS2322: Type 'number' is not assignable to type '"invalid_query" | "identity_or_discovery"'.
+lib/search/contractor-discovery.ts(85,100): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+lib/search/contractor-discovery.ts(85,126): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+lib/search/contractor-discovery.ts(86,97): error TS2322: Type 'number' is not assignable to type '"invalid_query" | "identity_or_discovery"'.
+lib/search/contractor-discovery.ts(86,105): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+lib/search/contractor-discovery.ts(86,131): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.

@@ -1,0 +1,20 @@
+✔ Illinois active roofing business count is the distinct ID headline (3.0193ms)
+✔ Illinois contractor total, entity, and filtered questions do not receive unfiltered counts (1.0054ms)
+✔ qualifying-party, source-row, and other-status counts never receive 4675 (0.8525ms)
+✔ mixed-jurisdiction and NY/VA/FL regressions stay off Illinois totals (0.8634ms)
+✔ explicit NY registry aggregate succeeds from the accepted snapshot (3.0576ms)
+✔ named-company and certificate questions do not become the statewide total (0.4809ms)
+✔ complaints, ranking, and discovery do not become the unfiltered total (0.4182ms)
+✔ debarment routing does not assume New York (1.5623ms)
+✔ existing exact-credential and VA/CO phrasing remain unchanged (0.6203ms)
+✔ Austin city survives before capability selection (4.9225ms)
+✔ Dallas city survives before capability selection (1.9644ms)
+✔ Browrd typo cannot authorize Florida execution (5.5329ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 518.243

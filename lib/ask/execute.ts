@@ -138,7 +138,7 @@ function classLabel(code: string | null): string | null {
   return CLASS_LABELS[code] || getOccupationInfo(code).label || code;
 }
 
-function askWhere(plan: ContractorResearchQuery, countySlug?: string | null): { where: string; params: unknown[] } | null {
+export function askWhere(plan: ContractorResearchQuery, countySlug?: string | null): { where: string; params: unknown[] } | null {
   const state = getStateBySlug("fl");
   const disc = getDiscoveryState("florida");
   if (!state?.live || !disc) return null;
@@ -154,6 +154,10 @@ function askWhere(plan: ContractorResearchQuery, countySlug?: string | null): { 
     where += ` AND l.status_normalized IN ('active', 'current')`;
   } else if (plan.credentialStatus === "expired") {
     where += ` AND l.status_normalized = 'expired'`;
+  }
+  if (plan.geography.city) {
+    params.push(plan.geography.city.toLowerCase());
+    where += ` AND LOWER(TRIM(l.city)) = $${params.length} AND l.state = 'FL'`;
   }
   if (county) {
     if (county.matchCodes?.[0]) {
@@ -178,13 +182,16 @@ async function askCounts(where: string, params: unknown[]): Promise<{ contractor
     params,
     { statementTimeoutMs: 10_000 }
   );
-  return { contractors: Number(row?.contractors || 0), credentials: Number(row?.credentials || 0) };
+  const contractors=Number(row?.contractors),credentials=Number(row?.credentials);
+  if(!row||![contractors,credentials].every(n=>Number.isSafeInteger(n)&&n>=0))throw new Error("invalid_source_count");
+  return {contractors,credentials};
 }
 
 function whyMatched(plan: ContractorResearchQuery, card: { evidenceCount: number }): string {
   const bits = ["This contractor appears because an indexed Florida DBPR credential record matched the structured filters."];
   if (plan.credentialStatus === "active_current") bits.push("Credential status is active/current in the extract.");
   if (plan.trade.label) bits.push(`Trade family is ${plan.trade.label} (${plan.trade.occupationCodes.join(", ")}).`);
+  if (plan.geography.city) bits.push(`Recorded credential city is ${plan.geography.city}, Florida; not service territory.`);
   if (plan.geography.countyLabel) {
     bits.push(
       `Recorded geography is ${plan.geography.countyLabel} from the indexed mailing/business address county — not a service area.`
@@ -282,7 +289,7 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
     if (!built) {
       return emptyExecution({ blocked: true, blockMessage: "Florida discovery configuration is not available." });
     }
-    if (plan.mode === "count" && !plan.geography.countySlug && plan.trade.familyId) {
+    if (plan.mode === "count" && !plan.geography.countySlug && !plan.geography.city && !plan.geographyRequirement && plan.trade.familyId) {
       const snap = intel.tradeFamilies.families.find((f) => {
         if (plan.trade.familyId === "roofing") return f.id === "roofing";
         if (plan.trade.familyId === "hvac") return f.id === "hvac";
@@ -338,7 +345,7 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
       `
       SELECT * FROM (
         SELECT DISTINCT ON (c.id)
-          c.id, c.slug, c.display_name, c.primary_city, c.primary_county, c.home_state,
+          c.id, c.slug, c.display_name, l.city AS primary_city, l.county_name AS primary_county, l.state AS home_state,
           l.external_key, l.occupation_code, l.status_normalized, l.source_system
         FROM contractors c
         JOIN licenses l ON l.contractor_id = c.id
@@ -391,7 +398,7 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
     try {
       totals = await askCounts(built.where, built.params);
     } catch {
-      totals = { contractors: results.length, credentials: results.length };
+      return emptyExecution({blocked:true,blockMessage:"The scoped total could not be checked. Retry this same research request; no page-size total was inferred.",asOf,snapshotFingerprint:intel.sourceFingerprint});
     }
 
     return emptyExecution({
@@ -409,13 +416,10 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
     });
   } catch (err) {
     const detail = dbUserFacingError(err);
-    console.error("[ask] execute failed:", detail);
+    console.error("[ask] source query unavailable");
     return emptyExecution({
       blocked: true,
-      blockMessage:
-        detail === "database error"
-          ? "The structured query could not be completed against the live research graph. Try a narrower question or Verify search."
-          : `The structured query could not be completed (${detail}). Try a narrower question or Verify search.`,
+      blockMessage: "The source query could not be completed. Retry this same research request; no broader scope or zero-result count was inferred.",
       asOf,
       snapshotFingerprint: intel.sourceFingerprint,
     });
@@ -427,6 +431,7 @@ const EXEC_MEMO = new Map<string, AskExecution>();
 export async function executeContractorResearchQuery(plan: ContractorResearchQuery): Promise<AskExecution> {
   const intel = loadContractorHubIntel();
   const key = `${plan.planId}:${plan.page}:${plan.sort.field}:${plan.mode}:${intel.sourceFingerprint}`;
+  if(plan.geographyRequirement&&!plan.geographyRequirement.executionGeography)return emptyExecution({blocked:true,blockMessage:plan.geographyRequirement.message,sqlContract:"No query: requested geography not authorized for execution."});
   const hit = EXEC_MEMO.get(key);
   if (hit) return hit;
   const lookup = plan.identity.identifier || plan.identity.entityQuery;
@@ -434,7 +439,7 @@ export async function executeContractorResearchQuery(plan: ContractorResearchQue
     ? await executeIdentityLookup(lookup, plan, intel.generatedAt.slice(0, 10), intel.sourceFingerprint)
     : await executeUncached(plan);
   if (EXEC_MEMO.size > 48) EXEC_MEMO.clear();
-  EXEC_MEMO.set(key, out);
+  if(out.ok&&!out.blocked)EXEC_MEMO.set(key, out);
   return out;
 }
 

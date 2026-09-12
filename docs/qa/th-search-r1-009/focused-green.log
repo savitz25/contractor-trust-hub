@@ -1,0 +1,38 @@
+
+> contractor-trust-hub@0.1.0 check:th-search-r1-009
+> npx --yes tsx --test scripts/test_th_search_r1_009.ts
+
+✔ Austin city survives before capability selection (15.1796ms)
+✔ Dallas city survives before capability selection (6.9935ms)
+✔ Houston city survives before capability selection (0.9663ms)
+✔ El Paso city survives before capability selection (0.8136ms)
+✔ ordinary explicit city/state forms use one extraction (1.7793ms)
+✔ Browrd typo cannot authorize Florida execution (13.6852ms)
+✔ accepted correction equals exact county query, including real SQL (6.3065ms)
+✔ invalid or cross-state correction cannot execute (6.3627ms)
+✔ explicit broadening preserves original city, trade and status with TX native class (4.1917ms)
+✔ broadening cannot change state or unsupported trade (1.8325ms)
+✔ business names do not become geography or correction (0.7621ms)
+✔ ambiguous, unknown, radius and multiple places remain unresolved (6.5688ms)
+✔ other filters and requested text survive action URLs and pagination (3.1745ms)
+✔ full input/duplicate/action/page validation before parsing (0.6793ms)
+✔ native/canonical route policy shares full interpreted geography (7.4059ms)
+✔ FL predicates apply county/city before pagination and retain source identity (3.7053ms)
+✔ NJ Master Plumber is PLB, not Florida plumbing classes (1.0909ms)
+✔ exact credential routing remains intact (0.8396ms)
+✔ actual V2 execution uses source/class/county predicates before limit and builds truthful rows (5.3942ms)
+✔ actual V2 city equality is executed with state, not a statewide window (1.266ms)
+✔ actual NJ and TX positive execution remains useful and source-native (1.465ms)
+✔ unsupported local scope blocks source calls; valid zero differs from source failure (2.2536ms)
+✔ pagination retains source scope and count independently of displayed row count (0.8729ms)
+✔ form resubmission field contract avoids duplicated select parameters (4.6449ms)
+✔ cleared status means all and Texas source attribution remains TDLR only (1.1264ms)
+✔ structured source entry cannot discard malformed or oversized city (0.6598ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1206.2179
