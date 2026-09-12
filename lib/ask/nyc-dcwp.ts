@@ -118,7 +118,7 @@ export function interpretNycDcwp(query: string, text: string): AskResult | null 
     );
   }
 
-  if (nyc && /\broof/.test(text)) {
+  if (nyc && /\broof/.test(text) && !/\bpermit/.test(text)) {
     interpretation.notes.push("nyc-roofing-not-automatic-hic");
     return closed(
       query,
