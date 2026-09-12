@@ -1,0 +1,81 @@
+{
+  "at": "2026-09-12T14:26:54.062Z",
+  "base": "https://www.contractortrusthub.com",
+  "sha": "ca77548a762b07618c8a33b91c7a9eb81bc38a05",
+  "cases": [
+    {
+      "name": "broward",
+      "params": {
+        "q": "roofers in Broward County"
+      },
+      "ms": 3252,
+      "displayedRows": 24,
+      "allRowsSatisfyVisibleScope": true,
+      "firstRows": [
+        "123 ROOFING, INC.\n\nRC29027885 · Registered Roofing Contractor\n\nFLORIDA DBPR\n\nActive/current in indexed DBPR record\nRegistered Roofing Contractor\nBroward recorded address\n\nBroward County, Florida recorded address in the indexed licensing record — not service territory.\n\nWhy this matched\n\nThis contractor appears because an indexed Florida DBPR credential record matched the structured filters. Trade family is Roofing (CCC, RC). Recorded geography is Broward County, Florida from the indexed mailing/business address county — not a service area.\n\nTrace this result\nResearch this contractor\nSave to research",
+        "2R BUILDERS CORP\n\nCCC1337629 · Certified Roofing Contractor\n\nFLORIDA DBPR\n\nActive/current in indexed DBPR record\nCertified Roofing Contractor\nBroward recorded address\n\nBroward County, Florida recorded address in the indexed licensing record — not service territory.\n\nWhy this matched\n\nThis contractor appears because an indexed Florida DBPR credential record matched the structured filters. Trade family is Roofing (CCC, RC). Recorded geography is Broward County, Florida from the indexed mailing/business address county — not a service area.\n\nTrace this result\nResearch this contractor\nSave to research"
+      ],
+      "screenshot": "docs/qa/th-search-r1-009/production-final-records-broward.png"
+    },
+    {
+      "name": "corrected",
+      "params": {
+        "q": "roofers in browrd county fl",
+        "geoAction": "correct",
+        "geoChoice": "broward"
+      },
+      "ms": 868,
+      "displayedRows": 24,
+      "allRowsSatisfyVisibleScope": true,
+      "firstRows": [
+        "123 ROOFING, INC.\n\nRC29027885 · Registered Roofing Contractor\n\nFLORIDA DBPR\n\nActive/current in indexed DBPR record\nRegistered Roofing Contractor\nBroward recorded address\n\nBroward County, Florida recorded address in the indexed licensing record — not service territory.\n\nWhy this matched\n\nThis contractor appears because an indexed Florida DBPR credential record matched the structured filters. Trade family is Roofing (CCC, RC). Recorded geography is Broward County, Florida from the indexed mailing/business address county — not a service area.\n\nTrace this result\nResearch this contractor\nSave to research",
+        "2R BUILDERS CORP\n\nCCC1337629 · Certified Roofing Contractor\n\nFLORIDA DBPR\n\nActive/current in indexed DBPR record\nCertified Roofing Contractor\nBroward recorded address\n\nBroward County, Florida recorded address in the indexed licensing record — not service territory.\n\nWhy this matched\n\nThis contractor appears because an indexed Florida DBPR credential record matched the structured filters. Trade family is Roofing (CCC, RC). Recorded geography is Broward County, Florida from the indexed mailing/business address county — not a service area.\n\nTrace this result\nResearch this contractor\nSave to research"
+      ],
+      "screenshot": "docs/qa/th-search-r1-009/production-final-records-corrected.png"
+    },
+    {
+      "name": "palm-beach",
+      "params": {
+        "q": "HVAC contractors in Palm Beach County"
+      },
+      "ms": 923,
+      "displayedRows": 24,
+      "allRowsSatisfyVisibleScope": true,
+      "firstRows": [
+        "A @ M AIR CONDITIONING AND REFRIGERATION, INC.\n\nCAC1822387 · Certified Air Conditioning Contractor\n\nFLORIDA DBPR\n\nActive/current in indexed DBPR record\nCertified Air Conditioning Contractor\nPalm Beach recorded address\n\nPalm Beach County, Florida recorded address in the indexed licensing record — not service territory.\n\nWhy this matched\n\nThis contractor appears because an indexed Florida DBPR credential record matched the structured filters. Trade family is HVAC / air conditioning (CAC, RA). Recorded geography is Palm Beach County, Florida from the indexed mailing/business address county — not a service area.\n\nTrace this result\nResearch this contractor\nSave to research",
+        "A & H SERVICES INC\n\nCACA35463 · Certified Air Conditioning Contractor\n\nFLORIDA DBPR\n\nActive/current in indexed DBPR record\nCertified Air Conditioning Contractor\nPalm Beach recorded address\n\nPalm Beach County, Florida recorded address in the indexed licensing record — not service territory.\n\nWhy this matched\n\nThis contractor appears because an indexed Florida DBPR credential record matched the structured filters. Trade family is HVAC / air conditioning (CAC, RA). Recorded geography is Palm Beach County, Florida from the indexed mailing/business address county — not a service area.\n\nTrace this result\nResearch this contractor\nSave to research"
+      ],
+      "screenshot": "docs/qa/th-search-r1-009/production-final-records-palm-beach.png"
+    },
+    {
+      "name": "nj",
+      "params": {
+        "q": "plumbers in New Jersey"
+      },
+      "ms": 3131,
+      "displayedRows": 24,
+      "allRowsSatisfyVisibleScope": true,
+      "firstRows": [
+        "MASTER PLUMBER (NJ)\n\nA BRUCE RYDH\nCredential\n36BI00990600\nStatus\nactive\nRecorded place\nWILLIAMSTOWN, Gloucester County, NJ\nSource\nDCA HIC + specialty · 2026-08-13\n\nMaster Plumber (NJ) row from DCA HIC + specialty matching the selected credential class and status.\n\nTrace this result\nResearch this contractor\nVerify credential",
+        "MASTER PLUMBER (NJ)\n\nA MICHAEL CANDIDO\nCredential\n36BI00852300\nStatus\nactive\nRecorded place\nLivingston, Essex County, NJ\nSource\nDCA HIC + specialty · 2026-08-13\n\nMaster Plumber (NJ) row from DCA HIC + specialty matching the selected credential class and status.\n\nTrace this result\nResearch this contractor\nVerify credential"
+      ],
+      "screenshot": "docs/qa/th-search-r1-009/production-final-records-nj.png"
+    },
+    {
+      "name": "texas",
+      "params": {
+        "q": "HVAC contractors in Austin Texas",
+        "geoAction": "broaden",
+        "geoChoice": "tx"
+      },
+      "ms": 1046,
+      "displayedRows": 24,
+      "allRowsSatisfyVisibleScope": true,
+      "firstRows": [
+        "A/C CONTRACTOR\n\n#1 ALLY AIR PRO LLC\nCredential\n164239\nStatus\nactive\nRecorded place\nDallas County, TX\nSource\nTDLR · 2026-08-12\n\nA/C Contractor row from TDLR matching the selected credential class and status.\n\nTrace this result\nResearch this contractor\nVerify credential",
+        "A/C CONTRACTOR\n\n#1 ANC LLC\nCredential\n132852\nStatus\nactive\nRecorded place\nDallas County, TX\nSource\nTDLR · 2026-08-12\n\nA/C Contractor row from TDLR matching the selected credential class and status.\n\nTrace this result\nResearch this contractor\nVerify credential"
+      ],
+      "screenshot": "docs/qa/th-search-r1-009/production-final-records-texas.png"
+    }
+  ]
+}

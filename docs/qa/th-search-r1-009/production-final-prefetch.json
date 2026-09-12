@@ -1,0 +1,40 @@
+{
+  "at": "2026-09-12T14:24:54.734Z",
+  "base": "https://www.contractortrusthub.com",
+  "phase": "production-final",
+  "sha": "ca77548a762b07618c8a33b91c7a9eb81bc38a05",
+  "cases": [
+    {
+      "q": "roofers in browrd county fl",
+      "beforeClick": [],
+      "afterClick": [
+        {
+          "path": "/ask",
+          "action": "correct",
+          "prefetch": null
+        }
+      ],
+      "ms": 523,
+      "beforeSecondChoice": [],
+      "afterSecondChoice": [
+        {
+          "path": "/ask",
+          "action": "broaden",
+          "prefetch": null
+        }
+      ]
+    },
+    {
+      "q": "HVAC contractors in Austin Texas",
+      "beforeClick": [],
+      "afterClick": [
+        {
+          "path": "/search",
+          "action": "broaden",
+          "prefetch": null
+        }
+      ],
+      "ms": 1006
+    }
+  ]
+}

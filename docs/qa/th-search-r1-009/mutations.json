@@ -1,6 +1,6 @@
 {
-  "testedAt": "2026-09-12T14:00:48.457952+00:00",
-  "candidate": "cb087c44473ac363f15c175e1e70f7be401edb94",
+  "testedAt": "2026-09-12T14:23:28.854588+00:00",
+  "candidate": "3c1419e7bdfb903c7b3588b25fbb2ed0b78f13c2",
   "restoredByteIdentically": true,
   "results": [
     {
@@ -13,5 +13,6 @@
       "exitCode": 1,
       "detected": true
     }
-  ]
+  ],
+  "cleanExitCode": 0
 }
