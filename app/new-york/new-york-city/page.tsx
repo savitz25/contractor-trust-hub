@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { NycIntelPage } from "@/components/new-york/nyc-local-intel-page";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildNycContractorJsonLd } from "@/lib/new-york-city-intelligence/jsonld";
+import { loadNycAcrisView } from "@/lib/new-york-city-acris-intelligence/load";
 import { loadNycDobPlutoView } from "@/lib/new-york-city-dob-intelligence/load";
 import { loadNycContractorView } from "@/lib/new-york-city-intelligence/load";
 import { NYC_INTELLIGENCE_GATE } from "@/lib/new-york-city-intelligence/publication";
@@ -17,10 +18,11 @@ export const metadata: Metadata = pageMetadata({
 export default function NewYorkCityIntelligencePage() {
   const snapshot = loadNycContractorView();
   const dob = loadNycDobPlutoView();
+  const acris = loadNycAcrisView();
   return (
     <>
       <JsonLd data={buildNycContractorJsonLd(snapshot)} />
-      <NycIntelPage snapshot={snapshot} dob={dob} />
+      <NycIntelPage snapshot={snapshot} dob={dob} acris={acris} />
     </>
   );
 }

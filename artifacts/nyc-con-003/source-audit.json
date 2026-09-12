@@ -1,0 +1,199 @@
+{
+  "audited_at": "2026-09-12T16:39:23Z",
+  "master": {
+    "id": "bnx9-e6tj",
+    "name": "ACRIS - Real Property Master",
+    "attribution": "Department of Finance (DOF)",
+    "description": "Document Details for Real Property Related Documents Recorded in ACRIS",
+    "rowsUpdatedAt": 1788895961,
+    "rowsUpdatedAt_iso": "2026-09-08T19:32:41+00:00",
+    "viewLastModified": 1740778366,
+    "columns": [
+      {
+        "fieldName": "document_id",
+        "name": "DOCUMENT ID",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "record_type",
+        "name": "RECORD TYPE",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "crfn",
+        "name": "CRFN",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "recorded_borough",
+        "name": "BOROUGH",
+        "dataTypeName": "number"
+      },
+      {
+        "fieldName": "doc_type",
+        "name": "DOC. TYPE",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "document_date",
+        "name": "DOC. DATE",
+        "dataTypeName": "calendar_date"
+      },
+      {
+        "fieldName": "document_amt",
+        "name": "DOC. AMOUNT",
+        "dataTypeName": "number"
+      },
+      {
+        "fieldName": "recorded_datetime",
+        "name": "RECORDED / FILED",
+        "dataTypeName": "calendar_date"
+      },
+      {
+        "fieldName": "modified_date",
+        "name": "MODIFIED DATE",
+        "dataTypeName": "calendar_date"
+      },
+      {
+        "fieldName": "reel_yr",
+        "name": "REEL YEAR",
+        "dataTypeName": "number"
+      },
+      {
+        "fieldName": "reel_nbr",
+        "name": "REEL NBR",
+        "dataTypeName": "number"
+      },
+      {
+        "fieldName": "reel_pg",
+        "name": "REEL PAGE",
+        "dataTypeName": "number"
+      },
+      {
+        "fieldName": "percent_trans",
+        "name": "% TRANSFERRED",
+        "dataTypeName": "number"
+      },
+      {
+        "fieldName": "good_through_date",
+        "name": "GOOD THROUGH DATE",
+        "dataTypeName": "calendar_date"
+      }
+    ],
+    "sample": [
+      {
+        "document_id": "2026033100333001",
+        "record_type": "A",
+        "crfn": "2026000232998",
+        "recorded_borough": "1",
+        "doc_type": "DEED",
+        "document_date": "2025-12-17T00:00:00.000",
+        "document_amt": "0",
+        "recorded_datetime": "2026-08-18T00:00:00.000",
+        "modified_date": "2026-08-18T00:00:00.000",
+        "reel_yr": "0",
+        "reel_nbr": "0",
+        "reel_pg": "0"
+      }
+    ],
+    "sample_error": null
+  },
+  "legals": {
+    "id": "8h5j-fqxa",
+    "name": "ACRIS - Real Property Legals",
+    "attribution": "Department of Finance (DOF)",
+    "description": "Property Details for Real Property Related Documents Recorded in ACRIS",
+    "rowsUpdatedAt": 1788895869,
+    "rowsUpdatedAt_iso": "2026-09-08T19:31:09+00:00",
+    "viewLastModified": 1740778244,
+    "columns": [
+      {
+        "fieldName": "document_id",
+        "name": "DOCUMENT ID",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "record_type",
+        "name": "RECORD TYPE",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "borough",
+        "name": "BOROUGH",
+        "dataTypeName": "number"
+      },
+      {
+        "fieldName": "block",
+        "name": "BLOCK",
+        "dataTypeName": "number"
+      },
+      {
+        "fieldName": "lot",
+        "name": "LOT",
+        "dataTypeName": "number"
+      },
+      {
+        "fieldName": "easement",
+        "name": "EASEMENT",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "partial_lot",
+        "name": "PARTIAL LOT",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "air_rights",
+        "name": "AIR RIGHTS",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "subterranean_rights",
+        "name": "SUBTERRANEAN RIGHTS",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "property_type",
+        "name": "PROPERTY TYPE",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "street_number",
+        "name": "STREET NUMBER",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "street_name",
+        "name": "STREET NAME",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "unit",
+        "name": "UNIT",
+        "dataTypeName": "text"
+      },
+      {
+        "fieldName": "good_through_date",
+        "name": "GOOD THROUGH DATE",
+        "dataTypeName": "calendar_date"
+      }
+    ],
+    "sample": [
+      {
+        "document_id": "2026071000067001",
+        "record_type": "L",
+        "borough": "1",
+        "block": "1296",
+        "lot": "1",
+        "easement": "N",
+        "partial_lot": "E",
+        "air_rights": "N",
+        "subterranean_rights": "N",
+        "property_type": "OF",
+        "street_number": "125",
+        "street_name": "PARK AVENUE"
+      }
+    ],
+    "sample_error": null
+  }
+}
