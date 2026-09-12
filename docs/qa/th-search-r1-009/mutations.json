@@ -1,6 +1,7 @@
 {
-  "testedAt": "2026-09-12T13:35:07.197155+00:00",
-  "restored": true,
+  "testedAt": "2026-09-12T14:00:48.457952+00:00",
+  "candidate": "cb087c44473ac363f15c175e1e70f7be401edb94",
+  "restoredByteIdentically": true,
   "results": [
     {
       "mutation": "drop-city-predicate",

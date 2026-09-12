@@ -51,6 +51,7 @@ export type ContractorResearchQuery = {
   geographyRequirement?: GeographyRequirement | null;
   geographyAction?: string | null;
   geographyChoice?: string | null;
+  geographyCorrection?: string | null;
   identity: { identifier: string | null; entityQuery: string | null };
   geography: {
     state: "FL" | null;
@@ -116,6 +117,7 @@ export function parseAskOverrides(sp: URLSearchParams | AskUrlOverrides): AskUrl
       geo: sp.get("geo"),
       geoAction: sp.get("geoAction"),
       geoChoice: sp.get("geoChoice"),
+      geoCorrection: sp.get("geoCorrection"),
       trade: sp.get("trade"),
       status: sp.get("status"),
       evidence: sp.get("evidence"),
@@ -246,6 +248,7 @@ export function buildContractorResearchQuery(
     geographyRequirement,
     geographyAction: overrides.geoAction,
     geographyChoice: overrides.geoChoice,
+    geographyCorrection: overrides.geoCorrection,
     identity: {
       identifier: interpreted.interpretation.identifier,
       entityQuery: interpreted.interpretation.entityQuery,
@@ -295,6 +298,7 @@ export function planToOverrides(plan: ContractorResearchQuery): AskUrlOverrides 
   return {
     geoAction:plan.geographyAction,
     geoChoice:plan.geographyChoice,
+    geoCorrection:plan.geographyCorrection,
     geo: plan.geography.countySlug ?? (plan.geography.state === "FL" ? "fl" : undefined),
     trade: plan.trade.familyId ?? undefined,
     status: plan.credentialStatus,
@@ -311,7 +315,7 @@ export function chipHref(
 ): string {
   const o = planToOverrides(plan);
   o[clear] = ASK_CLEARED;
-  if(clear==='geo'&&plan.geographyRequirement?.requestedState){o.geo=undefined;o.geoAction='broaden';o.geoChoice=plan.geographyRequirement.requestedState.toLowerCase();}
+  if(clear==='geo'&&plan.geographyRequirement?.requestedState){o.geo=undefined;o.geoAction='broaden';o.geoChoice=plan.geographyRequirement.requestedState.toLowerCase();if(plan.geographyRequirement.acceptedCorrection)o.geoCorrection=plan.geographyRequirement.correction?.id;}
   o.page = "1";
   return askHref(q, o);
 }

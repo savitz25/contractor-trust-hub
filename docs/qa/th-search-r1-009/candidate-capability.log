@@ -2,18 +2,18 @@
 > contractor-trust-hub@0.1.0 check:con-cap-002
 > npx --yes tsx --test scripts/test_con_cap_002.ts
 
-✔ contract family/version/fingerprints are deterministic (1.243ms)
-✔ state/source selection is exact (1.7339ms)
-✔ New Jersey class matrix is source-native (0.4066ms)
-✔ generic and General NJ requests never invent a population (1.5333ms)
-✔ New Jersey statewide and authoritative Summit geography normalize safely (0.4077ms)
-✔ invalid and conflicting New Jersey geography fails closed (0.4907ms)
-✔ statewide fallback is explicit (0.309ms)
-✔ service territory is never inferred (0.3274ms)
-✔ publication gate, row privacy, ordering, and exact lookup remain deterministic (0.3578ms)
-✔ pagination is bounded and stable by contract (0.4406ms)
-✔ Florida accepted behavior remains locked (0.7522ms)
-✔ route and contract expose safe state distinctions without writes (0.3484ms)
+✔ contract family/version/fingerprints are deterministic (1.2866ms)
+✔ state/source selection is exact (1.3094ms)
+✔ New Jersey class matrix is source-native (0.2707ms)
+✔ generic and General NJ requests never invent a population (0.9732ms)
+✔ New Jersey statewide and authoritative Summit geography normalize safely (0.2984ms)
+✔ invalid and conflicting New Jersey geography fails closed (0.3417ms)
+✔ statewide fallback is explicit (0.2328ms)
+✔ service territory is never inferred (0.2214ms)
+✔ publication gate, row privacy, ordering, and exact lookup remain deterministic (0.323ms)
+✔ pagination is bounded and stable by contract (0.3392ms)
+✔ Florida accepted behavior remains locked (0.5266ms)
+✔ route and contract expose safe state distinctions without writes (0.2503ms)
 ℹ tests 12
 ℹ suites 0
 ℹ pass 12
@@ -21,4 +21,4 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 544.1391
+ℹ duration_ms 485.9509

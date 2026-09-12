@@ -72,7 +72,7 @@ export default async function ContractorSearchPage({ searchParams }: Props) {
       {plan.mode==='discovery'&&!response?<p role="status" className="mt-4">Trade: {plan.interpretation.trade??'Not specified'}. {unsupportedCondition?'The requested count, ordering, year or evidence condition is not supported by this credential-list path. It has not been removed; edit that condition to continue.':'No broader credential list has been executed. Edit the place or select an available choice above.'}</p>:null}
 
       {plan.mode === "empty" ? <section className="mt-10 rounded-2xl border border-[var(--border)] bg-white p-6"><h2>Try a trade and place</h2><p className="mt-2 text-[var(--muted)]">Examples: roofers in Broward County, home improvement contractors in New Jersey, or HVAC contractors in Florida.</p></section> : null}
-      {plan.mode === "clarification" ? <section className="mt-10 rounded-2xl border border-[var(--border)] bg-white p-6"><p className="cth-intel-eyebrow">Clarification needed</p><h2>Are you researching a contractor category or verifying a known business?</h2><div className="mt-4 flex flex-wrap gap-3"><Link className="cth-intel-btn cth-intel-btn--primary" href="/search">Research by trade and place</Link><Link className="cth-intel-btn cth-intel-btn--secondary" href={`/verify?q=${encodeURIComponent(query)}`}>Verify this name</Link></div></section> : null}
+      {plan.mode === "clarification" ? <section className="mt-10 rounded-2xl border border-[var(--border)] bg-white p-6"><p className="cth-intel-eyebrow">Clarification needed</p><h2>Are you researching a contractor category or verifying a known business?</h2><div className="mt-4 flex flex-wrap gap-3"><Link prefetch={false} className="cth-intel-btn cth-intel-btn--primary" href="/search">Research by trade and place</Link><Link prefetch={false} className="cth-intel-btn cth-intel-btn--secondary" href={`/verify?q=${encodeURIComponent(query)}`}>Verify this name</Link></div></section> : null}
 
       {response ? (
         <section className="mt-10" aria-live="polite">
@@ -92,7 +92,7 @@ export default async function ContractorSearchPage({ searchParams }: Props) {
             {response.limitations?.[0] ? <p className="mt-2 text-sm text-[var(--muted)]">{response.limitations[0]}</p> : null}
           </div>
 
-          {choices.length ? <div className="mt-5"><h3>Available research paths</h3><div className="mt-3 flex flex-wrap gap-2">{choices.map((choice) => <Link key={choice.id} href={choiceHref(choice)} className="rounded-xl border border-[var(--border)] bg-white px-4 py-2 text-sm font-medium no-underline hover:border-[var(--navy)]/40">{choice.label}</Link>)}</div></div> : null}
+          {choices.length ? <div className="mt-5"><h3>Available research paths</h3><div className="mt-3 flex flex-wrap gap-2">{choices.map((choice) => <Link prefetch={false} key={choice.id} href={choiceHref(choice)} className="rounded-xl border border-[var(--border)] bg-white px-4 py-2 text-sm font-medium no-underline hover:border-[var(--navy)]/40">{choice.label}</Link>)}</div></div> : null}
 
           {rows.length ? <div className="mt-6 grid gap-4 md:grid-cols-2">{rows.map((row) => (
             <article key={`${row.credentialNumber}:${row.destination}`} className="min-w-0 rounded-2xl border border-[var(--border)] bg-white p-5 shadow-sm">
@@ -106,14 +106,14 @@ export default async function ContractorSearchPage({ searchParams }: Props) {
               </dl>
               <p className="mt-4 text-sm text-[var(--muted)]">{row.whyShown}</p>
               <details className="mt-4"><summary className="cursor-pointer font-semibold text-[var(--navy)]">Trace this result</summary><dl className="mt-2 grid gap-2 text-sm"><div><dt className="text-[var(--muted)]">Why matched</dt><dd>{row.whyShown}</dd></div><div><dt className="text-[var(--muted)]">Source</dt><dd>{row.source.label}</dd></div><div><dt className="text-[var(--muted)]">Coverage limit</dt><dd>Recorded regulator geography is not service territory. Missing evidence is not zero.</dd></div></dl></details>
-              <div className="mt-4 flex flex-wrap gap-3"><Link href={row.destination} className="font-semibold text-[var(--navy)]">Research this contractor</Link>{row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY") ? <Link href={row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY")!.url} className="font-medium">Verify credential</Link> : null}</div>
+              <div className="mt-4 flex flex-wrap gap-3"><Link prefetch={false} href={row.destination} className="font-semibold text-[var(--navy)]">Research this contractor</Link>{row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY") ? <Link prefetch={false} href={row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY")!.url} className="font-medium">Verify credential</Link> : null}</div>
             </article>
           ))}</div> : null}
 
-          {pagination && total > 0 ? <nav className="mt-8 flex items-center justify-between" aria-label="Search result pages"><span className="text-sm text-[var(--muted)]">Page {pagination.page} of {pagination.totalPages}</span><div className="flex gap-2">{pagination.page > 1 ? <Link className="rounded-lg border px-4 py-2" href={pageHref(pagination.page - 1)}>Previous</Link> : null}{pagination.hasNextPage ? <Link className="rounded-lg border px-4 py-2" href={pageHref(pagination.page + 1)}>Next</Link> : null}</div></nav> : null}
+          {pagination && total > 0 ? <nav className="mt-8 flex items-center justify-between" aria-label="Search result pages"><span className="text-sm text-[var(--muted)]">Page {pagination.page} of {pagination.totalPages}</span><div className="flex gap-2">{pagination.page > 1 ? <Link prefetch={false} className="rounded-lg border px-4 py-2" href={pageHref(pagination.page - 1)}>Previous</Link> : null}{pagination.hasNextPage ? <Link prefetch={false} className="rounded-lg border px-4 py-2" href={pageHref(pagination.page + 1)}>Next</Link> : null}</div></nav> : null}
         </section>
       ) : null}
-      <aside className="mt-12 border-t border-[var(--border)] pt-6 text-sm text-[var(--muted)]">Have an exact company or credential? <Link href="/verify" className="font-semibold text-[var(--navy)]">Use Verify</Link>. Recorded regulatory geography does not establish service territory or current availability.</aside>
+      <aside className="mt-12 border-t border-[var(--border)] pt-6 text-sm text-[var(--muted)]">Have an exact company or credential? <Link prefetch={false} href="/verify" className="font-semibold text-[var(--navy)]">Use Verify</Link>. Recorded regulatory geography does not establish service territory or current availability.</aside>
     </main>
   );
 }

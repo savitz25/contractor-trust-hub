@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import { askHref, type AskUrlOverrides } from "@/lib/ask/url";
 import { stateName, type GeographyRequirement } from "@/lib/ask/geography";
@@ -19,6 +20,7 @@ export function GeographyNotice({
       geo: undefined,
       geoAction: action,
       geoChoice: choice,
+      geoCorrection:r.acceptedCorrection?r.correction?.id:undefined,
       page: "1",
     }).replace(/^\/ask/, route);
   const executed = r.executionGeography;
@@ -52,6 +54,7 @@ export function GeographyNotice({
       <div className="mt-4 flex flex-wrap gap-3">
         {r.correction && !r.acceptedCorrection ? (
           <Link
+              prefetch={false}
             className="rounded-xl border px-4 py-3 font-semibold focus-visible:outline-2"
             href={href("correct", r.correction.id)}
           >
@@ -62,6 +65,7 @@ export function GeographyNotice({
         r.requestedState &&
         r.executionOutcome !== "USER_APPROVED_RELAXATION" ? (
           <Link
+              prefetch={false}
             className="rounded-xl border px-4 py-3 font-semibold focus-visible:outline-2"
             href={href("broaden", r.requestedState.toLowerCase())}
           >
@@ -88,7 +92,7 @@ export function GeographyNotice({
             TDLR
           </a>
           .{" "}
-          <Link className="underline" href="/texas">
+          <Link prefetch={false} className="underline" href="/texas">
             Texas intelligence
           </Link>{" "}
           is a separate source overview.
