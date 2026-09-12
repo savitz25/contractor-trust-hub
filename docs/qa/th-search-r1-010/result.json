@@ -5,7 +5,7 @@
   "baseline": "88075e4de4aac53a83a2235dd524d6e93fc46235",
   "model": "GPT-6 Astra previously USER-CONFIRMED; Medium recommended for this ticket; running setting not independently verifiable or switched",
   "candidate": "Containing implementation commit; future merge/deployment not asserted",
-  "sourceCodeFingerprint": "277e6485cb71da91aef0139d6d3dbaf53b495f0d05db0cdac2b884b2cfb14026",
+  "sourceCodeFingerprint": "b12795609fe8289e68812e2072d9e828e690aefbcd4de15f293db59400c6a4e7",
   "fingerprintFiles": [
     "lib/ask/recovery.ts",
     "lib/ask/recovery-sources.ts",
@@ -29,7 +29,7 @@
     },
     "npmTest": "PASS",
     "typecheck": "PASS",
-    "build": "PASS before final intro-only copy change; reconciled candidate build required",
+    "build": "PASS on reconciled candidate",
     "capability": {
       "pass": 12,
       "fail": 0
@@ -58,5 +58,7 @@
   "productionDataChanges": false,
   "otherReposModified": false,
   "runtimeMerge": null,
-  "deployment": null
+  "deployment": null,
+  "reconciledWith": "b694663796700f8f95b9c18d144b0a57e64d98ec",
+  "testedCandidate": "bb817cb759d48af53397d8472e9bde099059d9bc"
 }

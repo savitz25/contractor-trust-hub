@@ -39,3 +39,7 @@ All five destinations were opened independently via the web tool and in a real b
 Only Contractor code and ticket QA are changed. No data/schema/index writes, ingestion, paid resource, external redirect parameter or new raw-query analytics. Existing Verify uses its supported `state` parameter; unknown states never fall back to Florida through a generated recovery action.
 
 The first full regression run caught new interception of an existing NY certificate question. This was repaired by preserving the original NY/IL interpreters, with the unchanged baseline expectation retained. Historical unrelated network-total and homepage-heading assertions are compared with the exact detached baseline. Local source-positive checks lack an authorized database credential; they are explicitly skipped locally and require preview/Production proof.
+
+## Fresh-main reconciliation
+
+The owner merged NYC PR #60 at b694663796700f8f95b9c18d144b0a57e64d98ec during this ticket. A normal merge produced tested candidate bb817cb759d48af53397d8472e9bde099059d9bc. No NYC assignment was merged by this builder. Reconciled focused 39/39, R1-009 30/30, npm test (including NYC), typecheck and production build passed. Both old assertion failures also reproduce on detached b694663 (see upstream-baseline logs). Local production-build browser checks passed all 18 cases with database-positive checks explicitly skipped; preview/Production evidence remains required. The browser harness phase classifier was corrected to treat local-reconciled as local; no product source change was needed.
