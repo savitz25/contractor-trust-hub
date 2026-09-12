@@ -59,11 +59,17 @@ def main() -> None:
     legacy = json.loads(gzip.decompress((ACQ_DIR / "legacy-permits.json.gz").read_bytes()).decode("utf-8"))
     hic_values = [str(r.get("hic_license") or "").strip() for r in legacy if str(r.get("hic_license") or "").strip()]
     exact_hic = {v for v in hic_values if core_id(v) in dcwp_cores}
+    hic_cores = {core_id(v) for v in hic_values if core_id(v)}
+    exact_hic_cores = {core_id(v) for v in exact_hic if core_id(v)}
+    review_hic_cores = hic_cores - exact_hic_cores
     generated = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     D = acq["dob_now"]
     L = acq["legacy"]
     P = acq["pluto"]
     K = acq["linking"]
+    union_bbls = D["distinct_bbls"] + L["distinct_bbls"] - acq["overlap"]["shared_bbls"]
+    union_bins = D["distinct_bins"] + L["distinct_bins"] - acq["overlap"]["shared_bins"]
+    bbls_without_pluto = union_bbls - P["distinct_bbls"]
     work_map = {
         "General Construction": "general construction",
         "Plumbing": "plumbing",
@@ -242,10 +248,14 @@ def main() -> None:
             "pe_ra_ne_general_contractor": True,
             "owner_ne_contractor": True,
             "filing_representative_ne_permittee": True,
-            "review_required_dob_actor_associations": D["parsed_rows"],
+            "review_required_dob_actor_associations": len(review_hic_cores),
+            "review_required_dob_actor_associations_meaning": "Distinct legacy hic_license cores considered against DCWP HIC license cores that did not exact-match. Not DOB NOW permit observation rows.",
+            "dobnow_applicant_license_dcwp_crosswalk": "NOT_EVALUATED",
+            "dobnow_applicant_license_dcwp_crosswalk_meaning": "DOB NOW applicant_license and permittee_s_license_type are DOB namespaces. They were not treated as DCWP HIC crosswalk candidates.",
             "rejected_name_only": 0,
+            "rejected_name_only_meaning": "No name-only crosswalk was attempted or applied. This is not a clearance of all names.",
             "exact_profile_attachments": 0,
-            "exact_dob_contractor_id_associations": len(exact_hic),
+            "exact_dob_contractor_id_associations": len(exact_hic_cores),
         },
         "claim_eligibility": {"broadened": False, "property_identity_is_not_customer_identity": True},
         "expansion_ledger": {
@@ -263,22 +273,38 @@ def main() -> None:
             "NYC_PLUTO_UNIVERSE_ROWS": P["universe_rows"],
             "NYC_PLUTO_DISTINCT_BBLS": P["distinct_bbls"],
             "NYC_PLUTO_DISTINCT_BINS": None,
+            "NYC_DOBNOW_DISTINCT_BIN_IDENTITIES": D["distinct_bins"],
+            "NYC_ALL_ACQUIRED_DISTINCT_BIN_IDENTITIES": union_bins,
+            "NET_NEW_LOCAL_BBL_IDENTITIES": union_bbls,
+            "NET_NEW_LOCAL_BIN_IDENTITIES": union_bins,
+            "PLUTO_MATCHED_BBL_IDENTITIES": P["distinct_bbls"],
+            "DOB_BBLS_WITHOUT_PLUTO_MATCH": bbls_without_pluto,
+            "NET_NEW_DOBNOW_PERMIT_IDENTITIES": D["distinct_work_permits"],
+            "NET_NEW_LEGACY_BIS_PERMIT_IDENTITIES": L["distinct_permit_si_no"],
             "EXACT_DOB_PLUTO_BBL_ASSOCIATIONS": K["exact_any_dob_pluto_bbl"],
-            "EXACT_DOB_BIN_ASSOCIATIONS": D["distinct_bins"],
+            "EXACT_DCWP_DOB_BBL_ASSOCIATIONS": K["exact_dcwp_dob_bbl"],
+            "EXACT_DCWP_DOB_BIN_ASSOCIATIONS": K["exact_dcwp_dob_bin"],
             "EXACT_DCWP_PROPERTY_ASSOCIATIONS": K["exact_dcwp_dob_bbl"],
-            "EXACT_DOB_CONTRACTOR_ID_ASSOCIATIONS": len(exact_hic),
-            "REVIEW_REQUIRED_DOB_ACTOR_ASSOCIATIONS": D["parsed_rows"],
+            "EXACT_DOB_CONTRACTOR_ID_ASSOCIATIONS": len(exact_hic_cores),
+            "REVIEW_REQUIRED_DOB_ACTOR_ASSOCIATIONS": len(review_hic_cores),
+            "REVIEW_REQUIRED_DOB_ACTOR_ASSOCIATIONS_meaning": "Distinct legacy hic_license cores considered for DCWP linkage that did not exact-match. A DOB NOW permit observation row is not an actor association.",
             "REJECTED_NAME_ONLY_DOB_ASSOCIATIONS": 0,
+            "REJECTED_NAME_ONLY_DOB_ASSOCIATIONS_meaning": "No name-only crosswalk was attempted or applied. This is not a clearance of all names.",
             "EXACT_PROFILE_ATTACHMENTS": 0,
-            "NET_NEW_LOCAL_PROPERTY_IDENTITIES": P["distinct_bbls"],
-            "NET_NEW_LOCAL_PERMIT_IDENTITIES": D["distinct_work_permits"],
             "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
             "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
             "EXISTING_ORGANIZATIONS_ENRICHED": 0,
             "GRAPH_WRITES": 0,
             "do_not_sum_permits_jobs_bbls_bins_pluto": True,
+            "no_combined_property_identity_headline": True,
+            "no_combined_permit_identity_headline": True,
+            "bbl_ne_bin": True,
+            "dobnow_permit_namespace_ne_bis_permit_namespace": True,
             "baselines": {
                 "prior_accepted_nyc_dobnow_permit_ids": 0,
+                "prior_accepted_nyc_legacy_bis_permit_ids": 0,
+                "prior_accepted_nyc_bbl_identities": 0,
+                "prior_accepted_nyc_bin_identities": 0,
                 "prior_accepted_nyc_pluto_bbls": 0,
             },
         },
@@ -294,7 +320,15 @@ def main() -> None:
     body["fingerprint"] = fp1
     (LIB / "accepted-snapshot.json").write_text(json.dumps(body, indent=2) + "\n", encoding="utf-8")
     (ACQ_DIR / "accepted-snapshot.json").write_text(json.dumps(body, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"fingerprint": fp1, "dobnow": D["parsed_rows"], "pluto": P["matched_rows"], "hic_exact": len(exact_hic)}, indent=2))
+    print(json.dumps({
+        "fingerprint": fp1,
+        "dobnow": D["parsed_rows"],
+        "union_bbls": union_bbls,
+        "union_bins": union_bins,
+        "bbls_without_pluto": bbls_without_pluto,
+        "hic_exact_cores": len(exact_hic_cores),
+        "review_hic_cores": len(review_hic_cores),
+    }, indent=2))
 
 
 if __name__ == "__main__":

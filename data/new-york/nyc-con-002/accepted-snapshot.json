@@ -17,7 +17,7 @@
     "module": "Property & Permit Intelligence"
   },
   "clocks": {
-    "generatedAt": "2026-09-12T15:46:59Z",
+    "generatedAt": "2026-09-12T16:11:07Z",
     "snapshotAsOf": "2026-09-12",
     "dob_now": {
       "sourceUpdatedAt": "2026-09-11",
@@ -236,8 +236,12 @@
     "pe_ra_ne_general_contractor": true,
     "owner_ne_contractor": true,
     "filing_representative_ne_permittee": true,
-    "review_required_dob_actor_associations": 337613,
+    "review_required_dob_actor_associations": 6,
+    "review_required_dob_actor_associations_meaning": "Distinct legacy hic_license cores considered against DCWP HIC license cores that did not exact-match. Not DOB NOW permit observation rows.",
+    "dobnow_applicant_license_dcwp_crosswalk": "NOT_EVALUATED",
+    "dobnow_applicant_license_dcwp_crosswalk_meaning": "DOB NOW applicant_license and permittee_s_license_type are DOB namespaces. They were not treated as DCWP HIC crosswalk candidates.",
     "rejected_name_only": 0,
+    "rejected_name_only_meaning": "No name-only crosswalk was attempted or applied. This is not a clearance of all names.",
     "exact_profile_attachments": 0,
     "exact_dob_contractor_id_associations": 5
   },
@@ -260,22 +264,38 @@
     "NYC_PLUTO_UNIVERSE_ROWS": 858284,
     "NYC_PLUTO_DISTINCT_BBLS": 66525,
     "NYC_PLUTO_DISTINCT_BINS": null,
+    "NYC_DOBNOW_DISTINCT_BIN_IDENTITIES": 70797,
+    "NYC_ALL_ACQUIRED_DISTINCT_BIN_IDENTITIES": 73682,
+    "NET_NEW_LOCAL_BBL_IDENTITIES": 66923,
+    "NET_NEW_LOCAL_BIN_IDENTITIES": 73682,
+    "PLUTO_MATCHED_BBL_IDENTITIES": 66525,
+    "DOB_BBLS_WITHOUT_PLUTO_MATCH": 398,
+    "NET_NEW_DOBNOW_PERMIT_IDENTITIES": 228515,
+    "NET_NEW_LEGACY_BIS_PERMIT_IDENTITIES": 18858,
     "EXACT_DOB_PLUTO_BBL_ASSOCIATIONS": 66525,
-    "EXACT_DOB_BIN_ASSOCIATIONS": 70797,
+    "EXACT_DCWP_DOB_BBL_ASSOCIATIONS": 30,
+    "EXACT_DCWP_DOB_BIN_ASSOCIATIONS": 29,
     "EXACT_DCWP_PROPERTY_ASSOCIATIONS": 30,
     "EXACT_DOB_CONTRACTOR_ID_ASSOCIATIONS": 5,
-    "REVIEW_REQUIRED_DOB_ACTOR_ASSOCIATIONS": 337613,
+    "REVIEW_REQUIRED_DOB_ACTOR_ASSOCIATIONS": 6,
+    "REVIEW_REQUIRED_DOB_ACTOR_ASSOCIATIONS_meaning": "Distinct legacy hic_license cores considered for DCWP linkage that did not exact-match. A DOB NOW permit observation row is not an actor association.",
     "REJECTED_NAME_ONLY_DOB_ASSOCIATIONS": 0,
+    "REJECTED_NAME_ONLY_DOB_ASSOCIATIONS_meaning": "No name-only crosswalk was attempted or applied. This is not a clearance of all names.",
     "EXACT_PROFILE_ATTACHMENTS": 0,
-    "NET_NEW_LOCAL_PROPERTY_IDENTITIES": 66525,
-    "NET_NEW_LOCAL_PERMIT_IDENTITIES": 228515,
     "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
     "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
     "EXISTING_ORGANIZATIONS_ENRICHED": 0,
     "GRAPH_WRITES": 0,
     "do_not_sum_permits_jobs_bbls_bins_pluto": true,
+    "no_combined_property_identity_headline": true,
+    "no_combined_permit_identity_headline": true,
+    "bbl_ne_bin": true,
+    "dobnow_permit_namespace_ne_bis_permit_namespace": true,
     "baselines": {
       "prior_accepted_nyc_dobnow_permit_ids": 0,
+      "prior_accepted_nyc_legacy_bis_permit_ids": 0,
+      "prior_accepted_nyc_bbl_identities": 0,
+      "prior_accepted_nyc_bin_identities": 0,
       "prior_accepted_nyc_pluto_bbls": 0
     }
   },
@@ -284,6 +304,6 @@
     "live_cohort_not_inflated": true,
     "not_a_second_nyc_local_page": true
   },
-  "generated_at": "2026-09-12T15:46:59Z",
-  "fingerprint": "d45b0d0492634786b9669a07988d228037f7b162e7a837ba605d4666c4f2a80f"
+  "generated_at": "2026-09-12T16:11:07Z",
+  "fingerprint": "67618b431526d91ae33ffe36b717469a44ae386b611afa6980d9011068d08dc9"
 }

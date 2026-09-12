@@ -15,7 +15,7 @@ ACQ = json.loads((ROOT / "data/new-york/nyc-con-002/acquire-report.json").read_t
 PAGE = (ROOT / "app/new-york/new-york-city/page.tsx").read_text(encoding="utf-8")
 UI = (ROOT / "components/new-york/nyc-local-intel-page.tsx").read_text(encoding="utf-8")
 SITEMAP = (ROOT / "lib/seo/sitemap-data.ts").read_text(encoding="utf-8")
-FINGERPRINT = "d45b0d0492634786b9669a07988d228037f7b162e7a837ba605d4666c4f2a80f"
+FINGERPRINT = "67618b431526d91ae33ffe36b717469a44ae386b611afa6980d9011068d08dc9"
 
 
 def dump(obj: object) -> str:
@@ -70,6 +70,22 @@ class NycCon002Tests(unittest.TestCase):
         self.assertEqual(SNAP["expansion_ledger"]["GRAPH_WRITES"], 0)
         self.assertEqual(SNAP["expansion_ledger"]["NET_NEW_CANONICAL_ORGANIZATIONS"], 0)
         self.assertTrue(SNAP["legacy"]["do_not_sum_with_dobnow"])
+        ledger = SNAP["expansion_ledger"]
+        self.assertNotEqual(ledger["REVIEW_REQUIRED_DOB_ACTOR_ASSOCIATIONS"], SNAP["dob_now"]["parsed_rows"])
+        self.assertLess(ledger["REVIEW_REQUIRED_DOB_ACTOR_ASSOCIATIONS"], 50)
+        self.assertEqual(ledger["NET_NEW_LOCAL_BBL_IDENTITIES"], 66923)
+        self.assertEqual(ledger["PLUTO_MATCHED_BBL_IDENTITIES"], 66525)
+        self.assertEqual(ledger["DOB_BBLS_WITHOUT_PLUTO_MATCH"], 398)
+        self.assertNotEqual(ledger["PLUTO_MATCHED_BBL_IDENTITIES"], ledger["NET_NEW_LOCAL_BBL_IDENTITIES"])
+        self.assertEqual(ledger["NET_NEW_LOCAL_BIN_IDENTITIES"], 73682)
+        self.assertEqual(ledger["NYC_DOBNOW_DISTINCT_BIN_IDENTITIES"], 70797)
+        self.assertEqual(ledger["NET_NEW_DOBNOW_PERMIT_IDENTITIES"], 228515)
+        self.assertEqual(ledger["NET_NEW_LEGACY_BIS_PERMIT_IDENTITIES"], 18858)
+        self.assertNotIn("NET_NEW_LOCAL_PROPERTY_IDENTITIES", ledger)
+        self.assertNotIn("NET_NEW_LOCAL_PERMIT_IDENTITIES", ledger)
+        self.assertNotIn("EXACT_DOB_BIN_ASSOCIATIONS", ledger)
+        self.assertEqual(ledger["EXACT_DCWP_DOB_BIN_ASSOCIATIONS"], 29)
+        self.assertIn("not a clearance", SNAP["linking"]["rejected_name_only_meaning"].lower())
 
     def test_dcwp_and_statewide_frozen(self):
         self.assertEqual(DCWP["fingerprint"], "f2eeebd447fef501c4ebfd8dd74273a68be76e7d213ac18c6bf64e152a4a5bc2")
@@ -85,8 +101,8 @@ class NycCon002Tests(unittest.TestCase):
         self.assertIn("loadNycDobPlutoView", PAGE)
         self.assertIn("property-permit", UI)
         self.assertIn("Applicant is not contractor", UI)
-        self.assertIn("Applicant is not contractor", UI)
         self.assertNotIn("AggregateRating", UI)
+        self.assertNotIn("property identities", UI.lower())
 
     def test_fingerprint_mutations(self):
         self.assertEqual(SNAP["fingerprint"], FINGERPRINT)
@@ -106,6 +122,24 @@ class NycCon002Tests(unittest.TestCase):
         mut5 = copy.deepcopy(SNAP)
         mut5["expansion_ledger"]["GRAPH_WRITES"] = 1
         self.assertNotEqual(fingerprint(mut5), FINGERPRINT)
+        mut6 = copy.deepcopy(SNAP)
+        mut6["expansion_ledger"]["NET_NEW_LOCAL_BBL_IDENTITIES"] = 1
+        self.assertNotEqual(fingerprint(mut6), FINGERPRINT)
+        mut7 = copy.deepcopy(SNAP)
+        mut7["expansion_ledger"]["NET_NEW_LOCAL_BIN_IDENTITIES"] = 1
+        self.assertNotEqual(fingerprint(mut7), FINGERPRINT)
+        mut8 = copy.deepcopy(SNAP)
+        mut8["expansion_ledger"]["NET_NEW_DOBNOW_PERMIT_IDENTITIES"] = 1
+        self.assertNotEqual(fingerprint(mut8), FINGERPRINT)
+        mut9 = copy.deepcopy(SNAP)
+        mut9["expansion_ledger"]["NET_NEW_LEGACY_BIS_PERMIT_IDENTITIES"] = 1
+        self.assertNotEqual(fingerprint(mut9), FINGERPRINT)
+        mut10 = copy.deepcopy(SNAP)
+        mut10["expansion_ledger"]["PLUTO_MATCHED_BBL_IDENTITIES"] = 1
+        self.assertNotEqual(fingerprint(mut10), FINGERPRINT)
+        mut11 = copy.deepcopy(SNAP)
+        mut11["expansion_ledger"]["REVIEW_REQUIRED_DOB_ACTOR_ASSOCIATIONS"] = 337613
+        self.assertNotEqual(fingerprint(mut11), FINGERPRINT)
         alt = copy.deepcopy(SNAP)
         alt["generated_at"] = "2099-01-01T00:00:00Z"
         alt["clocks"]["generatedAt"] = "2099-01-01T00:00:00Z"

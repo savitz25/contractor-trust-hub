@@ -9,7 +9,13 @@ snap = json.loads((ROOT / "lib/new-york-city-dob-intelligence/accepted-snapshot.
 dcwp = json.loads((ROOT / "lib/new-york-city-intelligence/accepted-snapshot.json").read_text(encoding="utf-8"))
 metrics = json.loads((ROOT / "data/home/contractor-network-metrics-v1.json").read_text(encoding="utf-8"))
 by_key = {m["key"]: m for m in metrics["metrics"]}
-assert snap["fingerprint"] == "d45b0d0492634786b9669a07988d228037f7b162e7a837ba605d4666c4f2a80f"
+assert snap["fingerprint"] == "67618b431526d91ae33ffe36b717469a44ae386b611afa6980d9011068d08dc9"
+assert snap["expansion_ledger"]["REVIEW_REQUIRED_DOB_ACTOR_ASSOCIATIONS"] != snap["dob_now"]["parsed_rows"]
+assert snap["expansion_ledger"]["NET_NEW_LOCAL_BBL_IDENTITIES"] == 66923
+assert snap["expansion_ledger"]["PLUTO_MATCHED_BBL_IDENTITIES"] == 66525
+assert snap["expansion_ledger"]["NET_NEW_DOBNOW_PERMIT_IDENTITIES"] == 228515
+assert snap["expansion_ledger"]["NET_NEW_LEGACY_BIS_PERMIT_IDENTITIES"] == 18858
+assert "EXACT_DOB_BIN_ASSOCIATIONS" not in snap["expansion_ledger"]
 assert dcwp["fingerprint"] == "f2eeebd447fef501c4ebfd8dd74273a68be76e7d213ac18c6bf64e152a4a5bc2"
 assert snap["not_a_second_nyc_page"] is True
 assert by_key["published_nyc_local_intelligence_pages"]["value"] == 1
