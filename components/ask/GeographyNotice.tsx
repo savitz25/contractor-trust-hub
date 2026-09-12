@@ -20,6 +20,7 @@ export function GeographyNotice({
       geo: undefined,
       geoAction: action,
       geoChoice: choice,
+      geoCorrection:r.acceptedCorrection?r.correction?.id:undefined,
       page: "1",
     }).replace(/^\/ask/, route);
   const executed = r.executionGeography;

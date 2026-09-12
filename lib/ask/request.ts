@@ -19,6 +19,7 @@ export function readAskRequest(
   const enums:Record<string,string[]>={status:['-','active_current','expired','all'],evidence:['-','dbpr_discipline','unlicensed_activity','stop_work','recovery_fund'],sort:['name','credential','expiration','evidence_count','evidence_newest'],trade:['-','roofing','hvac','plumbing','electrical','mechanical','pool_spa','building','general','residential','solar','alarm','telecom','locksmith','hearth','home_improvement']};
   for(const [key,values]of Object.entries(enums))if(params[key]&&!values.includes(String(params[key])))error??=`Choose a valid ${key} filter.`;
   if(params.geoChoice&&!/^[a-z-]{2,60}$/.test(String(params.geoChoice)))error??='Choose a valid geographic refinement.';
+  if(params.geoCorrection&&!/^[a-z-]{2,60}$/.test(String(params.geoCorrection)))error??="Choose a valid prior county correction.";
   const query = typeof q === "string" ? q.trim() : "";
   const overrides: AskUrlOverrides = {};
   for (const key of [
@@ -30,6 +31,7 @@ export function readAskRequest(
     "page",
     "geoAction",
     "geoChoice",
+    "geoCorrection",
   ] as const)
     if (typeof params[key] === "string") overrides[key] = params[key];
   return { query, overrides, error };

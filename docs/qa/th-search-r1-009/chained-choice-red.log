@@ -1,0 +1,60 @@
+
+> contractor-trust-hub@0.1.0 check:th-search-r1-009
+> npx --yes tsx --test scripts/test_th_search_r1_009.ts
+
+✔ Austin city survives before capability selection (12.2614ms)
+✔ Dallas city survives before capability selection (3.0949ms)
+✔ Houston city survives before capability selection (0.6158ms)
+✔ El Paso city survives before capability selection (0.3423ms)
+✔ ordinary explicit city/state forms use one extraction (0.7334ms)
+✔ Browrd typo cannot authorize Florida execution (5.2517ms)
+✔ accepted correction equals exact county query, including real SQL (2.0459ms)
+✔ invalid or cross-state correction cannot execute (2.2465ms)
+✔ explicit broadening preserves original city, trade and status with TX native class (1.2302ms)
+✔ broadening cannot change state or unsupported trade (0.612ms)
+✔ business names do not become geography or correction (0.1936ms)
+✔ ambiguous, unknown, radius and multiple places remain unresolved (3.2696ms)
+✔ other filters and requested text survive action URLs and pagination (1.7123ms)
+✔ full input/duplicate/action/page validation before parsing (0.514ms)
+✔ native/canonical route policy shares full interpreted geography (2.5462ms)
+✔ FL predicates apply county/city before pagination and retain source identity (1.0783ms)
+✔ NJ Master Plumber is PLB, not Florida plumbing classes (0.3841ms)
+✔ exact credential routing remains intact (0.2723ms)
+✔ actual V2 execution uses source/class/county predicates before limit and builds truthful rows (1.9177ms)
+✔ actual V2 city equality is executed with state, not a statewide window (0.5337ms)
+✔ actual NJ and TX positive execution remains useful and source-native (0.5503ms)
+✔ unsupported local scope blocks source calls; valid zero differs from source failure (1.0225ms)
+✔ pagination retains source scope and count independently of displayed row count (0.4131ms)
+✔ form resubmission field contract avoids duplicated select parameters (1.6216ms)
+✔ cleared status means all and Texas source attribution remains TDLR only (0.5873ms)
+✔ structured source entry cannot discard malformed or oversized city (0.4854ms)
+✔ Texas source-native TAC equality uses the existing composite index shape (0.4136ms)
+✔ actual geography controls do not prefetch a correction or broader execution (144.1141ms)
+✖ accepted correction can be followed by explicit state broadening without losing its history (4.7616ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 28
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 945.6476
+
+✖ failing tests:
+
+test at scripts\test_th_search_r1_009.ts:2:18631
+✖ accepted correction can be followed by explicit state broadening without losing its history (4.7616ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  false !== true
+
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:446:814)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

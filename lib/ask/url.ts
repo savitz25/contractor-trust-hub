@@ -6,6 +6,7 @@ export type AskUrlOverrides = {
   geo?: string | null;
   geoAction?: string | null;
   geoChoice?: string | null;
+  geoCorrection?: string | null;
   trade?: string | null;
   status?: string | null;
   evidence?: string | null;
@@ -20,6 +21,7 @@ export function askHref(q: string, plan?: AskUrlOverrides): string {
   if (plan?.geo) sp.set("geo", plan.geo);
   if (plan?.geoAction) sp.set("geoAction",plan.geoAction);
   if (plan?.geoChoice) sp.set("geoChoice",plan.geoChoice);
+  if (plan?.geoCorrection) sp.set("geoCorrection",plan.geoCorrection);
   if (plan?.trade) sp.set("trade", plan.trade);
   if (plan?.status) sp.set("status", plan.status);
   if (plan?.evidence) sp.set("evidence", plan.evidence);

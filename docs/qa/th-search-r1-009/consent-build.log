@@ -4,7 +4,7 @@
 
 ▲ Next.js 16.3.3 (Turbopack)
 - Environments: .env.production.local
-✓ Running next.config.ts took 53ms
+✓ Running next.config.ts took 51ms
 
 node.exe : ⚠ The Edge Runtime is deprecated. You can use the "nodejs" runtime instead. Learn more:
 https://nextjs.org/docs/messages/edge-runtime-deprecated
@@ -15,22 +15,16 @@ At line:1 char:1
     + FullyQualifiedErrorId : NativeCommandError
 
   Creating an optimized production build ...
-✓ Compiled successfully in 5.5s
+✓ Compiled successfully in 4.1s
   Running TypeScript ...
-
-  We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
-  The following mandatory changes were made to your tsconfig.json:
-
-    - jsx was set to react-jsx (next.js uses the React automatic runtime)
-
-  Finished TypeScript in 6.7s ...
+  Finished TypeScript in 3.8s ...
   Collecting page data using 7 workers ...
 ⚠ Using edge runtime on a page currently disables static generation for that page
   Generating static pages using 7 workers (0/73) ...
   Generating static pages using 7 workers (18/73)
   Generating static pages using 7 workers (36/73)
   Generating static pages using 7 workers (54/73)
-✓ Generating static pages using 7 workers (73/73) in 4.1s
+✓ Generating static pages using 7 workers (73/73) in 1856ms
   Finalizing page optimization ...
 
 Route (app)
