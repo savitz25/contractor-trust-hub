@@ -35,6 +35,8 @@ assert(byKey.published_county_intelligence_pages.value === pub.publishedCountyIn
 assert(byKey.published_county_intelligence_pages.value !== byKey.live_researched_states.value, "counties != states");
 assert(byKey.published_ca_city_local_intelligence_pages.value === pub.caCityLocalPages.length, "CA city local pages match publication gates");
 assert(byKey.published_ca_city_local_intelligence_pages.value !== byKey.published_county_intelligence_pages.value, "CA city pages are not county pages");
+assert(byKey.published_nyc_local_intelligence_pages.value === pub.nycLocalPages.length, "NYC local page matches publication gate");
+assert(byKey.published_nyc_local_intelligence_pages.value !== byKey.live_researched_states.value, "NYC local page is not a statewide count");
 assert(!pub.caCityLocalPages.some((p) => p.includes("county")), "CA local gates are city pages, not county OS pages");
 assert(v1.californiaReconciliation.joinLiveCredentialCohort === false, "CA fail closed");
 assert(byKey.ca_acquired_cslb_license_master_rows_truncated.sourceAsOf === "2026-09-02", "CA sourceAsOf");

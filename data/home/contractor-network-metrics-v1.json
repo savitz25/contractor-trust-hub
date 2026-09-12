@@ -1,9 +1,9 @@
 {
   "schemaVersion": "contractor-network-metrics-v1",
-  "generatedAt": "2026-09-09T15:03:08.529Z",
+  "generatedAt": "2026-09-12T14:01:13.275Z",
   "newestDocumentedSourceAsOf": "2026-09-02",
   "newestDocumentedSourceAsOfNote": "Newest documented official source-effective date among metrics that carry a sourceAsOf. Not the live-credential board extract date and not Git/deploy time.",
-  "sourceFingerprint": "bfb7fa097a6c3d79a0d69f099690fb4c22db84c1166748790fc3e6409e7640c8",
+  "sourceFingerprint": "a975a9c0a247ea0a57d8674e4aad91bc90c20adc02f7d5e8b2ead85088104a78",
   "liveCohort": {
     "liveStates": 11,
     "liveStateCodes": [
@@ -92,7 +92,7 @@
         "wa_lni"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "One row per license/credential in live source systems.",
@@ -113,7 +113,7 @@
         ],
         "geographicCoverage": "11 live researched states",
         "sourceDates": "Board extract dates vary by state; not represented by Git or deploy time.",
-        "generationDate": "2026-09-09",
+        "generationDate": "2026-09-12",
         "currentActiveRule": "This metric is all live-cohort rows, not only active/current."
       }
     },
@@ -141,7 +141,7 @@
         "wa_lni"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Live-cohort license rows with status_normalized active or current.",
@@ -162,7 +162,7 @@
         ],
         "geographicCoverage": "11 live researched states",
         "sourceDates": "Board extract dates vary by state.",
-        "generationDate": "2026-09-09",
+        "generationDate": "2026-09-12",
         "currentActiveRule": "status_normalized IN ('active','current')"
       }
     },
@@ -190,7 +190,7 @@
         "wa_lni"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "States currently live in ContractorTrustHub Verify/config.",
@@ -200,7 +200,7 @@
         ],
         "geographicCoverage": "FL, TX, NJ, OR, WA, CA, AZ, LA, MS, KY, CO",
         "sourceDates": "Product configuration, not a regulator extract date.",
-        "generationDate": "2026-09-09"
+        "generationDate": "2026-09-12"
       }
     },
     {
@@ -215,6 +215,7 @@
       "contributingSourceSystems": [
         "az_roc",
         "ca_cslb",
+        "co_dora",
         "fl_dbpr",
         "ky_dhbc",
         "la_lslbc",
@@ -224,7 +225,6 @@
         "tx_tdlr",
         "tx_tsbpe",
         "wa_lni",
-        "co_dora",
         "ct_dcp",
         "id_dopl",
         "mn_dli",
@@ -234,7 +234,7 @@
         "va_dpor"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
       "trace": {
         "counts": "Every license row in the research graph.",
@@ -242,6 +242,7 @@
         "contributingSourceSystems": [
           "az_roc",
           "ca_cslb",
+          "co_dora",
           "fl_dbpr",
           "ky_dhbc",
           "la_lslbc",
@@ -251,7 +252,6 @@
           "tx_tdlr",
           "tx_tsbpe",
           "wa_lni",
-          "co_dora",
           "ct_dcp",
           "id_dopl",
           "mn_dli",
@@ -262,7 +262,7 @@
         ],
         "geographicCoverage": "All populated source systems",
         "sourceDates": "Board extract dates vary.",
-        "generationDate": "2026-09-09"
+        "generationDate": "2026-09-12"
       }
     },
     {
@@ -282,7 +282,7 @@
         "co_dora"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "discipline_actions rows, attributed to evidence families.",
@@ -296,7 +296,7 @@
         ],
         "geographicCoverage": "Florida-heavy; NJ and AZ families as indexed",
         "sourceDates": "Family source dates vary; not interchangeable severity.",
-        "generationDate": "2026-09-09"
+        "generationDate": "2026-09-12"
       }
     },
     {
@@ -312,7 +312,7 @@
         "permit_source_records"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Rows in permit_source_records.",
@@ -322,7 +322,7 @@
         ],
         "geographicCoverage": "Selected indexed permit sources",
         "sourceDates": "Permit file dates vary.",
-        "generationDate": "2026-09-09"
+        "generationDate": "2026-09-12"
       }
     },
     {
@@ -338,7 +338,7 @@
         "nj_construction_permits"
       ],
       "sourceAsOf": "2026-08-07",
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Permit-issued and certificate-issued SOURCE RECORDS in the NJ DCA construction extract.",
@@ -348,7 +348,7 @@
         ],
         "geographicCoverage": "New Jersey municipalities in the extract",
         "sourceDates": "Official data received as of 2026-08-07",
-        "generationDate": "2026-09-09"
+        "generationDate": "2026-09-12"
       }
     },
     {
@@ -365,7 +365,7 @@
         "nj-county-intel"
       ],
       "sourceAsOf": "2026-08-13",
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Published county intelligence routes.",
@@ -376,7 +376,7 @@
         ],
         "geographicCoverage": "Selected FL and NJ counties",
         "sourceDates": "NJ county publication fingerprints as of 2026-08-13; FL county pages are statewide coverage until the enhanced gate is activated.",
-        "generationDate": "2026-09-09"
+        "generationDate": "2026-09-12"
       }
     },
     {
@@ -392,7 +392,7 @@
         "nj_dca_construction_metadata"
       ],
       "sourceAsOf": "2026-08-13",
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Canonical current NJ municipality universe.",
@@ -402,7 +402,7 @@
         ],
         "geographicCoverage": "New Jersey",
         "sourceDates": "Metadata as of 2026-08-13",
-        "generationDate": "2026-09-09"
+        "generationDate": "2026-09-12"
       }
     },
     {
@@ -418,7 +418,7 @@
         "public_contact_observations"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
       "trace": {
         "counts": "Public contact observation rows.",
@@ -428,7 +428,7 @@
         ],
         "geographicCoverage": "Research graph",
         "sourceDates": "As published on board extracts.",
-        "generationDate": "2026-09-09"
+        "generationDate": "2026-09-12"
       }
     },
     {
@@ -444,7 +444,7 @@
         "contractors"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
       "trace": {
         "counts": "Rows in contractors.",
@@ -454,7 +454,7 @@
         ],
         "geographicCoverage": "Research graph",
         "sourceDates": "Identity rows are not a national census.",
-        "generationDate": "2026-09-09"
+        "generationDate": "2026-09-12"
       }
     },
     {
@@ -470,7 +470,7 @@
         "ca-local-intel"
       ],
       "sourceAsOf": "2026-09-02",
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Indexed CA city local intelligence routes.",
@@ -480,7 +480,33 @@
         ],
         "geographicCoverage": "City and County of San Francisco; City of Los Angeles only",
         "sourceDates": "Local publication alongside CSLB stream as_of 2026-09-02",
-        "generationDate": "2026-09-09"
+        "generationDate": "2026-09-12"
+      }
+    },
+    {
+      "unit": "count",
+      "key": "published_nyc_local_intelligence_pages",
+      "label": "Published New York City local intelligence pages",
+      "value": 1,
+      "grain": "published_city_local_intelligence_page",
+      "denominator": "NYC-CON-001A DCWP HIC publication gate",
+      "description": "NYC DCWP Home Improvement Contractor local page. Not a statewide New York page and not a live credential denominator.",
+      "coverage": "New York City",
+      "contributingSourceSystems": [
+        "nyc-dcwp-hic"
+      ],
+      "sourceAsOf": "2026-08-20",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
+      "publicationStatus": "PUBLIC",
+      "trace": {
+        "counts": "Indexed NYC local intelligence route /new-york/new-york-city.",
+        "doesNotCount": "Not NYSDOL public-work certificates, not borough pages, not live credentials, not unique companies.",
+        "contributingSourceSystems": [
+          "nyc-dcwp-hic"
+        ],
+        "geographicCoverage": "New York City DCWP HIC",
+        "sourceDates": "Issued Licenses Home Improvement Contractor slice rowsUpdatedAt 2026-08-20",
+        "generationDate": "2026-09-12"
       }
     },
     {
@@ -496,7 +522,7 @@
         "ca_cslb_master_truncated"
       ],
       "sourceAsOf": "2026-09-02",
-      "generatedAt": "2026-09-09T15:03:08.529Z",
+      "generatedAt": "2026-09-12T14:01:13.275Z",
       "publicationStatus": "PUBLIC_PARTIAL",
       "trace": {
         "counts": "Rows in the truncated CSLB License Master acquisition.",
@@ -506,7 +532,7 @@
         ],
         "geographicCoverage": "California",
         "sourceDates": "Acquisition as_of 2026-09-02; coverage ACQUIRED_PARTIAL_STREAM_TRUNCATED",
-        "generationDate": "2026-09-09"
+        "generationDate": "2026-09-12"
       }
     }
   ],
