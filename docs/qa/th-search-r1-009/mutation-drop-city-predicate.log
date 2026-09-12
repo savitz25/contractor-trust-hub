@@ -2,54 +2,54 @@
 > contractor-trust-hub@0.1.0 check:th-search-r1-009
 > npx --yes tsx --test scripts/test_th_search_r1_009.ts
 
-✔ Austin city survives before capability selection (7.0669ms)
-✔ Dallas city survives before capability selection (3.2241ms)
-✔ Houston city survives before capability selection (0.4581ms)
-✔ El Paso city survives before capability selection (0.4225ms)
-✔ ordinary explicit city/state forms use one extraction (1.3844ms)
-✔ Browrd typo cannot authorize Florida execution (6.2222ms)
-✔ accepted correction equals exact county query, including real SQL (4.3078ms)
-✔ invalid or cross-state correction cannot execute (5.2907ms)
-✔ explicit broadening preserves original city, trade and status with TX native class (3.8249ms)
-✔ broadening cannot change state or unsupported trade (4.113ms)
-✔ business names do not become geography or correction (0.7856ms)
-✔ ambiguous, unknown, radius and multiple places remain unresolved (6.7276ms)
-✔ other filters and requested text survive action URLs and pagination (3.0741ms)
-✔ full input/duplicate/action/page validation before parsing (0.8613ms)
-✔ native/canonical route policy shares full interpreted geography (4.131ms)
-✔ FL predicates apply county/city before pagination and retain source identity (2.5886ms)
-✔ NJ Master Plumber is PLB, not Florida plumbing classes (0.786ms)
-✔ exact credential routing remains intact (1.5439ms)
-✔ actual V2 execution uses source/class/county predicates before limit and builds truthful rows (3.6175ms)
-✖ actual V2 city equality is executed with state, not a statewide window (4.7194ms)
-✔ actual NJ and TX positive execution remains useful and source-native (0.7871ms)
-✔ unsupported local scope blocks source calls; valid zero differs from source failure (1.1536ms)
-✔ pagination retains source scope and count independently of displayed row count (0.4273ms)
-✔ form resubmission field contract avoids duplicated select parameters (2.4041ms)
-✔ cleared status means all and Texas source attribution remains TDLR only (0.5149ms)
-✔ structured source entry cannot discard malformed or oversized city (0.2546ms)
-✔ Texas source-native TAC equality uses the existing composite index shape (0.2469ms)
-ℹ tests 27
+✔ Austin city survives before capability selection (5.9095ms)
+✔ Dallas city survives before capability selection (2.2671ms)
+✔ Houston city survives before capability selection (0.3618ms)
+✔ El Paso city survives before capability selection (0.2745ms)
+✔ ordinary explicit city/state forms use one extraction (0.5643ms)
+✔ Browrd typo cannot authorize Florida execution (4.0895ms)
+✔ accepted correction equals exact county query, including real SQL (1.7495ms)
+✔ invalid or cross-state correction cannot execute (1.7858ms)
+✔ explicit broadening preserves original city, trade and status with TX native class (0.8999ms)
+✔ broadening cannot change state or unsupported trade (0.5132ms)
+✔ business names do not become geography or correction (0.1865ms)
+✔ ambiguous, unknown, radius and multiple places remain unresolved (2.5898ms)
+✔ other filters and requested text survive action URLs and pagination (1.0057ms)
+✔ full input/duplicate/action/page validation before parsing (0.2115ms)
+✔ native/canonical route policy shares full interpreted geography (1.6653ms)
+✖ FL predicates apply county/city before pagination and retain source identity (3.1852ms)
+✔ NJ Master Plumber is PLB, not Florida plumbing classes (0.3503ms)
+✔ exact credential routing remains intact (0.2643ms)
+✔ actual V2 execution uses source/class/county predicates before limit and builds truthful rows (1.8577ms)
+✔ actual V2 city equality is executed with state, not a statewide window (0.3491ms)
+✔ actual NJ and TX positive execution remains useful and source-native (0.3627ms)
+✔ unsupported local scope blocks source calls; valid zero differs from source failure (0.6602ms)
+✔ pagination retains source scope and count independently of displayed row count (0.2355ms)
+✔ form resubmission field contract avoids duplicated select parameters (1.7666ms)
+✔ cleared status means all and Texas source attribution remains TDLR only (0.3457ms)
+✔ structured source entry cannot discard malformed or oversized city (0.2166ms)
+✔ Texas source-native TAC equality uses the existing composite index shape (0.1641ms)
+✔ actual geography controls do not prefetch a correction or broader execution (107.9222ms)
+✔ accepted correction can be followed by explicit state broadening without losing its history (2.3116ms)
+✔ invalid prior correction cannot authorize typo broadening (1.0318ms)
+ℹ tests 30
 ℹ suites 0
-ℹ pass 26
+ℹ pass 29
 ℹ fail 1
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 988.8509
+ℹ duration_ms 844.3744
 
 ✖ failing tests:
 
-test at scripts\test_th_search_r1_009.ts:2:13089
-✖ actual V2 city equality is executed with state, not a statewide window (4.7194ms)
-  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /LOWER\(TRIM\(COALESCE\(l.city/. Input:
+test at scripts\test_th_search_r1_009.ts:2:8609
+✖ FL predicates apply county/city before pagination and retain source identity (3.1852ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /LOWER\(TRIM\(l.city\)\)/. Input:
 
-  "SELECT COUNT(*)::text AS total FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE l.source_system = ANY($1::text[]) AND c.is_thin_profile = FALSE AND c.slug IS NOT NULL AND c.slug <> '' AND (c.home_state = $2 OR l.state = $2) AND UPPER(TRIM(l.occupation_code)) = ANY($3::text[]) AND l.status_normalized IN ('active', 'current')"
+  'l.source_system = $1 AND c.is_thin_profile = FALSE AND (c.home_state = $2 OR l.state = $2) AND l.occupation_code = ANY($3::text[])'
 
-      at <anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:367:12)
-      at Object.queryOne (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:324:9)
-      at executeContractorSpecialistQuery (C:\Users\makei\th-search-r1-009-work\lib\specialist-execution\contractor-v2.ts:328:26)
-      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:372:19)
+      at TestContext.<anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:209:10)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
       at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
@@ -58,8 +58,8 @@ test at scripts\test_th_search_r1_009.ts:2:13089
       at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
     generatedMessage: true,
     code: 'ERR_ASSERTION',
-    actual: "SELECT COUNT(*)::text AS total FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE l.source_system = ANY($1::text[]) AND c.is_thin_profile = FALSE AND c.slug IS NOT NULL AND c.slug <> '' AND (c.home_state = $2 OR l.state = $2) AND UPPER(TRIM(l.occupation_code)) = ANY($3::text[]) AND l.status_normalized IN ('active', 'current')",
-    expected: /LOWER\(TRIM\(COALESCE\(l.city/,
+    actual: 'l.source_system = $1 AND c.is_thin_profile = FALSE AND (c.home_state = $2 OR l.state = $2) AND l.occupation_code = ANY($3::text[])',
+    expected: /LOWER\(TRIM\(l.city\)\)/,
     operator: 'match',
     diff: 'simple'
   }
