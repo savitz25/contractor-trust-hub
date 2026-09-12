@@ -1,0 +1,14 @@
+{
+  "retrievedAt": "2026-09-12T13:57:50.398681+00:00",
+  "method": "Read-only EXPLAIN, plus independent read-only count equivalence",
+  "existingIndex": "licenses_source_status_occ_idx",
+  "before": "source+status index, occupation UPPER(TRIM()) heap filter; parent-state OR",
+  "after": "source+status+source-native TAC index condition, l.state=TX",
+  "estimatedBeforeCost": 27014.99,
+  "estimatedAfterCost": 540.73,
+  "estimatesAreNotTimings": true,
+  "oldNormalizedActiveScope": 17757,
+  "exactSourceActiveScope": 17757,
+  "newIndexes": false,
+  "timeoutsRaised": false
+}

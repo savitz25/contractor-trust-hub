@@ -302,9 +302,10 @@ export function buildWhere(input: NormalizedContractorExecutionRequest) {
   if (!input.capability || !input.geography) throw new Error("unsupported_state_capability");
   const params: unknown[] = [input.capability.sourceSystems];
   const terms = ["l.source_system = ANY($1::text[])", "c.is_thin_profile = FALSE", "c.slug IS NOT NULL AND c.slug <> ''"];
-  if (input.state === "FL" || input.state === "TX") { params.push(input.state); terms.push(`(c.home_state = $${params.length} OR l.state = $${params.length})`); }
+  if (input.state === "FL") { params.push(input.state); terms.push(`(c.home_state = $${params.length} OR l.state = $${params.length})`); }
+  if (input.state === "TX") { params.push(input.state); terms.push(`l.state = $${params.length}`); }
   const occupationCodes = input.credentialClass ? [input.credentialClass] : input.tradeCapability?.occupationCodes ?? [];
-  if (occupationCodes.length) { params.push(occupationCodes); terms.push(`UPPER(TRIM(l.occupation_code)) = ANY($${params.length}::text[])`); }
+  if (occupationCodes.length) { params.push(occupationCodes); terms.push(input.state === "TX" ? `l.occupation_code = ANY($${params.length}::text[])` : `UPPER(TRIM(l.occupation_code)) = ANY($${params.length}::text[])`); }
   if (input.credentialStatus === "active_current") terms.push("l.status_normalized IN ('active', 'current')");
   if (input.credentialStatus === "expired") terms.push("l.status_normalized IN ('expired', 'inactive')");
   if (input.geography.county) {

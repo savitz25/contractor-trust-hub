@@ -438,3 +438,5 @@ test('form resubmission field contract avoids duplicated select parameters',asyn
 test('cleared status means all and Texas source attribution remains TDLR only',()=>{const p=discovery('HVAC contractors in Texas',{status:'-'});assert.equal(p.request.credentialStatus,'all');const n=normalizeContractorExecutionRequest(p.request);assert.equal(n.capability?.state.boardShortLabel,'TDLR');assert.doesNotMatch(n.capability?.state.boardLabel??'',/plumbing|TSBPE/i);});
 
 test('structured source entry cannot discard malformed or oversized city',()=>{for(const city of ['Austin'.repeat(20),42,'Austin\u0000'])assert.throws(()=>normalizeContractorExecutionRequest({state:'TX',trade:'hvac',city}),/invalid_text_field/);});
+
+test('Texas source-native TAC equality uses the existing composite index shape',()=>{const b=buildWhere(normalizeContractorExecutionRequest({state:'TX',trade:'hvac'}));assert.match(b.sql,/l.occupation_code = ANY/);assert.doesNotMatch(b.sql,/UPPER\(TRIM\(l.occupation_code/);assert.match(b.sql,/l.state = \$/);assert.doesNotMatch(b.sql,/home_state/);});

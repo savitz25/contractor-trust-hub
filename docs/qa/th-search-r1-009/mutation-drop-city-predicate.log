@@ -39,9 +39,9 @@
 test at scripts\test_th_search_r1_009.ts:2:13089
 ✖ actual V2 city equality is executed with state, not a statewide window (4.4036ms)
   AssertionError [ERR_ASSERTION]: The input did not match the regular expression /LOWER\(TRIM\(COALESCE\(l.city/. Input:
-  
+
   "SELECT COUNT(*)::text AS total FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE l.source_system = ANY($1::text[]) AND c.is_thin_profile = FALSE AND c.slug IS NOT NULL AND c.slug <> '' AND (c.home_state = $2 OR l.state = $2) AND UPPER(TRIM(l.occupation_code)) = ANY($3::text[]) AND l.status_normalized IN ('active', 'current')"
-  
+
       at <anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:367:12)
       at Object.queryOne (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:324:9)
       at executeContractorSpecialistQuery (C:\Users\makei\th-search-r1-009-work\lib\specialist-execution\contractor-v2.ts:326:26)

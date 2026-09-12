@@ -39,9 +39,9 @@
 test at scripts\test_th_search_r1_009.ts:2:2822
 ✖ Browrd typo cannot authorize Florida execution (5.6222ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   true !== false
-  
+
       at TestContext.<anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:47:10)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -60,9 +60,9 @@ test at scripts\test_th_search_r1_009.ts:2:2822
 test at scripts\test_th_search_r1_009.ts:2:3893
 ✖ invalid or cross-state correction cannot execute (3.3321ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   true !== false
-  
+
       at TestContext.<anonymous> (C:\Users\makei\th-search-r1-009-work\scripts\test_th_search_r1_009.ts:77:10)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
