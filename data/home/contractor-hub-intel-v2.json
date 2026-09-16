@@ -1,7 +1,7 @@
 {
   "schemaVersion": "contractor-hub-intel-v2",
-  "generatedAt": "2026-09-12T21:37:54.518Z",
-  "sourceFingerprint": "22c4ccf3f53d78c37ad6f19f9303af2676c69bf1fe8c45d9fad3f06c6b3502cb",
+  "generatedAt": "2026-09-16T14:43:26.106Z",
+  "sourceFingerprint": "ea334d2c7786821d664eb8f948c17416845cc4b2206af49fe29f826443301cca",
   "publicCoverage": {
     "liveStates": 11,
     "liveStateCodes": [
