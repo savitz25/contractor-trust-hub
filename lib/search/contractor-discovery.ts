@@ -1,4 +1,5 @@
 import type { ContractorExecutionRequest } from "@/lib/specialist-execution/contractor-v2";
+import { getExecutionCapability } from "@/lib/specialist-execution/state-capabilities";
 
 import {
   extractGeographyRequirement,
@@ -82,6 +83,10 @@ function findTrade(query: string): string | null {
   return TRADE_PATTERNS.find(([pattern]) => pattern.test(query))?.[1] ?? null;
 }
 
+function mentionsGenericContractor(query: string): boolean {
+  return /\bcontractors?\b/i.test(query);
+}
+
 function exactIdentifier(
   query: string,
 ): { identifier: string; state: string | null } | null {
@@ -122,7 +127,7 @@ export function planContractorSearch(
       originalQuery: query,
       reason: "identity_or_discovery",
     };
-  const trade =
+  const explicitTrade =
     overrides.trade && overrides.trade !== "-"
       ? (TRADE_PATTERNS.map(([, id]) => id).find(
           (id) => id === overrides.trade,
@@ -131,6 +136,21 @@ export function planContractorSearch(
         ? null
         : findTrade(query);
   const requirement = extractGeographyRequirement(query);
+  // TH-DISCOVERY-RESET-001 (production certification fix): a generic mention of "contractor(s)"
+  // with no specific trade word ("contractors in Miami") used to require clarification before
+  // ever showing a result, even though real, browseable evidence exists under 'general' (building
+  // contractor) for states that actually publish that class. Only default when the resolved
+  // state's own capability config says so (generalClassAvailable) -- New Jersey, for one, has no
+  // statewide General contractor license class at all (contractor-v2.ts already rejects a NJ
+  // 'general' request with `no_new_jersey_statewide_general_contractor_class`), so defaulting
+  // there would misrepresent what was actually searched rather than fix anything.
+  const preliminaryState = requirement?.requestedState ?? findState(query);
+  const defaultedToGeneral =
+    !explicitTrade &&
+    overrides.trade !== "-" &&
+    mentionsGenericContractor(query) &&
+    Boolean(preliminaryState && getExecutionCapability(preliminaryState)?.generalClassAvailable);
+  const trade = explicitTrade ?? (defaultedToGeneral ? "general" : null);
   const geographyRequirement = decideGeography(requirement, trade, overrides);
   const effective = geographyRequirement?.executionGeography;
   const geo = {
