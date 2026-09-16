@@ -1,0 +1,15 @@
+{
+  "ticket": "OR-CON-001",
+  "retrievedAt": "2026-09-16T14:27:41Z",
+  "ccb_rows": 56172,
+  "ccb_distinct_ids": 45501,
+  "bcd_rows": 47959,
+  "bcd_grains": {
+    "BUSINESS": 5562,
+    "PERSON": 33844,
+    "INSPECTOR": 8553
+  },
+  "fingerprint": "abf38ab50c6f3759c1bc3bd70681ae88e5cfb56c3b8e43d9a9407e912aa68657",
+  "ccb_raw_sha256": "f1f0ac156f2944d1de94a70236fd623db320a7f5e595d4f96d4c2dba80e661b9",
+  "bcd_raw_sha256": "5eddb82d51fb3010ee12a6b3a7f4349e83bdfac9c7abe19972a404747371be95"
+}

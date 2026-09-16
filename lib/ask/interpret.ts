@@ -22,6 +22,7 @@ import { interpretNycDcwp } from "./nyc-dcwp";
 import { interpretNycDob } from "./nyc-dob";
 import { interpretNycAcris } from "./nyc-acris";
 import { interpretIllinoisRoofing } from "./illinois-roofing";
+import { interpretOregonCcb } from "./oregon-ccb";
 
 const EMPTY_INTERPRET: AskInterpretation = {
   identifier: null,
@@ -111,6 +112,9 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
       failMessage: null, changeHints: ["Confirm with the issuing agency"],
     };
   }
+
+  const orEarly = interpretOregonCcb(query, text);
+  if (orEarly) return orEarly;
 
   const recovery = interpretRecovery(query);
   if (recovery) return { version: ASK_CONTRACT_VERSION, query, mode: "guidance", supported: true, interpretation: {...interpretation, location: recovery.locationLabel, trade: recovery.requestedTrade ?? "Not specified", entityType: recovery.requestedTask}, recovery, href: recovery.actions[0]?.destination ?? null, count: null, aggregate: null, comparison: null, failMessage: null, changeHints: [] };
