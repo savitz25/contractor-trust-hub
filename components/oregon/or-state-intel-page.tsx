@@ -60,13 +60,18 @@ export function OregonIntelPage({ snapshot }: { snapshot: OregonContractorSnapsh
         <h2 id="hero-metrics" className="sr-only">
           Snapshot metrics
         </h2>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <Metric value={fmtInt(s.hero.universe_value)} label={s.hero.universe_label} hint={s.hero.universe_hint} />
           <Metric value={fmtInt(s.hero.rows_value)} label={s.hero.rows_label} hint={s.hero.rows_hint} />
           <Metric
             value={fmtInt(s.hero.bcd_business_value)}
             label={s.hero.bcd_business_label}
             hint={s.hero.bcd_business_hint}
+          />
+          <Metric
+            value={fmtInt(s.bcd.ENTITY_GRAIN_DISTINCT_IDS.PERSON)}
+            label="BCD individual trade credentials"
+            hint="Person grain. Not added to CCB identities or BCD business credentials."
           />
         </div>
         <Trace

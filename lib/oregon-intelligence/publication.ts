@@ -1,6 +1,6 @@
 export const OR_STATE_INTEL_VERSION = "contractor-or-state-intel-v1" as const;
 export const OR_STATE_PUBLIC_FINGERPRINT =
-  "abf38ab50c6f3759c1bc3bd70681ae88e5cfb56c3b8e43d9a9407e912aa68657";
+  "b09a4da9e9566d52ad8b8ca6b2ce2f011e797dd5e6dd4ec308dfb3019c937fce";
 
 export const OREGON_INTELLIGENCE_GATE = {
   path: "/oregon",

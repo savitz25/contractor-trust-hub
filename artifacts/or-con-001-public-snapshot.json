@@ -2,7 +2,7 @@
   "version": "contractor-or-state-intel-v1",
   "ticket": "OR-CON-001",
   "as_of": "2026-09-15",
-  "generated_at": "2026-09-16T14:27:41Z",
+  "generated_at": "2026-09-16T14:54:32Z",
   "no_trust_score": true,
   "no_ranking": true,
   "no_oregon_local_intel_routes_this_ticket": true,
@@ -22,13 +22,13 @@
     "ccb_sourceUpdatedAt": "2026-09-15T20:33:54Z",
     "ccb_rowsUpdatedAt": "2026-09-15T20:33:54Z",
     "ccb_viewLastModified": "2026-09-15T20:33:47Z",
-    "ccb_retrievedAt": "2026-09-16T14:27:41Z",
+    "ccb_retrievedAt": "2026-09-16T14:54:32Z",
     "bcd_sourceAsOf": "2026-09-04",
     "bcd_sourceUpdatedAt": "2026-09-04T23:41:14Z",
     "bcd_rowsUpdatedAt": "2026-09-04T23:41:14Z",
-    "bcd_retrievedAt": "2026-09-16T14:27:41Z",
+    "bcd_retrievedAt": "2026-09-16T14:54:32Z",
     "snapshotAsOf": "2026-09-15",
-    "generatedAt": "2026-09-16T14:27:41Z",
+    "generatedAt": "2026-09-16T14:54:32Z",
     "retrievedAt_is_not_sourceAsOf": true,
     "do_not_substitute_build_time_for_source_time": true
   },
@@ -129,7 +129,7 @@
     "license_ne_unique_company": true,
     "raw_sha256": "f1f0ac156f2944d1de94a70236fd623db320a7f5e595d4f96d4c2dba80e661b9",
     "raw_bytes": 14628057,
-    "gz_sha256": "573276010512f2758613385b9183c81c8fbdfa071cadfcbbada79005f3f0762f",
+    "gz_sha256": "f3cdf8a2e12f8f254b5a896e8417537d4cc916a14d2b02875dedbf321d6af84b",
     "gz_bytes": 3167643
   },
   "bcd": {
@@ -261,7 +261,7 @@
     "inspector_ne_contractor": true,
     "raw_sha256": "5eddb82d51fb3010ee12a6b3a7f4349e83bdfac9c7abe19972a404747371be95",
     "raw_bytes": 6893067,
-    "gz_sha256": "e4264ed3970cc3ca5d1129ca83769ea8ef6c42de030b500824f5cbf176fefb7d",
+    "gz_sha256": "8638ae7458c4490ecf2cfc8a1a8d1e43230d28d1b00075742241b13be92e3f3b",
     "gz_bytes": 1361815
   },
   "adverse": {
@@ -301,7 +301,7 @@
       "observation": "No contractors are listed at this time.",
       "not": "no Oregon contractor has ever been debarred",
       "url": "https://www.oregon.gov/ccb/pages/licensing.aspx",
-      "retrievedAt": "2026-09-16T14:27:41Z"
+      "retrievedAt": "2026-09-16T14:54:32Z"
     }
   },
   "identity": {
@@ -309,7 +309,36 @@
     "bcd_namespace": "OR-BCD:{LicNbr}",
     "ccb_ne_bcd": true,
     "name_only": "UNSAFE",
-    "name_plus_address": "REVIEW_REQUIRED"
+    "name_plus_address": "REVIEW_REQUIRED",
+    "EXACT_CCB_LICENSE": 45501,
+    "EXACT_BCD_LICENSE": 47959,
+    "EXACT_BCD_BUSINESS_LICENSE": 5562,
+    "EXACT_BCD_PERSON_LICENSE": 33844,
+    "EXACT_SOURCE_NATIVE_CROSSWALK": 0,
+    "EXACT_SOURCE_NATIVE_CROSSWALK_meaning": "No CCB\u2194BCD native join field in either extract. CCB related_key is intra-CCB/OCHI, not a BCD bridge.",
+    "NAME_ONLY_UNSAFE": 0,
+    "NAME_ONLY_UNSAFE_meaning": "No name-only joins attempted.",
+    "REVIEW_REQUIRED_CROSSWALKS": 0,
+    "research_identity_ne_profile_attachment": true
+  },
+  "adverse_publication": {
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "REVIEW_REQUIRED": 0,
+    "UNRESOLVED": null,
+    "UNRESOLVED_meaning": "BCD final-order corpus not acquired as a structured table, so matters are not scored. Null is not zero unresolved.",
+    "INTERNAL_ONLY": 0,
+    "PUBLICATION_PENDING": 0,
+    "PUBLIC_READY_PROFILES": 0,
+    "PUBLICLY_RENDERED_PROFILES": 0,
+    "BUSINESS_RESPONSE_READY": 0,
+    "name_only_adverse_attachment": "REJECTED",
+    "person_order_ne_business_order": true,
+    "research_association_ne_profile_attachment": true
+  },
+  "withheld_reason_counts": {
+    "bcd_final_orders_structured_dataset_not_acquired": null,
+    "ccb_complaint_discipline_history_search_only": null,
+    "name_only_adverse_joins_not_attempted": 0
   },
   "claimEligibilityBroadened": false,
   "noCombinedOregonContractorsTotal": true,
@@ -326,14 +355,19 @@
     "OR_CCB_COMPLAINT_OBSERVATIONS": null,
     "OR_PUBLIC_CONTRACT_INELIGIBLE_LISTED": 0,
     "EXACT_PROFILE_ATTACHMENTS": 0,
+    "REVIEW_REQUIRED": 0,
+    "UNRESOLVED": null,
+    "INTERNAL_ONLY": 0,
+    "PUBLICATION_PENDING": 0,
     "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
     "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
     "EXISTING_ORGANIZATIONS_ENRICHED": 0,
-    "GRAPH_WRITES": 0
+    "GRAPH_WRITES": 0,
+    "CLAIM_ELIGIBILITY_BROADENED": false
   },
   "gate": {
     "live_cohort_not_inflated": true,
     "passed": true
   },
-  "fingerprint": "abf38ab50c6f3759c1bc3bd70681ae88e5cfb56c3b8e43d9a9407e912aa68657"
+  "fingerprint": "b09a4da9e9566d52ad8b8ca6b2ce2f011e797dd5e6dd4ec308dfb3019c937fce"
 }
