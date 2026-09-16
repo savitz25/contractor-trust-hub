@@ -12,7 +12,9 @@ export function assertOregonSnapshot(
   if (value.ccb.SOURCE_ROWS !== 56172) throw new Error("CCB source rows drifted");
   if (value.ccb.DISTINCT_NONEMPTY_LICENSE_IDS !== 45501) throw new Error("CCB distinct IDs drifted");
   if (value.hero.universe_value !== 45501) throw new Error("headline must be distinct CCB license IDs");
-  if (value.hero.universe_value === value.ccb.SOURCE_ROWS) throw new Error("do not headline source rows");
+  if (Number(value.hero.universe_value) === Number(value.ccb.SOURCE_ROWS)) {
+    throw new Error("do not headline source rows");
+  }
   if (value.bcd.ENTITY_GRAIN_DISTINCT_IDS.BUSINESS !== 5562) throw new Error("BCD business IDs drifted");
   if (value.bcd.not_added_to_ccb_denominator !== true) throw new Error("BCD must not be added to CCB");
   if (value.expansion_ledger.NET_NEW_CANONICAL_ORGANIZATIONS !== 0) throw new Error("no canonical writes");
