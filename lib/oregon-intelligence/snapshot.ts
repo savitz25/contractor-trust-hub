@@ -17,6 +17,11 @@ export function assertOregonSnapshot(
   }
   if (value.bcd.ENTITY_GRAIN_DISTINCT_IDS.BUSINESS !== 5562) throw new Error("BCD business IDs drifted");
   if (value.bcd.not_added_to_ccb_denominator !== true) throw new Error("BCD must not be added to CCB");
+  if (value.identity.EXACT_CCB_LICENSE !== 45501) throw new Error("exact CCB license identities drifted");
+  if (value.identity.EXACT_SOURCE_NATIVE_CROSSWALK !== 0) throw new Error("no CCB↔BCD native crosswalk");
+  if (value.identity.NAME_ONLY_UNSAFE !== 0) throw new Error("name-only joins must remain unattempted");
+  if (value.adverse_publication.EXACT_PROFILE_ATTACHMENTS !== 0) throw new Error("no profile attachments");
+  if (value.adverse_publication.UNRESOLVED !== null) throw new Error("unresolved final-order matters stay null, not zero");
   if (value.expansion_ledger.NET_NEW_CANONICAL_ORGANIZATIONS !== 0) throw new Error("no canonical writes");
   if (value.expansion_ledger.GRAPH_WRITES !== 0) throw new Error("no graph writes");
   if (value.claimEligibilityBroadened !== false) throw new Error("claim eligibility unchanged");
