@@ -202,6 +202,11 @@ export function extractGeographyRequirement(
   // Retain the existing accepted Boca Raton mapping; do not infer other cities' states from a partial corpus.
   if (!state && /^boca raton$/i.test(place)) state = "FL";
   if (!state && /^summit$/i.test(place)) state = "NJ";
+  // TH-DISCOVERY-RESET-001 (production certification fix): "Miami" is not genuinely ambiguous
+  // among the three states this source actually operates in (FL/NJ/TX), so a bare "contractors in
+  // Miami" dead-ended asking the consumer to clarify a state that has only one real answer here,
+  // even though ContractorTrustHub has real, live FL DBPR credential records for Miami-Dade.
+  if (!state && /^miami$/i.test(place)) state = "FL";
   return {
     ...base,
     requestedKind: "city",
