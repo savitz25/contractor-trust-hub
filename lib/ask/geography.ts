@@ -251,7 +251,14 @@ export function decideGeography(
     capability && trade
       ? getTradeCapability(state as "FL" | "NJ" | "TX", trade)
       : null;
-  if (!capability || (trade && !tradeCapability)) {
+  // TH-DISCOVERY-RESET-001B: Florida genuinely has no electrical occupation code in this extract
+  // (confirmed, not a wiring bug) -- but that trade-level gap does not make the requested
+  // geography itself unsupported. Previously this trade-capability check short-circuited before
+  // execution ever reached lib/ask/execute.ts's dedicated electrical branch, which already
+  // broadens to real, explicitly labeled county/statewide contractor options instead of a bare
+  // dead end. Let electrical+FL resolve geography normally so that branch is actually reached.
+  const electricalFloridaGap = state === "FL" && trade === "electrical";
+  if (!capability || (trade && !tradeCapability && !electricalFloridaGap)) {
     return {
       ...r,
       executionOutcome: "UNSUPPORTED",
