@@ -95,3 +95,24 @@ test("definitional active/current question is interpreted, not invented", () => 
   assert.equal(r.supported, true);
   assert.match(r.interpretation.notes.join(" "), /does not prove workmanship/i);
 });
+
+// TH-DISCOVERY-GEN-001: a resolved [PROVIDER CATEGORY] + [OPTIONAL GEOGRAPHY] must default to
+// DISCOVERY. "plumber in Boca Raton" resolves a real trade (plumbing, a genuinely supported FL
+// class) and a real city, but this file's own coarse GEO_ONTOLOGY only recognizes county names and
+// a few fixed phrases, not arbitrary cities -- and lacking any of a handful of trigger words
+// ("florida", "show", "find", "active"), it used to fall all the way through to the generic
+// "could not map that question" dead end despite a fully valid trade. A resolved trade alone is
+// now sufficient; geography (however phrased) never gates entry into entity/discovery mode here --
+// the actual geography resolution and any broadening happens downstream in plan.ts/execute.ts.
+for (const q of [
+  "plumber in Boca Raton",
+  "electrician in Boca Raton FL",
+  "plumbers",
+  "roofer",
+  "HVAC contractor in Naples",
+])
+  test(`provider category + optional geography defaults to discovery: "${q}"`, () => {
+    const r = interpretAskQuery(q, intel);
+    assert.equal(r.supported, true, `expected "${q}" to be supported, got: ${r.failMessage}`);
+    assert.equal(r.mode, "entity", `expected "${q}" to resolve to entity mode`);
+  });

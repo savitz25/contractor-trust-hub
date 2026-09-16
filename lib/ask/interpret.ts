@@ -395,15 +395,17 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
     };
   }
 
-  if (
-    trade &&
-    (geo ||
-      text.includes("florida") ||
-      text.includes("active") ||
-      text.includes("show") ||
-      text.includes("find") ||
-      /how many|count of|number of/.test(text))
-  ) {
+  // TH-DISCOVERY-GEN-001: [PROVIDER CATEGORY] + [OPTIONAL GEOGRAPHY] must default to DISCOVERY --
+  // a recognized trade alone used to be insufficient; entry into this branch also required this
+  // file's own coarse GEO_ONTOLOGY phrase match (county names and a few fixed phrases only, not
+  // arbitrary cities) or one of a handful of trigger words ("florida", "show", "find", "active").
+  // "plumber in Boca Raton" resolves a real trade AND a real geography (via the separate, more
+  // capable lib/ask/geography.ts resolver used later in plan.ts) but matched none of those trigger
+  // words and fell through to the generic "could not map that question" dead end. A resolved
+  // provider category is sufficient on its own; geography (however phrased) is optional and never
+  // gates entry here -- the actual geography resolution and any broadening happens downstream in
+  // plan.ts/execute.ts, which already understand far more place phrasing than this ontology does.
+  if (trade) {
     const href = geo?.kind === "county" ? geo.href : trade.href;
     if (geo?.kind === "county") {
       interpretation.notes.push("County pages use mailing/HQ county on the credential. That is not service territory.");
