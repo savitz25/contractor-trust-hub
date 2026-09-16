@@ -196,9 +196,22 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
     interpretation.evidenceFamily = EVIDENCE_ONTOLOGY[i].label;
   });
 
-  const trade = TRADE_ONTOLOGY.find((t) => t.phrases.some((p) => phraseInText(text, p)));
+  let trade = TRADE_ONTOLOGY.find((t) => t.phrases.some((p) => phraseInText(text, p)));
   const geo = GEO_ONTOLOGY.find((g) => g.phrases.some((p) => phraseInText(text, p)));
   const evidence = EVIDENCE_ONTOLOGY.find((e) => e.phrases.some((p) => phraseInText(text, p)));
+  // TH-DISCOVERY-RESET-001 (production certification fix): a generic "contractor(s)" mention with
+  // no specific trade word ("contractors in Miami") used to fall through every branch below (all
+  // gated on `trade` being truthy) to the final "we could not map that question" dead end, even
+  // though real, browseable evidence exists under 'general' (Florida CILB CGC/RG), the broadest
+  // real, populated trade class -- matching the identical default the /search path
+  // (lib/search/contractor-discovery.ts) already applies for the same phrase.
+  if (!trade && geo && /\bcontractors?\b/i.test(text)) {
+    trade = TRADE_ONTOLOGY.find((t) => t.id === "general");
+    if (trade) interpretation.trade = `${trade.label} (default — no trade requested)`;
+    interpretation.notes.push(
+      "No specific trade was requested, so these are general/building contractor records -- the broadest available trade class. Choose a specific trade to narrow.",
+    );
+  }
 
   if (/\bactive\b|\bcurrent\b/.test(text)) {
     interpretation.credentialStatus = "Active/current in the indexed regulator record";
