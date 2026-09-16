@@ -26,6 +26,22 @@ test("P2 execute Broward active roofing against production graph", { skip: !hasD
   assert.equal(row.sourceLabel, "Florida DBPR");
 });
 
+test("TH-DISCOVERY-RESET-001B: electricians in Palm Beach County resolves an executable plan, not a geography-level dead end", () => {
+  // TH-DISCOVERY-RESET-001B: lib/ask/geography.ts's decideGeography treated FL having no
+  // electrical occupation code as if the GEOGRAPHY itself were unsupported for this trade,
+  // short-circuiting executeContractorResearchQuery before it ever reached execute.ts's
+  // dedicated electrical-broadening branch below. This assertion needs no database -- it only
+  // checks plan construction, so it actually exercises the fix this local environment cannot
+  // otherwise verify (no DATABASE_URL here).
+  const intel = loadContractorHubIntel();
+  const interpreted = interpretAskQuery("electricians in Palm Beach County", intel);
+  const plan = buildContractorResearchQuery(interpreted);
+  assert.equal(plan.executable, true);
+  assert.equal(plan.geography.state, "FL");
+  assert.equal(plan.trade.familyId, "electrical");
+  assert.ok(plan.geographyRequirement?.executionGeography, "geography must resolve to an executable value, not an unsupported trade-capability dead end");
+});
+
 test("TH-DISCOVERY-RESET-001B: electricians in Palm Beach County broadens to real, labeled contractor cards instead of zero rows", { skip: !hasDb }, async () => {
   const intel = loadContractorHubIntel();
   const interpreted = interpretAskQuery("electricians in Palm Beach County", intel);
