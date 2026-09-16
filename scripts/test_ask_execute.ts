@@ -26,6 +26,24 @@ test("P2 execute Broward active roofing against production graph", { skip: !hasD
   assert.equal(row.sourceLabel, "Florida DBPR");
 });
 
+test("TH-DISCOVERY-RESET-001B: electricians in Palm Beach County broadens to real, labeled contractor cards instead of zero rows", { skip: !hasDb }, async () => {
+  const intel = loadContractorHubIntel();
+  const interpreted = interpretAskQuery("electricians in Palm Beach County", intel);
+  const plan = buildContractorResearchQuery(interpreted);
+  const exec = await executeContractorResearchQuery(plan);
+  assert.equal(exec.ok, true);
+  assert.equal(exec.blocked, false);
+  assert.match(exec.blockMessage ?? "", /ELECTRICAL-SPECIFIC RESULTS/);
+  assert.match(exec.blockMessage ?? "", /does not publish an electrical occupation page/);
+  assert.match(exec.blockMessage ?? "", /BROADER PALM BEACH COUNTY CONTRACTOR OPTIONS|BROADER FLORIDA CONTRACTOR OPTIONS/);
+  assert.ok(exec.results.length > 0, "broader contractor cards must be visible on the first result screen, not behind a second click");
+  const row = exec.results[0];
+  // Broader inventory is not filtered to exclude real electricians -- it is simply not filtered FOR
+  // electrical either. The guarantee under test is that the card never CLAIMS confirmed-electrician
+  // status it does not have, regardless of the row's own true trade.
+  assert.match(row.whyMatched, /not a confirmed electrician/i);
+});
+
 test("P2 execute stop-work does not list unpublished contractor joins", { skip: !hasDb }, async () => {
   const intel = loadContractorHubIntel();
   const interpreted = interpretAskQuery("Show contractors with Florida stop-work records.", intel);
