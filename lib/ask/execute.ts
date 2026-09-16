@@ -171,6 +171,32 @@ export function askWhere(plan: ContractorResearchQuery, countySlug?: string | nu
   return { where, params };
 }
 
+async function fetchBroaderContractorRows(
+  where: string,
+  params: unknown[],
+  limit: number
+): Promise<Array<{ id: string; slug: string; display_name: string; primary_city: string | null; primary_county: string | null; home_state: string | null; external_key: string | null; occupation_code: string | null; status_normalized: string | null; source_system: string | null }>> {
+  return query(
+    `
+    SELECT * FROM (
+      SELECT DISTINCT ON (c.id)
+        c.id, c.slug, c.display_name, l.city AS primary_city, l.county_name AS primary_county, l.state AS home_state,
+        l.external_key, l.occupation_code, l.status_normalized, l.source_system
+      FROM contractors c
+      JOIN licenses l ON l.contractor_id = c.id
+      WHERE ${where}
+      ORDER BY c.id,
+        CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
+        c.display_name
+    ) picked
+    ORDER BY LOWER(picked.display_name), picked.id
+    LIMIT $${params.length + 1}::int
+    `,
+    [...params, limit],
+    { statementTimeoutMs: 15_000 }
+  );
+}
+
 async function askCounts(where: string, params: unknown[]): Promise<{ contractors: number; credentials: number }> {
   const row = await queryOne<{ contractors: string; credentials: string }>(
     `
@@ -243,6 +269,54 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
   }
 
   if (plan.trade.familyId === "electrical" && plan.geography.state === "FL") {
+    // TH-DISCOVERY-RESET-001B: RESULTS FIRST -- electrical-specific coverage is genuinely
+    // unavailable in this extract, but that is not a reason to show zero providers. The requested
+    // geography (county, if given) still has real, indexed Florida contractors of other trades one
+    // query away -- show them immediately as an explicitly labeled broader alternative instead of
+    // stonewalling. Never relabeled as electricians: the trade filter is dropped, not substituted.
+    const broaderPlan: ContractorResearchQuery = { ...plan, trade: { familyId: null, label: null, occupationCodes: [], classLabels: [], discoverySlug: null } };
+    let built = askWhere(broaderPlan);
+    let broaderGeographyLabel = plan.geography.countyLabel ? `${plan.geography.countyLabel} County` : "Florida";
+    if (built) {
+      let rows = await fetchBroaderContractorRows(built.where, built.params, plan.limit);
+      if (rows.length === 0 && plan.geography.countySlug) {
+        // County-level broader inventory is itself empty -- auto-broaden once more to statewide
+        // Florida rather than showing nothing; still explicitly labeled, never silent.
+        built = askWhere(broaderPlan, null);
+        broaderGeographyLabel = "Florida";
+        rows = built ? await fetchBroaderContractorRows(built.where, built.params, plan.limit) : [];
+      }
+      if (rows.length > 0) {
+        const totals = await askCounts(built!.where, built!.params);
+        const results: AskEntityCard[] = rows.map((r) => {
+          const card: AskEntityCard = {
+            contractorId: r.id, slug: r.slug, displayName: r.display_name, credentialKey: r.external_key,
+            occupationCode: r.occupation_code, occupationLabel: classLabel(r.occupation_code),
+            statusNormalized: asLicenseStatus(r.status_normalized),
+            statusLabel: r.status_normalized === "active" || r.status_normalized === "current" ? "Active/current in indexed DBPR record" : r.status_normalized ? `${r.status_normalized} in indexed DBPR record` : "Status as published",
+            city: r.primary_city, county: r.primary_county, state: r.home_state,
+            sourceLabel: SOURCE_LABEL[r.source_system || "fl_dbpr"] || r.source_system || "Florida DBPR",
+            sourceSystem: r.source_system || "fl_dbpr",
+            geographyNote: `${broaderGeographyLabel} recorded address in the indexed licensing record — not service territory.`,
+            evidenceCount: 0, newestEvidenceDate: null,
+            whyMatched: `Broader ${broaderGeographyLabel} contractor result, not a confirmed electrician -- Florida CILB in this extract does not publish an electrical occupation page. ${whyMatched(broaderPlan, { evidenceCount: 0 })}`,
+            evidence: [], profileHref: r.slug ? `/contractors/${r.slug}` : null,
+          };
+          return card;
+        });
+        return emptyExecution({
+          ok: true,
+          blocked: false,
+          blockMessage: `ELECTRICAL-SPECIFIC RESULTS: Florida CILB in this extract does not publish an electrical occupation page. Electrical credential research is available in specialty-state Verify, not as a Florida Intelligence trade list. BROADER ${broaderGeographyLabel.toUpperCase()} CONTRACTOR OPTIONS below are not confirmed electricians.`,
+          contractorCount: totals.contractors,
+          credentialCount: totals.credentials,
+          results,
+          grainLabel: `Broader Florida DBPR contractor profiles in ${broaderGeographyLabel} across all recorded trades; not filtered to electrical, and not confirmed electricians.`,
+          asOf,
+          snapshotFingerprint: intel.sourceFingerprint,
+        });
+      }
+    }
     return emptyExecution({
       blocked: true,
       blockMessage:
