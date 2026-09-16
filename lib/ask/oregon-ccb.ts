@@ -50,10 +50,11 @@ export function hasOregonIntent(text: string): boolean {
 }
 
 function parseOrCcbNumber(query: string): string | null {
+  if (/\bbcd\b/i.test(query) && !/\bccb\b/i.test(query)) return null;
   const m = query.match(/\bccb(?:\s+license)?\s*#?\s*(\d{5,8})\b/i);
   if (m) return m[1];
   const labeled = query.match(/\b(?:oregon\s+)?(?:ccb\s+)?license\s+#?\s*(\d{5,8})\b/i);
-  if (labeled && /\b(oregon|ccb)\b/i.test(query)) return labeled[1];
+  if (labeled && /\bccb\b/i.test(query)) return labeled[1];
   return null;
 }
 

@@ -45,6 +45,9 @@ test("exact CCB identifiers beat geography and do not become Florida lookups", (
   assert.equal(r.href, "/oregon");
   assert.doesNotMatch(r.href || "", /verify/);
   assert.match(r.failMessage || "", /official Oregon CCB search/i);
+  const bcd = ask("Check Oregon BCD license 98765.");
+  assert.notEqual(bcd.interpretation.identifier, "98765");
+  assert.doesNotMatch(bcd.failMessage || "", /Exact CCB license 98765/i);
 });
 
 test("Oregon complaint, discipline, and final-order questions stay separate and search-only", () => {
