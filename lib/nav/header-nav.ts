@@ -24,6 +24,7 @@ export const EXPLORE_GROUP: HeaderGroup = {
     { href: "/new-york/new-york-city", label: "New York City HIC", hint: "DCWP home-improvement contractor licenses" },
     { href: "/illinois", label: "Illinois research", hint: "IDFPR roofing licenses — not a statewide GC" },
     { href: "/oregon", label: "Oregon research", hint: "CCB active licenses and BCD trade credentials" },
+    { href: "/pennsylvania", label: "Pennsylvania research", hint: "HICPA registration — not a statewide GC" },
     { href: "/texas", label: "Texas research", hint: "Specialty trades — no statewide GC license" },
     { href: "/texas/austin", label: "Austin permits", hint: "City of Austin local intelligence" },
     { href: "/california", label: "California research", hint: "Acquired CSLB public-data rows" },

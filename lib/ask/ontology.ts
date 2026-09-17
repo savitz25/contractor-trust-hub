@@ -213,6 +213,21 @@ export const GEO_ONTOLOGY: Array<{
     intelligence: "state_intelligence",
   },
   {
+    id: "pa",
+    label: "Pennsylvania",
+    phrases: [
+      "pennsylvania",
+      "in pennsylvania",
+      "pa statewide",
+      "philadelphia",
+      "pittsburgh",
+      "hicpa",
+    ],
+    href: "/pennsylvania",
+    kind: "state",
+    intelligence: "state_intelligence",
+  },
+  {
     id: "broward",
     label: "Broward County, Florida",
     phrases: ["broward", "broward county", "fort lauderdale", "deerfield beach"],

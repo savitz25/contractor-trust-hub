@@ -1,0 +1,297 @@
+{
+  "version": "contractor-pa-state-intel-v1",
+  "ticket": "PA-CON-001",
+  "publicationPath": "/pennsylvania",
+  "canonical": "https://www.contractortrusthub.com/pennsylvania",
+  "asOf": null,
+  "snapshotAsOf": "2026-09-17",
+  "retrievedAt": "2026-09-17T13:04:02Z",
+  "generatedAt": "2026-09-17T13:06:05Z",
+  "hero": {
+    "universe_value": null,
+    "universe_label": "No statewide general-contractor license census",
+    "universe_hint": "Pennsylvania does not impose a universal state contractor license. HICPA registration is OPEN_SEARCH_ONLY. Missing bulk is not zero contractors.",
+    "asbestos_value": 283,
+    "asbestos_label": "DLI certified asbestos abatement contractor firms",
+    "lead_value": 148,
+    "lead_label": "DLI certified lead abatement contractor firms",
+    "debarment_value": 6,
+    "debarment_label": "Current prevailing-wage debarment listing rows"
+  },
+  "licensing_model": {
+    "statewide_general_contractor_license": false,
+    "primary_statewide_consumer_credential": "HICPA Home Improvement Contractor registration",
+    "hicpa_ne_license": true,
+    "hicpa_ne_endorsement": true,
+    "hicpa_ne_competency": true,
+    "specialty_ne_hicpa": true,
+    "municipal_ne_state": true
+  },
+  "hicpa": {
+    "PA_HICPA_ROSTER_STATUS": "OPEN_SEARCH_ONLY",
+    "PA_HICPA_ROWS": null,
+    "PA_HICPA_DISTINCT_REGISTRATION_IDS": null,
+    "PA_HICPA_CURRENT_ROWS": null,
+    "PA_HICPA_CURRENT_DISTINCT_IDS": null,
+    "PA_HICPA_EXPIRED_ROWS": null,
+    "PA_HICPA_STATUS_UNKNOWN_ROWS": null,
+    "identityNamespace": "PA-HIC:{registration_number}",
+    "public_search_active_only": true,
+    "type_of_work_incomplete": true,
+    "missing_type_of_work_ne_trade_absence": true,
+    "business_name_ne_primary_applicant": true,
+    "primary_applicant_ne_business": true,
+    "address_row_ne_unique_company": true,
+    "not_returned_ne_denied": true,
+    "not_returned_ne_historically_unregistered": true,
+    "status_semantics": "SOURCE_SEMANTICS_UNCONFIRMED beyond official note that search results display active registrations only",
+    "source_history": {
+      "outage_began": "2025-08",
+      "search_restored": "2026-03",
+      "online_registration_operational": "2026-04-24",
+      "grace_period_ended": "2026-06-08",
+      "relaunch_ne_sourceAsOf": true,
+      "retrievedAt_ne_registration_effective_date": true,
+      "system_absence_ne_historical_non_registration": true
+    },
+    "search_url": "https://hicsearch.attorneygeneral.gov/",
+    "registration_url": "https://www.attorneygeneral.gov/businesses-and-organizations/home-improvement-contractor-registration/",
+    "reason": "Official HIC search requires Cloudflare Turnstile before Search/Excel export. Statewide enumeration would require CAPTCHA circumvention."
+  },
+  "asbestos": {
+    "coverage": "ACQUIRED_CURRENT_SNAPSHOT",
+    "PA_ASBESTOS_CONTRACTOR_ROWS": 299,
+    "PA_ASBESTOS_CONTRACTOR_DISTINCT_IDS": 283,
+    "PA_ASBESTOS_INDIVIDUAL_ROWS": 4985,
+    "PA_ASBESTOS_INDIVIDUAL_DISTINCT_IDS": 4985,
+    "firm_ne_person": true,
+    "not_added_to_hicpa": true,
+    "daily_update_note": "Official list described as updated daily Monday\u2013Friday. Daily cadence is not proof each row changed that day.",
+    "sourceUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dli/documents/individuals/labor-management-relations/bois/documents/asbcontr.htm",
+    "individualsUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dli/documents/individuals/labor-management-relations/bois/documents/asbcert.htm",
+    "contractors": {
+      "SOURCE_ROWS": 299,
+      "DISTINCT_CERT_IDS": 283,
+      "ROWS_WITHOUT_ID": 0,
+      "identityNamespace": "PA-DLI-ASB:{cert}",
+      "sha256": "58808b7f8a3aa6bffc17168ca2e3cb279bd74ae0e44d6132d3ecdd3426989e44"
+    },
+    "individuals": {
+      "SOURCE_ROWS": 4985,
+      "DISTINCT_CERT_IDS": 4985,
+      "ROWS_WITHOUT_ID": 0,
+      "person_grain": true,
+      "not_added_to_contractor_firms": true,
+      "sha256": "70490977054f9fcd5ef743746627fd506bcf17540e25a28c5978de702420def1"
+    }
+  },
+  "lead": {
+    "coverage": "ACQUIRED_CURRENT_SNAPSHOT",
+    "PA_LEAD_CONTRACTOR_ROWS": 155,
+    "PA_LEAD_CONTRACTOR_DISTINCT_IDS": 148,
+    "PA_LEAD_INDIVIDUAL_ROWS": 943,
+    "PA_LEAD_INDIVIDUAL_DISTINCT_IDS": 943,
+    "firm_ne_person": true,
+    "lead_ne_hicpa": true,
+    "lead_ne_asbestos": true,
+    "daily_update_note": "Official list described as updated daily Monday\u2013Friday. Daily cadence is not proof each row changed that day.",
+    "sourceUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dli/documents/individuals/labor-management-relations/bois/documents/ledcontr.htm",
+    "individualsUrl": "https://www.pa.gov/content/dam/copapwp-pagov/en/dli/documents/individuals/labor-management-relations/bois/documents/ledcert.htm",
+    "contractors": {
+      "SOURCE_ROWS": 155,
+      "DISTINCT_CERT_IDS": 148,
+      "ROWS_WITHOUT_ID": 0,
+      "identityNamespace": "PA-DLI-LEAD:{cert}",
+      "sha256": "34c775d8f5e2fa1c3c4b1693e1d2e8906b661933f95a849b3372f4d09dc9eb52"
+    },
+    "individuals": {
+      "SOURCE_ROWS": 943,
+      "DISTINCT_CERT_IDS": 943,
+      "ROWS_WITHOUT_ID": 0,
+      "person_grain": true,
+      "not_added_to_contractor_firms": true,
+      "sha256": "17c449bedd704d1909577f6671d95e670f1ae739f3155b84449dc74a5f759f21"
+    }
+  },
+  "other_specialty": {
+    "manufactured_housing_installers": "FUTURE",
+    "crane_operators": "FUTURE",
+    "reason": "Person-occupation credentials are not a contractor-business census. Not acquired in Wave 1."
+  },
+  "debarment": {
+    "coverage": "ACQUIRED_CURRENT_SNAPSHOT",
+    "PA_PREVAILING_WAGE_DEBARMENT_ROWS": 6,
+    "PA_PREVAILING_WAGE_DISTINCT_RESPONDENTS": 16,
+    "PA_PREVAILING_WAGE_FIRM_ROWS": 8,
+    "PA_PREVAILING_WAGE_PERSON_ROWS": 8,
+    "matters": [
+      {
+        "date": "11/1/2025",
+        "firms": [
+          "Telco, Inc.",
+          "Telco Companies, LLC"
+        ],
+        "persons": [
+          "Tedd Chung",
+          "Sen Chen"
+        ],
+        "address": "1224 Cross Keys Road, Reading, PA 19605 2238 Oakwood Court, Fogelsville, PA 18051"
+      },
+      {
+        "date": "4/12/2025",
+        "firms": [
+          "ETC Contracting, LLC"
+        ],
+        "persons": [
+          "Kevin Locklear",
+          "Tonie Mobley"
+        ],
+        "address": "350 Frank Drive, Pembroke, NC 28372 231 Ridgefield Drive, Lumberton, NC 28358"
+      },
+      {
+        "date": "12/7/2024",
+        "firms": [
+          "Trio Siteworks, LLC"
+        ],
+        "persons": [
+          "Paul Verna"
+        ],
+        "address": "600 Crum Creek Road Media, PA 19063"
+      },
+      {
+        "date": "9/21/2024",
+        "firms": [
+          "Vince Basile Plumbing, LLC",
+          "VPJ Enterprises, Inc."
+        ],
+        "persons": [
+          "Vince Basile"
+        ],
+        "address": "17 Trapper Road Sewell, NJ 08080"
+      },
+      {
+        "date": "8/17/2024",
+        "firms": [
+          "B. Redmond Enterprises, LLC"
+        ],
+        "persons": [
+          "Bruce Redmond"
+        ],
+        "address": "481 Brace Road Dallas, PA 18643"
+      },
+      {
+        "date": "7/1/2023",
+        "firms": [
+          "Aaron's Roofing & Construction, LLC"
+        ],
+        "persons": [
+          "Aaron Gebadlo"
+        ],
+        "address": "817 West 51st Street Erie, PA 16509"
+      }
+    ],
+    "grain": "public-works debarment listing row (firm and person respondents kept separate)",
+    "debarment_ne_complaint": true,
+    "debarment_ne_conviction": true,
+    "firm_ne_person": true,
+    "debarment_ne_hicpa": true,
+    "public_work_eligibility_ne_residential_quality": true,
+    "name_only_attachment": "NAME_ONLY_UNSAFE",
+    "sourceUrl": "https://www.pa.gov/agencies/dli/resources/compliance-laws-and-regulations/labor-management-relations/labor-law/prevailing-wage/debarments-and-settlements",
+    "sha256": "2bbe566453ad2537846228130380fc5a32ee2cbfb0bde5528b4f4e550160d62f",
+    "settlements": {
+      "CURRENT_SOURCE_OBSERVATION": "NONE",
+      "PA_CURRENT_SETTLEMENT_ROWS": 0,
+      "current_observation_ne_historical_clearance": true
+    }
+  },
+  "enforcement": {
+    "oag_hicpa_structured_actions": "SOURCE_NOT_ACQUIRED",
+    "news_releases": "DISCOVERY_ONLY",
+    "news_ne_census": true
+  },
+  "municipal": {
+    "PA_LOCAL_CONTRACTOR_LICENSING": "MUNICIPAL / NOT_CENTRALIZED",
+    "philadelphia_ne_statewide": true,
+    "pittsburgh_ne_statewide": true,
+    "electrical_plumbing_local": true,
+    "absence_ne_zero": true,
+    "municipalities_cited": 2562,
+    "sourceUrl": "https://www.pa.gov/agencies/dli/programs-services/labor-management-relations/bureau-of-occupational-and-industrial-safety/uniform-construction-code-home/contractor-licensing"
+  },
+  "permits_ucc": {
+    "coverage": "LOCAL_OR_FRAGMENTED",
+    "statewide_comparable_dataset": false,
+    "no_manufactured_permit_total": true
+  },
+  "identity": {
+    "EXACT_HICPA_REGISTRATION": 0,
+    "EXACT_ASBESTOS_CERT": 283,
+    "EXACT_LEAD_CERT": 148,
+    "EXACT_SOURCE_NATIVE_CROSSWALKS": 0,
+    "EXACT_DEBARMENT_CASE_ID": 0,
+    "NAME_ONLY_UNSAFE": 0,
+    "REVIEW_REQUIRED_CROSSWALKS": 0,
+    "hicpa_bulk_identities": "NOT_ACQUIRED",
+    "debarment_case_id": "NOT_EXPOSED \u2014 listing has name/address/date only"
+  },
+  "expansion_ledger": {
+    "NET_NEW_STATE_RESEARCH_IDENTITIES": 431,
+    "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
+    "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
+    "EXISTING_ORGANIZATIONS_ENRICHED": 0,
+    "GRAPH_WRITES": 0,
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "CLAIM_ELIGIBILITY_BROADENED": false
+  },
+  "adverse_publication": {
+    "ADVERSE_SOURCES_FOUND": 3,
+    "ADVERSE_SOURCES_ACQUIRED": 1,
+    "ADVERSE_ROWS_ACQUIRED": 6,
+    "UNIQUE_REGULATORY_MATTERS": 6,
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "REVIEW_REQUIRED": 0,
+    "UNRESOLVED": null,
+    "INTERNAL_ONLY": 0,
+    "PUBLICATION_PENDING": 0,
+    "PUBLIC_READY_PROFILES": 0,
+    "PUBLICLY_RENDERED_PROFILES": 0,
+    "BUSINESS_RESPONSE_READY": false,
+    "name_only_adverse_attachment": "REJECTED",
+    "statewide_page_renders_class_aggregates_not_facility_profiles": true
+  },
+  "withheld_reason_counts": {
+    "PUBLICATION_ADAPTER_NOT_READY": true,
+    "PROFILE_NOT_AVAILABLE": 0,
+    "MISSING_IDENTIFIER": 6,
+    "UNSAFE_NAME_MATCH": 0,
+    "SOURCE_RESTRICTION": 1,
+    "name_only_adverse_joins_not_attempted": 0
+  },
+  "clocks": {
+    "hicpa_sourceAsOf": null,
+    "hicpa_sourceAsOf_reason": "HICPA bulk census not acquired. Search restored March 2026; online registration operational 2026-04-24. Relaunch is not sourceAsOf.",
+    "asbestos_sourceAsOf": null,
+    "asbestos_sourceAsOf_reason": "Official list is described as updated daily Monday\u2013Friday. No row-level modified timestamp.",
+    "lead_sourceAsOf": null,
+    "lead_sourceAsOf_reason": "Official list is described as updated daily Monday\u2013Friday. No row-level modified timestamp.",
+    "debarment_sourceModifiedAt": "2026-02-12",
+    "retrievedAt": "2026-09-17T13:04:02Z",
+    "snapshotAsOf": "2026-09-17",
+    "generatedAt": "2026-09-17T13:06:05Z",
+    "retrievedAt_is_not_sourceAsOf": true
+  },
+  "no_local_pennsylvania_routes": true,
+  "no_philadelphia_page": true,
+  "no_pittsburgh_page": true,
+  "no_ranking": true,
+  "no_trust_score": true,
+  "no_aggregate_rating": true,
+  "unknown_is_not_zero": true,
+  "search_only_is_not_zero": true,
+  "gate": {
+    "live_cohort_not_inflated": true,
+    "passed": true
+  },
+  "fingerprint": "ad8e95e11e486c9c124b7da270d6fa38808fa4ab0be5d2008167283728324e9a"
+}

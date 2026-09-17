@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Home Improvement Contractor Search</title>
+    <link rel="icon" href="/img/favicon.png" sizes="32x32">
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/search-landing.css">
+    <link rel="stylesheet" type="text/css" href="/css/fonts.css">
+    <link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/lib/syncfusion/fluent.css" />
+    <link rel="stylesheet" href="/lib/webtour/webtour.min.css" />
+    <script type="text/javascript" src="/lib/jquery/dist/jquery.min.js?v=_xUj-3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej_m4"></script>
+    <script type="text/javascript" src="/lib/syncfusion/ej2.min.js?v=Rshi4Qn53d4PXPZ57U6jFpperEXnkDRfZdJ_zOLCGek"></script>
+    <script src="/lib/jquery-inputmask/jquery.inputmask.bundle.min.js?v=HQCkPjsckBtmO60xeZs560g8_5v04DvOkyEo01zhSpo"></script>
+    <script src="/lib/jquery-popper/popper.js?v=_ijcOLwFf26xEYAjW75FizKVo5tnTYiQddPZoLUHHZ8"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js?v=KuvCVS19rfTjoLgMyDDCdOkRRlhNrY4psEM4uezts2M"></script>
+    
+    
+</head>
+<body>
+    <div b-o9vxoorz3w class="loader-modal-container">
+        <div b-o9vxoorz3w class="screen-middle">
+            <div b-o9vxoorz3w class="logo-container-loader">
+                <span b-o9vxoorz3w class="spinner-loader"></span>
+                <img b-o9vxoorz3w src="./img/loader.svg" />
+            </div>
+        </div>
+    </div>
+    <div b-o9vxoorz3w class="bottom-controls">
+        <a b-o9vxoorz3w href="#" class="scroll-top hidden"><span b-o9vxoorz3w></span></a>
+        <div b-o9vxoorz3w id="onboardingSearchTrigger" class="onboarding-button" onclick="initializeSearchOnBoarding()">
+            <span b-o9vxoorz3w class="fa fa-question help-icon"></span>
+        </div>
+    </div>
+    <div b-o9vxoorz3w class="no-compatible-size">
+        <img b-o9vxoorz3w class="oag-logo-navbar" src="./img/oag-seal.svg" alt="Compatibility" />
+        <div b-o9vxoorz3w class="oag-app-naming">
+            <span b-o9vxoorz3w class="oag-app-title">Home Improvement</span>
+            <span b-o9vxoorz3w class="oag-app-subtitle">Consumer Information</span>
+        </div>
+        <div b-o9vxoorz3w class="compatibility-warning">
+            <span b-o9vxoorz3w class="icon-exclamation-triangle"></span>
+        </div>
+        <div b-o9vxoorz3w class="compatibility-message">
+            This device or screen size is not supported. Try from another device or use a larger resolution.
+        </div>
+    </div>
+    <header b-o9vxoorz3w class="main-header">
+        <div b-o9vxoorz3w class="oag-logo-header">
+            <img b-o9vxoorz3w src="./img/oag-seal.svg">
+            <div b-o9vxoorz3w class="oag-logo-header-app-name">
+                <h1 b-o9vxoorz3w>Home Improvement</h1>
+                <h5 b-o9vxoorz3w>Consumer Information</h5>
+            </div>
+        </div>
+    </header>
+    <div b-o9vxoorz3w class="container-box">
+        <div b-o9vxoorz3w class="full-content">
+            <div class="inner-content">
+    <div class="left-side">
+        
+<div name="cardFilters" id="searchFiltersCard" class="card mb-3 hidden">
+    <h5 class="card-header fw-bold">Search</h5>
+    <div class="card-body">
+        <form id="frmFilters" class="row g-3 needs-validation" novalidate>
+            <div class="col-md-6">
+                <label for="RegistrationNumber" class="fw-bold">Registration No.</label>
+                <div class="input-with-prefix">
+                    <span class="reg-number-prefix px-2">PA</span>
+                    <input type="text" id="RegistrationNumber" minlength="6" maxlength="6" 
+                           class="form-control numberonly no-validation-icon validate-control" placeholder="______" autocomplete="off">
+                </div>
+                <div class="invalid-feedback invalid-registration-number">
+                    Please input at least (6) characters.
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="BusinessName" class="fw-bold">Business Name</label>
+                <input type="text" id="BusinessName" minlength="3" maxlength="100" 
+                        class="form-control no-validation-icon validate-control" placeholder="" autocomplete="off">
+                <div class="invalid-feedback">
+                    Please input at least (3) characters.
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="PrimaryApplicant" class="fw-bold">Primary Applicant</label>
+                <input type="text" id="PrimaryApplicant" minlength="3" maxlength="131" 
+                       class="form-control alphanumeric no-validation-icon validate-control" placeholder="" autocomplete="off">
+                <div class="invalid-feedback">
+                    Please input at least (3) characters.
+                </div>
+            </div>
+            <div class="advanced-search-box-separator"></div>
+            <div class="col-12">
+                <label for="BusinessAddress" class="fw-bold">Address</label>
+                <input type="text" id="BusinessAddress" minlength="5" maxlength="128" 
+                       class="form-control address no-validation-icon validate-control" placeholder="" autocomplete="off">
+                <div class="invalid-feedback">
+                    Please input at least (5) characters.
+                </div>
+            </div>
+            <div class="col-md-5">
+                <label for="BusinessCity" class="fw-bold">City</label>
+                <input type="text" id="BusinessCity" minlength="3" maxlength="64" 
+                       class="form-control alphanumeric no-validation-icon validate-control" autocomplete="off">
+                <div class="invalid-feedback">
+                    Please input at least (3) characters.
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="BusinessState" class="fw-bold">State</label>
+                <select id="BusinessState" class="form-select validate-control">
+                <option selected="selected" value="PA">Pennsylvania</option>
+<option value="AL">Alabama</option>
+<option value="AK">Alaska</option>
+<option value="AZ">Arizona</option>
+<option value="AR">Arkansas</option>
+<option value="CA">California</option>
+<option value="CO">Colorado</option>
+<option value="CT">Connecticut</option>
+<option value="DE">Delaware</option>
+<option value="FL">Florida</option>
+<option value="GA">Georgia</option>
+<option value="HI">Hawaii</option>
+<option value="ID">Idaho</option>
+<option value="IL">Illinois</option>
+<option value="IN">Indiana</option>
+<option value="IA">Iowa</option>
+<option value="KS">Kansas</option>
+<option value="KY">Kentucky</option>
+<option value="LA">Louisiana</option>
+<option value="ME">Maine</option>
+<option value="MD">Maryland</option>
+<option value="MA">Massachusetts</option>
+<option value="MI">Michigan</option>
+<option value="MN">Minnesota</option>
+<option value="MS">Mississippi</option>
+<option value="MO">Missouri</option>
+<option value="MT">Montana</option>
+<option value="NE">Nebraska</option>
+<option value="NV">Nevada</option>
+<option value="NH">New Hampshire</option>
+<option value="NJ">New Jersey</option>
+<option value="NM">New Mexico</option>
+<option value="NY">New York</option>
+<option value="NC">North Carolina</option>
+<option value="ND">North Dakota</option>
+<option value="OH">Ohio</option>
+<option value="OK">Oklahoma</option>
+<option value="OR">Oregon</option>
+<option value="RP">Puerto Rico</option>
+<option value="RI">Rhode Island</option>
+<option value="SC">South Carolina</option>
+<option value="SD">South Dakota</option>
+<option value="TN">Tennessee</option>
+<option value="TX">Texas</option>
+<option value="VI">U.S. Virgin Islands</option>
+<option value="UT">Utah</option>
+<option value="VT">Vermont</option>
+<option value="VA">Virginia</option>
+<option value="WA">Washington</option>
+<option value="DC">Washington D.C.</option>
+<option value="WV">West Virginia</option>
+<option value="WI">Wisconsin</option>
+<option value="WY">Wyoming</option>
+</select>
+            </div>
+            <div class="col-md-3">
+                <label for="BusinessZip" class="fw-bold">Zip</label>
+                <input type="text" id="BusinessZip" minlength="5" maxlength="5" 
+                       class="form-control numberonly no-validation-icon validate-control" autocomplete="off">
+                <div class="invalid-feedback">
+                    Input a valid ZIP.
+                </div>
+            </div>
+            <div class="col-md-5">
+                <label for="BusinessCounty" class="fw-bold">County</label>
+                <select id="BusinessCounty" class="form-select validate-control">
+                <option value="95f85c95-6444-4f32-b4d0-9d8fae0a2684">ADAMS</option>
+<option value="dafe1cd6-26dd-4308-bee3-305a73dd0418">ALLEGHENY</option>
+<option value="5c0b8ae8-a236-407c-9772-28a2e07c5e1c">ARMSTRONG</option>
+<option value="367bda22-dfb7-44ee-8426-3b9a622d9709">BEAVER</option>
+<option value="71fe0ff9-76d8-430c-9ba3-b9e955e9c6ce">BEDFORD</option>
+<option value="66592884-2047-446e-9e69-620af3cd790a">BERKS</option>
+<option value="8e16ab88-f18a-498d-8bd6-0f3c4775accd">BLAIR</option>
+<option value="2ac94cc3-c583-446b-a51e-6859002e54e5">BRADFORD</option>
+<option value="893dc108-ba39-40a1-b3ef-5d40e74005a1">BUCKS</option>
+<option value="84318bbb-5517-4005-b088-9219971e2567">BUTLER</option>
+<option value="b5715dd2-2216-4c15-91fd-84e6dba9afb8">CAMBRIA</option>
+<option value="6892a610-c01c-43e7-9e0e-9a294fa7b5a1">CAMERON</option>
+<option value="2fa4edec-5574-4b87-b6d4-635b01eb2a7b">CARBON</option>
+<option value="d569a88d-fa66-4c6e-9716-d5f72718f91a">CENTRE</option>
+<option value="209c83df-91b6-42b1-8e51-09024b76e40c">CHESTER</option>
+<option value="4fd09da0-cbce-40b0-bc24-fe62ef28789d">CLARION</option>
+<option value="da781742-574a-47cf-a4af-56dacd008d78">CLEARFIELD</option>
+<option value="c331b2f7-0aba-4a21-ab75-a70b0c0146e8">CLINTON</option>
+<option value="76e7ba34-7f14-4e9d-a3dd-316c8751d9f4">COLUMBIA</option>
+<option value="fab0bdde-1400-4035-aca8-b469d79c5709">CRAWFORD</option>
+<option value="75adeb66-985b-4cc5-9444-a0e16e165039">CUMBERLAND</option>
+<option value="6d27568c-3a66-4fba-bdba-09fec53539d0">DAUPHIN</option>
+<option value="57108669-fbd7-48e6-890f-ecd3d657cac2">DELAWARE</option>
+<option value="ec22b4d4-4e8c-4f93-bad5-f701acde208f">ELK</option>
+<option value="fc61e2c1-1dc3-4ac9-b65a-5060361e75bf">ERIE</option>
+<option value="ca05a8e7-9b8c-4631-98da-aa1dca53dc9b">FAYETTE</option>
+<option value="f8617a76-2c4a-4098-b680-824306436d43">FOREST</option>
+<option value="27b1a9ae-d9f3-41d1-944e-dcaa5a9fc9b2">FRANKLIN</option>
+<option value="f3c0102e-35c3-47d4-98a7-09a7bdfcac88">FULTON</option>
+<option value="69762013-75be-4c12-a839-6a7939cd51b1">GREENE</option>
+<option value="ba9baaf6-3171-4f16-8217-7f5f4340654b">HUNTINGDON</option>
+<option value="f9e55c58-3508-4252-a100-21c54a4bc57a">INDIANA</option>
+<option value="82d5ece1-f629-435c-b8b9-e47aef941656">JEFFERSON</option>
+<option value="5ac48138-cb8a-4289-a373-5738814b6a04">JUNIATA</option>
+<option value="763d63d6-b318-479f-823f-eb922aa86bc5">LACKAWANNA</option>
+<option value="24fb7cdb-086d-4b4e-ba7d-4f0432fba616">LANCASTER</option>
+<option value="f252832c-addc-4488-a343-3c9160865e28">LAWRENCE</option>
+<option value="756b562e-126a-4435-9fa8-037008696fe6">LEBANON</option>
+<option value="160a38f2-5b1c-40bf-9727-44c3ebb89c16">LEHIGH</option>
+<option value="8a9ae751-80a8-493a-812c-e1e4b2e2d6be">LUZERNE</option>
+<option value="16585831-8170-4ddd-a57e-14e173d6df07">LYCOMING</option>
+<option value="f4e45fde-f921-485a-ad55-9e438487815b">MCKEAN</option>
+<option value="cdb4581b-61a1-4c1f-ac94-33473c92c992">MERCER</option>
+<option value="cc0eb8b2-71ce-4375-b3ec-b80817560186">MIFFLIN</option>
+<option value="7f019bd6-b87f-42e0-a07d-5fa1845978a2">MONROE</option>
+<option value="b052c44f-769e-46bf-b02e-3136194c467c">MONTGOMERY</option>
+<option value="a14d7255-da3e-4164-9af8-627cd092c083">MONTOUR</option>
+<option value="6e8c38be-e6fc-48b9-95c8-3981b2a61c63">NORTHAMPTON</option>
+<option value="e64d7eae-f1f2-4f21-8ffc-e3baa5e804a2">NORTHUMBERLAND</option>
+<option value="e84657c5-b236-422b-bccc-5968bfe874e9">PERRY</option>
+<option value="72cb339d-adca-42b3-9f65-b883ef742016">PHILADELPHIA</option>
+<option value="5f81451a-8dbc-4e56-b6f8-80fd3624268f">PIKE</option>
+<option value="8f83f521-dbab-4940-a1a7-fe6f75de52c4">POTTER</option>
+<option value="b533aa00-b759-4347-bd88-aa90ba6cfb2b">SCHUYLKILL</option>
+<option value="bfc4f886-3df4-43c1-8168-7f9eb4a46b52">SNYDER</option>
+<option value="f5457104-ffd8-43e3-a9dd-a2c82dfc91c3">SOMERSET</option>
+<option value="4f973eb1-2a83-44f8-b034-ae5fea7c7fad">SULLIVAN</option>
+<option value="90cb4258-0133-4936-b1e8-67291fb7eac8">SUSQUEHANNA</option>
+<option value="bf24a080-b373-44b0-bf91-b4bd82642f6c">TIOGA</option>
+<option value="dfb52e47-35c6-4226-ad6e-c4b413fdcd9e">UNION</option>
+<option value="25b86620-6870-4866-ac7f-1482814c54e4">VENANGO</option>
+<option value="b2f7f918-dc0d-4c89-adc4-9ef5a108ff53">WARREN</option>
+<option value="ad4f2e94-fcb4-4827-bb68-43f3946e1288">WASHINGTON</option>
+<option value="04e90913-eac9-4822-ba45-a6576f466dd7">WAYNE</option>
+<option value="8a57224b-da53-449d-b80e-eee449ba6e35">WESTMORELAND</option>
+<option value="74dac8c9-45a9-450a-b682-37d83e495880">WYOMING</option>
+<option value="5eadc9d8-f991-4230-aa52-84e225356325">YORK</option>
+<option value="2a2943e3-a738-47b2-b80d-d27361b47dda">OUT OF STATE</option>
+</select>
+            </div>
+            <div class="col-md-5">
+                <label for="BusinessPhone" class="fw-bold">Phone</label>
+                <input type="text" id="BusinessPhone" minlength="14" maxlength="14" 
+                       class="form-control phonenumber no-validation-icon validate-control" placeholder="" autocomplete="off">
+                <div class="invalid-feedback">
+                    Please complete the field correctly, phone should contain (10) characters. 
+                </div>
+            </div>
+            <div class="advanced-search-box-separator"></div>
+            <div class="col-md-8">
+                <label for="BusinessTypeOfWork" class="fw-bold">Type of Work</label>
+                <select id="BusinessTypeOfWork" class="form-select validate-control">
+                <option value="95-5">Carpentry</option>
+<option value="95-10">Carpet Installation</option>
+<option value="95-15">Central Vacuum Systems</option>
+<option value="95-16">Chimney Sweep</option>
+<option value="95-20">Cleaning &amp; Janitorial Services</option>
+<option value="95-45">Concrete</option>
+<option value="95-46A">Construction/Additions:  Conventional framing/stick-built construction</option>
+<option value="95-46B">Construction/Additions:  Pole-framing/post-framing </option>
+<option value="95-47">Countertops</option>
+<option value="95-50">Decks, patios porches</option>
+<option value="95-93">Demolition</option>
+<option value="95-55">Disaster-Related Services</option>
+<option value="95-56">Doors</option>
+<option value="95-57">Drywall/Plaster</option>
+<option value="95-60">Electrical</option>
+<option value="95-65">Excavation</option>
+<option value="95-70">Extermination</option>
+<option value="95-75">Fencing</option>
+<option value="95-80">Flooring Installation (Non-Carpet)</option>
+<option value="95-82">Gutters &amp; Downspouts</option>
+<option value="95-85">Handyman Services</option>
+<option value="95">Home Improvement</option>
+<option value="95-90">Home Improvement - General</option>
+<option value="95-95">HVAC</option>
+<option value="95-100">Insulation</option>
+<option value="95-105">Interior Decorators</option>
+<option value="95-110">Landscaping &amp; Hardscaping</option>
+<option value="95-115">Lawn &amp; Garden Services</option>
+<option value="95-120">Locksmith</option>
+<option value="95-125">Masonry - Brick or Stone</option>
+<option value="95-130">Painting &amp; Staining</option>
+<option value="95-135">Paving - Asphalt (Non-Concrete)</option>
+<option value="95-140">Plumbing</option>
+<option value="95-145">Pressure Washing</option>
+<option value="95-150">Radon &amp; Carbon Monixide Services</option>
+<option value="95-155">Remediation &amp; Restoration Services</option>
+<option value="95-157">Remodeling &amp; Renovation</option>
+<option value="95-160">Roofing</option>
+<option value="95-165">Security &amp; Fire Alarm Systems</option>
+<option value="95-167">Sewage/Septic Systems</option>
+<option value="95-170">Siding</option>
+<option value="95-172">Stucco</option>
+<option value="95-175">Swimming Pools - Above Ground</option>
+<option value="95-180">Swimmng Pools - In-Ground</option>
+<option value="95-185">Third Party Referral/Approval Services</option>
+<option value="95-190">Tree services</option>
+<option value="95-197">Water Conditioning</option>
+<option value="95-195">Waterproofing</option>
+<option value="95-200">Windows &amp; Glazing</option>
+</select>
+                <p style="font-size: 12px;">
+                    <span class="text-red-bold fst-italic">Since the 'Type of Work' field is new, there is limited data for most of existing contractors. Therefore, specific results may not be available at this time.</span>
+                </p>
+            </div>
+            <div class="d-grid gap-2">
+                <div id="frmValidationPlaceholder" class="alert-placeholder"></div>
+                <div class="btn-group w-100 d-flex" role="group" aria-label="Search Buttons">
+                    <button type="button" id="btnSearch"
+                            class="btn btn-warning btn-lg btn-block flex-grow-0 btn-trigger-search"
+                            disabled>
+                        <span class="icon-search"></span>
+                        <span class="search-btn-text">Please Verify</span>
+                    </button>
+                    <button type="button" id="btnClear"
+                            class="btn btn-warning btn-lg btn-block flex-grow-0 btn-clear-search"
+                            data-bs-toggle="tooltip"
+                            title="Clear search filters and result(s)"
+                            data-bs-placement="bottom">
+                        <span class="clear-btn-text">Clear</span>
+                    </button>
+                </div>
+                <div id="turnstileWidget"
+                     class="cf-turnstile"
+                     data-sitekey="0x4AAAAAACE8wEjCl3786N4y"
+                     data-theme="light"
+                     data-size="normal"
+                     data-callback="onTurnstileSuccess"
+                     data-error-callback="onTurnstileError"
+                     data-expired-callback="onTurnstileExpired"
+                ></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div name="cardFiltersPlaceholder" class="card mb-3">
+    <h5 class="card-header fw-bold">Search</h5>
+    <div class="card-body row g-3">
+        <div class="placeholder-glow col-12">
+            <span class="placeholder col-md-5"></span>
+            <span class="placeholder col-md-5"></span>
+        </div>
+        <div class="placeholder-glow col-12">
+            <span class="placeholder col-md-5"></span>
+            <span class="placeholder col-md-6"></span>
+        </div>
+        <div class="placeholder-glow col-12">
+            <span class="placeholder col-12"></span>
+        </div>
+        <div class="placeholder-glow col-12">
+            <span class="placeholder col-12"></span>
+        </div>
+        <div class="advanced-search-box-separator"></div>
+        <div class="placeholder-glow col-12">
+            <span class="placeholder col-12"></span>
+        </div>
+        <div class="placeholder-glow col-12">
+            <span class="placeholder col-12"></span>
+        </div>
+        <div class="placeholder-glow col-12">
+            <span class="placeholder col-md-3"></span>
+            <span class="placeholder col-md-3"></span>
+            <span class="placeholder col-md-3"></span>
+        </div>
+        <div class="placeholder-glow col-12">
+            <span class="placeholder col-md-3"></span>
+            <span class="placeholder col-md-3"></span>
+            <span class="placeholder col-md-3"></span>
+        </div>
+        <div class="placeholder-glow col-12">
+            <span class="placeholder col-md-5"></span>
+            <span class="placeholder col-md-5"></span>
+        </div>
+        <div class="placeholder-glow col-12">
+            <span class="placeholder col-md-5"></span>
+            <span class="placeholder col-md-6"></span>
+        </div>
+        <div name="btnGreenPlaceholder" class="d-grid gap-2">
+            <a href="#" tabindex="-1" class="btn btn-success disabled placeholder col-12"></a>
+        </div>
+    </div>
+</div>
+    </div>
+    <!--/.card-->
+    <div class="right-side">
+        <div class="card mb-3" id="searchInformationCard">
+   <h5 class="card-header bg-secondary important-info fw-bold">
+      <a data-bs-toggle="collapse" href="#important-info" aria-expanded="true" aria-controls="important-info" id="important-heading-info" class="d-block">
+      Important
+      <span class="icon-chevron-down pull-right"></span>
+      </a>
+   </h5>
+   <div id="important-info" class="collapse show" aria-labelledby="important-heading-info">
+      <div class="card-body">
+         <p style="font-size: 1.2em;">
+            <span class="text-red-bold fst-italic">Registration under HICPA is not an endorsement, recommendation, or approval by the Office of Attorney General.</span>
+         </p>
+         <p class="card-text">
+             <strong>
+             Please Note:
+             </strong>
+             Our search function has multiple features. Please read the instructions carefully.
+             <p>
+                 <ul>
+                    <li>
+                       If you have the contractor’s <strong>"Registration Number"</strong>, fill in that field. This may provide an exact result.
+                    </li>
+                    <li>
+                       If you combine multiple filters, it may provide more specific results.
+                    </li>
+                    <li>
+                       Search results will only display active registrations. The results obtained can be downloaded in <strong>".xlsx"</strong> (Excel) format (<span class="icon-document-file-xlsx green-color"></span>).
+                    </li>
+
+
+                 </ul>
+             </p>
+             <p>
+                If you experience difficulties related to the search function or have additional questions, please call our Helpline at <a href="tel:18885206680">1 (888) 520-6680</a> or email us at <a class="text-bold" href="mailto:hic@attorneygeneral.gov">hic@attorneygeneral.gov</a>.
+             </p>
+             <p style="font-size: 1.2em;">
+                <span class="text-red-bold fst-italic">The displayed results are based on information provided by the contractor on their registration form pursuant to the requirements of the Home Improvement Consumer Protection Act (HICPA).</span>
+             </p>
+         </p>
+      </div>
+   </div>
+</div>
+    </div>
+    <!--/.card-->
+</div>
+<div class="results-content">
+    
+
+<div class="card mb-3" id="searchResultsCard">
+    <h5 class="card-header fw-bold">
+        Results
+        <span class="download-result-excel pull-right">
+            <span class="download-result-as">Download as </span>
+            <span id="btnDownloadResultsXls"
+                  data-bs-toggle="tooltip"
+                  title="Download as Excel (.xlsx)"
+                  data-bs-placement="left"
+                  class="icon-document-file-xlsx download-result-icon-as">
+            </span>
+        </span>
+    </h5>
+    <div class="card-body result-container">
+        <p class="card-text">
+            <div class="e-bigger">
+                <div id="grdSearchResults">
+                    
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </p>
+    </div>
+</div>
+<!--/.card-->
+
+
+<script id="btnDownloadRedactedInfo" type="text/x-template">
+    <button type="button" name="${businessId}" data-businessid="${businessId}" onclick=GetReport('${registrationNumber}') class="btn btn-outline-danger btn-download-as-pdf" data-bs-toggle="tooltip" title="Download as PDF (.pdf)" data-bs-placement="left">
+        <span name="${businessId}" data-businessid="${businessId}" 
+              class="icon-document-file-pdf download-result-icon-as">
+        </span>
+    </button>   
+</script>
+<div id="please-wait" class="modal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Generating Report</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="height:60px;">
+                    <div class="waitSpinner"></div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-8">
+                        <label id="lblWaitMessage" class="text-primary control-label">Generating Report...</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-template" id="detailedResultTemplate">
+    <div class="detailed-business-info-container">
+        <div class="detailed-business-info-content">
+            <div class="detailed-business-info-content-1 row g-3">
+                <div class="col-md-12 row">
+                    <div class="col-md-1 detailed-business-info-header">
+                        <span class="icon-info-circle"></span>
+                    </div>
+                    <div class="col-md-11">
+                        <div class="row">
+                            <span>
+                                <strong>Business Name:</strong> ${businessName}
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span>
+                                <strong>Registration Number:</strong> ${registrationNumber}
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span>
+                                <strong>Expiration Date:</strong> <span>${expirationDateClean}</span>
+                            </span>
+                        </div>
+                        ${if(businessTypeOfWorkSet != null)}
+                        <div class="row">
+                            <span>
+                                <strong>Type of Work:</strong> ${businessTypeOfWorkSet}
+                            </span>
+                        </div>
+                        ${/if}
+                    </div>
+                </div>
+                <div class="detailed-business-info-content-divider"></div>
+                <div class="col-md-12 row">
+                    <div class="col-md-1 detailed-business-info-header">
+                        <span class="icon-address-book"></span>
+                    </div>
+                    <div class="col-md-11">
+                        <div class="row">
+                            <span>
+                                <strong>Phone:</strong> <a>${phone}</a>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span>
+                                <strong>Address 1:</strong> ${address}
+                            </span>
+                        </div>
+                        ${if(address2 != null)}
+                        <div class="row">
+                            <span>
+                                <strong>Address 2:</strong> ${address2}
+                            </span>
+                        </div>
+                        ${/if}
+                        ${if(address3 != null)}
+                        <div class="row">
+                            <span>
+                                <strong>Address 3:</strong> ${address3}
+                            </span>
+                        </div>
+                        ${/if}
+                        <div class="row">
+                            <span>
+                                <strong>City:</strong> ${city}
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span>
+                                <strong>State:</strong> ${stateCode}
+                            </span>
+                        </div>
+                        <div class="row">
+                            <span>
+                                <strong>Zip:</strong> ${zip}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="emptyResultTemplate" type="text/x-template">
+    <div class='empty-result-template'>
+        <span class="icon-search_off e-emptyRecord" alt="No record(s)"></span>
+        <span>There is no data available to display at the moment.</span>
+    </div>
+</script>
+</div>
+<script type="text/javascript">
+    var url = encodeURI('/Search/Search');
+    var customAdaptor = new ej.data.CustomDataAdaptor({
+        getData: function (option) {
+             //console.log('here');
+            // console.log(option);
+            var filters = loadFiltersAndValidate();
+            let filtersObject = convertFiltersToObject(filters);
+            var query = JSON.parse(option.data);
+            //console.log(document.getElementsByName('cf-turnstile-response'));
+            var token = document.getElementsByName('cf-turnstile-response')[0]?.value;
+            // console.log(filtersObject);
+            // console.log(query);
+            filtersObject.Skip = query.skip;
+            filtersObject.Take = query.take;
+            filtersObject.Token = token;
+            var model = filtersObject;
+            //console.log(model);
+            //console.log(token);
+            var ajax = new ej.base.Ajax({
+                url: url,
+                data: JSON.stringify(model),
+                type: 'POST',
+                contentType: 'application/json'
+            });
+            ajax.send();
+            ajax.onSuccess = function (data) {
+                var parsedData = JSON.parse(data);
+                option.onSuccess(parsedData, ajax);
+            };
+        }
+
+    });
+    function toolbarClick(args) {
+        var grid = document.getElementById("grdSearchResults").ej2_instances[0];
+        if (args.item.id === "grid_excelexport") {
+            var queryClone = grid.query;
+            grid.query = new ej.data.Query().addParams("Skip", "0").addParams("Take", "1000");
+            document.getElementById("message").innerText = 'Key: ' + grid.query.params[0].key + ' and Value: ' + grid.query.params[0].value + ' on ' + args.item.text;
+            grid.excelExport();
+        }
+    }
+
+    function excelExportComplete(args) {
+        var grid = document.getElementById("grdSearchResults").ej2_instances[0];
+        grid.query = new ej.data.Query();
+    }
+    function load(args) {
+        var grid = document.getElementById('grdSearchResults').ej2_instances[0];
+        // console.log(grid);
+        // console.log('load');
+        //grid.dataSource.adaptor = customAdaptor;
+        //grid.refresh();
+    }
+    
+</script>
+
+        </div>
+    </div>
+    <div b-o9vxoorz3w class="footer-content">
+        <div b-o9vxoorz3w class="footer-top-content">
+            <div b-o9vxoorz3w class="footer-info-left">
+                <span b-o9vxoorz3w class="footer-info-icon icon-info"></span>
+                The content of this site is the property of the Pennsylvania Office of Attorney General. Reuse of this content requires permission of the Press Office.
+            </div>
+            <div b-o9vxoorz3w class="footer-info-right">
+                <span b-o9vxoorz3w class="footer-contact-icon icon-phone"></span>
+                <p b-o9vxoorz3w>
+                    Pennsylvania Office of Attorney General<br b-o9vxoorz3w>
+                    Strawberry Square<br b-o9vxoorz3w>
+                    Harrisburg, PA 17120<br b-o9vxoorz3w>
+                    <a b-o9vxoorz3w class="footer-phone-link" href="tel:18885206680">1 (888) 520-6680</a>
+                </p>
+            </div>
+            <div b-o9vxoorz3w class="footer-top-content-spacer"></div>
+        </div>
+        <div b-o9vxoorz3w class="footer-bottom-content">
+            <div b-o9vxoorz3w>
+                <p b-o9vxoorz3w>Copyright © 2026, All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+   
+    
+    <script type="text/javascript" src="/lib/webtour/webtour.min.js?v=JeP7znDjCXvNk3B5SswwlFAchQ-On0QuSdDNhTPFDjs"></script>
+    <script type="text/javascript" src="/js/help.js?v=hzFTG-vAdPwhOfRIruxZ3ly-QPWPxPTI8a0w5w3hZMY"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+    
+    
+    <script type="text/javascript"> 
+
+        $(document).ready(function () {
+            urls.getSearchResults = '/Search/Search';
+            urls.showReport = '/Report/ShowReport';
+            urls.extractReport = '/Report/ExtractReport';
+        });
+    </script>
+    <script type="text/javascript" src="/js/common.js?v=oZmuGMEog4DWrm1E1Kq1UY91T_zx9WIL4o8aGZq6oIM"></script>
+    <script type="text/javascript" src="/js/export.js?v=rJcqSK3mzeF69sDaiWwG0GE_NKXe-chjY99gb7XIlxM"></script>
+
+    <div b-o9vxoorz3w id="webtourOverlay" class="modal-backdrop fade show wt-overlay-custom"></div>
+    
+
+    <svg b-o9vxoorz3w xmlns="http://www.w3.org/2000/svg" class="d-none">
+      <symbol b-o9vxoorz3w id="check-circle-fill" viewBox="0 0 16 16">
+        <path b-o9vxoorz3w d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+      </symbol>
+      <symbol b-o9vxoorz3w id="info-fill" viewBox="0 0 16 16">
+        <path b-o9vxoorz3w d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+      </symbol>
+      <symbol b-o9vxoorz3w id="exclamation-triangle-fill" viewBox="0 0 16 16">
+        <path b-o9vxoorz3w d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+      </symbol>
+    </svg>
+    <script>window.syncfusion={isLicValidated:true};new ejs.grids.Grid({
+  "allowExcelExport": true,
+  "allowPaging": true,
+  "allowSorting": true,
+  "columns": [
+    {
+      "field": "recordId",
+      "headerText": "#",
+      "type": "number",
+      "visible": false
+    },
+    {
+      "field": "businessId",
+      "isPrimaryKey": true,
+      "visible": false
+    },
+    {
+      "field": "businessName",
+      "headerText": "Business",
+      "width": "23%"
+    },
+    {
+      "field": "registrationNumber",
+      "headerText": "Registration No.",
+      "width": "11%"
+    },
+    {
+      "field": "expirationDateClean",
+      "format": "MM/dd/yyyy",
+      "headerText": "Expiration",
+      "type": "date",
+      "width": "10%"
+    },
+    {
+      "field": "address",
+      "headerText": "Address",
+      "width": "15%"
+    },
+    {
+      "field": "address2",
+      "visible": false
+    },
+    {
+      "field": "address3",
+      "visible": false
+    },
+    {
+      "field": "city",
+      "headerText": "City",
+      "width": "9%"
+    },
+    {
+      "field": "stateName",
+      "visible": false
+    },
+    {
+      "field": "stateCode",
+      "headerText": "State",
+      "width": "9%"
+    },
+    {
+      "field": "zip",
+      "headerText": "Zip",
+      "width": "9%"
+    },
+    {
+      "field": "phone",
+      "headerText": "Phone",
+      "width": "9%"
+    },
+    {
+      "field": "phoneClean",
+      "visible": false
+    },
+    {
+      "field": "businessTypeOfWorkSet",
+      "visible": false
+    }
+  ],
+  "dataSource": new ejs.data.DataManager({
+  "url": "/Search/UrlAdaptorSearch",
+  "adaptor": new ejs.data.UrlAdaptor()
+}),
+  "emptyRecordTemplate": "#emptyResultTemplate",
+  "enableAdaptiveUI": true,
+  "enableHover": false,
+  "frozenColumns": 0.0,
+  "frozenRows": 0.0,
+  "height": "400",
+  "infiniteScrollSettings": {
+    "initialBlocks": 3.0,
+    "maxBlocks": 3.0
+  },
+  "loadingIndicator": {},
+  "pageSettings": {
+    "currentPage": 1.0,
+    "pageCount": 8.0,
+    "pageSize": 25.0
+  },
+  "selectedRowIndex": -1.0,
+  "width": "100%",
+  "load": load
+}).appendTo("#grdSearchResults"); 
+</script>
+</body>
+</html>
