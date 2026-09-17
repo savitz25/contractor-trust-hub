@@ -63,8 +63,7 @@ import { ManageProfileCta } from "@/components/contractor/ManageProfileCta";
 import { MyTrustHubSave } from "@/components/contractor/MyTrustHubSave";
 import { eligibleClaimProfile } from "@/lib/claim/eligibility";
 import { claimCtaEnabledFor } from "@/lib/claim/server";
-import { getPublicBusinessProfile } from "@/lib/business-profile/server";
-import { getPublicBusinessReplies } from "@/lib/business-replies/server";
+import { getPublicContractorState } from "@/lib/business-profile/server";
 import { BusinessResponses } from "@/components/contractor/BusinessResponses";
 import { BusinessSuppliedProfile } from "@/components/contractor/BusinessSuppliedProfile";
 
@@ -200,12 +199,9 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const showClaimCta = customerRolloutEnabled;
   // Publication is governed by Ask's active-authority projection. Claim-intake
   // rollout only controls whether a new claim CTA is offered.
-  const [businessProfile, businessReplies] = claimProfile
-    ? await Promise.all([
-        getPublicBusinessProfile(claimProfile.id),
-        getPublicBusinessReplies(claimProfile.id),
-      ])
-    : [null, null];
+  const publicState = claimProfile ? await getPublicContractorState(claimProfile.id) : null;
+  const businessProfile = publicState?.profile ?? null;
+  const businessReplies = publicState?.replies ?? null;
 
   // FL only: officer-name lineage from stored Sunbiz officers (no invented links)
   const entityLineage =
