@@ -228,6 +228,21 @@ export const GEO_ONTOLOGY: Array<{
     intelligence: "state_intelligence",
   },
   {
+    id: "nc",
+    label: "North Carolina",
+    phrases: [
+      "north carolina",
+      "in north carolina",
+      "nc statewide",
+      "nclbgc",
+      "charlotte",
+      "raleigh",
+    ],
+    href: "/north-carolina",
+    kind: "state",
+    intelligence: "state_intelligence",
+  },
+  {
     id: "broward",
     label: "Broward County, Florida",
     phrases: ["broward", "broward county", "fort lauderdale", "deerfield beach"],

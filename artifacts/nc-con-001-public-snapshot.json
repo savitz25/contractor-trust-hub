@@ -1,0 +1,238 @@
+{
+  "version": "contractor-nc-state-intel-v1",
+  "ticket": "NC-CON-001",
+  "publicationPath": "/north-carolina",
+  "canonical": "https://www.contractortrusthub.com/north-carolina",
+  "generatedAt": "2026-09-17T18:26:21Z",
+  "snapshotAsOf": "2026-09-17",
+  "hero": {
+    "universe_label": "Current NCLBGC general-contractor census",
+    "universe_value": null,
+    "universe_hint": "OPEN_SEARCH_ONLY. Not 38,523 mixed records. Search-only is not zero.",
+    "discipline_label": "Licensed case-summary licenses in recent Board PDFs",
+    "discipline_value": 49,
+    "unlicensed_label": "Unlicensed injunction cases in Spring 2026 PDF",
+    "unlicensed_value": 43,
+    "debarment_label": "NC DOA debarred-vendor rows",
+    "debarment_value": 236
+  },
+  "clocks": {
+    "nclbgc_sourceAsOf": null,
+    "nclbgc_sourceAsOf_reason": "Public portal is search-only; mailing-list is paid. No bulk current census.",
+    "nclbgc_limitation_source": "NCLBGC classifications-and-limitations / GS 87-10(a1) / 2026 Laws book",
+    "nclbgc_limitation_as_of": "2026-01",
+    "licensed_summaries_periods": [
+      "2025-10/2025-12",
+      "2026-01/2026-03"
+    ],
+    "unlicensed_summaries_period": "2026-01/2026-03",
+    "discipline_profile_coverage": "complaints filed 2022 or later that resulted in discipline",
+    "phfs_attorney_page_retrievedAt": "2026-09-17T17:30:00Z",
+    "doa_debarment_sourceAsOf": "2021-06-01",
+    "doa_debarment_revision_note": "Official page: files last revised 6/1/2021; no changes since.",
+    "retrievedAt": "2026-09-17T17:30:00Z",
+    "snapshotAsOf": "2026-09-17",
+    "generatedAt": "2026-09-17T18:26:21Z",
+    "retrievedAt_is_not_sourceAsOf": true,
+    "april_2026_38523_is_not_current_snapshot": true
+  },
+  "nclbgc": {
+    "NC_NCLBGC_ROSTER_STATUS": "OPEN_SEARCH_ONLY",
+    "NC_NCLBGC_ROWS": null,
+    "NC_NCLBGC_DISTINCT_LICENSE_NUMBERS": null,
+    "NC_NCLBGC_ACTIVE_ROWS": null,
+    "NC_NCLBGC_INACTIVE_ROWS": null,
+    "NC_NCLBGC_INVALID_ROWS": null,
+    "NC_NCLBGC_STATUS_UNKNOWN_ROWS": null,
+    "NC_BUILDING_CLASS_LICENSES": null,
+    "NC_RESIDENTIAL_CLASS_LICENSES": null,
+    "NC_HIGHWAY_CLASS_LICENSES": null,
+    "NC_PUBLIC_UTILITIES_CLASS_LICENSES": null,
+    "NC_SPECIALTY_CLASS_LICENSES": null,
+    "NC_LIMITED_LICENSES": null,
+    "NC_INTERMEDIATE_LICENSES": null,
+    "NC_UNLIMITED_LICENSES": null,
+    "NC_QUALIFIER_RELATIONSHIPS": null,
+    "search_only_is_not_zero": true,
+    "mixed_38523_is_not_active_census": true,
+    "threshold_usd": 40000,
+    "threshold_is_not_every_job": true,
+    "licensee_ne_qualifier": true,
+    "classification_ne_limitation": true,
+    "limitation_ne_quality": true,
+    "building_may_include_specialty_work": true,
+    "roofing_not_only_s_roofing": true,
+    "namespace": "NC-NCLBGC:{license_number}",
+    "search_url": "https://portal.nclbgc.org/Public/Search",
+    "mailing_list_fee_usd": 25,
+    "do_not_purchase": true
+  },
+  "limitations": {
+    "Limited": {
+      "single_project_ceiling_usd": 750000,
+      "quality": false
+    },
+    "Intermediate": {
+      "single_project_ceiling_usd": 1500000,
+      "quality": false
+    },
+    "Unlimited": {
+      "single_project_ceiling_usd": null,
+      "unrestricted": true,
+      "quality": false
+    },
+    "unlimited_is_not_best": true
+  },
+  "classifications": {
+    "core": [
+      "Building Contractor",
+      "Residential Contractor",
+      "Highway Contractor",
+      "Public Utilities Contractor",
+      "Specialty Contractor"
+    ],
+    "unclassified_includes_all_core": true,
+    "specialty_includes_s_roofing": true,
+    "do_not_invent_single_trade_field": true
+  },
+  "discipline": {
+    "profile_linked_coverage": "2022_OR_LATER_COMPLAINTS_THAT_RESULTED_IN_DISCIPLINE",
+    "NC_NCLBGC_DISCIPLINE_PROFILES_WITH_LINKS": null,
+    "NC_NCLBGC_DISCIPLINARY_DOCUMENTS": null,
+    "NC_NCLBGC_UNIQUE_DISCIPLINARY_MATTERS": null,
+    "profile_endpoint_observed": true,
+    "no_link_ne_clean_history": true,
+    "complaint_ne_discipline": true,
+    "consent_order_ne_criminal_conviction": true,
+    "final_decision_ne_complaint_filing": true,
+    "example_license": "L.53462",
+    "example_documents": 2
+  },
+  "licensed_summaries": {
+    "coverage": "PARTIAL_RECENT_PERIODS",
+    "NC_NCLBGC_LICENSED_CASE_SUMMARY_ROWS": 49,
+    "grain": "distinct L. license numbers in Oct-Dec 2025 and Jan-Mar 2026 Board PDFs",
+    "not_complete_2022_2026_census": true
+  },
+  "unlicensed": {
+    "coverage": "PARTIAL_SPRING_2026_PDF",
+    "NC_NCLBGC_UNLICENSED_ORDER_ROWS": 43,
+    "NC_NCLBGC_UNLICENSED_UNIQUE_CASES": 43,
+    "unlicensed_ne_licensee": true,
+    "name_only": "UNSAFE"
+  },
+  "recovery_fund": {
+    "NC_RECOVERY_FUND_PUBLIC_RECORD_STATUS": "CONTEXT_ONLY",
+    "NC_RECOVERY_FUND_ROWS": null,
+    "hearing_ne_adverse_finding": true,
+    "claim_ne_award": true
+  },
+  "electrical": {
+    "NC_ELECTRICAL_ROSTER_STATUS": "OPEN_SEARCH_ONLY",
+    "NC_ELECTRICAL_ROWS": null,
+    "NC_ELECTRICAL_DISTINCT_LICENSE_IDS": null,
+    "NC_ELECTRICAL_BUSINESS_ROWS": null,
+    "NC_ELECTRICAL_PERSON_ROWS": null,
+    "NC_ELECTRICAL_DISCIPLINARY_ROWS": null,
+    "search_url": "https://arls-public.ncbeec.org/public/search",
+    "paid_listing_fee_usd": 50,
+    "person_ne_business": true,
+    "search_only_is_not_zero": true
+  },
+  "phfs": {
+    "NC_PHFS_ROSTER_STATUS": "OPEN_SEARCH_ONLY",
+    "NC_PHFS_ROWS": null,
+    "NC_PHFS_DISTINCT_LICENSE_IDS": null,
+    "NC_PHFS_CONTRACTOR_ROWS": null,
+    "NC_PHFS_TECHNICIAN_ROWS": null,
+    "search_url": "https://public.nclicensing.org/Public/Search",
+    "contractor_ne_technician": true,
+    "plumbing_ne_heating": true,
+    "fuel_piping_ne_fire_sprinkler": true,
+    "search_only_is_not_zero": true
+  },
+  "phfs_attorney": {
+    "coverage": "PARTIAL_CURRENT_BOARD_PAGE",
+    "NC_PHFS_ATTORNEY_REPORT_ROWS": 91,
+    "NC_PHFS_UNIQUE_REGULATORY_MATTERS": 91,
+    "source_url": "https://nclicensing.org/attorneys-report/",
+    "licensed_ne_unlicensed": true,
+    "allegation_ne_final_finding": true,
+    "name_only": "UNSAFE"
+  },
+  "doa_debarment": {
+    "NC_DOA_DEBARRED_VENDOR_ROWS": 236,
+    "NC_DOA_DEBARRED_VENDOR_SOURCE_AS_OF": "2021-06-01",
+    "no_recent_revision_ne_currently_verified_clean": true,
+    "debarment_ne_licensing_discipline": true,
+    "vendor_ne_licensed_gc": true,
+    "name_only": "UNSAFE"
+  },
+  "ncdot": {
+    "NC_NCDOT_PREQUALIFIED_ROWS": null,
+    "status": "NOT_ACQUIRED",
+    "prequalification_ne_nclbgc_license": true,
+    "prequalification_ne_endorsement": true
+  },
+  "permits": {
+    "NC_BUILDING_PERMIT_CAPABILITY": "LOCAL_OR_FRAGMENTED",
+    "no_statewide_permit_census": true
+  },
+  "identity": {
+    "preferred": "exact NCLBGC / NCBEEC / PHFS license number",
+    "EXACT_SOURCE_NATIVE_CROSSWALKS": 0,
+    "NAME_ONLY_UNSAFE": 0,
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "REVIEW_REQUIRED": 0
+  },
+  "adverse_publication": {
+    "ADVERSE_SOURCES_FOUND": 5,
+    "ADVERSE_SOURCES_ACQUIRED": 4,
+    "ADVERSE_ROWS_ACQUIRED": null,
+    "UNIQUE_REGULATORY_MATTERS": null,
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "REVIEW_REQUIRED": 0,
+    "UNRESOLVED": null,
+    "INTERNAL_ONLY": 0,
+    "PUBLICATION_PENDING": 0,
+    "PUBLIC_READY_PROFILES": 0,
+    "PUBLICLY_RENDERED_PROFILES": 0,
+    "BUSINESS_RESPONSE_READY": false,
+    "SEARCH_SUPPORTED": true,
+    "do_not_add_grains": true
+  },
+  "expansion_ledger": {
+    "NET_NEW_STATE_RESEARCH_IDENTITIES": 0,
+    "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
+    "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
+    "EXISTING_ORGANIZATIONS_ENRICHED": 0,
+    "GRAPH_WRITES": 0,
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "CLAIM_ELIGIBILITY_BROADENED": false
+  },
+  "gate": {
+    "live_cohort_not_inflated": true
+  },
+  "no_local_north_carolina_routes": true,
+  "no_ranking": true,
+  "no_trust_score": true,
+  "local_work_needed_now": "NO",
+  "semantic_guardrails": [
+    "$40,000 threshold != every job requires NCLBGC license",
+    "38,523 mixed records != active contractors",
+    "licensee != qualifier",
+    "classification != limitation",
+    "Unlimited != best",
+    "Building/Residential may encompass roofing; S(Roofing) is not the only roofing path",
+    "electrical board != NCLBGC",
+    "PHFS board != NCLBGC",
+    "complaint != discipline",
+    "unlicensed injunction != licensed discipline",
+    "DOA debarment != contractor license",
+    "search-only != zero",
+    "NO TRUST SCORE",
+    "NO COMBINED NORTH CAROLINA CONTRACTORS TOTAL",
+    "NO CHARLOTTE OR RALEIGH ROUTES"
+  ],
+  "fingerprint": "17bd03c18651bcb88ba52d54aeba3297d5ced19ae29190159c833d01774eb297"
+}
