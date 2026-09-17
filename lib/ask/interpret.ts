@@ -23,6 +23,7 @@ import { interpretNycDob } from "./nyc-dob";
 import { interpretNycAcris } from "./nyc-acris";
 import { interpretIllinoisRoofing } from "./illinois-roofing";
 import { interpretOregonCcb } from "./oregon-ccb";
+import { interpretPennsylvaniaHic } from "./pennsylvania-hic";
 
 const EMPTY_INTERPRET: AskInterpretation = {
   identifier: null,
@@ -115,6 +116,8 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
 
   const orEarly = interpretOregonCcb(query, text);
   if (orEarly) return orEarly;
+  const paEarly = interpretPennsylvaniaHic(query, text);
+  if (paEarly) return paEarly;
 
   const recovery = interpretRecovery(query);
   if (recovery) return { version: ASK_CONTRACT_VERSION, query, mode: "guidance", supported: true, interpretation: {...interpretation, location: recovery.locationLabel, trade: recovery.requestedTrade ?? "Not specified", entityType: recovery.requestedTask}, recovery, href: recovery.actions[0]?.destination ?? null, count: null, aggregate: null, comparison: null, failMessage: null, changeHints: [] };

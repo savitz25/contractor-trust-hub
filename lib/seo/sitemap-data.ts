@@ -136,6 +136,7 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/new-york", priority: 0.9, changefreq: "weekly" },
     { path: "/new-york/new-york-city", priority: 0.84, changefreq: "weekly" },
     { path: "/illinois", priority: 0.9, changefreq: "weekly" },
+    { path: "/pennsylvania", priority: 0.9, changefreq: "weekly" },
     { path: "/about", priority: 0.75, changefreq: "weekly" },
     { path: "/methodology", priority: 0.75, changefreq: "weekly" },
     { path: "/independence", priority: 0.7, changefreq: "monthly" },

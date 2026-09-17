@@ -39,6 +39,9 @@ artifacts/tx-con-001/business-identity-index.json
 # VA-CON-001A full DPOR identity index (rebuild from raw; do not commit)
 data/virginia/va-con-001/identity-index.json
 
+# Local source probes (not frozen artifacts)
+data/pennsylvania/_probe/
+
 # NY-CON-001 probe HTML — parsed snapshot + CSV checksum are committed
 artifacts/ny-con-001/*.html
 artifacts/ny-con-001/socrata-meta.json

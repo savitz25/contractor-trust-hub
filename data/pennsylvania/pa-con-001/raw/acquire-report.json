@@ -1,0 +1,61 @@
+{
+  "ticket": "PA-CON-001",
+  "retrievedAt": "2026-09-17T13:04:02Z",
+  "hicpa_bulk": {
+    "status": "OPEN_SEARCH_ONLY",
+    "reason": "Official HIC search requires Cloudflare Turnstile before Search/Excel export. Statewide enumeration would require CAPTCHA circumvention.",
+    "search_url": "https://hicsearch.attorneygeneral.gov/",
+    "active_only": true,
+    "xlsx_export": "results of a completed search, not a public bulk census"
+  },
+  "files": {
+    "asbcontr.htm": {
+      "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/dli/documents/individuals/labor-management-relations/bois/documents/asbcontr.htm",
+      "path": "data/pennsylvania/pa-con-001/raw/asbcontr.htm",
+      "bytes": 55551,
+      "sha256": "58808b7f8a3aa6bffc17168ca2e3cb279bd74ae0e44d6132d3ecdd3426989e44"
+    },
+    "asbcert.htm": {
+      "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/dli/documents/individuals/labor-management-relations/bois/documents/asbcert.htm",
+      "path": "data/pennsylvania/pa-con-001/raw/asbcert.htm",
+      "bytes": 797862,
+      "sha256": "70490977054f9fcd5ef743746627fd506bcf17540e25a28c5978de702420def1"
+    },
+    "ledcontr.htm": {
+      "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/dli/documents/individuals/labor-management-relations/bois/documents/ledcontr.htm",
+      "path": "data/pennsylvania/pa-con-001/raw/ledcontr.htm",
+      "bytes": 30182,
+      "sha256": "34c775d8f5e2fa1c3c4b1693e1d2e8906b661933f95a849b3372f4d09dc9eb52"
+    },
+    "ledcert.htm": {
+      "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/dli/documents/individuals/labor-management-relations/bois/documents/ledcert.htm",
+      "path": "data/pennsylvania/pa-con-001/raw/ledcert.htm",
+      "bytes": 143884,
+      "sha256": "17c449bedd704d1909577f6671d95e670f1ae739f3155b84449dc74a5f759f21"
+    },
+    "debarments.html": {
+      "url": "https://www.pa.gov/agencies/dli/resources/compliance-laws-and-regulations/labor-management-relations/labor-law/prevailing-wage/debarments-and-settlements",
+      "path": "data/pennsylvania/pa-con-001/raw/debarments.html",
+      "bytes": 215775,
+      "sha256": "2bbe566453ad2537846228130380fc5a32ee2cbfb0bde5528b4f4e550160d62f"
+    },
+    "contractor-licensing.html": {
+      "url": "https://www.pa.gov/agencies/dli/programs-services/labor-management-relations/bureau-of-occupational-and-industrial-safety/uniform-construction-code-home/contractor-licensing",
+      "path": "data/pennsylvania/pa-con-001/raw/contractor-licensing.html",
+      "bytes": 217983,
+      "sha256": "db13fb49b7016fc2dbad688134dc751473cd87adae2db5a3548110f76a8aed9b"
+    },
+    "hicpa-registration.html": {
+      "url": "https://www.attorneygeneral.gov/businesses-and-organizations/home-improvement-contractor-registration/",
+      "path": "data/pennsylvania/pa-con-001/raw/hicpa-registration.html",
+      "bytes": 131796,
+      "sha256": "95a0c590c5cfd24484e16c663e610dc4613e16ec00eedba2fae5e89db3fe4bed"
+    },
+    "hicsearch.html": {
+      "url": "https://hicsearch.attorneygeneral.gov/",
+      "path": "data/pennsylvania/pa-con-001/raw/hicsearch.html",
+      "bytes": 38016,
+      "sha256": "346cb0ace5a7c684d20869e7c24d56f2e60353f85430e1b6ada79d2935d85836"
+    }
+  }
+}
