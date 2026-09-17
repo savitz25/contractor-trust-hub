@@ -45,7 +45,10 @@ export function researchRoute(
 ) {
   if (interpretRecovery(query)) return "/ask" as const;
   if (
-    /\b(?:new york|illinois|NY|IL)\b/i.test(query) ||
+    /\b(?:new york|illinois|oregon|pennsylvania|philadelphia|pittsburgh|hicpa|pa hic|NY|IL)\b/i.test(
+      query,
+    ) ||
+    /\bPA\s*#?\s*\d{5,10}\b/.test(query) ||
     /\bcompar(?:e|ison)\b/i.test(query)
   )
     return "/ask" as const;

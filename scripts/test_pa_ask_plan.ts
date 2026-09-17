@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { interpretAskQuery } from "../lib/ask/interpret";
+import { researchRoute } from "../lib/ask/request";
 import { loadContractorHubIntel } from "../lib/home/load-intel-v2";
+import { planContractorSearch } from "../lib/search/contractor-discovery";
 import { PENNSYLVANIA_SNAPSHOT } from "../lib/pennsylvania-intelligence/snapshot";
 
 const intel = loadContractorHubIntel();
@@ -75,6 +77,20 @@ test("Palm Beach is not captured as Pennsylvania", () => {
   const r = ask("Show me active roofing contractors in Palm Beach County.");
   assert.notEqual(r.href, "/pennsylvania");
   assert.doesNotMatch(r.failMessage || "", /HICPA/i);
+});
+
+test("Pennsylvania questions stay on /ask instead of multi-state /search", () => {
+  for (const q of [
+    "licensed contractor Pennsylvania",
+    "PA HIC 123456",
+    "PA1234567",
+    "contractor Philadelphia",
+    "electrician Pennsylvania",
+    "asbestos contractor Pennsylvania",
+  ]) {
+    const discovery = planContractorSearch(q);
+    assert.equal(researchRoute(q, discovery), "/ask", q);
+  }
 });
 
 test("ranking fails closed and HICPA snapshot counts stay null", () => {
