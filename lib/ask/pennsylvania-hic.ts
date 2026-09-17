@@ -53,16 +53,23 @@ export function hasPennsylvaniaIntent(text: string): boolean {
   );
 }
 
-function parsePaHicNumber(query: string): string | null {
-  const labeled = query.match(/\b(?:pa\s*)?(?:hic(?:pa)?|registration(?:\s+number)?)\s*#?\s*(?:pa)?\s*(\d{5,10})\b/i);
-  if (labeled) return `PA${labeled[1]}`;
-  const pa = query.match(/\bPA\s*#?\s*(\d{5,10})\b/i);
-  if (pa) return `PA${pa[1]}`;
+function parsePaHicNumber(query: string, text: string): string | null {
+  const paPrefixed = query.match(/\bPA\s*#?\s*(\d{5,10})\b/i);
+  if (paPrefixed) return `PA${paPrefixed[1]}`;
+  const labeled = query.match(
+    /\b(?:hic(?:pa)?|registration(?:\s+number)?)\s*#?\s*(?:pa)?\s*(\d{5,10})\b/i,
+  );
+  if (
+    labeled &&
+    (hasPennsylvaniaIntent(text) || /\bpa\b/i.test(query) || /\bhicpa\b/i.test(query))
+  ) {
+    return `PA${labeled[1]}`;
+  }
   return null;
 }
 
 export function interpretPennsylvaniaHic(query: string, text: string): AskResult | null {
-  const hic = parsePaHicNumber(query);
+  const hic = parsePaHicNumber(query, text);
   if (!hasPennsylvaniaIntent(text) && !hic) return null;
   const interpretation: AskInterpretation = {
     ...EMPTY,

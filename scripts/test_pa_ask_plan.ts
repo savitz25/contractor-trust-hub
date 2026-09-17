@@ -28,6 +28,15 @@ test("exact PA HIC registration beats geography", () => {
   assert.doesNotMatch(r.href || "", /verify/);
 });
 
+test("bare HIC numbers are not rewritten as Pennsylvania identities", () => {
+  const nyc = ask("Check NYC HIC license 1234567");
+  assert.notEqual(nyc.href, "/pennsylvania");
+  assert.notEqual(nyc.interpretation.identifier, "PA1234567");
+  const bare = ask("registration number 1234567");
+  assert.notEqual(bare.href, "/pennsylvania");
+  assert.notEqual(bare.interpretation.identifier, "PA1234567");
+});
+
 test("asbestos and lead stay separate from HICPA", () => {
   const asb = ask("asbestos contractor Pennsylvania");
   assert.equal(asb.href, "/pennsylvania");
