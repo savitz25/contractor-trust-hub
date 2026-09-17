@@ -110,7 +110,9 @@ export function AskResults({
 
       {interpreted.failMessage || execution.blockMessage ? (
         <p className="rounded-xl border border-[var(--border)] bg-white p-4" role="status">
-          {execution.blockMessage || interpreted.failMessage}
+          {interpreted.mode === "fail_closed"
+            ? interpreted.failMessage || execution.blockMessage
+            : execution.blockMessage || interpreted.failMessage}
         </p>
       ) : null}
 
