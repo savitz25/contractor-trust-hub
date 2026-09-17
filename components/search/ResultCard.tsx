@@ -384,6 +384,7 @@ export function ResultCard({
               {result.relatedProfiles.slice(0, 6).map((rel) => (
                 <li key={`${rel.slug}-${rel.licenseKey || ""}`}>
                   <Link
+                    prefetch={false}
                     href={`/contractors/${encodeURIComponent(rel.slug)}`}
                     className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--bg)] px-2.5 py-1 text-[11px] font-medium text-[var(--navy)] no-underline hover:border-[var(--navy)]/30"
                   >

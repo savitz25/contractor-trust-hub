@@ -42,10 +42,10 @@ test("claim rollout gates only intake while exact-profile Layer C and replies re
   const page = readFileSync("app/contractors/[slug]/page.tsx", "utf8");
   assert.match(page, /const customerRolloutEnabled = Boolean\(claimProfile && claimCtaEnabledFor/);
   assert.match(page, /const showClaimCta = customerRolloutEnabled/);
-  assert.match(page, /\[businessProfile, businessReplies\] = claimProfile/);
-  assert.doesNotMatch(page, /\[businessProfile, businessReplies\] = customerRolloutEnabled/);
-  assert.match(page, /getPublicBusinessProfile\(claimProfile\.id\)/);
-  assert.match(page, /getPublicBusinessReplies\(claimProfile\.id\)/);
+  assert.match(page, /getPublicContractorState\(claimProfile\.id\)/);
+  assert.doesNotMatch(page, /customerRolloutEnabled \? await Promise\.all/);
+  assert.match(page, /publicState\?\.profile/);
+  assert.match(page, /publicState\?\.replies/);
 });
 
 test("handoff failures provide bounded safe recovery without leaking internals", () => {
