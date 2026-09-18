@@ -38,9 +38,7 @@ function closed(
 }
 
 export function hasOhioIntent(text: string): boolean {
-  const namedCity =
-    /\b(columbus|cleveland|cincinnati|toledo|akron|dayton)\b/.test(text) &&
-    /\b(contractor|ocilb|license|licensed|hvac|electrical|plumb|hydronic|refrigerat|fire)\b/.test(text);
+  const namedCity = /\b(columbus|cleveland|cincinnati|toledo|akron|dayton)\b/.test(text);
   return (
     phraseInText(text, "ohio") ||
     phraseInText(text, "ocilb") ||
@@ -60,8 +58,20 @@ export function parseOhOcilbNumber(query: string, text: string): string | null {
   );
   if (!labeled?.[2]) return null;
   if (!hasOhioIntent(text) && !/\bocilb\b/i.test(query)) return null;
-  const prefix = (labeled[1] || "EL").toUpperCase();
-  return `${prefix}.${labeled[2]}`;
+  if (labeled[1]) return `${labeled[1].toUpperCase()}.${labeled[2]}`;
+  const fromTrade = /\belectrical\b/i.test(query)
+    ? "EL"
+    : /\bhydronics\b/i.test(query)
+      ? "HY"
+      : /\bhvac\b/i.test(query)
+        ? "HV"
+        : /\bplumbing\b/i.test(query)
+          ? "PL"
+          : /\brefrigeration\b/i.test(query)
+            ? "RE"
+            : null;
+  if (!fromTrade) return null;
+  return `${fromTrade}.${labeled[2]}`;
 }
 
 export function interpretOhioOcilb(query: string, text: string): AskResult | null {
