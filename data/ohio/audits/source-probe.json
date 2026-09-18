@@ -1,0 +1,129 @@
+{
+  "retrievedAt": "2026-09-18T13:34:03.402234+00:00",
+  "results": {
+    "company_lookup": {
+      "url": "https://apps.com.ohio.gov/dico/CompanyLicenseeLookup/",
+      "error": "ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))"
+    },
+    "company_lookup_default": {
+      "url": "https://apps.com.ohio.gov/dico/CompanyLicenseeLookup/default.aspx",
+      "error": "ConnectionError(ProtocolError('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')))"
+    },
+    "license_lookup": {
+      "url": "https://elicense4.com.ohio.gov/Lookup/LicenseLookup.aspx",
+      "finalUrl": "https://elicense4.com.ohio.gov/Lookup/LicenseLookup.aspx",
+      "status": 200,
+      "ctype": "text/html; charset=utf-8",
+      "bytes": 196683,
+      "snippet": "\r <!DOCTYPE html>\r <html lang=\"en\">\r <head><meta charset=\"utf-8\" /><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" /><meta id=\"ctl00_metaviewport\" name=\"viewport\" content=\"width=device-width,initial-scale=1.0,viewport-fit=cover\" /><meta name=\"SKYPE_TOOLBAR\" content=\"SKYPE_TOOLBAR_PARSER_COMPATIBLE\" /><meta name=\"description\" /><meta name=\"author\" /><title>\r \tOCILB eLicense Center\r </title><link href=\"//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800\" rel=\"stylesheet\" type=\"text/css\" /><link href=\"../Assets/thirdparty/toastr-2.1.4/toastr.min.css?ver=20150413_Release.289.25214\" rel=\"stylesheet\" /><link href=\"../Assets/thirdparty/kendoui.2026.1.325.core/styles/default-ocean-blue-a11y.css?ver=20150413_Release.289.25214\" rel=\"stylesheet\" /><link href=\"../Assets/css/generated/"
+    },
+    "print_detail_sample": {
+      "url": "https://elicense4.com.ohio.gov/Lookup/PrintLicenseDetails.aspx?cred=25589&contact=64",
+      "finalUrl": "https://elicense4.com.ohio.gov/Lookup/PrintLicenseDetails.aspx?cred=25589&contact=64",
+      "status": 200,
+      "ctype": "text/html; charset=utf-8",
+      "bytes": 5019,
+      "snippet": "\r \r <!DOCTYPE html>\r <html lang=\"en\">\r <head><meta charset=\"utf-8\" /><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" /><link href=\"//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800\" rel=\"stylesheet\" type=\"text/css\" /><link href=\"../Assets/css/generated/kendo.min.css\" rel=\"stylesheet\" /><link href=\"../Assets/css/generated/styles.min.css\" rel=\"stylesheet\" /><title>\r \tPrint Lookup Details\r </title></head>\r <body style=\"padding: 10px;\">\r     <form name=\"form1\" method=\"post\" action=\"./PrintLicenseDetails.aspx?cred=25589&amp;contact=64\" id=\"form1\">\r <div>\r <input type=\"hidden\" name=\"__EVENTTARGET\" id=\"__EVENTTARGET\" value=\"\" />\r <input type=\"hidden\" name=\"__EVENTARGUMENT\" id=\"__EVENTARGUMENT\" value=\"\" />\r <i"
+    },
+    "ocilb_home": {
+      "url": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/boards/ohio-construction-industry-licensing-board",
+      "finalUrl": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/boards/ohio-construction-industry-licensing-board",
+      "status": 200,
+      "ctype": "text/html; charset=UTF-8",
+      "bytes": 356437,
+      "snippet": "<!DOCTYPE html> <html class=\"no-js\" lang=\"en\"> <head> <meta charset=\"utf-8\"> <!-- rel=dynamic-content indicates an element that is replaced with the contents produced by the specified href.  \t dyn-cs:* URIs are resolved using the WP DynamicContentSpotMappings resource environment provider. These values can \t also be set using theme metadata if a theme is specified in the URI (e.g. @tl:oid:theme_unique_name). ODX v1.02 --> <link rel=\"stylesheet\" href=\"/wps/contenthandler/gov/!ut/p/digest!WjV8znmv3Qm9oKpKFqkXiQ/sp/mashup:ra:collection?soffset=0&amp;eoffset=4&amp;themeID=ZJ_O9LGHI40NG82E0QG0O0KF412S1&amp;locale=en&amp;mime-type=text%2Fcss&amp;lm=1750892465022&amp;entry=wp_portlet_css__0.0%3Ahead_css&amp;entry=wp_simple_contextmenu_css__0.0%3Ahead_css&amp;entry=wp_status_bar__0.0%3Ahead_css\" t"
+    },
+    "ocilb_contractors": {
+      "url": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/boards/ohio-construction-industry-licensing-board/contractors-and-contracting-companies",
+      "finalUrl": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/boards/ohio-construction-industry-licensing-board/contractors-and-contracting-companies",
+      "status": 200,
+      "ctype": "text/html; charset=UTF-8",
+      "bytes": 422718,
+      "snippet": "<!DOCTYPE html> <html class=\"no-js\" lang=\"en\"> <head> <meta charset=\"utf-8\"> <!-- rel=dynamic-content indicates an element that is replaced with the contents produced by the specified href.  \t dyn-cs:* URIs are resolved using the WP DynamicContentSpotMappings resource environment provider. These values can \t also be set using theme metadata if a theme is specified in the URI (e.g. @tl:oid:theme_unique_name). ODX v1.02 --> <link rel=\"stylesheet\" href=\"/wps/contenthandler/gov/!ut/p/digest!WjV8znmv3Qm9oKpKFqkXiQ/sp/mashup:ra:collection?soffset=0&amp;eoffset=4&amp;themeID=ZJ_O9LGHI40NG82E0QG0O0KF412S1&amp;locale=en&amp;mime-type=text%2Fcss&amp;lm=1750892465022&amp;entry=wp_portlet_css__0.0%3Ahead_css&amp;entry=wp_simple_contextmenu_css__0.0%3Ahead_css&amp;entry=wp_status_bar__0.0%3Ahead_css\" t"
+    },
+    "complaint": {
+      "url": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/file-a-complaint-industrial",
+      "finalUrl": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/file-a-complaint-industrial",
+      "status": 200,
+      "ctype": "text/html; charset=UTF-8",
+      "bytes": 436956,
+      "snippet": "<!DOCTYPE html> <html class=\"no-js\" lang=\"en\"> <head> <meta charset=\"utf-8\"> <!-- rel=dynamic-content indicates an element that is replaced with the contents produced by the specified href.  \t dyn-cs:* URIs are resolved using the WP DynamicContentSpotMappings resource environment provider. These values can \t also be set using theme metadata if a theme is specified in the URI (e.g. @tl:oid:theme_unique_name). ODX v1.02 --> <link rel=\"stylesheet\" href=\"/wps/contenthandler/gov/!ut/p/digest!WjV8znmv3Qm9oKpKFqkXiQ/sp/mashup:ra:collection?soffset=0&amp;eoffset=4&amp;themeID=ZJ_O9LGHI40NG82E0QG0O0KF412S1&amp;locale=en&amp;mime-type=text%2Fcss&amp;lm=1749077494849&amp;entry=wp_portlet_css__0.0%3Ahead_css&amp;entry=wp_simple_contextmenu_css__0.0%3Ahead_css&amp;entry=wp_status_bar__0.0%3Ahead_css\" t"
+    },
+    "pw_portal": {
+      "url": "https://pwr.com.ohio.gov/",
+      "finalUrl": "https://pwr.com.ohio.gov/",
+      "status": 200,
+      "ctype": "text/html; charset=utf-8",
+      "bytes": 15745,
+      "snippet": "\r <!DOCTYPE html>\r <html lang=\"en\">\r <head>\r     <meta charset=\"utf-8\" />\r     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r     <title>Home - Prevailing Wage Portal</title>\r     \r \r \r     <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-DQvkBjpPgn7RC31MCQoOeC9TI2kdqa4+BSgNMNj8v77fdC77Kj5zpWFTJaaAoMbC\" crossorigin=\"anonymous\">\r <meta name=\"x-stylesheet-fallback-test\" content=\"\" class=\"visually-hidden\" /><script>!function(a,b,c,d){var e,f=document,g=f.getElementsByTagName(\"SCRIPT\"),h=g[g.length-1].previousElementSibling,i=f.defaultView&&f.defaultView.getComputedStyle?f.defaultView.getComputedStyle(h):h.currentStyle;if(i&&i[a]!==b)for(e=0;e<c.length;e++)f.write('<link href=\"'+c[e]+'\" '+d+\"/>\")}"
+    },
+    "pw_wagehour": {
+      "url": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/wage-and-hour",
+      "finalUrl": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/wage-and-hour",
+      "status": 200,
+      "ctype": "text/html; charset=UTF-8",
+      "bytes": 356633,
+      "snippet": "<!DOCTYPE html> <html class=\"no-js\" lang=\"en\"> <head> <meta charset=\"utf-8\"> <!-- rel=dynamic-content indicates an element that is replaced with the contents produced by the specified href.  \t dyn-cs:* URIs are resolved using the WP DynamicContentSpotMappings resource environment provider. These values can \t also be set using theme metadata if a theme is specified in the URI (e.g. @tl:oid:theme_unique_name). ODX v1.02 --> <link rel=\"stylesheet\" href=\"/wps/contenthandler/gov/!ut/p/digest!WjV8znmv3Qm9oKpKFqkXiQ/sp/mashup:ra:collection?soffset=0&amp;eoffset=4&amp;themeID=ZJ_O9LGHI40NG82E0QG0O0KF412S1&amp;locale=en&amp;mime-type=text%2Fcss&amp;lm=1750892465022&amp;entry=wp_portlet_css__0.0%3Ahead_css&amp;entry=wp_simple_contextmenu_css__0.0%3Ahead_css&amp;entry=wp_status_bar__0.0%3Ahead_css\" t"
+    },
+    "sfm_lookup_page": {
+      "url": "https://com.ohio.gov/divisions-and-programs/state-fire-marshal/fireworks/guides-and-resources/state-fire-marshal-license-lookup",
+      "finalUrl": "https://com.ohio.gov/divisions-and-programs/state-fire-marshal/fireworks/guides-and-resources/state-fire-marshal-license-lookup",
+      "status": 200,
+      "ctype": "text/html; charset=UTF-8",
+      "bytes": 426834,
+      "snippet": "<!DOCTYPE html> <html class=\"no-js\" lang=\"en\"> <head> <meta charset=\"utf-8\"> <!-- rel=dynamic-content indicates an element that is replaced with the contents produced by the specified href.  \t dyn-cs:* URIs are resolved using the WP DynamicContentSpotMappings resource environment provider. These values can \t also be set using theme metadata if a theme is specified in the URI (e.g. @tl:oid:theme_unique_name). ODX v1.02 --> <link rel=\"stylesheet\" href=\"/wps/contenthandler/gov/!ut/p/digest!WjV8znmv3Qm9oKpKFqkXiQ/sp/mashup:ra:collection?soffset=0&amp;eoffset=4&amp;themeID=ZJ_O9LGHI40NG82E0QG0O0KF412S1&amp;locale=en&amp;mime-type=text%2Fcss&amp;lm=1749683357690&amp;entry=wp_portlet_css__0.0%3Ahead_css&amp;entry=wp_simple_contextmenu_css__0.0%3Ahead_css&amp;entry=wp_status_bar__0.0%3Ahead_css\" t"
+    },
+    "sfm_cert": {
+      "url": "https://com.ohio.gov/divisions-and-programs/state-fire-marshal/licensing-and-certification/guides-and-resources/fire-protection-certification",
+      "finalUrl": "https://com.ohio.gov/divisions-and-programs/state-fire-marshal/licensing-and-certification/guides-and-resources/fire-protection-certification",
+      "status": 200,
+      "ctype": "text/html; charset=UTF-8",
+      "bytes": 442777,
+      "snippet": "<!DOCTYPE html> <html class=\"no-js\" lang=\"en\"> <head> <meta charset=\"utf-8\"> <!-- rel=dynamic-content indicates an element that is replaced with the contents produced by the specified href.  \t dyn-cs:* URIs are resolved using the WP DynamicContentSpotMappings resource environment provider. These values can \t also be set using theme metadata if a theme is specified in the URI (e.g. @tl:oid:theme_unique_name). ODX v1.02 --> <link rel=\"stylesheet\" href=\"/wps/contenthandler/gov/!ut/p/digest!WjV8znmv3Qm9oKpKFqkXiQ/sp/mashup:ra:collection?soffset=0&amp;eoffset=4&amp;themeID=ZJ_O9LGHI40NG82E0QG0O0KF412S1&amp;locale=en&amp;mime-type=text%2Fcss&amp;lm=1749077494849&amp;entry=wp_portlet_css__0.0%3Ahead_css&amp;entry=wp_simple_contextmenu_css__0.0%3Ahead_css&amp;entry=wp_status_bar__0.0%3Ahead_css\" t"
+    },
+    "bbs_certs": {
+      "url": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/boards/board-of-building-standards/certifications",
+      "finalUrl": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/boards/board-of-building-standards/certifications",
+      "status": 200,
+      "ctype": "text/html; charset=UTF-8",
+      "bytes": 434477,
+      "snippet": "<!DOCTYPE html> <html class=\"no-js\" lang=\"en\"> <head> <meta charset=\"utf-8\"> <!-- rel=dynamic-content indicates an element that is replaced with the contents produced by the specified href.  \t dyn-cs:* URIs are resolved using the WP DynamicContentSpotMappings resource environment provider. These values can \t also be set using theme metadata if a theme is specified in the URI (e.g. @tl:oid:theme_unique_name). ODX v1.02 --> <link rel=\"stylesheet\" href=\"/wps/contenthandler/gov/!ut/p/digest!WjV8znmv3Qm9oKpKFqkXiQ/sp/mashup:ra:collection?soffset=0&amp;eoffset=4&amp;themeID=ZJ_O9LGHI40NG82E0QG0O0KF412S1&amp;locale=en&amp;mime-type=text%2Fcss&amp;lm=1749077494849&amp;entry=wp_portlet_css__0.0%3Ahead_css&amp;entry=wp_simple_contextmenu_css__0.0%3Ahead_css&amp;entry=wp_status_bar__0.0%3Ahead_css\" t"
+    },
+    "bbs_lpi": {
+      "url": "https://lpi.elicense.ohio.gov/",
+      "finalUrl": "https://lpi.elicense.ohio.gov/",
+      "status": 200,
+      "ctype": "text/html; charset=UTF-8",
+      "bytes": 291090,
+      "snippet": "<!DOCTYPE html> <html class=\"no-js\" lang=\"en\"> <head> <meta charset=\"utf-8\"> <!-- rel=dynamic-content indicates an element that is replaced with the contents produced by the specified href.  \t dyn-cs:* URIs are resolved using the WP DynamicContentSpotMappings resource environment provider. These values can \t also be set using theme metadata if a theme is specified in the URI (e.g. @tl:oid:theme_unique_name). ODX v1.02 --> <link rel=\"stylesheet\" href=\"/wps/contenthandler/gov/!ut/p/digest!WjV8znmv3Qm9oKpKFqkXiQ/sp/mashup:ra:collection?soffset=0&amp;eoffset=4&amp;themeID=ZJ_O9LGHI40NG82E0QG0O0KF412S1&amp;locale=en&amp;mime-type=text%2Fcss&amp;lm=1749683357690&amp;entry=wp_portlet_css__0.0%3Ahead_css&amp;entry=wp_simple_contextmenu_css__0.0%3Ahead_css&amp;entry=wp_status_bar__0.0%3Ahead_css\" t"
+    },
+    "bbs_lpi_lookup": {
+      "url": "https://elicense.lpi.ohio.gov/s/licenseshome",
+      "error": "SSLError(MaxRetryError(\"HTTPSConnectionPool(host='elicense.lpi.ohio.gov', port=443): Max retries exceeded with url: /s/licenseshome (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))\"))"
+    },
+    "orc_4740_13": {
+      "url": "https://codes.ohio.gov/ohio-revised-code/section-4740.13",
+      "finalUrl": "https://codes.ohio.gov/ohio-revised-code/section-4740.13",
+      "status": 200,
+      "ctype": "text/html;charset=UTF-8",
+      "bytes": 16189,
+      "snippet": "<!DOCTYPE html> <html lang=\"en\" dir=\"ltr\">  \t<head><script async src=\"https://www.googletagmanager.com/gtag/js?id=G-E4HLMDVMKH\"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag(\"js\", new Date()); gtag(\"config\", \"G-E4HLMDVMKH\");</script> <script type=\"text/javascript\"> window._monsido = window._monsido || { token: \"87hVpSXvcXqeefK5MDn5QA\", statistics: { enabled: true, documentTracking: { enabled: true, documentCls: \"monsido_download\", documentIgnoreCls: \"monsido_ignore_download\", documentExt: [], }, }, pageCorrect: { enabled: true, }, pageAssistV2: { enabled: true, theme: \"light\", mainColor: \"#11466e\", textColor: \"#ffffff\", linkColor: \"#11466e\", buttonHoverColor: \"#11466e\", mainDarkColor: \"#052942\", textDarkColor: \"#ffffff\", link"
+    },
+    "orc_4740_01": {
+      "url": "https://codes.ohio.gov/ohio-revised-code/section-4740.01",
+      "finalUrl": "https://codes.ohio.gov/ohio-revised-code/section-4740.01",
+      "status": 200,
+      "ctype": "text/html;charset=UTF-8",
+      "bytes": 17364,
+      "snippet": "<!DOCTYPE html> <html lang=\"en\" dir=\"ltr\">  \t<head><script async src=\"https://www.googletagmanager.com/gtag/js?id=G-E4HLMDVMKH\"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag(\"js\", new Date()); gtag(\"config\", \"G-E4HLMDVMKH\");</script> <script type=\"text/javascript\"> window._monsido = window._monsido || { token: \"87hVpSXvcXqeefK5MDn5QA\", statistics: { enabled: true, documentTracking: { enabled: true, documentCls: \"monsido_download\", documentIgnoreCls: \"monsido_ignore_download\", documentExt: [], }, }, pageCorrect: { enabled: true, }, pageAssistV2: { enabled: true, theme: \"light\", mainColor: \"#11466e\", textColor: \"#ffffff\", linkColor: \"#11466e\", buttonHoverColor: \"#11466e\", mainDarkColor: \"#052942\", textDarkColor: \"#ffffff\", link"
+    },
+    "oac_4101_7_5_01": {
+      "url": "https://codes.ohio.gov/ohio-administrative-code/rule-4101:7-5-01",
+      "finalUrl": "https://codes.ohio.gov/ohio-administrative-code/rule-4101:7-5-01",
+      "status": 200,
+      "ctype": "text/html;charset=UTF-8",
+      "bytes": 27563,
+      "snippet": "<!DOCTYPE html> <html lang=\"en\" dir=\"ltr\">  \t<head><script async src=\"https://www.googletagmanager.com/gtag/js?id=G-E4HLMDVMKH\"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag(\"js\", new Date()); gtag(\"config\", \"G-E4HLMDVMKH\");</script> <script type=\"text/javascript\"> window._monsido = window._monsido || { token: \"87hVpSXvcXqeefK5MDn5QA\", statistics: { enabled: true, documentTracking: { enabled: true, documentCls: \"monsido_download\", documentIgnoreCls: \"monsido_ignore_download\", documentExt: [], }, }, pageCorrect: { enabled: true, }, pageAssistV2: { enabled: true, theme: \"light\", mainColor: \"#11466e\", textColor: \"#ffffff\", linkColor: \"#11466e\", buttonHoverColor: \"#11466e\", mainDarkColor: \"#052942\", textDarkColor: \"#ffffff\", link"
+    }
+  }
+}

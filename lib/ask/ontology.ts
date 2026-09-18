@@ -251,6 +251,22 @@ export const GEO_ONTOLOGY: Array<{
     intelligence: "state_intelligence",
   },
   {
+    id: "oh",
+    label: "Ohio",
+    phrases: [
+      "ohio",
+      "in ohio",
+      "oh statewide",
+      "ocilb",
+      "columbus",
+      "cleveland",
+      "cincinnati",
+    ],
+    href: "/ohio",
+    kind: "state",
+    intelligence: "state_intelligence",
+  },
+  {
     id: "broward",
     label: "Broward County, Florida",
     phrases: ["broward", "broward county", "fort lauderdale", "deerfield beach"],

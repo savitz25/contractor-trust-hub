@@ -1,0 +1,474 @@
+{
+  "version": "contractor-oh-state-intel-v1",
+  "ticket": "OH-CON-001",
+  "publicationPath": "/ohio",
+  "canonical": "https://www.contractortrusthub.com/ohio",
+  "generatedAt": "2026-09-18T13:38:19Z",
+  "snapshotAsOf": "2026-09-18",
+  "hero": {
+    "universe_label": "Distinct OCILB numeric license identities in the current no-fee listing",
+    "universe_value": 9528,
+    "universe_hint": "Not 12,461 trade-credential rows. Not a statewide general-contractor census. Not every Ohio residential contractor. One person can hold multiple trade prefixes on the same numeric identity.",
+    "electrical_label": "OCILB electrical credentials (EL.)",
+    "electrical_value": 4489,
+    "fire_installer_label": "Distinct SFM fire-protection individual certificate IDs",
+    "fire_installer_value": 19990
+  },
+  "clocks": {
+    "ocilb_roster_generated_via": "elicense4.com.ohio.gov Generate Roster (OCLIB No Fee Required)",
+    "ocilb_roster_retrievedAt": "2026-09-18T13:30:18.794218+00:00",
+    "ocilb_fileDownload": "https://elicense4.com.ohio.gov/Lookup/FileDownload.aspx",
+    "sfm_roster_retrievedAt": "2026-09-18T13:33:21.454025+00:00",
+    "sfm_generate": "https://elicense7.com.ohio.gov/Lookup/GenerateRoster.aspx",
+    "retrievedAt": "2026-09-18T13:30:18.794218+00:00",
+    "snapshotAsOf": "2026-09-18",
+    "generatedAt": "2026-09-18T13:38:19Z",
+    "retrievedAt_is_not_license_effective_date": true,
+    "current_listing_is_not_historical_inactive_census": true
+  },
+  "regulatory_model": {
+    "primary_regulator": "Ohio Department of Commerce — Division of Industrial Compliance",
+    "primary_board": "Ohio Construction Industry Licensing Board (OCILB)",
+    "statute": "ORC Chapter 4740",
+    "not_universal_contractor_license": true,
+    "not_statewide_general_contractor_license": true,
+    "not_universal_residential_contractor_license": true,
+    "licensed_construction_project_excludes_residential_building": true,
+    "OH_GENERAL_CONTRACTOR_STATE_ROSTER_STATUS": "UNSUPPORTED",
+    "trades": [
+      "Electrical",
+      "HVAC",
+      "Hydronics",
+      "Plumbing",
+      "Refrigeration"
+    ],
+    "prefixes_source_native": [
+      "EL.",
+      "HV.",
+      "HY.",
+      "PL.",
+      "RE."
+    ],
+    "license_holder_is_individual": true,
+    "company_association_is_not_company_license": true,
+    "credential_ne_company": true,
+    "company_ne_license_holder": true,
+    "local_registration_may_apply": true,
+    "local_registration_ne_ocilb_license": true
+  },
+  "ocilb": {
+    "OH_OCILB_ROSTER_STATUS": "ACQUIRED_CURRENT_NO_FEE_LISTING",
+    "OH_OCILB_ALL_TRADE_CREDENTIAL_ROWS": 12461,
+    "OH_OCILB_DISTINCT_FORMATTED_CREDENTIALS": 12454,
+    "OH_OCILB_DISTINCT_LICENSE_HOLDERS": 9528,
+    "OH_OCILB_DISTINCT_LICENSEE_PERSONS": 9504,
+    "OH_OCILB_DISTINCT_ASSOCIATED_COMPANY_NAMES": 8568,
+    "SOURCE_CREDENTIAL_ROWS": 12461,
+    "DISTINCT_FORMATTED_CREDENTIALS": 12454,
+    "DISTINCT_NUMERIC_LICENSE_HOLDERS": 9528,
+    "DISTINCT_LICENSEE_PERSONS": 9504,
+    "DISTINCT_ASSOCIATED_COMPANIES": 8568,
+    "do_not_sum_trade_rows_as_unique_contractors": true,
+    "escrow_encoded_as_company_string_rows": 88,
+    "escrow_is_not_a_company": true,
+    "search_url": "https://elicense4.com.ohio.gov/Lookup/LicenseLookup.aspx",
+    "generate_roster_url": "https://elicense4.com.ohio.gov/Lookup/GenerateRoster.aspx",
+    "files": {
+      "el": {
+        "path": "data/ohio/ocilb/raw/ocilb_el_roster.csv",
+        "sha256": "49c830a3dacb4c440e7d94b7849a823fabb18262aa9813b875233cefeb8bd6f4",
+        "bytes": 703098,
+        "sourceRecordCount": 4492,
+        "rosterIdnt": "200084"
+      },
+      "hv": {
+        "path": "data/ohio/ocilb/raw/ocilb_hv_roster.csv",
+        "sha256": "0f19f55a67834d129da4beb0addee2ac2140632f8e1bbc1725c2637641a775d7",
+        "bytes": 499025,
+        "sourceRecordCount": 3131,
+        "rosterIdnt": "200085"
+      },
+      "hy": {
+        "path": "data/ohio/ocilb/raw/ocilb_hy_roster.csv",
+        "sha256": "a7d126cb28f933e3755db92106e5c91d6e277255f8c8801bd71d17094ca42760",
+        "bytes": 152104,
+        "sourceRecordCount": 955,
+        "rosterIdnt": "200086"
+      },
+      "pl": {
+        "path": "data/ohio/ocilb/raw/ocilb_pl_roster.csv",
+        "sha256": "42c9a0be08f07d5d004427219ba784e72a2625cbab6506c87ceb11d8751f7620",
+        "bytes": 483303,
+        "sourceRecordCount": 3064,
+        "rosterIdnt": "200087"
+      },
+      "re": {
+        "path": "data/ohio/ocilb/raw/ocilb_re_roster.csv",
+        "sha256": "db696b741da88d5b2bfec13c67b7e48ce7bbfa5780b123eeda0cfbafcc7c02cd",
+        "bytes": 130759,
+        "sourceRecordCount": 819,
+        "rosterIdnt": "200088"
+      }
+    },
+    "columns": [
+      "FormattedCredential",
+      "Name",
+      "LastName",
+      "Type",
+      "Status",
+      "State",
+      "County",
+      "Effective Date",
+      "Expiration Date",
+      "Company",
+      "Company Address",
+      "Company Address 2",
+      "Company City",
+      "Company State",
+      "Company Zip",
+      "Company Phone",
+      "Company Fax",
+      "Company Email"
+    ],
+    "training_agency_excluded": true,
+    "current_listing_statuses_observed": [
+      "ACTIVE",
+      "ACTIVE IN RENEWAL"
+    ],
+    "inactive_expired_suspended_revoked_not_in_current_listing": true,
+    "missing_inactive_in_current_listing_is_not_zero_inactive_licenses": true
+  },
+  "electrical": {
+    "OH_OCILB_ROWS": 4492,
+    "OH_OCILB_DISTINCT_CREDENTIALS": 4489,
+    "OH_OCILB_DISTINCT_NUMERIC_IDS": 4489,
+    "OH_OCILB_DISTINCT_PERSON_KEYS": 4485,
+    "OH_OCILB_DISTINCT_COMPANY_NAMES": 4122,
+    "escrow_company_rows": 36,
+    "blank_company_rows": 5,
+    "status_row_bucket": {
+      "ACTIVE": 4136,
+      "ACTIVE_IN_RENEWAL": 356
+    },
+    "status_distinct_credential_bucket": {
+      "ACTIVE": 4134,
+      "ACTIVE_IN_RENEWAL": 355
+    },
+    "prefix": "EL",
+    "formatted_punctuation": "EL.#####",
+    "OH_OCILB_ELECTRICAL_ROWS": 4492,
+    "OH_OCILB_ELECTRICAL_DISTINCT_CREDENTIALS": 4489
+  },
+  "hvac": {
+    "OH_OCILB_ROWS": 3131,
+    "OH_OCILB_DISTINCT_CREDENTIALS": 3129,
+    "OH_OCILB_DISTINCT_NUMERIC_IDS": 3129,
+    "OH_OCILB_DISTINCT_PERSON_KEYS": 3124,
+    "OH_OCILB_DISTINCT_COMPANY_NAMES": 2881,
+    "escrow_company_rows": 17,
+    "blank_company_rows": 3,
+    "status_row_bucket": {
+      "ACTIVE": 2868,
+      "ACTIVE_IN_RENEWAL": 263
+    },
+    "status_distinct_credential_bucket": {
+      "ACTIVE": 2866,
+      "ACTIVE_IN_RENEWAL": 263
+    },
+    "prefix": "HV",
+    "formatted_punctuation": "HV.#####",
+    "OH_OCILB_HVAC_ROWS": 3131,
+    "OH_OCILB_HVAC_DISTINCT_CREDENTIALS": 3129
+  },
+  "hydronics": {
+    "OH_OCILB_ROWS": 955,
+    "OH_OCILB_DISTINCT_CREDENTIALS": 955,
+    "OH_OCILB_DISTINCT_NUMERIC_IDS": 955,
+    "OH_OCILB_DISTINCT_PERSON_KEYS": 954,
+    "OH_OCILB_DISTINCT_COMPANY_NAMES": 869,
+    "escrow_company_rows": 5,
+    "blank_company_rows": 0,
+    "status_row_bucket": {
+      "ACTIVE": 889,
+      "ACTIVE_IN_RENEWAL": 66
+    },
+    "status_distinct_credential_bucket": {
+      "ACTIVE": 889,
+      "ACTIVE_IN_RENEWAL": 66
+    },
+    "prefix": "HY",
+    "formatted_punctuation": "HY.#####",
+    "OH_OCILB_HYDRONICS_ROWS": 955,
+    "OH_OCILB_HYDRONICS_DISTINCT_CREDENTIALS": 955
+  },
+  "plumbing": {
+    "OH_OCILB_ROWS": 3064,
+    "OH_OCILB_DISTINCT_CREDENTIALS": 3063,
+    "OH_OCILB_DISTINCT_NUMERIC_IDS": 3063,
+    "OH_OCILB_DISTINCT_PERSON_KEYS": 3059,
+    "OH_OCILB_DISTINCT_COMPANY_NAMES": 2768,
+    "escrow_company_rows": 26,
+    "blank_company_rows": 1,
+    "status_row_bucket": {
+      "ACTIVE": 2829,
+      "ACTIVE_IN_RENEWAL": 235
+    },
+    "status_distinct_credential_bucket": {
+      "ACTIVE": 2829,
+      "ACTIVE_IN_RENEWAL": 234
+    },
+    "prefix": "PL",
+    "formatted_punctuation": "PL.#####",
+    "OH_OCILB_PLUMBING_ROWS": 3064,
+    "OH_OCILB_PLUMBING_DISTINCT_CREDENTIALS": 3063
+  },
+  "refrigeration": {
+    "OH_OCILB_ROWS": 819,
+    "OH_OCILB_DISTINCT_CREDENTIALS": 818,
+    "OH_OCILB_DISTINCT_NUMERIC_IDS": 818,
+    "OH_OCILB_DISTINCT_PERSON_KEYS": 817,
+    "OH_OCILB_DISTINCT_COMPANY_NAMES": 749,
+    "escrow_company_rows": 4,
+    "blank_company_rows": 1,
+    "status_row_bucket": {
+      "ACTIVE": 764,
+      "ACTIVE_IN_RENEWAL": 55
+    },
+    "status_distinct_credential_bucket": {
+      "ACTIVE": 763,
+      "ACTIVE_IN_RENEWAL": 55
+    },
+    "prefix": "RE",
+    "formatted_punctuation": "RE.#####",
+    "OH_OCILB_REFRIGERATION_ROWS": 819,
+    "OH_OCILB_REFRIGERATION_DISTINCT_CREDENTIALS": 818
+  },
+  "multi_trade": {
+    "OH_OCILB_MULTI_TRADE_NUMERIC_HOLDERS": 1664,
+    "person_key_with_multiple_numeric_ids": 23,
+    "numeric_id_with_multiple_person_keys": 0,
+    "do_not_merge_persons_by_name": true,
+    "same_numeric_id_may_span_trade_prefixes": true,
+    "example": "HY.10621 and PL.10621 are the same numeric identity across trades"
+  },
+  "status": {
+    "OH_OCILB_ACTIVE_CREDENTIAL_ROWS": 11486,
+    "OH_OCILB_ACTIVE_IN_RENEWAL_ROWS": 975,
+    "OH_OCILB_INACTIVE_ROWS": 0,
+    "OH_OCILB_EXPIRED_ROWS": 0,
+    "OH_OCILB_SUSPENDED_ROWS": 0,
+    "OH_OCILB_REVOKED_ROWS": 0,
+    "OH_OCILB_STATUS_OTHER_ROWS": 0,
+    "raw_and_normalized_separate": true,
+    "active_in_renewal_is_not_expired": true,
+    "active_in_renewal_is_not_inactive": true,
+    "do_not_add_incompatible_trade_rows_as_active_contractors": true
+  },
+  "company_relationships": {
+    "OH_OCILB_COMPANY_LOOKUP_STATUS": "OPEN_SEARCH_ONLY",
+    "OH_OCILB_COMPANY_LOOKUP_URL": "https://apps.com.ohio.gov/dico/CompanyLicenseeLookup/",
+    "OH_OCILB_EXACT_LICENSEE_COMPANY_RELATIONSHIPS": 12363,
+    "bridge_source": "OCILB no-fee Generate Roster Company column",
+    "not_fuzzy_name_match": true,
+    "individual_assigned_to_contracting_company": true,
+    "company_does_not_own_the_license": true,
+    "employer_lookup_ui_not_bulk_acquired": true
+  },
+  "license_lookup_fields_observed": [
+    "individual name",
+    "company",
+    "public address",
+    "formatted credential",
+    "license type",
+    "issue date",
+    "expiration date",
+    "status",
+    "status reason",
+    "continuing education",
+    "renewal requirements"
+  ],
+  "local_registration": {
+    "local_may_regulate_or_require_registration": true,
+    "local_registration_ne_ocilb_license": true,
+    "municipal_gc_registration_ne_statewide_license": true,
+    "columbus_contractor_ne_statewide_credential": true,
+    "no_local_harvest_this_ticket": true
+  },
+  "discipline": {
+    "OH_OCILB_DISCIPLINE_COVERAGE": "OPEN_SEARCH_ONLY",
+    "OH_OCILB_DISCIPLINE_DOCUMENT_ROWS": null,
+    "OH_OCILB_UNIQUE_DISCIPLINARY_MATTERS": null,
+    "OH_OCILB_SUSPENSION_MATTERS": null,
+    "OH_OCILB_REVOCATION_MATTERS": null,
+    "OH_OCILB_FINE_MATTERS": null,
+    "OH_OCILB_ADDITIONAL_CE_MATTERS": null,
+    "OH_OCILB_REFUSAL_MATTERS": null,
+    "OH_OCILB_EXACT_LICENSE_ATTACHMENTS": 0,
+    "complaint_ne_disciplinary_action": true,
+    "notice_ne_final_order": true,
+    "fine_ne_revocation": true,
+    "suspension_ne_revocation": true,
+    "additional_ce_ne_suspension": true,
+    "criminal_conviction_ne_administrative_action": true,
+    "search_only_is_not_zero": true
+  },
+  "unlicensed": {
+    "OH_OCILB_UNLICENSED_ENFORCEMENT_COVERAGE": "OPEN_SEARCH_ONLY",
+    "OH_OCILB_UNLICENSED_ENFORCEMENT_ROWS": null,
+    "statute": "ORC 4740.13 / 4740.16",
+    "ag_may_seek_injunction": true,
+    "no_news_derived_blacklist": true,
+    "search_only_is_not_zero": true
+  },
+  "low_voltage_firewall": {
+    "orc_4740_13_d": true,
+    "fire_alarm_lt_50v_excluded_from_ocilb_electrical": true,
+    "burglar_alarm_cabling_teledata_sound_communication_landscape_lt_50v_excluded": true,
+    "absence_of_el_credential_does_not_prove_low_voltage_fire_alarm_unlicensed": true,
+    "research_sfm_certification_path": true
+  },
+  "fire_protection": {
+    "OH_FIRE_INSTALLER_ROSTER_STATUS": "ACQUIRED_CURRENT_NO_FEE_LISTING",
+    "OH_FIRE_INSTALLER_ROWS": 30042,
+    "OH_FIRE_INSTALLER_DISTINCT_CERT_IDS": 19990,
+    "OH_FIRE_INSTALLER_DISTINCT_NAMES": 19903,
+    "OH_FIRE_INSTALLER_STATUS_DISTINCT_CERTS": {
+      "ACTIVE": 13434,
+      "ACTIVE_IN_RENEWAL": 6556
+    },
+    "OH_FIRE_INSTALLER_MIXED_STATUS_CERTS": 0,
+    "OH_FIRE_COMPANY_CERT_ROWS": 2182,
+    "OH_FIRE_COMPANY_DISTINCT_CERT_IDS": 2182,
+    "OH_FIRE_COMPANY_STATUS": {
+      "ACTIVE": 2146,
+      "ACTIVE_IN_RENEWAL": 36
+    },
+    "OH_FIRE_COMPANY_TYPES": {
+      "Fire Protection Organization - Branch Office": 135,
+      "Fire Protection Organization - Sole Proprietor": 144,
+      "Fire Protection Organization - Company": 1903
+    },
+    "OH_FIRE_DESIGNER_ROWS": null,
+    "OH_FIRE_WATER_BASED_DESIGNER_ROWS": null,
+    "OH_FIRE_ALARM_DESIGNER_ROWS": null,
+    "OH_FIRE_SPECIAL_HAZARDS_DESIGNER_ROWS": null,
+    "OH_FIRE_DESIGNER_COVERAGE": "OPEN_SEARCH_ONLY",
+    "bbs_public_lookup_future_update": true,
+    "installer_ne_company": true,
+    "installer_ne_designer": true,
+    "designer_ne_ocilb_contractor": true,
+    "sfm_ne_ocilb": true,
+    "category_rows_are_not_unique_installers": true,
+    "largest_individual_category": "Fire Alarms / Detection",
+    "largest_individual_category_rows": 14583,
+    "individual_prefix": "54.",
+    "company_prefixes": [
+      "50.",
+      "52.",
+      "53."
+    ],
+    "search_url": "https://elicense7.com.ohio.gov/Lookup/LicenseLookup.aspx",
+    "files": {
+      "companies": {
+        "path": "data/ohio/sfm/raw/sfm_fire_companies_roster.csv",
+        "sha256": "1a843a39fa3a8e933be6b6d19a6ec2a8dc03e4a9612fb9d959af5765f0b0c940",
+        "bytes": 397801
+      },
+      "individuals": {
+        "path": "data/ohio/sfm/raw/sfm_fire_individuals_roster.csv",
+        "sha256": "8f6336a33d4376bfd52be26bf144e3b29833a05ad41b9c69ca1c0453c5f96649",
+        "bytes": 6391475
+      }
+    }
+  },
+  "prevailing_wage": {
+    "OH_PREVAILING_WAGE_DEBARMENT_ROWS": null,
+    "OH_PREVAILING_WAGE_COVERAGE": "RATES_PORTAL_OHID_NO_PUBLIC_CONTRACTOR_ENFORCEMENT_CATALOG",
+    "portal": "https://pwr.com.ohio.gov/",
+    "rates_are_not_contractor_identities": true,
+    "search_only_is_not_zero": true
+  },
+  "permits": {
+    "OH_BUILDING_PERMIT_CAPABILITY": "LOCAL_OR_FRAGMENTED",
+    "no_statewide_permit_census": true,
+    "no_local_permit_acquisition_this_ticket": true
+  },
+  "identity": {
+    "preferred": "exact OCILB formatted credential (EL./HV./HY./PL./RE.) or exact numeric license identity",
+    "EXACT_OCILB_FORMATTED_CREDENTIALS": 12454,
+    "EXACT_OCILB_NUMERIC_IDENTITIES": 9528,
+    "EXACT_OCILB_PERSON_COMPANY_BRIDGES": 12363,
+    "EXACT_SFM_INSTALLER_CERT_IDS": 19990,
+    "EXACT_SFM_COMPANY_CERT_IDS": 2182,
+    "EXACT_SOURCE_NATIVE_CROSSWALKS": 0,
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "NAME_ONLY_UNSAFE": 0,
+    "REVIEW_REQUIRED": 0,
+    "do_not_attach_adverse_by_name": true
+  },
+  "adverse_publication": {
+    "ADVERSE_SOURCES_FOUND": 3,
+    "ADVERSE_SOURCES_ACQUIRED": 0,
+    "ADVERSE_ROWS_ACQUIRED": null,
+    "UNIQUE_REGULATORY_MATTERS": null,
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "REVIEW_REQUIRED": 0,
+    "UNRESOLVED": null,
+    "INTERNAL_ONLY": 0,
+    "PUBLICATION_PENDING": 0,
+    "PUBLIC_READY_PROFILES": 0,
+    "PUBLICLY_RENDERED_PROFILES": 0,
+    "BUSINESS_RESPONSE_READY": false,
+    "SEARCH_SUPPORTED": true,
+    "REMAINING_ADVERSE_GAPS": [
+      "OCILB discipline bulk catalog",
+      "unlicensed injunction catalog",
+      "prevailing-wage contractor enforcement catalog"
+    ],
+    "WITHHELD_REASON_COUNTS": {
+      "OPEN_SEARCH_ONLY": 3
+    },
+    "do_not_add_licensing_fire_discipline_into_one_total": true
+  },
+  "expansion_ledger": {
+    "NET_NEW_STATE_RESEARCH_IDENTITIES": 9528,
+    "NET_NEW_STATE_RESEARCH_IDENTITIES_definition": "Distinct OCILB numeric license identities in the current no-fee listing. Not trade-credential row sum. Not SFM certificates. Not canonical organizations and not public profiles.",
+    "NET_NEW_CANONICAL_ORGANIZATIONS": 0,
+    "NET_NEW_PUBLIC_CONTRACTOR_PROFILES": 0,
+    "EXISTING_ORGANIZATIONS_ENRICHED": 0,
+    "GRAPH_WRITES": 0,
+    "EXACT_PROFILE_ATTACHMENTS": 0,
+    "CLAIM_ELIGIBILITY_BROADENED": false
+  },
+  "gate": {
+    "live_cohort_not_inflated": true
+  },
+  "no_local_ohio_routes": true,
+  "no_ranking": true,
+  "no_trust_score": true,
+  "local_work_needed_now": "NO",
+  "semantic_guardrails": [
+    "OCILB != statewide general-contractor license",
+    "OCILB != universal residential-contractor license",
+    "five-trade credential sum != unique contractors",
+    "licensed individual != contracting company",
+    "credential != company",
+    "ACTIVE IN RENEWAL != expired",
+    "ACTIVE IN RENEWAL != inactive",
+    "ESCROW company string != contracting company",
+    "Company lookup UI != fuzzy name match",
+    "SFM installer != OCILB electrical contractor",
+    "SFM company != SFM individual",
+    "BBS designer != installer != OCILB contractor",
+    "low-voltage fire alarm != automatically OCILB EL",
+    "absence of EL. != proof a fire-alarm contractor is unlicensed",
+    "prevailing-wage rates != contractor identities",
+    "permits LOCAL_OR_FRAGMENTED",
+    "discipline search-only != zero",
+    "unlicensed enforcement search-only != zero",
+    "NO TRUST SCORE",
+    "NO COLUMBUS CLEVELAND CINCINNATI TOLEDO AKRON DAYTON INTEL ROUTES",
+    "NO COMBINED OCILB+SFM+DISCIPLINE TOTAL"
+  ],
+  "fingerprint": "b7e441958066cc598342127e4ecc3d87ee4273d16470f5db8d148f7dfef9c03d"
+}

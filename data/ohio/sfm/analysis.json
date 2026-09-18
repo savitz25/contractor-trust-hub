@@ -1,0 +1,140 @@
+{
+  "retrievedAt": "2026-09-18T13:34:05.565857+00:00",
+  "companies": {
+    "path": "data/ohio/sfm/raw/sfm_fire_companies_roster.csv",
+    "sha256": "1a843a39fa3a8e933be6b6d19a6ec2a8dc03e4a9612fb9d959af5765f0b0c940",
+    "bytes": 397801,
+    "rows": 2182,
+    "columns": [
+      "Name",
+      "Attention",
+      "Address 1",
+      "Address 2",
+      "City",
+      "State",
+      "Zip Code",
+      "Phone",
+      "Credential",
+      "Licensee Type",
+      "First Issued Date",
+      "Expiration Date",
+      "License Status",
+      "Status Reason",
+      "Supervisor License",
+      "Supervisor Name",
+      "Supervision Type",
+      "Supervisor License Status",
+      "Supervisor Expiration",
+      ""
+    ],
+    "distinct_credentials": 2182,
+    "blank_credentials": 0,
+    "license_status": {
+      "ACTIVE": 2146,
+      "ACTIVE IN RENEWAL": 36
+    },
+    "licensee_type": {
+      "Fire Protection Organization - Branch Office": 135,
+      "Fire Protection Organization - Sole Proprietor": 144,
+      "Fire Protection Organization - Company": 1903
+    },
+    "status_reason_top": {
+      "ACTIVE": 2145,
+      "RENEWAL PENDING": 36,
+      "RENEWED": 1
+    },
+    "sample_credentials": [
+      "50.04.0004",
+      "50.07.0001",
+      "50.09.1064",
+      "50.09.1068",
+      "50.09.1069"
+    ]
+  },
+  "individuals": {
+    "path": "data/ohio/sfm/raw/sfm_fire_individuals_roster.csv",
+    "sha256": "8f6336a33d4376bfd52be26bf144e3b29833a05ad41b9c69ca1c0453c5f96649",
+    "bytes": 6391475,
+    "rows": 30042,
+    "columns": [
+      "Name",
+      "City",
+      "State",
+      "Zip Code",
+      "Credential",
+      "Licensee Type",
+      "First Issued Date",
+      "Expiration Date",
+      "License Status",
+      "Status Reason",
+      "Category Type",
+      "Category",
+      "Category Status",
+      "Date Added",
+      "Supervisor License",
+      "Supervisor Name",
+      "Supervision Type",
+      "Supervisor License Status",
+      "Supervisor Expiration",
+      ""
+    ],
+    "distinct_credentials": 19990,
+    "distinct_names": 19903,
+    "blank_credentials": 0,
+    "license_status": {
+      "ACTIVE": 20462,
+      "ACTIVE IN RENEWAL": 9580
+    },
+    "licensee_type": {
+      "Fire Protection Individual": 30042
+    },
+    "category": {
+      "Portable Fire Extinguishers": 2589,
+      "Pre-Engineered Extinguishers (OTW)": 1376,
+      "Fire Service Mains": 3120,
+      "Fire Pumps": 1798,
+      "Diesel Pump Technician": 1223,
+      "Sprinkler / Standpipe": 4200,
+      "Fire Alarms / Detection": 14583,
+      "Engineered Extinguishers (OTW)": 647,
+      "Aerosol Extinguishers": 99,
+      "Household Fire Warning Equipment": 329,
+      "Reciprocity - Sprinkler / Standpipe": 11,
+      "Reciprocity- Fire Alarms / Detection": 33,
+      "Reciprocity -Engineered Extinguishers (OTW)": 3,
+      "Reciprocity - Pre-Engineered Extinguishers (OTW)": 7,
+      "Reciprocity - Aerosol Extinguishers": 2,
+      "Reciprocity - Fire Service Mains": 4,
+      "Reciprocity - Fire Pumps": 8,
+      "Reciprocity - Portable Fire Extinguishers": 7,
+      "Reciprocity - Diesel Pump Technician": 3
+    },
+    "category_type": {
+      "Category #05": 2596,
+      "Category #07": 1383,
+      "Category #02": 3124,
+      "Category #03": 1806,
+      "Category #10": 1226,
+      "Category #01": 4211,
+      "Category #04": 14616,
+      "Category #06": 650,
+      "Category #09": 101,
+      "Category #08": 329
+    },
+    "category_status": {
+      "Active": 30042
+    },
+    "sample_credentials": [
+      "54.01.1007",
+      "54.01.1009",
+      "54.01.1010",
+      "54.01.1016",
+      "54.01.1019"
+    ]
+  },
+  "notes": {
+    "company_ne_individual": true,
+    "sfm_ne_ocilb": true,
+    "category_rows_may_exceed_distinct_certs": true
+  }
+}

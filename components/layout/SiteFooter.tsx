@@ -46,6 +46,7 @@ export function SiteFooter() {
     { href: "/oregon", label: "Oregon contractor research" },
     { href: "/pennsylvania", label: "Pennsylvania contractor research" },
     { href: "/north-carolina", label: "North Carolina contractor research" },
+    { href: "/ohio", label: "Ohio contractor research" },
     { href: "/guides", label: "Homeowner guides" },
     { href: "/tools/coverage", label: "Where we cover" },
     { href: "/methodology", label: "Trust standards" },

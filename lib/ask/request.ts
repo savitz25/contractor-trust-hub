@@ -45,10 +45,11 @@ export function researchRoute(
 ) {
   if (interpretRecovery(query)) return "/ask" as const;
   if (
-    /\b(?:new york|illinois|oregon|pennsylvania|philadelphia|pittsburgh|hicpa|pa hic|north carolina|nclbgc|charlotte|raleigh|NY|IL|NC)\b/i.test(
+    /\b(?:new york|illinois|oregon|pennsylvania|philadelphia|pittsburgh|hicpa|pa hic|north carolina|nclbgc|charlotte|raleigh|ohio|ocilb|columbus|cleveland|cincinnati|toledo|akron|dayton|NY|IL|NC|OH)\b/i.test(
       query,
     ) ||
     /\bPA\s*#?\s*\d{5,10}\b/.test(query) ||
+    /\b(?:EL|HV|HY|PL|RE)\.\d{3,6}\b/i.test(query) ||
     /\bcompar(?:e|ison)\b/i.test(query)
   )
     return "/ask" as const;

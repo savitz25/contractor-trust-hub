@@ -1,0 +1,33 @@
+{
+  "source": "https://elicense7.com.ohio.gov/Lookup/GenerateRoster.aspx",
+  "fileDownload": "https://elicense7.com.ohio.gov/Lookup/FileDownload.aspx",
+  "retrievedAt": "2026-09-18T13:33:21.454025+00:00",
+  "rosters": [
+    {
+      "slug": "fire_companies",
+      "label": "50 / 52 / 53 Fire Protection Companies (No Fee Required)",
+      "checkbox": "ctl00$MainContentPlaceHolder$ckbRoster2",
+      "rosterIdnt": "268953",
+      "sourceRecordCount": 2182,
+      "path": "ohio/sfm/raw/sfm_fire_companies_roster.csv",
+      "sha256": "1a843a39fa3a8e933be6b6d19a6ec2a8dc03e4a9612fb9d959af5765f0b0c940",
+      "bytes": 397801,
+      "contentType": "text/csv",
+      "disposition": "attachment;filename=\"50_/_52_/_53_Fire_Protection_Companies.csv\"",
+      "retrievedAt": "2026-09-18T13:33:13.123945+00:00"
+    },
+    {
+      "slug": "fire_individuals",
+      "label": "54 Fire Protection Individual (No Fee Required)",
+      "checkbox": "ctl00$MainContentPlaceHolder$ckbRoster3",
+      "rosterIdnt": "268954",
+      "sourceRecordCount": 2182,
+      "path": "ohio/sfm/raw/sfm_fire_individuals_roster.csv",
+      "sha256": "8f6336a33d4376bfd52be26bf144e3b29833a05ad41b9c69ca1c0453c5f96649",
+      "bytes": 6391475,
+      "contentType": "text/csv",
+      "disposition": "attachment;filename=\"54_Fire_Protection_Individual.csv\"",
+      "retrievedAt": "2026-09-18T13:33:20.452381+00:00"
+    }
+  ]
+}
