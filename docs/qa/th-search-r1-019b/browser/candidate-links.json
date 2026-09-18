@@ -1,0 +1,45 @@
+{
+  "note": "Every candidate action.href returned by the operation was requested against the local optimized build.",
+  "links": [
+    {
+      "name": "Stilwell Solar",
+      "stableKey": "contractor:profile:cpc1460219-stilwell-solar-llc",
+      "path": "/contractors/cpc1460219-stilwell-solar-llc",
+      "status": 200,
+      "pageShowsDisplayName": true,
+      "ms": 1309
+    },
+    {
+      "name": "Stilwell Solar",
+      "stableKey": "contractor:profile:cvc57212-stilwell-solar-llc",
+      "path": "/contractors/cvc57212-stilwell-solar-llc",
+      "status": 200,
+      "pageShowsDisplayName": true,
+      "ms": 1231
+    },
+    {
+      "name": "Stilwell Solar",
+      "stableKey": "contractor:profile:fro12195-stilwell-solar-llc",
+      "path": "/contractors/fro12195-stilwell-solar-llc",
+      "status": 200,
+      "pageShowsDisplayName": true,
+      "ms": 1177
+    },
+    {
+      "name": "Worsham Construction",
+      "stableKey": "contractor:profile:cbc015082-worsham-construction-company-inc",
+      "path": "/contractors/cbc015082-worsham-construction-company-inc",
+      "status": 200,
+      "pageShowsDisplayName": true,
+      "ms": 9434
+    },
+    {
+      "name": "Whaley's Air Conditioning",
+      "stableKey": "contractor:profile:cac1813195-whaley-s-air-conditioning-inc",
+      "path": "/contractors/cac1813195-whaley-s-air-conditioning-inc",
+      "status": 200,
+      "pageShowsDisplayName": true,
+      "ms": 1360
+    }
+  ]
+}

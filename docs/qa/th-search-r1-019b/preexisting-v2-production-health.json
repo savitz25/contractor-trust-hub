@@ -1,0 +1,12 @@
+{
+  "observedAt": "2026-09-18",
+  "scope": "NOT caused by and NOT changed by TH-SEARCH-R1-019B. lib/specialist-execution/contractor-v2.ts and its route are byte-identical to base 7b34589.",
+  "observations": [
+    { "target": "https://www.contractortrusthub.com/api/specialist-execution/v2?state=FL&identifier=CBC015082", "http": 503, "seconds": 10.4, "body": "BACKEND_UNAVAILABLE / execution_unavailable" },
+    { "target": "https://www.contractortrusthub.com/api/specialist-execution/v2?state=FL&identifier=CBC015082&credentialStatus=all", "http": 503, "seconds": 10.4 },
+    { "target": "https://www.contractortrusthub.com/api/specialist-execution/v2?state=FL&trade=roofing&county=broward", "http": 503, "seconds": 10.4 },
+    { "target": "same requests against this branch's optimized local build", "http": 503, "note": "identical; server log: statement timeout on runCohortRows' SELECT COUNT(*) FROM licenses JOIN contractors" },
+    { "target": "https://www.contractortrusthub.com/verify?state=fl&q=stilwell+solar (native name search, before this change)", "http": 200, "seconds": 10.8, "body": "search took too long" }
+  ],
+  "meaning": "The legacy exact-identifier and cohort operations time out in production today, independent of this work. runCohortRows / maxDuration repair was explicitly excluded from this assignment and was not touched."
+}

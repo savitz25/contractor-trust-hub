@@ -1,0 +1,118 @@
+{
+  "ranAt": "2026-09-18T23:37:39Z",
+  "note": "Small read-only sample through the HTTP endpoint from a developer machine (~250ms network round trip to the database included). One statement per request. Not a p95.",
+  "requests": [
+    {
+      "label": "Stilwell: Stilwell Solar",
+      "http": 200,
+      "wallMs": 5374,
+      "queryMs": 5360,
+      "statements": 1
+    },
+    {
+      "label": "Stilwell: STILWELL SOLAR, LLC",
+      "http": 200,
+      "wallMs": 299,
+      "queryMs": 288,
+      "statements": 1
+    },
+    {
+      "label": "Stilwell: stilwell solar",
+      "http": 200,
+      "wallMs": 299,
+      "queryMs": 288,
+      "statements": 1
+    },
+    {
+      "label": "Worsham: Worsham Construction",
+      "http": 200,
+      "wallMs": 893,
+      "queryMs": 879,
+      "statements": 1
+    },
+    {
+      "label": "Worsham: Worsham Construction Company, Inc.",
+      "http": 200,
+      "wallMs": 373,
+      "queryMs": 363,
+      "statements": 1
+    },
+    {
+      "label": "Third company: Pink Zebra Moving? (expect miss)",
+      "http": 200,
+      "wallMs": 833,
+      "queryMs": 823,
+      "statements": 1
+    },
+    {
+      "label": "Third company: Whaley's Air Conditioning",
+      "http": 200,
+      "wallMs": 1441,
+      "queryMs": 1433,
+      "statements": 1
+    },
+    {
+      "label": "Short prefix: stilw",
+      "http": 200,
+      "wallMs": 758,
+      "queryMs": 747,
+      "statements": 1
+    },
+    {
+      "label": "Shared name: Allied Roofing",
+      "http": 200,
+      "wallMs": 2548,
+      "queryMs": 2540,
+      "statements": 1
+    },
+    {
+      "label": "Explicit TX (expect miss)",
+      "http": 200,
+      "wallMs": 374,
+      "queryMs": 366,
+      "statements": 1
+    },
+    {
+      "label": "Unsupported OH (422)",
+      "http": 422,
+      "wallMs": 5,
+      "queryMs": 0,
+      "statements": 0
+    },
+    {
+      "label": "Invalid wildcard (400)",
+      "http": 400,
+      "wallMs": 7,
+      "queryMs": null,
+      "statements": null
+    },
+    {
+      "label": "Unknown field (400)",
+      "http": 400,
+      "wallMs": 8,
+      "queryMs": null,
+      "statements": null
+    },
+    {
+      "label": "Warm repeat: Stilwell Solar",
+      "http": 200,
+      "wallMs": 287,
+      "queryMs": 281,
+      "statements": 1
+    },
+    {
+      "label": "Common single word: Allied",
+      "http": 200,
+      "wallMs": 6058,
+      "queryMs": 6051,
+      "statements": 1
+    },
+    {
+      "label": "Generic-only words: General Construction",
+      "http": 504,
+      "wallMs": 6230,
+      "queryMs": 6223,
+      "statements": 1
+    }
+  ]
+}

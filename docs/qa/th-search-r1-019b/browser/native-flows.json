@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-09-18",
+  "target": "this branch, optimized build (next build + next start) on http://localhost:3119, real Chrome via browser automation",
+  "method": "The automation window runs at ~25% browser zoom (viewport reported 4800 CSS px), so window resizing would not give honest widths. Each flow was loaded in a same-origin iframe fixed at the stated CSS width, which drives layout and media queries exactly as a viewport of that width does. Screenshot capture timed out in this browser (CDP Page.captureScreenshot), so evidence is DOM-measured rather than pixel images.",
+  "flows": [
+    { "flow": "native positive  /verify?state=fl&q=stilwell+solar", "cssWidth": 1280, "profileLinks": 6, "firstLink": "/contractors/cvc57212-stilwell-solar-llc", "tookTooLong": false, "horizontalOverflow": false },
+    { "flow": "native positive  /verify?state=fl&q=stilwell+solar", "cssWidth": 390, "profileLinks": 6, "firstLink": "/contractors/cvc57212-stilwell-solar-llc", "tookTooLong": false, "horizontalOverflow": false },
+    { "flow": "native ambiguous /verify?state=fl&q=Allied+Roofing", "cssWidth": 390, "profileLinks": 26, "tookTooLong": false, "horizontalOverflow": false },
+    { "flow": "native miss      /verify?state=fl&q=zzqx+nonexistent+builder", "cssWidth": 390, "profileLinks": 0, "tookTooLong": false, "horizontalOverflow": false }
+  ],
+  "profileOpened": { "url": "/contractors/fro12195-stilwell-solar-llc", "title": "STILWELL SOLAR, LLC — Florida Contractor Trust Report · Contractor Trust Hub", "h1": "STILWELL SOLAR, LLC" },
+  "beforeThisChange": "Production /verify?state=fl&q=stilwell+solar answered 'search took too long' after ~10.8 s (see preexisting-v2-production-health.json).",
+  "preview": "No Vercel preview was used: previews for this project sit behind Vercel SSO and protection was not bypassed. The draft PR's preview, once built, needs an authorized reviewer to open it."
+}

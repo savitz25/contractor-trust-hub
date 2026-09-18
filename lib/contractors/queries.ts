@@ -19,6 +19,13 @@ import {
   normalizeLicenseKey,
   prepareNameSearch,
 } from "./search-normalize";
+import {
+  indexedWordSlots,
+  nameMatchPredicateSql,
+  namePrefilteredContractorsFromSql,
+  nameRankCaseSql,
+  paddedTokenLikes,
+} from "./name-search-core";
 import { stateHasEntityLinking } from "./trust-report";
 import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
 import type {
@@ -87,7 +94,9 @@ function workFilterSql(
 
 export async function searchContractors(
   rawQuery: string,
-  options: SearchOptions = {}
+  options: SearchOptions = {},
+  /** Injectable for tests only; production always uses the pooled `query`. */
+  db: { query: typeof query } = { query }
 ): Promise<{ results: SearchResult[]; state: EvidenceState; mode: "license" | "name" }> {
   const state = getStateBySlug(options.stateSlug || "fl");
   if (!state || !state.live) {
@@ -114,7 +123,7 @@ export async function searchContractors(
   if (licenseMode) {
     const key = normalizeLicenseKey(q);
     // Prefer exact/prefix license hits; avoid leading-wildcard scans when possible.
-    const rows = await query<{
+    const rows = await db.query<{
       id: string;
       slug: string;
       display_name: string;
@@ -251,7 +260,7 @@ export async function searchContractors(
     }
     workParams.push(...extra.params);
 
-    const rows = await query<{
+    const rows = await db.query<{
       id: string;
       slug: string;
       display_name: string;
@@ -338,17 +347,11 @@ export async function searchContractors(
   // Name search — forgiving on legal suffixes / multi-word tokens; entity links stay strict
   const prepared = prepareNameSearch(q);
   // Up to 4 significant tokens must all appear (AND). Pad with "%" so unused slots always match.
-  const tokenLikes = prepared.tokenLikes.slice(0, 4);
-  while (tokenLikes.length < 4) tokenLikes.push("%");
-
-  // Combined name blob for multi-token AND matching
-  const nameBlob = `(
-    COALESCE(c.display_name, '') || ' ' ||
-    COALESCE(c.legal_name, '') || ' ' ||
-    COALESCE(c.dba_name, '') || ' ' ||
-    COALESCE(l.licensee_name_raw, '') || ' ' ||
-    COALESCE(l.dba_name_raw, '')
-  )`;
+  // TH-SEARCH-R1-019B: predicate, rank and prefilter come from the shared name core so the
+  // callable name-candidate operation and this native search cannot drift apart.
+  const tokenLikes = paddedTokenLikes(prepared);
+  // Token patterns are $7-$10; only indexable words drive the candidate prefilter.
+  const prefilterParams = indexedWordSlots(prepared).map((slot) => 7 + slot);
 
   // Cap candidate set early so short ILIKE tokens cannot pin the pool client.
   const candidateCap = Math.min(Math.max(limit * 8, 80), 200);
@@ -376,7 +379,7 @@ export async function searchContractors(
   }
   baseParams.push(...workExtra.params);
 
-  const rows = await query<{
+  const rows = await db.query<{
     id: string;
     slug: string;
     display_name: string;
@@ -414,37 +417,12 @@ export async function searchContractors(
         l.last_verified_at,
         l.source_system,
         l.secondary_status,
-        CASE
-          WHEN c.display_name ILIKE $1 THEN 0
-          WHEN c.dba_name ILIKE $1 THEN 1
-          WHEN c.legal_name ILIKE $1 THEN 2
-          WHEN c.display_name ILIKE $2 THEN 3
-          WHEN c.dba_name ILIKE $2 OR c.legal_name ILIKE $2 THEN 4
-          WHEN l.licensee_name_raw ILIKE $2 THEN 5
-          ELSE 6
-        END AS rank_score
-      FROM contractors c
+        ${nameRankCaseSql({ prefixStripped: 1, likeStripped: 2 })} AS rank_score
+      FROM ${namePrefilteredContractorsFromSql(prefilterParams)}
       JOIN licenses l ON l.contractor_id = c.id AND l.source_system = ANY($3::text[])
       WHERE c.is_thin_profile = FALSE
         AND (c.home_state = $4 OR l.state = $4)
-        AND (
-          c.display_name ILIKE $5
-          OR c.legal_name ILIKE $5
-          OR c.dba_name ILIKE $5
-          OR l.licensee_name_raw ILIKE $5
-          OR l.dba_name_raw ILIKE $5
-          OR c.display_name ILIKE $2
-          OR c.legal_name ILIKE $2
-          OR c.dba_name ILIKE $2
-          OR l.licensee_name_raw ILIKE $2
-          OR l.dba_name_raw ILIKE $2
-          OR (
-            ${nameBlob} ILIKE $7
-            AND ${nameBlob} ILIKE $8
-            AND ${nameBlob} ILIKE $9
-            AND ${nameBlob} ILIKE $10
-          )
-        )
+        AND ${nameMatchPredicateSql({ likeOriginal: 5, likeStripped: 2, tokens: [7, 8, 9, 10] })}
         ${workExtra.sql}
       ORDER BY c.id,
         CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,

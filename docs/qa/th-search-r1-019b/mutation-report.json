@@ -1,0 +1,66 @@
+{
+  "ranAt": "2026-09-18T23:35:10.751283+00:00",
+  "gate": "npx --yes tsx --test scripts/test_th_search_r1_019b.ts",
+  "baseline": "green",
+  "mutations": [
+    {
+      "id": "M1_drop_name_predicate",
+      "file": "lib/contractors/name-search-core.ts",
+      "meaning": "The shared name predicate admits every row (an unfiltered cohort dressed up as name matches).",
+      "detected": true,
+      "failingTests": [
+        "\u2716 8. match field/value/method agree with the returned source record (50.6072ms)",
+        "\u2716 index prefilter uses only indexable required words and never widens the match set (32.6719ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M2_source_failure_becomes_empty_success",
+      "file": "lib/specialist-execution/contractor-name-candidates.ts",
+      "meaning": "A timeout / unavailable source is reported as a searched-and-missed result.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 10. a failed source is never a searched-and-missed result (2.2868ms)",
+        "\u2716 8. match field/value/method agree with the returned source record (106.8757ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M3_ignore_explicit_jurisdiction",
+      "file": "lib/specialist-execution/contractor-name-candidates.ts",
+      "meaning": "An explicit jurisdiction constraint is silently dropped and every scope is searched.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (18.395ms)",
+        "\u2716 5. explicit jurisdiction is applied; absent jurisdiction never claims nationwide coverage from FL alone (29.6566ms)",
+        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (62.9667ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M4_drop_publication_gate",
+      "file": "lib/contractors/name-candidates-query.ts",
+      "meaning": "Held/thin and destination-less profiles are promoted into public candidates.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (16.0322ms)",
+        "\u2716 3. Allied finds every Allied-named public record; generic-word overlap alone admits nothing (21.3092ms)",
+        "\u2716 6. inactive/unknown-status public profiles stay discoverable; publication restrictions stay enforced (22.8661ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M5_remove_row_level_evidence_check",
+      "file": "lib/specialist-execution/contractor-name-candidates.ts",
+      "meaning": "A row whose own names do not explain the match is displayed anyway (source echo trusted as proof).",
+      "detected": true,
+      "failingTests": [
+        "\u2716 8. match field/value/method agree with the returned source record (71.8045ms)"
+      ],
+      "restoredExactBytes": true
+    }
+  ],
+  "gateGreenAfterRestore": true,
+  "detected": 5,
+  "total": 5
+}
