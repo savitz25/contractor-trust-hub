@@ -24,6 +24,17 @@ const NJ_MUNICIPALITIES: Record<string, Municipality> = {
     municipalityCode: "2018",
     source: "https://www.nj.gov/treasury/omb/pdf/forms/municodes.pdf",
   },
+  // TH-DISCOVERY-FINAL-REPAIR-A: Newark is New Jersey's largest city and an
+  // unambiguous, well-known municipality (Essex County code 07, Newark
+  // municipality code 14) -- it was simply never added, which dead-ended a
+  // real, common NJ query behind a "confirm statewide" prompt instead of
+  // resolving it the way "Summit" already does.
+  newark: {
+    city: "Newark",
+    county: "Essex",
+    municipalityCode: "0714",
+    source: "https://www.nj.gov/treasury/omb/pdf/forms/municodes.pdf",
+  },
 };
 
 function normalizedPlace(value: string): string {

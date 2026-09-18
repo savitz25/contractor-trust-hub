@@ -50,10 +50,23 @@ test("generic and General NJ requests never invent a population", async () => {
   assert.equal(generic.resultState, "CLARIFICATION_REQUIRED"); // 18
   assert.equal("errorCode" in generic && generic.errorCode, "new_jersey_credential_class_required"); // 19
   assert.ok("capabilityChoices" in generic && generic.capabilityChoices.some((choice) => choice.id === "home_improvement")); // 20
-  const general = await executeContractorSpecialistQuery({ state: "NJ", trade: "general" });
-  assert.equal(general.resultState, "UNSUPPORTED_TRADE_CAPABILITY"); // 21
-  assert.equal("errorCode" in general && general.errorCode, "no_new_jersey_statewide_general_contractor_class"); // 22
-  assert.match(JSON.stringify(general), /HIC is not relabeled General/); // 23
+  // TH-DISCOVERY-FINAL-REPAIR-A: a NJ "general" request no longer dead-ends at
+  // a bare capability response -- it runs a real broadened cohort query
+  // (trade filter dropped) across NJ's other real credential classes and
+  // returns actual cards, never relabeled as general contractors.
+  const generalDb = {
+    queryOne: async () => ({ total: "1" }),
+    query: async () => [{
+      slug: "nj-hic-fixture", display_name: "Fixture NJ Home Improvement", license_number: "HIC900001",
+      external_key: "HIC900001", occupation_code: "HIC", occupation_description: "Home Improvement Contractor",
+      status_normalized: "active", primary_status: "Active", city: null, county: null, state: "NJ",
+      updated_at: "2026-01-01T00:00:00Z",
+    }],
+  } as unknown as Parameters<typeof executeContractorSpecialistQuery>[1];
+  const general = await executeContractorSpecialistQuery({ state: "NJ", trade: "general" }, generalDb);
+  assert.equal(general.resultState, "SUPPORTED_RESULTS"); // 21
+  assert.match(JSON.stringify(general), /does not provide a statewide 'general contractor' class/i); // 22
+  if ("rows" in general) assert.match(general.rows[0].whyShown, /NOT a confirmed general contractor/); // 23
 });
 
 test("New Jersey statewide and authoritative Summit geography normalize safely", () => {
