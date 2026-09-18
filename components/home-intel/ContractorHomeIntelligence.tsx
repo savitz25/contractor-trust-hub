@@ -23,6 +23,7 @@ const txLocal = network.acceptedStateDatasets["lib/texas-intelligence/local/acce
 const ca = network.acceptedStateDatasets["lib/california-intelligence/accepted-snapshot.json"].snapshot;
 const caLocal = network.acceptedStateDatasets["lib/california-intelligence/local/accepted-snapshot.json"].snapshot;
 const nj = network.acceptedStateDatasets["lib/new-jersey-intelligence/accepted-snapshot.json"].snapshot;
+const pa = network.acceptedStateDatasets["lib/pennsylvania-intelligence/accepted-snapshot.json"].snapshot;
 
 const INTELLIGENCE_CODES = new Set(network.stateCapabilities.filter(s => s.route).map(s => s.state));
 
@@ -231,6 +232,7 @@ export function ContractorHomeIntelligence({
             ["Texas · Austin", "Local permit/work-history evidence kept separate from state specialty credentials", txLocal.as_of, "/texas/austin"],
             ["California · SF + LA", "Published city permit/work-history intelligence alongside CSLB identity evidence", caLocal.as_of, "/california"],
             ["New Jersey", "State construction-source, public-works enforcement, specialty, and four-county research", nj.as_of, "/new-jersey"],
+            ["Pennsylvania", "HICPA, DLI asbestos/lead certifications, and prevailing-wage debarments as separate official datasets", pa.snapshotAsOf, "/pennsylvania"],
           ].map(([place, change, date, href]) => <article key={place}><Freshness date={date} /><h3>{place}</h3><p>{change}</p><Link href={href}>Open the intelligence →</Link></article>)}
         </div>
       </section>
