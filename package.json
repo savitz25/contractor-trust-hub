@@ -53,6 +53,7 @@
     "test:or-con-001": "python -X utf8 -m unittest scripts.test_or_con_001 && python -X utf8 scripts/assert_or_con_001.py && npx --yes tsx --test scripts/test_or_ask_plan.ts",
     "assert:or-con-001": "python -X utf8 scripts/assert_or_con_001.py",
     "test:pa-con-001": "python -X utf8 -m unittest scripts.test_pa_con_001 && python -X utf8 scripts/assert_pa_con_001.py && npx --yes tsx --test scripts/test_pa_ask_plan.ts",
+    "test:pa-rel-001": "npx --yes tsx --test scripts/test_pa_rel_001.ts",
     "test:nc-con-001": "python -X utf8 -m unittest scripts.test_nc_con_001 && python -X utf8 scripts/north-carolina/build_nc_con_001_snapshot.py --check && python -X utf8 scripts/assert_nc_con_001.py && npx --yes tsx --test scripts/test_nc_ask_plan.ts",
     "assert:nc-con-001": "python -X utf8 scripts/assert_nc_con_001.py",
     "assert:pa-con-001": "python -X utf8 scripts/assert_pa_con_001.py",
