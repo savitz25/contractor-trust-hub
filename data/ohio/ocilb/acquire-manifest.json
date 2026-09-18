@@ -1,0 +1,82 @@
+{
+  "source": "https://elicense4.com.ohio.gov/Lookup/GenerateRoster.aspx",
+  "fileDownload": "https://elicense4.com.ohio.gov/Lookup/FileDownload.aspx",
+  "retrievedAt": "2026-09-18T13:30:18.794218+00:00",
+  "trades": [
+    {
+      "trade": "el",
+      "typeCode": "63",
+      "label": "ELECTRICAL CONTRACTOR (EL)",
+      "rosterIdnt": "200084",
+      "sourceRecordCount": 4492,
+      "sourceStatus": "Ready for Download",
+      "path": "ohio/ocilb/raw/ocilb_el_roster.csv",
+      "sha256": "49c830a3dacb4c440e7d94b7849a823fabb18262aa9813b875233cefeb8bd6f4",
+      "bytes": 703098,
+      "contentType": "text/csv",
+      "disposition": "attachment;filename=\"OCLIB.csv\"",
+      "finalUrl": "https://elicense4.com.ohio.gov/Lookup/FileDownload.aspx?Idnt=200084&Type=Comma",
+      "retrievedAt": "2026-09-18T13:30:10.034429+00:00"
+    },
+    {
+      "trade": "hv",
+      "typeCode": "64",
+      "label": "HVAC CONTRACTOR (HV)",
+      "rosterIdnt": "200085",
+      "sourceRecordCount": 3131,
+      "sourceStatus": "Ready for Download",
+      "path": "ohio/ocilb/raw/ocilb_hv_roster.csv",
+      "sha256": "0f19f55a67834d129da4beb0addee2ac2140632f8e1bbc1725c2637641a775d7",
+      "bytes": 499025,
+      "contentType": "text/csv",
+      "disposition": "attachment;filename=\"OCLIB.csv\"",
+      "finalUrl": "https://elicense4.com.ohio.gov/Lookup/FileDownload.aspx?Idnt=200085&Type=Comma",
+      "retrievedAt": "2026-09-18T13:30:12.108324+00:00"
+    },
+    {
+      "trade": "hy",
+      "typeCode": "65",
+      "label": "HYDRONICS CONTRACTOR (HY)",
+      "rosterIdnt": "200086",
+      "sourceRecordCount": 955,
+      "sourceStatus": "Ready for Download",
+      "path": "ohio/ocilb/raw/ocilb_hy_roster.csv",
+      "sha256": "a7d126cb28f933e3755db92106e5c91d6e277255f8c8801bd71d17094ca42760",
+      "bytes": 152104,
+      "contentType": "text/csv",
+      "disposition": "attachment;filename=\"OCLIB.csv\"",
+      "finalUrl": "https://elicense4.com.ohio.gov/Lookup/FileDownload.aspx?Idnt=200086&Type=Comma",
+      "retrievedAt": "2026-09-18T13:30:13.939569+00:00"
+    },
+    {
+      "trade": "pl",
+      "typeCode": "66",
+      "label": "PLUMBING CONTRACTOR (PL)",
+      "rosterIdnt": "200087",
+      "sourceRecordCount": 3064,
+      "sourceStatus": "Ready for Download",
+      "path": "ohio/ocilb/raw/ocilb_pl_roster.csv",
+      "sha256": "42c9a0be08f07d5d004427219ba784e72a2625cbab6506c87ceb11d8751f7620",
+      "bytes": 483303,
+      "contentType": "text/csv",
+      "disposition": "attachment;filename=\"OCLIB.csv\"",
+      "finalUrl": "https://elicense4.com.ohio.gov/Lookup/FileDownload.aspx?Idnt=200087&Type=Comma",
+      "retrievedAt": "2026-09-18T13:30:15.964983+00:00"
+    },
+    {
+      "trade": "re",
+      "typeCode": "67",
+      "label": "REFRIGERATION CONTRACTOR (RE)",
+      "rosterIdnt": "200088",
+      "sourceRecordCount": 819,
+      "sourceStatus": "Ready for Download",
+      "path": "ohio/ocilb/raw/ocilb_re_roster.csv",
+      "sha256": "db696b741da88d5b2bfec13c67b7e48ce7bbfa5780b123eeda0cfbafcc7c02cd",
+      "bytes": 130759,
+      "contentType": "text/csv",
+      "disposition": "attachment;filename=\"OCLIB.csv\"",
+      "finalUrl": "https://elicense4.com.ohio.gov/Lookup/FileDownload.aspx?Idnt=200088&Type=Comma",
+      "retrievedAt": "2026-09-18T13:30:17.793910+00:00"
+    }
+  ]
+}

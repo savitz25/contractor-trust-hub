@@ -11,6 +11,7 @@ export const PUBLISHED_STATEWIDE_SLUGS = [
   "new-jersey",
   "new-york",
   "north-carolina",
+  "ohio",
   "oregon",
   "pennsylvania",
   "texas",

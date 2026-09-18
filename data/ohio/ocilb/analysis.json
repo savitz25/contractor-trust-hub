@@ -1,0 +1,383 @@
+{
+  "retrievedAt": "2026-09-18T13:31:58.557658+00:00",
+  "files": {
+    "el": {
+      "path": "data/ohio/ocilb/raw/ocilb_el_roster.csv",
+      "sha256": "49c830a3dacb4c440e7d94b7849a823fabb18262aa9813b875233cefeb8bd6f4",
+      "bytes": 703098,
+      "data_rows": 4492,
+      "columns": [
+        "FormattedCredential",
+        "Name",
+        "LastName",
+        "Type",
+        "Status",
+        "State",
+        "County",
+        "Effective Date",
+        "Expiration Date",
+        "Company",
+        "Company Address",
+        "Company Address 2",
+        "Company City",
+        "Company State",
+        "Company Zip",
+        "Company Phone",
+        "Company Fax",
+        "Company Email",
+        ""
+      ]
+    },
+    "hv": {
+      "path": "data/ohio/ocilb/raw/ocilb_hv_roster.csv",
+      "sha256": "0f19f55a67834d129da4beb0addee2ac2140632f8e1bbc1725c2637641a775d7",
+      "bytes": 499025,
+      "data_rows": 3131,
+      "columns": [
+        "FormattedCredential",
+        "Name",
+        "LastName",
+        "Type",
+        "Status",
+        "State",
+        "County",
+        "Effective Date",
+        "Expiration Date",
+        "Company",
+        "Company Address",
+        "Company Address 2",
+        "Company City",
+        "Company State",
+        "Company Zip",
+        "Company Phone",
+        "Company Fax",
+        "Company Email",
+        ""
+      ]
+    },
+    "hy": {
+      "path": "data/ohio/ocilb/raw/ocilb_hy_roster.csv",
+      "sha256": "a7d126cb28f933e3755db92106e5c91d6e277255f8c8801bd71d17094ca42760",
+      "bytes": 152104,
+      "data_rows": 955,
+      "columns": [
+        "FormattedCredential",
+        "Name",
+        "LastName",
+        "Type",
+        "Status",
+        "State",
+        "County",
+        "Effective Date",
+        "Expiration Date",
+        "Company",
+        "Company Address",
+        "Company Address 2",
+        "Company City",
+        "Company State",
+        "Company Zip",
+        "Company Phone",
+        "Company Fax",
+        "Company Email",
+        ""
+      ]
+    },
+    "pl": {
+      "path": "data/ohio/ocilb/raw/ocilb_pl_roster.csv",
+      "sha256": "42c9a0be08f07d5d004427219ba784e72a2625cbab6506c87ceb11d8751f7620",
+      "bytes": 483303,
+      "data_rows": 3064,
+      "columns": [
+        "FormattedCredential",
+        "Name",
+        "LastName",
+        "Type",
+        "Status",
+        "State",
+        "County",
+        "Effective Date",
+        "Expiration Date",
+        "Company",
+        "Company Address",
+        "Company Address 2",
+        "Company City",
+        "Company State",
+        "Company Zip",
+        "Company Phone",
+        "Company Fax",
+        "Company Email",
+        ""
+      ]
+    },
+    "re": {
+      "path": "data/ohio/ocilb/raw/ocilb_re_roster.csv",
+      "sha256": "db696b741da88d5b2bfec13c67b7e48ce7bbfa5780b123eeda0cfbafcc7c02cd",
+      "bytes": 130759,
+      "data_rows": 819,
+      "columns": [
+        "FormattedCredential",
+        "Name",
+        "LastName",
+        "Type",
+        "Status",
+        "State",
+        "County",
+        "Effective Date",
+        "Expiration Date",
+        "Company",
+        "Company Address",
+        "Company Address 2",
+        "Company City",
+        "Company State",
+        "Company Zip",
+        "Company Phone",
+        "Company Fax",
+        "Company Email",
+        ""
+      ]
+    }
+  },
+  "columns": [
+    "FormattedCredential",
+    "Name",
+    "LastName",
+    "Type",
+    "Status",
+    "State",
+    "County",
+    "Effective Date",
+    "Expiration Date",
+    "Company",
+    "Company Address",
+    "Company Address 2",
+    "Company City",
+    "Company State",
+    "Company Zip",
+    "Company Phone",
+    "Company Fax",
+    "Company Email",
+    ""
+  ],
+  "OH_OCILB_ELECTRICAL_ROWS": 4492,
+  "OH_OCILB_ELECTRICAL_DISTINCT_CREDENTIALS": 4489,
+  "OH_OCILB_HVAC_ROWS": 3131,
+  "OH_OCILB_HVAC_DISTINCT_CREDENTIALS": 3129,
+  "OH_OCILB_HYDRONICS_ROWS": 955,
+  "OH_OCILB_HYDRONICS_DISTINCT_CREDENTIALS": 955,
+  "OH_OCILB_PLUMBING_ROWS": 3064,
+  "OH_OCILB_PLUMBING_DISTINCT_CREDENTIALS": 3063,
+  "OH_OCILB_REFRIGERATION_ROWS": 819,
+  "OH_OCILB_REFRIGERATION_DISTINCT_CREDENTIALS": 818,
+  "OH_OCILB_ALL_TRADE_CREDENTIAL_ROWS": 12461,
+  "OH_OCILB_DISTINCT_FORMATTED_CREDENTIALS": 12454,
+  "OH_OCILB_DISTINCT_LICENSE_HOLDERS": 9528,
+  "OH_OCILB_DISTINCT_LICENSEE_PERSONS": 9504,
+  "OH_OCILB_DISTINCT_ASSOCIATED_COMPANY_NAMES": 8569,
+  "SOURCE_CREDENTIAL_ROWS": 12461,
+  "DISTINCT_FORMATTED_CREDENTIALS": 12454,
+  "DISTINCT_NUMERIC_LICENSE_HOLDERS": 9528,
+  "DISTINCT_LICENSEE_PERSONS": 9504,
+  "DISTINCT_ASSOCIATED_COMPANIES": 8569,
+  "malformed_credential_rows": 0,
+  "prefix_mismatch_rows": 0,
+  "blank_name_rows": 0,
+  "blank_company_rows": 10,
+  "status_raw": {
+    "ACTIVE": 11486,
+    "ACTIVE IN RENEWAL": 975
+  },
+  "status_bucket": {
+    "ACTIVE": 11486,
+    "ACTIVE_IN_RENEWAL": 975
+  },
+  "OH_OCILB_ACTIVE_CREDENTIAL_ROWS": 11486,
+  "OH_OCILB_ACTIVE_IN_RENEWAL_ROWS": 975,
+  "OH_OCILB_INACTIVE_ROWS": 0,
+  "OH_OCILB_EXPIRED_ROWS": 0,
+  "OH_OCILB_SUSPENDED_ROWS": 0,
+  "OH_OCILB_REVOKED_ROWS": 0,
+  "OH_OCILB_STATUS_OTHER_ROWS": 0,
+  "type_values": {
+    "EL": 4492,
+    "HV": 3131,
+    "HY": 955,
+    "PL": 3064,
+    "RE": 819
+  },
+  "multi_trade_numeric_holders": 1664,
+  "multi_trade_numeric_examples": {
+    "11198": [
+      "EL",
+      "HY",
+      "PL",
+      "RE"
+    ],
+    "11633": [
+      "EL",
+      "PL"
+    ],
+    "11702": [
+      "EL",
+      "HV",
+      "HY",
+      "PL"
+    ],
+    "12062": [
+      "EL",
+      "HV",
+      "PL"
+    ],
+    "12195": [
+      "EL",
+      "PL"
+    ],
+    "12357": [
+      "EL",
+      "HV",
+      "HY",
+      "PL",
+      "RE"
+    ],
+    "10710": [
+      "EL",
+      "HV",
+      "HY",
+      "PL",
+      "RE"
+    ],
+    "12030": [
+      "EL",
+      "HV",
+      "HY",
+      "PL",
+      "RE"
+    ]
+  },
+  "numeric_id_with_multiple_person_keys": 0,
+  "person_key_with_multiple_numeric_ids": 23,
+  "numeric_id_with_multiple_companies": 106,
+  "roster_rows_with_person_and_company": 12451,
+  "trade_stats": {
+    "el": {
+      "rows": 4492,
+      "distinct_formatted_credentials": 4489,
+      "distinct_numeric_license_ids": 4489,
+      "distinct_licensee_person_keys": 4485,
+      "distinct_associated_company_names": 4123,
+      "blank_company_rows": 5,
+      "status_raw": {
+        "ACTIVE": 4136,
+        "ACTIVE IN RENEWAL": 356
+      },
+      "status_bucket": {
+        "ACTIVE": 4136,
+        "ACTIVE_IN_RENEWAL": 356
+      },
+      "sample_formatted": [
+        "EL.10514",
+        "EL.10577",
+        "EL.10578",
+        "EL.51895",
+        "EL.51896"
+      ]
+    },
+    "hv": {
+      "rows": 3131,
+      "distinct_formatted_credentials": 3129,
+      "distinct_numeric_license_ids": 3129,
+      "distinct_licensee_person_keys": 3124,
+      "distinct_associated_company_names": 2882,
+      "blank_company_rows": 3,
+      "status_raw": {
+        "ACTIVE": 2868,
+        "ACTIVE IN RENEWAL": 263
+      },
+      "status_bucket": {
+        "ACTIVE": 2868,
+        "ACTIVE_IN_RENEWAL": 263
+      },
+      "sample_formatted": [
+        "HV.10540",
+        "HV.10544",
+        "HV.10549",
+        "HV.51900",
+        "HV.51901"
+      ]
+    },
+    "hy": {
+      "rows": 955,
+      "distinct_formatted_credentials": 955,
+      "distinct_numeric_license_ids": 955,
+      "distinct_licensee_person_keys": 954,
+      "distinct_associated_company_names": 870,
+      "blank_company_rows": 0,
+      "status_raw": {
+        "ACTIVE": 889,
+        "ACTIVE IN RENEWAL": 66
+      },
+      "status_bucket": {
+        "ACTIVE": 889,
+        "ACTIVE_IN_RENEWAL": 66
+      },
+      "sample_formatted": [
+        "HY.10546",
+        "HY.10606",
+        "HY.10608",
+        "HY.51882",
+        "HY.51894"
+      ]
+    },
+    "pl": {
+      "rows": 3064,
+      "distinct_formatted_credentials": 3063,
+      "distinct_numeric_license_ids": 3063,
+      "distinct_licensee_person_keys": 3059,
+      "distinct_associated_company_names": 2769,
+      "blank_company_rows": 1,
+      "status_raw": {
+        "ACTIVE": 2829,
+        "ACTIVE IN RENEWAL": 235
+      },
+      "status_bucket": {
+        "ACTIVE": 2829,
+        "ACTIVE_IN_RENEWAL": 235
+      },
+      "sample_formatted": [
+        "PL.10544",
+        "PL.10546",
+        "PL.10586",
+        "PL.51897",
+        "PL.51898"
+      ]
+    },
+    "re": {
+      "rows": 819,
+      "distinct_formatted_credentials": 818,
+      "distinct_numeric_license_ids": 818,
+      "distinct_licensee_person_keys": 817,
+      "distinct_associated_company_names": 750,
+      "blank_company_rows": 1,
+      "status_raw": {
+        "ACTIVE": 764,
+        "ACTIVE IN RENEWAL": 55
+      },
+      "status_bucket": {
+        "ACTIVE": 764,
+        "ACTIVE_IN_RENEWAL": 55
+      },
+      "sample_formatted": [
+        "RE.10606",
+        "RE.10608",
+        "RE.10704",
+        "RE.51882",
+        "RE.51894"
+      ]
+    }
+  },
+  "notes": {
+    "formatted_punctuation": "EL.#### with period, source-native",
+    "company_column_is_roster_association_not_company_license": true,
+    "do_not_sum_trade_rows_as_unique_contractors": true,
+    "active_in_renewal_is_not_expired": true
+  }
+}
