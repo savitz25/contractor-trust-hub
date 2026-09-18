@@ -1,5 +1,6 @@
 import { CONTRACTOR_STATE_NAMES } from "../search/state-names";
 import { FLORIDA_COUNTIES } from "../discovery/counties";
+import { TRADE_ONTOLOGY, normalizeAskText, phraseInText } from "./ontology";
 import {
   NJ_COUNTIES,
   resolveNjMunicipality,
@@ -84,7 +85,15 @@ const counties = [
 export function extractGeographyRequirement(
   question: string,
 ): GeographyRequirement | null {
-  if (/\b(?:llc|inc|corp|corporation|company|holdings)\b/i.test(question))
+  // TH-DISCOVERY-PARITY-001A: bare "company"/"holdings" is not itself evidence of a
+  // specific business name -- "kitchen remodeling company Denver" names an ordinary
+  // provider category, not a brand to look up. Exempt when a real TRADE_ONTOLOGY
+  // phrase is present in the text (a genuine brand name like "Roto-Rooter" has no
+  // trade phrase to match and is still correctly treated as a company name here).
+  const matchesKnownTrade = TRADE_ONTOLOGY.some((t) =>
+    t.phrases.some((p) => phraseInText(normalizeAskText(question), p)),
+  );
+  if (/\b(?:llc|inc|corp|corporation|company|holdings)\b/i.test(question) && !matchesKnownTrade)
     return null;
   let raw = question.match(
     /\b(?:in|near|around|serving|within)\s+(.+?)(?=\s+(?:with|having|that|which|sorted|sort|active|expired|licensed)\b|[?!;]|$)/i,
@@ -96,6 +105,35 @@ export function extractGeographyRequirement(
         /^(?:show\s+|find\s+)?(?:active\s+|current\s+)?(?:roofers?|roofing|hvacr?|plumb(?:ers?|ing)|electrical|electricians?|home improvement|general|mechanical)\s+/i,
         "",
       );
+  }
+  if (!raw) {
+    // TH-DISCOVERY-PARITY-001A: a bare "TRADE PLACE" phrase with no preposition
+    // ("licensed electrician Miami-Dade", "kitchen remodeling company Denver",
+    // "home builder San Bernardino County") and no state name/code in the text at
+    // all was previously never extracted -- the fallback above only fired when a
+    // trailing STATE suffix existed. Strip any known TRADE_ONTOLOGY phrase (all of
+    // them, not a hand-maintained duplicate list) plus common lead-in words, and
+    // treat a genuine remainder as the place candidate.
+    const tradeAlternation = TRADE_ONTOLOGY.flatMap((t) => t.phrases)
+      .sort((a, b) => b.length - a.length)
+      .map(esc)
+      .join("|");
+    const afterLeadIn = question
+      .replace(/[?.]+$/, "")
+      .replace(
+        /^(?:show\s+me\s+|show\s+|find\s+me\s+a\s+|find\s+|looking\s+for\s+|i\s+need\s+an?\s+|can\s+you\s+find\s+|help\s+me\s+find\s+)?(?:active\s+|current\s+|licensed\s+|certified\s+|registered\s+)*/i,
+        "",
+      )
+      .trim();
+    const tradeStripRe = new RegExp(`^(?:${tradeAlternation})s?\\s+(.+)$`, "i");
+    const tradeStripped = afterLeadIn.match(tradeStripRe)?.[1]?.trim();
+    // Only accept when the TRADE PHRASE ITSELF was actually matched and removed --
+    // not merely because a lead-in word ("Show ") changed the string. Otherwise a
+    // query with no trade word at the very start ("Show Florida HVAC contractors.")
+    // would wrongly treat "Florida HVAC contractors" as a place name.
+    if (tradeStripped && tradeStripped.length >= 3) {
+      raw = tradeStripped;
+    }
   }
   if (!raw) return null;
   raw = normalized(raw).replace(/[?.]+$/, "");
@@ -207,6 +245,24 @@ export function extractGeographyRequirement(
   // Miami" dead-ended asking the consumer to clarify a state that has only one real answer here,
   // even though ContractorTrustHub has real, live FL DBPR credential records for Miami-Dade.
   if (!state && /^miami$/i.test(place)) state = "FL";
+  // TH-DISCOVERY-PARITY-001A: "roofing contractor near Jacksonville" named a real,
+  // unambiguous FL city, but this source's contractor data is indexed at COUNTY grain
+  // -- with no city->county resolution, a real, well-known city dead-ended asking the
+  // consumer to "clarify" a county that has exactly one real answer. A small, curated
+  // major-city alias list (not a full gazetteer) lets these resolve to the real county
+  // the same way "Boca Raton"/"Miami" already do above.
+  const majorCity = FL_MAJOR_CITY_TO_COUNTY[place.toLowerCase()];
+  if (majorCity && (!state || state === "FL")) {
+    return {
+      ...base,
+      requestedKind: "county",
+      requestedCity: title(place),
+      requestedCounty: majorCity,
+      requestedState: "FL",
+      normalizedPlace: `${majorCity} County, Florida (${title(place)})`,
+      resolution: "EXACT",
+    };
+  }
   return {
     ...base,
     requestedKind: "city",
@@ -216,6 +272,24 @@ export function extractGeographyRequirement(
     resolution: state ? "EXACT" : "AMBIGUOUS",
   };
 }
+
+// TH-DISCOVERY-PARITY-001A: curated, deliberately small -- major FL cities whose
+// county is unambiguous and well-known, not an attempt at a full city gazetteer.
+const FL_MAJOR_CITY_TO_COUNTY: Record<string, string> = {
+  jacksonville: "Duval",
+  orlando: "Orange",
+  tampa: "Hillsborough",
+  "st petersburg": "Pinellas",
+  "saint petersburg": "Pinellas",
+  "fort lauderdale": "Broward",
+  tallahassee: "Leon",
+  gainesville: "Alachua",
+  naples: "Collier",
+  pensacola: "Escambia",
+  sarasota: "Sarasota",
+  clearwater: "Pinellas",
+  hialeah: "Miami-Dade",
+};
 
 export function decideGeography(
   requirement: GeographyRequirement | null,
