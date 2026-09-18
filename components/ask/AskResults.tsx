@@ -17,7 +17,22 @@ export function AskResults({
   plan: ContractorResearchQuery;
   execution: AskExecution;
 }) {
-  if(plan.recovery) return <RecoveryAnswer recovery={plan.recovery} />;
+  if (plan.recovery) {
+    return (
+      <div className="space-y-8">
+        <RecoveryAnswer recovery={plan.recovery} />
+        {execution.results.length > 0 ? (
+          <ul className="space-y-4">
+            {execution.results.map((card) => (
+              <li key={card.contractorId}>
+                <AskResultCard card={card} />
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+    );
+  }
   const overrides = planToOverrides(plan);
   const nextPage = askHref(plan.rawQuery, { ...overrides, page: String(plan.page + 1) });
   const prevPage = askHref(plan.rawQuery, { ...overrides, page: String(Math.max(1, plan.page - 1)) });

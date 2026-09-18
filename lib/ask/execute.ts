@@ -5,14 +5,15 @@ import { asLicenseStatus } from "@/lib/contractors/format";
 import type { LicenseStatus } from "@/lib/contractors/types";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { searchContractors } from "@/lib/contractors/queries";
-import { dbUserFacingError, query, queryOne } from "@/lib/db";
+import { dbUserFacingError, query } from "@/lib/db";
 import { getCounty, getDiscoveryState } from "@/lib/discovery/config";
 import { loadContractorHubIntel } from "@/lib/home/load-intel-v2";
 import { REGULATORY_PUBLICATION_GATE_ACTIVE } from "@/lib/regulatory/publication";
 import { getStateBySlug } from "@/lib/states/config";
 import type { ContractorResearchQuery, EvidenceFamilyId } from "./plan";
 import { ASK_PAGE_SIZE } from "./plan";
-import { CLASS_LABELS } from "./ontology";
+import { CLASS_LABELS, TRADE_ONTOLOGY, TRADE_TO_DISCOVERY_SLUG } from "./ontology";
+import { stateName } from "./geography";
 
 const SOURCE_LABEL: Record<string, string> = {
   fl_dbpr: "Florida DBPR",
@@ -171,46 +172,95 @@ export function askWhere(plan: ContractorResearchQuery, countySlug?: string | nu
   return { where, params };
 }
 
-async function fetchBroaderContractorRows(
-  where: string,
-  params: unknown[],
-  limit: number
-): Promise<Array<{ id: string; slug: string; display_name: string; primary_city: string | null; primary_county: string | null; home_state: string | null; external_key: string | null; occupation_code: string | null; status_normalized: string | null; source_system: string | null }>> {
-  return query(
-    `
-    SELECT * FROM (
-      SELECT DISTINCT ON (c.id)
+type ContractorRow = {
+  id: string;
+  slug: string;
+  display_name: string;
+  primary_city: string | null;
+  primary_county: string | null;
+  home_state: string | null;
+  external_key: string | null;
+  occupation_code: string | null;
+  status_normalized: string | null;
+  source_system: string | null;
+};
+
+/**
+ * TH-DISCOVERY-FINAL-REPAIR-A: the list path used to run two sequential DB
+ * round trips (a rows query, then a separate COUNT query) against the same
+ * filtered join. Under the production connection pool (max 1 client per
+ * serverless isolate — see lib/db.ts), a second concurrent request on a warm
+ * isolate has to queue behind that first request's *two* round trips, and
+ * their combined statement-timeout budgets (15s + 10s) could exceed the
+ * platform's real function duration, producing an intermittent truncated
+ * render instead of a clean result. Computing the filtered join once in a
+ * materialized CTE and reading both the paginated page and the totals out of
+ * it in a single round trip removes the duplicate scan and the second
+ * connection acquisition/release, not just the appearance of one.
+ */
+/**
+ * Exported only so a regression test can assert on the SQL text directly:
+ * the LATERAL subquery's own ORDER BY makes its OWN output deterministic,
+ * but SQL gives no guarantee that a join preserves a subquery's row order
+ * into the outer result set -- the outer SELECT needs its own top-level
+ * ORDER BY (repeating the same tie-broken sort) or pagination can still
+ * reshuffle equal-name rows across requests.
+ */
+export function buildCohortRowsSql(limitIdx: number, offsetIdx: number, where: string): string {
+  return `
+    WITH matched AS MATERIALIZED (
+      SELECT
         c.id, c.slug, c.display_name, l.city AS primary_city, l.county_name AS primary_county, l.state AS home_state,
-        l.external_key, l.occupation_code, l.status_normalized, l.source_system
+        l.external_key, l.occupation_code, l.status_normalized, l.source_system,
+        ROW_NUMBER() OVER (
+          PARTITION BY c.id
+          ORDER BY CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END
+        ) AS rn
       FROM contractors c
       JOIN licenses l ON l.contractor_id = c.id
       WHERE ${where}
-      ORDER BY c.id,
-        CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
-        c.display_name
-    ) picked
-    ORDER BY LOWER(picked.display_name), picked.id
-    LIMIT $${params.length + 1}::int
-    `,
-    [...params, limit],
+    ),
+    totals AS (
+      SELECT COUNT(*) FILTER (WHERE rn = 1)::text AS contractors, COUNT(*)::text AS credentials
+      FROM matched
+    )
+    SELECT sub.id, sub.slug, sub.display_name, sub.primary_city, sub.primary_county, sub.home_state,
+           sub.external_key, sub.occupation_code, sub.status_normalized, sub.source_system,
+           totals.contractors, totals.credentials
+    FROM totals
+    LEFT JOIN LATERAL (
+      SELECT * FROM matched WHERE rn = 1
+      ORDER BY LOWER(display_name), id
+      LIMIT $${limitIdx}::int OFFSET $${offsetIdx}::int
+    ) sub ON true
+    ORDER BY LOWER(sub.display_name), sub.id
+    `;
+}
+
+async function fetchRowsWithTotals(
+  where: string,
+  params: unknown[],
+  limit: number,
+  offset: number
+): Promise<{ rows: ContractorRow[]; contractors: number; credentials: number }> {
+  const limitIdx = params.length + 1;
+  const offsetIdx = params.length + 2;
+  const rows = await query<ContractorRow & { contractors: string; credentials: string }>(
+    buildCohortRowsSql(limitIdx, offsetIdx, where),
+    [...params, limit, offset],
     { statementTimeoutMs: 15_000 }
   );
+  const contractors = Number(rows[0]?.contractors ?? "0");
+  const credentials = Number(rows[0]?.credentials ?? "0");
+  if (![contractors, credentials].every((n) => Number.isSafeInteger(n) && n >= 0)) {
+    throw new Error("invalid_source_count");
+  }
+  return { rows: rows.filter((r) => r.id != null), contractors, credentials };
 }
 
 async function askCounts(where: string, params: unknown[]): Promise<{ contractors: number; credentials: number }> {
-  const row = await queryOne<{ contractors: string; credentials: string }>(
-    `
-    SELECT COUNT(DISTINCT c.id)::text AS contractors, COUNT(*)::text AS credentials
-    FROM contractors c
-    JOIN licenses l ON l.contractor_id = c.id
-    WHERE ${where}
-    `,
-    params,
-    { statementTimeoutMs: 10_000 }
-  );
-  const contractors=Number(row?.contractors),credentials=Number(row?.credentials);
-  if(!row||![contractors,credentials].every(n=>Number.isSafeInteger(n)&&n>=0))throw new Error("invalid_source_count");
-  return {contractors,credentials};
+  const { contractors, credentials } = await fetchRowsWithTotals(where, params, 0, 0);
+  return { contractors, credentials };
 }
 
 function whyMatched(plan: ContractorResearchQuery, card: { evidenceCount: number }): string {
@@ -278,17 +328,17 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
     let built = askWhere(broaderPlan);
     let broaderGeographyLabel = plan.geography.countyLabel ? `${plan.geography.countyLabel} County` : "Florida";
     if (built) {
-      let rows = await fetchBroaderContractorRows(built.where, built.params, plan.limit);
-      if (rows.length === 0 && plan.geography.countySlug) {
+      let fetched = await fetchRowsWithTotals(built.where, built.params, plan.limit, 0);
+      if (fetched.rows.length === 0 && plan.geography.countySlug) {
         // County-level broader inventory is itself empty -- auto-broaden once more to statewide
         // Florida rather than showing nothing; still explicitly labeled, never silent.
         built = askWhere(broaderPlan, null);
         broaderGeographyLabel = "Florida";
-        rows = built ? await fetchBroaderContractorRows(built.where, built.params, plan.limit) : [];
+        fetched = built ? await fetchRowsWithTotals(built.where, built.params, plan.limit, 0) : { rows: [], contractors: 0, credentials: 0 };
       }
-      if (rows.length > 0) {
-        const totals = await askCounts(built!.where, built!.params);
-        const results: AskEntityCard[] = rows.map((r) => {
+      if (fetched.rows.length > 0) {
+        const totals = { contractors: fetched.contractors, credentials: fetched.credentials };
+        const results: AskEntityCard[] = fetched.rows.map((r) => {
           const card: AskEntityCard = {
             contractorId: r.id, slug: r.slug, displayName: r.display_name, credentialKey: r.external_key,
             occupationCode: r.occupation_code, occupationLabel: classLabel(r.occupation_code),
@@ -389,7 +439,7 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
     }
 
     if (plan.mode === "count") {
-      const totals = await askCounts(built.where, built.params);
+      const totals = await fetchRowsWithTotals(built.where, built.params, 0, 0);
       return emptyExecution({
         ok: true,
         contractorCount: totals.contractors,
@@ -403,39 +453,14 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
       });
     }
 
-    const listParams = [...built.params, plan.limit, plan.offset];
-    const rows = await query<{
-      id: string;
-      slug: string;
-      display_name: string;
-      primary_city: string | null;
-      primary_county: string | null;
-      home_state: string | null;
-      external_key: string | null;
-      occupation_code: string | null;
-      status_normalized: string | null;
-      source_system: string | null;
-    }>(
-      `
-      SELECT * FROM (
-        SELECT DISTINCT ON (c.id)
-          c.id, c.slug, c.display_name, l.city AS primary_city, l.county_name AS primary_county, l.state AS home_state,
-          l.external_key, l.occupation_code, l.status_normalized, l.source_system
-        FROM contractors c
-        JOIN licenses l ON l.contractor_id = c.id
-        WHERE ${built.where}
-        ORDER BY c.id,
-          CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
-          c.display_name
-      ) picked
-      ORDER BY LOWER(picked.display_name), picked.id
-      LIMIT $${built.params.length + 1}::int OFFSET $${built.params.length + 2}::int
-      `,
-      listParams,
-      { statementTimeoutMs: 15_000 }
-    );
+    let fetched: { rows: ContractorRow[]; contractors: number; credentials: number };
+    try {
+      fetched = await fetchRowsWithTotals(built.where, built.params, plan.limit, plan.offset);
+    } catch {
+      return emptyExecution({blocked:true,blockMessage:"The scoped total could not be checked. Retry this same research request; no page-size total was inferred.",asOf,snapshotFingerprint:intel.sourceFingerprint});
+    }
 
-    const results: AskEntityCard[] = rows.map((r) => {
+    const results: AskEntityCard[] = fetched.rows.map((r) => {
       const card: AskEntityCard = {
         contractorId: r.id,
         slug: r.slug,
@@ -468,17 +493,10 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
       return card;
     });
 
-    let totals: { contractors: number; credentials: number } | null = null;
-    try {
-      totals = await askCounts(built.where, built.params);
-    } catch {
-      return emptyExecution({blocked:true,blockMessage:"The scoped total could not be checked. Retry this same research request; no page-size total was inferred.",asOf,snapshotFingerprint:intel.sourceFingerprint});
-    }
-
     return emptyExecution({
       ok: true,
-      contractorCount: totals.contractors,
-      credentialCount: totals.credentials,
+      contractorCount: fetched.contractors,
+      credentialCount: fetched.credentials,
       grainLabel:
         "Matching canonical contractor profiles (contractors.id) vs matching credential rows. These are not the same grain.",
       asOf,
@@ -500,10 +518,78 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
   }
 }
 
+/**
+ * TH-DISCOVERY-FINAL-REPAIR-A: a genuinely unsupported state (recovery.ts's
+ * generic COHORT_UNAVAILABLE branch, e.g. Colorado) used to end at a bare
+ * "BROADER TRUSTHUB CONTRACTOR DIRECTORY" text link with zero providers on the
+ * first screen -- a Results-First violation. Real, indexed Florida
+ * contractors for the requested trade family (or "general" if none was
+ * named) are one query away; show a bounded set of them immediately,
+ * clearly labeled as NOT specific to the requested state.
+ */
+async function cohortUnavailableBroaderResults(
+  plan: ContractorResearchQuery,
+  intel: ReturnType<typeof loadContractorHubIntel>
+): Promise<{ results: AskEntityCard[]; contractorCount: number | null; credentialCount: number | null }> {
+  const requestedTradeId = plan.recovery?.requestedTrade;
+  const tradeMeta =
+    TRADE_ONTOLOGY.find((t) => t.id === requestedTradeId) ?? TRADE_ONTOLOGY.find((t) => t.id === "general")!;
+  const stateLabel = plan.recovery?.requestedState ? stateName(plan.recovery.requestedState) : (plan.recovery?.locationLabel ?? "the requested jurisdiction");
+  const broaderPlan: ContractorResearchQuery = {
+    ...plan,
+    trade: {
+      familyId: tradeMeta.id,
+      label: tradeMeta.label,
+      occupationCodes: [...tradeMeta.exactClasses],
+      classLabels: tradeMeta.exactClasses.map((c) => CLASS_LABELS[c] || c),
+      discoverySlug: TRADE_TO_DISCOVERY_SLUG[tradeMeta.id],
+    },
+    geography: { ...plan.geography, state: "FL", city: null, countySlug: null, countyLabel: null },
+    credentialStatus: "active_current",
+  };
+  const built = askWhere(broaderPlan, null);
+  if (!built) return { results: [], contractorCount: null, credentialCount: null };
+  const fetched = await fetchRowsWithTotals(built.where, built.params, 20, 0);
+  const results: AskEntityCard[] = fetched.rows.map((r) => ({
+    contractorId: r.id, slug: r.slug, displayName: r.display_name, credentialKey: r.external_key,
+    occupationCode: r.occupation_code, occupationLabel: classLabel(r.occupation_code),
+    statusNormalized: asLicenseStatus(r.status_normalized),
+    statusLabel: r.status_normalized === "active" || r.status_normalized === "current" ? "Active/current in indexed DBPR record" : r.status_normalized ? `${r.status_normalized} in indexed DBPR record` : "Status as published",
+    city: r.primary_city, county: r.primary_county, state: r.home_state,
+    sourceLabel: SOURCE_LABEL[r.source_system || "fl_dbpr"] || r.source_system || "Florida DBPR",
+    sourceSystem: r.source_system || "fl_dbpr",
+    geographyNote: "Florida recorded address in the indexed licensing record — not service territory, and NOT " + stateLabel + ".",
+    evidenceCount: 0, newestEvidenceDate: null,
+    whyMatched: `BROADER TRUSTHUB CONTRACTOR DIRECTORY result -- these are NOT ${stateLabel}-specific. TrustHub has not acquired ${stateLabel} contractor-license directory data; this is a real, indexed Florida ${tradeMeta.label.toLowerCase()} credential holder shown as the broader, currently-covered alternative.`,
+    evidence: [], profileHref: r.slug ? `/contractors/${r.slug}` : null,
+  }));
+  return { results, contractorCount: fetched.contractors, credentialCount: fetched.credentials };
+}
+
 const EXEC_MEMO = new Map<string, AskExecution>();
 
 export async function executeContractorResearchQuery(plan: ContractorResearchQuery): Promise<AskExecution> {
-  if(plan.mode === "guidance") return emptyExecution({ok:true,grainLabel:"Guidance; no provider retrieval or count",sqlContract:"No query: guidance/recovery operation."});
+  if (plan.mode === "guidance") {
+    const intel = loadContractorHubIntel();
+    if (plan.recovery?.capabilityState === "COHORT_UNAVAILABLE") {
+      try {
+        const broader = await cohortUnavailableBroaderResults(plan, intel);
+        return emptyExecution({
+          ok: true,
+          results: broader.results,
+          contractorCount: broader.contractorCount,
+          credentialCount: broader.credentialCount,
+          grainLabel: "Broader Florida DBPR contractor profiles shown as a labeled fallback; not filtered to the requested state.",
+          asOf: intel.generatedAt.slice(0, 10),
+          snapshotFingerprint: intel.sourceFingerprint,
+          sqlContract: "parameterized contractors ⋈ licenses (broader-state fallback for an unsupported jurisdiction)",
+        });
+      } catch {
+        return emptyExecution({ ok: true, grainLabel: "Guidance; no provider retrieval or count", sqlContract: "No query: guidance/recovery operation." });
+      }
+    }
+    return emptyExecution({ok:true,grainLabel:"Guidance; no provider retrieval or count",sqlContract:"No query: guidance/recovery operation."});
+  }
   const intel = loadContractorHubIntel();
   const key = `${plan.planId}:${plan.page}:${plan.sort.field}:${plan.mode}:${intel.sourceFingerprint}`;
   if(plan.geographyRequirement&&!plan.geographyRequirement.executionGeography)return emptyExecution({blocked:true,blockMessage:plan.geographyRequirement.message,sqlContract:"No query: requested geography not authorized for execution."});

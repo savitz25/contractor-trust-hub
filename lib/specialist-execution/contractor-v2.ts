@@ -317,12 +317,10 @@ export function buildWhere(input: NormalizedContractorExecutionRequest) {
   return { sql: terms.join(" AND "), params, occupationCodes };
 }
 
-export async function executeContractorSpecialistQuery(raw: unknown, db: {query:typeof query;queryOne:typeof queryOne} = {query,queryOne}): Promise<ContractorExecutionResponse | ContractorCapabilityResponse> {
-  const input = normalizeContractorExecutionRequest(raw);
-  if (input.state === "FL" && input.tradeRaw === "electrical") throw new Error("unsupported_florida_electrical_source");
-  const semantic = semanticCapabilityResult(input);
-  if (semantic) return semantic;
-  if (!input.capability || !input.geography || (input.state !== "FL" && input.state !== "NJ" && input.state !== "TX")) throw new Error("unsupported_state_capability");
+async function runCohortRows(
+  input: NormalizedContractorExecutionRequest,
+  db: { query: typeof query; queryOne: typeof queryOne }
+) {
   const built = buildWhere(input);
   const offset = (input.page - 1) * input.limit;
   const count = await db.queryOne<{ total: string }>(`SELECT COUNT(*)::text AS total FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE ${built.sql}`, built.params, { statementTimeoutMs: 10_000 });
@@ -333,36 +331,99 @@ export async function executeContractorSpecialistQuery(raw: unknown, db: {query:
      ORDER BY LOWER(c.display_name), UPPER(COALESCE(l.license_number, l.external_key, '')), l.id
      LIMIT $${built.params.length + 1}::int OFFSET $${built.params.length + 2}::int`, params, { statementTimeoutMs: 15_000 });
   const total = Number(count?.total);
-  if(!count || !Number.isSafeInteger(total)||total<0)throw new Error("source_count_unavailable");
+  if (!count || !Number.isSafeInteger(total) || total < 0) throw new Error("source_count_unavailable");
   const totalPages = Math.ceil(total / input.limit);
   const pageOutOfRange = totalPages > 0 && input.page > totalPages;
+  return { built, rows, total, totalPages, pageOutOfRange };
+}
+
+function cohortRowsToApiRows(
+  input: NormalizedContractorExecutionRequest,
+  rows: Awaited<ReturnType<typeof runCohortRows>>["rows"],
+  whyShown: (row: (typeof rows)[number]) => string
+): ContractorExecutionRow[] {
+  return rows.map((row) => {
+    const credentialNumber = row.license_number ?? row.external_key ?? "";
+    const profileUrl = absoluteUrl(`/contractors/${encodeURIComponent(row.slug)}`);
+    const verifyUrl = absoluteUrl(`${input.capability!.verifyDestination}${input.capability!.verifyDestination.includes("?") ? "&" : "?"}q=${encodeURIComponent(credentialNumber)}`);
+    return {
+      name: row.display_name, credentialNumber, credentialKey: row.external_key,
+      trade: row.occupation_description ?? getOccupationInfo(row.occupation_code).label,
+      occupationCode: row.occupation_code ?? "", credentialClass: row.occupation_description,
+      status: row.status_normalized, sourceNativeStatus: row.primary_status,
+      recordedGeography: { city: row.city, county: row.county, state: row.state },
+      source: { system: input.capability!.sourceSystems[0], label: input.capability!.state.boardShortLabel, observedAt: row.updated_at ? new Date(row.updated_at).toISOString() : null },
+      publicationState: "PUBLIC_PROFILE" as const,
+      whyShown: whyShown(row),
+      regulatoryHistory: { available: false, meaning: "Not exposed by this credential-row contract; open the canonical profile for separately publication-gated regulatory evidence." },
+      destination: profileUrl,
+      destinations: [
+        { type: "PUBLIC_PROFILE" as const, url: profileUrl },
+        { type: "CONTRACTORTRUSTHUB_VERIFY" as const, url: verifyUrl },
+        { type: "OFFICIAL_BOARD_VERIFICATION" as const, url: input.capability!.state.boardUrl },
+      ],
+    };
+  });
+}
+
+/**
+ * TH-DISCOVERY-FINAL-REPAIR-A: New Jersey genuinely has no statewide "general
+ * contractor" credential class (see NJ_TRADES in state-capabilities.ts), but
+ * that used to dead-end at a bare list of trade-picker links with no actual
+ * providers on the first screen -- a Results-First violation. Real, indexed NJ
+ * credential holders across its OTHER supported classes (HIC, electrical,
+ * plumbing, HVAC, alarm, telecom, locksmith, hearth) are one query away at the
+ * same requested geography; show them immediately, clearly labeled, never
+ * relabeled as general contractors.
+ */
+async function njGeneralContractorBroadenedResponse(
+  input: NormalizedContractorExecutionRequest,
+  db: { query: typeof query; queryOne: typeof queryOne }
+): Promise<ContractorExecutionResponse> {
+  if (!input.geography || !input.capability) throw new Error("invalid_geography");
+  const broadened: NormalizedContractorExecutionRequest = { ...input, tradeRaw: null, trade: null, tradeCapability: null, credentialClass: null };
+  const { built, rows, total, totalPages, pageOutOfRange } = await runCohortRows(broadened, db);
+  const resultState: ContractorExecutionResponse["resultState"] = pageOutOfRange ? "INVALID_QUERY" : total === 0 ? "ZERO_MATCHING_ROWS" : "SUPPORTED_RESULTS";
+  return {
+    ...baseEnvelope(), resultState, status: pageOutOfRange ? "invalid_query" : "supported",
+    queryInterpretation: { state: input.state, trade: input.tradeRaw, occupationCodes: built.occupationCodes, identifier: input.identifier, geography: input.geography, credentialStatus: input.credentialStatus, ordering: "Normalized public name, then exact credential identifier, then stable source record. Neutral regulatory ordering; not recommendation." },
+    resultType: "credential_rows",
+    rows: cohortRowsToApiRows(broadened, rows, (row) => `BROADER NEW JERSEY CREDENTIAL RESULT -- NOT a confirmed general contractor. New Jersey has no statewide General Contractor license class; this is a real, indexed ${row.occupation_description ?? "NJ DCA"} credential holder in the requested geography.`),
+    total,
+    pagination: { page: input.page, limit: input.limit, totalPages, hasNextPage: input.page * input.limit < total },
+    availableRefinements: [
+      { field: "trade", values: input.capability!.trades.map((trade) => trade.id) },
+      { field: "credentialStatus", values: ["active_current", "expired", "all"] },
+      { field: "county", values: [...NJ_COUNTIES] },
+    ],
+    provenance: { source: input.capability!.state.boardLabel, sourceSystem: input.capability!.sourceSystems[0], sourceClockField: "licenses.updated_at", queryGrain: `${input.capability!.state.code} source-native credential row joined to an existing public non-thin ContractorTrustHub identity`, publicationSemantics: "Research-row inclusion reuses the existing non-thin public profile relationship; this endpoint creates no identity or profile." },
+    limitations: [
+      "NJ'S CURRENT INDEXED CREDENTIAL SOURCE DOES NOT PROVIDE A STATEWIDE 'GENERAL CONTRACTOR' CLASS.",
+      "BROADER NJ CONTRACTOR OPTIONS: rows below are real indexed New Jersey credential holders across other license classes (Home Improvement, electrical, plumbing, HVAC, alarm, telecom, locksmith, hearth) at the requested geography -- never called general contractors.",
+      "Rows are neutral regulatory research results, not rankings, recommendations, or proof of workmanship.",
+      "Recorded credential/address geography is not service territory or current availability.",
+      "New Jersey has no single statewide General contractor license class; HIC and each specialty remain separate.",
+      ...(pageOutOfRange ? [`Requested page ${input.page} exceeds the current last page ${totalPages}; no broader or fallback query was executed.`] : []),
+    ],
+  };
+}
+
+export async function executeContractorSpecialistQuery(raw: unknown, db: {query:typeof query;queryOne:typeof queryOne} = {query,queryOne}): Promise<ContractorExecutionResponse | ContractorCapabilityResponse> {
+  const input = normalizeContractorExecutionRequest(raw);
+  if (input.state === "FL" && input.tradeRaw === "electrical") throw new Error("unsupported_florida_electrical_source");
+  if (input.state === "NJ" && input.tradeRaw === "general" && input.geography && !input.geography.requiresStatewideConfirmation) {
+    return njGeneralContractorBroadenedResponse(input, db);
+  }
+  const semantic = semanticCapabilityResult(input);
+  if (semantic) return semantic;
+  if (!input.capability || !input.geography || (input.state !== "FL" && input.state !== "NJ" && input.state !== "TX")) throw new Error("unsupported_state_capability");
+  const { built, rows, total, totalPages, pageOutOfRange } = await runCohortRows(input, db);
   const resultState: ContractorExecutionResponse["resultState"] = pageOutOfRange ? "INVALID_QUERY" : input.identifier && total === 1 ? "EXACT_IDENTITY" : total === 0 ? "ZERO_MATCHING_ROWS" : "SUPPORTED_RESULTS";
   return {
     ...baseEnvelope(), resultState, status: pageOutOfRange ? "invalid_query" : "supported",
     queryInterpretation: { state: input.state, trade: input.tradeCapability?.label ?? input.credentialClass, occupationCodes: built.occupationCodes, identifier: input.identifier, geography: input.geography, credentialStatus: input.credentialStatus, ordering: "Normalized public name, then exact credential identifier, then stable source record. Neutral regulatory ordering; not recommendation." },
     resultType: input.identifier ? "exact_credential" : "credential_rows",
-    rows: rows.map((row) => {
-      const credentialNumber = row.license_number ?? row.external_key ?? "";
-      const profileUrl = absoluteUrl(`/contractors/${encodeURIComponent(row.slug)}`);
-      const verifyUrl = absoluteUrl(`${input.capability!.verifyDestination}${input.capability!.verifyDestination.includes("?") ? "&" : "?"}q=${encodeURIComponent(credentialNumber)}`);
-      return {
-        name: row.display_name, credentialNumber, credentialKey: row.external_key,
-        trade: row.occupation_description ?? getOccupationInfo(row.occupation_code).label,
-        occupationCode: row.occupation_code ?? "", credentialClass: row.occupation_description,
-        status: row.status_normalized, sourceNativeStatus: row.primary_status,
-        recordedGeography: { city: row.city, county: row.county, state: row.state },
-        source: { system: input.capability!.sourceSystems[0], label: input.capability!.state.boardShortLabel, observedAt: row.updated_at ? new Date(row.updated_at).toISOString() : null },
-        publicationState: "PUBLIC_PROFILE" as const,
-        whyShown: `${row.occupation_description ?? row.occupation_code ?? "Credential"} row from ${input.capability!.state.boardShortLabel} matching the selected credential class and status.`,
-        regulatoryHistory: { available: false, meaning: "Not exposed by this credential-row contract; open the canonical profile for separately publication-gated regulatory evidence." },
-        destination: profileUrl,
-        destinations: [
-          { type: "PUBLIC_PROFILE" as const, url: profileUrl },
-          { type: "CONTRACTORTRUSTHUB_VERIFY" as const, url: verifyUrl },
-          { type: "OFFICIAL_BOARD_VERIFICATION" as const, url: input.capability!.state.boardUrl },
-        ],
-      };
-    }),
+    rows: cohortRowsToApiRows(input, rows, (row) => `${row.occupation_description ?? row.occupation_code ?? "Credential"} row from ${input.capability!.state.boardShortLabel} matching the selected credential class and status.`),
     total,
     pagination: { page: input.page, limit: input.limit, totalPages, hasNextPage: input.page * input.limit < total },
     availableRefinements: [

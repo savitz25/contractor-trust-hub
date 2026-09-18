@@ -345,7 +345,13 @@ export function decideGeography(
   // broadens to real, explicitly labeled county/statewide contractor options instead of a bare
   // dead end. Let electrical+FL resolve geography normally so that branch is actually reached.
   const electricalFloridaGap = state === "FL" && trade === "electrical";
-  if (!capability || (trade && !tradeCapability && !electricalFloridaGap)) {
+  // TH-DISCOVERY-FINAL-REPAIR-A: New Jersey genuinely has no statewide "general
+  // contractor" class (same shape of gap as FL+electrical above) -- but that
+  // does not make the requested geography itself unsupported. Let it resolve
+  // normally so contractor-v2.ts's dedicated NJ-general broadening branch is
+  // actually reached instead of dead-ending here.
+  const njGeneralGap = state === "NJ" && trade === "general";
+  if (!capability || (trade && !tradeCapability && !electricalFloridaGap && !njGeneralGap)) {
     return {
       ...r,
       executionOutcome: "UNSUPPORTED",

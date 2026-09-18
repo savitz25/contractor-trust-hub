@@ -32,13 +32,43 @@ test("discovery and identity routes are deterministic", () => {
 
 test("capability outcomes stay distinct without running cohort SQL", async () => {
   assert.equal((await executeContractorSpecialistQuery(discovery("contractor New Jersey").request)).resultState, "CLARIFICATION_REQUIRED");
-  assert.equal((await executeContractorSpecialistQuery(discovery("general contractor New Jersey").request)).resultState, "UNSUPPORTED_TRADE_CAPABILITY");
   assert.equal((await executeContractorSpecialistQuery(discovery("contractors serving New Jersey").request)).resultState, "UNSUPPORTED_TRADE_CAPABILITY");
   const summitCounty = contractorRequestErrorResponse(new Error("invalid_geography:summit_is_city_in_union_county"), discovery("contractor in Summit County NJ").request);
   assert.equal(summitCounty.resultState, "INVALID_GEOGRAPHY");
   const unsupported = contractorRequestErrorResponse(new Error("unsupported_state"), discovery("roofers in Ohio").request);
   assert.equal(unsupported.resultState, "UNSUPPORTED_STATE_CAPABILITY");
   assert.equal(contractorUnsupportedElectricalResponse(discovery("electrical contractor in Boca Raton").request).errorCode, "unsupported_florida_electrical_source");
+});
+
+// TH-DISCOVERY-FINAL-REPAIR-A: New Jersey has no statewide "general contractor"
+// class, but that used to dead-end at a bare capability response with zero
+// providers on the first screen. A "general contractor" NJ request must now
+// run a real, broadened cohort query (trade filter dropped, geography kept)
+// across NJ's OTHER real credential classes and return actual cards, never
+// relabeled as general contractors.
+test("NJ general-contractor request runs a real broadened cohort query, not a bare capability dead end", async () => {
+  const fixtureRow = {
+    slug: "nj-hic-newark", display_name: "Fixture Newark Home Improvement", license_number: "HIC100001",
+    external_key: "HIC100001", occupation_code: "HIC", occupation_description: "Home Improvement Contractor",
+    status_normalized: "active", primary_status: "Active", city: "Newark", county: "Essex", state: "NJ",
+    updated_at: "2026-01-01T00:00:00Z",
+  };
+  const calls: { sql: string; params: unknown[] }[] = [];
+  const db = {
+    queryOne: async (sql: string, params: unknown[]) => { calls.push({ sql, params }); return { total: "1" }; },
+    query: async (sql: string, params: unknown[]) => { calls.push({ sql, params }); return [fixtureRow]; },
+  } as unknown as Parameters<typeof executeContractorSpecialistQuery>[1];
+  const resp = await executeContractorSpecialistQuery(discovery("general contractor in Newark NJ").request, db);
+  assert.equal(resp.resultState, "SUPPORTED_RESULTS");
+  assert.ok(calls.length > 0, "a real cohort query must run, not a bare capability response");
+  for (const call of calls) assert.doesNotMatch(call.sql, /occupation_code\s*=\s*ANY|UPPER\(TRIM\(l\.occupation_code\)\)/, "trade filter must be dropped when broadening");
+  if ("rows" in resp) {
+    assert.equal(resp.rows.length, 1);
+    assert.match(resp.rows[0].whyShown, /NOT a confirmed general contractor/);
+    assert.match(resp.limitations[0], /does not provide a statewide 'general contractor' class/i);
+  } else {
+    assert.fail("expected a ContractorExecutionResponse with rows");
+  }
 });
 
 test("UI uses V2, separates Verify, and preserves safety metrics", () => {

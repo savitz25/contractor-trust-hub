@@ -224,3 +224,45 @@ test("DANGEROUS re-test: 'licensed electrician Miami-Dade' never relabels a broa
   assert.equal(p.executable, true);
   assert.equal(p.geography.state, "FL");
 });
+
+// TH-DISCOVERY-FINAL-REPAIR-A (Vercel review finding): fetchRowsWithTotals's
+// combined rows+totals query must carry its OWN top-level ORDER BY on the
+// outer SELECT, not rely on the inner LATERAL subquery's ORDER BY being
+// incidentally preserved through the join -- SQL gives no such guarantee, so
+// pagination could otherwise reshuffle equal-name rows across requests.
+test("fetchRowsWithTotals SQL has a deterministic top-level ORDER BY, not just an inner one", async () => {
+  const { buildCohortRowsSql } = await import("./execute");
+  const sql = buildCohortRowsSql(5, 6, "l.source_system = $1");
+  // Three ORDER BY clauses: the ROW_NUMBER() window's (picks the winning
+  // credential per contractor, unrelated to page order), the LATERAL
+  // subquery's (bounds the page), and the outer query's (guarantees the
+  // final row order -- this is the one the review finding was about).
+  const orderByMatches = sql.match(/ORDER BY/g);
+  assert.equal(orderByMatches?.length, 3, "expected the window ORDER BY, the inner (subquery) ORDER BY, and the outer (top-level) ORDER BY");
+  // The outer ORDER BY must appear AFTER the LATERAL subquery closes, and use
+  // the same alphabetical-name-then-id tie-break as the pre-existing list path
+  // (LOWER(display_name), id) so pagination semantics are preserved exactly.
+  const afterLateral = sql.split(") sub ON true")[1] ?? "";
+  assert.match(afterLateral, /ORDER BY LOWER\(sub\.display_name\), sub\.id/);
+});
+
+// Simulates the exact bug class the review flagged: two rows sharing the same
+// display_name (a real, unremarkable case -- e.g. two different franchisees
+// both named "ABC Roofing") must still land in a stable, repeatable order
+// across identical calls, tie-broken by id.
+test("equal-name rows sort deterministically by the stable id tie-breaker (simulated)", () => {
+  const rows = [
+    { display_name: "Same Roofing Co", id: "b-002" },
+    { display_name: "Same Roofing Co", id: "a-001" },
+    { display_name: "Same Roofing Co", id: "c-003" },
+  ];
+  const sortOnce = (input: typeof rows) =>
+    [...input].sort((a, b) => {
+      const nameCmp = a.display_name.toLowerCase().localeCompare(b.display_name.toLowerCase());
+      return nameCmp !== 0 ? nameCmp : a.id.localeCompare(b.id);
+    });
+  const first = sortOnce(rows).map((r) => r.id);
+  const second = sortOnce([...rows].reverse()).map((r) => r.id);
+  assert.deepEqual(first, ["a-001", "b-002", "c-003"]);
+  assert.deepEqual(second, first, "identical input in a different starting order must still sort identically");
+});
