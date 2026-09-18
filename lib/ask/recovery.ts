@@ -284,19 +284,57 @@ export function interpretRecovery(
         "Use the supported indexed identity lookup for this jurisdiction. Review its source coverage and confirm the credential with its issuing agency; an indexed miss is not a licensing finding.";
       r.actions = [verify(state)];
     }
-  } else {
+  } else if (state === "CA") {
+    // California keeps its own pre-existing, more specific recovery: a real
+    // identity/credential Verify path plus the official CSLB search. That is a
+    // genuinely better answer than the generic broader-directory fallback below
+    // (California has SOME real indexed capability, just not a browseable cohort),
+    // so it is deliberately excluded from the generic branch, not silently merged.
     r.capabilityState = "COHORT_UNAVAILABLE";
     r.title = "The requested credential cohort is unavailable";
     r.answer = `We cannot apply this ${r.locationLabel} filter for the requested ${trade ?? "contractor"} research in the current ContractorTrustHub research corpus. No broader or other-state cohort was substituted.`;
-    if (state === "CA") {
-      r.actions = [
-        verify("CA"),
-        official("california", "Official California CSLB license search"),
-      ];
-      r.limitations.push(
-        "The California Verify action is a separate name/credential lookup, not a Los Angeles cohort or consent to statewide discovery.",
-      );
-    }
+    r.actions = [
+      verify("CA"),
+      official("california", "Official California CSLB license search"),
+    ];
+    r.limitations.push(
+      "The California Verify action is a separate name/credential lookup, not a Los Angeles cohort or consent to statewide discovery.",
+    );
+  } else {
+    r.capabilityState = "COHORT_UNAVAILABLE";
+    r.title = "The requested credential cohort is unavailable";
+    // TH-DISCOVERY-PARITY-001A-REVIEW section 7: a genuinely unsupported STATE
+    // (no contractor-license directory data acquired and no other real guidance
+    // path exists -- CO, WA, AK-for-a-trade-without-a-verified-source, and any
+    // other state not specially handled above) must not end with an empty wall
+    // when TrustHub has a real, currently-covered contractor directory it can show
+    // honestly. Generic for ANY such state, not hard-coded to CO/WA only: state
+    // REQUESTED STATE COVERAGE disclosure first, then an explicit, prominently-
+    // labeled BROADER TRUSTHUB CONTRACTOR DIRECTORY destination (the real,
+    // currently-covered Florida directory for the requested trade family --
+    // Florida is this hub's only fully-covered state). The broader directory is a
+    // fallback, never presented as if it answered the state-specific request.
+    const stateLabel = state ? stateName(state) : r.locationLabel;
+    const tradeMeta = trade ? TRADE_ONTOLOGY.find((t) => t.id === trade) : undefined;
+    const broaderHref = tradeMeta?.href ?? "/florida/general-contractors";
+    const broaderLabel = tradeMeta ? tradeMeta.label.toLowerCase() : "contractor";
+    r.answer =
+      `REQUESTED STATE COVERAGE: TrustHub has not acquired contractor-license directory data for ${stateLabel}. ` +
+      `No ${stateLabel}-specific cohort was substituted or fabricated. ` +
+      `BROADER TRUSTHUB CONTRACTOR DIRECTORY: browse real, currently-covered ${broaderLabel} records below -- these are NOT ${stateLabel}-specific results.`;
+    r.actions = [
+      {
+        kind: "INTERNAL_RESEARCH",
+        label: `Browse the broader TrustHub ${broaderLabel} directory (not ${stateLabel}-specific)`,
+        destination: broaderHref,
+        reason: `TrustHub has not acquired a ${stateLabel} contractor-license directory. This is the broader, currently-covered directory instead.`,
+        establishes: "Real, currently-indexed contractor credential records for this trade in TrustHub's covered directory.",
+        cannotEstablish: `That any listed contractor operates in, is licensed in, or serves ${stateLabel}.`,
+      },
+    ];
+    r.limitations.push(
+      `These broader directory results are NOT ${stateLabel}-specific. Do not treat them as local or licensed-in-${stateLabel} providers.`,
+    );
   }
   if (state === "AK" && trade === "elevator" && !transaction) {
     r.answer =

@@ -131,7 +131,20 @@ export function extractGeographyRequirement(
     // not merely because a lead-in word ("Show ") changed the string. Otherwise a
     // query with no trade word at the very start ("Show Florida HVAC contractors.")
     // would wrongly treat "Florida HVAC contractors" as a place name.
-    if (tradeStripped && tradeStripped.length >= 3) {
+    //
+    // TH-DISCOVERY-PARITY-001A-REVIEW: ...and only when the remainder is an actual
+    // place candidate, not a bare provider descriptor. Many trade phrases are a
+    // single generic word ("roofing", "plumbing", "general", "electrical"), so
+    // "roofing contractors" leaves "contractors" as the remainder -- that is not a
+    // place and must not be treated as one (previously this invented a bogus
+    // "Contractors" city and made common location-less queries non-executable).
+    if (
+      tradeStripped &&
+      tradeStripped.length >= 3 &&
+      !/^(?:contractors?|companies|company|business(?:es)?|services?|firms?|providers?)$/i.test(
+        tradeStripped,
+      )
+    ) {
       raw = tradeStripped;
     }
   }

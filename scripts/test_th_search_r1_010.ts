@@ -208,12 +208,21 @@ for (const q of [
     assert.match(r.actions[0].cannotEstablish, /not proof of a contractor/);
     assert.ok(!r.actions.some((a) => /state=(fl|nj)/.test(a.destination)));
   });
-test("no verified source for the requested trade means clarification, not a guessed regulator", () => {
+// TH-DISCOVERY-PARITY-001A-REVIEW section 7: superseded -- "roofers in Alaska" (no
+// verified official regulator source AND no browseable cohort) previously dead-
+// ended at a bare CLARIFY with zero real guidance. Results-First now requires a
+// real, honestly-labeled broader TrustHub directory fallback instead of a dead end;
+// this never guesses an unverified official regulator link (sourceIds stays empty),
+// it links to TrustHub's own real, currently-covered directory instead.
+test("no verified source for the requested trade means a labeled broader directory fallback, not a guessed regulator or a dead end", () => {
   const r = interpretRecovery("roofers in Alaska")!;
   assert.equal(r.requestedTrade, "roofing");
   assert.equal(r.requestedState, "AK");
-  assert.equal(r.actions[0].kind, "CLARIFY");
-  assert.equal(r.sourceIds.length, 0);
+  assert.equal(r.actions[0].kind, "INTERNAL_RESEARCH");
+  assert.equal(r.sourceIds.length, 0, "must not guess an unverified official regulator source");
+  assert.match(r.answer, /BROADER TRUSTHUB/);
+  assert.match(r.answer, /NOT Alaska-specific/);
+  assert.match(r.actions[0].destination, /^\/florida\//, "must link to a real, currently-covered TrustHub directory, not a fabricated Alaska one");
 });
 test("Florida electrical guidance does not assert CILB electrical coverage", () => {
   const r = interpretRecovery(

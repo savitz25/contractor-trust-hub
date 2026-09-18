@@ -93,7 +93,7 @@ export const TRADE_ONTOLOGY: Array<{
     // TH-DISCOVERY-PARITY-001A: "kitchen remodeling company" / "home builder" name
     // ordinary consumer work that Florida CILB licenses under the building class
     // (new construction and remodeling), not a distinct "remodeling" occupation.
-    phrases: ["building contractor", "building contractors", "kitchen remodeling company", "kitchen remodeling contractor", "remodeling company", "remodeling contractor", "home builder", "home builders", "house builder"],
+    phrases: ["building contractor", "building contractors", "kitchen remodeling company", "kitchen remodeling companies", "kitchen remodeling contractor", "kitchen remodeling contractors", "remodeling company", "remodeling companies", "remodeling contractor", "remodeling contractors", "home builder", "home builders", "house builder"],
     exactClasses: ["CBC", "RB"],
     familyNote: "Florida CILB building class (CBC/RB), distinct from general (CGC) and residential (CRC).",
     href: "/florida/building-contractors",

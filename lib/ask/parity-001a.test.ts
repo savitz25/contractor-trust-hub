@@ -3,6 +3,9 @@ import test from "node:test";
 import { interpretAskQuery } from "./interpret";
 import { buildContractorResearchQuery } from "./plan";
 import { extractGeographyRequirement } from "./geography";
+import { interpretRecovery } from "./recovery";
+import { planContractorSearch } from "../search/contractor-discovery";
+import { researchRoute } from "./request";
 import { loadContractorHubIntel } from "@/lib/home/load-intel-v2";
 
 // TH-DISCOVERY-PARITY-001A: named Builder-2 audit FAIL/DANGEROUS strings for
@@ -135,4 +138,89 @@ test("a personalized/deictic place reference is not silently treated as a real p
 test("quality/ranking claims stay correctly refused, not swallowed by the broadened trade default", () => {
   const r = interpretAskQuery("best roofer in Broward", intel);
   assert.equal(r.supported, false);
+});
+
+// TH-DISCOVERY-PARITY-001A-REVIEW section 5: Vercel finding on PR #81 -- the bare
+// "TRADE PLACE" extraction could leave a generic provider descriptor ("contractors",
+// "companies", "business", "services", "firm", "provider") as the REMAINDER after
+// stripping a single-word trade phrase ("roofing" from "roofing contractors"), and
+// treat that leftover descriptor as if it were a place name, inventing a bogus
+// AMBIGUOUS city and making an ordinary location-less query non-executable.
+const LOCATION_LESS_TRADE_CASES: ReadonlyArray<readonly [string, RegExp]> = [
+  ["roofing contractors", /Roofing/],
+  ["plumbing contractors", /Plumbing/],
+  ["electrical contractors", /Electrical/],
+  ["general contractors", /General contractor/],
+  ["HVAC companies", /HVAC/],
+  ["remodeling companies", /Building contractor/],
+];
+
+test(`location-less trade phrases (${LOCATION_LESS_TRADE_CASES.length} cases) remain provider discovery with NO fabricated place`, () => {
+  for (const [q, tradePattern] of LOCATION_LESS_TRADE_CASES) {
+    const { interpreted } = plan(q);
+    assert.notEqual(interpreted.mode, "fail_closed", `expected discovery for "${q}", got fail_closed (${interpreted.failMessage ?? ""})`);
+    assert.match(interpreted.interpretation.trade, tradePattern, `wrong/missing trade for "${q}"`);
+    assert.equal(interpreted.interpretation.location, "Not specified", `must not invent a fake place for "${q}"`);
+  }
+});
+
+// TH-DISCOVERY-PARITY-001A-REVIEW section 7: a genuinely unsupported STATE (no
+// contractor-license directory data acquired at all) must not end with an empty
+// wall -- Results-First requires an honestly-labeled BROADER TrustHub directory
+// fallback, generically, not hard-coded to only CO/WA/CA.
+// NOTE: California is deliberately excluded from this generic list -- it has its
+// own, more specific pre-existing recovery (real identity Verify + official CSLB
+// search), asserted separately below, since that is a genuinely better answer than
+// the generic broader-directory fallback for a state with SOME real capability.
+const UNSUPPORTED_STATE_CASES = [
+  ["contractor in Denver Colorado", "Colorado"],
+  ["contractor around Tacoma Washington", "Washington"],
+  ["roofers in Alaska", "Alaska"],
+];
+
+test(`unsupported-state fallback (${UNSUPPORTED_STATE_CASES.length} cases, generic) shows a real, honestly-labeled broader directory instead of a dead end`, () => {
+  for (const [q, stateLabel] of UNSUPPORTED_STATE_CASES) {
+    const r = interpretRecovery(q);
+    assert.ok(r, `expected a recovery response for "${q}"`);
+    assert.equal(r!.capabilityState, "COHORT_UNAVAILABLE", `expected COHORT_UNAVAILABLE for "${q}"`);
+    assert.match(r!.answer, /REQUESTED STATE COVERAGE/, `expected the two-part disclosure for "${q}"`);
+    assert.match(r!.answer, /BROADER TRUSTHUB CONTRACTOR DIRECTORY/, `expected a labeled broader directory for "${q}"`);
+    assert.match(r!.answer, new RegExp(`NOT ${stateLabel}-specific`), `must prominently disclaim the broader results are not ${stateLabel}-specific`);
+    assert.ok(r!.actions.some((a) => a.kind === "INTERNAL_RESEARCH" && a.destination.startsWith("/florida/")), `expected a real, currently-covered TrustHub directory destination for "${q}"`);
+  }
+});
+
+test("California keeps its own dedicated identity-verify recovery, not the generic broader-directory fallback (it has a genuinely better real alternative)", () => {
+  const r = interpretRecovery("general contractors in Los Angeles California")!;
+  assert.equal(r.capabilityState, "COHORT_UNAVAILABLE");
+  assert.doesNotMatch(r.answer, /BROADER TRUSTHUB CONTRACTOR DIRECTORY/);
+  assert.deepEqual(r.actions.map((a) => a.destination), [
+    "/verify?state=ca",
+    "https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx",
+  ]);
+});
+
+// Section 6: "general contractor in Newark NJ" must route to the /search (non-FL)
+// discovery engine with geography AND trade preserved, not dead-end or drop NJ.
+test("NJ general-contractor query preserves geography through the real routing decision (routes to /search, not a dead end)", () => {
+  const q = "general contractor in Newark NJ";
+  const discoveryPlan = planContractorSearch(q, {});
+  assert.equal(discoveryPlan.mode, "discovery");
+  if (discoveryPlan.mode === "discovery") {
+    assert.equal(discoveryPlan.request.state, "NJ");
+    assert.equal(discoveryPlan.request.trade, "general");
+    assert.equal(discoveryPlan.request.geography?.city, "Newark");
+  }
+  assert.equal(researchRoute(q, discoveryPlan), "/search");
+});
+
+// Section 8: exact trade safety re-test -- the DANGEROUS finding must never
+// resurface. A general/remodeling contractor must never be presented AS an
+// electrician; the interpreted trade must stay labeled Electrical throughout.
+test("DANGEROUS re-test: 'licensed electrician Miami-Dade' never relabels a broader contractor as an electrician", () => {
+  const { interpreted, plan: p } = plan("licensed electrician Miami-Dade");
+  assert.match(interpreted.interpretation.trade, /^Electrical\b/);
+  assert.doesNotMatch(interpreted.interpretation.trade, /General contractor|Building contractor/);
+  assert.equal(p.executable, true);
+  assert.equal(p.geography.state, "FL");
 });
