@@ -125,8 +125,18 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
   const recovery = interpretRecovery(query);
   if (recovery) return { version: ASK_CONTRACT_VERSION, query, mode: "guidance", supported: true, interpretation: {...interpretation, location: recovery.locationLabel, trade: recovery.requestedTrade ?? "Not specified", entityType: recovery.requestedTask}, recovery, href: recovery.actions[0]?.destination ?? null, count: null, aggregate: null, comparison: null, failMessage: null, changeHints: [] };
 
+  // TH-DISCOVERY-PARITY-001A: "kitchen remodeling company Denver" / "concrete
+  // driveway contractor" name an ordinary provider CATEGORY -- the bare word
+  // "company"/"group" is not itself evidence of a specific business name to look
+  // up. Previously ANY mention of "company" (without also using "in/near/with/
+  // active/current/licensed") sent the WHOLE query into entity/identity-lookup
+  // mode instead of discovery. Now exempted when a real TRADE_ONTOLOGY phrase is
+  // present in the text -- a genuine brand name ("Roto-Rooter Colorado Springs")
+  // has no trade phrase to match and still routes to entity lookup correctly.
+  const matchesKnownTrade = TRADE_ONTOLOGY.some((t) => t.phrases.some((p) => phraseInText(text, p)));
   const looksLikeCompany = /\b(llc|inc|corp|corporation|company|group|holdings)\b/i.test(query)
-    && !/\b(in|near|with|active|current|licensed)\b/i.test(query);
+    && !/\b(in|near|with|active|current|licensed)\b/i.test(query)
+    && !matchesKnownTrade;
   if (looksLikeCompany) {
     interpretation.entityQuery = query.slice(0, 120);
     interpretation.notes.push("Name matching identifies candidate records; it does not prove similarly named businesses are the same entity.");
@@ -215,7 +225,24 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
   // though real, browseable evidence exists under 'general' (Florida CILB CGC/RG), the broadest
   // real, populated trade class -- matching the identical default the /search path
   // (lib/search/contractor-discovery.ts) already applies for the same phrase.
-  if (!trade && geo && /\bcontractors?\b/i.test(text)) {
+  // TH-DISCOVERY-PARITY-001A: this default previously required `geo` -- a STATE-level
+  // GEO_ONTOLOGY match ("florida", "colorado", ...) -- to also be present, so
+  // "contractors around Tacoma" (a real city, resolved separately and more precisely
+  // by extractGeographyRequirement below, not by the coarser GEO_ONTOLOGY list) never
+  // reached this default and fell through to the final dead end instead. Geography is
+  // optional context for entering discovery, not a prerequisite -- drop the `geo`
+  // requirement so a bare "contractor(s)" mention with ANY or no geography still
+  // defaults to the broadest real, populated trade class.
+  // Guarded on `!evidence` too: "contractors with Florida stop-work records" must
+  // still reach the dedicated evidence-mode branch below, not get short-circuited
+  // into a trade/geography discovery plan just because it also says "contractors".
+  // Also guarded against a personalized/deictic place reference ("my address", "my
+  // neighborhood") -- "contractor serving my address" is an unsupported
+  // service-territory claim, not a request this hub can resolve to any real place;
+  // defaulting it to a generic trade+geography plan would silently treat "my
+  // address" as if it were a real, if ambiguous, place name.
+  const personalizedPlace = /\bmy\s+(?:address|zip|zip\s*code|county|area|state|neighborhood|location|city|town)\b/i.test(text);
+  if (!trade && !evidence && !personalizedPlace && /\bcontractors?\b/i.test(text)) {
     trade = TRADE_ONTOLOGY.find((t) => t.id === "general");
     if (trade) interpretation.trade = `${trade.label} (default — no trade requested)`;
     interpretation.notes.push(
@@ -475,6 +502,31 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
       failMessage:
         "This Ask path does not publish a single Florida-only active-credential total. Open Florida Intelligence for statewide trade pages, or ask about a mapped trade family.",
       changeHints: ["Open Florida Intelligence", "Ask about a trade family"],
+    };
+  }
+
+  // TH-DISCOVERY-PARITY-001A: "Roto-Rooter Colorado Springs" names a specific,
+  // well-known company brand -- no TRADE_ONTOLOGY phrase to match ("Roto-Rooter"
+  // isn't a trade word), so it fell all the way through to the generic "we could
+  // not map that question" dead end instead of reaching the exact-identity search
+  // this hub already runs for a genuine business name (the same real search
+  // `looksLikeCompany` above hands off to via /verify -- this is the same
+  // destination, just recognizing a bare brand name with no llc/inc/company suffix
+  // and no trade word as a company-identity candidate instead of an unmapped
+  // question). A leading run of capitalized words (a proper-noun brand pattern)
+  // that matched no known trade phrase is treated as a candidate business name.
+  const brandNameCandidate = !trade
+    ? query.trim().match(/^[A-Z][A-Za-z0-9'&.-]*(?:[\s-]+[A-Z][A-Za-z0-9'&.-]*)*/)?.[0]
+    : null;
+  const brandLeadWord = brandNameCandidate?.split(/\s+/)[0]?.toLowerCase();
+  const notABrandLeadWord = brandLeadWord && /^(?:show|find|who|what|how|looking|help|can|is|are|does|licensed|active|current|please|the|a|an|my|this|i)$/.test(brandLeadWord);
+  if (brandNameCandidate && !notABrandLeadWord) {
+    interpretation.entityQuery = query.slice(0, 120);
+    interpretation.notes.push("Name matching identifies candidate records; it does not prove similarly named businesses are the same entity.");
+    return {
+      version: ASK_CONTRACT_VERSION, query, mode: "entity", supported: true, interpretation,
+      href: `/verify?q=${encodeURIComponent(query)}`, count: null, aggregate: null, comparison: null,
+      failMessage: null, changeHints: ["Add a credential number", "Confirm the exact identity"],
     };
   }
 

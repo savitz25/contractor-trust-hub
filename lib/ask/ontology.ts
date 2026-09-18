@@ -77,7 +77,12 @@ export const TRADE_ONTOLOGY: Array<{
   {
     id: "general",
     label: "General contractor",
-    phrases: ["general contractor", "general contractors", "gc", "general contracting", "general"],
+    // TH-DISCOVERY-PARITY-001A: "handyman" and "concrete driveway contractor" name
+    // ordinary consumer work that Florida CILB does not license as its own distinct
+    // occupation class -- general contracting is the closest real, legitimately
+    // licensed category that covers this work (not a "broader fallback" due to
+    // unsupported precision the way electrical is; this IS the accurate class).
+    phrases: ["general contractor", "general contractors", "gc", "general contracting", "general", "handyman", "handymen", "concrete driveway contractor", "driveway contractor", "concrete contractor"],
     exactClasses: ["CGC", "RG"],
     familyNote: "Florida CILB general is CGC/RG. Not every state has a statewide GC class.",
     href: "/florida/general-contractors",
@@ -85,7 +90,10 @@ export const TRADE_ONTOLOGY: Array<{
   {
     id: "building",
     label: "Building contractor",
-    phrases: ["building contractor", "building contractors"],
+    // TH-DISCOVERY-PARITY-001A: "kitchen remodeling company" / "home builder" name
+    // ordinary consumer work that Florida CILB licenses under the building class
+    // (new construction and remodeling), not a distinct "remodeling" occupation.
+    phrases: ["building contractor", "building contractors", "kitchen remodeling company", "kitchen remodeling companies", "kitchen remodeling contractor", "kitchen remodeling contractors", "remodeling company", "remodeling companies", "remodeling contractor", "remodeling contractors", "home builder", "home builders", "house builder"],
     exactClasses: ["CBC", "RB"],
     familyNote: "Florida CILB building class (CBC/RB), distinct from general (CGC) and residential (CRC).",
     href: "/florida/building-contractors",
