@@ -36,6 +36,14 @@ test("exact OCILB credential outranks geography", () => {
   assert.match(r.failMessage || "", /individual/i);
 });
 
+test("unlabeled numbers do not default to EL", () => {
+  const pl = ask("plumbing license 12345 Ohio");
+  assert.equal(pl.interpretation.identifier, "PL.12345");
+  const bare = ask("ocilb license 12345 Ohio");
+  assert.equal(bare.interpretation.identifier, null);
+  assert.equal(bare.href, "/ohio");
+});
+
 test("trade credentials stay distinct", () => {
   assert.match(ask("electrical contractor Ohio").failMessage || "", /EL\./);
   assert.match(ask("HVAC contractor Ohio").failMessage || "", /HV\./);
@@ -63,6 +71,12 @@ test("Columbus and Cleveland stay statewide", () => {
   assert.doesNotMatch(col.href || "", /columbus/);
   const cle = ask("contractor Cleveland");
   assert.equal(cle.href, "/ohio");
+  const plumber = ask("Columbus plumber");
+  assert.equal(plumber.supported, false);
+  assert.equal(plumber.href, "/ohio");
+  assert.doesNotMatch(plumber.href || "", /florida/i);
+  const elec = ask("Cleveland electrician");
+  assert.equal(elec.href, "/ohio");
 });
 
 test("best contractor Ohio fails closed", () => {
