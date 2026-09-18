@@ -198,16 +198,16 @@ type ContractorRow = {
  * it in a single round trip removes the duplicate scan and the second
  * connection acquisition/release, not just the appearance of one.
  */
-async function fetchRowsWithTotals(
-  where: string,
-  params: unknown[],
-  limit: number,
-  offset: number
-): Promise<{ rows: ContractorRow[]; contractors: number; credentials: number }> {
-  const limitIdx = params.length + 1;
-  const offsetIdx = params.length + 2;
-  const rows = await query<ContractorRow & { contractors: string; credentials: string }>(
-    `
+/**
+ * Exported only so a regression test can assert on the SQL text directly:
+ * the LATERAL subquery's own ORDER BY makes its OWN output deterministic,
+ * but SQL gives no guarantee that a join preserves a subquery's row order
+ * into the outer result set -- the outer SELECT needs its own top-level
+ * ORDER BY (repeating the same tie-broken sort) or pagination can still
+ * reshuffle equal-name rows across requests.
+ */
+export function buildCohortRowsSql(limitIdx: number, offsetIdx: number, where: string): string {
+  return `
     WITH matched AS MATERIALIZED (
       SELECT
         c.id, c.slug, c.display_name, l.city AS primary_city, l.county_name AS primary_county, l.state AS home_state,
@@ -233,7 +233,20 @@ async function fetchRowsWithTotals(
       ORDER BY LOWER(display_name), id
       LIMIT $${limitIdx}::int OFFSET $${offsetIdx}::int
     ) sub ON true
-    `,
+    ORDER BY LOWER(sub.display_name), sub.id
+    `;
+}
+
+async function fetchRowsWithTotals(
+  where: string,
+  params: unknown[],
+  limit: number,
+  offset: number
+): Promise<{ rows: ContractorRow[]; contractors: number; credentials: number }> {
+  const limitIdx = params.length + 1;
+  const offsetIdx = params.length + 2;
+  const rows = await query<ContractorRow & { contractors: string; credentials: string }>(
+    buildCohortRowsSql(limitIdx, offsetIdx, where),
     [...params, limit, offset],
     { statementTimeoutMs: 15_000 }
   );
