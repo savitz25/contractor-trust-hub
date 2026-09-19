@@ -1,0 +1,13 @@
+{
+  "capturedAt": "2026-09-19",
+  "statement": "The exact statement the operation issues for name \"R & T GENERAL CONSTRUCTION\" (EXPLAIN (ANALYZE, BUFFERS), read-only, 40 s bound for plan capture only).",
+  "order": ["scope=MS (first)", "scope=ALL (first)", "scope=MS (repeat)", "scope=ALL (repeat)"],
+  "executionMs": { "MS_first": 18949.8, "ALL_first": 14849.1, "MS_repeat": 230.3, "ALL_repeat": 227.8 },
+  "planShape": "IDENTICAL for scoped and unscoped, cold and warm. Bitmap Index Scan on all five name trigram indexes (contractors display/legal/dba, licenses licensee_name_raw/dba_name_raw) -> BitmapOr -> Bitmap Heap Scan with the full per-field rule as Filter -> Unique -> nested-loop lookups on licenses_contractor_idx and contractors_pkey -> scope function scan. No sequential scan anywhere.",
+  "rows": { "indexCandidatesContractors": 2096, "removedByFilterAtHeapScan": 2093, "indexCandidatesLicenses": 1911, "removedByFilterAtHeapScanLicenses": 1908, "rowsReachingJoins": 3, "rowsReturned": "3 unscoped / 1 scoped to MS" },
+  "coldNodeTimesMs": { "contractors_display_name_trgm_idx": 2302, "contractors_legal_name_trgm_idx": 3052, "contractors_dba_name_trgm_idx": 894, "contractorsBitmapHeapScanTotal": 10212, "licenses_licensee_name_trgm_idx": 2890, "licenses_dba_name_raw_trgm_idx": 1820, "licensesBitmapHeapScanTotal": 8632 },
+  "warmNodeTimesMs": { "contractors_display_name_trgm_idx": 36, "contractors_legal_name_trgm_idx": 34, "contractors_dba_name_trgm_idx": 7, "licenses_licensee_name_trgm_idx": 31, "licenses_dba_name_raw_trgm_idx": 20 },
+  "earlierObservation": "Before the full per-field rule was moved inside the prefilter, ~2,000 index candidates each also paid two join lookups (contractors_pkey + licenses_contractor_idx); that variant measured 19-25 s and one warm run of 2.6 s, of which 2.3 s was 37 cold reads of the licensee index (~64 ms per read).",
+  "finding": "The query does the minimum possible work for this predicate with the existing indexes. Latency is governed by whether ~8,000 index/heap pages are resident: ~0.23 s resident, 15-19 s not resident. Pages searched 10-20 minutes earlier were already non-resident again. The same cold/warm swing was measured for the single common word \"Allied\" (9-11 s and one >30 s cold; 0.09-0.34 s warm).",
+  "notDone": "No timeout was raised, no index/schema added, no resources purchased, no publication weakened."
+}

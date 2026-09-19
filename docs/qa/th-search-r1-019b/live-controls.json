@@ -1,0 +1,790 @@
+{
+  "ranAt": "2026-09-18T23:37:39Z",
+  "server": "next start (optimized build) on localhost:3119, production database read-only",
+  "controls": [
+    {
+      "label": "Stilwell: Stilwell Solar",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "Stilwell Solar"
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 3,
+      "hasMore": false,
+      "wallMs": 5374,
+      "queryMs": 5360,
+      "candidates": [
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CPC1460219",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cpc1460219-stilwell-solar-llc"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CVC57212",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cvc57212-stilwell-solar-llc"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "FRO12195",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/fro12195-stilwell-solar-llc"
+        }
+      ]
+    },
+    {
+      "label": "Stilwell: STILWELL SOLAR, LLC",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "STILWELL SOLAR, LLC"
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 3,
+      "hasMore": false,
+      "wallMs": 299,
+      "queryMs": 288,
+      "candidates": [
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CPC1460219",
+          "jurisdiction": "FL",
+          "method": "EXACT_SOURCE_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cpc1460219-stilwell-solar-llc"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CVC57212",
+          "jurisdiction": "FL",
+          "method": "EXACT_SOURCE_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cvc57212-stilwell-solar-llc"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "FRO12195",
+          "jurisdiction": "FL",
+          "method": "EXACT_SOURCE_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/fro12195-stilwell-solar-llc"
+        }
+      ]
+    },
+    {
+      "label": "Stilwell: stilwell solar",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "stilwell solar"
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 3,
+      "hasMore": false,
+      "wallMs": 299,
+      "queryMs": 288,
+      "candidates": [
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CPC1460219",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cpc1460219-stilwell-solar-llc"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CVC57212",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cvc57212-stilwell-solar-llc"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "FRO12195",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/fro12195-stilwell-solar-llc"
+        }
+      ]
+    },
+    {
+      "label": "Worsham: Worsham Construction",
+      "request": {
+        "body": {
+          "operation": "name_candidates",
+          "name": "Worsham Construction"
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 1,
+      "hasMore": false,
+      "wallMs": 893,
+      "queryMs": 879,
+      "candidates": [
+        {
+          "name": "WORSHAM CONSTRUCTION COMPANY, INC.",
+          "key": "CBC015082",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cbc015082-worsham-construction-company-inc"
+        }
+      ]
+    },
+    {
+      "label": "Worsham: Worsham Construction Company, Inc.",
+      "request": {
+        "body": {
+          "operation": "name_candidates",
+          "name": "Worsham Construction Company, Inc."
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 1,
+      "hasMore": false,
+      "wallMs": 373,
+      "queryMs": 363,
+      "candidates": [
+        {
+          "name": "WORSHAM CONSTRUCTION COMPANY, INC.",
+          "key": "CBC015082",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cbc015082-worsham-construction-company-inc"
+        }
+      ]
+    },
+    {
+      "label": "Valid miss: a real non-contractor business name (Pink Zebra Moving)",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "Pink Zebra Moving"
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_NO_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 833,
+      "queryMs": 823,
+      "candidates": []
+    },
+    {
+      "label": "Third company: Whaley's Air Conditioning",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "Whaley's Air Conditioning"
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 1,
+      "hasMore": false,
+      "wallMs": 1441,
+      "queryMs": 1433,
+      "candidates": [
+        {
+          "name": "WHALEY'S AIR CONDITIONING INC",
+          "key": "CAC1813195",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cac1813195-whaley-s-air-conditioning-inc"
+        }
+      ]
+    },
+    {
+      "label": "Short prefix: stilw",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "stilw"
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 10,
+      "hasMore": true,
+      "wallMs": 758,
+      "queryMs": 747,
+      "candidates": [
+        {
+          "name": "STILWELL AIR & REFRIGERATION L.L.C.",
+          "key": "CAC1820929",
+          "jurisdiction": "FL",
+          "method": "NAME_CONTAINS",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cac1820929-stilwell-air-refrigeration-l-l-c"
+        },
+        {
+          "name": "STILWELL CONSTRUCTION INC",
+          "key": "CA-CSLB:615234",
+          "jurisdiction": "CA",
+          "method": "NAME_CONTAINS",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/ca-ca-cslb-615234-stilwell-construction-inc"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CPC1460219",
+          "jurisdiction": "FL",
+          "method": "NAME_CONTAINS",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cpc1460219-stilwell-solar-llc"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CVC57212",
+          "jurisdiction": "FL",
+          "method": "NAME_CONTAINS",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cvc57212-stilwell-solar-llc"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "FRO12195",
+          "jurisdiction": "FL",
+          "method": "NAME_CONTAINS",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/fro12195-stilwell-solar-llc"
+        },
+        {
+          "name": "HOUSEHAPPY HOME SERVICES",
+          "key": "WA-LNI:HOUSEHS842R8",
+          "jurisdiction": "WA",
+          "method": "NAME_CONTAINS",
+          "field": "dba_name",
+          "href": "https://www.contractortrusthub.com/contractors/wa-lni-househs842r8-househappy-home-services"
+        },
+        {
+          "name": "A AFFORDABLE ROOF REPAIR INC",
+          "key": "RC0047852",
+          "jurisdiction": "FL",
+          "method": "NAME_CONTAINS",
+          "field": "legal_name",
+          "href": "https://www.contractortrusthub.com/contractors/rc0047852-a-affordable-roof-repair-inc"
+        },
+        {
+          "name": "AC DIRECT LLC",
+          "key": "CAC1819433",
+          "jurisdiction": "FL",
+          "method": "NAME_CONTAINS",
+          "field": "legal_name",
+          "href": "https://www.contractortrusthub.com/contractors/cac1819433-ac-direct-llc"
+        },
+        {
+          "name": "DELTA DEVELOPMENT LLC",
+          "key": "CGC1518801",
+          "jurisdiction": "FL",
+          "method": "NAME_CONTAINS",
+          "field": "legal_name",
+          "href": "https://www.contractortrusthub.com/contractors/cgc1518801-delta-development-llc"
+        },
+        {
+          "name": "MIKE'S QUALITY POOL CARE",
+          "key": "CPC1458536",
+          "jurisdiction": "FL",
+          "method": "NAME_CONTAINS",
+          "field": "legal_name",
+          "href": "https://www.contractortrusthub.com/contractors/cpc1458536-mike-s-quality-pool-care"
+        }
+      ]
+    },
+    {
+      "label": "Shared name: Allied Roofing",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "Allied Roofing",
+          "limit": 5
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 5,
+      "hasMore": true,
+      "wallMs": 2548,
+      "queryMs": 2540,
+      "candidates": [
+        {
+          "name": "ALLIED ROOFING & BUILDING SOLUTIONS INC",
+          "key": "CCC1336239",
+          "jurisdiction": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/ccc1336239-allied-roofing-building-solutions-inc"
+        },
+        {
+          "name": "ALLIED ROOFING & BUILDING SOLUTIONS INC",
+          "key": "CGC1528501",
+          "jurisdiction": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cgc1528501-allied-roofing-building-solutions-inc"
+        },
+        {
+          "name": "ALLIED ROOFING & SHEET METAL, INC.",
+          "key": "CCC1333158",
+          "jurisdiction": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/ccc1333158-allied-roofing-sheet-metal-inc"
+        },
+        {
+          "name": "ALLIED ROOFING & SHEET METAL, INC.",
+          "key": "CCC1336374",
+          "jurisdiction": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/ccc1336374-allied-roofing-sheet-metal-inc"
+        },
+        {
+          "name": "ALLIED ROOFING & SHEET METAL, INC.",
+          "key": "CGC1532879",
+          "jurisdiction": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cgc1532879-allied-roofing-sheet-metal-inc"
+        }
+      ]
+    },
+    {
+      "label": "Explicit TX (expect miss)",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "Stilwell Solar",
+          "jurisdiction": "TX"
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_NO_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "TX"
+      ],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 374,
+      "queryMs": 366,
+      "candidates": []
+    },
+    {
+      "label": "Unsupported OH (422)",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "Stilwell Solar",
+          "jurisdiction": "OH"
+        }
+      },
+      "http": 422,
+      "resultState": "UNSUPPORTED_SCOPE",
+      "errorCode": "jurisdiction_not_name_searchable",
+      "predicateApplied": false,
+      "searched": [],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 5,
+      "queryMs": 0,
+      "candidates": []
+    },
+    {
+      "label": "Invalid wildcard (400)",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "%%%"
+        }
+      },
+      "http": 400,
+      "resultState": "INVALID_QUERY",
+      "errorCode": "invalid_name",
+      "predicateApplied": null,
+      "searched": [],
+      "returned": null,
+      "hasMore": null,
+      "wallMs": 7,
+      "queryMs": null,
+      "candidates": []
+    },
+    {
+      "label": "Unknown field (400)",
+      "request": {
+        "body": {
+          "operation": "name_candidates",
+          "name": "Stilwell Solar",
+          "trade": "roofing"
+        }
+      },
+      "http": 400,
+      "resultState": "INVALID_QUERY",
+      "errorCode": "unsupported_field",
+      "predicateApplied": null,
+      "searched": [],
+      "returned": null,
+      "hasMore": null,
+      "wallMs": 8,
+      "queryMs": null,
+      "candidates": []
+    },
+    {
+      "label": "Warm repeat: Stilwell Solar",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "Stilwell Solar"
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 3,
+      "hasMore": false,
+      "wallMs": 287,
+      "queryMs": 281,
+      "candidates": [
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CPC1460219",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cpc1460219-stilwell-solar-llc"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CVC57212",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cvc57212-stilwell-solar-llc"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "FRO12195",
+          "jurisdiction": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/fro12195-stilwell-solar-llc"
+        }
+      ]
+    },
+    {
+      "label": "Common single word: Allied",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "Allied"
+        }
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "errorCode": null,
+      "predicateApplied": true,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 10,
+      "hasMore": true,
+      "wallMs": 6058,
+      "queryMs": 6051,
+      "candidates": [
+        {
+          "name": "Allied Air Conditioning & Heat, LLC",
+          "key": "LA-LSLBC:7818",
+          "jurisdiction": "LA",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/la-lslbc-7818-allied-air-conditioning-heat-llc"
+        },
+        {
+          "name": "ALLIED AIR CONDITIONING & HEATING",
+          "key": "TX-TDLR:A-C-CONTRACTOR:22691:BC",
+          "jurisdiction": "TX",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/tx-tdlr-a-c-contractor-22691-bc-allied-air-conditioning-heating"
+        },
+        {
+          "name": "ALLIED AIR CONDITIONING AND HEATING INC",
+          "key": "CAC042748",
+          "jurisdiction": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cac042748-allied-air-conditioning-and-heating-inc"
+        },
+        {
+          "name": "ALLIED AIR SERVICES, LLC",
+          "key": "CAC1819960",
+          "jurisdiction": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cac1819960-allied-air-services-llc"
+        },
+        {
+          "name": "ALLIED AIR SERVICES, LLC",
+          "key": "CAC1823066",
+          "jurisdiction": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/cac1823066-allied-air-services-llc"
+        },
+        {
+          "name": "Allied Airwall, LLC",
+          "key": "LA-LSLBC:9685",
+          "jurisdiction": "LA",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/la-lslbc-9685-allied-airwall-llc"
+        },
+        {
+          "name": "ALLIED ALUMINUM AND RAIL, LLC",
+          "key": "SCC131153594",
+          "jurisdiction": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/scc131153594-allied-aluminum-and-rail-llc"
+        },
+        {
+          "name": "ALLIED AMERICAN AIR AND APPLIANCE INC",
+          "key": "TX-TDLR:A-C-CONTRACTOR:10475:BC",
+          "jurisdiction": "TX",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/tx-tdlr-a-c-contractor-10475-bc-allied-american-air-and-appliance-inc"
+        },
+        {
+          "name": "ALLIED AQUATICS",
+          "key": "TX-TDLR:APPLIANCE-INSTALLATION-CONTRACTOR:1268:RAIC",
+          "jurisdiction": "TX",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/tx-tdlr-appliance-installation-contractor-1268-raic-allied-aquatics"
+        },
+        {
+          "name": "Allied Asphalt Paving and Sealcoating Inc",
+          "key": "AZ-ROC:310186",
+          "jurisdiction": "AZ",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name",
+          "href": "https://www.contractortrusthub.com/contractors/az-az-roc-310186-allied-asphalt-paving-and-sealcoating-inc"
+        }
+      ]
+    },
+    {
+      "label": "Generic-only words: General Construction",
+      "request": {
+        "params": {
+          "operation": "name_candidates",
+          "name": "General Construction"
+        }
+      },
+      "http": 504,
+      "resultState": "SOURCE_FAILURE",
+      "errorCode": "source_timeout",
+      "predicateApplied": false,
+      "searched": [
+        "FL",
+        "TX",
+        "NJ",
+        "OR",
+        "WA",
+        "CA",
+        "AZ",
+        "LA",
+        "MS",
+        "KY",
+        "CO"
+      ],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 6230,
+      "queryMs": 6223,
+      "candidates": []
+    }
+  ]
+}

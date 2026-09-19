@@ -85,6 +85,7 @@
     "report:ath-cust-003": "node scripts/report_ath_cust_003_cohort.mjs",
     "check:th-search-r1-009": "npx --yes tsx --test scripts/test_th_search_r1_009.ts",
     "check:th-search-r1-010": "npx --yes tsx --test scripts/test_th_search_r1_010.ts",
+    "check:th-search-r1-019b": "npx --yes tsx --test scripts/test_th_search_r1_019b.ts",
     "check:metrics-r2": "node --import tsx scripts/build_network_metrics_v1.mjs --check && tsx --test scripts/test_metrics_r2.ts scripts/test_metrics_homepage_r2.tsx"
   },
   "dependencies": {
@@ -95,6 +96,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/pg": "^8.21.0",

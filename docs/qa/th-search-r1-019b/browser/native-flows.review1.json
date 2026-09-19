@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-09-19",
+  "target": "review-1 final runtime, optimized build (next build + next start) on http://localhost:3119, real Chrome via browser automation, isolated tab group",
+  "UNRESOLVED_EVIDENCE_GAP": {
+    "requested": "Normal 100% browser zoom at 390 and 1280 CSS px plus a 320 check, real Enter submission, screenshots.",
+    "actual": "The automation window lays pages out in a 4800 CSS px viewport (document.documentElement.clientWidth = 4800; matchMedia('(min-width:3000px)') = true; screen.width = 1600; devicePixelRatio = 1.5), i.e. roughly 33% effective zoom. resize_window did not change it, zoom shortcuts are not available to the tool, and typed keystrokes did not reach the search input (input.value stayed empty after click + type + Return).",
+    "consequence": "Normal-zoom visual usability, a real keyboard Enter submission, and pixel screenshots are NOT established by this evidence. This is reported as a gap, not a pass. A human (or a tool with a normal window) should repeat the four flows below at 100% zoom."
+  },
+  "whatWasExercised": "Each flow ran in a same-origin iframe fixed at the stated CSS width (layout and media queries respond exactly as a viewport of that width). The search was submitted through the page's real form (value set on the real input, input event dispatched, form.requestSubmit()), and the first candidate was opened with a real DOM click on the rendered link.",
+  "flows": [
+    { "flow": "positive: 'Whaleys Air Conditioning' (no apostrophe typed)", "cssWidth": 1280, "submittedUrl": "/verify?q=Whaleys+Air+Conditioning", "profileLinks": 2, "firstResult": "WHALEY'S AIR CONDITIONING INC", "tookTooLong": false, "horizontalOverflow": false },
+    { "flow": "positive + candidate selection", "cssWidth": 390, "submittedUrl": "/verify?q=Whaleys+Air+Conditioning", "profileLinks": 2, "firstResult": "WHALEY'S AIR CONDITIONING INC", "afterClick": { "path": "/contractors/cac1813195-whaley-s-air-conditioning-inc", "h1": "WHALEY'S AIR CONDITIONING INC", "horizontalOverflow": false }, "tookTooLong": false, "horizontalOverflow": false },
+    { "flow": "positive", "cssWidth": 320, "profileLinks": 2, "firstResult": "WHALEY'S AIR CONDITIONING INC", "tookTooLong": false, "horizontalOverflow": false },
+    { "flow": "ambiguous: 'Allied Roofing'", "cssWidth": 390, "profileLinks": 26, "firstResult": "ALLIED ROOFING INC (the exact name now ranks first)", "tookTooLong": false, "horizontalOverflow": false },
+    { "flow": "miss: 'zzqx nonexistent builder'", "cssWidth": 320, "profileLinks": 0, "tookTooLong": false, "horizontalOverflow": false }
+  ],
+  "continuation": "The operation's cap action is REFINE_SEARCH -> /verify?[state=xx&]q=<name>. That destination is the native first page for the same name (the 'ambiguous' flow above is such a destination); it is labelled as a refinement and explicitly states it does not reach rows beyond the cap.",
+  "preview": "Vercel preview for the PR sits behind Vercel SSO. Not opened; protection was not bypassed."
+}

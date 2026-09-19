@@ -1,0 +1,665 @@
+{
+  "ranAt": "2026-09-19T13:39:55.363Z",
+  "envVarUsed": "DATABASE_URL",
+  "target": {
+    "host": "aws-0-ca-central-1.pooler.supabase.com",
+    "port": "5432",
+    "database": "postgres",
+    "user": "postgres.jhjztnisugdsuliriajp",
+    "password": "[not printed]"
+  },
+  "identity": [
+    {
+      "db": "postgres",
+      "schema": "public",
+      "search_path": "\"\\$user\", public, extensions",
+      "current_user": "postgres",
+      "session_user": "postgres",
+      "v": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+      "in_recovery": false,
+      "server_port": 5432
+    }
+  ],
+  "role": [
+    {
+      "rolname": "postgres",
+      "rolsuper": false,
+      "rolcreatedb": true,
+      "rolcreaterole": true,
+      "rolreplication": true,
+      "rolbypassrls": true
+    }
+  ],
+  "tableOwners": [
+    {
+      "nspname": "public",
+      "relname": "licenses",
+      "owner": "postgres",
+      "current_user_is_owner": true,
+      "member_of_owner": true,
+      "relpersistence": "p",
+      "relrowsecurity": false
+    },
+    {
+      "nspname": "public",
+      "relname": "contractors",
+      "owner": "postgres",
+      "current_user_is_owner": true,
+      "member_of_owner": true,
+      "relpersistence": "p",
+      "relrowsecurity": false
+    }
+  ],
+  "schemaCreate": [
+    {
+      "can_create_in_public": true
+    }
+  ],
+  "locale": [
+    {
+      "datname": "postgres",
+      "encoding": 6,
+      "enc": "UTF8",
+      "datlocprovider": "i",
+      "datcollate": "en_US.UTF-8",
+      "datctype": "en_US.UTF-8",
+      "datcollversion": "153.121",
+      "actual_collversion": "153.121"
+    }
+  ],
+  "nameColumns": [
+    {
+      "table_name": "contractors",
+      "column_name": "display_name",
+      "data_type": "text",
+      "collation_name": null
+    },
+    {
+      "table_name": "contractors",
+      "column_name": "legal_name",
+      "data_type": "text",
+      "collation_name": null
+    },
+    {
+      "table_name": "contractors",
+      "column_name": "dba_name",
+      "data_type": "text",
+      "collation_name": null
+    },
+    {
+      "table_name": "licenses",
+      "column_name": "licensee_name_raw",
+      "data_type": "text",
+      "collation_name": null
+    },
+    {
+      "table_name": "licenses",
+      "column_name": "dba_name_raw",
+      "data_type": "text",
+      "collation_name": null
+    }
+  ],
+  "extensions": [
+    {
+      "extname": "pg_stat_statements",
+      "extversion": "1.11",
+      "schema": "extensions"
+    },
+    {
+      "extname": "pg_trgm",
+      "extversion": "1.6",
+      "schema": "public"
+    },
+    {
+      "extname": "pgcrypto",
+      "extversion": "1.3",
+      "schema": "extensions"
+    },
+    {
+      "extname": "plpgsql",
+      "extversion": "1.0",
+      "schema": "pg_catalog"
+    },
+    {
+      "extname": "supabase_vault",
+      "extversion": "0.3.1",
+      "schema": "vault"
+    },
+    {
+      "extname": "uuid-ossp",
+      "extversion": "1.1",
+      "schema": "extensions"
+    }
+  ],
+  "opclasses": [
+    {
+      "schema": "pg_catalog",
+      "opcname": "text_pattern_ops",
+      "amname": "btree"
+    },
+    {
+      "schema": "pg_catalog",
+      "opcname": "text_pattern_ops",
+      "amname": "hash"
+    },
+    {
+      "schema": "public",
+      "opcname": "gin_trgm_ops",
+      "amname": "gin"
+    }
+  ],
+  "functionVolatility": [
+    {
+      "fn": "upper(text)",
+      "provolatile": "i"
+    },
+    {
+      "fn": "btrim(text)",
+      "provolatile": "i"
+    },
+    {
+      "fn": "regexp_replace(text,text,text,text)",
+      "provolatile": "i"
+    },
+    {
+      "fn": "regexp_replace(text,text,text,integer)",
+      "provolatile": "i"
+    }
+  ],
+  "existingIndexes": [
+    {
+      "schema": "public",
+      "tbl": "contractors",
+      "idx": "contractors_dba_name_trgm_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "41566208",
+      "predicate": null,
+      "def": "CREATE INDEX contractors_dba_name_trgm_idx ON public.contractors USING gin (dba_name gin_trgm_ops)"
+    },
+    {
+      "schema": "public",
+      "tbl": "contractors",
+      "idx": "contractors_display_name_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "67411968",
+      "predicate": null,
+      "def": "CREATE INDEX contractors_display_name_idx ON public.contractors USING btree (display_name)"
+    },
+    {
+      "schema": "public",
+      "tbl": "contractors",
+      "idx": "contractors_display_name_trgm_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "86786048",
+      "predicate": null,
+      "def": "CREATE INDEX contractors_display_name_trgm_idx ON public.contractors USING gin (display_name gin_trgm_ops)"
+    },
+    {
+      "schema": "public",
+      "tbl": "contractors",
+      "idx": "contractors_home_state_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "10731520",
+      "predicate": null,
+      "def": "CREATE INDEX contractors_home_state_idx ON public.contractors USING btree (home_state)"
+    },
+    {
+      "schema": "public",
+      "tbl": "contractors",
+      "idx": "contractors_legal_name_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "70189056",
+      "predicate": null,
+      "def": "CREATE INDEX contractors_legal_name_idx ON public.contractors USING btree (legal_name)"
+    },
+    {
+      "schema": "public",
+      "tbl": "contractors",
+      "idx": "contractors_legal_name_trgm_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "86261760",
+      "predicate": null,
+      "def": "CREATE INDEX contractors_legal_name_trgm_idx ON public.contractors USING gin (legal_name gin_trgm_ops)"
+    },
+    {
+      "schema": "public",
+      "tbl": "contractors",
+      "idx": "contractors_pkey",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "58105856",
+      "predicate": null,
+      "def": "CREATE UNIQUE INDEX contractors_pkey ON public.contractors USING btree (id)"
+    },
+    {
+      "schema": "public",
+      "tbl": "contractors",
+      "idx": "contractors_primary_county_lower_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "4857856",
+      "predicate": "((primary_county IS NOT NULL) AND (TRIM(BOTH FROM primary_county) <> ''::text) AND (is_thin_profile = false))",
+      "def": "CREATE INDEX contractors_primary_county_lower_idx ON public.contractors USING btree (lower(TRIM(BOTH FROM primary_county))) WHERE ((primary_county IS NOT NULL) AND (TRIM(BOTH FROM primary_county) <> ''::text) AND (is_thin_profile = false))"
+    },
+    {
+      "schema": "public",
+      "tbl": "contractors",
+      "idx": "contractors_searchable_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "10035200",
+      "predicate": "(is_thin_profile = false)",
+      "def": "CREATE INDEX contractors_searchable_idx ON public.contractors USING btree (home_state) WHERE (is_thin_profile = false)"
+    },
+    {
+      "schema": "public",
+      "tbl": "contractors",
+      "idx": "contractors_slug_key",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "123797504",
+      "predicate": null,
+      "def": "CREATE UNIQUE INDEX contractors_slug_key ON public.contractors USING btree (slug)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_contractor_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "51978240",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_contractor_idx ON public.licenses USING btree (contractor_id)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_county_code_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "12984320",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_county_code_idx ON public.licenses USING btree (county_code)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_county_name_lower_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "5120000",
+      "predicate": "((county_name IS NOT NULL) AND (TRIM(BOTH FROM county_name) <> ''::text))",
+      "def": "CREATE INDEX licenses_county_name_lower_idx ON public.licenses USING btree (lower(TRIM(BOTH FROM county_name))) WHERE ((county_name IS NOT NULL) AND (TRIM(BOTH FROM county_name) <> ''::text))"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_dba_name_raw_trgm_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "52838400",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_dba_name_raw_trgm_idx ON public.licenses USING gin (dba_name_raw gin_trgm_ops)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_expiration_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "12623872",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_expiration_idx ON public.licenses USING btree (expiration_date)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_external_key_upper_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "84803584",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_external_key_upper_idx ON public.licenses USING btree (source_system, upper(external_key))"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_license_number_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "47595520",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_license_number_idx ON public.licenses USING btree (license_number)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_licensee_name_trgm_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "100311040",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_licensee_name_trgm_idx ON public.licenses USING gin (licensee_name_raw gin_trgm_ops)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_occupation_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "11067392",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_occupation_idx ON public.licenses USING btree (occupation_code)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_occupation_source_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "11157504",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_occupation_source_idx ON public.licenses USING btree (source_system, occupation_code)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_pkey",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "52510720",
+      "predicate": null,
+      "def": "CREATE UNIQUE INDEX licenses_pkey ON public.licenses USING btree (id)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_source_status_occ_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "11501568",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_source_status_occ_idx ON public.licenses USING btree (source_system, occupation_code, status_normalized)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_source_system_external_key_key",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "83779584",
+      "predicate": null,
+      "def": "CREATE UNIQUE INDEX licenses_source_system_external_key_key ON public.licenses USING btree (source_system, external_key)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_state_city_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "15376384",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_state_city_idx ON public.licenses USING btree (state, city)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_state_status_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "11952128",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_state_status_idx ON public.licenses USING btree (state, status_normalized)"
+    },
+    {
+      "schema": "public",
+      "tbl": "licenses",
+      "idx": "licenses_status_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "12500992",
+      "predicate": null,
+      "def": "CREATE INDEX licenses_status_idx ON public.licenses USING btree (status_normalized)"
+    }
+  ],
+  "proposedNamesAnywhere": [],
+  "invalidIndexesAnywhere": [],
+  "sizes": [
+    {
+      "db_bytes": "10857294995",
+      "contractors_total": "816701440",
+      "licenses_total": "1912643584",
+      "contractors_idx": "559931392",
+      "licenses_idx": "578330624"
+    }
+  ],
+  "settings": [
+    {
+      "name": "archive_mode",
+      "setting": "on",
+      "unit": null,
+      "source": "configuration file"
+    },
+    {
+      "name": "archive_timeout",
+      "setting": "120",
+      "unit": "s",
+      "source": "configuration file"
+    },
+    {
+      "name": "autovacuum",
+      "setting": "on",
+      "unit": null,
+      "source": "default"
+    },
+    {
+      "name": "checkpoint_timeout",
+      "setting": "300",
+      "unit": "s",
+      "source": "default"
+    },
+    {
+      "name": "default_transaction_read_only",
+      "setting": "off",
+      "unit": null,
+      "source": "default"
+    },
+    {
+      "name": "effective_cache_size",
+      "setting": "98304",
+      "unit": "8kB",
+      "source": "configuration file"
+    },
+    {
+      "name": "idle_in_transaction_session_timeout",
+      "setting": "0",
+      "unit": "ms",
+      "source": "default"
+    },
+    {
+      "name": "lock_timeout",
+      "setting": "0",
+      "unit": "ms",
+      "source": "default"
+    },
+    {
+      "name": "maintenance_work_mem",
+      "setting": "65536",
+      "unit": "kB",
+      "source": "configuration file"
+    },
+    {
+      "name": "max_connections",
+      "setting": "60",
+      "unit": null,
+      "source": "configuration file"
+    },
+    {
+      "name": "max_parallel_maintenance_workers",
+      "setting": "1",
+      "unit": null,
+      "source": "configuration file"
+    },
+    {
+      "name": "max_slot_wal_keep_size",
+      "setting": "512",
+      "unit": "MB",
+      "source": "configuration file"
+    },
+    {
+      "name": "max_wal_size",
+      "setting": "4096",
+      "unit": "MB",
+      "source": "configuration file"
+    },
+    {
+      "name": "min_wal_size",
+      "setting": "1024",
+      "unit": "MB",
+      "source": "configuration file"
+    },
+    {
+      "name": "shared_buffers",
+      "setting": "32768",
+      "unit": "8kB",
+      "source": "configuration file"
+    },
+    {
+      "name": "standard_conforming_strings",
+      "setting": "on",
+      "unit": null,
+      "source": "default"
+    },
+    {
+      "name": "statement_timeout",
+      "setting": "8000",
+      "unit": "ms",
+      "source": "session"
+    },
+    {
+      "name": "temp_file_limit",
+      "setting": "-1",
+      "unit": "kB",
+      "source": "default"
+    },
+    {
+      "name": "wal_keep_size",
+      "setting": "0",
+      "unit": "MB",
+      "source": "default"
+    },
+    {
+      "name": "wal_level",
+      "setting": "logical",
+      "unit": null,
+      "source": "configuration file"
+    },
+    {
+      "name": "work_mem",
+      "setting": "3500",
+      "unit": "kB",
+      "source": "configuration file"
+    }
+  ],
+  "activity": [
+    {
+      "total": "11",
+      "active": "3",
+      "idle_in_tx": "0",
+      "xact_over_5m": "0",
+      "oldest_xact": {
+        "milliseconds": -851.036
+      },
+      "waiting_on_lock": "0"
+    }
+  ],
+  "longOrMaintenanceSessions": [],
+  "progressCreateIndex": [],
+  "progressVacuum": [],
+  "replication": [
+    {
+      "replicas": "0"
+    }
+  ],
+  "slots": [],
+  "walDir": [
+    {
+      "files": "65",
+      "bytes": "1073742193"
+    }
+  ],
+  "tableStats": [
+    {
+      "relname": "contractors",
+      "n_live_tup": "1390133",
+      "n_dead_tup": "16518",
+      "n_tup_ins": "1392932",
+      "n_tup_upd": "128154",
+      "n_tup_del": "202",
+      "n_tup_hot_upd": "702",
+      "last_autovacuum": "2026-08-14T15:38:53.232Z",
+      "last_autoanalyze": "2026-08-14T17:37:49.348Z",
+      "last_analyze": null
+    },
+    {
+      "relname": "licenses",
+      "n_live_tup": "1266260",
+      "n_dead_tup": "65056",
+      "n_tup_ins": "1266236",
+      "n_tup_upd": "185164",
+      "n_tup_del": "22",
+      "n_tup_hot_upd": "167",
+      "last_autovacuum": "2026-08-14T17:41:29.030Z",
+      "last_autoanalyze": "2026-08-26T15:46:44.899Z",
+      "last_analyze": null
+    }
+  ],
+  "dbStats": [
+    {
+      "numbackends": 11,
+      "xact_commit": "8600600",
+      "xact_rollback": "112922",
+      "blks_read": "3328290891",
+      "blks_hit": "46198752673",
+      "hit_pct": "93.28",
+      "temp_files": "287697",
+      "temp_bytes": "978168743037",
+      "deadlocks": "0",
+      "conflicts": "0",
+      "stats_reset": "2026-07-24T08:28:18.170Z"
+    }
+  ],
+  "opsLoadRunsColumns": []
+}

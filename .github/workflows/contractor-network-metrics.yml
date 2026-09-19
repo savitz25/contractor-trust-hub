@@ -28,5 +28,9 @@ jobs:
       - name: Contractor guidance and recovery integrity (R1-010)
         run: npm run check:th-search-r1-010
 
+      - name: Contractor name-candidate operation and shared name engine (R1-019B)
+        # In-memory Postgres (PGlite) fixtures only: no secrets, no network, no production source.
+        run: npm run check:th-search-r1-019b
+
       - name: Reproduce accepted metrics and validate reconciliation
         run: npm run check:metrics-r2

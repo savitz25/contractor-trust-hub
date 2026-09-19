@@ -1,0 +1,778 @@
+{
+  "ranAt": "2026-09-19T00:33:53Z",
+  "candidate": "review-1 runtime",
+  "server": "next start (optimized build) on localhost:3119; production database, read-only",
+  "note": "Single observations from a developer machine (~250 ms network round trip to the database included). Not percentiles.",
+  "contract": {
+    "contract": "contractor-name-candidates-v1",
+    "contractVersion": "1.0.0",
+    "schemaFingerprint": "f1a998790cd8c31c6261a432172cd192e42d489b6f7a8b5cdaf346c14e2bc1f3"
+  },
+  "controls": [
+    {
+      "label": "R&T unscoped (1st)",
+      "request": {
+        "operation": "name_candidates",
+        "name": "R & T GENERAL CONSTRUCTION"
+      },
+      "http": 504,
+      "resultState": "SOURCE_FAILURE",
+      "failureKind": "timeout",
+      "requiredWords": [
+        "R",
+        "T",
+        "GENERAL",
+        "CONSTRUCTION"
+      ],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 7243,
+      "queryMs": 7205,
+      "candidates": []
+    },
+    {
+      "label": "R&T unscoped (repeat)",
+      "request": {
+        "operation": "name_candidates",
+        "name": "R & T GENERAL CONSTRUCTION"
+      },
+      "http": 504,
+      "resultState": "SOURCE_FAILURE",
+      "failureKind": "timeout",
+      "requiredWords": [
+        "R",
+        "T",
+        "GENERAL",
+        "CONSTRUCTION"
+      ],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 6318,
+      "queryMs": 6285,
+      "candidates": []
+    },
+    {
+      "label": "R&T scoped MS",
+      "request": {
+        "operation": "name_candidates",
+        "name": "R & T GENERAL CONSTRUCTION",
+        "jurisdiction": "MS"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "R",
+        "T",
+        "GENERAL",
+        "CONSTRUCTION"
+      ],
+      "returned": 1,
+      "hasMore": false,
+      "wallMs": 671,
+      "queryMs": 646,
+      "candidates": [
+        {
+          "name": "R & T GENERAL CONSTRUCTION, INC",
+          "key": "MS-SBC:UNLIC:FFF91CFC1598FA73",
+          "jur": "MS",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "R&T displayed form scoped MS",
+      "request": {
+        "operation": "name_candidates",
+        "name": "R & T GENERAL CONSTRUCTION, INC",
+        "jurisdiction": "MS"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "R",
+        "T",
+        "GENERAL",
+        "CONSTRUCTION"
+      ],
+      "returned": 1,
+      "hasMore": false,
+      "wallMs": 555,
+      "queryMs": 540,
+      "candidates": [
+        {
+          "name": "R & T GENERAL CONSTRUCTION, INC",
+          "key": "MS-SBC:UNLIC:FFF91CFC1598FA73",
+          "jur": "MS",
+          "method": "EXACT_SOURCE_NAME",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "General Construction unscoped (must NOT be R&T-equivalent)",
+      "request": {
+        "operation": "name_candidates",
+        "name": "General Construction",
+        "limit": 5
+      },
+      "http": 504,
+      "resultState": "SOURCE_FAILURE",
+      "failureKind": "timeout",
+      "requiredWords": [
+        "GENERAL",
+        "CONSTRUCTION"
+      ],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 6264,
+      "queryMs": 6240,
+      "candidates": []
+    },
+    {
+      "label": "Stilwell Solar unscoped",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Stilwell Solar"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "STILWELL",
+        "SOLAR"
+      ],
+      "returned": 3,
+      "hasMore": false,
+      "wallMs": 1256,
+      "queryMs": 1248,
+      "candidates": [
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CPC1460219",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CVC57212",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "FRO12195",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "Stilwell Solar scoped FL",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Stilwell Solar",
+        "jurisdiction": "FL"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "STILWELL",
+        "SOLAR"
+      ],
+      "returned": 3,
+      "hasMore": false,
+      "wallMs": 300,
+      "queryMs": 269,
+      "candidates": [
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CPC1460219",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CVC57212",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "FRO12195",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "stilwell solar lowercase",
+      "request": {
+        "operation": "name_candidates",
+        "name": "stilwell solar"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "STILWELL",
+        "SOLAR"
+      ],
+      "returned": 3,
+      "hasMore": false,
+      "wallMs": 300,
+      "queryMs": 272,
+      "candidates": [
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CPC1460219",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CVC57212",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "FRO12195",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "STILWELL SOLAR, LLC",
+      "request": {
+        "operation": "name_candidates",
+        "name": "STILWELL SOLAR, LLC"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "STILWELL",
+        "SOLAR"
+      ],
+      "returned": 3,
+      "hasMore": false,
+      "wallMs": 309,
+      "queryMs": 279,
+      "candidates": [
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CPC1460219",
+          "jur": "FL",
+          "method": "EXACT_SOURCE_NAME",
+          "field": "display_name"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "CVC57212",
+          "jur": "FL",
+          "method": "EXACT_SOURCE_NAME",
+          "field": "display_name"
+        },
+        {
+          "name": "STILWELL SOLAR, LLC",
+          "key": "FRO12195",
+          "jur": "FL",
+          "method": "EXACT_SOURCE_NAME",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "Worsham Construction",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Worsham Construction"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "WORSHAM",
+        "CONSTRUCTION"
+      ],
+      "returned": 1,
+      "hasMore": false,
+      "wallMs": 1350,
+      "queryMs": 1344,
+      "candidates": [
+        {
+          "name": "WORSHAM CONSTRUCTION COMPANY, INC.",
+          "key": "CBC015082",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "Worsham Construction Company, Inc.",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Worsham Construction Company, Inc."
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "WORSHAM",
+        "CONSTRUCTION"
+      ],
+      "returned": 1,
+      "hasMore": false,
+      "wallMs": 299,
+      "queryMs": 293,
+      "candidates": [
+        {
+          "name": "WORSHAM CONSTRUCTION COMPANY, INC.",
+          "key": "CBC015082",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "Whaley's Air Conditioning",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Whaley's Air Conditioning"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "WHALEYS",
+        "AIR",
+        "CONDITIONING"
+      ],
+      "returned": 1,
+      "hasMore": false,
+      "wallMs": 1673,
+      "queryMs": 1646,
+      "candidates": [
+        {
+          "name": "WHALEY'S AIR CONDITIONING INC",
+          "key": "CAC1813195",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "Whaleys Air Conditioning (no apostrophe)",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Whaleys Air Conditioning"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "WHALEYS",
+        "AIR",
+        "CONDITIONING"
+      ],
+      "returned": 1,
+      "hasMore": false,
+      "wallMs": 325,
+      "queryMs": 305,
+      "candidates": [
+        {
+          "name": "WHALEY'S AIR CONDITIONING INC",
+          "key": "CAC1813195",
+          "jur": "FL",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "Brown and Root Industrial Services",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Brown and Root Industrial Services"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "BROWN",
+        "ROOT",
+        "INDUSTRIAL",
+        "SERVICES"
+      ],
+      "returned": 3,
+      "hasMore": false,
+      "wallMs": 1582,
+      "queryMs": 1560,
+      "candidates": [
+        {
+          "name": "BROWN & ROOT INDUSTRIAL SERVICES, LLC",
+          "key": "LA-LSLBC:1",
+          "jur": "LA",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        },
+        {
+          "name": "BROWN & ROOT INDUSTRIAL SERVICES, LLC",
+          "key": "LA-LSLBC:883684",
+          "jur": "LA",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        },
+        {
+          "name": "BROWN & ROOT INDUSTRIAL SERVICES, LLC",
+          "key": "MS-SBC:COM:21327-MC",
+          "jur": "MS",
+          "method": "NORMALIZED_NAME",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "Allied unscoped (1st)",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Allied"
+      },
+      "http": 504,
+      "resultState": "SOURCE_FAILURE",
+      "failureKind": "timeout",
+      "requiredWords": [
+        "ALLIED"
+      ],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 6216,
+      "queryMs": 6208,
+      "candidates": []
+    },
+    {
+      "label": "Allied unscoped (repeat)",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Allied"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "ALLIED"
+      ],
+      "returned": 10,
+      "hasMore": true,
+      "wallMs": 4526,
+      "queryMs": 4499,
+      "candidates": [
+        {
+          "name": "Allied Air Conditioning & Heat, LLC",
+          "key": "LA-LSLBC:7818",
+          "jur": "LA",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED AIR CONDITIONING & HEATING",
+          "key": "TX-TDLR:A-C-CONTRACTOR:22691:BC",
+          "jur": "TX",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED AIR CONDITIONING AND HEATING INC",
+          "key": "CAC042748",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED AIR SERVICES, LLC",
+          "key": "CAC1819960",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED AIR SERVICES, LLC",
+          "key": "CAC1823066",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "Allied Airwall, LLC",
+          "key": "LA-LSLBC:9685",
+          "jur": "LA",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED ALUMINUM AND RAIL, LLC",
+          "key": "SCC131153594",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED AMERICAN AIR AND APPLIANCE INC",
+          "key": "TX-TDLR:A-C-CONTRACTOR:10475:BC",
+          "jur": "TX",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED AQUATICS",
+          "key": "TX-TDLR:APPLIANCE-INSTALLATION-CONTRACTOR:1268:RAIC",
+          "jur": "TX",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "Allied Asphalt Paving and Sealcoating Inc",
+          "key": "AZ-ROC:310186",
+          "jur": "AZ",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "Allied scoped FL",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Allied",
+        "jurisdiction": "FL"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "ALLIED"
+      ],
+      "returned": 10,
+      "hasMore": true,
+      "wallMs": 338,
+      "queryMs": 306,
+      "candidates": [
+        {
+          "name": "ALLIED AIR CONDITIONING AND HEATING INC",
+          "key": "CAC042748",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED AIR SERVICES, LLC",
+          "key": "CAC1819960",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED AIR SERVICES, LLC",
+          "key": "CAC1823066",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED ALUMINUM AND RAIL, LLC",
+          "key": "SCC131153594",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED BUILDERS",
+          "key": "CBC1261077",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED BUILDERS",
+          "key": "CGC1539589",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED CONSTRUCTION AND ROOFING LLC",
+          "key": "CCC1335075",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED CONSTRUCTION FL INC",
+          "key": "CGC1514760",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED CONSTRUCTION FL INC",
+          "key": "SCC131149763",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        },
+        {
+          "name": "ALLIED CONSTRUCTION GROUP INC",
+          "key": "CBC1252650",
+          "jur": "FL",
+          "method": "PREFIX_OR_TOKEN",
+          "field": "display_name"
+        }
+      ]
+    },
+    {
+      "label": "Short prefix stilw",
+      "request": {
+        "operation": "name_candidates",
+        "name": "stilw"
+      },
+      "http": 504,
+      "resultState": "SOURCE_FAILURE",
+      "failureKind": "timeout",
+      "requiredWords": [
+        "STILW"
+      ],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 6261,
+      "queryMs": 6228,
+      "candidates": []
+    },
+    {
+      "label": "Explicit TX miss",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Stilwell Solar",
+        "jurisdiction": "TX"
+      },
+      "http": 200,
+      "resultState": "COMPLETED_NO_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "STILWELL",
+        "SOLAR"
+      ],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 298,
+      "queryMs": 289,
+      "candidates": []
+    },
+    {
+      "label": "Unsupported OH",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Stilwell Solar",
+        "jurisdiction": "OH"
+      },
+      "http": 422,
+      "resultState": "UNSUPPORTED_SCOPE",
+      "failureKind": null,
+      "requiredWords": [
+        "STILWELL",
+        "SOLAR"
+      ],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 27,
+      "queryMs": 0,
+      "candidates": []
+    },
+    {
+      "label": "Cap window page 9 x 24 (Allied FL)",
+      "request": {
+        "operation": "name_candidates",
+        "name": "Allied",
+        "jurisdiction": "FL",
+        "limit": 24,
+        "page": 9
+      },
+      "http": 200,
+      "resultState": "COMPLETED_NO_CANDIDATES",
+      "failureKind": null,
+      "requiredWords": [
+        "ALLIED"
+      ],
+      "returned": 0,
+      "hasMore": false,
+      "wallMs": 338,
+      "queryMs": 307,
+      "candidates": []
+    }
+  ],
+  "finalRuntimeRecheck": {
+    "note": "The controls above were captured before the index-fragment rule was tightened (they include a 'stilw' timeout driven by the 3-letter fragment TIL). These direct calls ran on the FINAL runtime.",
+    "checks": [
+      {
+        "name": "stilw",
+        "resultState": "COMPLETED_WITH_CANDIDATES",
+        "returned": 5,
+        "indexFragments": [
+          "STILW"
+        ],
+        "wallMs": 4468,
+        "first": "A AFFORDABLE ROOF REPAIR INC"
+      },
+      {
+        "name": "Stilwell Solar",
+        "resultState": "COMPLETED_WITH_CANDIDATES",
+        "returned": 3,
+        "indexFragments": [
+          "TILWEL",
+          "SOLAR"
+        ],
+        "wallMs": 994,
+        "first": "STILWELL SOLAR, LLC"
+      },
+      {
+        "name": "Whaleys Air Conditioning",
+        "resultState": "COMPLETED_WITH_CANDIDATES",
+        "returned": 1,
+        "indexFragments": [
+          "HALEY",
+          "AIR",
+          "ONDITIONIN"
+        ],
+        "wallMs": 2260,
+        "first": "WHALEY'S AIR CONDITIONING INC"
+      },
+      {
+        "name": "Worsham Construction",
+        "resultState": "COMPLETED_WITH_CANDIDATES",
+        "returned": 1,
+        "indexFragments": [
+          "ORSHA",
+          "ONSTRUCTIO"
+        ],
+        "wallMs": 3560,
+        "first": "WORSHAM CONSTRUCTION COMPANY, INC."
+      }
+    ]
+  }
+}

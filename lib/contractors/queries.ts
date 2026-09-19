@@ -14,11 +14,8 @@ import {
   type WorkSearchFilter,
 } from "@/lib/verify/work-intents";
 import { asLicenseStatus } from "./format";
-import {
-  looksLikeLicenseKey,
-  normalizeLicenseKey,
-  prepareNameSearch,
-} from "./search-normalize";
+import { looksLikeLicenseKey, normalizeLicenseKey } from "./search-normalize";
+import { buildNameMatchSql, prepareNameTerms } from "./name-search-core";
 import { stateHasEntityLinking } from "./trust-report";
 import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
 import type {
@@ -87,7 +84,9 @@ function workFilterSql(
 
 export async function searchContractors(
   rawQuery: string,
-  options: SearchOptions = {}
+  options: SearchOptions = {},
+  /** Injectable for tests only; production always uses the pooled `query`. */
+  db: { query: typeof query } = { query }
 ): Promise<{ results: SearchResult[]; state: EvidenceState; mode: "license" | "name" }> {
   const state = getStateBySlug(options.stateSlug || "fl");
   if (!state || !state.live) {
@@ -114,7 +113,7 @@ export async function searchContractors(
   if (licenseMode) {
     const key = normalizeLicenseKey(q);
     // Prefer exact/prefix license hits; avoid leading-wildcard scans when possible.
-    const rows = await query<{
+    const rows = await db.query<{
       id: string;
       slug: string;
       display_name: string;
@@ -251,7 +250,7 @@ export async function searchContractors(
     }
     workParams.push(...extra.params);
 
-    const rows = await query<{
+    const rows = await db.query<{
       id: string;
       slug: string;
       display_name: string;
@@ -335,48 +334,31 @@ export async function searchContractors(
     return { mode: "name", state, results: rows.map(mapSearchRow) };
   }
 
-  // Name search — forgiving on legal suffixes / multi-word tokens; entity links stay strict
-  const prepared = prepareNameSearch(q);
-  // Up to 4 significant tokens must all appear (AND). Pad with "%" so unused slots always match.
-  const tokenLikes = prepared.tokenLikes.slice(0, 4);
-  while (tokenLikes.length < 4) tokenLikes.push("%");
+  // Name search. TH-SEARCH-R1-019B: predicate, rank and index prefilter come from the shared
+  // name core (every meaningful word, within one source name field), so the callable
+  // name-candidate operation and this native search cannot drift apart.
+  const nameTerms = prepareNameTerms(q);
+  if (nameTerms.terms.length === 0) {
+    return { results: [], state, mode: "name" };
+  }
 
-  // Combined name blob for multi-token AND matching
-  const nameBlob = `(
-    COALESCE(c.display_name, '') || ' ' ||
-    COALESCE(c.legal_name, '') || ' ' ||
-    COALESCE(c.dba_name, '') || ' ' ||
-    COALESCE(l.licensee_name_raw, '') || ' ' ||
-    COALESCE(l.dba_name_raw, '')
-  )`;
-
-  // Cap candidate set early so short ILIKE tokens cannot pin the pool client.
+  // Cap candidate set early so a broad name cannot pin the pool client.
   const candidateCap = Math.min(Math.max(limit * 8, 80), 200);
-  // Fixed $1–$11; entity $12–$13 only when wantEntity; work filters after that.
-  const workStart = wantEntity ? 14 : 12;
+  // $1 sources, $2 state, $3 limit, $4 cap; entity $5-$6 only when wantEntity; then work filters; then name params.
+  const workStart = wantEntity ? 7 : 5;
   const workExtra = workFilter
     ? workFilterSql(workFilter, workStart)
     : { sql: "", params: [] as unknown[] };
 
-  const baseParams: unknown[] = [
-    prepared.prefixStripped, // $1
-    prepared.likeStripped, // $2
-    licenseSourcesFor(state), // $3
-    state.code, // $4
-    prepared.likeOriginal, // $5
-    limit, // $6
-    tokenLikes[0], // $7
-    tokenLikes[1], // $8
-    tokenLikes[2], // $9
-    tokenLikes[3], // $10
-    candidateCap, // $11
-  ];
+  const baseParams: unknown[] = [licenseSourcesFor(state), state.code, limit, candidateCap];
   if (wantEntity) {
-    baseParams.push(state.entitySource, MIN_SUNBIZ_CONFIDENCE); // $12–$13
+    baseParams.push(state.entitySource, MIN_SUNBIZ_CONFIDENCE); // $5-$6
   }
   baseParams.push(...workExtra.params);
+  const nameMatch = buildNameMatchSql(nameTerms, baseParams.length + 1);
+  baseParams.push(...nameMatch.params);
 
-  const rows = await query<{
+  const rows = await db.query<{
     id: string;
     slug: string;
     display_name: string;
@@ -414,37 +396,12 @@ export async function searchContractors(
         l.last_verified_at,
         l.source_system,
         l.secondary_status,
-        CASE
-          WHEN c.display_name ILIKE $1 THEN 0
-          WHEN c.dba_name ILIKE $1 THEN 1
-          WHEN c.legal_name ILIKE $1 THEN 2
-          WHEN c.display_name ILIKE $2 THEN 3
-          WHEN c.dba_name ILIKE $2 OR c.legal_name ILIKE $2 THEN 4
-          WHEN l.licensee_name_raw ILIKE $2 THEN 5
-          ELSE 6
-        END AS rank_score
-      FROM contractors c
-      JOIN licenses l ON l.contractor_id = c.id AND l.source_system = ANY($3::text[])
+        ${nameMatch.rankSql} AS rank_score
+      FROM ${nameMatch.fromSql}
+      JOIN licenses l ON l.contractor_id = c.id AND l.source_system = ANY($1::text[])
       WHERE c.is_thin_profile = FALSE
-        AND (c.home_state = $4 OR l.state = $4)
-        AND (
-          c.display_name ILIKE $5
-          OR c.legal_name ILIKE $5
-          OR c.dba_name ILIKE $5
-          OR l.licensee_name_raw ILIKE $5
-          OR l.dba_name_raw ILIKE $5
-          OR c.display_name ILIKE $2
-          OR c.legal_name ILIKE $2
-          OR c.dba_name ILIKE $2
-          OR l.licensee_name_raw ILIKE $2
-          OR l.dba_name_raw ILIKE $2
-          OR (
-            ${nameBlob} ILIKE $7
-            AND ${nameBlob} ILIKE $8
-            AND ${nameBlob} ILIKE $9
-            AND ${nameBlob} ILIKE $10
-          )
-        )
+        AND (c.home_state = $2 OR l.state = $2)
+        AND ${nameMatch.predicateSql}
         ${workExtra.sql}
       ORDER BY c.id,
         CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
@@ -456,7 +413,7 @@ export async function searchContractors(
       ORDER BY rank_score,
         CASE occupation_code WHEN 'TRMP' THEN 0 WHEN 'TMP' THEN 1 ELSE 2 END,
         display_name
-      LIMIT $11
+      LIMIT $4
     )
     SELECT
       m.*,
@@ -480,9 +437,9 @@ export async function searchContractors(
       JOIN entities ent ON ent.id = ce.entity_id
       WHERE ce.contractor_id = m.id
         AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
-        AND ent.source_system = $12
+        AND ent.source_system = $5
         AND ce.confidence IS NOT NULL
-        AND ce.confidence >= $13
+        AND ce.confidence >= $6
       ORDER BY ce.confidence DESC NULLS LAST
       LIMIT 1
     ) e ON TRUE`
@@ -491,7 +448,7 @@ export async function searchContractors(
     ORDER BY m.rank_score,
       CASE m.occupation_code WHEN 'TRMP' THEN 0 WHEN 'TMP' THEN 1 ELSE 2 END,
       m.display_name
-    LIMIT $6
+    LIMIT $3
     `,
     baseParams
   );
