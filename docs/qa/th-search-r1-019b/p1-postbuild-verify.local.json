@@ -1,0 +1,347 @@
+{
+  "ranAt": "2026-09-19T20:48:22.367Z",
+  "identity": [
+    {
+      "db": "postgres",
+      "usr": "postgres"
+    }
+  ],
+  "indexState": [
+    {
+      "relname": "contractors_display_name_nameorder_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "52527104",
+      "def": "CREATE INDEX contractors_display_name_nameorder_idx ON public.contractors USING btree ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text)) text_pattern_ops) WHERE (display_name IS NOT NULL)"
+    },
+    {
+      "relname": "contractors_legal_name_nameorder_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "54444032",
+      "def": "CREATE INDEX contractors_legal_name_nameorder_idx ON public.contractors USING btree ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text)) text_pattern_ops) WHERE (legal_name IS NOT NULL)"
+    },
+    {
+      "relname": "contractors_dba_name_nameorder_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "19791872",
+      "def": "CREATE INDEX contractors_dba_name_nameorder_idx ON public.contractors USING btree ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text)) text_pattern_ops) WHERE (dba_name IS NOT NULL)"
+    },
+    {
+      "relname": "licenses_licensee_name_raw_nameorder_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "49422336",
+      "def": "CREATE INDEX licenses_licensee_name_raw_nameorder_idx ON public.licenses USING btree ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text)) text_pattern_ops) WHERE (licensee_name_raw IS NOT NULL)"
+    },
+    {
+      "relname": "licenses_dba_name_raw_nameorder_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "bytes": "19521536",
+      "def": "CREATE INDEX licenses_dba_name_raw_nameorder_idx ON public.licenses USING btree ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text)) text_pattern_ops) WHERE (dba_name_raw IS NOT NULL)"
+    }
+  ],
+  "allIndexSizes": [
+    {
+      "table": "contractors",
+      "index": "contractors_dba_name_nameorder_idx",
+      "bytes": "19791872"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_dba_name_trgm_idx",
+      "bytes": "41566208"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_display_name_idx",
+      "bytes": "67411968"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_display_name_nameorder_idx",
+      "bytes": "52527104"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_display_name_trgm_idx",
+      "bytes": "86786048"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_home_state_idx",
+      "bytes": "10731520"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_legal_name_idx",
+      "bytes": "70189056"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_legal_name_nameorder_idx",
+      "bytes": "54444032"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_legal_name_trgm_idx",
+      "bytes": "86261760"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_pkey",
+      "bytes": "58105856"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_primary_county_lower_idx",
+      "bytes": "4857856"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_searchable_idx",
+      "bytes": "10035200"
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_slug_key",
+      "bytes": "123797504"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_contractor_idx",
+      "bytes": "51978240"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_county_code_idx",
+      "bytes": "12984320"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_county_name_lower_idx",
+      "bytes": "5120000"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_dba_name_raw_nameorder_idx",
+      "bytes": "19521536"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_dba_name_raw_trgm_idx",
+      "bytes": "52838400"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_expiration_idx",
+      "bytes": "12623872"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_external_key_upper_idx",
+      "bytes": "84803584"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_license_number_idx",
+      "bytes": "47595520"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_licensee_name_raw_nameorder_idx",
+      "bytes": "49422336"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_licensee_name_trgm_idx",
+      "bytes": "100311040"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_occupation_idx",
+      "bytes": "11067392"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_occupation_source_idx",
+      "bytes": "11157504"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_pkey",
+      "bytes": "52510720"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_source_status_occ_idx",
+      "bytes": "11501568"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_source_system_external_key_key",
+      "bytes": "83779584"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_state_city_idx",
+      "bytes": "15376384"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_state_status_idx",
+      "bytes": "11952128"
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_status_idx",
+      "bytes": "12500992"
+    }
+  ],
+  "dbSize": [
+    {
+      "bytes": "11053059219"
+    }
+  ],
+  "activity": [
+    {
+      "total": "11",
+      "active": "1",
+      "long_xact": "0"
+    }
+  ],
+  "strongTierPlans": {
+    "Stilwell Solar": [
+      "Limit  (cost=25074.79..25095.67 rows=26 width=16)",
+      "  ->  Nested Loop  (cost=25074.79..45592.66 rows=25549 width=16)",
+      "        ->  HashAggregate  (cost=25074.36..25329.85 rows=25549 width=16)",
+      "              Group Key: contractors.id",
+      "              ->  Append  (cost=268.13..25010.49 rows=25549 width=16)",
+      "                    ->  Bitmap Heap Scan on contractors  (cost=268.13..14921.29 rows=16579 width=16)",
+      "                          Recheck Cond: (((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILWELL SOLAR%'::text) AND (display_name IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILWELL SOLAR%'::text) AND (legal_name IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILWELL SOLAR%'::text) AND (dba_name IS NOT NULL)))",
+      "                          Filter: (((display_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILWELL SOLAR%'::text)) OR ((legal_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILWELL SOLAR%'::text)) OR ((dba_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILWELL SOLAR%'::text)))",
+      "                          ->  BitmapOr  (cost=268.13..268.13 rows=16641 width=0)",
+      "                                ->  Bitmap Index Scan on contractors_display_name_nameorder_idx  (cost=0.00..106.37 rows=6964 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' STILWELL SOLAR'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' STILWELL SOLAS'::text))",
+      "                                ->  Bitmap Index Scan on contractors_legal_name_nameorder_idx  (cost=0.00..107.47 rows=6964 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' STILWELL SOLAR'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' STILWELL SOLAS'::text))",
+      "                                ->  Bitmap Index Scan on contractors_dba_name_nameorder_idx  (cost=0.00..41.86 rows=2714 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' STILWELL SOLAR'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' STILWELL SOLAS'::text))",
+      "                    ->  Bitmap Heap Scan on licenses  (cost=142.48..9961.46 rows=8970 width=16)",
+      "                          Recheck Cond: (((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILWELL SOLAR%'::text) AND (licensee_name_raw IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILWELL SOLAR%'::text) AND (dba_name_raw IS NOT NULL)))",
+      "                          Filter: (((licensee_name_raw IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILWELL SOLAR%'::text)) OR ((dba_name_raw IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILWELL SOLAR%'::text)))",
+      "                          ->  BitmapOr  (cost=142.48..142.48 rows=8984 width=0)",
+      "                                ->  Bitmap Index Scan on licenses_licensee_name_raw_nameorder_idx  (cost=0.00..97.84 rows=6331 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' STILWELL SOLAR'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' STILWELL SOLAS'::text))",
+      "                                ->  Bitmap Index Scan on licenses_dba_name_raw_nameorder_idx  (cost=0.00..40.16 rows=2653 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' STILWELL SOLAR'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' STILWELL SOLAS'::text))",
+      "        ->  Index Only Scan using contractors_pkey on contractors c  (cost=0.43..0.79 rows=1 width=16)",
+      "              Index Cond: (id = contractors.id)"
+    ],
+    "Allied": [
+      "Limit  (cost=25074.79..25095.67 rows=26 width=16)",
+      "  ->  Nested Loop  (cost=25074.79..45592.66 rows=25549 width=16)",
+      "        ->  HashAggregate  (cost=25074.36..25329.85 rows=25549 width=16)",
+      "              Group Key: contractors.id",
+      "              ->  Append  (cost=268.13..25010.49 rows=25549 width=16)",
+      "                    ->  Bitmap Heap Scan on contractors  (cost=268.13..14921.29 rows=16579 width=16)",
+      "                          Recheck Cond: (((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' ALLIED%'::text) AND (display_name IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' ALLIED%'::text) AND (legal_name IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' ALLIED%'::text) AND (dba_name IS NOT NULL)))",
+      "                          Filter: (((display_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' ALLIED%'::text)) OR ((legal_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' ALLIED%'::text)) OR ((dba_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' ALLIED%'::text)))",
+      "                          ->  BitmapOr  (cost=268.13..268.13 rows=16641 width=0)",
+      "                                ->  Bitmap Index Scan on contractors_display_name_nameorder_idx  (cost=0.00..106.37 rows=6964 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' ALLIED'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' ALLIEE'::text))",
+      "                                ->  Bitmap Index Scan on contractors_legal_name_nameorder_idx  (cost=0.00..107.47 rows=6964 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' ALLIED'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' ALLIEE'::text))",
+      "                                ->  Bitmap Index Scan on contractors_dba_name_nameorder_idx  (cost=0.00..41.86 rows=2714 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' ALLIED'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' ALLIEE'::text))",
+      "                    ->  Bitmap Heap Scan on licenses  (cost=142.48..9961.46 rows=8970 width=16)",
+      "                          Recheck Cond: (((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' ALLIED%'::text) AND (licensee_name_raw IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' ALLIED%'::text) AND (dba_name_raw IS NOT NULL)))",
+      "                          Filter: (((licensee_name_raw IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' ALLIED%'::text)) OR ((dba_name_raw IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' ALLIED%'::text)))",
+      "                          ->  BitmapOr  (cost=142.48..142.48 rows=8984 width=0)",
+      "                                ->  Bitmap Index Scan on licenses_licensee_name_raw_nameorder_idx  (cost=0.00..97.84 rows=6331 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' ALLIED'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' ALLIEE'::text))",
+      "                                ->  Bitmap Index Scan on licenses_dba_name_raw_nameorder_idx  (cost=0.00..40.16 rows=2653 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' ALLIED'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' ALLIEE'::text))",
+      "        ->  Index Only Scan using contractors_pkey on contractors c  (cost=0.43..0.79 rows=1 width=16)",
+      "              Index Cond: (id = contractors.id)"
+    ],
+    "R & T GENERAL CONSTRUCTION, INC.": [
+      "Limit  (cost=25074.79..25095.67 rows=26 width=16)",
+      "  ->  Nested Loop  (cost=25074.79..45592.66 rows=25549 width=16)",
+      "        ->  HashAggregate  (cost=25074.36..25329.85 rows=25549 width=16)",
+      "              Group Key: contractors.id",
+      "              ->  Append  (cost=268.13..25010.49 rows=25549 width=16)",
+      "                    ->  Bitmap Heap Scan on contractors  (cost=268.13..14921.29 rows=16579 width=16)",
+      "                          Recheck Cond: (((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' R T GENERAL CONSTRUCTION%'::text) AND (display_name IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' R T GENERAL CONSTRUCTION%'::text) AND (legal_name IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' R T GENERAL CONSTRUCTION%'::text) AND (dba_name IS NOT NULL)))",
+      "                          Filter: (((display_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' R T GENERAL CONSTRUCTION%'::text)) OR ((legal_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' R T GENERAL CONSTRUCTION%'::text)) OR ((dba_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' R T GENERAL CONSTRUCTION%'::text)))",
+      "                          ->  BitmapOr  (cost=268.13..268.13 rows=16641 width=0)",
+      "                                ->  Bitmap Index Scan on contractors_display_name_nameorder_idx  (cost=0.00..106.37 rows=6964 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' R T GENERAL CONSTRUCTION'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' R T GENERAL CONSTRUCTIOO'::text))",
+      "                                ->  Bitmap Index Scan on contractors_legal_name_nameorder_idx  (cost=0.00..107.47 rows=6964 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' R T GENERAL CONSTRUCTION'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' R T GENERAL CONSTRUCTIOO'::text))",
+      "                                ->  Bitmap Index Scan on contractors_dba_name_nameorder_idx  (cost=0.00..41.86 rows=2714 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' R T GENERAL CONSTRUCTION'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' R T GENERAL CONSTRUCTIOO'::text))",
+      "                    ->  Bitmap Heap Scan on licenses  (cost=142.48..9961.46 rows=8970 width=16)",
+      "                          Recheck Cond: (((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' R T GENERAL CONSTRUCTION%'::text) AND (licensee_name_raw IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' R T GENERAL CONSTRUCTION%'::text) AND (dba_name_raw IS NOT NULL)))",
+      "                          Filter: (((licensee_name_raw IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' R T GENERAL CONSTRUCTION%'::text)) OR ((dba_name_raw IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' R T GENERAL CONSTRUCTION%'::text)))",
+      "                          ->  BitmapOr  (cost=142.48..142.48 rows=8984 width=0)",
+      "                                ->  Bitmap Index Scan on licenses_licensee_name_raw_nameorder_idx  (cost=0.00..97.84 rows=6331 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' R T GENERAL CONSTRUCTION'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' R T GENERAL CONSTRUCTIOO'::text))",
+      "                                ->  Bitmap Index Scan on licenses_dba_name_raw_nameorder_idx  (cost=0.00..40.16 rows=2653 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' R T GENERAL CONSTRUCTION'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' R T GENERAL CONSTRUCTIOO'::text))",
+      "        ->  Index Only Scan using contractors_pkey on contractors c  (cost=0.43..0.79 rows=1 width=16)",
+      "              Index Cond: (id = contractors.id)"
+    ],
+    "stilw": [
+      "Limit  (cost=25074.79..25095.67 rows=26 width=16)",
+      "  ->  Nested Loop  (cost=25074.79..45592.66 rows=25549 width=16)",
+      "        ->  HashAggregate  (cost=25074.36..25329.85 rows=25549 width=16)",
+      "              Group Key: contractors.id",
+      "              ->  Append  (cost=268.13..25010.49 rows=25549 width=16)",
+      "                    ->  Bitmap Heap Scan on contractors  (cost=268.13..14921.29 rows=16579 width=16)",
+      "                          Recheck Cond: (((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILW%'::text) AND (display_name IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILW%'::text) AND (legal_name IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILW%'::text) AND (dba_name IS NOT NULL)))",
+      "                          Filter: (((display_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILW%'::text)) OR ((legal_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILW%'::text)) OR ((dba_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILW%'::text)))",
+      "                          ->  BitmapOr  (cost=268.13..268.13 rows=16641 width=0)",
+      "                                ->  Bitmap Index Scan on contractors_display_name_nameorder_idx  (cost=0.00..106.37 rows=6964 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' STILW'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' STILX'::text))",
+      "                                ->  Bitmap Index Scan on contractors_legal_name_nameorder_idx  (cost=0.00..107.47 rows=6964 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' STILW'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' STILX'::text))",
+      "                                ->  Bitmap Index Scan on contractors_dba_name_nameorder_idx  (cost=0.00..41.86 rows=2714 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' STILW'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' STILX'::text))",
+      "                    ->  Bitmap Heap Scan on licenses  (cost=142.48..9961.46 rows=8970 width=16)",
+      "                          Recheck Cond: (((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILW%'::text) AND (licensee_name_raw IS NOT NULL)) OR ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILW%'::text) AND (dba_name_raw IS NOT NULL)))",
+      "                          Filter: (((licensee_name_raw IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILW%'::text)) OR ((dba_name_raw IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ ' STILW%'::text)))",
+      "                          ->  BitmapOr  (cost=142.48..142.48 rows=8984 width=0)",
+      "                                ->  Bitmap Index Scan on licenses_licensee_name_raw_nameorder_idx  (cost=0.00..97.84 rows=6331 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' STILW'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' STILX'::text))",
+      "                                ->  Bitmap Index Scan on licenses_dba_name_raw_nameorder_idx  (cost=0.00..40.16 rows=2653 width=0)",
+      "                                      Index Cond: ((((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~>=~ ' STILW'::text) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~<~ ' STILX'::text))",
+      "        ->  Index Only Scan using contractors_pkey on contractors c  (cost=0.43..0.79 rows=1 width=16)",
+      "              Index Cond: (id = contractors.id)"
+    ]
+  },
+  "tokenTierPlanAllied": [
+    "Limit  (cost=279953.07..279993.96 rows=26 width=16)",
+    "  ->  Nested Loop  (cost=279953.07..280759.89 rows=513 width=16)",
+    "        ->  Unique  (cost=279952.64..279955.21 rows=513 width=16)",
+    "              ->  Sort  (cost=279952.64..279953.92 rows=513 width=16)",
+    "                    Sort Key: licenses.contractor_id",
+    "                    ->  Gather  (cost=1000.00..279929.55 rows=513 width=16)",
+    "                          Workers Planned: 1",
+    "                          ->  Parallel Append  (cost=0.00..278878.25 rows=302 width=16)",
+    "                                ->  Parallel Seq Scan on licenses  (cost=0.00..196341.43 rows=106 width=16)",
+    "                                      Filter: (((licensee_name_raw IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(licensee_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ '% ALLIED%'::text)) OR ((dba_name_raw IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name_raw, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ '% ALLIED%'::text)))",
+    "                                ->  Parallel Seq Scan on contractors  (cost=0.00..82535.31 rows=196 width=16)",
+    "                                      Filter: (((display_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(display_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ '% ALLIED%'::text)) OR ((legal_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(legal_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ '% ALLIED%'::text)) OR ((dba_name IS NOT NULL) AND (((' '::text || btrim(regexp_replace(regexp_replace(upper(COALESCE(dba_name, ''::text)), '[''`\\u2018\\u2019\\u02BC]'::text, ''::text, 'g'::text), '[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+'::text, ' '::text, 'g'::text))) || ' '::text) ~~ '% ALLIED%'::text)))",
+    "        ->  Index Only Scan using contractors_pkey on contractors c  (cost=0.43..1.57 rows=1 width=16)",
+    "              Index Cond: (id = licenses.contractor_id)"
+  ],
+  "codeVsIndexExpressionCount": 5
+}
