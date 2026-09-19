@@ -97,6 +97,11 @@ which timed out — rollback does not restore a working earlier search).
 **Approval needed (none assumed):** owner authorization for production DDL (phase 1, optionally phase 2), confirmation of
 disk headroom, a maintenance window choice, and who runs it. No prewarm schedule or larger instance is requested.
 
+**Phase 1 preflight (2026-09-19):** read-only production preflight ran; see [PHASE1-PREFLIGHT.md](PHASE1-PREFLIGHT.md).
+Everything checkable by SQL passed (opclasses/extension present, partial-predicate implication confirmed, no invalid
+objects, no blocking activity). **Blocked before execution** on two dashboard-only fields Supabase does not expose to SQL:
+provisioned disk headroom and storage-billing behavior. No DDL was run.
+
 ## 3. Measurement
 No new production timing was taken: the final runtime depends on indexes that do not exist, so re-running the frozen
 60-variant holdout would be 60 sequential scans of production tables and would measure nothing but the timeout. The holdout
