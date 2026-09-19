@@ -1,20 +1,13 @@
 /**
  * TH-SEARCH-R1-019B: lightweight name-candidate projection over the shared name core.
  *
- * Same predicate, rank and normalization as native Verify name search
- * (`searchContractors`), rendered from `name-search-core.ts`. Differences are limited to
- * what a candidate card needs: no entity/discipline enrichment, no count query, a
- * deterministic page window, and one statement across every permitted source scope.
+ * Same predicate, rank and index prefilter as native Verify name search
+ * (`searchContractors`), rendered by `buildNameMatchSql`. Differences are limited to what a
+ * candidate card needs: no entity/discipline enrichment, no count query, a deterministic
+ * page window, and one statement across every permitted source scope.
  */
 import { query as defaultQuery } from "@/lib/db";
-import { prepareNameSearch } from "./search-normalize";
-import {
-  indexedWordSlots,
-  nameMatchPredicateSql,
-  namePrefilteredContractorsFromSql,
-  nameRankCaseSql,
-  paddedTokenLikes,
-} from "./name-search-core";
+import { buildNameMatchSql, prepareNameTerms, type NameMatchSql, type PreparedNameTerms } from "./name-search-core";
 
 export type NameCandidateScope = {
   /** Credential jurisdiction code, e.g. "FL". */
@@ -56,31 +49,20 @@ export const NAME_CANDIDATE_STATEMENT_TIMEOUT_MS = 6_000;
 
 export async function queryContractorNameCandidates(
   args: { name: string; scopes: NameCandidateScope[]; limit: number; offset: number },
-  db: NameCandidateDb = { query: defaultQuery }
-): Promise<{ rows: NameCandidateDbRow[]; hasMore: boolean; prefiltered: boolean }> {
+  db: NameCandidateDb = { query: defaultQuery },
+  /** Test oracle hook: swap in the unprefiltered builder to prove the prefilter drops nothing. */
+  build: (prepared: PreparedNameTerms, startIndex: number) => NameMatchSql = buildNameMatchSql
+): Promise<{ rows: NameCandidateDbRow[]; hasMore: boolean; usesNameIndexes: boolean }> {
   if (args.scopes.length === 0) throw new Error("name_candidates_no_scope");
-  const prepared = prepareNameSearch(args.name);
-  const tokenLikes = paddedTokenLikes(prepared);
-  // Token patterns are $4-$7; only indexable words drive the candidate prefilter.
-  const prefilterParams = indexedWordSlots(prepared).map((slot) => 4 + slot);
-
-  const params: unknown[] = [
-    prepared.prefixStripped, // $1
-    prepared.likeStripped, // $2
-    prepared.likeOriginal, // $3
-    tokenLikes[0], // $4
-    tokenLikes[1], // $5
-    tokenLikes[2], // $6
-    tokenLikes[3], // $7
-    JSON.stringify(args.scopes), // $8
-    args.limit + 1, // $9 -- one probe row proves whether another page exists
-    args.offset, // $10
-  ];
+  if (!Number.isInteger(args.limit) || args.limit < 1 || !Number.isInteger(args.offset) || args.offset < 0) throw new Error("name_candidates_bad_window");
+  // $1 scopes, $2 probe limit (one extra row proves another page exists), $3 offset, then name params.
+  const match = build(prepareNameTerms(args.name), 4);
+  const params: unknown[] = [JSON.stringify(args.scopes), args.limit + 1, args.offset, ...match.params];
 
   const rows = await db.query<NameCandidateDbRow>(
     `
     WITH scope AS (
-      SELECT code, sources FROM jsonb_to_recordset($8::jsonb) AS s(code text, sources text[])
+      SELECT code, sources FROM jsonb_to_recordset($1::jsonb) AS s(code text, sources text[])
     ),
     per_contractor AS (
       SELECT DISTINCT ON (c.id)
@@ -106,26 +88,30 @@ export async function queryContractorNameCandidates(
         l.licensee_name_raw,
         l.dba_name_raw,
         s.code AS scope_code,
-        ${nameRankCaseSql({ prefixStripped: 1, likeStripped: 2 })} AS rank_score
-      FROM ${namePrefilteredContractorsFromSql(prefilterParams)}
+        ${match.rankSql} AS rank_score
+      FROM ${match.fromSql}
       JOIN licenses l ON l.contractor_id = c.id
       JOIN scope s ON l.source_system = ANY(s.sources) AND (c.home_state = s.code OR l.state = s.code)
       WHERE c.is_thin_profile = FALSE
         AND c.slug IS NOT NULL AND c.slug <> ''
-        AND ${nameMatchPredicateSql({ likeOriginal: 3, likeStripped: 2, tokens: [4, 5, 6, 7] })}
+        AND ${match.predicateSql}
+      -- Representative credential row: the row with the STRONGEST name relation first, so an exact
+      -- source-name row is never displaced by a weaker match; then active/current, then most recent.
       ORDER BY c.id,
+        ${match.rankSql},
         CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
-        l.updated_at DESC NULLS LAST
+        l.updated_at DESC NULLS LAST,
+        l.id
     )
     SELECT *
     FROM per_contractor
     ORDER BY rank_score, LOWER(display_name), slug
-    LIMIT $9::int OFFSET $10::int
+    LIMIT $2::int OFFSET $3::int
     `,
     params,
     { statementTimeoutMs: NAME_CANDIDATE_STATEMENT_TIMEOUT_MS }
   );
 
   const hasMore = rows.length > args.limit;
-  return { rows: hasMore ? rows.slice(0, args.limit) : rows, hasMore, prefiltered: prefilterParams.length > 0 };
+  return { rows: hasMore ? rows.slice(0, args.limit) : rows, hasMore, usesNameIndexes: match.usesNameIndexes };
 }

@@ -11,14 +11,13 @@
 import { createHash } from "node:crypto";
 import { isDbCapacityError, isDbConnectTimeout, isDbQueryTimeout } from "@/lib/db";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
-import { deriveNameMatchEvidence, indexedWordSlots } from "@/lib/contractors/name-search-core";
+import { deriveNameMatchEvidence, prepareNameTerms } from "@/lib/contractors/name-search-core";
 import {
   queryContractorNameCandidates,
   type NameCandidateDb,
   type NameCandidateDbRow,
   type NameCandidateScope,
 } from "@/lib/contractors/name-candidates-query";
-import { prepareNameSearch } from "@/lib/contractors/search-normalize";
 import { absoluteUrl } from "@/lib/site";
 import { EVIDENCE_STATES, getLiveStates, licenseSourcesFor, verifyPathFor, type EvidenceState } from "@/lib/states/config";
 
@@ -46,7 +45,7 @@ const SCHEMA_DESCRIPTOR = {
   response: ["contract", "contractVersion", "schemaFingerprint", "hub", "operation", "resultState", "name", "scope", "grain", "candidates", "pagination", "continuation", "ordering", "limitations", "timing"],
   candidate: ["stableKey", "sourceGrain", "displayName", "entityType", "match", "identifiers", "credential", "credentialJurisdiction", "recordedLocation", "source", "publicationState", "action", "destinations"],
   resultStates: ["COMPLETED_WITH_CANDIDATES", "COMPLETED_NO_CANDIDATES", "PARTIAL_TRUNCATED", "UNSUPPORTED_SCOPE", "INVALID_QUERY", "SOURCE_FAILURE"],
-  matchMethods: ["EXACT_SOURCE_NAME", "NORMALIZED_NAME", "DOCUMENTED_ALIAS", "PREFIX_OR_TOKEN", "NAME_CONTAINS"],
+  matchMethods: ["EXACT_SOURCE_NAME", "NORMALIZED_NAME", "DOCUMENTED_ALIAS", "PREFIX_OR_TOKEN"],
 };
 export const NAME_CANDIDATES_SCHEMA_FINGERPRINT = createHash("sha256").update(JSON.stringify(SCHEMA_DESCRIPTOR)).digest("hex");
 
@@ -88,7 +87,8 @@ export function normalizeNameCandidatesRequest(value: unknown): NormalizedNameCa
   if (name.length < NAME_MIN_LENGTH || name.length > NAME_MAX_LENGTH) throw new Error("invalid_name");
   // Punctuation/wildcard-only input must never become a match-all pattern.
   if (!/[\p{L}\p{N}]/u.test(name)) throw new Error("invalid_name");
-  if (prepareNameSearch(name).tokens.length === 0) throw new Error("invalid_name");
+  // Every meaningful word stays required; a name with no ASCII letter/digit word cannot be searched.
+  if (prepareNameTerms(name).terms.length === 0) throw new Error("invalid_name");
 
   let jurisdiction: string | null = null;
   if (input.jurisdiction !== undefined && input.jurisdiction !== null && input.jurisdiction !== "") {
@@ -132,7 +132,7 @@ function verifyContinuation(state: Pick<EvidenceState, "slug" | "name">, name: s
     type: "VERIFY" as const,
     jurisdiction: state.slug.toUpperCase(),
     href: absoluteUrl(`${path}${path.includes("?") ? "&" : "?"}q=${encodeURIComponent(name)}`),
-    label: `Continue this name search in ContractorTrustHub Verify (${state.name})`,
+    label: `Search this name in ContractorTrustHub Verify (${state.name})`,
   };
 }
 
@@ -162,7 +162,7 @@ function toCandidate(row: NameCandidateDbRow, name: string, scopes: ScopeDescrip
     displayName: row.display_name,
     // Entity type is not source-backed at this grain; never inferred from the name.
     entityType: null,
-    match: { field: evidence.field, value: evidence.value, method: evidence.method, explanation: evidence.explanation },
+    match: { field: evidence.field, value: evidence.value, method: evidence.method, matchedWords: evidence.matchedWords, explanation: evidence.explanation },
     identifiers: [
       ...(row.external_key ? [{ label: "ContractorTrustHub credential key", value: row.external_key, meaning: "Stable source credential key for the representative row." }] : []),
       ...(row.license_number && row.license_number !== row.external_key ? [{ label: "State credential number", value: row.license_number, meaning: "Credential number as published by the source board." }] : []),
@@ -215,15 +215,17 @@ function failureKind(error: unknown): "timeout" | "unavailable" | "invalid_respo
 
 export async function executeContractorNameCandidates(raw: unknown, db?: NameCandidateDb): Promise<NameCandidatesResponse> {
   const input = normalizeNameCandidatesRequest(raw);
-  const prepared = prepareNameSearch(input.name);
+  const prepared = prepareNameTerms(input.name);
   const allScopes = nameSearchableScopes();
   const nameEcho = {
     supplied: input.name,
-    normalized: prepared.stripped,
-    requiredWords: prepared.tokens.slice(0, 4),
-    ignoredWords: prepared.tokens.slice(4),
-    indexedWords: indexedWordSlots(prepared).map((slot) => prepared.tokens[slot]),
-    predicate: "A name field contains the supplied name, OR contains it after punctuation and legal-suffix normalization, OR contains every required word. All words must co-occur in ONE name field. Applied before any row limit.",
+    normalized: prepared.key,
+    // Every word here is enforced by the final predicate -- initials and later words included.
+    requiredWords: prepared.terms,
+    optionalWordsDropped: prepared.optionalWordsDropped,
+    // Index-driving text only. It narrows which rows are scanned; it never defines the name.
+    indexFragments: prepared.indexFragments,
+    predicate: "ONE source name field (display, legal/licensee, DBA, or a credential row's source names) contains every required word after identical normalization of both sides (case, punctuation, apostrophes). A word of 3+ characters may begin a source word; a shorter word must equal one. Applied before any row limit.",
   };
 
   const scopes = input.jurisdiction ? allScopes.filter((scope) => scope.code === input.jurisdiction) : allScopes;
@@ -247,11 +249,13 @@ export async function executeContractorNameCandidates(raw: unknown, db?: NameCan
     requestedJurisdiction: input.jurisdiction,
     notSearchableByName: notSearchableByName(),
   };
+  const offset = (input.page - 1) * input.limit;
   const started = Date.now();
   let result: Awaited<ReturnType<typeof queryContractorNameCandidates>>;
   let candidates: ReturnType<typeof toCandidate>[];
   try {
-    result = await queryContractorNameCandidates({ name: input.name, scopes, limit: input.limit, offset: (input.page - 1) * input.limit }, db);
+    // The last window is clamped so no request can ever return rows beyond the advertised cap.
+    result = await queryContractorNameCandidates({ name: input.name, scopes, limit: Math.min(input.limit, NAME_SOURCE_CAP - offset), offset }, db);
     candidates = result.rows.map((row) => toCandidate(row, input.name, scopes));
   } catch (error) {
     const kind = failureKind(error);
@@ -262,13 +266,17 @@ export async function executeContractorNameCandidates(raw: unknown, db?: NameCan
       scope: { ...scopeBase, searched: scopes.map((scope) => ({ code: scope.code, label: scope.label, sources: scope.sources, state: "FAILED" })), meaning: "The source did not complete. No jurisdiction is reported as searched-and-missed." },
       grain: GRAIN, candidates: [],
       pagination: { page: input.page, limit: input.limit, returned: 0, hasMore: false, nextPage: null, sourceCap: NAME_SOURCE_CAP, truncated: false, total: null, totalMeaning: "Unknown: the source did not complete." },
-      continuation: { type: "VERIFY", scoped: scopes.map((scope) => verifyContinuation({ slug: scope.slug, name: scope.label }, input.name)) },
+      continuation: {
+        type: "RETRY_OR_VERIFY",
+        meaning: "The source did not complete. Retry, or search the same name in ContractorTrustHub Verify for a jurisdiction.",
+        scoped: scopes.map((scope) => verifyContinuation({ slug: scope.slug, name: scope.label }, input.name)),
+      },
       ordering: ORDERING, limitations: BASE_LIMITATIONS, timing: { queryMs: Date.now() - started, queries: 1 },
     };
   }
   const queryMs = Date.now() - started;
 
-  const reachedCap = input.page * input.limit >= NAME_SOURCE_CAP;
+  const reachedCap = offset + candidates.length >= NAME_SOURCE_CAP;
   const truncated = result.hasMore && reachedCap;
   const hasMore = result.hasMore && !reachedCap;
   const resultState: NameCandidatesResultState = truncated ? "PARTIAL_TRUNCATED" : candidates.length > 0 ? "COMPLETED_WITH_CANDIDATES" : "COMPLETED_NO_CANDIDATES";
@@ -295,13 +303,18 @@ export async function executeContractorNameCandidates(raw: unknown, db?: NameCan
     continuation: hasMore
       ? { type: "NEXT_PAGE", request: { contract: NAME_CANDIDATES_CONTRACT, operation: NAME_CANDIDATES_OPERATION, name: input.name, ...(input.jurisdiction ? { jurisdiction: input.jurisdiction } : {}), page: input.page + 1, limit: input.limit } }
       : truncated
-        ? { type: "VERIFY", scoped: scopes.map((scope) => verifyContinuation({ slug: scope.slug, name: scope.label }, input.name)) }
+        ? {
+          type: "REFINE_SEARCH",
+          reachesRowsBeyondCap: false,
+          meaning: "These links open ContractorTrustHub Verify for the same name. Verify shows its own first page; it does NOT continue past this operation's cap. To reach other records, supply a more specific name or a jurisdiction.",
+          scoped: scopes.map((scope) => verifyContinuation({ slug: scope.slug, name: scope.label }, input.name)),
+        }
         : null,
     ordering: ORDERING,
     limitations: [
       ...BASE_LIMITATIONS,
-      ...(truncated ? [`More matching profiles exist beyond this operation's ${NAME_SOURCE_CAP}-row cap. Continue in ContractorTrustHub Verify for the listed jurisdiction(s) or supply a more specific name.`] : []),
-      ...(result.prefiltered ? [] : ["Every supplied word is shorter than three characters, so the search could not use the name indexes and may be slow."]),
+      ...(truncated ? [`More matching profiles exist beyond this operation's ${NAME_SOURCE_CAP}-row cap and are not reachable through it. Supply a more specific name or a jurisdiction.`] : []),
+      ...(result.usesNameIndexes ? [] : ["Every supplied word is shorter than three characters. Such a name is matched only where the source name contains the supplied text as written (so \"R & T\" does not find \"R&T\")."]),
     ],
     timing: { queryMs, queries: 1 },
   };

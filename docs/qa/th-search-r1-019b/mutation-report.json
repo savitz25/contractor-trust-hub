@@ -1,16 +1,15 @@
 {
-  "ranAt": "2026-09-18T23:35:10.751283+00:00",
+  "ranAt": "2026-09-19T00:46:55.570000+00:00",
   "gate": "npx --yes tsx --test scripts/test_th_search_r1_019b.ts",
   "baseline": "green",
   "mutations": [
     {
       "id": "M1_drop_name_predicate",
       "file": "lib/contractors/name-search-core.ts",
-      "meaning": "The shared name predicate admits every row (an unfiltered cohort dressed up as name matches).",
+      "meaning": "The shared name predicate admits every prefiltered row (a cohort dressed up as name matches).",
       "detected": true,
       "failingTests": [
-        "\u2716 8. match field/value/method agree with the returned source record (50.6072ms)",
-        "\u2716 index prefilter uses only indexable required words and never widens the match set (32.6719ms)"
+        "\u2716 15. the index prefilter never drops a match: optimized == complete unprefiltered predicate == expected (51.4922ms)"
       ],
       "restoredExactBytes": true
     },
@@ -20,8 +19,8 @@
       "meaning": "A timeout / unavailable source is reported as a searched-and-missed result.",
       "detected": true,
       "failingTests": [
-        "\u2716 10. a failed source is never a searched-and-missed result (2.2868ms)",
-        "\u2716 8. match field/value/method agree with the returned source record (106.8757ms)"
+        "\u2716 10. a failed source is never a searched-and-missed result (2.9715ms)",
+        "\u2716 8. match field/value/method agree with the returned source record (168.4435ms)"
       ],
       "restoredExactBytes": true
     },
@@ -31,9 +30,9 @@
       "meaning": "An explicit jurisdiction constraint is silently dropped and every scope is searched.",
       "detected": true,
       "failingTests": [
-        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (18.395ms)",
-        "\u2716 5. explicit jurisdiction is applied; absent jurisdiction never claims nationwide coverage from FL alone (29.6566ms)",
-        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (62.9667ms)"
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (30.3068ms)",
+        "\u2716 5. explicit jurisdiction is applied; absent jurisdiction never claims nationwide coverage from FL alone (12.8918ms)",
+        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (147.2165ms)"
       ],
       "restoredExactBytes": true
     },
@@ -43,9 +42,9 @@
       "meaning": "Held/thin and destination-less profiles are promoted into public candidates.",
       "detected": true,
       "failingTests": [
-        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (16.0322ms)",
-        "\u2716 3. Allied finds every Allied-named public record; generic-word overlap alone admits nothing (21.3092ms)",
-        "\u2716 6. inactive/unknown-status public profiles stay discoverable; publication restrictions stay enforced (22.8661ms)"
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (29.7816ms)",
+        "\u2716 3. Allied finds every Allied-named public record; generic-word overlap alone admits nothing (14.0637ms)",
+        "\u2716 6. inactive/unknown-status public profiles stay discoverable; publication restrictions stay enforced (25.6292ms)"
       ],
       "restoredExactBytes": true
     },
@@ -55,12 +54,98 @@
       "meaning": "A row whose own names do not explain the match is displayed anyway (source echo trusted as proof).",
       "detected": true,
       "failingTests": [
-        "\u2716 8. match field/value/method agree with the returned source record (71.8045ms)"
+        "\u2716 8. match field/value/method agree with the returned source record (94.1832ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M6_prefilter_uses_fused_pseudo_word",
+      "file": "lib/contractors/name-search-core.ts",
+      "meaning": "Review finding 2: initials are fused into a normalized pseudo-word ('R T') that the raw field ('R & T') never contains, so the prefilter drops an exact source name.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (44.0293ms)",
+        "\u2716 15. the index prefilter never drops a match: optimized == complete unprefiltered predicate == expected (31.9937ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M7_initials_not_required",
+      "file": "lib/contractors/name-search-core.ts",
+      "meaning": "Review finding 3: single-letter initials are dropped, making 'R & T General Construction' equivalent to 'General Construction'.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (4.0114ms)",
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (58.698ms)",
+        "\u2716 15. the index prefilter never drops a match: optimized == complete unprefiltered predicate == expected (0.4339ms)",
+        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (17.1717ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M8_only_first_four_words_required",
+      "file": "lib/contractors/name-search-core.ts",
+      "meaning": "Review finding 3: words after the fourth are ignored, so '... Estate Alpha' matches '... Estate Beta'.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (37.9959ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M9_initial_matches_inside_a_word",
+      "file": "lib/contractors/name-search-core.ts",
+      "meaning": "Review finding 3: a word (including an initial) matches any letters inside a source word.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 15. the index prefilter never drops a match: optimized == complete unprefiltered predicate == expected (130.1335ms)",
+        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (26.3848ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M10_no_equality_rank_tier",
+      "file": "lib/contractors/name-search-core.ts",
+      "meaning": "Review finding 4: no full-name equality tier, so an exact target sorts behind 200+ prefix siblings and falls past the cap.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 17. an exact/normalized target is never buried behind 200+ names that merely start the same (45.1826ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M11_last_window_not_clamped_to_cap",
+      "file": "lib/specialist-execution/contractor-name-candidates.ts",
+      "meaning": "Review finding 4: page 9 x 24 returns rows 193-216, beyond the advertised 200-row cap.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (854.0541ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M12_apostrophe_not_equivalent",
+      "file": "lib/contractors/name-search-core.ts",
+      "meaning": "Review finding 3: 'OBrien' no longer finds O'BRIEN (supplied-side apostrophe handling removed; SQL and JS normalizers diverge).",
+      "detected": true,
+      "failingTests": [
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (112.2537ms)",
+        "\u2716 2. case, punctuation, legal-suffix and short distinctive variants retrieve the record (61.1197ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "M13_representative_row_ignores_name_strength",
+      "file": "lib/contractors/name-candidates-query.ts",
+      "meaning": "Review finding 4: an active but unrelated credential row displaces the exact matched source row.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 17. an exact/normalized target is never buried behind 200+ names that merely start the same (43.5896ms)"
       ],
       "restoredExactBytes": true
     }
   ],
   "gateGreenAfterRestore": true,
-  "detected": 5,
-  "total": 5
+  "detected": 13,
+  "total": 13
 }

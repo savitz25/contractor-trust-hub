@@ -1,6 +1,9 @@
 # TH-SEARCH-R1-019B — Contractor name-candidate operation (integration handoff)
 
-Status: `READY_FOR_ASTRA_REVIEW — CONTRACTOR_OPERATION`. Draft PR only. Not merged, not deployed.
+Status: `READY_FOR_ASTRA_REVIEW — CONTRACTOR_OPERATION` (review-1 correction pass). Draft PR only. Not merged, not deployed.
+
+> **Read `REVIEW-1.md` first.** It is the disposition of the CHANGES_REQUESTED review on `3a22d7b` and supersedes this file
+> wherever they differ. Sections 4, 6, 7 and 8 below were rewritten for the corrected runtime.
 
 **The Ask parent adapter is NOT activated by this change.** `contractorNameAdapter` in Ask
 (`lib/network/name-candidates/adapters.ts`) stays `enabled: false`. Nothing in Ask was edited.
@@ -28,7 +31,7 @@ identifier dispatch). v2's fingerprint hashes its request field list, so adding 
 would take down every existing caller until Ask re-pinned. The name operation is therefore a separately
 versioned opt-in. `lib/specialist-execution/contractor-v2.ts` and `app/api/specialist-execution/v2/route.ts`
 are byte-identical to base; the pinned values are recorded in `v2-contract-pins.json` and asserted by the gate
-(they equal the value Ask currently pins: `4c220137…0f79b5`).
+(they equal the value Ask currently pins: `4c220137…0f79b5`). This contract's own fingerprint is `f1a99879…2bc1f3`.
 
 ## 2. Request
 
@@ -68,45 +71,39 @@ A name that contains digits or a city stays a name. This operation never enters 
 
 ## 4. Matching (shared engine)
 
-Predicate (rendered by `nameMatchPredicateSql`, used by both native Verify and this operation), applied **before** any row limit.
-A record matches when **one** of `display_name, legal_name, dba_name, licensee_name_raw, dba_name_raw`:
+Rendered by `buildNameMatchSql` for both native Verify name search and this operation; applied **before** any row limit.
 
-1. contains the supplied name, **or**
-2. contains it after punctuation + legal-suffix normalization (`prepareNameSearch`), **or**
-3. contains **every** one of the first four significant words.
+A record matches when **one** actual source name field (`display_name`, `legal_name`, `dba_name`, `licensee_name_raw`,
+`dba_name_raw`) contains **every** meaningful word of the supplied name:
 
-> **Reviewer decision point — word rule is per name field.** On base, rule 3 tested the five fields *concatenated*, so
-> one word could come from the business name and another from a different field (in FL, `legal_name` is often the
-> qualifying individual). That form cannot use any index and is why native search times out (§7). Rule 3 now requires
-> the words to co-occur in a single name field. `Perez Gulf` no longer matches a profile whose display name is
-> `GULF COAST` and whose licensee is `PEREZ, MARIA`; `Perez Maria` and `Gulf Coast` each still do. Native Verify and this
-> operation share the rule (gate tests 8 and 13). Since native name search returns nothing at all on base, no working
-> behavior is lost, but it is a deliberate semantic choice and is called out here rather than buried.
+* Both sides are normalized identically: ASCII upper-case, apostrophes removed (`O'BRIEN` = `OBRIEN`), every other
+  non-alphanumeric run is a word break.
+* Legal-suffix words and the connector `AND` are dropped from the **supplied** name only (`name.optionalWordsDropped`), so
+  the customer never types LLC/Inc and "Brown and Root" finds `BROWN & ROOT`. Dotted forms (`L.L.C.`) are suffixes, not initials.
+* Initials and every later word stay required (`name.requiredWords` lists all of them). Nothing is cut to "the first four".
+* A word of 3+ characters may **begin** a source word (`stilw` → `STILWELL`); a shorter word must **equal** one. A letter
+  inside a word never satisfies an initial.
+* Words must co-occur in one field. A business-name word plus a word from another field is not a source name.
+* No aliases are invented; only stored DBA fields are aliases. Exact-credential operations are untouched.
 
-Generic-word overlap alone admits nothing (rule 3 is AND, within one field). No aliases are invented; only stored DBA fields count as aliases.
-Words 5+ of a long name are not required (`name.ignoredWords` discloses them).
-
-`match.method` per candidate, derived from the row's own returned values (`deriveNameMatchEvidence`):
+`match` per candidate is derived from the row's own returned values by the same rules (`deriveNameMatchEvidence`):
+`field`, `value`, `method`, `matchedWords` (supplied word → source word) and an explanation naming exactly those words.
 
 | Method | Meaning |
 |---|---|
-| `EXACT_SOURCE_NAME` | a name field equals the supplied text exactly |
-| `NORMALIZED_NAME` | equal after case / punctuation / legal-suffix normalization |
-| `DOCUMENTED_ALIAS` | the equality above held on a stored DBA field |
-| `PREFIX_OR_TOKEN` | the field starts with the name at a word boundary, or contains every required word |
-| `NAME_CONTAINS` | field contains the supplied name |
+| `EXACT_SOURCE_NAME` | the field is exactly the supplied text |
+| `NORMALIZED_NAME` | equal after case / punctuation / apostrophe / legal-suffix normalization |
+| `DOCUMENTED_ALIAS` | either equality above, on a stored DBA field |
+| `PREFIX_OR_TOKEN` | the field contains every required word, each beginning or equal to one of its words |
 
-These map 1:1 onto Ask's `MatchMethod` values of the same names. None is an identity finding. A single
-returned row is still `COMPLETED_WITH_CANDIDATES`; this contract has no `EXACT_IDENTITY` state.
+None is an identity finding; a single row is still `COMPLETED_WITH_CANDIDATES`. If a returned row has no derivable
+evidence the whole response is `SOURCE_FAILURE` / `invalid_response`. The `name` echo alone is not proof.
 
-**Row-level proof the predicate ran:** every candidate must have evidence derivable from its own returned
-name fields. If a row has none, the whole response is `SOURCE_FAILURE` / `invalid_response` — it is never shown.
-The `name` echo alone is not treated as proof.
-
-Ordering: neutral string-relation rank → `LOWER(display_name)` → `slug`. Never provider quality.
-Grain: one card per public profile with one representative credential row (active/current first, then most
-recently updated — same as native). Several sources are credential-grain, so cards ≠ distinct companies
-(e.g. `STILWELL SOLAR, LLC` is three FL profiles: CVC57212, FRO12195, CPC1460219). Dedup is on `stableKey` only.
+Ordering (neutral, never provider quality): 0 display name equals the name (optional suffix) · 1 another name field
+equals it · 2 display name starts with it · 3 another field starts with it · 4 contains every word; then
+`LOWER(display_name)`, then `slug`. The representative credential row is the one with the strongest name relation, then
+active/current, then most recent. Grain: one card per public profile; several sources are credential-grain, so cards ≠
+distinct companies (`STILWELL SOLAR, LLC` is three FL profiles: CVC57212, FRO12195, CPC1460219). Dedup on `stableKey` only.
 
 ## 5. Response
 
@@ -115,8 +112,8 @@ recently updated — same as native). Several sources are credential-grain, so c
   "contract": "contractor-name-candidates-v1", "contractVersion": "1.0.0", "schemaFingerprint": "…", "hub": "contractor",
   "operation": "name_candidates",
   "resultState": "COMPLETED_WITH_CANDIDATES",
-  "name": { "supplied": "Stilwell Solar", "normalized": "Stilwell Solar", "requiredWords": ["Stilwell","Solar"],
-            "ignoredWords": [], "indexedWords": ["Stilwell","Solar"], "predicate": "…", "predicateApplied": true },
+  "name": { "supplied": "Stilwell Solar", "normalized": "STILWELL SOLAR", "requiredWords": ["STILWELL","SOLAR"],
+            "optionalWordsDropped": [], "indexFragments": ["TILWEL","SOLAR"], "predicate": "…", "predicateApplied": true },
   "scope": { "mode": "all_name_searchable_jurisdictions", "requestedJurisdiction": null,
              "searched": [{ "code": "FL", "label": "Florida", "sources": ["fl_dbpr"], "state": "COMPLETED" }, …],
              "notSearchableByName": [{ "code": "VA", … }], "meaning": "… This is not nationwide coverage." },
@@ -125,7 +122,8 @@ recently updated — same as native). Several sources are credential-grain, so c
     "stableKey": "contractor:profile:fro12195-stilwell-solar-llc",
     "sourceGrain": "ContractorTrustHub public profile with a representative state credential row",
     "displayName": "STILWELL SOLAR, LLC", "entityType": null,
-    "match": { "field": "display_name", "value": "STILWELL SOLAR, LLC", "method": "NORMALIZED_NAME", "explanation": "…" },
+    "match": { "field": "display_name", "value": "STILWELL SOLAR, LLC", "method": "NORMALIZED_NAME",
+               "matchedWords": [{ "supplied": "STILWELL", "source": "STILWELL" }, { "supplied": "SOLAR", "source": "SOLAR" }], "explanation": "…" },
     "identifiers": [{ "label": "ContractorTrustHub credential key", "value": "FRO12195", "meaning": "…" }, …],
     "credential": { "number": "0012195", "class": "…", "occupationCode": "FRO", "status": "current",
                     "sourceNativeStatus": "…", "statusMeaning": "… Not a live board check, not regulatory approval …" },
@@ -163,51 +161,41 @@ There is no policy-restricted state in v1: held/thin profiles are simply not can
 ## 6. Pagination
 
 * `limit + 1` probe row ⇒ `hasMore` is proven, never guessed. No count query, so `total` is always `null`.
-* `hasMore: true` ⇒ `continuation.type: "NEXT_PAGE"` with a ready-to-send `request` that preserves name and jurisdiction.
-* Cap: 200 rows per name+scope. When more exist at the cap: `resultState: "PARTIAL_TRUNCATED"`, `hasMore: false`,
-  `pagination.truncated: true`, and `continuation.type: "VERIFY"` with one working native Verify URL per searched
-  jurisdiction (`/verify?state=xx&q=<name>`). `hasMore` is never advertised without a usable next page.
-* Ask's `HUB_PAGE_SIZE = 10` × `MAX_PAGE = 20` = 200 fits the cap exactly.
+* `hasMore: true` ⇒ `continuation.type: "NEXT_PAGE"` with a ready-to-send `request` preserving name and jurisdiction.
+* Cap: 200 rows per name+scope, enforced for every limit — the last window is clamped to the rows remaining under the cap
+  (page 9 × 24 returns 8 rows; page 10 is `invalid_page`).
+* At the cap with more rows: `resultState: "PARTIAL_TRUNCATED"`, `hasMore: false`, `pagination.truncated: true`, and
+  `continuation.type: "REFINE_SEARCH"` with `reachesRowsBeyondCap: false`. Its links open native Verify for the same name;
+  Verify shows its own first page and does **not** continue past row 200. It is a refinement action, not a cursor.
+* On failure `continuation.type` is `RETRY_OR_VERIFY`.
 
-## 7. Engine repair found during the audit (the one native-path change)
+## 7. Engine repair (the one native-path change)
 
-On unchanged base **and in production**, native Verify name search times out
-(`red-before-base-7b34589.json`; production `/verify?state=fl&q=stilwell+solar` answered "search took too long"
-after ~10 s). Trigram indexes exist on all five name columns, but the predicate's `OR` across two tables plus the
-concatenated-blob `ILIKE` prevents Postgres from using them, so it scans ~1.3 M rows until the 8 s statement timeout.
+On unchanged base **and in production**, native Verify name search times out (`red-before-base-7b34589.json`; production
+`/verify?state=fl&q=stilwell+solar` answered "search took too long" after ~10 s): the old predicate's `OR` across two tables
+and its concatenated-blob `ILIKE` cannot use the trigram indexes that exist on all five name columns.
 
-Repair (`namePrefilteredContractorsFromSql`): candidate contractor ids are collected first from the per-column
-trigram indexes — *some name field contains every indexable required word* — then the full predicate is applied.
-Because every row the predicate admits has one field containing every required word, the prefilter is an exact
-superset: it changes which rows are scanned, never which match (gate: "index prefilter … never widens the match set").
-Keeping all words on the same column lets one index scan intersect them on the rarest trigram before any heap
-recheck. No schema, index, timeout, pooling or infrastructure change. Words under three characters cannot drive a
-trigram index and are left out of the prefilter (still required by the predicate); if no word qualifies the query is
-the legacy unfiltered scan and `limitations` says so.
+Per field the rule is `indexRule(raw column) AND wordRule(normalized column)`. The index rule is "the raw column contains
+every index fragment" — all fragments on the **same** column, so one index scan intersects them on the rarest trigram.
+The prefilter applies that same per-field rule to each table, so it is a superset of the predicate by construction and
+discards non-matching index candidates at the heap scan, before any join. No schema, index, timeout, pooling or
+infrastructure change. Index fragments: the word itself under six letters; the piece the customer marked with an
+apostrophe; otherwise the interior of a 6+ letter word (survives a source apostrophe after the first or before the last
+letter). Initials never drive an index. With no indexable word the rule is "raw column contains the supplied text".
+`searchContractors` also gained an optional `db` argument (tests only).
 
-How the design was reached (all three holdout runs are kept):
+Holdout history on the unchanged frozen sample (every run kept): run 1 29/60 · run 2 48/60 · run 3 57/60 · run 4 59/60 · run 5 59/60 ·
+**run 6 (final runtime) 59/60**, 0 misses in every run. See `REVIEW-1.md` for the remaining failure.
 
-| Prefilter | Holdout (60 variants) | Note |
-|---|---|---|
-| base (none) | native search never completes | 8 s statement timeout |
-| run 1 — single "anchor" word | 29 found / 31 timeouts / 0 misses | any row containing the word needs a heap recheck; even rare words timed out cold |
-| run 2 — all words, `OR` across a table's columns | 48 found / 12 timeouts / 0 misses | one full index scan per word per column |
-| **run 3 — all words on one column (final)** | **57 found / 3 timeouts / 0 misses**, median 341 ms | the 3 timeouts are one record, `R & T GENERAL CONSTRUCTION` |
+## 8. Measured cost (single observations; not percentiles)
 
-`searchContractors` also gained an optional third `db` argument (tests only; production callers unchanged).
+One statement per request, no enrichment, no count query, no retry on timeout, 6 s statement budget (Ask's per-hub
+reference is ~7 s). `live-controls.review1.json`, `query-plan-cold-vs-warm.review1.json`, `query-plans.json`.
 
-## 8. Measured cost (small read-only sample; not a p95)
-
-See `timings.json` and `live-controls.json` (HTTP endpoint on the optimized local build; ~250 ms of each figure is this
-machine's round trip to the database). One statement per request, no enrichment, no count query, no retry on timeout.
-Statement budget 6 s (under Ask's ~7 s per-hub reference).
-
-* Typical: 0.3–1.5 s (`Stilwell Solar` 0.29 s warm, `Worsham Construction` 0.37–0.89 s, `Whaley's Air Conditioning` 1.4 s).
-* Cold index pages: the first `Stilwell Solar` of the session took 5.4 s; the identical repeat took 0.29 s. The database's
-  cold-read speed dominates; that is infrastructure, not changed here.
-* **Slow paths:** a very common single word (`Allied` 6.1 s — completed, at the edge of the budget) and names made only of
-  generic words (`General Construction` → 504 `SOURCE_FAILURE`). These are reported as failures with a working Verify
-  continuation, never as misses.
+* Distinctive names: 0.3–1.7 s (Stilwell 0.30 s warm / 1.26 s first; Worsham 0.30–1.35 s; Whaley's 0.33–1.67 s).
+* **Unresolved:** names whose index fragments are all common words. Identical statement, identical plan (index scans only,
+  3 rows reach the joins): 14.8–18.9 s cold, 0.23 s warm. `R & T GENERAL CONSTRUCTION` unscoped returned 504 twice;
+  scoped to `MS` 0.6 s. `Allied` unscoped 504 then 4.5 s; scoped `FL` 0.34 s. Reported as `SOURCE_FAILURE`, never a miss.
 
 ## 9. Ask-side activation work still required (NOT done here)
 
@@ -222,8 +210,8 @@ Statement budget 6 s (under Ask's ~7 s per-hub reference).
    `matchedName = match.value`, `matchedField = match.field`, `matchMethod = match.method`,
    `hubMatchExplanation = match.explanation`, `identifiers`, `recordedLocation` + `locationMeaning`,
    `sourceAsOf = source.clock.value`, `sourceDateLabel = source.clock.label`, `publicationState`, `action`.
-5. `hasMore`/`page` from `pagination`; `truncatedWithoutCursor = false` (a VERIFY continuation is always supplied
-   when truncated); `continuation` from `continuation.scoped[0]` or a chooser; `hubReportedTotal = null`.
+5. `hasMore`/`page` from `pagination`; `truncatedWithoutCursor = pagination.truncated` (the cap action is `REFINE_SEARCH`,
+   a refinement, not a cursor); offer `continuation.scoped[]` as a research action; `hubReportedTotal = null`.
 6. `searchedScope` from `scope.searched[].code` + `scope.meaning`; `matchBreadth` from `name.predicate`.
 7. Ask fixtures/tests, deadline accounting (one call per page), then a separately reviewed Ask release.
 
@@ -232,9 +220,10 @@ Statement budget 6 s (under Ask's ~7 s per-hub reference).
 **Blockers for this PR:** none known.
 
 **Deferred (deliberately not in scope):**
-* Common-word / generic-only-name latency (see §8). A durable fix is a normalized-name column with an ordered index, or more database memory — schema/infrastructure changes that need their own approval.
+* **Cold-cache latency for common-word names (see §8 and `REVIEW-1.md`).** The plan is index-only-driven and minimal; the cost is page residency. Smallest dependency, needing explicit authorization: keep the five name trigram indexes resident (`pg_prewarm`/larger cache), or a normalized-name column with a `text_pattern_ops` index.
 * **Pre-existing, unrelated:** the legacy v2 exact-identifier and cohort operations return 503 in production today (`preexisting-v2-production-health.json`; `runCohortRows` `COUNT(*)` times out). Not touched here; repair was explicitly excluded from this assignment.
 * No lint is configured in this repository (no ESLint config, no `lint` script), so none was run.
+* Normal-zoom browser evidence is an open gap (`browser/native-flows.review1.json`).
 * `POLICY_RESTRICTED` detection (telling "only held/thin records match" apart from a true miss) would need a second query per miss.
 * The native per-jurisdiction rule `(home_state = code OR license.state = code)` can omit an out-of-state-addressed
   credential holder for some sources. Inherited unchanged so both surfaces agree; changing it is a native-search decision.
@@ -249,7 +238,10 @@ Statement budget 6 s (under Ask's ~7 s per-hub reference).
 | `v2-contract-pins.json` | v2 version + fingerprints captured from base; asserted unchanged |
 | `holdout-frozen.json` / `holdout-results.run{1,2,3}-*.json` | frozen 20-record diagnostic holdout (2 per scope for 10 scopes; CO produced no eligible pick) and every run, with the reason for each rerun |
 | `preexisting-v2-production-health.json` | legacy v2 and native search timing out in production before this change |
-| `mutation-report.json` | mutations and the tests that detected them |
+| `REVIEW-1.md` | disposition of the review on `3a22d7b`; supersedes this file where they differ |
+| `mutation-report.json` | 13 mutations and the tests that detected them |
+| `query-plan-cold-vs-warm.review1.json`, `query-plans.json` | bounded query-plan evidence |
+| `live-controls.review1.json`, `holdout-results.run4-*.json`, `holdout-results.run5-*.json`, `holdout-results.run6-*.json` | review-1 runtime: HTTP controls and holdout runs |
 | `timings.json` | measured request costs |
 | `live-controls.json` | Stilwell / Worsham / third-company live verification through the HTTP endpoint |
 | `browser/` | native positive / ambiguous / miss flows at 1280 and 390 CSS px, opened profile, every candidate link checked |

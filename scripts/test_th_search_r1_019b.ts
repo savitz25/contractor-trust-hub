@@ -11,8 +11,8 @@ import test, { after, before } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { pg_trgm } from "@electric-sql/pglite/contrib/pg_trgm";
 import { searchContractors } from "../lib/contractors/queries";
-import { deriveNameMatchEvidence, indexedWordSlots, namePrefilteredContractorsFromSql } from "../lib/contractors/name-search-core";
-import { prepareNameSearch } from "../lib/contractors/search-normalize";
+import { queryContractorNameCandidates } from "../lib/contractors/name-candidates-query";
+import { buildNameMatchSql, buildUnprefilteredNameMatchSql, deriveNameMatchEvidence, prepareNameTerms } from "../lib/contractors/name-search-core";
 import {
   CONTRACTOR_CONTRACT_FINGERPRINT,
   CONTRACTOR_SCHEMA_FINGERPRINT,
@@ -82,6 +82,26 @@ before(async () => {
   await addContractor({ name: "HARBOR VIEW", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0011021", state: "FL", raw: "NGUYEN, THANH" }]);
   await addContractor({ name: "KESTREL RIDGE", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0011031", state: "FL", raw: "KESTREL RIDGE OKAFOR", dbaRaw: null }]);
   await addContractor({ name: "O'BRIEN & SONS PLUMBING CO.", home: "FL" }, [{ source: "fl_dbpr", key: "CFC0012012", state: "FL" }]);
+  // Reviewer counterexamples + punctuation / initials / long-name / numeric-leading matrix.
+  await addContractor({ name: "R & T", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013001", state: "FL" }]);
+  await addContractor({ name: "A.B", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013002", state: "FL" }]);
+  await addContractor({ name: "R & T GENERAL CONSTRUCTION, INC", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013003", state: "FL" }]);
+  await addContractor({ name: "GENERAL CONSTRUCTION LLC", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013004", state: "FL" }]);
+  await addContractor({ name: "ART GENERAL CONSTRUCTION", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013005", state: "FL" }]);
+  await addContractor({ name: "NORTH HARBOR VIEW ESTATE ALPHA", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013006", state: "FL" }]);
+  await addContractor({ name: "NORTH HARBOR VIEW ESTATE BETA", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013007", state: "FL" }]);
+  await addContractor({ name: "MCDONALD'S PLUMBING", home: "FL" }, [{ source: "fl_dbpr", key: "CFC0013008", state: "FL" }]);
+  await addContractor({ name: "D'ANGELO TILE L.L.C.", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013009", state: "FL" }]);
+  await addContractor({ name: "84 LUMBER SUPPLY", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013010", state: "FL" }]);
+  await addContractor({ name: "BROWN & ROOT INDUSTRIAL SERVICES, LLC", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013011", state: "FL" }]);
+  // Exact target that sorts AFTER 210 siblings which merely start with the same name.
+  for (let i = 1; i <= 210; i += 1) await addContractor({ name: `YARROW WORKS ${String(i).padStart(3, "0")}`, home: "FL" }, [{ source: "fl_dbpr", key: `CBC07${String(i).padStart(5, "0")}`, state: "FL" }]);
+  await addContractor({ name: "YARROW WORKS, INC.", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0799999", state: "FL" }]);
+  // Representative credential: BOTH rows match. The exact source-name row is expired; the active row only contains the name.
+  await addContractor({ name: "UMBRELLA HOLDINGS", home: "FL" }, [
+    { source: "fl_dbpr", key: "CBC0014001", state: "FL", status: "active", raw: "LANTERN CREEK BUILDERS OF TAMPA" },
+    { source: "fl_dbpr", key: "CBC0014002", state: "FL", status: "expired", raw: "LANTERN CREEK BUILDERS" },
+  ]);
   await addContractor({ name: "OUT OF SCOPE ALLIED LLC", home: "GA" }, [{ source: "ga_unpermitted_source", key: "GA-1", state: "GA" }]);
   for (let i = 1; i <= 30; i += 1) await addContractor({ name: `ZEPHYR BUILDERS ${String(i).padStart(2, "0")}`, home: "FL" }, [{ source: "fl_dbpr", key: `CBC09${String(i).padStart(5, "0")}`, state: "FL" }]);
   await addContractor({ name: "ZEPHYR ZZ TARGET LLC", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0999999", state: "FL" }]);
@@ -103,7 +123,8 @@ test("1. name-only structured request reaches name execution and keeps the whole
   assert.deepEqual(names(r), ["ALLIED ROOFING OF TAMPA, INC."]);
   assert.equal(calls.length, 1, "exactly one statement, no count query, no enrichment");
   assert.match(calls[0].sql, /ILIKE/);
-  assert.ok((calls[0].params as string[]).includes("%Allied Roofing of Tampa%"), "whole supplied name is a predicate parameter");
+  assert.deepEqual(r.name.requiredWords, ["ALLIED", "ROOFING", "OF", "TAMPA"], "every word of the supplied name is required");
+  for (const word of r.name.requiredWords) assert.ok((calls[0].params as string[]).includes(word), `${word} is a predicate parameter`);
   assert.doesNotMatch(calls[0].sql, /status_normalized IN/, "no cohort status default leaks into the name operation");
 });
 
@@ -113,11 +134,14 @@ test("2. case, punctuation, legal-suffix and short distinctive variants retrieve
     const r = await run({ name: variant });
     assert.ok(names(r).includes("ALLIED ELECTRICAL LLC"), `variant "${variant}" must find the record`);
   }
-  const apostrophe = await run({ name: "OBrien Sons Plumbing" });
-  assert.deepEqual(names(apostrophe), [], "apostrophes are meaningful: O'BRIEN is not silently equated with OBRIEN");
-  const real = await run({ name: "O'Brien & Sons Plumbing" });
-  assert.deepEqual(names(real), ["O'BRIEN & SONS PLUMBING CO."]);
-  assert.equal(real.candidates[0].match.method, "NORMALIZED_NAME");
+  for (const variant of ["OBrien Sons Plumbing", "O'Brien & Sons Plumbing", "o\u2019brien and sons plumbing co", "Obrien Sons"]) {
+    assert.deepEqual(names(await run({ name: variant })), ["O'BRIEN & SONS PLUMBING CO."], `apostrophe/punctuation variant "${variant}"`);
+  }
+  assert.equal((await run({ name: "OBrien Sons Plumbing" })).candidates[0].match.method, "NORMALIZED_NAME", "labelled as normalized, never as the exact source name");
+  assert.deepEqual(names(await run({ name: "McDonalds Plumbing" })), ["MCDONALD'S PLUMBING"]);
+  assert.deepEqual(names(await run({ name: "DAngelo Tile" })), ["D'ANGELO TILE L.L.C."]);
+  assert.deepEqual(names(await run({ name: "Brown and Root Industrial Services" })), ["BROWN & ROOT INDUSTRIAL SERVICES, LLC"]);
+  assert.equal((await run({ name: "D'Angelo Tile LLC" })).candidates[0].match.method, "NORMALIZED_NAME", "dotted L.L.C. is a suffix, not three initials");
 });
 
 // 3 ---------------------------------------------------------------------------------------
@@ -251,9 +275,29 @@ test("9. a true target beyond the first page is reachable; capped results carry 
   assert.equal(capped.resultState, "PARTIAL_TRUNCATED");
   assert.equal(capped.pagination.hasMore, false, "hasMore is never advertised without a usable next page");
   assert.equal(capped.pagination.truncated, true);
-  assert.equal(capped.continuation.type, "VERIFY");
+  assert.equal(capped.continuation.type, "REFINE_SEARCH", "the cap action is a refinement, not a cursor");
+  assert.equal(capped.continuation.reachesRowsBeyondCap, false);
+  assert.match(capped.continuation.meaning, /does NOT continue past/);
   assert.equal(capped.continuation.scoped.length, 1);
-  assert.match(capped.continuation.scoped[0].href, /\/verify\?q=Quartz%20Homes$/, "native continuation preserves name and scope");
+  assert.match(capped.continuation.scoped[0].href, /\/verify\?q=Quartz%20Homes$/, "refinement link preserves name and scope");
+  // Non-divisor limits can never return rows beyond the advertised cap.
+  for (const limit of [7, 10, 20, 24, 25]) {
+    const keys: string[] = [];
+    let request: Row | null = { name: "Quartz Homes", jurisdiction: "FL", limit };
+    let last: Any = null;
+    while (request) {
+      last = await executeContractorNameCandidates({ operation: "name_candidates", ...request }, db) as Any;
+      keys.push(...last.candidates.map((c: Any) => c.stableKey));
+      request = last.pagination.hasMore ? last.continuation.request : null;
+    }
+    assert.equal(keys.length, NAME_SOURCE_CAP, `limit ${limit}: exactly the cap is reachable`);
+    assert.equal(new Set(keys).size, NAME_SOURCE_CAP, `limit ${limit}: no row repeats`);
+    assert.equal(last.resultState, "PARTIAL_TRUNCATED");
+    assert.equal(last.pagination.hasMore, false);
+  }
+  const lastWindow = await run({ name: "Quartz Homes", jurisdiction: "FL", limit: 24, page: 9 });
+  assert.equal(lastWindow.pagination.returned, 8, "page 9 x 24 starts at row 192: only 8 rows remain under the cap");
+  assert.throws(() => normalizeNameCandidatesRequest({ operation: "name_candidates", name: "Quartz Homes", limit: 24, page: 10 }), /invalid_page/);
   assert.throws(() => normalizeNameCandidatesRequest({ operation: "name_candidates", name: "Quartz Homes", limit: 25, page: 9 }), /invalid_page/);
   const past = await run({ name: "Zephyr", limit: 10, page: 9 });
   assert.equal(past.resultState, "COMPLETED_NO_CANDIDATES");
@@ -292,6 +336,7 @@ test("11. empty, invalid and wildcard-like input never becomes an unrestricted c
   const long = "A".repeat(120);
   assert.equal(normalizeNameCandidatesRequest({ operation: "name_candidates", name: long }).name.length, 120, "valid long names are never truncated");
 
+  assert.throws(() => normalizeNameCandidatesRequest({ operation: "name_candidates", name: "\u65e5\u672c\u5efa\u8a2d" }), /invalid_name/, "no ASCII word to match on");
   const wildcard = await run({ name: "%a%" });
   assert.equal(wildcard.resultState, "COMPLETED_NO_CANDIDATES", "LIKE metacharacters are literals, not match-all");
   const underscore = await run({ name: "A_lied" });
@@ -323,7 +368,7 @@ test("12. legacy v2 exact-credential, cohort and contract locks are unchanged", 
 
 // 13 --------------------------------------------------------------------------------------
 test("13. native Verify name search and the operation return the same identities under the same scope", async () => {
-  for (const [name, slug, code] of [["Allied", "fl", "FL"], ["Allied", "tx", "TX"], ["Suncoast Builders", "fl", "FL"], ["sunny side solar", "fl", "FL"], ["Perez Maria", "fl", "FL"], ["Kestrel Okafor", "fl", "FL"], ["Zephyr", "fl", "FL"]] as const) {
+  for (const [name, slug, code] of [["Allied", "fl", "FL"], ["Allied", "tx", "TX"], ["R & T", "fl", "FL"], ["OBrien Sons", "fl", "FL"], ["North Harbor View Estate Alpha", "fl", "FL"], ["Suncoast Builders", "fl", "FL"], ["sunny side solar", "fl", "FL"], ["Perez Maria", "fl", "FL"], ["Kestrel Okafor", "fl", "FL"], ["Zephyr", "fl", "FL"]] as const) {
     const native = await searchContractors(name, { stateSlug: slug, limit: 50 }, db);
     assert.equal(native.mode, "name");
     const op = await run({ name, jurisdiction: code, limit: 25 });
@@ -341,8 +386,10 @@ test("13. native Verify name search and the operation return the same identities
   const nativeSource = fs.readFileSync("lib/contractors/queries.ts", "utf8");
   const opQuery = fs.readFileSync("lib/contractors/name-candidates-query.ts", "utf8");
   const opModule = fs.readFileSync("lib/specialist-execution/contractor-name-candidates.ts", "utf8");
-  assert.match(core, /export function nameMatchPredicateSql/);
-  for (const source of [nativeSource, opQuery]) { assert.match(source, /nameMatchPredicateSql\(/); assert.match(source, /nameRankCaseSql\(/); assert.match(source, /namePrefilteredContractorsFromSql\(/); }
+  assert.match(core, /export function buildNameMatchSql/);
+  assert.match(nativeSource, /buildNameMatchSql\(/);
+  assert.match(opQuery, /buildNameMatchSql/);
+  for (const source of [nativeSource, opQuery]) { assert.match(source, /\.predicateSql/); assert.match(source, /\.rankSql/); assert.match(source, /\.fromSql/); }
   assert.doesNotMatch(opQuery, /ILIKE/, "the operation has no matching SQL of its own");
   assert.doesNotMatch(opModule, /ILIKE|SELECT /, "the boundary module has no SQL at all");
 });
@@ -362,24 +409,87 @@ test("14. no private fields or claim lookups enter the public path", async () =>
   }
 });
 
-// prefilter -------------------------------------------------------------------------------
-test("index prefilter uses only indexable required words and never widens the match set", async () => {
-  assert.deepEqual(indexedWordSlots(prepareNameSearch("Worsham Construction")), [0, 1]);
-  assert.deepEqual(indexedWordSlots(prepareNameSearch("R & T General Construction")), [0, 1], "one-letter words are not required words at all");
-  assert.deepEqual(indexedWordSlots(prepareNameSearch("AB Roofing")), [1], "a two-letter word is required by the predicate but cannot drive an index");
-  assert.deepEqual(indexedWordSlots(prepareNameSearch("AB CD")), []);
-  assert.equal(namePrefilteredContractorsFromSql([]), "contractors c", "no indexable word -> legacy scan, not a match-all shortcut");
-  const sql = namePrefilteredContractorsFromSql([4, 5]);
-  assert.match(sql, /\(display_name ILIKE \$4 AND display_name ILIKE \$5\)/, "ALL indexable words are required together on the SAME column");
-  assert.match(sql, /\(licensee_name_raw ILIKE \$4 AND licensee_name_raw ILIKE \$5\)/);
-  for (const name of ["Allied Electrical", "Electrical Allied"]) {
-    const r = await run({ name });
-    assert.deepEqual(names(r), ["ALLIED ELECTRICAL LLC"], "word order does not change the match set");
+// 15 --------------------------------------------------------------------------------------
+const MATRIX: Array<[string, string[]]> = [
+  ["R & T", ["R & T", "R & T GENERAL CONSTRUCTION, INC"]],
+  ["A.B", ["A.B"]],
+  ["R & T GENERAL CONSTRUCTION", ["R & T GENERAL CONSTRUCTION, INC"]],
+  ["r & t general construction, inc", ["R & T GENERAL CONSTRUCTION, INC"]],
+  ["General Construction", ["ART GENERAL CONSTRUCTION", "GENERAL CONSTRUCTION LLC", "R & T GENERAL CONSTRUCTION, INC"]],
+  ["North Harbor View Estate Alpha", ["NORTH HARBOR VIEW ESTATE ALPHA"]],
+  ["North Harbor View Estate", ["NORTH HARBOR VIEW ESTATE ALPHA", "NORTH HARBOR VIEW ESTATE BETA"]],
+  ["OBrien Sons Plumbing", ["O'BRIEN & SONS PLUMBING CO."]],
+  ["McDonald's Plumbing", ["MCDONALD'S PLUMBING"]],
+  ["84 Lumber", ["84 LUMBER SUPPLY"]],
+  ["Sunny Side Solar", ["BRIGHT HOME SERVICES"]],
+  ["Kestrel Okafor", ["KESTREL RIDGE"]],
+  ["Allied Electrical", ["ALLIED ELECTRICAL LLC"]],
+  ["Lantern Creek Builders", ["UMBRELLA HOLDINGS"]],
+  ["Perez Gulf", []],
+  ["T General Construction", ["R & T GENERAL CONSTRUCTION, INC"]],
+];
+test("15. the index prefilter never drops a match: optimized == complete unprefiltered predicate == expected", async () => {
+  const scopes = nameSearchableScopes().map(({ code, sources }) => ({ code, sources }));
+  for (const [name, expected] of MATRIX) {
+    const optimized = await queryContractorNameCandidates({ name, scopes, limit: 100, offset: 0 }, db, buildNameMatchSql);
+    const complete = await queryContractorNameCandidates({ name, scopes, limit: 100, offset: 0 }, db, buildUnprefilteredNameMatchSql);
+    const sort = (rows: Any[]) => rows.map((r) => r.display_name).sort();
+    assert.deepEqual(sort(optimized.rows), sort(complete.rows), `"${name}": prefilter changed the match set`);
+    assert.deepEqual(sort(optimized.rows), [...expected].sort(), `"${name}": independent expectation`);
   }
-  calls.length = 0;
-  const short = await run({ name: "AB CD" });
-  assert.equal(short.resultState, "COMPLETED_NO_CANDIDATES");
-  assert.doesNotMatch(calls[0].sql, /name_prefilter/);
-  assert.match(short.limitations.join(" "), /shorter than three characters/);
-  assert.deepEqual((await run({ name: "Allied" })).name.indexedWords, ["Allied"]);
+  const noIndex = buildNameMatchSql(prepareNameTerms("R & T"), 1);
+  assert.equal(noIndex.usesNameIndexes, false);
+  assert.deepEqual(prepareNameTerms("R & T").terms, ["R", "T"], "initials are terms, never a fused \"R T\" pseudo-word");
+  assert.ok(noIndex.params.includes("%R & T%"), "with no indexable word the index rule is the raw supplied text, which the predicate also requires");
+  const sql = buildNameMatchSql(prepareNameTerms("Worsham Construction"), 1);
+  assert.match(sql.fromSql, /\(display_name ILIKE \$3 AND display_name ILIKE \$4\)/, "all index fragments sit on the SAME column");
+  assert.deepEqual(prepareNameTerms("OBrien").indexFragments, ["BRIE"], "fragment survives O'BRIEN and OBRIEN'S");
+  assert.deepEqual(prepareNameTerms("O'Neil").indexFragments, ["NEIL"], "a typed apostrophe tells us the safe piece");
+  assert.deepEqual(prepareNameTerms("stilw").indexFragments, ["STILW"], "a short word is never reduced to an unselective 3-letter interior");
+  assert.deepEqual(prepareNameTerms("Allied Electrical L.L.C.").terms, ["ALLIED", "ELECTRICAL"]);
+  assert.deepEqual(prepareNameTerms("The Company").terms, ["THE", "COMPANY"], "a name of only optional words is never emptied");
+});
+
+// 16 --------------------------------------------------------------------------------------
+test("16. initials and later words stay required; evidence never claims words it did not match", async () => {
+  const rt = await run({ name: "R & T GENERAL CONSTRUCTION" });
+  assert.deepEqual(names(rt), ["R & T GENERAL CONSTRUCTION, INC"], "GENERAL CONSTRUCTION LLC and ART GENERAL CONSTRUCTION are not this name");
+  assert.deepEqual(rt.name.requiredWords, ["R", "T", "GENERAL", "CONSTRUCTION"]);
+  assert.equal(deriveNameMatchEvidence("R & T GENERAL CONSTRUCTION", { display_name: "GENERAL CONSTRUCTION LLC" }), null);
+  assert.equal(deriveNameMatchEvidence("R & T GENERAL CONSTRUCTION", { display_name: "ART GENERAL CONSTRUCTION" }), null, "an initial never matches a letter inside a word");
+  assert.equal(deriveNameMatchEvidence("North Harbor View Estate Alpha", { display_name: "NORTH HARBOR VIEW ESTATE BETA" }), null, "the fifth word is enforced");
+  const alpha = await run({ name: "North Harbor View Estate Alpha" });
+  assert.deepEqual(names(alpha), ["NORTH HARBOR VIEW ESTATE ALPHA"]);
+  assert.deepEqual(alpha.candidates[0].match.matchedWords.map((w: Any) => w.supplied), ["NORTH", "HARBOR", "VIEW", "ESTATE", "ALPHA"]);
+  const ev = deriveNameMatchEvidence("R & T General", { display_name: "R & T GENERAL CONSTRUCTION, INC" });
+  assert.equal(ev?.method, "PREFIX_OR_TOKEN");
+  assert.match(ev?.explanation ?? "", /R, T, GENERAL/);
+  // A typed prefix ranks a display name that starts with it above a match on another field.
+  const prefixRank = await run({ name: "zeph", jurisdiction: "FL", limit: 3 });
+  assert.ok(prefixRank.candidates.every((c: Any) => c.displayName.startsWith("ZEPHYR")));
+  const numeric = await run({ name: "84 Lumber" });
+  assert.deepEqual(names(numeric), ["84 LUMBER SUPPLY"]);
+  // Source field meaning stays visible; a display name alone creates no person/ownership claim.
+  const person = await run({ name: "Perez Maria" });
+  assert.equal(person.candidates[0].displayName, "GULF COAST");
+  assert.equal(person.candidates[0].match.field, "legal_name");
+  assert.match(person.candidates[0].match.explanation, /qualifying individual, not the business/);
+});
+
+// 17 --------------------------------------------------------------------------------------
+test("17. an exact/normalized target is never buried behind 200+ names that merely start the same", async () => {
+  const r = await run({ name: "Yarrow Works", jurisdiction: "FL", limit: 10 });
+  assert.equal(r.candidates[0].displayName, "YARROW WORKS, INC.", "equality outranks prefix even though it sorts last alphabetically");
+  assert.equal(r.candidates[0].match.method, "NORMALIZED_NAME");
+  assert.equal(r.pagination.hasMore, true);
+  const sorted = [...Array(210)].map((_, i) => `yarrow works ${String(i + 1).padStart(3, "0")}`).concat("yarrow works, inc.").sort();
+  assert.ok(sorted.indexOf("yarrow works, inc.") >= 200, "fixture proves the target would fall beyond the cap on name order alone");
+  // Representative credential row: the exact source-name row wins over a merely-active unrelated row.
+  const rep = await run({ name: "Lantern Creek Builders" });
+  assert.deepEqual(names(rep), ["UMBRELLA HOLDINGS"]);
+  assert.equal(rep.candidates[0].match.field, "licensee_name_raw");
+  assert.equal(rep.candidates[0].match.value, "LANTERN CREEK BUILDERS", "the exact source row, not the active row that merely contains the name");
+  assert.equal(rep.candidates[0].match.method, "NORMALIZED_NAME");
+  assert.equal(rep.candidates[0].identifiers[0].value, "CBC0014002");
+  assert.equal(rep.candidates[0].credential.status, "expired", "status is reported, never used to hide or swap the matched row");
 });
