@@ -1,0 +1,61 @@
+{
+  "ranAt": "2026-09-19T22:18:27.926Z",
+  "ddlFile": "docs/qa/th-search-r1-019b/PROPOSED-normalized-name-indexes.sql",
+  "results": [
+    {
+      "name": "contractors_display_name_namewords_idx",
+      "startedAt": "2026-09-19T22:13:40.740Z",
+      "finishedAt": "2026-09-19T22:14:21.344Z",
+      "ms": 40531,
+      "bytes": "70983680",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "error": null
+    },
+    {
+      "name": "contractors_legal_name_namewords_idx",
+      "startedAt": "2026-09-19T22:14:21.345Z",
+      "finishedAt": "2026-09-19T22:15:23.847Z",
+      "ms": 62448,
+      "bytes": "70828032",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "error": null
+    },
+    {
+      "name": "contractors_dba_name_namewords_idx",
+      "startedAt": "2026-09-19T22:15:23.848Z",
+      "finishedAt": "2026-09-19T22:15:51.445Z",
+      "ms": 27537,
+      "bytes": "31375360",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "error": null
+    },
+    {
+      "name": "licenses_licensee_name_raw_namewords_idx",
+      "startedAt": "2026-09-19T22:15:51.446Z",
+      "finishedAt": "2026-09-19T22:17:27.329Z",
+      "ms": 95827,
+      "bytes": "78241792",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "error": null
+    },
+    {
+      "name": "licenses_dba_name_raw_namewords_idx",
+      "startedAt": "2026-09-19T22:17:27.329Z",
+      "finishedAt": "2026-09-19T22:18:27.926Z",
+      "ms": 60544,
+      "bytes": "37208064",
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "error": null
+    }
+  ]
+}
