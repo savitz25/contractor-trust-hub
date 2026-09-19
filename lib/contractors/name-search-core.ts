@@ -75,6 +75,20 @@ export function normalizedFieldSql(column: string): string {
   return `(' ' || btrim(regexp_replace(regexp_replace(upper(coalesce(${column}, '')), '${APOSTROPHES_SQL}', '', 'g'), '${SEPARATORS_SQL}', ' ', 'g')) || ' ')`;
 }
 
+/**
+ * TH-SEARCH-R1-019B-P2D access-path separation: value-identical to normalizedFieldSql (`|| ''` is a
+ * no-op on any non-null text), but a SYNTACTICALLY DISTINCT expression tree. PostgreSQL only matches
+ * an expression index when the query's expression is an exact syntactic match (modulo constant
+ * folding); giving the token tier's GIN index this wrapped expression, while the strong tier's
+ * predicate and B-tree index stay on the bare expression, makes it structurally impossible for the
+ * planner to consider the GIN index for the strong tier -- not merely more expensive, but not a
+ * candidate at all. See docs/qa/th-search-r1-019b/p2d-*.local.* for the empirical proof this identity
+ * holds and that the two tiers' plans are exclusive.
+ */
+function tokenAccessExpressionSql(column: string): string {
+  return `(${normalizedFieldSql(column)} || '')`;
+}
+
 /** Upper-case ASCII only. Non-ASCII case folding is left to the database so both sides of a comparison fold identically there. */
 function asciiUpper(value: string): string {
   return value.replace(/[a-z]+/g, (run) => run.toUpperCase());
@@ -159,9 +173,11 @@ function build(prepared: PreparedNameTerms, startIndex: number, access: AccessPa
     // and no condition on raw text in either mode.
     const tierRule = (column: string) =>
       // `IS NOT NULL` changes nothing (a NULL name matches no word); it lets the planner use partial indexes.
+      // The token tier's access-path expression is deliberately distinct from the strong tier's (see
+      // tokenAccessExpressionSql) so the two tiers' index candidates never overlap; the value is identical.
       access === "strong"
         ? `(${column} IS NOT NULL AND ${normalizedFieldSql(column)} LIKE ' ' || ${keyParam} || '%')`
-        : `(${column} IS NOT NULL AND ${wordRule(normalizedFieldSql(column))})`;
+        : `(${column} IS NOT NULL AND ${wordRule(tokenAccessExpressionSql(column))})`;
     const fieldRule = (column: string) => tierRule(column);
     fromSql = `(
         SELECT id FROM contractors
@@ -207,9 +223,14 @@ export function buildSemanticNameMatchSql(prepared: PreparedNameTerms, startInde
 export const NORMALIZED_NAME_INDEXES: Array<{ name: string; table: "contractors" | "licenses"; kind: "ordered" | "words"; ddl: string }> = NAME_MATCH_FIELDS.flatMap((field) => {
   const table = CONTRACTOR_FIELDS.includes(field) ? ("contractors" as const) : ("licenses" as const);
   const expr = normalizedFieldSql(field);
+  // "words" (GIN) is built on the token access-path expression (value-identical, syntactically
+  // distinct -- see tokenAccessExpressionSql) so it can never be matched against the strong tier's
+  // bare-expression predicate, and the strong tier's B-tree can never be matched against the token
+  // tier's wrapped predicate. Structural separation, not a cost-based preference.
+  const tokenExpr = tokenAccessExpressionSql(field);
   return [
     { name: `${table}_${field}_nameorder_idx`, table, kind: "ordered" as const, ddl: `CREATE INDEX CONCURRENTLY IF NOT EXISTS ${table}_${field}_nameorder_idx ON ${table} (${expr} text_pattern_ops) WHERE ${field} IS NOT NULL` },
-    { name: `${table}_${field}_namewords_idx`, table, kind: "words" as const, ddl: `CREATE INDEX CONCURRENTLY IF NOT EXISTS ${table}_${field}_namewords_idx ON ${table} USING gin (${expr} gin_trgm_ops) WHERE ${field} IS NOT NULL` },
+    { name: `${table}_${field}_namewords_idx`, table, kind: "words" as const, ddl: `CREATE INDEX CONCURRENTLY IF NOT EXISTS ${table}_${field}_namewords_idx ON ${table} USING gin (${tokenExpr} gin_trgm_ops) WHERE ${field} IS NOT NULL` },
   ];
 });
 

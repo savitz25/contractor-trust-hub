@@ -12,7 +12,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { pg_trgm } from "@electric-sql/pglite/contrib/pg_trgm";
 import { searchContractors } from "../lib/contractors/queries";
 import { queryContractorNameCandidates } from "../lib/contractors/name-candidates-query";
-import { buildNameMatchSql, buildSemanticNameMatchSql, buildStrongNameMatchSql, deriveNameMatchEvidence, NORMALIZED_NAME_INDEXES, normalizeNameText, prepareNameTerms } from "../lib/contractors/name-search-core";
+import { buildNameMatchSql, buildSemanticNameMatchSql, buildStrongNameMatchSql, deriveNameMatchEvidence, NORMALIZED_NAME_INDEXES, normalizedFieldSql, normalizeNameText, prepareNameTerms } from "../lib/contractors/name-search-core";
 import {
   CONTRACTOR_CONTRACT_FINGERPRINT,
   CONTRACTOR_SCHEMA_FINGERPRINT,
@@ -115,6 +115,16 @@ before(async () => {
   for (let i = 1; i <= 30; i += 1) await addContractor({ name: `ZEPHYR BUILDERS ${String(i).padStart(2, "0")}`, home: "FL" }, [{ source: "fl_dbpr", key: `CBC09${String(i).padStart(5, "0")}`, state: "FL" }]);
   await addContractor({ name: "ZEPHYR ZZ TARGET LLC", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0999999", state: "FL" }]);
   for (let i = 1; i <= NAME_SOURCE_CAP + 5; i += 1) await addContractor({ name: `QUARTZ HOMES ${String(i).padStart(3, "0")}`, home: "FL" }, [{ source: "fl_dbpr", key: `CRC08${String(i).padStart(5, "0")}`, state: "FL" }]);
+  // TH-SEARCH-R1-019B-P2D: the specific named cases from the isolated-reproduction and Production
+  // holdout evidence, so the access-path-separation design proof exercises the exact names that
+  // regressed in Production, not just the pre-existing generic matrix. legal_name/dba_name/raw-name
+  // fields are given real (non-matching) values so these columns are not near-empty in this fixture --
+  // display_name is the only field every OTHER fixture row above populates, and a near-empty partial
+  // index lets the planner pick either index family to prove a trivial "column IS NOT NULL" fact
+  // regardless of which expression it indexes, which is a fixture-sparsity artifact, not a real defect.
+  await addContractor({ name: "STILWELL SOLAR, LLC", legal: "STILWELL SOLAR LLC", home: "FL" }, [{ source: "fl_dbpr", key: "CVC0020001", state: "FL", raw: "STILWELL SOLAR LLC" }]);
+  await addContractor({ name: "WORSHAM CONSTRUCTION", legal: "WORSHAM CONSTRUCTION LLC", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0020002", state: "FL", raw: "WORSHAM CONSTRUCTION LLC" }]);
+  await addContractor({ name: "WHALEY'S AIR CONDITIONING", legal: "WHALEYS AIR CONDITIONING INC", home: "FL" }, [{ source: "fl_dbpr", key: "CAC0020003", state: "FL", raw: "WHALEYS AIR CONDITIONING INC" }]);
 });
 after(async () => { await pg.close(); });
 
@@ -603,5 +613,105 @@ test("19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tie
     }
   } finally {
     await pg.exec("RESET enable_seqscan");
+  }
+});
+
+// 20 --------------------------------------------------------------------------------------
+test("20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path", async () => {
+  // Indexes from test 19 are already live on this connection (CREATE INDEX IF NOT EXISTS is idempotent).
+  await pg.exec("ANALYZE contractors; ANALYZE licenses;");
+  const plan = async (sql: string, params: unknown[]) => {
+    const literal = sql.replace(/\$(\d+)/g, (_, i) => `'${String(params[Number(i) - 1]).replace(/'/g, "''")}'`);
+    return (await pg.query(`EXPLAIN ${literal}`)).rows.map((row: Any) => row["QUERY PLAN"]).join("\n");
+  };
+
+  // 0. Scale-independent structural check on the index DEFINITIONS themselves, unlike everything
+  // below which depends on the planner's cost model (and is therefore sensitive to fixture size -- see
+  // the notes further down). This alone catches "remove the token GIN access path entirely" and
+  // "revert the GIN index back onto the shared bare expression" regardless of table size.
+  assert.equal(NORMALIZED_NAME_INDEXES.filter((i) => i.kind === "words").length, 5, "exactly 5 token-tier GIN indexes must exist");
+  assert.equal(NORMALIZED_NAME_INDEXES.filter((i) => i.kind === "ordered").length, 5, "exactly 5 strong-tier B-tree indexes must exist");
+  for (const idx of NORMALIZED_NAME_INDEXES) {
+    if (idx.kind === "words") {
+      assert.match(idx.ddl, /gin_trgm_ops/, `${idx.name}: must be a GIN trigram index`);
+      assert.match(idx.ddl, /\|\| ''\)/, `${idx.name}: must be built on the wrapped (syntactically distinct) token access expression, not the bare one`);
+    } else {
+      assert.match(idx.ddl, /text_pattern_ops/, `${idx.name}: must be a text_pattern_ops B-tree index`);
+      assert.doesNotMatch(idx.ddl, /\|\| ''\)/, `${idx.name}: the strong tier's index must stay on the bare expression`);
+    }
+  }
+
+  // 1. Value identity: the token access-path expression must equal the strong (bare) expression for
+  // every non-null row in both tables -- byte/character identical, never an approximation.
+  for (const [table, field] of [["contractors", "display_name"], ["contractors", "legal_name"], ["contractors", "dba_name"], ["licenses", "licensee_name_raw"], ["licenses", "dba_name_raw"]] as const) {
+    const bare = normalizedFieldSql(field);
+    const mismatch = await pg.query(`SELECT count(*) n FROM ${table} WHERE ${field} IS NOT NULL AND ${bare} IS DISTINCT FROM (${bare} || '')`);
+    assert.equal(Number((mismatch.rows[0] as Any).n), 0, `${table}.${field}: token access expression must be byte-identical to the strong expression`);
+  }
+
+  // 2. Structural exclusivity, plain EXPLAIN, across every case this ticket names plus the existing
+  // apostrophe / initials / AND-connector / non-ASCII / legal-suffix / category-word / cross-field
+  // control matrix. The check is on WHAT SERVES THE MATCH, not on whether an index's bare name string
+  // appears anywhere in the plan: on a column that is sparsely populated in this small fixture (e.g.
+  // legal_name/dba_name/*_raw, unlike display_name, which every row carries), Postgres may legitimately
+  // use EITHER partial index -- nameorder_idx or namewords_idx, whichever is cheaper -- purely to prove
+  // the shared "column IS NOT NULL" partial-index predicate, with NO Index Cond attached, deferring the
+  // entire real word-match condition to a plain Filter. That is correct (never a false result; both
+  // indexes share the identical `WHERE field IS NOT NULL` clause) and is not what this ticket's defect
+  // was about -- Production's regression was GIN being chosen WITH a real Index Cond to serve the actual
+  // prefix predicate on a well-populated column. So the violation this checks for is precise: the WRONG
+  // family's index appearing with an actual "Index Cond" line attached (i.e. actually serving the match),
+  // never merely being named in the plan.
+  const servesRealCondition = (planText: string, indexNameFragment: RegExp) => {
+    const lines = planText.split("\n").map((l) => l.trim());
+    for (let i = 0; i < lines.length; i += 1) {
+      if (indexNameFragment.test(lines[i]) && lines[i].startsWith("Bitmap Index Scan") && lines[i + 1]?.startsWith("Index Cond:")) return true;
+    }
+    return false;
+  };
+  await pg.exec("SET enable_seqscan = off");
+  try {
+    const names = [
+      "Stilwell Solar", "STILWELL SOLAR, LLC", "Worsham Construction", "Whaley's Air Conditioning",
+      "R & T GENERAL CONSTRUCTION, INC", "Allied", "stilw",
+      "ONeil Plumbing", "A.B", "José Builders", "Brown and Root Industrial Services",
+      "Allied Electrical L.L.C.", "General Construction", "Perez Gulf",
+    ];
+    for (const name of names) {
+      const strong = buildStrongNameMatchSql(prepareNameTerms(name), 1);
+      const strongPlan = await plan(`SELECT c.id FROM ${strong.fromSql}`, strong.params);
+      assert.equal(servesRealCondition(strongPlan, /_namewords_idx/), false, `${name}: strong tier must never let the token GIN index serve the actual match`);
+      assert.doesNotMatch(strongPlan, /Seq Scan/, `${name}: strong tier must still be servable by an index`);
+
+      const all = buildNameMatchSql(prepareNameTerms(name), 1);
+      const tokenPlan = await plan(`SELECT c.id FROM ${all.fromSql}`, all.params);
+      assert.equal(servesRealCondition(tokenPlan, /_nameorder_idx/), false, `${name}: token tier must never let the strong B-tree index serve the actual match`);
+      assert.doesNotMatch(tokenPlan, /Seq Scan/, `${name}: token tier must still be servable by an index, not a scan`);
+    }
+    // Positive proof that GIN genuinely serves the token tier's real match condition (not just the
+    // negative "never the wrong index" guarantee above) requires a table large enough that a full
+    // index-order scan is not cheaper than using any specialized index -- not achievable at this
+    // fixture's scale (confirmed: neither the old nor the new access-path shape gets GIN chosen here
+    // over a plain contractors_pkey scan + Filter on ~570 rows). That positive proof instead comes
+    // from Production's own plain-EXPLAIN evidence (docs/qa/th-search-r1-019b/p2s-explain.local.json,
+    // captured against the live 1.39M-row table under the OLD shared-expression design, where GIN was
+    // demonstrably chosen for the `~~` operator this design keeps unchanged) plus the structural fact
+    // that gin_trgm_ops is the ONLY operator family that can serve an infix `%WORD%` predicate at all --
+    // text_pattern_ops cannot serve it at any scale, wrapper or not.
+  } finally {
+    await pg.exec("RESET enable_seqscan");
+  }
+
+  // 3. The extended matrix, including the newly added named cases, still agrees three ways with the
+  // access-path change in place -- the answer must not move even though the access path did.
+  const scopes = nameSearchableScopes().map(({ code, sources }) => ({ code, sources }));
+  const extended: Array<[string, string[]]> = [...MATRIX,
+    ["Stilwell Solar", ["STILWELL SOLAR, LLC"]], ["stilw", ["STILWELL SOLAR, LLC"]],
+    ["Worsham Construction", ["WORSHAM CONSTRUCTION"]], ["Whaley's Air Conditioning", ["WHALEY'S AIR CONDITIONING"]],
+    ["Whaleys Air Conditioning", ["WHALEY'S AIR CONDITIONING"]],
+  ];
+  for (const [name, expected] of extended) {
+    const tiered = await queryContractorNameCandidates({ name, scopes, limit: 100, offset: 0 }, db);
+    assert.deepEqual(tiered.rows.map((r) => r.display_name).sort(), [...expected].sort(), `"${name}" with the access-path-separated indexes in place`);
   }
 });
