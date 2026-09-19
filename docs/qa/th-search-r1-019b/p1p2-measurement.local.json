@@ -1,0 +1,487 @@
+{
+  "ranAt": "2026-09-19T22:33:21.744Z",
+  "note": "Two attempts per case (cold-ish, immediate warm repeat), never averaged, never p95 from a single sample.",
+  "results": [
+    {
+      "case": "1. Stilwell Solar",
+      "name": "Stilwell Solar",
+      "jurisdiction": null,
+      "attempts": [
+        {
+          "pass": "cold-ish",
+          "ms": 7158,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        },
+        {
+          "pass": "immediate-warm-repeat",
+          "ms": 6634,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        }
+      ]
+    },
+    {
+      "case": "2. STILWELL SOLAR, LLC",
+      "name": "STILWELL SOLAR, LLC",
+      "jurisdiction": null,
+      "attempts": [
+        {
+          "pass": "cold-ish",
+          "ms": 6460,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        },
+        {
+          "pass": "immediate-warm-repeat",
+          "ms": 6304,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        }
+      ]
+    },
+    {
+      "case": "3. Worsham Construction",
+      "name": "Worsham Construction",
+      "jurisdiction": null,
+      "attempts": [
+        {
+          "pass": "cold-ish",
+          "ms": 6466,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        },
+        {
+          "pass": "immediate-warm-repeat",
+          "ms": 6403,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        }
+      ]
+    },
+    {
+      "case": "4. Whaley's Air Conditioning",
+      "name": "Whaley's Air Conditioning",
+      "jurisdiction": null,
+      "attempts": [
+        {
+          "pass": "cold-ish",
+          "ms": 6629,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        },
+        {
+          "pass": "immediate-warm-repeat",
+          "ms": 6454,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        }
+      ]
+    },
+    {
+      "case": "5. R & T GENERAL CONSTRUCTION, INC.",
+      "name": "R & T GENERAL CONSTRUCTION, INC.",
+      "jurisdiction": null,
+      "attempts": [
+        {
+          "pass": "cold-ish",
+          "ms": 6235,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        },
+        {
+          "pass": "immediate-warm-repeat",
+          "ms": 5954,
+          "resultState": "PARTIAL_TRUNCATED",
+          "failureKind": null,
+          "candidateCount": 3,
+          "firstCandidate": {
+            "name": "R & T GENERAL CONSTRUCTION, INC",
+            "method": "NORMALIZED_NAME",
+            "stableKey": "contractor:profile:ms-sbc-unlic-fff91cfc1598fa73-r-t-general-construction-inc"
+          },
+          "strongTier": "COMPLETED",
+          "tokenTier": "NOT_COMPLETED",
+          "completenessMeaning": "PARTIAL: more candidates may exist whose name contains the supplied words but does not begin with them. This is not a miss and not a complete list.",
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        }
+      ]
+    },
+    {
+      "case": "6. Allied",
+      "name": "Allied",
+      "jurisdiction": null,
+      "attempts": [
+        {
+          "pass": "cold-ish",
+          "ms": 6239,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        },
+        {
+          "pass": "immediate-warm-repeat",
+          "ms": 6254,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        }
+      ]
+    },
+    {
+      "case": "7. stilw (short prefix)",
+      "name": "stilw",
+      "jurisdiction": null,
+      "attempts": [
+        {
+          "pass": "cold-ish",
+          "ms": 6251,
+          "resultState": "COMPLETED_WITH_CANDIDATES",
+          "failureKind": null,
+          "candidateCount": 10,
+          "firstCandidate": {
+            "name": "STILWELL AIR & REFRIGERATION L.L.C.",
+            "method": "PREFIX_OR_TOKEN",
+            "stableKey": "contractor:profile:cac1820929-stilwell-air-refrigeration-l-l-c"
+          },
+          "strongTier": "COMPLETED",
+          "tokenTier": "NOT_NEEDED",
+          "completenessMeaning": "This page is filled by names that equal or begin with the supplied name; weaker matches sort after them and are reached by later pages.",
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        },
+        {
+          "pass": "immediate-warm-repeat",
+          "ms": 6293,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL",
+            "TX",
+            "NJ",
+            "OR",
+            "WA",
+            "CA",
+            "AZ",
+            "LA",
+            "MS",
+            "KY",
+            "CO"
+          ],
+          "thrown": null
+        }
+      ]
+    },
+    {
+      "case": "8. explicit-jurisdiction positive (Stilwell Solar @ FL)",
+      "name": "Stilwell Solar",
+      "jurisdiction": "FL",
+      "attempts": [
+        {
+          "pass": "cold-ish",
+          "ms": 6419,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL"
+          ],
+          "thrown": null
+        },
+        {
+          "pass": "immediate-warm-repeat",
+          "ms": 6288,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "FL"
+          ],
+          "thrown": null
+        }
+      ]
+    },
+    {
+      "case": "9. explicit-jurisdiction honest miss (Stilwell Solar @ TX)",
+      "name": "Stilwell Solar",
+      "jurisdiction": "TX",
+      "attempts": [
+        {
+          "pass": "cold-ish",
+          "ms": 6581,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "TX"
+          ],
+          "thrown": null
+        },
+        {
+          "pass": "immediate-warm-repeat",
+          "ms": 6445,
+          "resultState": "SOURCE_FAILURE",
+          "failureKind": "timeout",
+          "candidateCount": 0,
+          "firstCandidate": null,
+          "strongTier": null,
+          "tokenTier": null,
+          "completenessMeaning": null,
+          "scopesSearched": [
+            "TX"
+          ],
+          "thrown": null
+        }
+      ]
+    }
+  ]
+}
