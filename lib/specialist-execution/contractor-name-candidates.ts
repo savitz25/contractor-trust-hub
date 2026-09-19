@@ -42,7 +42,7 @@ export type NameCandidatesResultState =
 
 const SCHEMA_DESCRIPTOR = {
   request: ["contract", "operation", "name", "jurisdiction", "page", "limit"],
-  response: ["contract", "contractVersion", "schemaFingerprint", "hub", "operation", "resultState", "name", "scope", "grain", "candidates", "pagination", "continuation", "ordering", "limitations", "timing"],
+  response: ["contract", "contractVersion", "schemaFingerprint", "hub", "operation", "resultState", "name", "scope", "grain", "candidates", "pagination", "continuation", "completeness", "ordering", "limitations", "timing"],
   candidate: ["stableKey", "sourceGrain", "displayName", "entityType", "match", "identifiers", "credential", "credentialJurisdiction", "recordedLocation", "source", "publicationState", "action", "destinations"],
   resultStates: ["COMPLETED_WITH_CANDIDATES", "COMPLETED_NO_CANDIDATES", "PARTIAL_TRUNCATED", "UNSUPPORTED_SCOPE", "INVALID_QUERY", "SOURCE_FAILURE"],
   matchMethods: ["EXACT_SOURCE_NAME", "NORMALIZED_NAME", "DOCUMENTED_ALIAS", "PREFIX_OR_TOKEN"],
@@ -87,7 +87,7 @@ export function normalizeNameCandidatesRequest(value: unknown): NormalizedNameCa
   if (name.length < NAME_MIN_LENGTH || name.length > NAME_MAX_LENGTH) throw new Error("invalid_name");
   // Punctuation/wildcard-only input must never become a match-all pattern.
   if (!/[\p{L}\p{N}]/u.test(name)) throw new Error("invalid_name");
-  // Every meaningful word stays required; a name with no ASCII letter/digit word cannot be searched.
+  // Every meaningful word stays required; a name with no letter or digit of any script cannot be searched.
   if (prepareNameTerms(name).terms.length === 0) throw new Error("invalid_name");
 
   let jurisdiction: string | null = null;
@@ -209,6 +209,7 @@ function failureKind(error: unknown): "timeout" | "unavailable" | "invalid_respo
   if (isDbQueryTimeout(error)) return "timeout";
   if (isDbConnectTimeout(error) || isDbCapacityError(error)) return "unavailable";
   const message = error instanceof Error ? error.message : "";
+  if (message === "name_candidates_out_of_time") return "timeout";
   if (message === "name_predicate_evidence_missing" || message === "name_candidate_scope_unrecognized") return "invalid_response";
   return "unavailable";
 }
@@ -223,9 +224,7 @@ export async function executeContractorNameCandidates(raw: unknown, db?: NameCan
     // Every word here is enforced by the final predicate -- initials and later words included.
     requiredWords: prepared.terms,
     optionalWordsDropped: prepared.optionalWordsDropped,
-    // Index-driving text only. It narrows which rows are scanned; it never defines the name.
-    indexFragments: prepared.indexFragments,
-    predicate: "ONE source name field (display, legal/licensee, DBA, or a credential row's source names) contains every required word after identical normalization of both sides (case, punctuation, apostrophes). A word of 3+ characters may begin a source word; a shorter word must equal one. Applied before any row limit.",
+    predicate: "ONE source name field (display, legal/licensee, DBA, or a credential row's source names) contains every required word after identical normalization of both sides: apostrophes removed, ASCII punctuation as word breaks, letters and digits of any script kept, case folded. A word of 3+ characters may begin a source word; a shorter word must equal one. Applied before any row limit; independent of the access path.",
   };
 
   const scopes = input.jurisdiction ? allScopes.filter((scope) => scope.code === input.jurisdiction) : allScopes;
@@ -240,7 +239,7 @@ export async function executeContractorNameCandidates(raw: unknown, db?: NameCan
       },
       grain: GRAIN, candidates: [],
       pagination: { page: input.page, limit: input.limit, returned: 0, hasMore: false, nextPage: null, sourceCap: NAME_SOURCE_CAP, truncated: false, total: null, totalMeaning: "Not searched." },
-      continuation: null, ordering: ORDERING, limitations: BASE_LIMITATIONS, timing: { queryMs: 0, queries: 0 },
+      continuation: null, completeness: null, ordering: ORDERING, limitations: BASE_LIMITATIONS, timing: { queryMs: 0, queries: 0 },
     };
   }
 
@@ -271,7 +270,7 @@ export async function executeContractorNameCandidates(raw: unknown, db?: NameCan
         meaning: "The source did not complete. Retry, or search the same name in ContractorTrustHub Verify for a jurisdiction.",
         scoped: scopes.map((scope) => verifyContinuation({ slug: scope.slug, name: scope.label }, input.name)),
       },
-      ordering: ORDERING, limitations: BASE_LIMITATIONS, timing: { queryMs: Date.now() - started, queries: 1 },
+      completeness: null, ordering: ORDERING, limitations: BASE_LIMITATIONS, timing: { queryMs: Date.now() - started, queries: 1 },
     };
   }
   const queryMs = Date.now() - started;
@@ -279,7 +278,9 @@ export async function executeContractorNameCandidates(raw: unknown, db?: NameCan
   const reachedCap = offset + candidates.length >= NAME_SOURCE_CAP;
   const truncated = result.hasMore && reachedCap;
   const hasMore = result.hasMore && !reachedCap;
-  const resultState: NameCandidatesResultState = truncated ? "PARTIAL_TRUNCATED" : candidates.length > 0 ? "COMPLETED_WITH_CANDIDATES" : "COMPLETED_NO_CANDIDATES";
+  // Strong matches were read but "contains every word" matches were not finished in the time budget.
+  const tokenTierIncomplete = result.tiers.token === "NOT_COMPLETED";
+  const resultState: NameCandidatesResultState = truncated || tokenTierIncomplete ? "PARTIAL_TRUNCATED" : candidates.length > 0 ? "COMPLETED_WITH_CANDIDATES" : "COMPLETED_NO_CANDIDATES";
   const pastEnd = candidates.length === 0 && input.page > 1;
 
   return {
@@ -296,7 +297,7 @@ export async function executeContractorNameCandidates(raw: unknown, db?: NameCan
     candidates,
     pagination: {
       page: input.page, limit: input.limit, returned: candidates.length, hasMore, nextPage: hasMore ? input.page + 1 : null,
-      sourceCap: NAME_SOURCE_CAP, truncated, total: null,
+      sourceCap: NAME_SOURCE_CAP, truncated: truncated || tokenTierIncomplete, total: null,
       totalMeaning: pastEnd ? "This page is past the last matching row; no total is asserted." : "No exact total is asserted. hasMore is proven by a one-row probe beyond this page.",
     },
     // A usable continuation always exists when rows remain: nextPage below the cap, native Verify beyond it.
@@ -309,14 +310,30 @@ export async function executeContractorNameCandidates(raw: unknown, db?: NameCan
           meaning: "These links open ContractorTrustHub Verify for the same name. Verify shows its own first page; it does NOT continue past this operation's cap. To reach other records, supply a more specific name or a jurisdiction.",
           scoped: scopes.map((scope) => verifyContinuation({ slug: scope.slug, name: scope.label }, input.name)),
         }
-        : null,
+        : tokenTierIncomplete
+          ? {
+            type: "RETRY_OR_VERIFY",
+            meaning: "Names that equal or begin with the supplied name are listed. Names that contain the supplied words elsewhere were not finished in time. Retry, or search the same name in ContractorTrustHub Verify for a jurisdiction.",
+            scoped: scopes.map((scope) => verifyContinuation({ slug: scope.slug, name: scope.label }, input.name)),
+          }
+          : null,
+    completeness: {
+      // rank 0-3: a source name equals or starts with the supplied name. rank 4: contains every word.
+      strongNameMatches: result.tiers.strong,
+      wordMatchesElsewhereInName: result.tiers.token,
+      meaning: tokenTierIncomplete
+        ? "PARTIAL: more candidates may exist whose name contains the supplied words but does not begin with them. This is not a miss and not a complete list."
+        : result.tiers.token === "NOT_NEEDED"
+          ? "This page is filled by names that equal or begin with the supplied name; weaker matches sort after them and are reached by later pages."
+          : "Both tiers completed for this page.",
+    },
     ordering: ORDERING,
     limitations: [
       ...BASE_LIMITATIONS,
+      ...(tokenTierIncomplete ? ["The search for names that contain the supplied words away from the start did not finish within the time budget. The candidates shown are real matches; the list is partial."] : []),
       ...(truncated ? [`More matching profiles exist beyond this operation's ${NAME_SOURCE_CAP}-row cap and are not reachable through it. Supply a more specific name or a jurisdiction.`] : []),
-      ...(result.usesNameIndexes ? [] : ["Every supplied word is shorter than three characters. Such a name is matched only where the source name contains the supplied text as written (so \"R & T\" does not find \"R&T\")."]),
     ],
-    timing: { queryMs, queries: 1 },
+    timing: { queryMs, queries: result.queries },
   };
 }
 
@@ -336,7 +353,7 @@ export function nameCandidatesCapability() {
     matchMethods: SCHEMA_DESCRIPTOR.matchMethods,
     nameSearchableJurisdictions: nameSearchableScopes().map((scope) => ({ code: scope.code, label: scope.label, sources: scope.sources })),
     notSearchableByName: notSearchableByName(),
-    grain: GRAIN, ordering: ORDERING, limitations: BASE_LIMITATIONS,
+    grain: GRAIN, completeness: null, ordering: ORDERING, limitations: BASE_LIMITATIONS,
     engine: "Shared with native ContractorTrustHub Verify name search (lib/contractors/name-search-core.ts).",
   };
 }

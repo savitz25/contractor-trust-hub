@@ -12,7 +12,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { pg_trgm } from "@electric-sql/pglite/contrib/pg_trgm";
 import { searchContractors } from "../lib/contractors/queries";
 import { queryContractorNameCandidates } from "../lib/contractors/name-candidates-query";
-import { buildNameMatchSql, buildUnprefilteredNameMatchSql, deriveNameMatchEvidence, prepareNameTerms } from "../lib/contractors/name-search-core";
+import { buildNameMatchSql, buildSemanticNameMatchSql, buildStrongNameMatchSql, deriveNameMatchEvidence, NORMALIZED_NAME_INDEXES, normalizeNameText, prepareNameTerms } from "../lib/contractors/name-search-core";
 import {
   CONTRACTOR_CONTRACT_FINGERPRINT,
   CONTRACTOR_SCHEMA_FINGERPRINT,
@@ -94,6 +94,15 @@ before(async () => {
   await addContractor({ name: "D'ANGELO TILE L.L.C.", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013009", state: "FL" }]);
   await addContractor({ name: "84 LUMBER SUPPLY", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013010", state: "FL" }]);
   await addContractor({ name: "BROWN & ROOT INDUSTRIAL SERVICES, LLC", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0013011", state: "FL" }]);
+  // Review 2: both directions of apostrophe / punctuation / connector equivalence, short names, non-ASCII.
+  await addContractor({ name: "O'NEIL PLUMBING LLC", home: "FL" }, [{ source: "fl_dbpr", key: "CFC0015001", state: "FL" }]);
+  await addContractor({ name: "ONEIL ROOFING LLC", home: "FL" }, [{ source: "fl_dbpr", key: "CCC0015002", state: "FL" }]);
+  await addContractor({ name: "R&T SERVICES", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0015003", state: "FL" }]);
+  await addContractor({ name: "SMITH AND SONS PAINTING", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0015004", state: "FL" }]);
+  await addContractor({ name: "JOS\u00C9 BUILDERS", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0015005", state: "FL" }]);
+  await addContractor({ name: "JOS BUILDERS", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0015006", state: "FL" }]);
+  await addContractor({ name: "M\u00DCLLER & S\u00D6HNE BAU", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0015007", state: "FL" }]);
+  await addContractor({ name: "NIGHT OWL", dba: "D'ARCY'S TILE", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0015008", state: "FL" }]);
   // Exact target that sorts AFTER 210 siblings which merely start with the same name.
   for (let i = 1; i <= 210; i += 1) await addContractor({ name: `YARROW WORKS ${String(i).padStart(3, "0")}`, home: "FL" }, [{ source: "fl_dbpr", key: `CBC07${String(i).padStart(5, "0")}`, state: "FL" }]);
   await addContractor({ name: "YARROW WORKS, INC.", home: "FL" }, [{ source: "fl_dbpr", key: "CBC0799999", state: "FL" }]);
@@ -121,8 +130,9 @@ test("1. name-only structured request reaches name execution and keeps the whole
   assert.equal(r.name.supplied, "Allied Roofing of Tampa");
   assert.equal(r.name.predicateApplied, true);
   assert.deepEqual(names(r), ["ALLIED ROOFING OF TAMPA, INC."]);
-  assert.equal(calls.length, 1, "exactly one statement, no count query, no enrichment");
-  assert.match(calls[0].sql, /ILIKE/);
+  assert.equal(calls.length, 2, "strong tier, then token tier: no count query, no enrichment");
+  for (const call of calls) assert.doesNotMatch(call.sql, /COUNT\(/i);
+  assert.match(calls[0].sql, /LIKE '% ' \|\| upper\(\$4\)/, "the word rule reaches the statement");
   assert.deepEqual(r.name.requiredWords, ["ALLIED", "ROOFING", "OF", "TAMPA"], "every word of the supplied name is required");
   for (const word of r.name.requiredWords) assert.ok((calls[0].params as string[]).includes(word), `${word} is a predicate parameter`);
   assert.doesNotMatch(calls[0].sql, /status_normalized IN/, "no cohort status default leaks into the name operation");
@@ -323,7 +333,7 @@ test("10. a failed source is never a searched-and-missed result", async () => {
 
 // 11 --------------------------------------------------------------------------------------
 test("11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL", async () => {
-  for (const name of ["", "   ", "%", "%%%", "___", "...", "&&", "a", "x".repeat(121), "bad name", "<script>alert(1)</script>", 42, null, ["Allied"]]) {
+  for (const name of ["", "   ", "%", "%%%", "___", "...", "&&", "a", "x".repeat(121), "bad\u0000name", "<script>alert(1)</script>", 42, null, ["Allied"]]) {
     assert.throws(() => normalizeNameCandidatesRequest({ operation: "name_candidates", name }), /invalid_name/, `name ${JSON.stringify(name)} must be rejected`);
   }
   assert.throws(() => normalizeNameCandidatesRequest({ name: "Allied" }), /invalid_operation/, "the operation is explicit, never inferred");
@@ -336,9 +346,10 @@ test("11. empty, invalid and wildcard-like input never becomes an unrestricted c
   const long = "A".repeat(120);
   assert.equal(normalizeNameCandidatesRequest({ operation: "name_candidates", name: long }).name.length, 120, "valid long names are never truncated");
 
-  assert.throws(() => normalizeNameCandidatesRequest({ operation: "name_candidates", name: "\u65e5\u672c\u5efa\u8a2d" }), /invalid_name/, "no ASCII word to match on");
+  assert.deepEqual(prepareNameTerms("\u65e5\u672c\u5efa\u8a2d").terms, ["\u65e5\u672c\u5efa\u8a2d"], "a non-ASCII name is a name, not an invalid or emptied query");
+  assert.equal((await run({ name: "\u65e5\u672c\u5efa\u8a2d" })).resultState, "COMPLETED_NO_CANDIDATES");
   const wildcard = await run({ name: "%a%" });
-  assert.equal(wildcard.resultState, "COMPLETED_NO_CANDIDATES", "LIKE metacharacters are literals, not match-all");
+  assert.deepEqual(names(wildcard), ["A.B"], "LIKE metacharacters are word breaks: this is the one-word name A, never match-all");
   const underscore = await run({ name: "A_lied" });
   assert.deepEqual(names(underscore), []);
   const injection = await run({ name: "Allied'; DROP TABLE contractors;--" });
@@ -410,44 +421,67 @@ test("14. no private fields or claim lookups enter the public path", async () =>
 });
 
 // 15 --------------------------------------------------------------------------------------
+const RT = ["R & T", "R & T GENERAL CONSTRUCTION, INC", "R&T SERVICES"];
 const MATRIX: Array<[string, string[]]> = [
-  ["R & T", ["R & T", "R & T GENERAL CONSTRUCTION, INC"]],
-  ["A.B", ["A.B"]],
-  ["R & T GENERAL CONSTRUCTION", ["R & T GENERAL CONSTRUCTION, INC"]],
-  ["r & t general construction, inc", ["R & T GENERAL CONSTRUCTION, INC"]],
+  // initials, every spelling, both directions
+  ["R & T", RT], ["R T", RT], ["R&T", RT], ["r and t", RT],
+  ["A.B", ["A.B"]], ["A B", ["A.B"]], ["a b", ["A.B"]],
+  // apostrophes, both directions, short AND long words
+  ["ONeil Plumbing", ["O'NEIL PLUMBING LLC"]], ["O'Neil Plumbing", ["O'NEIL PLUMBING LLC"]], ["O Neil Plumbing", []],
+  ["ONeil Roofing", ["ONEIL ROOFING LLC"]], ["O'Neil Roofing", ["ONEIL ROOFING LLC"]],
+  ["Oneil", ["O'NEIL PLUMBING LLC", "ONEIL ROOFING LLC"]],
+  ["OBrien Sons Plumbing", ["O'BRIEN & SONS PLUMBING CO."]], ["O'Brien & Sons Plumbing", ["O'BRIEN & SONS PLUMBING CO."]],
+  ["McDonald's Plumbing", ["MCDONALD'S PLUMBING"]], ["McDonalds Plumbing", ["MCDONALD'S PLUMBING"]],
+  ["Darcys Tile", ["NIGHT OWL"]], ["D'Arcy's Tile", ["NIGHT OWL"]],
+  // connector variants, both directions
+  ["Brown and Root Industrial Services", ["BROWN & ROOT INDUSTRIAL SERVICES, LLC"]], ["Brown & Root Industrial Services", ["BROWN & ROOT INDUSTRIAL SERVICES, LLC"]],
+  ["Smith & Sons Painting", ["SMITH AND SONS PAINTING"]], ["Smith and Sons Painting", ["SMITH AND SONS PAINTING"]],
+  // late distinctive words, initials with common words
+  ["R & T GENERAL CONSTRUCTION", ["R & T GENERAL CONSTRUCTION, INC"]], ["R T General Construction Inc", ["R & T GENERAL CONSTRUCTION, INC"]],
+  ["T General Construction", ["R & T GENERAL CONSTRUCTION, INC"]],
   ["General Construction", ["ART GENERAL CONSTRUCTION", "GENERAL CONSTRUCTION LLC", "R & T GENERAL CONSTRUCTION, INC"]],
   ["North Harbor View Estate Alpha", ["NORTH HARBOR VIEW ESTATE ALPHA"]],
   ["North Harbor View Estate", ["NORTH HARBOR VIEW ESTATE ALPHA", "NORTH HARBOR VIEW ESTATE BETA"]],
-  ["OBrien Sons Plumbing", ["O'BRIEN & SONS PLUMBING CO."]],
-  ["McDonald's Plumbing", ["MCDONALD'S PLUMBING"]],
-  ["84 Lumber", ["84 LUMBER SUPPLY"]],
-  ["Sunny Side Solar", ["BRIGHT HOME SERVICES"]],
-  ["Kestrel Okafor", ["KESTREL RIDGE"]],
-  ["Allied Electrical", ["ALLIED ELECTRICAL LLC"]],
-  ["Lantern Creek Builders", ["UMBRELLA HOLDINGS"]],
-  ["Perez Gulf", []],
-  ["T General Construction", ["R & T GENERAL CONSTRUCTION, INC"]],
+  // non-ASCII source names are preserved, never deleted into a different name
+  ["Jos\u00E9 Builders", ["JOS\u00C9 BUILDERS"]], ["JOS\u00C9 BUILDERS", ["JOS\u00C9 BUILDERS"]],
+  ["Jos Builders", ["JOS BUILDERS", "JOS\u00C9 BUILDERS"]],
+  ["M\u00FCller S\u00F6hne", ["M\u00DCLLER & S\u00D6HNE BAU"]], ["Muller Sohne", []],
+  // aliases, credential-row names, numeric-leading, ordinary control, cross-field negative
+  ["Sunny Side Solar", ["BRIGHT HOME SERVICES"]], ["Kestrel Okafor", ["KESTREL RIDGE"]], ["84 Lumber", ["84 LUMBER SUPPLY"]],
+  ["Allied Electrical", ["ALLIED ELECTRICAL LLC"]], ["Lantern Creek Builders", ["UMBRELLA HOLDINGS"]], ["Perez Gulf", []],
 ];
-test("15. the index prefilter never drops a match: optimized == complete unprefiltered predicate == expected", async () => {
+test("15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query", async () => {
   const scopes = nameSearchableScopes().map(({ code, sources }) => ({ code, sources }));
+  const sort = (rows: Any[]) => rows.map((r) => r.display_name).sort();
   for (const [name, expected] of MATRIX) {
-    const optimized = await queryContractorNameCandidates({ name, scopes, limit: 100, offset: 0 }, db, buildNameMatchSql);
-    const complete = await queryContractorNameCandidates({ name, scopes, limit: 100, offset: 0 }, db, buildUnprefilteredNameMatchSql);
-    const sort = (rows: Any[]) => rows.map((r) => r.display_name).sort();
-    assert.deepEqual(sort(optimized.rows), sort(complete.rows), `"${name}": prefilter changed the match set`);
-    assert.deepEqual(sort(optimized.rows), [...expected].sort(), `"${name}": independent expectation`);
+    const semantic = await queryContractorNameCandidates({ name, scopes, limit: 100, offset: 0 }, db, buildSemanticNameMatchSql);
+    const allWords = await queryContractorNameCandidates({ name, scopes, limit: 100, offset: 0 }, db, buildNameMatchSql);
+    const tiered = await queryContractorNameCandidates({ name, scopes, limit: 100, offset: 0 }, db);
+    assert.deepEqual(sort(semantic.rows), [...expected].sort(), `"${name}": semantic predicate vs independent expectation`);
+    assert.deepEqual(allWords.rows.map((r) => r.slug), semantic.rows.map((r) => r.slug), `"${name}": the access path changed the answer or its order`);
+    assert.deepEqual(tiered.rows.map((r) => r.slug), semantic.rows.map((r) => r.slug), `"${name}": tiered retrieval changed the answer or its order`);
+    assert.equal(tiered.tiers.token, "COMPLETED");
+    // A fourth, SQL-free check: the JS evidence rule agrees on every returned row.
+    for (const row of semantic.rows) assert.ok(deriveNameMatchEvidence(name, row), `"${name}": evidence must exist for ${row.display_name}`);
   }
-  const noIndex = buildNameMatchSql(prepareNameTerms("R & T"), 1);
-  assert.equal(noIndex.usesNameIndexes, false);
-  assert.deepEqual(prepareNameTerms("R & T").terms, ["R", "T"], "initials are terms, never a fused \"R T\" pseudo-word");
-  assert.ok(noIndex.params.includes("%R & T%"), "with no indexable word the index rule is the raw supplied text, which the predicate also requires");
-  const sql = buildNameMatchSql(prepareNameTerms("Worsham Construction"), 1);
-  assert.match(sql.fromSql, /\(display_name ILIKE \$3 AND display_name ILIKE \$4\)/, "all index fragments sit on the SAME column");
-  assert.deepEqual(prepareNameTerms("OBrien").indexFragments, ["BRIE"], "fragment survives O'BRIEN and OBRIEN'S");
-  assert.deepEqual(prepareNameTerms("O'Neil").indexFragments, ["NEIL"], "a typed apostrophe tells us the safe piece");
-  assert.deepEqual(prepareNameTerms("stilw").indexFragments, ["STILW"], "a short word is never reduced to an unselective 3-letter interior");
+  // The oracle is genuinely independent of the optimization: no access path and no condition on raw text anywhere.
+  const prepared = prepareNameTerms("ONeil Plumbing");
+  const semanticSql = buildSemanticNameMatchSql(prepared, 1);
+  assert.equal(semanticSql.fromSql, "contractors c");
+  assert.deepEqual(semanticSql.params, ["ONEIL", "PLUMBING", "ONEIL PLUMBING"]);
+  for (const optimized of [buildNameMatchSql(prepared, 1), buildStrongNameMatchSql(prepared, 1)]) {
+    assert.equal(optimized.predicateSql, semanticSql.predicateSql, "the optimization never edits eligibility");
+    assert.equal(optimized.rankSql, semanticSql.rankSql);
+    assert.deepEqual(optimized.params, semanticSql.params, "the access path introduces no parameter of its own");
+    assert.doesNotMatch(optimized.fromSql, /ILIKE|~\*/, "no condition on raw source text: raw text cannot express the semantics");
+    // Every name column in the access path appears only inside the normalization expression or an IS NOT NULL guard.
+    const stripped = optimized.fromSql.replace(/upper\(coalesce\([a-z_]+, ''\)\)/g, "").replace(/[a-z_]+ IS NOT NULL/g, "");
+    assert.doesNotMatch(stripped, /display_name|legal_name|dba_name|licensee_name_raw|dba_name_raw/);
+  }
+  assert.deepEqual(prepareNameTerms("R & T").terms, ["R", "T"]);
   assert.deepEqual(prepareNameTerms("Allied Electrical L.L.C.").terms, ["ALLIED", "ELECTRICAL"]);
   assert.deepEqual(prepareNameTerms("The Company").terms, ["THE", "COMPANY"], "a name of only optional words is never emptied");
+  assert.equal(normalizeNameText("Jos\u00E9 O'Neil-Smith"), "JOS\u00C9 ONEIL SMITH", "non-ASCII letters are kept; apostrophes removed; hyphen is a break");
 });
 
 // 16 --------------------------------------------------------------------------------------
@@ -492,4 +526,82 @@ test("17. an exact/normalized target is never buried behind 200+ names that mere
   assert.equal(rep.candidates[0].match.method, "NORMALIZED_NAME");
   assert.equal(rep.candidates[0].identifiers[0].value, "CBC0014002");
   assert.equal(rep.candidates[0].credential.status, "expired", "status is reported, never used to hide or swap the matched row");
+});
+
+// 18 --------------------------------------------------------------------------------------
+test("18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden", async () => {
+  const scopes = nameSearchableScopes().map(({ code, sources }) => ({ code, sources }));
+  for (const name of ["Allied", "General Construction", "Yarrow Works", "North Harbor View Estate", "Oneil", "R T"]) {
+    const whole = (await queryContractorNameCandidates({ name, scopes, limit: 400, offset: 0 }, db, buildSemanticNameMatchSql)).rows.map((r) => r.slug);
+    assert.ok(whole.length > 0, name);
+    for (const limit of [1, 3, 7]) {
+      const walked: string[] = [];
+      for (let offset = 0; offset < Math.min(whole.length + limit, 40); offset += limit) {
+        const page = await queryContractorNameCandidates({ name, scopes, limit, offset }, db);
+        walked.push(...page.rows.map((r) => r.slug));
+        assert.equal(page.hasMore, offset + limit < whole.length, `${name} limit ${limit} offset ${offset}: hasMore`);
+      }
+      assert.deepEqual(walked, whole.slice(0, walked.length), `${name} limit ${limit}: same rows, same order, no duplicate or gap at the tier boundary`);
+      assert.ok(walked.length >= Math.min(whole.length, 40));
+    }
+  }
+  // A page filled by strong matches never runs the token tier.
+  calls.length = 0;
+  const filled = await queryContractorNameCandidates({ name: "Yarrow Works", scopes, limit: 5, offset: 0 }, db);
+  assert.equal(filled.tiers.token, "NOT_NEEDED");
+  assert.equal(calls.length, 1, "no weak scan in front of strong candidates");
+
+  // Token tier cannot finish: strong candidates are still shown, and the response says it is partial.
+  const tokenTimesOut = { query: (async (sql: string, params?: unknown[]) => {
+    if (/WHERE rank_score = 4/.test(sql)) throw new Error("canceling statement due to statement timeout");
+    return (await pg.query(sql, params as Any[])).rows;
+  }) as Any };
+  const partial = await executeContractorNameCandidates({ operation: "name_candidates", name: "R & T GENERAL CONSTRUCTION, INC" }, tokenTimesOut) as Any;
+  assert.equal(partial.resultState, "PARTIAL_TRUNCATED");
+  assert.deepEqual(names(partial), ["R & T GENERAL CONSTRUCTION, INC"], "the named positive is returned from the strong tier alone");
+  assert.equal(partial.candidates[0].match.method, "EXACT_SOURCE_NAME");
+  assert.equal(partial.completeness.strongNameMatches, "COMPLETED");
+  assert.equal(partial.completeness.wordMatchesElsewhereInName, "NOT_COMPLETED");
+  assert.equal(partial.pagination.truncated, true);
+  assert.equal(partial.pagination.hasMore, false);
+  assert.equal(partial.continuation.type, "RETRY_OR_VERIFY");
+  // With nothing strong to show, an unfinished token tier stays a failure -- never "no candidates".
+  const nothingStrong = await executeContractorNameCandidates({ operation: "name_candidates", name: "T General Construction" }, tokenTimesOut) as Any;
+  assert.equal(nothingStrong.resultState, "SOURCE_FAILURE");
+  assert.equal(nothingStrong.failureKind, "timeout");
+  const complete = await run({ name: "T General Construction" });
+  assert.equal(complete.resultState, "COMPLETED_WITH_CANDIDATES");
+  assert.equal(complete.completeness.wordMatchesElsewhereInName, "COMPLETED");
+});
+
+// 19 --------------------------------------------------------------------------------------
+test("19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer", async () => {
+  // Disposable in-memory fixture DDL. Nothing here is applied to any real database.
+  assert.equal(NORMALIZED_NAME_INDEXES.length, 10);
+  for (const index of NORMALIZED_NAME_INDEXES) await pg.exec(index.ddl.replace(" CONCURRENTLY", ""));
+  await pg.exec("ANALYZE contractors; ANALYZE licenses;");
+  const plan = async (sql: string, params: unknown[]) => {
+    const literal = sql.replace(/\$(\d+)/g, (_, i) => `'${String(params[Number(i) - 1]).replace(/'/g, "''")}'`);
+    return (await pg.query(`EXPLAIN ${literal}`)).rows.map((row: Any) => row["QUERY PLAN"]).join("\n");
+  };
+  // Tiny fixture tables always prefer a sequential scan; this local-only setting asks "CAN the index serve it?".
+  await pg.exec("SET enable_seqscan = off");
+  try {
+    for (const name of ["Allied", "R & T GENERAL CONSTRUCTION, INC", "R & T", "ONeil Plumbing", "Jos\u00E9 Builders"]) {
+      const strong = buildStrongNameMatchSql(prepareNameTerms(name), 1);
+      const strongPlan = await plan(`SELECT c.id FROM ${strong.fromSql}`, strong.params);
+      for (const field of ["display_name", "legal_name", "dba_name", "licensee_name_raw", "dba_name_raw"]) assert.match(strongPlan, new RegExp(`${field}_nameorder_idx`), `${name}: ordered index serves ${field}`);
+      assert.doesNotMatch(strongPlan, /Seq Scan/, `${name}: strong tier needs no scan, including initials-only names`);
+      const all = buildNameMatchSql(prepareNameTerms(name), 1);
+      const allPlan = await plan(`SELECT c.id FROM ${all.fromSql}`, all.params);
+      assert.match(allPlan, /_namewords_idx/, `${name}: trigram index on the normalized expression serves the word rule`);
+    }
+    const scopes = nameSearchableScopes().map(({ code, sources }) => ({ code, sources }));
+    for (const [name, expected] of MATRIX) {
+      const tiered = await queryContractorNameCandidates({ name, scopes, limit: 100, offset: 0 }, db);
+      assert.deepEqual(tiered.rows.map((r) => r.display_name).sort(), [...expected].sort(), `"${name}" with the proposed indexes in place`);
+    }
+  } finally {
+    await pg.exec("RESET enable_seqscan");
+  }
 });

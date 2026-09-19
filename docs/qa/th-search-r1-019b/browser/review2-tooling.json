@@ -1,0 +1,50 @@
+{
+  "ranAt": "2026-09-19T12:58:46.566Z",
+  "baseUrl": "http://localhost:3119",
+  "browser": "153.0.8010.48",
+  "headless": true,
+  "submitMethod": "page.keyboard.type + page.keyboard.press('Enter') on the focused search input (trusted key events; no requestSubmit, no iframe)",
+  "runs": [
+    {
+      "query": "R & T GENERAL CONSTRUCTION, INC",
+      "cssViewportWidth": 1280,
+      "typedValue": "R & T GENERAL CONSTRUCTION, INC",
+      "elapsedMs": 9340,
+      "screenshot": "review2-tooling-1280-1.png",
+      "url": "/verify?q=R+%26+T+GENERAL+CONSTRUCTION%2C+INC",
+      "innerWidth": 1280,
+      "clientWidth": 1280,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "horizontalOverflow": false,
+      "retainedQuery": "R & T GENERAL CONSTRUCTION, INC",
+      "profileLinks": 0,
+      "firstProfile": null,
+      "tookTooLong": true,
+      "noMatch": false
+    },
+    {
+      "query": "Allied Roofing",
+      "cssViewportWidth": 390,
+      "typedValue": "Allied Roofing",
+      "elapsedMs": 8864,
+      "screenshot": "review2-tooling-390-2.png",
+      "url": "/verify?q=Allied+Roofing",
+      "innerWidth": 390,
+      "clientWidth": 390,
+      "devicePixelRatio": 1,
+      "visualViewportScale": 1,
+      "horizontalOverflow": false,
+      "retainedQuery": "Allied Roofing",
+      "profileLinks": 0,
+      "firstProfile": null,
+      "tookTooLong": true,
+      "noMatch": false
+    }
+  ],
+  "overflow320": {
+    "innerWidth": 320,
+    "scrollWidth": 320,
+    "horizontalOverflow": false
+  }
+}

@@ -2,22 +2,35 @@
  * TH-SEARCH-R1-019B: the ONE contractor name-matching core.
  *
  * Native Verify name search (`searchContractors`) and the callable name-candidate operation
- * both render predicate, rank and index prefilter from here, so the two cannot drift into
- * separate matchers.
+ * both render predicate, rank and access path from here, so the two cannot drift apart.
  *
- * NAME SEMANTICS (candidate retrieval only -- never identity or evidence attachment)
+ * CANDIDATE SEMANTICS -- defined here, independently of any index or access path
+ * (candidate retrieval only; never identity or evidence attachment):
  *
  * A record matches when ONE actual source name field (display, legal/licensee, DBA, or the
- * credential row's source names) contains EVERY meaningful word of the supplied name:
- *   - both sides are normalized the same way: ASCII upper-case, apostrophes removed
- *     (O'BRIEN == OBRIEN), every other non-alphanumeric run becomes a word break;
- *   - legal-suffix words and the connector AND are dropped from the SUPPLIED name only, so
- *     the customer never has to type LLC/Inc, and "Brown and Root" finds "BROWN & ROOT";
- *   - initials and every later word stay required. Nothing is truncated to "the first four";
- *   - a word of three or more characters matches a source word it begins (STILW -> STILWELL);
- *     a shorter word (an initial) must equal a whole source word -- never a letter inside one.
- * Words must co-occur in one field: a business-name word plus a word from a different field
- * (e.g. the qualifying individual) is not a source name and is not a match.
+ * credential row's source names) contains EVERY meaningful word of the supplied name, after
+ * BOTH sides pass through the same normalization:
+ *   - apostrophes are removed (O'NEIL == ONEIL, in both directions, at any word length);
+ *   - ASCII punctuation/whitespace and common typographic dashes/quotes are word breaks
+ *     (R & T == R T == R&T; A.B == A B);
+ *   - letters and digits of ANY script are kept. Non-ASCII characters are never deleted into
+ *     a different name (JOSÉ stays JOSÉ; it does not become JOS);
+ *   - case is folded.
+ * Legal-suffix words and the connector AND are dropped from the SUPPLIED name only. Initials
+ * and every later word stay required. A word of three or more characters may BEGIN a source
+ * word (STILW -> STILWELL); a shorter word must EQUAL one -- never a letter inside a word.
+ * Words must co-occur in one field: a business-name word plus a word from another field is
+ * not a source name.
+ *
+ * ACCESS PATH -- an optimization that must never change the answer:
+ * `fromSql` narrows which rows are read. It is written on the SAME normalized expression the
+ * semantics use, so it is the semantic rule itself (or, for the strong tier, a rule the rank
+ * tiers 0-3 imply) -- never a separate condition on the raw text. Review 2 established that the
+ * existing raw-text trigram indexes cannot serve these semantics (an apostrophe may fall between
+ * any two letters of the raw value, initials have no trigram); the access path therefore needs
+ * indexes on the normalized expression (NORMALIZED_NAME_INDEXES). Without them the same SQL is
+ * still correct but scans. The test gate compares three things that must agree: independent
+ * fixture expectations, the semantic predicate with NO access path, and the optimized query.
  */
 
 export const NAME_MATCH_FIELDS = [
@@ -41,136 +54,88 @@ const DOTTED_SUFFIX = /\b(L\.\s?L\.\s?C\.?|L\.\s?L\.\s?P\.?|P\.\s?L\.\s?L\.\s?C\
 /** Suffix tokens as they appear in a NORMALIZED source field (dots already turned into breaks). */
 const SUFFIX_TAIL_REGEX = "( (INCORPORATED|INC|LLC|L L C|CORPORATION|CORP|COMPANY|CO|LTD|LIMITED|PLLC|P L L C|P A|PA|LP|L P|LLP|L L P))*";
 
-/** Words this short are initials: whole-word match only, and they cannot drive a trigram index. */
+/** Words this short are initials: whole-word match only. */
 export const MIN_PREFIX_WORD_LENGTH = 3;
 
-/** Identical in effect to normalizedFieldSql below. */
+// Apostrophe-like characters: removed (never a word break).      '  `  ‘  ’  ʼ
+const APOSTROPHES_JS = /['`\u2018\u2019\u02BC]/g;
+// Word breaks: every ASCII character that is not a letter or digit, plus NBSP, en/em dash and
+// curly double quotes. Everything else -- including all non-ASCII letters -- is kept.
+const SEPARATORS_JS = /[\u0000-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007F\u00A0\u2013\u2014\u201C\u201D]+/g;
+// The same two classes for PostgreSQL advanced regular expressions.
+const APOSTROPHES_SQL = "[''`\\u2018\\u2019\\u02BC]";
+const SEPARATORS_SQL = "[\\x01-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7F\\u00A0\\u2013\\u2014\\u201C\\u201D]+";
+
+/** Normalization for comparison in JS. Same character classes as normalizedFieldSql. */
 export function normalizeNameText(value: string): string {
-  return value
-    .replace(/['`‘’]/g, "")
-    .replace(/[^\x00-\x7F]/g, " ")
-    .toUpperCase()
-    .replace(/[^A-Z0-9]+/g, " ")
-    .trim();
+  return value.replace(APOSTROPHES_JS, "").replace(SEPARATORS_JS, " ").toUpperCase().trim();
 }
 
-function normalizedFieldSql(column: string): string {
-  // Non-ASCII characters fall outside [A-Z0-9] and become breaks, exactly as in normalizeNameText.
-  return `(' ' || btrim(regexp_replace(regexp_replace(upper(coalesce(${column}, '')), '[''\`‘’]', '', 'g'), '[^A-Z0-9]+', ' ', 'g')) || ' ')`;
+export function normalizedFieldSql(column: string): string {
+  return `(' ' || btrim(regexp_replace(regexp_replace(upper(coalesce(${column}, '')), '${APOSTROPHES_SQL}', '', 'g'), '${SEPARATORS_SQL}', ' ', 'g')) || ' ')`;
+}
+
+/** Upper-case ASCII only. Non-ASCII case folding is left to the database so both sides of a comparison fold identically there. */
+function asciiUpper(value: string): string {
+  return value.replace(/[a-z]+/g, (run) => run.toUpperCase());
 }
 
 export type PreparedNameTerms = {
   /** Supplied name, whitespace-collapsed. Never truncated. */
   supplied: string;
-  /** Every required word, in order. */
+  /** Every required word, in order (ASCII upper-cased; other scripts as typed). */
   terms: string[];
   /** terms joined by a space: the normalized name key. */
   key: string;
   /** Words dropped as optional (legal suffixes, AND). Disclosed, never silently lost. */
   optionalWordsDropped: string[];
-  /** Raw-text fragments that drive the trigram indexes (see indexFragmentFor). */
-  indexFragments: string[];
-  /** LIKE pattern for the raw supplied name; the index rule when no word can drive an index. */
-  rawContainsLike: string;
 };
-
-function escapeLike(s: string): string {
-  return s.replace(/[%_\\]/g, "\\$&");
-}
-
-/**
- * Index-driving fragment for one supplied word. A fragment must be guaranteed to appear
- * CONTIGUOUSLY in the raw source text whenever the word matches, otherwise the prefilter
- * would drop a legitimate match. Apostrophes are the only characters removed inside a word.
- *   - The customer typed the apostrophe (O'NEIL): the longest piece (NEIL) is present whether
- *     the source writes O'NEIL or ONEIL.
- *   - No apostrophe typed, six or more letters (OBRIEN, MCDONALDS): the interior (BRIE) survives
- *     a source apostrophe after the first letter or before the last.
- *   - Shorter words are used whole, so an untyped apostrophe is not bridged for them
- *     (ONEIL does not find O'NEIL; O'NEIL and O NEIL do). A three-letter interior is too
- *     unselective to drive an index.
- * Because the final predicate contains this same rule, these limits are exact, not leaks.
- */
-const MIN_INTERIOR_WORD_LENGTH = 6;
-function indexFragmentFor(term: string, typedPieces: string[]): string | null {
-  if (term.length < MIN_PREFIX_WORD_LENGTH) return null;
-  if (typedPieces.length > 1) {
-    const longest = [...typedPieces].sort((x, y) => y.length - x.length)[0];
-    return longest.length >= MIN_PREFIX_WORD_LENGTH ? longest : null;
-  }
-  return term.length >= MIN_INTERIOR_WORD_LENGTH ? term.slice(1, -1) : term;
-}
 
 export function prepareNameTerms(raw: string): PreparedNameTerms {
   const supplied = raw.trim().replace(/\s+/g, " ");
-  // Same normalization as normalizeNameText, but apostrophes are kept long enough to learn where
-  // the customer typed them.
-  const typedWords = supplied
-    .replace(DOTTED_SUFFIX, " ")
-    .replace(/[`‘’]/g, "'")
-    .replace(/[^\x00-\x7F]/g, " ")
-    .toUpperCase()
-    .replace(/[^A-Z0-9']+/g, " ")
-    .split(" ")
-    .map((word) => ({ term: word.replace(/'/g, ""), pieces: word.split("'").filter(Boolean) }))
-    .filter(({ term }) => term.length > 0);
-  const kept = typedWords.filter(({ term }) => !OPTIONAL_SUPPLIED_WORDS.has(term));
+  const words = asciiUpper(supplied.replace(DOTTED_SUFFIX, " ").replace(APOSTROPHES_JS, "").replace(SEPARATORS_JS, " ")).trim().split(" ").filter(Boolean);
+  const kept = words.filter((word) => !OPTIONAL_SUPPLIED_WORDS.has(word));
   // A name made only of optional words ("The Company") keeps them: never an empty/match-all name.
-  const used = kept.length > 0 ? kept : typedWords;
-  const terms = used.map(({ term }) => term);
-  const fragments = [...new Set(used.map(({ term, pieces }) => indexFragmentFor(term, pieces)).filter((f): f is string => f !== null))];
+  const terms = kept.length > 0 ? kept : words;
   return {
     supplied,
     terms,
     key: terms.join(" "),
-    optionalWordsDropped: kept.length > 0 ? typedWords.map(({ term }) => term).filter((term) => OPTIONAL_SUPPLIED_WORDS.has(term)) : [],
-    indexFragments: fragments,
-    rawContainsLike: `%${escapeLike(supplied)}%`,
+    optionalWordsDropped: kept.length > 0 ? words.filter((word) => OPTIONAL_SUPPLIED_WORDS.has(word)) : [],
   };
 }
 
 export type NameMatchSql = {
-  /** Parameters to append; their first index is the `startIndex` given to buildNameMatchSql. */
+  /** Parameters to append; their first index is the `startIndex` given to the builder. */
   params: unknown[];
-  /** Predicate over contractors `c` and licenses `l`. */
+  /** The SEMANTIC predicate over contractors `c` and licenses `l`. Contains no access-path condition. */
   predicateSql: string;
   /** Neutral string-relation rank for a (c, l) row. Lower is a stronger NAME relation; never quality. */
   rankSql: string;
-  /** FROM-clause source for contractors `c`, driven by the trigram indexes. */
+  /** FROM-clause source for contractors `c`. */
   fromSql: string;
   usesNameIndexes: boolean;
 };
 
-/**
- * Render predicate, rank and prefilter for one supplied name.
- *
- * Per field:   indexRule(raw column)  AND  wordRule(normalized column)
- * Prefilter:   some field satisfies indexRule
- * The prefilter is a superset of the predicate BY CONSTRUCTION -- the predicate contains the
- * very rule the prefilter applies -- so it can change which rows are scanned, never which match.
- * All fragments sit on the same column so one index scan intersects them on the rarest trigram.
- */
-export function buildNameMatchSql(prepared: PreparedNameTerms, startIndex: number): NameMatchSql {
+/** "none": no access path (oracle). "all": every semantic match. "strong": rank tiers 0-3 only, readable in name order. */
+type AccessPath = "none" | "all" | "strong";
+
+function build(prepared: PreparedNameTerms, startIndex: number, access: AccessPath): NameMatchSql {
   if (prepared.terms.length === 0) throw new Error("name_terms_empty");
   const params: unknown[] = [];
   const param = (value: unknown) => { params.push(value); return `$${startIndex + params.length - 1}`; };
 
-  const termParams = prepared.terms.map((term) => ({ term, p: param(term) }));
-  const usesNameIndexes = prepared.indexFragments.length > 0;
-  const indexParams = usesNameIndexes
-    ? prepared.indexFragments.map((fragment) => param(`%${fragment}%`))
-    : [param(prepared.rawContainsLike)];
-  const keyParam = param(prepared.key);
-
-  const indexRule = (column: string) => `(${indexParams.map((p) => `${column} ILIKE ${p}`).join(" AND ")})`;
+  // upper($n) so the database folds the supplied word exactly as it folds the column.
+  const termParams = prepared.terms.map((term) => ({ term, p: `upper(${param(term)})` }));
+  const keyParam = `upper(${param(prepared.key)})`;
   const wordRule = (normalized: string) =>
     termParams
-      .map(({ term, p }) => (term.length < MIN_PREFIX_WORD_LENGTH ? `${normalized} LIKE '% ' || ${p} || ' %'` : `${normalized} LIKE '% ' || ${p} || '%'`))
+      .map(({ term, p }) => ([...term].length < MIN_PREFIX_WORD_LENGTH ? `${normalized} LIKE '% ' || ${p} || ' %'` : `${normalized} LIKE '% ' || ${p} || '%'`))
       .join(" AND ");
   const qualified = (field: NameMatchField) => (CONTRACTOR_FIELDS.includes(field) ? `c.${field}` : `l.${field}`);
 
   const predicateSql = `(
-          ${NAME_MATCH_FIELDS.map((field) => `(${indexRule(qualified(field))} AND ${wordRule(normalizedFieldSql(qualified(field)))})`).join("\n          OR ")}
+          ${NAME_MATCH_FIELDS.map((field) => `(${wordRule(normalizedFieldSql(qualified(field)))})`).join("\n          OR ")}
         )`;
 
   const equalsName = (field: NameMatchField) => `${normalizedFieldSql(qualified(field))} ~ ('^ ' || ${keyParam} || '${SUFFIX_TAIL_REGEX} $')`;
@@ -185,11 +150,20 @@ export function buildNameMatchSql(prepared: PreparedNameTerms, startIndex: numbe
           ELSE 4
         END`;
 
-  // Each branch applies the FULL per-field rule (index rule AND word rule), not just the index
-  // rule: candidates that only share common words ("GENERAL CONSTRUCTION") are discarded at the
-  // bitmap heap scan, before the contractor/credential joins multiply their cost.
-  const fieldRule = (column: string) => `(${indexRule(column)} AND ${wordRule(normalizedFieldSql(column))})`;
-  const fromSql = `(
+  const usesNameIndexes = access !== "none";
+  let fromSql = "contractors c";
+  if (usesNameIndexes) {
+    // "all": the word rule itself, per column (trigram index on the normalized expression).
+    // "strong": the normalized field starts with the whole key -- exactly rank tiers 0-3, and a
+    // range of the ordered (text_pattern_ops) index on the normalized expression. No new parameter
+    // and no condition on raw text in either mode.
+    const tierRule = (column: string) =>
+      // `IS NOT NULL` changes nothing (a NULL name matches no word); it lets the planner use partial indexes.
+      access === "strong"
+        ? `(${column} IS NOT NULL AND ${normalizedFieldSql(column)} LIKE ' ' || ${keyParam} || '%')`
+        : `(${column} IS NOT NULL AND ${wordRule(normalizedFieldSql(column))})`;
+    const fieldRule = (column: string) => tierRule(column);
+    fromSql = `(
         SELECT id FROM contractors
         WHERE ${CONTRACTOR_FIELDS.map((field) => fieldRule(field)).join(" OR ")}
         UNION
@@ -197,14 +171,47 @@ export function buildNameMatchSql(prepared: PreparedNameTerms, startIndex: numbe
         WHERE ${CREDENTIAL_FIELDS.map((field) => fieldRule(field)).join(" OR ")}
       ) name_prefilter
       JOIN contractors c ON c.id = name_prefilter.id`;
-
+  }
   return { params, predicateSql, rankSql, fromSql, usesNameIndexes };
 }
 
-/** The same predicate with NO prefilter. Test oracle only: proves the prefilter never drops a match. */
-export function buildUnprefilteredNameMatchSql(prepared: PreparedNameTerms, startIndex: number): NameMatchSql {
-  return { ...buildNameMatchSql(prepared, startIndex), fromSql: "contractors c" };
+/** Every semantic match, reached through the normalized expression. */
+export function buildNameMatchSql(prepared: PreparedNameTerms, startIndex: number): NameMatchSql {
+  return build(prepared, startIndex, "all");
 }
+
+/**
+ * Strong tier only: rows whose best name relation is rank 0-3 (a source name equals or starts with
+ * the supplied name). Same predicate and rank; the caller adds nothing. Rank-4 rows are NOT here.
+ */
+export function buildStrongNameMatchSql(prepared: PreparedNameTerms, startIndex: number): NameMatchSql {
+  return build(prepared, startIndex, "strong");
+}
+
+/** Lowest rank the strong tier cannot produce; the token tier is `rank = WEAKEST_NAME_RANK`. */
+export const WEAKEST_NAME_RANK = 4;
+
+/**
+ * The semantic predicate ALONE: no access path, no access-path parameters, no index condition of
+ * any kind. Test oracle: the optimized query must return exactly what this returns.
+ */
+export function buildSemanticNameMatchSql(prepared: PreparedNameTerms, startIndex: number): NameMatchSql {
+  return build(prepared, startIndex, "none");
+}
+
+/**
+ * PROPOSED, NOT APPLIED ANYWHERE BUT DISPOSABLE TEST FIXTURES: the indexes the access path needs.
+ * Rendered from the same expression as the predicate so the two cannot drift. `ordered` serves the
+ * strong tier (equality/prefix in name order); `words` serves every-word matching.
+ */
+export const NORMALIZED_NAME_INDEXES: Array<{ name: string; table: "contractors" | "licenses"; kind: "ordered" | "words"; ddl: string }> = NAME_MATCH_FIELDS.flatMap((field) => {
+  const table = CONTRACTOR_FIELDS.includes(field) ? ("contractors" as const) : ("licenses" as const);
+  const expr = normalizedFieldSql(field);
+  return [
+    { name: `${table}_${field}_nameorder_idx`, table, kind: "ordered" as const, ddl: `CREATE INDEX CONCURRENTLY IF NOT EXISTS ${table}_${field}_nameorder_idx ON ${table} (${expr} text_pattern_ops) WHERE ${field} IS NOT NULL` },
+    { name: `${table}_${field}_namewords_idx`, table, kind: "words" as const, ddl: `CREATE INDEX CONCURRENTLY IF NOT EXISTS ${table}_${field}_namewords_idx ON ${table} USING gin (${expr} gin_trgm_ops) WHERE ${field} IS NOT NULL` },
+  ];
+});
 
 export type NameMatchMethod = "EXACT_SOURCE_NAME" | "NORMALIZED_NAME" | "DOCUMENTED_ALIAS" | "PREFIX_OR_TOKEN";
 
@@ -243,10 +250,9 @@ function stripTrailingSuffixWords(words: string[]): string[] {
 }
 
 /**
- * Row-level evidence derived from the values the row itself returned, using the SAME rules as
- * the SQL (word rule on the normalized field AND index rule on the raw field). It is an
- * independent check that the predicate ran: a row with no derivable evidence must be treated
- * as a source failure by the caller, never displayed.
+ * Row-level evidence derived from the values the row itself returned, using the SEMANTIC rule
+ * only (never the access path). It is an independent check that the predicate ran: a row with
+ * no derivable evidence must be treated as a source failure by the caller, never displayed.
  */
 export function deriveNameMatchEvidence(
   suppliedName: string,
@@ -254,22 +260,18 @@ export function deriveNameMatchEvidence(
 ): NameMatchEvidence | null {
   const prepared = prepareNameTerms(suppliedName);
   if (prepared.terms.length === 0) return null;
+  const terms = prepared.terms.map((term) => term.toUpperCase());
+  const key = terms.join(" ");
   const found: NameMatchEvidence[] = [];
 
   for (const field of NAME_MATCH_FIELDS) {
     const raw = fields[field];
     if (!raw) continue;
     const value = raw.trim().replace(/\s+/g, " ");
-    const rawLower = raw.toLowerCase();
-    const indexRuleHolds = prepared.indexFragments.length > 0
-      ? prepared.indexFragments.every((fragment) => rawLower.includes(fragment.toLowerCase()))
-      : rawLower.includes(prepared.supplied.toLowerCase());
-    if (!indexRuleHolds) continue;
-
     const sourceWords = normalizeNameText(raw).split(" ").filter(Boolean);
     const matchedWords: Array<{ supplied: string; source: string }> = [];
-    const everyWord = prepared.terms.every((term) => {
-      const source = sourceWords.find((word) => (term.length < MIN_PREFIX_WORD_LENGTH ? word === term : word.startsWith(term)));
+    const everyWord = terms.every((term) => {
+      const source = sourceWords.find((word) => ([...term].length < MIN_PREFIX_WORD_LENGTH ? word === term : word.startsWith(term)));
       if (source) matchedWords.push({ supplied: term, source });
       return Boolean(source);
     });
@@ -277,13 +279,13 @@ export function deriveNameMatchEvidence(
 
     const label = FIELD_LABEL[field];
     const alias = ALIAS_FIELDS.has(field);
-    const sameName = stripTrailingSuffixWords(sourceWords).join(" ") === prepared.key;
+    const sameName = stripTrailingSuffixWords(sourceWords).join(" ") === key;
     if (value === prepared.supplied) {
       found.push({ field, value, matchedWords, method: alias ? "DOCUMENTED_ALIAS" : "EXACT_SOURCE_NAME", explanation: `The ${label} is exactly the supplied name.` });
     } else if (sameName) {
       found.push({ field, value, matchedWords, method: alias ? "DOCUMENTED_ALIAS" : "NORMALIZED_NAME", explanation: `The ${label} equals the supplied name after case, punctuation, apostrophe and legal-suffix normalization.` });
     } else {
-      found.push({ field, value, matchedWords, method: "PREFIX_OR_TOKEN", explanation: `The ${label} contains every required supplied word (${prepared.terms.join(", ")}); each one begins or equals a word of that name.` });
+      found.push({ field, value, matchedWords, method: "PREFIX_OR_TOKEN", explanation: `The ${label} contains every required supplied word (${terms.join(", ")}); each one begins or equals a word of that name.` });
     }
   }
   if (found.length === 0) return null;

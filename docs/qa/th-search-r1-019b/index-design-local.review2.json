@@ -1,0 +1,222 @@
+{
+  "ranAt": "2026-09-19T12:56:47.185Z",
+  "kind": "LOCAL SYNTHETIC EXPERIMENT -- in-memory PGlite, generated names, warm memory. Sizes-per-row are MEASURED here and only an ESTIMATE for production; latencies say nothing about a cold production cache.",
+  "postgres": "PostgreSQL 18.3 (PGlite 0.5.8) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit",
+  "rowsPerTable": 200000,
+  "indexes": [
+    {
+      "index": "contractors_dba_name_nameorder_idx",
+      "bytes": 1875968,
+      "bytesPerTableRow": 9.4,
+      "buildMs": 474
+    },
+    {
+      "index": "contractors_dba_name_namewords_idx",
+      "bytes": 6414336,
+      "bytesPerTableRow": 32.1,
+      "buildMs": 1347
+    },
+    {
+      "index": "contractors_display_name_nameorder_idx",
+      "bytes": 4399104,
+      "bytesPerTableRow": 22,
+      "buildMs": 1015
+    },
+    {
+      "index": "contractors_display_name_namewords_idx",
+      "bytes": 12410880,
+      "bytesPerTableRow": 62.1,
+      "buildMs": 3114
+    },
+    {
+      "index": "contractors_legal_name_nameorder_idx",
+      "bytes": 4399104,
+      "bytesPerTableRow": 22,
+      "buildMs": 1081
+    },
+    {
+      "index": "contractors_legal_name_namewords_idx",
+      "bytes": 12410880,
+      "bytesPerTableRow": 62.1,
+      "buildMs": 2967
+    },
+    {
+      "index": "licenses_dba_name_raw_nameorder_idx",
+      "bytes": 1875968,
+      "bytesPerTableRow": 9.4,
+      "buildMs": 500
+    },
+    {
+      "index": "licenses_dba_name_raw_namewords_idx",
+      "bytes": 6086656,
+      "bytesPerTableRow": 30.4,
+      "buildMs": 1408
+    },
+    {
+      "index": "licenses_licensee_name_raw_nameorder_idx",
+      "bytes": 4399104,
+      "bytesPerTableRow": 22,
+      "buildMs": 1190
+    },
+    {
+      "index": "licenses_licensee_name_raw_namewords_idx",
+      "bytes": 11780096,
+      "bytesPerTableRow": 58.9,
+      "buildMs": 3119
+    },
+    {
+      "index": "raw_display_btree",
+      "bytes": 4317184,
+      "bytesPerTableRow": 21.6,
+      "buildMs": null
+    },
+    {
+      "index": "raw_display_trgm",
+      "bytes": 12427264,
+      "bytesPerTableRow": 62.1,
+      "buildMs": null
+    }
+  ],
+  "tiers": [
+    {
+      "name": "Allied",
+      "tier": "strong",
+      "usesProposedIndex": true,
+      "sequentialScan": false,
+      "indexesNamed": [
+        "contractors_display_name_nameorder_idx",
+        "contractors_legal_name_nameorder_idx",
+        "contractors_dba_name_nameorder_idx",
+        "licenses_licensee_name_raw_nameorder_idx",
+        "licenses_dba_name_raw_nameorder_idx"
+      ],
+      "executionMs": 151.591
+    },
+    {
+      "name": "Allied",
+      "tier": "allWords",
+      "usesProposedIndex": true,
+      "sequentialScan": false,
+      "indexesNamed": [
+        "contractors_display_name_namewords_idx",
+        "contractors_legal_name_namewords_idx",
+        "contractors_dba_name_namewords_idx",
+        "licenses_licensee_name_raw_namewords_idx",
+        "licenses_dba_name_raw_namewords_idx"
+      ],
+      "executionMs": 107.829
+    },
+    {
+      "name": "R & T GENERAL CONSTRUCTION, INC",
+      "tier": "strong",
+      "usesProposedIndex": true,
+      "sequentialScan": false,
+      "indexesNamed": [
+        "contractors_display_name_nameorder_idx",
+        "contractors_legal_name_nameorder_idx",
+        "contractors_dba_name_nameorder_idx",
+        "licenses_licensee_name_raw_nameorder_idx",
+        "licenses_dba_name_raw_nameorder_idx"
+      ],
+      "executionMs": 57.813
+    },
+    {
+      "name": "R & T GENERAL CONSTRUCTION, INC",
+      "tier": "allWords",
+      "usesProposedIndex": true,
+      "sequentialScan": false,
+      "indexesNamed": [
+        "contractors_display_name_namewords_idx",
+        "contractors_legal_name_namewords_idx",
+        "contractors_dba_name_namewords_idx",
+        "licenses_licensee_name_raw_namewords_idx",
+        "licenses_dba_name_raw_namewords_idx"
+      ],
+      "executionMs": 225.107
+    },
+    {
+      "name": "R & T",
+      "tier": "strong",
+      "usesProposedIndex": true,
+      "sequentialScan": false,
+      "indexesNamed": [
+        "contractors_display_name_nameorder_idx",
+        "contractors_legal_name_nameorder_idx",
+        "contractors_dba_name_nameorder_idx",
+        "licenses_licensee_name_raw_nameorder_idx",
+        "licenses_dba_name_raw_nameorder_idx"
+      ],
+      "executionMs": 138.962
+    },
+    {
+      "name": "R & T",
+      "tier": "allWords",
+      "usesProposedIndex": true,
+      "sequentialScan": false,
+      "indexesNamed": [
+        "contractors_display_name_namewords_idx",
+        "contractors_legal_name_namewords_idx",
+        "contractors_dba_name_namewords_idx",
+        "licenses_licensee_name_raw_namewords_idx",
+        "licenses_dba_name_raw_namewords_idx"
+      ],
+      "executionMs": 250.828
+    },
+    {
+      "name": "ONeil Plumbing",
+      "tier": "strong",
+      "usesProposedIndex": true,
+      "sequentialScan": false,
+      "indexesNamed": [
+        "contractors_display_name_nameorder_idx",
+        "contractors_legal_name_nameorder_idx",
+        "contractors_dba_name_nameorder_idx",
+        "licenses_licensee_name_raw_nameorder_idx",
+        "licenses_dba_name_raw_nameorder_idx"
+      ],
+      "executionMs": 0.242
+    },
+    {
+      "name": "ONeil Plumbing",
+      "tier": "allWords",
+      "usesProposedIndex": true,
+      "sequentialScan": false,
+      "indexesNamed": [
+        "contractors_display_name_namewords_idx",
+        "contractors_legal_name_namewords_idx",
+        "contractors_dba_name_namewords_idx",
+        "licenses_licensee_name_raw_namewords_idx",
+        "licenses_dba_name_raw_namewords_idx"
+      ],
+      "executionMs": 15.733
+    },
+    {
+      "name": "General Construction",
+      "tier": "strong",
+      "usesProposedIndex": true,
+      "sequentialScan": false,
+      "indexesNamed": [
+        "contractors_display_name_nameorder_idx",
+        "contractors_legal_name_nameorder_idx",
+        "contractors_dba_name_nameorder_idx",
+        "licenses_licensee_name_raw_nameorder_idx",
+        "licenses_dba_name_raw_nameorder_idx"
+      ],
+      "executionMs": 0.371
+    },
+    {
+      "name": "General Construction",
+      "tier": "allWords",
+      "usesProposedIndex": true,
+      "sequentialScan": false,
+      "indexesNamed": [
+        "contractors_display_name_namewords_idx",
+        "contractors_legal_name_namewords_idx",
+        "contractors_dba_name_namewords_idx",
+        "licenses_licensee_name_raw_namewords_idx",
+        "licenses_dba_name_raw_namewords_idx"
+      ],
+      "executionMs": 486.29
+    }
+  ]
+}

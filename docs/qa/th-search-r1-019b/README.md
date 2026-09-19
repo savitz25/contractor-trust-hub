@@ -1,5 +1,7 @@
 # TH-SEARCH-R1-019B — Contractor name-candidate operation (integration handoff)
 
+> **Current state: review 2 → `BLOCKED_PENDING_INDEX_APPROVAL`. Read [REVIEW-2.md](REVIEW-2.md) first.** It supersedes the matching rule, access path, fingerprint and browser sections below (kept as the record of earlier passes). Do not merge this head before the proposed indexes exist.
+
 Status: `READY_FOR_ASTRA_REVIEW — CONTRACTOR_OPERATION` (review-1 correction pass). Draft PR only. Not merged, not deployed.
 
 > **Read `REVIEW-1.md` first.** It is the disposition of the CHANGES_REQUESTED review on `3a22d7b` and supersedes this file
