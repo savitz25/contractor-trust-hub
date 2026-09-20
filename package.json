@@ -25,6 +25,8 @@
     "assert:visual": "node scripts/assert-visual-007.mjs",
     "assert:brand": "node scripts/assert-brand-001.mjs",
     "typecheck": "tsc --noEmit",
+    "test:ea-ct-001": "npx --yes tsx --test scripts/test_ea_ct_001.ts",
+    "verify:ea-ct-001": "node --env-file-if-exists=.env.local node_modules/tsx/dist/cli.mjs scripts/verify_ea_ct_001.ts",
     "test:matcher": "node scripts/test_permit_matcher.mjs",
     "test:nj": "node scripts/test_nj_verify_smoke.mjs",
     "test:nj-con-001": "python -m unittest scripts.test_nj_con_001",

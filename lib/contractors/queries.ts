@@ -21,11 +21,13 @@ import {
 } from "./search-normalize";
 import { stateHasEntityLinking } from "./trust-report";
 import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
+import { ACTIVATED_CONTACT_KINDS, dedupeContactsForDisplay } from "./public-contacts";
 import type {
   ContractorDetail,
   DisciplineDetail,
   EntityDetail,
   LicenseDetail,
+  PublicContactDetail,
   SearchResult,
 } from "./types";
 
@@ -695,6 +697,38 @@ async function getContractorBySlugUncached(
     [c.id]
   );
 
+  // EA-CT-001: CONFIRMED public business-contact observations, joined ONLY through this
+  // contractor's own license rows (o.attributed_license_id -> l.id -> l.contractor_id = $1) -- the
+  // same exact license-FK path licenses/discipline already use above. The INNER JOIN itself fails
+  // closed on a null/dangling attributed_license_id (no name-only join, no fuzzy match ever
+  // possible here). is_agency_number = false excludes a regulator's own agency contact number,
+  // matching the existing filter already established in lib/intelligence/county-snapshot.ts.
+  // contact_name/contact_title kinds are never selected -- see ACTIVATED_CONTACT_KINDS.
+  const publicContacts = await query<{
+    id: string;
+    attributed_license_id: string;
+    kind: string;
+    value: string;
+    value_normalized: string;
+    source_system: string;
+    source_url: string | null;
+    retrieved_at: Date | null;
+    currentness: string | null;
+  }>(
+    `
+    SELECT o.id, o.attributed_license_id, o.kind, o.value, o.value_normalized,
+           o.source_system, o.source_url, o.retrieved_at, o.currentness
+    FROM public_contact_observations o
+    JOIN licenses l ON l.id = o.attributed_license_id
+    WHERE l.contractor_id = $1
+      AND o.attribution_class = 'CONFIRMED'
+      AND o.is_agency_number = false
+      AND o.kind = ANY($2::text[])
+    ORDER BY o.kind, o.retrieved_at DESC NULLS LAST
+    `,
+    [c.id, ACTIVATED_CONTACT_KINDS]
+  );
+
   const licenseDetails: LicenseDetail[] = licenses.map((l) => ({
     id: l.id,
     externalKey: l.external_key,
@@ -751,6 +785,20 @@ async function getContractorBySlugUncached(
     lastVerifiedAt: d.last_verified_at?.toISOString() ?? null,
   }));
 
+  const publicContactDetails: PublicContactDetail[] = dedupeContactsForDisplay(
+    publicContacts.map((o) => ({
+      id: o.id,
+      licenseId: o.attributed_license_id,
+      kind: o.kind as PublicContactDetail["kind"],
+      value: o.value,
+      valueNormalized: o.value_normalized,
+      sourceSystem: o.source_system,
+      sourceUrl: o.source_url,
+      retrievedAt: o.retrieved_at?.toISOString() ?? null,
+      currentness: o.currentness,
+    }))
+  );
+
   return {
     id: c.id,
     slug: c.slug,
@@ -764,6 +812,7 @@ async function getContractorBySlugUncached(
     licenses: licenseDetails,
     entities: entityDetails,
     discipline: disciplineDetails,
+    publicContacts: publicContactDetails,
   };
 }
 
