@@ -1,0 +1,193 @@
+{
+  "ranAt": "2026-09-20T16:35:45.245Z",
+  "note": "READ-ONLY. Plain EXPLAIN ANALYZE inside BEGIN READ ONLY, always ROLLBACK. No writes.",
+  "cases": {
+    "zero_permit": {
+      "slug": "mn-qb648229-margaret-m-karrh",
+      "licenseCount": 1,
+      "currentPath": {
+        "candidates": {
+          "summary": {
+            "planningTimeMs": 15.723,
+            "executionTimeMs": 32.066,
+            "usesSeqScanOnPermitAttributions": true,
+            "usesIndexOnPermitAttributions": false,
+            "indexNames": [
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Limit  (cost=4810.73..4810.96 rows=2 width=47) (actual time=26.000..31.965 rows=0 loops=1)\n  Buffers: shared hit=2047 read=344\n  ->  Gather Merge  (cost=4810.73..4810.96 rows=2 width=47) (actual time=25.998..31.961 rows=0 loops=1)\n        Workers Planned: 1\n        Workers Launched: 1\n        Buffers: shared hit=2047 read=344\n        ->  Sort  (cost=3810.72..3810.73 rows=2 width=47) (actual time=14.858..14.860 rows=0 loops=2)\n              Sort Key: s.issue_date DESC NULLS LAST, s.permit_number DESC NULLS LAST, a.id\n              Sort Method: quicksort  Memory: 25kB\n              Buffers: shared hit=2047 read=344\n              Worker 0:  Sort Method: quicksort  Memory: 25kB\n              ->  Nested Loop  (cost=0.42..3810.71 rows=2 width=47) (actual time=14.780..14.781 rows=0 loops=2)\n                    Buffers: shared hit=2024 read=344\n                    ->  Parallel Seq Scan on permit_attributions a  (cost=0.00..3805.44 rows=2 width=48) (actual time=14.779..14.780 rows=0 loops=2)\n                          Filter: ((matched_contractor_id = '1461098f-ba14-437c-b0f1-bd77051884c1'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                          Rows Removed by Filter: 69793\n                          Buffers: shared hit=2024 read=344\n                    ->  Index Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..2.64 rows=1 width=31) (never executed)\n                          Index Cond: (id = a.permit_source_record_id)\nPlanning:\n  Buffers: shared hit=96 read=29\nPlanning Time: 15.723 ms\nExecution Time: 32.066 ms"
+        },
+        "count": {
+          "summary": {
+            "planningTimeMs": 0.715,
+            "executionTimeMs": 2.718,
+            "usesSeqScanOnPermitAttributions": false,
+            "usesIndexOnPermitAttributions": true,
+            "indexNames": [
+              "licenses_contractor_idx",
+              "permit_attributions_license_idx",
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Aggregate  (cost=24.99..25.00 rows=1 width=8) (actual time=2.664..2.666 rows=1 loops=1)\n  Buffers: shared hit=2 read=4\n  ->  Nested Loop  (cost=1.14..24.98 rows=1 width=0) (actual time=2.661..2.662 rows=0 loops=1)\n        Buffers: shared hit=2 read=4\n        ->  Nested Loop  (cost=0.72..23.17 rows=1 width=16) (actual time=2.661..2.662 rows=0 loops=1)\n              Buffers: shared hit=2 read=4\n              ->  Index Scan using licenses_contractor_idx on licenses l  (cost=0.43..2.65 rows=1 width=32) (actual time=1.339..1.341 rows=1 loops=1)\n                    Index Cond: (contractor_id = '1461098f-ba14-437c-b0f1-bd77051884c1'::uuid)\n                    Buffers: shared hit=2 read=2\n              ->  Index Scan using permit_attributions_license_idx on permit_attributions a  (cost=0.29..20.52 rows=1 width=48) (actual time=1.317..1.317 rows=0 loops=1)\n                    Index Cond: (matched_license_id = l.id)\n                    Filter: ((matched_contractor_id = '1461098f-ba14-437c-b0f1-bd77051884c1'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                    Buffers: shared read=2\n        ->  Index Only Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..1.81 rows=1 width=16) (never executed)\n              Index Cond: (id = a.permit_source_record_id)\n              Heap Fetches: 0\nPlanning:\n  Buffers: shared hit=17 read=7\nPlanning Time: 0.715 ms\nExecution Time: 2.718 ms"
+        }
+      },
+      "candidatePath": {
+        "candidates": {
+          "summary": {
+            "planningTimeMs": 0.444,
+            "executionTimeMs": 0.088,
+            "usesSeqScanOnPermitAttributions": false,
+            "usesIndexOnPermitAttributions": true,
+            "indexNames": [
+              "permit_attributions_license_idx",
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Limit  (cost=17.54..17.54 rows=1 width=47) (actual time=0.020..0.021 rows=0 loops=1)\n  Buffers: shared hit=2\n  ->  Sort  (cost=17.54..17.54 rows=1 width=47) (actual time=0.019..0.020 rows=0 loops=1)\n        Sort Key: s.issue_date DESC NULLS LAST, s.permit_number DESC NULLS LAST, a.id\n        Sort Method: quicksort  Memory: 25kB\n        Buffers: shared hit=2\n        ->  Nested Loop  (cost=0.71..17.53 rows=1 width=47) (actual time=0.012..0.013 rows=0 loops=1)\n              Buffers: shared hit=2\n              ->  Index Scan using permit_attributions_license_idx on permit_attributions a  (cost=0.29..14.89 rows=1 width=48) (actual time=0.012..0.012 rows=0 loops=1)\n                    Index Cond: (matched_license_id = ANY ('{64e40ad5-c9e2-4d7a-97c8-88656f096d6d}'::uuid[]))\n                    Filter: ((matched_contractor_id = '1461098f-ba14-437c-b0f1-bd77051884c1'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                    Buffers: shared hit=2\n              ->  Index Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..2.64 rows=1 width=31) (never executed)\n                    Index Cond: (id = a.permit_source_record_id)\nPlanning:\n  Buffers: shared hit=16\nPlanning Time: 0.444 ms\nExecution Time: 0.088 ms"
+        },
+        "count": {
+          "summary": {
+            "planningTimeMs": 0.632,
+            "executionTimeMs": 0.087,
+            "usesSeqScanOnPermitAttributions": false,
+            "usesIndexOnPermitAttributions": true,
+            "indexNames": [
+              "licenses_contractor_idx",
+              "permit_attributions_license_idx",
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Aggregate  (cost=7.82..7.83 rows=1 width=8) (actual time=0.025..0.027 rows=1 loops=1)\n  Buffers: shared hit=6\n  ->  Nested Loop  (cost=1.14..7.81 rows=1 width=0) (actual time=0.023..0.024 rows=0 loops=1)\n        Buffers: shared hit=6\n        ->  Nested Loop  (cost=0.72..5.17 rows=1 width=16) (actual time=0.023..0.023 rows=0 loops=1)\n              Buffers: shared hit=6\n              ->  Index Scan using licenses_contractor_idx on licenses l  (cost=0.43..2.65 rows=1 width=32) (actual time=0.011..0.012 rows=1 loops=1)\n                    Index Cond: (contractor_id = '1461098f-ba14-437c-b0f1-bd77051884c1'::uuid)\n                    Buffers: shared hit=4\n              ->  Index Scan using permit_attributions_license_idx on permit_attributions a  (cost=0.29..2.52 rows=1 width=48) (actual time=0.008..0.008 rows=0 loops=1)\n                    Index Cond: ((matched_license_id = l.id) AND (matched_license_id = ANY ('{64e40ad5-c9e2-4d7a-97c8-88656f096d6d}'::uuid[])))\n                    Filter: ((matched_contractor_id = '1461098f-ba14-437c-b0f1-bd77051884c1'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                    Buffers: shared hit=2\n        ->  Index Only Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..2.64 rows=1 width=16) (never executed)\n              Index Cond: (id = a.permit_source_record_id)\n              Heap Fetches: 0\nPlanning:\n  Buffers: shared hit=24\nPlanning Time: 0.632 ms\nExecution Time: 0.087 ms"
+        }
+      }
+    },
+    "lennar_high_volume": {
+      "slug": "cgc062343-lennar-homes-llc",
+      "licenseCount": 1,
+      "currentPath": {
+        "candidates": {
+          "summary": {
+            "planningTimeMs": 0.464,
+            "executionTimeMs": 483.341,
+            "usesSeqScanOnPermitAttributions": true,
+            "usesIndexOnPermitAttributions": false,
+            "indexNames": [
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Limit  (cost=5711.99..5757.76 rows=398 width=47) (actual time=472.646..483.222 rows=500 loops=1)\n  Buffers: shared hit=8929 read=1635\n  ->  Gather Merge  (cost=5711.99..5757.76 rows=398 width=47) (actual time=472.644..483.142 rows=500 loops=1)\n        Workers Planned: 1\n        Workers Launched: 1\n        Buffers: shared hit=8929 read=1635\n        ->  Sort  (cost=4711.98..4712.97 rows=398 width=47) (actual time=467.999..468.038 rows=376 loops=2)\n              Sort Key: s.issue_date DESC NULLS LAST, s.permit_number DESC NULLS LAST, a.id\n              Sort Method: top-N heapsort  Memory: 95kB\n              Buffers: shared hit=8929 read=1635\n              Worker 0:  Sort Method: quicksort  Memory: 93kB\n              ->  Nested Loop  (cost=0.42..4694.79 rows=398 width=47) (actual time=1.292..466.263 rows=1022 loops=2)\n                    Buffers: shared hit=8906 read=1635\n                    ->  Parallel Seq Scan on permit_attributions a  (cost=0.00..3805.44 rows=398 width=48) (actual time=0.015..17.071 rows=1022 loops=2)\n                          Filter: ((matched_contractor_id = 'a18c03e6-5ee5-44ee-8cda-243288930459'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                          Rows Removed by Filter: 68772\n                          Buffers: shared hit=2368\n                    ->  Index Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..2.23 rows=1 width=31) (actual time=0.438..0.438 rows=1 loops=2043)\n                          Index Cond: (id = a.permit_source_record_id)\n                          Buffers: shared hit=6538 read=1635\nPlanning:\n  Buffers: shared hit=16\nPlanning Time: 0.464 ms\nExecution Time: 483.341 ms"
+        },
+        "count": {
+          "summary": {
+            "planningTimeMs": 0.656,
+            "executionTimeMs": 13.67,
+            "usesSeqScanOnPermitAttributions": false,
+            "usesIndexOnPermitAttributions": true,
+            "indexNames": [
+              "licenses_contractor_idx",
+              "permit_attributions_license_idx",
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Aggregate  (cost=24.53..24.54 rows=1 width=8) (actual time=13.609..13.611 rows=1 loops=1)\n  Buffers: shared hit=7158 read=3\n  ->  Nested Loop  (cost=1.14..24.53 rows=1 width=0) (actual time=0.736..13.308 rows=2043 loops=1)\n        Buffers: shared hit=7158 read=3\n        ->  Nested Loop  (cost=0.72..23.17 rows=1 width=16) (actual time=0.726..4.124 rows=2043 loops=1)\n              Buffers: shared hit=726 read=3\n              ->  Index Scan using licenses_contractor_idx on licenses l  (cost=0.43..2.65 rows=1 width=32) (actual time=0.027..0.028 rows=1 loops=1)\n                    Index Cond: (contractor_id = 'a18c03e6-5ee5-44ee-8cda-243288930459'::uuid)\n                    Buffers: shared hit=3 read=1\n              ->  Index Scan using permit_attributions_license_idx on permit_attributions a  (cost=0.29..20.52 rows=1 width=48) (actual time=0.696..3.752 rows=2043 loops=1)\n                    Index Cond: (matched_license_id = l.id)\n                    Filter: ((matched_contractor_id = 'a18c03e6-5ee5-44ee-8cda-243288930459'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                    Buffers: shared hit=723 read=2\n        ->  Index Only Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..1.36 rows=1 width=16) (actual time=0.004..0.004 rows=1 loops=2043)\n              Index Cond: (id = a.permit_source_record_id)\n              Heap Fetches: 302\n              Buffers: shared hit=6432\nPlanning:\n  Buffers: shared hit=24\nPlanning Time: 0.656 ms\nExecution Time: 13.670 ms"
+        }
+      },
+      "candidatePath": {
+        "candidates": {
+          "summary": {
+            "planningTimeMs": 0.557,
+            "executionTimeMs": 14.313,
+            "usesSeqScanOnPermitAttributions": false,
+            "usesIndexOnPermitAttributions": true,
+            "indexNames": [
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Limit  (cost=1537.52..1537.54 rows=10 width=47) (actual time=14.099..14.207 rows=500 loops=1)\n  Buffers: shared hit=8897\n  ->  Sort  (cost=1537.52..1537.54 rows=10 width=47) (actual time=14.098..14.144 rows=500 loops=1)\n        Sort Key: s.issue_date DESC NULLS LAST, s.permit_number DESC NULLS LAST, a.id\n        Sort Method: top-N heapsort  Memory: 95kB\n        Buffers: shared hit=8897\n        ->  Nested Loop  (cost=20.33..1537.35 rows=10 width=47) (actual time=0.268..12.079 rows=2043 loops=1)\n              Buffers: shared hit=8897\n              ->  Bitmap Heap Scan on permit_attributions a  (cost=19.91..1510.98 rows=10 width=48) (actual time=0.257..2.522 rows=2043 loops=1)\n                    Recheck Cond: (matched_license_id = ANY ('{13830714-24f2-4192-baf8-bff4f9c1bbf4}'::uuid[]))\n                    Filter: ((matched_contractor_id = 'a18c03e6-5ee5-44ee-8cda-243288930459'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                    Heap Blocks: exact=722\n                    Buffers: shared hit=725\n                    ->  Bitmap Index Scan on permit_attributions_license_idx  (cost=0.00..19.91 rows=2029 width=0) (actual time=0.148..0.148 rows=2043 loops=1)\n                          Index Cond: (matched_license_id = ANY ('{13830714-24f2-4192-baf8-bff4f9c1bbf4}'::uuid[]))\n                          Buffers: shared hit=3\n              ->  Index Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..2.64 rows=1 width=31) (actual time=0.004..0.004 rows=1 loops=2043)\n                    Index Cond: (id = a.permit_source_record_id)\n                    Buffers: shared hit=8172\nPlanning:\n  Buffers: shared hit=16\nPlanning Time: 0.557 ms\nExecution Time: 14.313 ms"
+        },
+        "count": {
+          "summary": {
+            "planningTimeMs": 0.645,
+            "executionTimeMs": 10.178,
+            "usesSeqScanOnPermitAttributions": false,
+            "usesIndexOnPermitAttributions": true,
+            "indexNames": [
+              "licenses_contractor_idx",
+              "permit_attributions_license_idx",
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Aggregate  (cost=6.94..6.95 rows=1 width=8) (actual time=10.117..10.119 rows=1 loops=1)\n  Buffers: shared hit=7161\n  ->  Nested Loop  (cost=1.14..6.93 rows=1 width=0) (actual time=0.040..9.822 rows=2043 loops=1)\n        Buffers: shared hit=7161\n        ->  Nested Loop  (cost=0.72..5.17 rows=1 width=16) (actual time=0.032..2.232 rows=2043 loops=1)\n              Buffers: shared hit=729\n              ->  Index Scan using licenses_contractor_idx on licenses l  (cost=0.43..2.65 rows=1 width=32) (actual time=0.012..0.013 rows=1 loops=1)\n                    Index Cond: (contractor_id = 'a18c03e6-5ee5-44ee-8cda-243288930459'::uuid)\n                    Buffers: shared hit=4\n              ->  Index Scan using permit_attributions_license_idx on permit_attributions a  (cost=0.29..2.52 rows=1 width=48) (actual time=0.017..1.896 rows=2043 loops=1)\n                    Index Cond: ((matched_license_id = l.id) AND (matched_license_id = ANY ('{13830714-24f2-4192-baf8-bff4f9c1bbf4}'::uuid[])))\n                    Filter: ((matched_contractor_id = 'a18c03e6-5ee5-44ee-8cda-243288930459'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                    Buffers: shared hit=725\n        ->  Index Only Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..1.76 rows=1 width=16) (actual time=0.003..0.003 rows=1 loops=2043)\n              Index Cond: (id = a.permit_source_record_id)\n              Heap Fetches: 302\n              Buffers: shared hit=6432\nPlanning:\n  Buffers: shared hit=24\nPlanning Time: 0.645 ms\nExecution Time: 10.178 ms"
+        }
+      }
+    },
+    "normal_volume": {
+      "slug": "cac009417-aire-serv-of-south-miami",
+      "licenseCount": 1,
+      "currentPath": {
+        "candidates": {
+          "summary": {
+            "planningTimeMs": 0.44,
+            "executionTimeMs": 28.778,
+            "usesSeqScanOnPermitAttributions": true,
+            "usesIndexOnPermitAttributions": false,
+            "indexNames": [
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Limit  (cost=4810.73..4810.96 rows=2 width=47) (actual time=20.644..28.722 rows=4 loops=1)\n  Buffers: shared hit=2406 read=2\n  ->  Gather Merge  (cost=4810.73..4810.96 rows=2 width=47) (actual time=20.643..28.719 rows=4 loops=1)\n        Workers Planned: 1\n        Workers Launched: 1\n        Buffers: shared hit=2406 read=2\n        ->  Sort  (cost=3810.72..3810.73 rows=2 width=47) (actual time=15.555..15.557 rows=2 loops=2)\n              Sort Key: s.issue_date DESC NULLS LAST, s.permit_number DESC NULLS LAST, a.id\n              Sort Method: quicksort  Memory: 25kB\n              Buffers: shared hit=2406 read=2\n              Worker 0:  Sort Method: quicksort  Memory: 25kB\n              ->  Nested Loop  (cost=0.42..3810.71 rows=2 width=47) (actual time=5.160..15.484 rows=2 loops=2)\n                    Buffers: shared hit=2383 read=2\n                    ->  Parallel Seq Scan on permit_attributions a  (cost=0.00..3805.44 rows=2 width=48) (actual time=4.760..14.737 rows=2 loops=2)\n                          Filter: ((matched_contractor_id = '64cb478d-1873-45b2-bb54-bc144358726d'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                          Rows Removed by Filter: 69791\n                          Buffers: shared hit=2368\n                    ->  Index Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..2.64 rows=1 width=31) (actual time=0.367..0.367 rows=1 loops=4)\n                          Index Cond: (id = a.permit_source_record_id)\n                          Buffers: shared hit=15 read=2\nPlanning:\n  Buffers: shared hit=16\nPlanning Time: 0.440 ms\nExecution Time: 28.778 ms"
+        },
+        "count": {
+          "summary": {
+            "planningTimeMs": 0.634,
+            "executionTimeMs": 0.787,
+            "usesSeqScanOnPermitAttributions": false,
+            "usesIndexOnPermitAttributions": true,
+            "indexNames": [
+              "licenses_contractor_idx",
+              "permit_attributions_license_idx",
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Aggregate  (cost=24.99..25.00 rows=1 width=8) (actual time=0.736..0.737 rows=1 loops=1)\n  Buffers: shared hit=22 read=1\n  ->  Nested Loop  (cost=1.14..24.98 rows=1 width=0) (actual time=0.701..0.732 rows=4 loops=1)\n        Buffers: shared hit=22 read=1\n        ->  Nested Loop  (cost=0.72..23.17 rows=1 width=16) (actual time=0.688..0.699 rows=4 loops=1)\n              Buffers: shared hit=9 read=1\n              ->  Index Scan using licenses_contractor_idx on licenses l  (cost=0.43..2.65 rows=1 width=32) (actual time=0.025..0.025 rows=1 loops=1)\n                    Index Cond: (contractor_id = '64cb478d-1873-45b2-bb54-bc144358726d'::uuid)\n                    Buffers: shared hit=4\n              ->  Index Scan using permit_attributions_license_idx on permit_attributions a  (cost=0.29..20.52 rows=1 width=48) (actual time=0.660..0.669 rows=4 loops=1)\n                    Index Cond: (matched_license_id = l.id)\n                    Filter: ((matched_contractor_id = '64cb478d-1873-45b2-bb54-bc144358726d'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                    Buffers: shared hit=5 read=1\n        ->  Index Only Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..1.81 rows=1 width=16) (actual time=0.007..0.007 rows=1 loops=4)\n              Index Cond: (id = a.permit_source_record_id)\n              Heap Fetches: 0\n              Buffers: shared hit=13\nPlanning:\n  Buffers: shared hit=24\nPlanning Time: 0.634 ms\nExecution Time: 0.787 ms"
+        }
+      },
+      "candidatePath": {
+        "candidates": {
+          "summary": {
+            "planningTimeMs": 0.5,
+            "executionTimeMs": 0.106,
+            "usesSeqScanOnPermitAttributions": false,
+            "usesIndexOnPermitAttributions": true,
+            "indexNames": [
+              "permit_attributions_license_idx",
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Limit  (cost=17.54..17.54 rows=1 width=47) (actual time=0.063..0.065 rows=4 loops=1)\n  Buffers: shared hit=22\n  ->  Sort  (cost=17.54..17.54 rows=1 width=47) (actual time=0.062..0.063 rows=4 loops=1)\n        Sort Key: s.issue_date DESC NULLS LAST, s.permit_number DESC NULLS LAST, a.id\n        Sort Method: quicksort  Memory: 25kB\n        Buffers: shared hit=22\n        ->  Nested Loop  (cost=0.71..17.53 rows=1 width=47) (actual time=0.025..0.054 rows=4 loops=1)\n              Buffers: shared hit=22\n              ->  Index Scan using permit_attributions_license_idx on permit_attributions a  (cost=0.29..14.89 rows=1 width=48) (actual time=0.015..0.022 rows=4 loops=1)\n                    Index Cond: (matched_license_id = ANY ('{17b79505-408b-443e-9e5c-8ddc0c1a0907}'::uuid[]))\n                    Filter: ((matched_contractor_id = '64cb478d-1873-45b2-bb54-bc144358726d'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                    Buffers: shared hit=6\n              ->  Index Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..2.64 rows=1 width=31) (actual time=0.006..0.006 rows=1 loops=4)\n                    Index Cond: (id = a.permit_source_record_id)\n                    Buffers: shared hit=16\nPlanning:\n  Buffers: shared hit=16\nPlanning Time: 0.500 ms\nExecution Time: 0.106 ms"
+        },
+        "count": {
+          "summary": {
+            "planningTimeMs": 0.66,
+            "executionTimeMs": 0.116,
+            "usesSeqScanOnPermitAttributions": false,
+            "usesIndexOnPermitAttributions": true,
+            "indexNames": [
+              "licenses_contractor_idx",
+              "permit_attributions_license_idx",
+              "permit_source_records_pkey"
+            ]
+          },
+          "plan": "Aggregate  (cost=7.82..7.83 rows=1 width=8) (actual time=0.063..0.065 rows=1 loops=1)\n  Buffers: shared hit=23\n  ->  Nested Loop  (cost=1.14..7.81 rows=1 width=0) (actual time=0.034..0.060 rows=4 loops=1)\n        Buffers: shared hit=23\n        ->  Nested Loop  (cost=0.72..5.17 rows=1 width=16) (actual time=0.027..0.036 rows=4 loops=1)\n              Buffers: shared hit=10\n              ->  Index Scan using licenses_contractor_idx on licenses l  (cost=0.43..2.65 rows=1 width=32) (actual time=0.012..0.013 rows=1 loops=1)\n                    Index Cond: (contractor_id = '64cb478d-1873-45b2-bb54-bc144358726d'::uuid)\n                    Buffers: shared hit=4\n              ->  Index Scan using permit_attributions_license_idx on permit_attributions a  (cost=0.29..2.52 rows=1 width=48) (actual time=0.011..0.019 rows=4 loops=1)\n                    Index Cond: ((matched_license_id = l.id) AND (matched_license_id = ANY ('{17b79505-408b-443e-9e5c-8ddc0c1a0907}'::uuid[])))\n                    Filter: ((matched_contractor_id = '64cb478d-1873-45b2-bb54-bc144358726d'::uuid) AND (identity_state = 'CONFIRMED'::text) AND (identity_method = 'FULL_DBPR_LICENSE'::text))\n                    Buffers: shared hit=6\n        ->  Index Only Scan using permit_source_records_pkey on permit_source_records s  (cost=0.42..2.64 rows=1 width=16) (actual time=0.005..0.005 rows=1 loops=4)\n              Index Cond: (id = a.permit_source_record_id)\n              Heap Fetches: 0\n              Buffers: shared hit=13\nPlanning:\n  Buffers: shared hit=24\nPlanning Time: 0.660 ms\nExecution Time: 0.116 ms"
+        }
+      }
+    }
+  },
+  "normalVolumeSlugFound": {
+    "slug": "cac009417-aire-serv-of-south-miami",
+    "id": "64cb478d-1873-45b2-bb54-bc144358726d",
+    "n": "4"
+  }
+}

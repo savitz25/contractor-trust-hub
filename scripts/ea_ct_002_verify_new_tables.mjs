@@ -1,5 +1,8 @@
-/** EA-CT-002 baseline verification, part 2. READ-ONLY. Inspects the permit-related tables that exist in
- * Production but are not defined in any committed migration (schema drift), before any code is written. */
+/** EA-CT-002 baseline verification, part 2. READ-ONLY. Inspects the permit-related tables backing Evidence
+ * Activation. permit_source_records, permit_lifecycle_events, and permit_attributions are defined in
+ * schema/migrations/011_enhanced_county_foundation.sql; permit_events is a separate table not covered by
+ * that migration and is out of scope for EA-CT-002. Aggregate/schema-only -- no row samples (no individual
+ * permit/property data, raw payloads, addresses, parcel IDs, or production UUID examples are collected). */
 import fs from "node:fs";
 import { Pool } from "pg";
 
@@ -21,7 +24,6 @@ async function main() {
     for (const t of TABLES) {
       await q(`${t}__columns`, `SELECT column_name, data_type FROM information_schema.columns WHERE table_schema='public' AND table_name='${t}' ORDER BY ordinal_position`);
       await q(`${t}__count`, `SELECT count(*) n FROM ${t}`);
-      await q(`${t}__sample`, `SELECT * FROM ${t} LIMIT 3`);
     }
     // FK/constraint context for permit_attributions specifically -- is it the identity bridge?
     await q("permit_attributions__constraints", `

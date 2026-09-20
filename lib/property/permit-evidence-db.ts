@@ -24,14 +24,23 @@ export type RawPermitEvidenceRow = {
 };
 
 /**
- * EA-CT-002: candidate rows for one contractor's Evidence-Activation permit attributions.
- *
- * Filters to identity_state = CONFIRMED and identity_method = FULL_DBPR_LICENSE in SQL for clarity
- * and index use, but this is NOT the sole enforcement point -- lib/contractors/permit-evidence.ts
- * re-checks identity_state/method and contractor/license consistency in a pure, unit-tested function
- * before anything renders. Read-only. No writes, no DDL, no identity computation here: matched_*
- * columns are read exactly as the Evidence Activation batch already resolved them.
+ * EA-CT-002 QA amendment: read-only EXPLAIN ANALYZE (docs/qa/ea-ct-002/query-plan-verification.local.json)
+ * found the original `WHERE a.matched_contractor_id = $1` path sequentially scanning the full
+ * permit_attributions table (139,586 rows) -- 483ms for a high-volume contractor, 29ms for an ordinary
+ * one. permit_attributions has no index on matched_contractor_id, but migration
+ * 011_enhanced_county_foundation.sql already defines permit_attributions_license_idx ON
+ * (matched_license_id) WHERE matched_license_id IS NOT NULL. Resolving the contractor's license ids
+ * first (licenses_contractor_idx, initial_schema.sql) and filtering permit_attributions by
+ * matched_license_id = ANY(...) lets the planner use that existing index: 14ms for the same
+ * high-volume contractor, sub-millisecond for an ordinary one. matched_contractor_id is KEPT as an
+ * exact equality filter in the same query -- this changes which index drives the scan, not which rows
+ * qualify. No new index, no DDL, no schema change.
  */
+async function licenseIdsForContractor(contractorId: string): Promise<string[]> {
+  const rows = await query<{ id: string }>(`SELECT id FROM licenses WHERE contractor_id = $1`, [contractorId]);
+  return rows.map((r) => r.id);
+}
+
 /**
  * SQL-level cap on how many raw candidate rows are scanned for display/dedup purposes only. This is
  * NOT the source of the displayed total count (see fetchPermitEvidenceTotal) -- it exists purely so a
@@ -43,9 +52,20 @@ export type RawPermitEvidenceRow = {
  */
 const CANDIDATE_SCAN_LIMIT = 500;
 
+/**
+ * EA-CT-002: candidate rows for one contractor's Evidence-Activation permit attributions.
+ *
+ * Filters to identity_state = CONFIRMED and identity_method = FULL_DBPR_LICENSE in SQL for clarity
+ * and index use, but this is NOT the sole enforcement point -- lib/contractors/permit-evidence.ts
+ * re-checks identity_state/method and contractor/license consistency in a pure, unit-tested function
+ * before anything renders. Read-only. No writes, no DDL, no identity computation here: matched_*
+ * columns are read exactly as the Evidence Activation batch already resolved them.
+ */
 export async function fetchPermitEvidenceCandidates(
   contractorId: string
 ): Promise<RawPermitEvidenceRow[]> {
+  const licenseIds = await licenseIdsForContractor(contractorId);
+  if (!licenseIds.length) return []; // No license on this profile -> no attribution can reference it. No query needed.
   return query<RawPermitEvidenceRow>(
     `
     SELECT
@@ -72,13 +92,14 @@ export async function fetchPermitEvidenceCandidates(
     FROM permit_attributions a
     JOIN permit_source_records s ON s.id = a.permit_source_record_id
     LEFT JOIN licenses l ON l.id = a.matched_license_id
-    WHERE a.matched_contractor_id = $1
+    WHERE a.matched_license_id = ANY($1::uuid[])
+      AND a.matched_contractor_id = $2
       AND a.identity_state = 'CONFIRMED'
       AND a.identity_method = 'FULL_DBPR_LICENSE'
     ORDER BY s.issue_date DESC NULLS LAST, s.permit_number DESC NULLS LAST, a.id
     LIMIT ${CANDIDATE_SCAN_LIMIT}
     `,
-    [contractorId]
+    [licenseIds, contractorId]
   );
 }
 
@@ -88,20 +109,23 @@ export async function fetchPermitEvidenceCandidates(
  * understate the true count for a high-volume contractor (observed in production).
  */
 export async function fetchPermitEvidenceTotal(contractorId: string): Promise<number> {
+  const licenseIds = await licenseIdsForContractor(contractorId);
+  if (!licenseIds.length) return 0;
   const rows = await query<{ n: string }>(
     `
     SELECT count(*) AS n
     FROM permit_attributions a
     JOIN permit_source_records s ON s.id = a.permit_source_record_id
     LEFT JOIN licenses l ON l.id = a.matched_license_id
-    WHERE a.matched_contractor_id = $1
+    WHERE a.matched_license_id = ANY($1::uuid[])
+      AND a.matched_contractor_id = $2
       AND a.identity_state = 'CONFIRMED'
       AND a.identity_method = 'FULL_DBPR_LICENSE'
       AND l.contractor_id = a.matched_contractor_id
       AND l.external_key IS NOT NULL
       AND s.id IS NOT NULL
     `,
-    [contractorId]
+    [licenseIds, contractorId]
   );
   return Number(rows[0]?.n ?? 0);
 }

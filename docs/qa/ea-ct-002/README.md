@@ -28,9 +28,17 @@ exactly equals `permit_source_records.contractor_license_normalized` (normalized
 Note on the older `permit_records` / `contractor_permit_activity` / `permit_coverage_stats` tables (Stage 6,
 `schema/migrations/006_stage6_permits_activity.sql`, still backing the existing `ActivitySection`): all three are
 **empty in Production** (0 rows). The Evidence Activation batch lives entirely in `permit_source_records` /
-`permit_attributions` / `permit_lifecycle_events` / `permit_events` — none of which appear in any committed
-migration (schema drift; these tables were created directly against Production). `permit_lifecycle_events` and
-`permit_events` are both currently empty (0 rows) — no lifecycle/inspection history exists yet for any permit.
+`permit_attributions` / `permit_lifecycle_events` (plus `permit_events`, not used by this feature).
+
+**Correction (QA amendment):** `permit_source_records`, `permit_lifecycle_events`, and `permit_attributions` —
+including `permit_attributions_license_idx ON permit_attributions (matched_license_id) WHERE matched_license_id
+IS NOT NULL` — **are** defined in the committed migration `schema/migrations/011_enhanced_county_foundation.sql`.
+An earlier draft of this document incorrectly claimed none of these tables appeared in any committed migration
+and were created directly against Production; that claim was wrong and is retracted. `permit_events` is a
+separate table and is **not** defined in migration 011; whether it represents genuine schema drift is a distinct,
+out-of-scope question — EA-CT-002 does not read, write, or otherwise depend on `permit_events`, and that table
+is not touched by this feature. `permit_lifecycle_events` is currently empty (0 rows) — no lifecycle/inspection
+history exists yet for any permit.
 
 ## Identity bridge used (nothing computed here — read exactly as the batch already resolved it)
 
@@ -78,6 +86,35 @@ matching of any kind.
 10. deterministic ordering + display-limit/hasMore behavior
 11. **(added after the preview defect above)** a high-volume contractor's totalCount reflects the TRUE count,
     never the bounded candidate-scan length
+
+## Query-performance QA amendment (read-only `EXPLAIN ANALYZE`, no writes/DDL/mutation)
+
+Context: ContractorTrustHub had an active DB session-slot / IO-pressure incident at the time of this amendment.
+The FL Trust Report permit-evidence feature issues two read queries per profile view: a candidate-row query
+and a `COUNT(*)` query. Both were checked read-only (`BEGIN READ ONLY` / `ROLLBACK`, single connection,
+`statement_timeout` set, no `ANALYZE`/`VACUUM`, no DDL, no mutation) — see
+`docs/qa/ea-ct-002/query-plan-verification.local.json` and `scripts/ea_ct_002_qa_explain.mjs`.
+
+Finding: the original candidate-row query (`WHERE a.matched_contractor_id = $1`) sequentially scanned the full
+`permit_attributions` table (139,586 rows) — `permit_attributions` has no index on `matched_contractor_id`.
+The `COUNT(*)` query was already fast because it joins `licenses` and filters `l.contractor_id =
+a.matched_contractor_id`, letting Postgres drive the join through `licenses_contractor_idx` +
+`permit_attributions_license_idx`.
+
+| case | rows | current path (seq scan) | fixed path (license-idx) |
+|---|---:|---:|---:|
+| zero-permit contractor | 0 | 28.8 ms, `Seq Scan on permit_attributions` | 0.1 ms, index only, no seq scan |
+| normal-volume contractor (2–10 permits) | few | comparable seq-scan cost on the same table | sub-ms, no seq scan |
+| Lennar (high-volume, 2,043 permits) | 2,043 | 483 ms, `Seq Scan on permit_attributions` | 14 ms, no seq scan |
+
+Fix (code path only, no schema change): `lib/property/permit-evidence-db.ts` now resolves the contractor's
+license id(s) first (`SELECT id FROM licenses WHERE contractor_id = $1`, using the existing
+`licenses_contractor_idx`), then filters `permit_attributions` by `matched_license_id = ANY($1::uuid[])` —
+which uses the existing `permit_attributions_license_idx` — **while still requiring `matched_contractor_id =
+$2` as an exact equality filter in the same query**. This changes which index drives the scan; it does not
+change which rows qualify or relax any safety check. No new index, no DDL, no database mutation, no pool
+tuning, no load test. If `permit_attributions.matched_contractor_id` still needs its own index at higher load,
+that is a separate proposed schema gate, not part of this amendment.
 
 ## Regression
 
