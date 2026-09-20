@@ -21,7 +21,7 @@ import {
 } from "./search-normalize";
 import { stateHasEntityLinking } from "./trust-report";
 import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
-import { ACTIVATED_CONTACT_KINDS, dedupeContactsForDisplay } from "./public-contacts";
+import { ACTIVATED_CONTACT_KINDS, dedupeExactObservations } from "./public-contacts";
 import type {
   ContractorDetail,
   DisciplineDetail,
@@ -785,7 +785,7 @@ async function getContractorBySlugUncached(
     lastVerifiedAt: d.last_verified_at?.toISOString() ?? null,
   }));
 
-  const publicContactDetails: PublicContactDetail[] = dedupeContactsForDisplay(
+  const publicContactDetails: PublicContactDetail[] = dedupeExactObservations(
     publicContacts.map((o) => ({
       id: o.id,
       licenseId: o.attributed_license_id,
