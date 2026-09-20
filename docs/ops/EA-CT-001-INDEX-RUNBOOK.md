@@ -68,14 +68,30 @@ check below detects this case explicitly.
 
 Run: `python -X utf8 scripts/apply_migration_016_concurrent.py --check` (read-only, safe anytime).
 
-It checks:
-1. `public_contact_observations` exists (`to_regclass`).
+It checks, and **fails closed** (non-zero exit, `--apply` refuses to proceed) rather than treating
+an ambiguous state as a safe no-op:
+1. `public_contact_observations` exists (`to_regclass('public.public_contact_observations')`).
 2. Current row count (informational — confirms scale before/after).
-3. Whether an index of this name already exists (`pg_indexes`).
-4. Whether that existing index (if any) is **invalid** (`pg_index.indisvalid`) — a leftover from a
-   prior failed/cancelled concurrent build. If so: **stop**, do not run `--apply` — first run
-   `DROP INDEX CONCURRENTLY IF EXISTS public_contact_observations_confirmed_license_idx;` (also
-   non-transactional; run it the same way, via a one-off autocommit connection) and re-check.
+3. Whether an object named `public_contact_observations_confirmed_license_idx` already exists,
+   inspected via `pg_class`/`pg_namespace`/`pg_index`/`pg_attribute` (never the display-formatted
+   `indexdef` string, for the structural facts). If it exists, it must **exactly** match all of:
+   - index schema **and** table schema are both `public` (an identically-named object in another
+     schema never satisfies this);
+   - the indexed table is `public_contact_observations`;
+   - the indexed column is exactly `attributed_license_id` (and only that column);
+   - the partial predicate, read via `pg_get_expr(indpred, indrelid)`, semantically covers
+     `attribution_class = 'CONFIRMED'`, a non-agency exclusion (Postgres may canonicalize
+     `is_agency_number = false` as `NOT is_agency_number` — both forms are accepted), and
+     `attributed_license_id IS NOT NULL`;
+   - `indisvalid` **and** `indisready` are both true.
+
+   Any existing object failing **any** one of these is a **BLOCKER** — `--check`/`--apply` fail
+   closed, never falling back to "close enough" or a silent no-op. Only when every condition holds
+   is it treated as an already-satisfied, safe no-op.
+4. If a same-named object exists but is invalid/not-ready or otherwise mismatched (e.g. a prior
+   failed/cancelled concurrent build): **stop**, do not run `--apply` — investigate the mismatch,
+   and only drop it (`DROP INDEX CONCURRENTLY IF EXISTS ...`, non-transactional, same one-off
+   autocommit shape as `--apply`) once you've confirmed it is safe to rebuild, then re-check.
 5. Connected database/server/user identity — confirm this is genuinely the intended target before
    ever proceeding to `--apply`.
 6. Any transaction open longer than 2 minutes (`pg_stat_activity`) — not a blocker by itself, but a
@@ -90,17 +106,25 @@ before using `--apply`.
 
 Run: `python -X utf8 scripts/apply_migration_016_concurrent.py --verify`
 
-It checks:
-1. The index exists and `pg_index.indisvalid = true`.
-2. Its `pg_indexes` definition matches the intended predicate exactly.
-3. `EXPLAIN ANALYZE` on the real Trust Report contact query for a contact-bearing contractor
-   (`cgc061782-jemko-developmant-corp`) and a zero-contact contractor
-   (`mn-qb115394-james-t-otterkill`) — the same two fixed fixtures used throughout EA-CT-001 QA.
-
-**Acceptance**: no `Seq Scan` on `public_contact_observations` in either plan; the plan uses
-`public_contact_observations_confirmed_license_idx`; returned rows are unchanged from the pre-index
-behavior (2 rows for JEMKO, 0 for the zero-contact contractor); execution time materially below the
-~16ms full-scan baseline measured in EA-CT-001's QA amendment.
+`--verify` prints a hard PASS/FAIL line for every check below and **exits non-zero if any single one
+fails** — nothing here is merely informational:
+1. The index exists.
+2. It exactly matches intent (same schema/table/column/predicate check as `--check`, item F.3).
+3. `indisvalid` is true.
+4. `indisready` is true.
+5. For **both** fixtures (contact-bearing `cgc061782-jemko-developmant-corp`, zero-contact
+   `mn-qb115394-james-t-otterkill`) — the same two fixed fixtures used throughout EA-CT-001 QA:
+   - the contractor slug resolves;
+   - the **actual contact query is executed** (not just `EXPLAIN`'d) and its **returned row count**
+     matches the count established during EA-CT-001 QA exactly (JEMKO: 2, zero-contact: 0) — proving
+     data-result stability, not only plan shape;
+   - a separate, read-only `EXPLAIN (ANALYZE, FORMAT TEXT)` of the identical query shows **no**
+     `Seq Scan on public_contact_observations` and **does** reference the new index by name;
+   - execution time is parsed from the plan and printed for comparison to the ~16ms pre-index
+     baseline — **informational only, never a fixed-millisecond pass/fail cutoff** (runtime noise
+     varies); the plan shape (no Seq Scan, index present) is the hard gate;
+   - any exception raised while running the query itself is caught and reported as a FAIL for that
+     fixture, never allowed to crash the script uncaught.
 
 ## H. Rollback
 
@@ -124,10 +148,20 @@ never through the standard transactional apply pattern.
 
 ## I. Operational caveats
 
-- The existing apply-script convention's `SET statement_timeout = '60s'` is deliberately **not**
-  reused here — a legitimate concurrent index build can validly take longer than 60s as the table
-  grows, and a timeout mid-build would abort it and leave an invalid index behind (see F.4/H). No
-  statement timeout is set by `--apply`; rely on the pre-apply checks and manual monitoring instead.
+- **`lock_timeout` vs. `statement_timeout` — deliberately different from the existing apply-script
+  convention.** `--apply` sets `SET lock_timeout = '5s'` immediately before `CREATE INDEX
+  CONCURRENTLY` (the existing apply scripts set both `lock_timeout='5s'` AND
+  `statement_timeout='60s'`). This script sets **only** `lock_timeout`:
+  - `lock_timeout='5s'` makes the build fail fast (a clean, immediate error) if it cannot acquire
+    its brief initial lock right away — e.g. because something else is mid-DDL on the same table —
+    rather than queuing silently behind an incompatible lock indefinitely.
+  - `statement_timeout` is **never set** for `--apply`. Once the initial lock is acquired, a
+    legitimate concurrent build can validly run far longer than 60s as the table grows, and a
+    timeout mid-build would forcibly abort it, leaving an **invalid** index behind (the same failure
+    mode as an operator-cancelled build — see F.3/F.4/H). Killing the build on elapsed time alone,
+    rather than on genuine lock contention, is exactly the failure mode this split avoids.
+  - Net effect: the build either starts within ~5s or fails cleanly with no side effect; once
+    started, it is never killed merely for taking a while.
 - `CREATE INDEX CONCURRENTLY` never takes a lock that blocks normal reads or writes on the table (it
   does take a brief lock at the very start and end), so it is safe to run during periods of live
   traffic. It does add extra I/O/CPU load while building, which is the specific reason to coordinate
