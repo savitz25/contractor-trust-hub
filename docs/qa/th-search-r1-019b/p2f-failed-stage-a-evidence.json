@@ -1,0 +1,36 @@
+{
+  "note": "Evidence record for the first Stage-A attempt (TH-SEARCH-R1-019B-P2E build wrapper, owner-run). Section 'receipt' is a verbatim copy of the owner-run receipt docs/qa/th-search-r1-019b/p2e-build-v2-receipt.local.json (sha256 53e2815e78f5aebf3a020bfeb0950efaf994ea639239997103905a91f7f15327); it was checked for connection strings, hosts, passwords and keys and contains none. Section 'coordinatorReportedProductionState' was reported by the coordinator from an independent read-only Production inspection; the preparing session did NOT connect to Production and has not verified it -- the recovery wrappers re-prove every item of it themselves before acting. No cause for the build exceeding the timeout is established or claimed.",
+  "receipt": {
+    "startedAt": "2026-09-20T00:45:59.580Z",
+    "ddlFile": "docs/qa/th-search-r1-019b/PROPOSED-namewords-v2-indexes.sql",
+    "ddlSha256": "4aefa3644d622c43616113c60d55ff206a926b071875e87cd1f7ed413c7e644e",
+    "selfCheck": { "creates": 5, "ifNotExists": 0, "drops": 0, "alters": 0, "reindexVacuumAnalyze": 0, "settings": 0, "btreeModifications": 0, "canonicalNamewordsNames": 0, "sourceDataWrites": 0, "statementsPerLine": true },
+    "precheck": {
+      "identity": { "db": "postgres", "usr": "postgres", "version": "17.6", "trgm": 1 },
+      "activeIndexBuilds": 0,
+      "allFiveV2NamesAbsent": true,
+      "allFivePhase1ReferencesAsExpected": true
+    },
+    "results": [ { "name": "contractors_display_name_namewords_v2_idx", "startedAt": "2026-09-20T00:46:00.867Z" } ],
+    "outcome": "STOPPED",
+    "error": "canceling statement due to statement timeout",
+    "finishedAt": "2026-09-20T00:48:01.688Z"
+  },
+  "derivedFromReceipt": {
+    "targetAttempted": "contractors_display_name_namewords_v2_idx (1 of 5)",
+    "laterTargetsAttempted": 0,
+    "createStartedToStopSeconds": 120.8,
+    "partialResultMetadata": "none beyond the target name and its start time: the CREATE never returned, so no size/validity facts were recorded by the wrapper",
+    "wrapperBehaviour": "fail-closed as designed: stopped on the first error, attempted no later target, removed nothing, wrote its receipt"
+  },
+  "coordinatorReportedProductionState": {
+    "contractors_display_name_namewords_v2_idx": { "exists": true, "method": "gin", "bytes": 70983680, "indisvalid": false, "indisready": true, "indislive": true, "exactWrappedExpression": true, "exactPartialPredicate": true },
+    "otherFourV2IndexesExist": false,
+    "createIndexRunning": false,
+    "lockWaiters": 0,
+    "queriesOver60s": 0,
+    "vacuumInProgress": false,
+    "sessionStatementTimeout": "2min",
+    "persistentRoleOrDatabaseSettingExplainingIt": "none found in pg_roles / pg_db_role_setting -- treated as a connection/session/platform setting, not a database-level configuration change"
+  }
+}
