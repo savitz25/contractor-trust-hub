@@ -1,0 +1,536 @@
+{
+  "permit_attributions__columns": [
+    {
+      "column_name": "id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "permit_source_record_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "identity_state",
+      "data_type": "text"
+    },
+    {
+      "column_name": "identity_method",
+      "data_type": "text"
+    },
+    {
+      "column_name": "matched_license_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "matched_contractor_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "matched_local_credential_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone"
+    }
+  ],
+  "permit_attributions__count": [
+    {
+      "n": "139586"
+    }
+  ],
+  "permit_attributions__sample": [
+    {
+      "id": "063470bc-9a41-4912-93b3-0f56eddf5b0c",
+      "permit_source_record_id": "09c6b497-6698-4510-b820-112ef0929c6a",
+      "identity_state": "UNRESOLVED",
+      "identity_method": "OWNER_BUILDER",
+      "matched_license_id": null,
+      "matched_contractor_id": null,
+      "matched_local_credential_id": null,
+      "created_at": "2026-08-27T00:26:14.745Z",
+      "updated_at": "2026-08-27T00:26:14.745Z"
+    },
+    {
+      "id": "46c711e8-1281-49dc-8a47-866c788a925d",
+      "permit_source_record_id": "9d31938b-4386-4022-874f-558edda3dad7",
+      "identity_state": "UNRESOLVED",
+      "identity_method": "UNRESOLVED",
+      "matched_license_id": null,
+      "matched_contractor_id": null,
+      "matched_local_credential_id": null,
+      "created_at": "2026-08-27T00:26:14.745Z",
+      "updated_at": "2026-08-27T00:26:14.745Z"
+    },
+    {
+      "id": "66ffa352-24d6-4e72-a241-13083778e28b",
+      "permit_source_record_id": "35585428-3f66-4867-a2d7-e5f9f807c32d",
+      "identity_state": "CONFIRMED",
+      "identity_method": "FULL_DBPR_LICENSE",
+      "matched_license_id": "e49308ca-da40-426f-8c0a-5483fd7f1150",
+      "matched_contractor_id": "ca9d983f-f6a2-4dd3-af07-3b0de119418b",
+      "matched_local_credential_id": null,
+      "created_at": "2026-08-27T00:26:14.745Z",
+      "updated_at": "2026-08-27T00:26:14.745Z"
+    }
+  ],
+  "permit_events__columns": [
+    {
+      "column_name": "id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "contractor_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "source_system",
+      "data_type": "text"
+    },
+    {
+      "column_name": "external_key",
+      "data_type": "text"
+    },
+    {
+      "column_name": "permit_number",
+      "data_type": "text"
+    },
+    {
+      "column_name": "issued_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "permit_type",
+      "data_type": "text"
+    },
+    {
+      "column_name": "status",
+      "data_type": "text"
+    },
+    {
+      "column_name": "valuation",
+      "data_type": "numeric"
+    },
+    {
+      "column_name": "address",
+      "data_type": "text"
+    },
+    {
+      "column_name": "city",
+      "data_type": "text"
+    },
+    {
+      "column_name": "county",
+      "data_type": "text"
+    },
+    {
+      "column_name": "state",
+      "data_type": "character"
+    },
+    {
+      "column_name": "raw_payload",
+      "data_type": "jsonb"
+    },
+    {
+      "column_name": "ingest_batch_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone"
+    }
+  ],
+  "permit_events__count": [
+    {
+      "n": "0"
+    }
+  ],
+  "permit_events__sample": [],
+  "permit_lifecycle_events__columns": [
+    {
+      "column_name": "id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "permit_source_record_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "event_type_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "event_type_normalized",
+      "data_type": "text"
+    },
+    {
+      "column_name": "event_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "result_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "inspector_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_fingerprint",
+      "data_type": "text"
+    },
+    {
+      "column_name": "raw_payload",
+      "data_type": "jsonb"
+    },
+    {
+      "column_name": "retrieved_at",
+      "data_type": "timestamp with time zone"
+    }
+  ],
+  "permit_lifecycle_events__count": [
+    {
+      "n": "0"
+    }
+  ],
+  "permit_lifecycle_events__sample": [],
+  "permit_source_records__columns": [
+    {
+      "column_name": "id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "source_system",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_jurisdiction",
+      "data_type": "text"
+    },
+    {
+      "column_name": "county_slug",
+      "data_type": "text"
+    },
+    {
+      "column_name": "municipality",
+      "data_type": "text"
+    },
+    {
+      "column_name": "permit_number",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_record_id",
+      "data_type": "text"
+    },
+    {
+      "column_name": "permit_type_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "permit_type_normalized",
+      "data_type": "text"
+    },
+    {
+      "column_name": "work_description",
+      "data_type": "text"
+    },
+    {
+      "column_name": "property_address",
+      "data_type": "text"
+    },
+    {
+      "column_name": "parcel_id",
+      "data_type": "text"
+    },
+    {
+      "column_name": "contractor_name_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "contractor_license_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "contractor_license_normalized",
+      "data_type": "text"
+    },
+    {
+      "column_name": "local_contractor_id",
+      "data_type": "text"
+    },
+    {
+      "column_name": "applicant_name_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "qualifier_name_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "expeditor_name_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "application_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "issue_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "expiration_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "final_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "status_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "status_normalized",
+      "data_type": "text"
+    },
+    {
+      "column_name": "valuation",
+      "data_type": "numeric"
+    },
+    {
+      "column_name": "job_value",
+      "data_type": "numeric"
+    },
+    {
+      "column_name": "fees",
+      "data_type": "numeric"
+    },
+    {
+      "column_name": "owner_name_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_url",
+      "data_type": "text"
+    },
+    {
+      "column_name": "retrieved_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "source_updated_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "parser_version",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_fingerprint",
+      "data_type": "text"
+    },
+    {
+      "column_name": "raw_payload",
+      "data_type": "jsonb"
+    },
+    {
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone"
+    }
+  ],
+  "permit_source_records__count": [
+    {
+      "n": "139586"
+    }
+  ],
+  "permit_source_records__sample": [
+    {
+      "id": "5b886b24-e4cf-4113-a056-50982fc794e9",
+      "source_system": "mdc_opendata_issued",
+      "source_jurisdiction": "unincorporated",
+      "county_slug": "miami-dade",
+      "municipality": null,
+      "permit_number": "2025041429",
+      "source_record_id": "C2025094378",
+      "permit_type_raw": "BLDG",
+      "permit_type_normalized": "bldg",
+      "work_description": "RE-ROOF",
+      "property_address": "1985 SW 70 AVE",
+      "parcel_id": "3040110190271",
+      "contractor_name_raw": "AA MASTERS CONSTRUCTION DEVELOPMENT AN",
+      "contractor_license_raw": "CCC1332215",
+      "contractor_license_normalized": "CCC1332215",
+      "local_contractor_id": null,
+      "applicant_name_raw": null,
+      "qualifier_name_raw": null,
+      "expeditor_name_raw": null,
+      "application_date": "2025-04-21T04:00:00.000Z",
+      "issue_date": "2025-04-29T04:00:00.000Z",
+      "expiration_date": null,
+      "final_date": null,
+      "status_raw": "issued",
+      "status_normalized": "issued",
+      "valuation": "40000.0",
+      "job_value": null,
+      "fees": "60546.0",
+      "owner_name_raw": null,
+      "source_url": "https://opendata.miamidade.gov/datasets/6db5f56e886446df88313ca279e59120",
+      "retrieved_at": "2026-08-27T00:25:49.228Z",
+      "source_updated_at": null,
+      "parser_version": "mdc-opendata-permits-v1",
+      "source_fingerprint": "9e9fe2d711dd8c2ec13d4832b70fe41ae9440c7a3be0b51910c22f8eb6c3effa",
+      "raw_payload": {
+        "PermitType": "BLDG",
+        "FolioNumber": "3040110190271",
+        "process_kind": "county_issued",
+        "ProcessNumber": null,
+        "contractor_namespace": "DBPR_FULL_PREFIXED"
+      },
+      "created_at": "2026-08-27T00:29:15.548Z",
+      "updated_at": "2026-08-27T00:29:15.548Z"
+    },
+    {
+      "id": "008ab7c4-4d95-46b7-9f16-017babe8b64a",
+      "source_system": "mdc_opendata_issued",
+      "source_jurisdiction": "unincorporated",
+      "county_slug": "miami-dade",
+      "municipality": null,
+      "permit_number": "2025041428",
+      "source_record_id": "C2025079270",
+      "permit_type_raw": "ELEC",
+      "permit_type_normalized": "elec",
+      "work_description": "FIRE ALARM",
+      "property_address": "1645 SW 107 AVE              114D",
+      "parcel_id": "3040080000120",
+      "contractor_name_raw": "EXCELL-ALARM SYSTEM INC",
+      "contractor_license_raw": "EF0001115",
+      "contractor_license_normalized": "EF0001115",
+      "local_contractor_id": null,
+      "applicant_name_raw": null,
+      "qualifier_name_raw": null,
+      "expeditor_name_raw": null,
+      "application_date": "2025-03-24T04:00:00.000Z",
+      "issue_date": "2025-04-29T04:00:00.000Z",
+      "expiration_date": null,
+      "final_date": null,
+      "status_raw": "issued",
+      "status_normalized": "issued",
+      "valuation": "11000.0",
+      "job_value": null,
+      "fees": "129386.0",
+      "owner_name_raw": null,
+      "source_url": "https://opendata.miamidade.gov/datasets/6db5f56e886446df88313ca279e59120",
+      "retrieved_at": "2026-08-27T00:25:49.228Z",
+      "source_updated_at": null,
+      "parser_version": "mdc-opendata-permits-v1",
+      "source_fingerprint": "9e9fe2d711dd8c2ec13d4832b70fe41ae9440c7a3be0b51910c22f8eb6c3effa",
+      "raw_payload": {
+        "PermitType": "ELEC",
+        "FolioNumber": "3040080000120",
+        "process_kind": "county_issued",
+        "ProcessNumber": null,
+        "contractor_namespace": "DBPR_FULL_PREFIXED"
+      },
+      "created_at": "2026-08-27T00:29:15.548Z",
+      "updated_at": "2026-08-27T00:29:15.548Z"
+    },
+    {
+      "id": "eb898c22-7e49-4601-b673-9c41dd05d4d1",
+      "source_system": "mdc_opendata_issued",
+      "source_jurisdiction": "associated_county_review",
+      "county_slug": "miami-dade",
+      "municipality": null,
+      "permit_number": "2025041427",
+      "source_record_id": "M2025012991",
+      "permit_type_raw": "MBLD",
+      "permit_type_normalized": "mbld",
+      "work_description": "NEW POOL",
+      "property_address": "21862 SW 95 PL",
+      "parcel_id": "3660160100430",
+      "contractor_name_raw": "GALLERY POOL AND SPA INC",
+      "contractor_license_raw": "22BS00108",
+      "contractor_license_normalized": "22BS00108",
+      "local_contractor_id": "22BS00108",
+      "applicant_name_raw": null,
+      "qualifier_name_raw": null,
+      "expeditor_name_raw": null,
+      "application_date": "2025-04-07T04:00:00.000Z",
+      "issue_date": "2025-04-29T04:00:00.000Z",
+      "expiration_date": null,
+      "final_date": null,
+      "status_raw": "issued",
+      "status_normalized": "issued",
+      "valuation": "30000.0",
+      "job_value": null,
+      "fees": "33863.0",
+      "owner_name_raw": null,
+      "source_url": "https://opendata.miamidade.gov/datasets/6db5f56e886446df88313ca279e59120",
+      "retrieved_at": "2026-08-27T00:25:49.228Z",
+      "source_updated_at": null,
+      "parser_version": "mdc-opendata-permits-v1",
+      "source_fingerprint": "9e9fe2d711dd8c2ec13d4832b70fe41ae9440c7a3be0b51910c22f8eb6c3effa",
+      "raw_payload": {
+        "PermitType": "MBLD",
+        "FolioNumber": "3660160100430",
+        "process_kind": "associated_county_review",
+        "ProcessNumber": null,
+        "contractor_namespace": "MIAMI_DADE_COC"
+      },
+      "created_at": "2026-08-27T00:29:15.548Z",
+      "updated_at": "2026-08-27T00:29:15.548Z"
+    }
+  ],
+  "permit_attributions__constraints": [
+    {
+      "conname": "permit_attributions_matched_contractor_id_fkey",
+      "def": "FOREIGN KEY (matched_contractor_id) REFERENCES contractors(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "permit_attributions_matched_license_id_fkey",
+      "def": "FOREIGN KEY (matched_license_id) REFERENCES licenses(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "permit_attributions_matched_local_credential_id_fkey",
+      "def": "FOREIGN KEY (matched_local_credential_id) REFERENCES local_credentials(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "permit_attributions_permit_source_record_id_fkey",
+      "def": "FOREIGN KEY (permit_source_record_id) REFERENCES permit_source_records(id) ON DELETE CASCADE"
+    },
+    {
+      "conname": "permit_attributions_permit_source_record_id_key",
+      "def": "UNIQUE (permit_source_record_id)"
+    },
+    {
+      "conname": "permit_attributions_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "conname": "permit_attributions_state_check",
+      "def": "CHECK ((identity_state = ANY (ARRAY['CONFIRMED'::text, 'HIGH_CONFIDENCE'::text, 'REVIEW_REQUIRED'::text, 'UNRESOLVED'::text])))"
+    }
+  ],
+  "permit_source_records__constraints": [
+    {
+      "conname": "permit_source_records_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "conname": "permit_source_records_source_system_source_jurisdiction_per_key",
+      "def": "UNIQUE (source_system, source_jurisdiction, permit_number)"
+    },
+    {
+      "conname": "permit_source_records_status_check",
+      "def": "CHECK ((status_normalized = ANY (ARRAY['applied'::text, 'under_review'::text, 'ready_for_issuance'::text, 'issued'::text, 'active'::text, 'inactive'::text, 'expired'::text, 'stop_issue'::text, 'cancelled'::text, 'final'::text, 'closed'::text, 'unknown'::text])))"
+    }
+  ]
+}

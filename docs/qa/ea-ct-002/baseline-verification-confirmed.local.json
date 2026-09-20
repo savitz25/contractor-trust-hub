@@ -1,0 +1,160 @@
+{
+  "attributions_by_state": [
+    {
+      "identity_state": "CONFIRMED",
+      "n": "80810"
+    },
+    {
+      "identity_state": "UNRESOLVED",
+      "n": "33631"
+    },
+    {
+      "identity_state": "REVIEW_REQUIRED",
+      "n": "25145"
+    }
+  ],
+  "attributions_by_state_method": [
+    {
+      "identity_state": "CONFIRMED",
+      "identity_method": "FULL_DBPR_LICENSE",
+      "n": "80810"
+    },
+    {
+      "identity_state": "REVIEW_REQUIRED",
+      "identity_method": "DBPR_PREFIX_NOT_IN_WAREHOUSE",
+      "n": "25145"
+    },
+    {
+      "identity_state": "UNRESOLVED",
+      "identity_method": "OWNER_BUILDER",
+      "n": "25016"
+    },
+    {
+      "identity_state": "UNRESOLVED",
+      "identity_method": "LOCAL_CREDENTIAL_CANDIDATE",
+      "n": "5531"
+    },
+    {
+      "identity_state": "UNRESOLVED",
+      "identity_method": "UNRESOLVED",
+      "n": "3084"
+    }
+  ],
+  "confirmed_dbpr_total": [
+    {
+      "n": "80810"
+    }
+  ],
+  "confirmed_all_methods_total": [
+    {
+      "n": "80810"
+    }
+  ],
+  "confirmed_dbpr_distinct_permits_contractors": [
+    {
+      "raw_attribution_rows": "80810",
+      "distinct_permit_source_records": "80810",
+      "distinct_contractors_affected": "8015",
+      "distinct_licenses_matched": "8015"
+    }
+  ],
+  "confirmed_dbpr_source_record_uniqueness": [
+    {
+      "n": "80810",
+      "distinct_by_natural_key": "80810"
+    }
+  ],
+  "confirmed_dbpr_by_jurisdiction": [
+    {
+      "county_slug": "miami-dade",
+      "source_system": "mdc_opendata_issued",
+      "n": "80810"
+    }
+  ],
+  "confirmed_dbpr_integrity_spotcheck": [
+    {
+      "exact_key_matches": "80810",
+      "total": "80810"
+    }
+  ],
+  "high_confidence_and_review_totals": [
+    {
+      "identity_state": "REVIEW_REQUIRED",
+      "identity_method": "DBPR_PREFIX_NOT_IN_WAREHOUSE",
+      "n": "25145"
+    }
+  ],
+  "local_credentials_exists": [
+    {
+      "reg": "local_credentials"
+    }
+  ],
+  "permit_lifecycle_events_count": [
+    {
+      "n": "0"
+    }
+  ],
+  "permit_events_count": [
+    {
+      "n": "0"
+    }
+  ],
+  "permit_lifecycle_events_columns": [
+    {
+      "column_name": "id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "permit_source_record_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "event_type_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "event_type_normalized",
+      "data_type": "text"
+    },
+    {
+      "column_name": "event_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "result_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "inspector_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_fingerprint",
+      "data_type": "text"
+    },
+    {
+      "column_name": "raw_payload",
+      "data_type": "jsonb"
+    },
+    {
+      "column_name": "retrieved_at",
+      "data_type": "timestamp with time zone"
+    }
+  ],
+  "evidence_activation_tables": [],
+  "confirmed_dbpr_freshness": [
+    {
+      "earliest_retrieved": "2026-08-27T00:25:49.228Z",
+      "latest_retrieved": "2026-08-27T00:25:49.228Z",
+      "earliest_source_updated": null,
+      "latest_source_updated": null,
+      "parser_versions": "1"
+    }
+  ],
+  "confirmed_dbpr_status_distribution": [
+    {
+      "status_normalized": "issued",
+      "n": "80810"
+    }
+  ]
+}

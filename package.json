@@ -26,6 +26,7 @@
     "assert:brand": "node scripts/assert-brand-001.mjs",
     "typecheck": "tsc --noEmit",
     "test:matcher": "node scripts/test_permit_matcher.mjs",
+    "test:permit-evidence": "npx --yes tsx scripts/test_permit_evidence.ts",
     "test:nj": "node scripts/test_nj_verify_smoke.mjs",
     "test:nj-con-001": "python -m unittest scripts.test_nj_con_001",
     "test:nj-con-002a": "python -m unittest scripts.test_nj_con_002a",
