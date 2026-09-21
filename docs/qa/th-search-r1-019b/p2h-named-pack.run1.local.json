@@ -1,0 +1,174 @@
+{
+  "ranAt": "2026-09-21T20:02:17.265Z",
+  "label": "run1",
+  "outcomes": [
+    {
+      "id": "1_Allied",
+      "name": "Allied",
+      "jurisdiction": null,
+      "wallMs": 3774,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "returned": 10,
+      "hasMore": true,
+      "firstCandidate": {
+        "displayName": "Allied Air Conditioning & Heat, LLC",
+        "stableKey": "contractor:profile:la-lslbc-7818-allied-air-conditioning-heat-llc",
+        "method": "PREFIX_OR_TOKEN"
+      },
+      "timingReported": {
+        "queryMs": 3772,
+        "queries": 1
+      },
+      "errMsg": null
+    },
+    {
+      "id": "2_stilw",
+      "name": "stilw",
+      "jurisdiction": null,
+      "wallMs": 475,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "returned": 10,
+      "hasMore": true,
+      "firstCandidate": {
+        "displayName": "STILWELL AIR & REFRIGERATION L.L.C.",
+        "stableKey": "contractor:profile:cac1820929-stilwell-air-refrigeration-l-l-c",
+        "method": "PREFIX_OR_TOKEN"
+      },
+      "timingReported": {
+        "queryMs": 473,
+        "queries": 1
+      },
+      "errMsg": null
+    },
+    {
+      "id": "3_Stilwell_Solar",
+      "name": "Stilwell Solar",
+      "jurisdiction": null,
+      "wallMs": 2146,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "returned": 3,
+      "hasMore": false,
+      "firstCandidate": {
+        "displayName": "STILWELL SOLAR, LLC",
+        "stableKey": "contractor:profile:cpc1460219-stilwell-solar-llc",
+        "method": "NORMALIZED_NAME"
+      },
+      "timingReported": {
+        "queryMs": 2146,
+        "queries": 2
+      },
+      "errMsg": null
+    },
+    {
+      "id": "4_Whaleys_Air_Conditioning",
+      "name": "Whaleys Air Conditioning",
+      "jurisdiction": null,
+      "wallMs": 2064,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "returned": 1,
+      "hasMore": false,
+      "firstCandidate": {
+        "displayName": "WHALEY'S AIR CONDITIONING INC",
+        "stableKey": "contractor:profile:cac1813195-whaley-s-air-conditioning-inc",
+        "method": "NORMALIZED_NAME"
+      },
+      "timingReported": {
+        "queryMs": 2063,
+        "queries": 2
+      },
+      "errMsg": null
+    },
+    {
+      "id": "5_Worsham_Construction",
+      "name": "Worsham Construction",
+      "jurisdiction": null,
+      "wallMs": 2612,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "returned": 1,
+      "hasMore": false,
+      "firstCandidate": {
+        "displayName": "WORSHAM CONSTRUCTION COMPANY, INC.",
+        "stableKey": "contractor:profile:cbc015082-worsham-construction-company-inc",
+        "method": "NORMALIZED_NAME"
+      },
+      "timingReported": {
+        "queryMs": 2611,
+        "queries": 2
+      },
+      "errMsg": null
+    },
+    {
+      "id": "6_R_and_T",
+      "name": "R & T GENERAL CONSTRUCTION, INC",
+      "jurisdiction": null,
+      "wallMs": 2199,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "failureKind": null,
+      "returned": 3,
+      "hasMore": false,
+      "firstCandidate": {
+        "displayName": "R & T GENERAL CONSTRUCTION, INC",
+        "stableKey": "contractor:profile:ms-sbc-unlic-fff91cfc1598fa73-r-t-general-construction-inc",
+        "method": "EXACT_SOURCE_NAME"
+      },
+      "timingReported": {
+        "queryMs": 2199,
+        "queries": 2
+      },
+      "errMsg": null
+    },
+    {
+      "id": "7_explicit_TX_miss_Stilwell",
+      "name": "Stilwell Solar",
+      "jurisdiction": "TX",
+      "wallMs": 532,
+      "resultState": "COMPLETED_NO_CANDIDATES",
+      "failureKind": null,
+      "returned": 0,
+      "hasMore": false,
+      "firstCandidate": null,
+      "timingReported": {
+        "queryMs": 531,
+        "queries": 2
+      },
+      "errMsg": null
+    },
+    {
+      "id": "8_unsupported_OH",
+      "name": "Stilwell Solar",
+      "jurisdiction": "OH",
+      "wallMs": 0,
+      "resultState": "UNSUPPORTED_SCOPE",
+      "failureKind": null,
+      "returned": 0,
+      "hasMore": false,
+      "firstCandidate": null,
+      "timingReported": {
+        "queryMs": 0,
+        "queries": 0
+      },
+      "errMsg": null
+    },
+    {
+      "id": "9_fictitious_miss",
+      "name": "Zqxplorvantium Nonexistent Fictitious Contracting",
+      "jurisdiction": null,
+      "wallMs": 3041,
+      "resultState": "COMPLETED_NO_CANDIDATES",
+      "failureKind": null,
+      "returned": 0,
+      "hasMore": false,
+      "firstCandidate": null,
+      "timingReported": {
+        "queryMs": 3040,
+        "queries": 2
+      },
+      "errMsg": null
+    }
+  ]
+}

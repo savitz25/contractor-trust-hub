@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-09-21T18:23:40.408211+00:00",
+  "ranAt": "2026-09-21T19:58:05.610297+00:00",
   "gate": "npx --yes tsx --test scripts/test_th_search_r1_019b.ts",
   "baseline": "green",
   "mutations": [
@@ -9,7 +9,7 @@
       "meaning": "The token tier's access path reverts to the SAME (bare) expression the strong tier's B-tree indexes are built on -- the exact architecture this ticket exists to eliminate.",
       "detected": true,
       "failingTests": [
-        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (53.0284ms)"
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (152.7264ms)"
       ],
       "restoredExactBytes": true
     },
@@ -19,7 +19,7 @@
       "meaning": "The strong tier's prefix predicate is rewritten onto the token access-path expression, making the strong-tier's own B-tree index (built on the bare expression) unable to serve its own query.",
       "detected": true,
       "failingTests": [
-        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (49.1061ms)"
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (65.1289ms)"
       ],
       "restoredExactBytes": true
     },
@@ -29,8 +29,8 @@
       "meaning": "The token tier's GIN index family is removed entirely -- every-word (contains) queries have no index access path left at all.",
       "detected": true,
       "failingTests": [
-        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (6.5657ms)",
-        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (6.1793ms)"
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (19.2018ms)",
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (14.0885ms)"
       ],
       "restoredExactBytes": true
     },
@@ -40,7 +40,7 @@
       "meaning": "The token access-path expression is no longer value-identical to the strong expression (an 'X' is silently appended), so the token tier would match different rows than the semantic predicate.",
       "detected": true,
       "failingTests": [
-        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (32.603ms)"
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (33.0649ms)"
       ],
       "restoredExactBytes": true
     },
@@ -50,14 +50,14 @@
       "meaning": "Word-boundary anchoring is dropped from the token tier's predicate (a change to matching semantics, not the access path), so a supplied word can match letters inside an unrelated word.",
       "detected": true,
       "failingTests": [
-        "\u2716 1. name-only structured request reaches name execution and keeps the whole name (2118.084ms)",
-        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (73.9502ms)",
-        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (113.2392ms)",
-        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (78.8451ms)",
-        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (19.0023ms)",
-        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (6778.8874ms)",
-        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (120.5763ms)",
-        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (272.3182ms)"
+        "\u2716 1. name-only structured request reaches name execution and keeps the whole name (3034.7156ms)",
+        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (94.2446ms)",
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (191.0155ms)",
+        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (139.7275ms)",
+        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (21.0283ms)",
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (6441.8778ms)",
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (94.7608ms)",
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (268.5693ms)"
       ],
       "restoredExactBytes": true
     },
@@ -67,22 +67,22 @@
       "meaning": "The last required supplied word is silently dropped, so a name is matched by a strict subset of what the customer typed.",
       "detected": true,
       "failingTests": [
-        "\u2716 1. name-only structured request reaches name execution and keeps the whole name (2249.7234ms)",
-        "\u2716 10. a failed source is never a searched-and-missed result (0.3945ms)",
-        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (1.2785ms)",
-        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (0.8626ms)",
-        "\u2716 14. no private fields or claim lookups enter the public path (1.7473ms)",
-        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (394.844ms)",
-        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (29.9924ms)",
-        "\u2716 17. an exact/normalized target is never buried behind 200+ names that merely start the same (29.7799ms)",
-        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (1.5277ms)",
-        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (99.9583ms)",
-        "\u2716 2. case, punctuation, legal-suffix and short distinctive variants retrieve the record (129.448ms)",
-        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (148.9133ms)",
-        "\u2716 3. Allied finds every Allied-named public record; generic-word overlap alone admits nothing (0.4752ms)",
-        "\u2716 5. explicit jurisdiction is applied; absent jurisdiction never claims nationwide coverage from FL alone (0.3344ms)",
-        "\u2716 8. match field/value/method agree with the returned source record (15.1744ms)",
-        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (0.7388ms)"
+        "\u2716 1. name-only structured request reaches name execution and keeps the whole name (3156.048ms)",
+        "\u2716 10. a failed source is never a searched-and-missed result (0.2827ms)",
+        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (1.2923ms)",
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (0.4983ms)",
+        "\u2716 14. no private fields or claim lookups enter the public path (1.8096ms)",
+        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (234.5858ms)",
+        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (14.4996ms)",
+        "\u2716 17. an exact/normalized target is never buried behind 200+ names that merely start the same (24.0804ms)",
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (1.2651ms)",
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (89.6855ms)",
+        "\u2716 2. case, punctuation, legal-suffix and short distinctive variants retrieve the record (251.2525ms)",
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (97.3372ms)",
+        "\u2716 3. Allied finds every Allied-named public record; generic-word overlap alone admits nothing (0.4762ms)",
+        "\u2716 5. explicit jurisdiction is applied; absent jurisdiction never claims nationwide coverage from FL alone (0.3665ms)",
+        "\u2716 8. match field/value/method agree with the returned source record (15.8867ms)",
+        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (0.6063ms)"
       ],
       "restoredExactBytes": true
     }
