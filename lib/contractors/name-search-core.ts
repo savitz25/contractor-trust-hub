@@ -179,6 +179,17 @@ function build(prepared: PreparedNameTerms, startIndex: number, access: AccessPa
         ? `(${column} IS NOT NULL AND ${normalizedFieldSql(column)} LIKE ' ' || ${keyParam} || '%')`
         : `(${column} IS NOT NULL AND ${wordRule(tokenAccessExpressionSql(column))})`;
     const fieldRule = (column: string) => tierRule(column);
+    // TH-SEARCH-R1-019B-P2J: the candidate-ID prefilter's own cardinality is grossly overestimated
+    // by the planner (UNION + Bitmap-Or + HashAggregate across two relations; real Production EXPLAIN:
+    // estimated ~13,595 rows against an actual of ~3 -- see docs/qa/th-search-r1-019b/p2i-post-analyze-
+    // explain-fullplans.local.json). A plain JOIN back to contractors lets that bad estimate drive a
+    // Hash Join whose build/probe side is a Parallel Seq Scan of contractors. LATERAL forms an
+    // optimizer boundary: for EACH candidate id the planner must produce a single row through
+    // `contractors_pkey`, so hydration is structurally PK-driven regardless of how badly the
+    // prefilter's row count is estimated. `LIMIT 1` is semantically a no-op (contractors.id is the
+    // primary key, so at most one row can ever match) -- its only purpose is to force that per-row
+    // boundary; it changes no answer. Value-identical to the prior `JOIN contractors c ON c.id =
+    // name_prefilter.id`, syntactically a LATERAL correlated subquery.
     fromSql = `(
         SELECT id FROM contractors
         WHERE ${CONTRACTOR_FIELDS.map((field) => fieldRule(field)).join(" OR ")}
@@ -186,7 +197,9 @@ function build(prepared: PreparedNameTerms, startIndex: number, access: AccessPa
         SELECT contractor_id FROM licenses
         WHERE ${CREDENTIAL_FIELDS.map((field) => fieldRule(field)).join(" OR ")}
       ) name_prefilter
-      JOIN contractors c ON c.id = name_prefilter.id`;
+      CROSS JOIN LATERAL (
+        SELECT * FROM contractors WHERE contractors.id = name_prefilter.id LIMIT 1
+      ) c`;
   }
   return { params, predicateSql, rankSql, fromSql, usesNameIndexes };
 }

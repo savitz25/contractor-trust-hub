@@ -715,3 +715,45 @@ test("20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an acces
     assert.deepEqual(tiered.rows.map((r) => r.display_name).sort(), [...expected].sort(), `"${name}" with the access-path-separated indexes in place`);
   }
 });
+
+// 21 --------------------------------------------------------------------------------------
+test("21. TH-SEARCH-R1-019B-P2J: candidate-ID hydration is PK-driven (LATERAL), not a plain joinable shape", async () => {
+  // Structural guard: the join-back MUST be a LATERAL correlated subquery keyed on contractors.id
+  // (an optimizer boundary that forces per-candidate PK lookup), and must NEVER regress to the old
+  // flat `JOIN contractors c ON c.id = name_prefilter.id` shape -- the exact shape whose cardinality
+  // misestimate (real Production EXPLAIN: ~13,595 estimated vs ~3 actual rows) drove a Hash Join
+  // against a Parallel Seq Scan of contractors. This is scale-independent: it inspects the generated
+  // SQL text itself, not a plan the small in-memory fixture's planner might not choose to reproduce.
+  const strong = buildStrongNameMatchSql(prepareNameTerms("R & T GENERAL CONSTRUCTION, INC"), 1);
+  const all = buildNameMatchSql(prepareNameTerms("R & T GENERAL CONSTRUCTION, INC"), 1);
+  for (const match of [strong, all]) {
+    assert.match(match.fromSql, /CROSS JOIN LATERAL/, "join-back must be a LATERAL correlated subquery");
+    assert.match(match.fromSql, /WHERE contractors\.id = name_prefilter\.id/, "the LATERAL subquery must be keyed on the candidate id (PK lookup boundary)");
+    assert.match(match.fromSql, /LIMIT 1/, "the LATERAL subquery must carry the optimizer-boundary LIMIT 1 (a semantic no-op: contractors.id is the PK)");
+    assert.doesNotMatch(match.fromSql, /\)\s*name_prefilter\s*JOIN contractors c ON c\.id = name_prefilter\.id/, "must never regress to the old flat hash-joinable shape");
+  }
+
+  // The LATERAL shape must still execute and return byte-identical rows to what the old flat JOIN
+  // shape returned (proven above in tests 15 and 18-20, which all ran against this same fromSql).
+  // This test adds a direct EXPLAIN-shape assertion that PGlite (real Postgres) accepts and executes
+  // the new SQL without error -- a syntactically-broken LATERAL rewrite would fail here, not silently
+  // degrade to a scan.
+  const literal = (sqlText: string, params: unknown[]) =>
+    sqlText.replace(/\$(\d+)/g, (_, i) => `'${String(params[Number(i) - 1]).replace(/'/g, "''")}'`);
+  const strongPlan = (await pg.query(literal(`EXPLAIN SELECT c.id FROM ${strong.fromSql}`, strong.params))).rows
+    .map((row: Any) => row["QUERY PLAN"]).join("\n");
+  assert.match(strongPlan, /Nested Loop/, "LATERAL must plan as a Nested Loop (per-candidate driven), never a Hash Join");
+  assert.doesNotMatch(strongPlan, /Hash Join/, "the join-back must never plan as a Hash Join (the P2I regression shape)");
+
+  // Native Verify (`searchContractors`, lib/contractors/queries.ts) and the name-candidates operation
+  // consume the identical shared `fromSql` -- prove they still agree after the join-back rewrite, same
+  // as test 13, specifically for the control this ticket's evidence was captured against.
+  const scopesNow = nameSearchableScopes().map(({ code, sources }) => ({ code, sources }));
+  const tiered = await queryContractorNameCandidates({ name: "R & T GENERAL CONSTRUCTION, INC", scopes: scopesNow, limit: 100, offset: 0 }, db);
+  const native = await searchContractors("R & T GENERAL CONSTRUCTION, INC", { stateSlug: "fl", limit: 10 }, db);
+  assert.deepEqual(
+    tiered.rows.map((r) => r.display_name).sort(),
+    native.results.map((r: Any) => r.displayName).sort(),
+    "native Verify and the name-candidates operation must agree on identity after the P2J join-back rewrite"
+  );
+});

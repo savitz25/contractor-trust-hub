@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-09-19T23:53:01.802212+00:00",
+  "ranAt": "2026-09-21T18:25:22.617106+00:00",
   "gate": "npx --yes tsx --test scripts/test_th_search_r1_019b.ts",
   "baseline": "green",
   "mutations": [
@@ -9,9 +9,9 @@
       "meaning": "The shared name predicate admits every prefiltered row (a cohort dressed up as name matches).",
       "detected": true,
       "failingTests": [
-        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (34.8456ms)",
-        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (39.0139ms)",
-        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (56.9133ms)"
+        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (26.0059ms)",
+        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (30.4757ms)",
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (55.4844ms)"
       ],
       "restoredExactBytes": true
     },
@@ -21,9 +21,9 @@
       "meaning": "A timeout / unavailable source is reported as a searched-and-missed result.",
       "detected": true,
       "failingTests": [
-        "\u2716 10. a failed source is never a searched-and-missed result (1.1783ms)",
-        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (1427.9119ms)",
-        "\u2716 8. match field/value/method agree with the returned source record (102.3319ms)"
+        "\u2716 10. a failed source is never a searched-and-missed result (0.8843ms)",
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (1149.5302ms)",
+        "\u2716 8. match field/value/method agree with the returned source record (89.749ms)"
       ],
       "restoredExactBytes": true
     },
@@ -33,9 +33,9 @@
       "meaning": "An explicit jurisdiction constraint is silently dropped and every scope is searched.",
       "detected": true,
       "failingTests": [
-        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (23.4772ms)",
-        "\u2716 5. explicit jurisdiction is applied; absent jurisdiction never claims nationwide coverage from FL alone (16.9272ms)",
-        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (49.9593ms)"
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (18.0751ms)",
+        "\u2716 5. explicit jurisdiction is applied; absent jurisdiction never claims nationwide coverage from FL alone (14.0942ms)",
+        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (42.6172ms)"
       ],
       "restoredExactBytes": true
     },
@@ -45,9 +45,9 @@
       "meaning": "Held/thin and destination-less profiles are promoted into public candidates.",
       "detected": true,
       "failingTests": [
-        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (18.5485ms)",
-        "\u2716 3. Allied finds every Allied-named public record; generic-word overlap alone admits nothing (17.0267ms)",
-        "\u2716 6. inactive/unknown-status public profiles stay discoverable; publication restrictions stay enforced (33.0746ms)"
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (13.7302ms)",
+        "\u2716 3. Allied finds every Allied-named public record; generic-word overlap alone admits nothing (14.6917ms)",
+        "\u2716 6. inactive/unknown-status public profiles stay discoverable; publication restrictions stay enforced (31.4199ms)"
       ],
       "restoredExactBytes": true
     },
@@ -57,7 +57,7 @@
       "meaning": "A row whose own names do not explain the match is displayed anyway (source echo trusted as proof).",
       "detected": true,
       "failingTests": [
-        "\u2716 8. match field/value/method agree with the returned source record (87.9927ms)"
+        "\u2716 8. match field/value/method agree with the returned source record (84.6998ms)"
       ],
       "restoredExactBytes": true
     },
@@ -67,11 +67,11 @@
       "meaning": "Review 2 finding 1: the access path again requires each supplied word verbatim in the RAW source text, so 'ONeil Plumbing' cannot reach O'NEIL PLUMBING LLC although the semantics say it matches.",
       "detected": true,
       "failingTests": [
-        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (193.3882ms)",
-        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (1080.3158ms)",
-        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (163.3135ms)",
-        "\u2716 2. case, punctuation, legal-suffix and short distinctive variants retrieve the record (69.2214ms)",
-        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (162.5358ms)"
+        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (156.0392ms)",
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (904.4197ms)",
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (129.5526ms)",
+        "\u2716 2. case, punctuation, legal-suffix and short distinctive variants retrieve the record (72.4451ms)",
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (141.0015ms)"
       ],
       "restoredExactBytes": true
     },
@@ -81,13 +81,13 @@
       "meaning": "Review 1 finding 3: single-letter initials are dropped, making 'R & T General Construction' equivalent to 'General Construction'.",
       "detected": true,
       "failingTests": [
-        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (9.2573ms)",
-        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (33.4555ms)",
-        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (0.5397ms)",
-        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (19.8685ms)",
-        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (1335.8099ms)",
-        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (50.5897ms)",
-        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (47.6146ms)"
+        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (9.1858ms)",
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (27.7556ms)",
+        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (0.5133ms)",
+        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (14.0076ms)",
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (1024.456ms)",
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (40.1383ms)",
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (40.1226ms)"
       ],
       "restoredExactBytes": true
     },
@@ -97,10 +97,10 @@
       "meaning": "Review 1 finding 3: words after the fourth are ignored, so '... Estate Alpha' matches '... Estate Beta'.",
       "detected": true,
       "failingTests": [
-        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (780.8696ms)",
-        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (11.9114ms)",
-        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (296.8716ms)",
-        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (322.0175ms)"
+        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (583.3591ms)",
+        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (14.8862ms)",
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (249.9778ms)",
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (294.6752ms)"
       ],
       "restoredExactBytes": true
     },
@@ -110,14 +110,14 @@
       "meaning": "Review 1 finding 3: a word (including an initial) matches any letters inside a source word.",
       "detected": true,
       "failingTests": [
-        "\u2716 1. name-only structured request reaches name execution and keeps the whole name (2252.0339ms)",
-        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (31.6299ms)",
-        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (84.7917ms)",
-        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (94.7945ms)",
-        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (14.2833ms)",
-        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (3196.5332ms)",
-        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (48.7198ms)",
-        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (106.1873ms)"
+        "\u2716 1. name-only structured request reaches name execution and keeps the whole name (2102.7336ms)",
+        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (32.0431ms)",
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (60.7256ms)",
+        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (53.0335ms)",
+        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (14.7958ms)",
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (2425.1074ms)",
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (43.3464ms)",
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (81.9859ms)"
       ],
       "restoredExactBytes": true
     },
@@ -127,7 +127,7 @@
       "meaning": "Review finding 4: no full-name equality tier, so an exact target sorts behind 200+ prefix siblings and falls past the cap.",
       "detected": true,
       "failingTests": [
-        "\u2716 17. an exact/normalized target is never buried behind 200+ names that merely start the same (13.1517ms)"
+        "\u2716 17. an exact/normalized target is never buried behind 200+ names that merely start the same (12.7883ms)"
       ],
       "restoredExactBytes": true
     },
@@ -137,7 +137,7 @@
       "meaning": "Review finding 4: page 9 x 24 returns rows 193-216, beyond the advertised 200-row cap.",
       "detected": true,
       "failingTests": [
-        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (532.4107ms)"
+        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (402.978ms)"
       ],
       "restoredExactBytes": true
     },
@@ -147,10 +147,10 @@
       "meaning": "Review 2 finding 1: the source side stops removing apostrophes (O'NEIL becomes O NEIL), so 'ONeil' no longer finds it -- the two directions stop being symmetric.",
       "detected": true,
       "failingTests": [
-        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (182.6075ms)",
-        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (53.2185ms)",
-        "\u2716 2. case, punctuation, legal-suffix and short distinctive variants retrieve the record (98.5269ms)",
-        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (145.682ms)"
+        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (159.4995ms)",
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (102.9988ms)",
+        "\u2716 2. case, punctuation, legal-suffix and short distinctive variants retrieve the record (92.5469ms)",
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (190.765ms)"
       ],
       "restoredExactBytes": true
     },
@@ -160,9 +160,9 @@
       "meaning": "Review 2 finding 1: non-ASCII letters are turned into breaks again, so JOS\u00c9 BUILDERS collapses into JOS BUILDERS.",
       "detected": true,
       "failingTests": [
-        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (844.1473ms)",
-        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (594.6736ms)",
-        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (525.2943ms)"
+        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (1518.1606ms)",
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (437.1266ms)",
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (360.7031ms)"
       ],
       "restoredExactBytes": true
     },
@@ -172,7 +172,7 @@
       "meaning": "Review 2 finding 2: an unfinished token tier is presented as a complete result.",
       "detected": true,
       "failingTests": [
-        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (2066.3928ms)"
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (1436.8249ms)"
       ],
       "restoredExactBytes": true
     },
@@ -182,9 +182,9 @@
       "meaning": "Review 2 finding 2: the weak (contains-every-word) scan runs even when strong matches already fill the page.",
       "detected": true,
       "failingTests": [
-        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (349.9979ms)",
-        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (107.6678ms)",
-        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (44.0673ms)"
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (519.3635ms)",
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (115.0137ms)",
+        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (133.0717ms)"
       ],
       "restoredExactBytes": true
     },
@@ -194,7 +194,7 @@
       "meaning": "Review 2 finding 2: the token tier restarts from the page offset instead of continuing after the strong tier (rows skipped at the boundary).",
       "detected": true,
       "failingTests": [
-        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (23.801ms)"
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (89.2583ms)"
       ],
       "restoredExactBytes": true
     },
@@ -204,7 +204,7 @@
       "meaning": "Review finding 4: an active but unrelated credential row displaces the exact matched source row.",
       "detected": true,
       "failingTests": [
-        "\u2716 17. an exact/normalized target is never buried behind 200+ names that merely start the same (31.9088ms)"
+        "\u2716 17. an exact/normalized target is never buried behind 200+ names that merely start the same (89.0899ms)"
       ],
       "restoredExactBytes": true
     }
