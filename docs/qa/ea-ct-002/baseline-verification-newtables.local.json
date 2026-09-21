@@ -1,0 +1,362 @@
+{
+  "permit_attributions__columns": [
+    {
+      "column_name": "id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "permit_source_record_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "identity_state",
+      "data_type": "text"
+    },
+    {
+      "column_name": "identity_method",
+      "data_type": "text"
+    },
+    {
+      "column_name": "matched_license_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "matched_contractor_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "matched_local_credential_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone"
+    }
+  ],
+  "permit_attributions__count": [
+    {
+      "n": "139586"
+    }
+  ],
+  "permit_events__columns": [
+    {
+      "column_name": "id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "contractor_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "source_system",
+      "data_type": "text"
+    },
+    {
+      "column_name": "external_key",
+      "data_type": "text"
+    },
+    {
+      "column_name": "permit_number",
+      "data_type": "text"
+    },
+    {
+      "column_name": "issued_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "permit_type",
+      "data_type": "text"
+    },
+    {
+      "column_name": "status",
+      "data_type": "text"
+    },
+    {
+      "column_name": "valuation",
+      "data_type": "numeric"
+    },
+    {
+      "column_name": "address",
+      "data_type": "text"
+    },
+    {
+      "column_name": "city",
+      "data_type": "text"
+    },
+    {
+      "column_name": "county",
+      "data_type": "text"
+    },
+    {
+      "column_name": "state",
+      "data_type": "character"
+    },
+    {
+      "column_name": "raw_payload",
+      "data_type": "jsonb"
+    },
+    {
+      "column_name": "ingest_batch_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone"
+    }
+  ],
+  "permit_events__count": [
+    {
+      "n": "0"
+    }
+  ],
+  "permit_lifecycle_events__columns": [
+    {
+      "column_name": "id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "permit_source_record_id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "event_type_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "event_type_normalized",
+      "data_type": "text"
+    },
+    {
+      "column_name": "event_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "result_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "inspector_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_fingerprint",
+      "data_type": "text"
+    },
+    {
+      "column_name": "raw_payload",
+      "data_type": "jsonb"
+    },
+    {
+      "column_name": "retrieved_at",
+      "data_type": "timestamp with time zone"
+    }
+  ],
+  "permit_lifecycle_events__count": [
+    {
+      "n": "0"
+    }
+  ],
+  "permit_source_records__columns": [
+    {
+      "column_name": "id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "source_system",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_jurisdiction",
+      "data_type": "text"
+    },
+    {
+      "column_name": "county_slug",
+      "data_type": "text"
+    },
+    {
+      "column_name": "municipality",
+      "data_type": "text"
+    },
+    {
+      "column_name": "permit_number",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_record_id",
+      "data_type": "text"
+    },
+    {
+      "column_name": "permit_type_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "permit_type_normalized",
+      "data_type": "text"
+    },
+    {
+      "column_name": "work_description",
+      "data_type": "text"
+    },
+    {
+      "column_name": "property_address",
+      "data_type": "text"
+    },
+    {
+      "column_name": "parcel_id",
+      "data_type": "text"
+    },
+    {
+      "column_name": "contractor_name_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "contractor_license_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "contractor_license_normalized",
+      "data_type": "text"
+    },
+    {
+      "column_name": "local_contractor_id",
+      "data_type": "text"
+    },
+    {
+      "column_name": "applicant_name_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "qualifier_name_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "expeditor_name_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "application_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "issue_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "expiration_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "final_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "status_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "status_normalized",
+      "data_type": "text"
+    },
+    {
+      "column_name": "valuation",
+      "data_type": "numeric"
+    },
+    {
+      "column_name": "job_value",
+      "data_type": "numeric"
+    },
+    {
+      "column_name": "fees",
+      "data_type": "numeric"
+    },
+    {
+      "column_name": "owner_name_raw",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_url",
+      "data_type": "text"
+    },
+    {
+      "column_name": "retrieved_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "source_updated_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "parser_version",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_fingerprint",
+      "data_type": "text"
+    },
+    {
+      "column_name": "raw_payload",
+      "data_type": "jsonb"
+    },
+    {
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone"
+    }
+  ],
+  "permit_source_records__count": [
+    {
+      "n": "139586"
+    }
+  ],
+  "permit_attributions__constraints": [
+    {
+      "conname": "permit_attributions_matched_contractor_id_fkey",
+      "def": "FOREIGN KEY (matched_contractor_id) REFERENCES contractors(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "permit_attributions_matched_license_id_fkey",
+      "def": "FOREIGN KEY (matched_license_id) REFERENCES licenses(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "permit_attributions_matched_local_credential_id_fkey",
+      "def": "FOREIGN KEY (matched_local_credential_id) REFERENCES local_credentials(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "permit_attributions_permit_source_record_id_fkey",
+      "def": "FOREIGN KEY (permit_source_record_id) REFERENCES permit_source_records(id) ON DELETE CASCADE"
+    },
+    {
+      "conname": "permit_attributions_permit_source_record_id_key",
+      "def": "UNIQUE (permit_source_record_id)"
+    },
+    {
+      "conname": "permit_attributions_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "conname": "permit_attributions_state_check",
+      "def": "CHECK ((identity_state = ANY (ARRAY['CONFIRMED'::text, 'HIGH_CONFIDENCE'::text, 'REVIEW_REQUIRED'::text, 'UNRESOLVED'::text])))"
+    }
+  ],
+  "permit_source_records__constraints": [
+    {
+      "conname": "permit_source_records_pkey",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "conname": "permit_source_records_source_system_source_jurisdiction_per_key",
+      "def": "UNIQUE (source_system, source_jurisdiction, permit_number)"
+    },
+    {
+      "conname": "permit_source_records_status_check",
+      "def": "CHECK ((status_normalized = ANY (ARRAY['applied'::text, 'under_review'::text, 'ready_for_issuance'::text, 'issued'::text, 'active'::text, 'inactive'::text, 'expired'::text, 'stop_issue'::text, 'cancelled'::text, 'final'::text, 'closed'::text, 'unknown'::text])))"
+    }
+  ]
+}

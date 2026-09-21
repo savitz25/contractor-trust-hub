@@ -1,0 +1,275 @@
+{
+  "identity": [
+    {
+      "db": "postgres",
+      "usr": "postgres"
+    }
+  ],
+  "tables_matching_permit_or_dbpr": [
+    {
+      "table_schema": "public",
+      "table_name": "contractor_permit_activity"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "permit_attributions"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "permit_coverage_stats"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "permit_events"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "permit_lifecycle_events"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "permit_records"
+    },
+    {
+      "table_schema": "public",
+      "table_name": "permit_source_records"
+    }
+  ],
+  "permit_records_columns": [
+    {
+      "column_name": "id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "jurisdiction_slug",
+      "data_type": "text"
+    },
+    {
+      "column_name": "jurisdiction_label",
+      "data_type": "text"
+    },
+    {
+      "column_name": "address_key",
+      "data_type": "text"
+    },
+    {
+      "column_name": "street_normalized",
+      "data_type": "text"
+    },
+    {
+      "column_name": "unit",
+      "data_type": "text"
+    },
+    {
+      "column_name": "city",
+      "data_type": "text"
+    },
+    {
+      "column_name": "zip",
+      "data_type": "text"
+    },
+    {
+      "column_name": "county",
+      "data_type": "text"
+    },
+    {
+      "column_name": "permit_number",
+      "data_type": "text"
+    },
+    {
+      "column_name": "description",
+      "data_type": "text"
+    },
+    {
+      "column_name": "category",
+      "data_type": "text"
+    },
+    {
+      "column_name": "status",
+      "data_type": "text"
+    },
+    {
+      "column_name": "filed_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "issued_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "final_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "declared_value",
+      "data_type": "numeric"
+    },
+    {
+      "column_name": "contractor_name",
+      "data_type": "text"
+    },
+    {
+      "column_name": "contractor_license_key",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_label",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source_url",
+      "data_type": "text"
+    },
+    {
+      "column_name": "retrieved_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "raw",
+      "data_type": "jsonb"
+    },
+    {
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone"
+    }
+  ],
+  "permit_records_totals": [
+    {
+      "raw_rows": "0",
+      "rows_with_license_key": "0",
+      "distinct_permit_numbers": "0",
+      "distinct_permit_numbers_per_jurisdiction": "0",
+      "distinct_jurisdictions": "0",
+      "distinct_source_labels": "0",
+      "earliest_retrieved_at": null,
+      "latest_retrieved_at": null
+    }
+  ],
+  "permit_records_by_source_label": [],
+  "permit_records_by_jurisdiction": [],
+  "dual_linked_confirmed": [
+    {
+      "raw_permit_rows_with_confirmed_license_match": "0",
+      "distinct_permit_ids": "0",
+      "distinct_contractors_affected": "0",
+      "distinct_license_keys_matched": "0"
+    }
+  ],
+  "dual_linked_by_source_label": [],
+  "name_only_would_be_rows": [
+    {
+      "name_only_candidate_rows": "0"
+    }
+  ],
+  "license_key_present_but_unmatched": [
+    {
+      "unmatched_rows": "0"
+    }
+  ],
+  "status_distribution": [],
+  "existing_activity_rollup_totals": [
+    {
+      "rows": "0",
+      "total_permit_count": null
+    }
+  ],
+  "permit_coverage_stats": [],
+  "ingest_batches_recent": [
+    {
+      "source_system": "fl_dfs",
+      "source_dataset": "fl_dfs_workers_comp_stop_work",
+      "row_count": 48260,
+      "extracted_at": "2026-08-24T20:09:45.980Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_rf",
+      "row_count": 12,
+      "extracted_at": "2026-08-24T17:05:17.527Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_rf",
+      "row_count": 647,
+      "extracted_at": "2026-08-24T17:05:17.323Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_rf",
+      "row_count": 216,
+      "extracted_at": "2026-08-24T17:05:16.873Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_rf",
+      "row_count": 256,
+      "extracted_at": "2026-08-24T17:05:16.612Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_rf",
+      "row_count": 548,
+      "extracted_at": "2026-08-24T17:05:16.234Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_ula",
+      "row_count": 1842,
+      "extracted_at": "2026-08-24T15:03:59.371Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_ula",
+      "row_count": 2338,
+      "extracted_at": "2026-08-24T15:03:58.904Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_ula",
+      "row_count": 2568,
+      "extracted_at": "2026-08-24T15:03:58.312Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_ula",
+      "row_count": 2631,
+      "extracted_at": "2026-08-24T15:03:57.747Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_ula",
+      "row_count": 2312,
+      "extracted_at": "2026-08-24T15:03:56.941Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "row_count": 395,
+      "extracted_at": "2026-08-24T12:58:27.272Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "row_count": 1878,
+      "extracted_at": "2026-08-24T12:58:26.436Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "row_count": 1534,
+      "extracted_at": "2026-08-24T12:58:25.984Z"
+    },
+    {
+      "source_system": "fl_dbpr",
+      "source_dataset": "contractor_disc_lic",
+      "row_count": 1109,
+      "extracted_at": "2026-08-24T12:58:25.435Z"
+    }
+  ],
+  "lifecycle_duplicate_groups": [
+    {
+      "groups_with_multiple_rows": "0",
+      "rows_in_those_groups": null
+    }
+  ]
+}

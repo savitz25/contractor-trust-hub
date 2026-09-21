@@ -5,6 +5,7 @@ import { CompareToggle } from "@/components/compare/CompareToggle";
 import { ActivitySection } from "@/components/contractor/ActivitySection";
 import { CautionSummary } from "@/components/contractor/CautionSummary";
 import { InsuranceGuidance } from "@/components/contractor/InsuranceGuidance";
+import { PermitEvidenceSection } from "@/components/contractor/PermitEvidenceSection";
 import { ProjectFitBanner } from "@/components/contractor/ProjectFitBanner";
 import { RelatedEntitySection } from "@/components/contractor/RelatedEntitySection";
 import {
@@ -584,6 +585,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
 
         {isFlFull ? <InsuranceGuidance contractor={contractor} /> : null}
         {isFlFull ? <ActivitySection contractor={contractor} /> : null}
+        {isFlFull ? <PermitEvidenceSection contractor={contractor} /> : null}
         {isFlFull ? <HiringGuidance contractor={contractor} /> : null}
 
         {isFlFull ? (
