@@ -1,0 +1,35 @@
+{
+  "ranAt": "2026-09-21T18:34:01.989Z",
+  "results": [
+    {
+      "i": 0,
+      "ms": 1004,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "queryMs": 1002
+    },
+    {
+      "i": 1,
+      "ms": 312,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "queryMs": 312
+    },
+    {
+      "i": 2,
+      "ms": 292,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "queryMs": 292
+    },
+    {
+      "i": 3,
+      "ms": 309,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "queryMs": 309
+    },
+    {
+      "i": 4,
+      "ms": 311,
+      "resultState": "COMPLETED_WITH_CANDIDATES",
+      "queryMs": 311
+    }
+  ]
+}

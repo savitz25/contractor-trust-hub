@@ -1,0 +1,20 @@
+{
+  "note": "Fresh isolated runtime for TH-SEARCH-R1-019B-P2S. Started after confirming no competing process for this worktree was running (PowerShell process audit) and after confirming runtime files (lib/app/components) are byte-identical to the reviewed remote PR #86 head via git diff. Not a reuse of any process used for index creation, mutation testing, prior holdout runs, or prior p1/p1p2 measurements -- this is a brand-new `next start` production server process started for this pass only.",
+  "pid": 40704,
+  "parentPid": 25212,
+  "processCommandLine": "\"C:\\Program Files\\nodejs\\node.exe\" node_modules\\.bin/../next/dist/bin/next start -p 3993",
+  "gitSha": "07d1e6b24d1cbad7effe73df2e967514af924b0e",
+  "gitBranch": "th-search-r1-019b-contractor-name-operation",
+  "startUtc": "2026-09-19T23:01:35.711Z",
+  "port": 3993,
+  "nodeEnv": "production",
+  "serverMode": "next start (production build, not next dev)",
+  "capabilityProbeOk": true,
+  "stoppedUtc": "2026-09-19T23:16:00Z",
+  "stoppedCleanly": true,
+  "confirmations": {
+    "runtimeFilesCleanVsReviewedRemoteHead": "git diff 9bcf52438fdfd0bb43b2d96ac86c505cc9418d9c -- lib app components was empty",
+    "workingTreeStatus": "git status --short was empty",
+    "noCompetingProcessForThisWorktree": "PowerShell Win32_Process scan for tsx|node|python|next|th_search_r1_019b|contractor-th-search-r1-019b|mutations.py found only unrelated worktrees/apps (insurance-trust-hub-th-discovery-002 :3911, insurance-trust-hub-parity-001b, consumers-trust-hub-r1-019a :3419-3422, plus unrelated desktop apps); none referenced this worktree or its scripts"
+  }
+}

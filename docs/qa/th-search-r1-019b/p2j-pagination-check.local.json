@@ -1,0 +1,44 @@
+{
+  "ranAt": "2026-09-21T18:33:40.790Z",
+  "page1": {
+    "resultState": "COMPLETED_WITH_CANDIDATES",
+    "returned": 10,
+    "hasMore": true,
+    "keys": [
+      "contractor:profile:la-lslbc-7818-allied-air-conditioning-heat-llc",
+      "contractor:profile:tx-tdlr-a-c-contractor-22691-bc-allied-air-conditioning-heating",
+      "contractor:profile:cac042748-allied-air-conditioning-and-heating-inc",
+      "contractor:profile:cac1819960-allied-air-services-llc",
+      "contractor:profile:cac1823066-allied-air-services-llc",
+      "contractor:profile:la-lslbc-9685-allied-airwall-llc",
+      "contractor:profile:scc131153594-allied-aluminum-and-rail-llc",
+      "contractor:profile:tx-tdlr-a-c-contractor-10475-bc-allied-american-air-and-appliance-inc",
+      "contractor:profile:tx-tdlr-appliance-installation-contractor-1268-raic-allied-aquatics",
+      "contractor:profile:az-az-roc-310186-allied-asphalt-paving-and-sealcoating-inc"
+    ],
+    "ms": 4980,
+    "queries": 1
+  },
+  "page2": {
+    "resultState": "COMPLETED_WITH_CANDIDATES",
+    "returned": 10,
+    "hasMore": true,
+    "keys": [
+      "contractor:profile:wa-lni-alliebu775o2-allied-blower-usa-inc",
+      "contractor:profile:la-lslbc-75148-allied-blower-usa-inc",
+      "contractor:profile:nj-nj-hic-13vh08476800-allied-brothers-home-corporation",
+      "contractor:profile:cbc1261077-allied-builders",
+      "contractor:profile:cgc1539589-allied-builders",
+      "contractor:profile:wa-lni-alliebd030dj-allied-building-development",
+      "contractor:profile:wa-lni-alliebd819k1-allied-building-and-drain-llc",
+      "contractor:profile:ca-ca-cslb-913530-allied-building-and-technologies-inc",
+      "contractor:profile:wa-lni-alliebc791m3-allied-building-care",
+      "contractor:profile:la-lslbc-39985-allied-building-co-inc"
+    ],
+    "ms": 384,
+    "queries": 1
+  },
+  "overlap": [],
+  "dupWithinP1": false,
+  "dupWithinP2": false
+}

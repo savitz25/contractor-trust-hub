@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-09-19",
+  "kind": "MEASURED: plain EXPLAIN on production (the statements were planned, never executed). Read-only session, 8 s statement timeout, no planner setting changed.",
+  "question": "Can the EXISTING raw-text trigram indexes serve the independently defined semantics?",
+  "accessPathTested": "Per required word of 3+ characters: raw_column ~* 'O[apostrophes]*N[apostrophes]*E[apostrophes]*I[apostrophes]*L' -- the only raw-text condition the semantics imply, because a removed apostrophe may sit between any two letters of the raw value. Words under 3 characters have no condition at all.",
+  "plans": [
+    { "name": "ONeil Plumbing", "contractors": "Parallel Seq Scan on contractors (cost 138,297)", "licenses": "Bitmap Index Scan on both license trigram indexes with total cost 96,120 + 76,899 -- the cost of reading each index in full: pg_trgm extracts no selective trigram from a pattern with an optional character between every letter", "totalCost": 312319 },
+    { "name": "Allied", "contractors": "Parallel Seq Scan on contractors (cost 88,928)", "licenses": "full-cost Bitmap Index Scans (96,072 + 76,858)", "totalCost": 263068 },
+    { "name": "R & T GENERAL CONSTRUCTION, INC", "contractors": "Parallel Seq Scan on contractors (cost 224,692)", "licenses": "full-cost Bitmap Index Scans (96,126 + 76,899)", "totalCost": 400255 },
+    { "name": "R & T", "contractors": "n/a", "licenses": "Seq Scan on licenses (1,268,855 rows): initials have no trigram", "totalCost": 2409424 }
+  ],
+  "forComparison": "The review-1 plan that used raw ILIKE fragments cost ~2,100 index candidates, but its semantics were the ones review 2 rejected (apostrophe threshold, raw-fragment gate).",
+  "conclusion": "Alternative A fails. No condition on raw text is both implied by the semantics and selective: apostrophes can fall anywhere, initials have no trigram, and one-word common names stay cache-bound. These statements were deliberately NOT executed on production: each is a sequential scan of a 0.26 GB / 1.33 GB table.",
+  "productionFacts": {
+    "serverVersion": "17.6",
+    "locale": "en_US.UTF-8 (upper('josé müller') = 'JOSÉ MÜLLER': non-ASCII case folding works)",
+    "sharedBuffers": "256MB",
+    "effectiveCacheSize": "768MB",
+    "databaseBytes": 10857294995,
+    "tables": { "contractors": { "bytes": 256671744, "rows": 1364306 }, "licenses": { "bytes": 1333854208, "rows": 1266260 } },
+    "existingNameIndexes": {
+      "contractors_display_name_trgm_idx": 86786048, "contractors_legal_name_trgm_idx": 86261760, "contractors_dba_name_trgm_idx": 41566208,
+      "licenses_licensee_name_trgm_idx": 100311040, "licenses_dba_name_raw_trgm_idx": 52838400,
+      "contractors_display_name_idx (btree, raw)": 67411968, "contractors_legal_name_idx (btree, raw)": 70189056
+    },
+    "observation": "The five name trigram indexes total 368 MB, more than shared_buffers (256 MB). They cannot all stay resident, which matches the cold 14.8-18.9 s vs warm 0.23 s swing measured in review 1.",
+    "nullFraction": { "contractors.dba_name": 0.61, "licenses.dba_name_raw": 0.58, "others": 0 },
+    "avgNameWidthBytes": "21-22",
+    "extensions": ["pg_trgm 1.6", "pg_stat_statements", "pgcrypto", "uuid-ossp", "supabase_vault"],
+    "UNKNOWN": ["provisioned disk size / free disk (not visible through SQL; owner must read it from the Supabase dashboard)", "instance RAM", "write rate on contractors/licenses during ingestion"]
+  }
+}

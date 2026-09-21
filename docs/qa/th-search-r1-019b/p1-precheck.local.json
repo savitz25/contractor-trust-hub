@@ -1,0 +1,277 @@
+{
+  "ranAt": "2026-09-19T20:35:12.720Z",
+  "identity": [
+    {
+      "db": "postgres",
+      "usr": "postgres",
+      "v": "17.6"
+    }
+  ],
+  "existingByName": [],
+  "existingByExpression": [],
+  "currentIndexes": [
+    {
+      "table": "contractors",
+      "index": "contractors_dba_name_trgm_idx",
+      "bytes": "41566208",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_display_name_idx",
+      "bytes": "67411968",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_display_name_trgm_idx",
+      "bytes": "86786048",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_home_state_idx",
+      "bytes": "10731520",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_legal_name_idx",
+      "bytes": "70189056",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_legal_name_trgm_idx",
+      "bytes": "86261760",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_pkey",
+      "bytes": "58105856",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_primary_county_lower_idx",
+      "bytes": "4857856",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_searchable_idx",
+      "bytes": "10035200",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "contractors",
+      "index": "contractors_slug_key",
+      "bytes": "123797504",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_contractor_idx",
+      "bytes": "51978240",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_county_code_idx",
+      "bytes": "12984320",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_county_name_lower_idx",
+      "bytes": "5120000",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_dba_name_raw_trgm_idx",
+      "bytes": "52838400",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_expiration_idx",
+      "bytes": "12623872",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_external_key_upper_idx",
+      "bytes": "84803584",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_license_number_idx",
+      "bytes": "47595520",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_licensee_name_trgm_idx",
+      "bytes": "100311040",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_occupation_idx",
+      "bytes": "11067392",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_occupation_source_idx",
+      "bytes": "11157504",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_pkey",
+      "bytes": "52510720",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_source_status_occ_idx",
+      "bytes": "11501568",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_source_system_external_key_key",
+      "bytes": "83779584",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_state_city_idx",
+      "bytes": "15376384",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_state_status_idx",
+      "bytes": "11952128",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "table": "licenses",
+      "index": "licenses_status_idx",
+      "bytes": "12500992",
+      "indisvalid": true,
+      "indisready": true
+    }
+  ],
+  "sizes": [
+    {
+      "db_bytes": "10857335955",
+      "contractors_total": "816701440",
+      "licenses_total": "1912643584",
+      "contractors_est_rows": "1364306",
+      "licenses_est_rows": "1266260"
+    }
+  ],
+  "settings": [
+    {
+      "name": "effective_cache_size",
+      "setting": "98304",
+      "unit": "8kB"
+    },
+    {
+      "name": "lock_timeout",
+      "setting": "0",
+      "unit": "ms"
+    },
+    {
+      "name": "maintenance_work_mem",
+      "setting": "65536",
+      "unit": "kB"
+    },
+    {
+      "name": "max_parallel_maintenance_workers",
+      "setting": "1",
+      "unit": null
+    },
+    {
+      "name": "shared_buffers",
+      "setting": "32768",
+      "unit": "8kB"
+    },
+    {
+      "name": "statement_timeout",
+      "setting": "8000",
+      "unit": "ms"
+    }
+  ],
+  "activity": [
+    {
+      "total": "13",
+      "active": "2",
+      "long_xact": "0",
+      "waiting_on_lock": "0",
+      "maintenance_like": "1"
+    }
+  ],
+  "longQueries": [],
+  "locks": [
+    {
+      "mode": "AccessShareLock",
+      "granted": true,
+      "count": "34"
+    },
+    {
+      "mode": "ExclusiveLock",
+      "granted": true,
+      "count": "2"
+    }
+  ],
+  "progressCreateIndex": [],
+  "progressVacuum": [],
+  "tableStats": [
+    {
+      "relname": "contractors",
+      "n_live_tup": "1390133",
+      "n_dead_tup": "16518",
+      "last_autovacuum": "2026-08-14T15:38:53.232Z",
+      "last_autoanalyze": "2026-08-14T17:37:49.348Z"
+    },
+    {
+      "relname": "licenses",
+      "n_live_tup": "1266260",
+      "n_dead_tup": "65056",
+      "last_autovacuum": "2026-08-14T17:41:29.030Z",
+      "last_autoanalyze": "2026-08-26T15:46:44.899Z"
+    }
+  ]
+}

@@ -1,0 +1,348 @@
+{
+  "ranAt": "2026-09-21T20:03:05.753Z",
+  "note": "READ-ONLY. Post-P2J (LATERAL join-back) EXPLAIN ANALYZE captured from the real operation's own first (strong-tier) statement -- SQL never hand-reconstructed.",
+  "controls": {
+    "R & T GENERAL CONSTRUCTION, INC": {
+      "summary": {
+        "planningTimeMs": 12.521,
+        "executionTimeMs": 12.354,
+        "seqScanOnContractors": false,
+        "contractorsPkeyUsed": true,
+        "contractorsAccessLines": [
+          "->  Bitmap Heap Scan on contractors  (cost=267.59..14885.52 rows=16529 width=16) (actual time=4.740..5.752 rows=3 loops=1)",
+          "->  Bitmap Index Scan on contractors_display_name_nameorder_idx  (cost=0.00..106.36 rows=6963 width=0) (actual time=1.650..1.650 rows=3 loops=1)",
+          "->  Bitmap Index Scan on contractors_legal_name_nameorder_idx  (cost=0.00..107.46 rows=6963 width=0) (actual time=1.274..1.274 rows=3 loops=1)",
+          "->  Bitmap Index Scan on contractors_dba_name_nameorder_idx  (cost=0.00..41.38 rows=2665 width=0) (actual time=1.370..1.371 rows=0 loops=1)",
+          "->  Index Scan using contractors_pkey on contractors contractors_1  (cost=0.43..2.65 rows=1 width=219) (actual time=0.261..0.261 rows=1 loops=3)"
+        ],
+        "licensesAccessLines": [
+          "->  Bitmap Heap Scan on licenses  (cost=142.33..9946.84 rows=8957 width=16) (actual time=2.972..3.410 rows=3 loops=1)",
+          "->  Bitmap Index Scan on licenses_licensee_name_raw_nameorder_idx  (cost=0.00..97.94 rows=6341 width=0) (actual time=1.371..1.371 rows=3 loops=1)",
+          "->  Bitmap Index Scan on licenses_dba_name_raw_nameorder_idx  (cost=0.00..39.91 rows=2629 width=0) (actual time=1.149..1.149 rows=0 loops=1)",
+          "->  Index Scan using licenses_contractor_idx on licenses l  (cost=0.43..3.00 rows=1 width=179) (actual time=0.544..0.545 rows=1 loops=3)"
+        ],
+        "indexNamesUsed": [
+          "contractors_display_name_nameorder_idx",
+          "contractors_legal_name_nameorder_idx",
+          "contractors_dba_name_nameorder_idx",
+          "licenses_licensee_name_raw_nameorder_idx",
+          "licenses_dba_name_raw_nameorder_idx",
+          "contractors_pkey",
+          "licenses_contractor_idx"
+        ],
+        "nameorderIndexesUsed": [
+          "contractors_display_name_nameorder_idx",
+          "contractors_legal_name_nameorder_idx",
+          "contractors_dba_name_nameorder_idx",
+          "licenses_licensee_name_raw_nameorder_idx",
+          "licenses_dba_name_raw_nameorder_idx"
+        ],
+        "namewordsIndexesUsed": [],
+        "hashJoin": false,
+        "nestedLoop": true,
+        "buffersLine": [
+          "Buffers: shared hit=19 read=27",
+          "Buffers: shared hit=19 read=27",
+          "Buffers: shared hit=19 read=27",
+          "Buffers: shared hit=19 read=27",
+          "Buffers: shared hit=19 read=27",
+          "Buffers: shared hit=19 read=27",
+          "Buffers: shared hit=19 read=27",
+          "Buffers: shared hit=11 read=23",
+          "Buffers: shared hit=1 read=21",
+          "Buffers: shared hit=1 read=21",
+          "Buffers: shared read=13",
+          "Buffers: shared read=10",
+          "Buffers: shared read=4",
+          "Buffers: shared read=3",
+          "Buffers: shared read=3",
+          "Buffers: shared hit=1 read=8",
+          "Buffers: shared read=6",
+          "Buffers: shared read=3",
+          "Buffers: shared read=3",
+          "Buffers: shared hit=10 read=2",
+          "Buffers: shared hit=10 read=2",
+          "Buffers: shared hit=10 read=2",
+          "Buffers: shared hit=8 read=4",
+          "Buffers: shared hit=8 read=5"
+        ]
+      },
+      "error": null,
+      "note": null
+    },
+    "Whaleys Air Conditioning": {
+      "summary": {
+        "planningTimeMs": 8.338,
+        "executionTimeMs": 8.06,
+        "seqScanOnContractors": false,
+        "contractorsPkeyUsed": true,
+        "contractorsAccessLines": [
+          "->  Bitmap Heap Scan on contractors  (cost=267.59..14885.52 rows=16529 width=16) (actual time=3.316..3.803 rows=2 loops=1)",
+          "->  Bitmap Index Scan on contractors_display_name_nameorder_idx  (cost=0.00..106.36 rows=6963 width=0) (actual time=0.967..0.967 rows=2 loops=1)",
+          "->  Bitmap Index Scan on contractors_legal_name_nameorder_idx  (cost=0.00..107.46 rows=6963 width=0) (actual time=0.782..0.783 rows=1 loops=1)",
+          "->  Bitmap Index Scan on contractors_dba_name_nameorder_idx  (cost=0.00..41.38 rows=2665 width=0) (actual time=1.014..1.014 rows=1 loops=1)",
+          "->  Index Scan using contractors_pkey on contractors contractors_1  (cost=0.43..2.65 rows=1 width=219) (actual time=0.429..0.429 rows=1 loops=2)"
+        ],
+        "licensesAccessLines": [
+          "->  Bitmap Heap Scan on licenses  (cost=142.33..9946.84 rows=8957 width=16) (actual time=1.931..1.933 rows=1 loops=1)",
+          "->  Bitmap Index Scan on licenses_licensee_name_raw_nameorder_idx  (cost=0.00..97.94 rows=6341 width=0) (actual time=0.799..0.799 rows=0 loops=1)",
+          "->  Bitmap Index Scan on licenses_dba_name_raw_nameorder_idx  (cost=0.00..39.91 rows=2629 width=0) (actual time=0.731..0.731 rows=1 loops=1)",
+          "->  Index Scan using licenses_contractor_idx on licenses l  (cost=0.43..2.91 rows=1 width=179) (actual time=0.866..0.867 rows=1 loops=1)"
+        ],
+        "indexNamesUsed": [
+          "contractors_display_name_nameorder_idx",
+          "contractors_legal_name_nameorder_idx",
+          "contractors_dba_name_nameorder_idx",
+          "licenses_licensee_name_raw_nameorder_idx",
+          "licenses_dba_name_raw_nameorder_idx",
+          "contractors_pkey",
+          "licenses_contractor_idx"
+        ],
+        "nameorderIndexesUsed": [
+          "contractors_display_name_nameorder_idx",
+          "contractors_legal_name_nameorder_idx",
+          "contractors_dba_name_nameorder_idx",
+          "licenses_licensee_name_raw_nameorder_idx",
+          "licenses_dba_name_raw_nameorder_idx"
+        ],
+        "namewordsIndexesUsed": [],
+        "hashJoin": false,
+        "nestedLoop": true,
+        "buffersLine": [
+          "Buffers: shared hit=13 read=17",
+          "Buffers: shared hit=13 read=17",
+          "Buffers: shared hit=13 read=17",
+          "Buffers: shared hit=13 read=17",
+          "Buffers: shared hit=13 read=17",
+          "Buffers: shared hit=13 read=17",
+          "Buffers: shared hit=13 read=17",
+          "Buffers: shared hit=11 read=15",
+          "Buffers: shared hit=5 read=13",
+          "Buffers: shared hit=5 read=13",
+          "Buffers: shared hit=3 read=8",
+          "Buffers: shared hit=3 read=6",
+          "Buffers: shared hit=1 read=2",
+          "Buffers: shared hit=1 read=2",
+          "Buffers: shared hit=1 read=2",
+          "Buffers: shared hit=2 read=5",
+          "Buffers: shared hit=2 read=4",
+          "Buffers: shared hit=1 read=2",
+          "Buffers: shared hit=1 read=2",
+          "Buffers: shared hit=6 read=2",
+          "Buffers: shared hit=6 read=2",
+          "Buffers: shared hit=6 read=2",
+          "Buffers: shared hit=2 read=2",
+          "Buffers: shared hit=13"
+        ]
+      },
+      "error": null,
+      "note": null
+    },
+    "Worsham Construction": {
+      "summary": {
+        "planningTimeMs": 7.058,
+        "executionTimeMs": 6.859,
+        "seqScanOnContractors": false,
+        "contractorsPkeyUsed": true,
+        "contractorsAccessLines": [
+          "->  Bitmap Heap Scan on contractors  (cost=267.59..14885.52 rows=16529 width=16) (actual time=2.250..2.691 rows=2 loops=1)",
+          "->  Bitmap Index Scan on contractors_display_name_nameorder_idx  (cost=0.00..106.36 rows=6963 width=0) (actual time=0.436..0.436 rows=2 loops=1)",
+          "->  Bitmap Index Scan on contractors_legal_name_nameorder_idx  (cost=0.00..107.46 rows=6963 width=0) (actual time=0.958..0.958 rows=1 loops=1)",
+          "->  Bitmap Index Scan on contractors_dba_name_nameorder_idx  (cost=0.00..41.38 rows=2665 width=0) (actual time=0.396..0.396 rows=1 loops=1)",
+          "->  Index Scan using contractors_pkey on contractors contractors_1  (cost=0.43..2.65 rows=1 width=219) (actual time=0.427..0.427 rows=1 loops=2)"
+        ],
+        "licensesAccessLines": [
+          "->  Bitmap Heap Scan on licenses  (cost=142.33..9946.84 rows=8957 width=16) (actual time=1.715..1.717 rows=1 loops=1)",
+          "->  Bitmap Index Scan on licenses_licensee_name_raw_nameorder_idx  (cost=0.00..97.94 rows=6341 width=0) (actual time=0.764..0.765 rows=0 loops=1)",
+          "->  Bitmap Index Scan on licenses_dba_name_raw_nameorder_idx  (cost=0.00..39.91 rows=2629 width=0) (actual time=0.530..0.531 rows=1 loops=1)",
+          "->  Index Scan using licenses_contractor_idx on licenses l  (cost=0.43..2.82 rows=1 width=179) (actual time=0.842..0.843 rows=1 loops=1)"
+        ],
+        "indexNamesUsed": [
+          "contractors_display_name_nameorder_idx",
+          "contractors_legal_name_nameorder_idx",
+          "contractors_dba_name_nameorder_idx",
+          "licenses_licensee_name_raw_nameorder_idx",
+          "licenses_dba_name_raw_nameorder_idx",
+          "contractors_pkey",
+          "licenses_contractor_idx"
+        ],
+        "nameorderIndexesUsed": [
+          "contractors_display_name_nameorder_idx",
+          "contractors_legal_name_nameorder_idx",
+          "contractors_dba_name_nameorder_idx",
+          "licenses_licensee_name_raw_nameorder_idx",
+          "licenses_dba_name_raw_nameorder_idx"
+        ],
+        "namewordsIndexesUsed": [],
+        "hashJoin": false,
+        "nestedLoop": true,
+        "buffersLine": [
+          "Buffers: shared hit=16 read=14",
+          "Buffers: shared hit=16 read=14",
+          "Buffers: shared hit=16 read=14",
+          "Buffers: shared hit=16 read=14",
+          "Buffers: shared hit=16 read=14",
+          "Buffers: shared hit=16 read=14",
+          "Buffers: shared hit=16 read=14",
+          "Buffers: shared hit=14 read=12",
+          "Buffers: shared hit=8 read=10",
+          "Buffers: shared hit=8 read=10",
+          "Buffers: shared hit=5 read=6",
+          "Buffers: shared hit=5 read=4",
+          "Buffers: shared hit=2 read=1",
+          "Buffers: shared hit=1 read=2",
+          "Buffers: shared hit=2 read=1",
+          "Buffers: shared hit=3 read=4",
+          "Buffers: shared hit=3 read=3",
+          "Buffers: shared hit=1 read=2",
+          "Buffers: shared hit=2 read=1",
+          "Buffers: shared hit=6 read=2",
+          "Buffers: shared hit=6 read=2",
+          "Buffers: shared hit=6 read=2",
+          "Buffers: shared hit=2 read=2",
+          "Buffers: shared hit=13"
+        ]
+      },
+      "error": null,
+      "note": null
+    },
+    "Allied": {
+      "summary": {
+        "planningTimeMs": 4.898,
+        "executionTimeMs": 5226.514,
+        "seqScanOnContractors": false,
+        "contractorsPkeyUsed": true,
+        "contractorsAccessLines": [
+          "->  Bitmap Heap Scan on contractors  (cost=267.59..14885.52 rows=16529 width=16) (actual time=66.724..784.182 rows=482 loops=1)",
+          "->  Bitmap Index Scan on contractors_display_name_nameorder_idx  (cost=0.00..106.36 rows=6963 width=0) (actual time=20.920..20.920 rows=432 loops=1)",
+          "->  Bitmap Index Scan on contractors_legal_name_nameorder_idx  (cost=0.00..107.46 rows=6963 width=0) (actual time=26.221..26.221 rows=379 loops=1)",
+          "->  Bitmap Index Scan on contractors_dba_name_nameorder_idx  (cost=0.00..41.38 rows=2665 width=0) (actual time=15.746..15.746 rows=122 loops=1)",
+          "->  Index Scan using contractors_pkey on contractors contractors_1  (cost=0.43..2.65 rows=1 width=219) (actual time=3.943..3.943 rows=1 loops=482)"
+        ],
+        "licensesAccessLines": [
+          "->  Bitmap Heap Scan on licenses  (cost=142.33..9946.84 rows=8957 width=16) (actual time=8.031..481.408 rows=410 loops=1)",
+          "->  Bitmap Index Scan on licenses_licensee_name_raw_nameorder_idx  (cost=0.00..97.94 rows=6341 width=0) (actual time=7.895..7.895 rows=311 loops=1)",
+          "->  Bitmap Index Scan on licenses_dba_name_raw_nameorder_idx  (cost=0.00..39.91 rows=2629 width=0) (actual time=0.048..0.048 rows=115 loops=1)",
+          "->  Index Scan using licenses_contractor_idx on licenses l  (cost=0.43..2.73 rows=1 width=179) (actual time=4.955..4.957 rows=1 loops=410)"
+        ],
+        "indexNamesUsed": [
+          "contractors_display_name_nameorder_idx",
+          "contractors_legal_name_nameorder_idx",
+          "contractors_dba_name_nameorder_idx",
+          "licenses_licensee_name_raw_nameorder_idx",
+          "licenses_dba_name_raw_nameorder_idx",
+          "contractors_pkey",
+          "licenses_contractor_idx"
+        ],
+        "nameorderIndexesUsed": [
+          "contractors_display_name_nameorder_idx",
+          "contractors_legal_name_nameorder_idx",
+          "contractors_dba_name_nameorder_idx",
+          "licenses_licensee_name_raw_nameorder_idx",
+          "licenses_dba_name_raw_nameorder_idx"
+        ],
+        "namewordsIndexesUsed": [],
+        "hashJoin": false,
+        "nestedLoop": true,
+        "buffersLine": [
+          "Buffers: shared hit=2755 read=1539",
+          "Buffers: shared hit=2755 read=1539",
+          "Buffers: shared hit=2755 read=1539",
+          "Buffers: shared hit=2755 read=1539",
+          "Buffers: shared hit=2755 read=1539",
+          "Buffers: shared hit=2755 read=1539",
+          "Buffers: shared hit=2755 read=1539",
+          "Buffers: shared hit=2755 read=1539",
+          "Buffers: shared hit=1540 read=1114",
+          "Buffers: shared hit=15 read=711",
+          "Buffers: shared hit=15 read=711",
+          "Buffers: shared hit=3 read=380",
+          "Buffers: shared hit=3 read=11",
+          "Buffers: shared hit=1 read=4",
+          "Buffers: shared hit=1 read=4",
+          "Buffers: shared hit=1 read=3",
+          "Buffers: shared hit=12 read=331",
+          "Buffers: shared hit=2 read=7",
+          "Buffers: shared hit=1 read=4",
+          "Buffers: shared hit=1 read=3",
+          "Buffers: shared hit=1525 read=403",
+          "Buffers: shared hit=1525 read=403",
+          "Buffers: shared hit=1525 read=403",
+          "Buffers: shared hit=1215 read=425",
+          "Buffers: shared hit=13"
+        ]
+      },
+      "error": null,
+      "note": null
+    },
+    "stilw": {
+      "summary": {
+        "planningTimeMs": 4.533,
+        "executionTimeMs": 219.412,
+        "seqScanOnContractors": false,
+        "contractorsPkeyUsed": true,
+        "contractorsAccessLines": [
+          "->  Bitmap Heap Scan on contractors  (cost=267.59..14885.52 rows=16529 width=16) (actual time=38.842..68.929 rows=14 loops=1)",
+          "->  Bitmap Index Scan on contractors_display_name_nameorder_idx  (cost=0.00..106.36 rows=6963 width=0) (actual time=12.983..12.983 rows=8 loops=1)",
+          "->  Bitmap Index Scan on contractors_legal_name_nameorder_idx  (cost=0.00..107.46 rows=6963 width=0) (actual time=13.760..13.760 rows=10 loops=1)",
+          "->  Bitmap Index Scan on contractors_dba_name_nameorder_idx  (cost=0.00..41.38 rows=2665 width=0) (actual time=8.070..8.070 rows=5 loops=1)",
+          "->  Index Scan using contractors_pkey on contractors contractors_1  (cost=0.43..2.65 rows=1 width=219) (actual time=3.073..3.073 rows=1 loops=14)"
+        ],
+        "licensesAccessLines": [
+          "->  Bitmap Heap Scan on licenses  (cost=142.33..9946.84 rows=8957 width=16) (actual time=21.900..45.916 rows=11 loops=1)",
+          "->  Bitmap Index Scan on licenses_licensee_name_raw_nameorder_idx  (cost=0.00..97.94 rows=6341 width=0) (actual time=9.870..9.870 rows=7 loops=1)",
+          "->  Bitmap Index Scan on licenses_dba_name_raw_nameorder_idx  (cost=0.00..39.91 rows=2629 width=0) (actual time=8.926..8.927 rows=5 loops=1)",
+          "->  Index Scan using licenses_contractor_idx on licenses l  (cost=0.43..2.73 rows=1 width=179) (actual time=5.425..5.427 rows=1 loops=11)"
+        ],
+        "indexNamesUsed": [
+          "contractors_display_name_nameorder_idx",
+          "contractors_legal_name_nameorder_idx",
+          "contractors_dba_name_nameorder_idx",
+          "licenses_licensee_name_raw_nameorder_idx",
+          "licenses_dba_name_raw_nameorder_idx",
+          "contractors_pkey",
+          "licenses_contractor_idx"
+        ],
+        "nameorderIndexesUsed": [
+          "contractors_display_name_nameorder_idx",
+          "contractors_legal_name_nameorder_idx",
+          "contractors_dba_name_nameorder_idx",
+          "licenses_licensee_name_raw_nameorder_idx",
+          "licenses_dba_name_raw_nameorder_idx"
+        ],
+        "namewordsIndexesUsed": [],
+        "hashJoin": false,
+        "nestedLoop": true,
+        "buffersLine": [
+          "Buffers: shared hit=84 read=57",
+          "Buffers: shared hit=84 read=57",
+          "Buffers: shared hit=84 read=57",
+          "Buffers: shared hit=84 read=57",
+          "Buffers: shared hit=84 read=57",
+          "Buffers: shared hit=84 read=57",
+          "Buffers: shared hit=84 read=57",
+          "Buffers: shared hit=84 read=57",
+          "Buffers: shared hit=51 read=46",
+          "Buffers: shared hit=7 read=34",
+          "Buffers: shared hit=7 read=34",
+          "Buffers: shared hit=4 read=20",
+          "Buffers: shared hit=3 read=7",
+          "Buffers: shared hit=1 read=3",
+          "Buffers: shared hit=1 read=2",
+          "Buffers: shared hit=1 read=2",
+          "Buffers: shared hit=3 read=14",
+          "Buffers: shared hit=2 read=4",
+          "Buffers: shared hit=1 read=2",
+          "Buffers: shared hit=1 read=2",
+          "Buffers: shared hit=44 read=12",
+          "Buffers: shared hit=44 read=12",
+          "Buffers: shared hit=44 read=12",
+          "Buffers: shared hit=33 read=11",
+          "Buffers: shared hit=13"
+        ]
+      },
+      "error": null,
+      "note": null
+    }
+  }
+}

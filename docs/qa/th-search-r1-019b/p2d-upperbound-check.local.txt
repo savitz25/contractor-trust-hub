@@ -1,0 +1,4 @@
+Naive U+FFFF upper bound (~>=~/~<~, C-locale byte compare) -- rows matched: 1 (expect 0 = false negative if unsafe)
+LIKE 'TESTCO%' -- rows matched: 1 (ground truth, expect 1)
+True-max U+10FFFF upper bound (~>=~/~<~) -- rows matched: 1 (expect 2 if safe, since both real rows start with TESTCO)
+LIKE 'TESTCO%' after second insert -- rows matched: 2 (ground truth, expect 2)

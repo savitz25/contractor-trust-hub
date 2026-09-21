@@ -1,0 +1,147 @@
+{
+  "drawnAt": "2026-09-18T22:30:32.210Z",
+  "seed": 19,
+  "method": "Seeded index pick: per name-searchable scope, the digits of the lowest and highest credential key are replaced with seeded digits and the first public non-thin profile with a slug at or after that key is taken; up to two per scope, round-robin to 20. Block sampling (TABLESAMPLE) timed out on this database and was not used.",
+  "distribution": {
+    "FL": 2,
+    "TX": 2,
+    "NJ": 2,
+    "OR": 2,
+    "WA": 2,
+    "CA": 2,
+    "AZ": 2,
+    "LA": 2,
+    "MS": 2,
+    "KY": 2,
+    "CO": 0
+  },
+  "sample": [
+    {
+      "scope": "FL",
+      "slug": "cac1813195-whaley-s-air-conditioning-inc",
+      "displayName": "WHALEY'S AIR CONDITIONING INC",
+      "credentialKey": "CAC1813195"
+    },
+    {
+      "scope": "TX",
+      "slug": "tx-tdlr-a-c-contractor-56893-ac-cline-james-william",
+      "displayName": "CLINE, JAMES WILLIAM",
+      "credentialKey": "TX-TDLR:A-C-CONTRACTOR:56893:AC"
+    },
+    {
+      "scope": "NJ",
+      "slug": "nj-nj-alm-34al00000100-kev-security-inc",
+      "displayName": "KEV SECURITY INC",
+      "credentialKey": "NJ-ALM:34AL00000100"
+    },
+    {
+      "scope": "OR",
+      "slug": "or-ccb-2694-ochi-rory-allen-brown",
+      "displayName": "RORY ALLEN BROWN",
+      "credentialKey": "OR-CCB:2694:OCHI"
+    },
+    {
+      "scope": "WA",
+      "slug": "wa-lni-7angeac776mr-7-angels-const-llc",
+      "displayName": "7 ANGELS CONST LLC",
+      "credentialKey": "WA-LNI:7ANGEAC776MR"
+    },
+    {
+      "scope": "CA",
+      "slug": "ca-ca-cslb-502649-lloyd-s-plumbing-inc",
+      "displayName": "LLOYD'S PLUMBING INC",
+      "credentialKey": "CA-CSLB:502649"
+    },
+    {
+      "scope": "AZ",
+      "slug": "az-az-roc-302615-econo-custom-and-commercial-painting-llc",
+      "displayName": "Econo Custom and Commercial Painting LLC",
+      "credentialKey": "AZ-ROC:302615"
+    },
+    {
+      "scope": "LA",
+      "slug": "la-lslbc-1-brown-root-industrial-services-llc",
+      "displayName": "BROWN & ROOT INDUSTRIAL SERVICES, LLC",
+      "credentialKey": "LA-LSLBC:1"
+    },
+    {
+      "scope": "MS",
+      "slug": "ms-sbc-res-00010-landmark-homes-inc",
+      "displayName": "LANDMARK HOMES, INC.",
+      "credentialKey": "MS-SBC:RES:00010"
+    },
+    {
+      "scope": "KY",
+      "slug": "ky-ce18656-cook-robin-e",
+      "displayName": "Cook, Robin E",
+      "credentialKey": "KY-DHBC:CE18656"
+    },
+    {
+      "scope": "TX",
+      "slug": "tx-tdlr-water-well-driller-pump-installer-1055-cdmnw-mahorney-donald",
+      "displayName": "MAHORNEY, DONALD",
+      "credentialKey": "TX-TDLR:WATER-WELL-DRILLER-PUMP-INSTALLER:1055:CDMNW"
+    },
+    {
+      "scope": "OR",
+      "slug": "or-ccb-78219-rgc-richard-allen-spiering",
+      "displayName": "RICHARD ALLEN SPIERING",
+      "credentialKey": "OR-CCB:78219:RGC"
+    },
+    {
+      "scope": "WA",
+      "slug": "wa-lni-zztestb800dl-zz-test-and-balance-inc",
+      "displayName": "ZZ TEST AND BALANCE INC",
+      "credentialKey": "WA-LNI:ZZTESTB800DL"
+    },
+    {
+      "scope": "CA",
+      "slug": "ca-ca-cslb-1000013-desert-elite-electric-construction-inc",
+      "displayName": "DESERT ELITE ELECTRIC & CONSTRUCTION INC",
+      "credentialKey": "CA-CSLB:1000013"
+    },
+    {
+      "scope": "LA",
+      "slug": "la-lslbc-70601-elvin-trung-do",
+      "displayName": "Elvin Trung Do",
+      "credentialKey": "LA-LSLBC:70601"
+    },
+    {
+      "scope": "MS",
+      "slug": "ms-sbc-unlic-fff91cfc1598fa73-r-t-general-construction-inc",
+      "displayName": "R & T GENERAL CONSTRUCTION, INC",
+      "credentialKey": "MS-SBC:UNLIC:FFF91CFC1598FA73"
+    },
+    {
+      "scope": "KY",
+      "slug": "ky-m6002-cooksey-timothy-r",
+      "displayName": "Cooksey, Timothy R",
+      "credentialKey": "KY-DHBC:M6002"
+    },
+    {
+      "scope": "FL",
+      "slug": "scc56687-opm-construction-services-llc",
+      "displayName": "OPM CONSTRUCTION SERVICES, LLC",
+      "credentialKey": "SCC56687"
+    },
+    {
+      "scope": "NJ",
+      "slug": "nj-nj-tel-34te00315600-gelski-enterprises-llc-dba-venugrid",
+      "displayName": "GELSKI  ENTERPRISES LLC. DBA VENUGRID",
+      "credentialKey": "NJ-TEL:34TE00315600"
+    },
+    {
+      "scope": "AZ",
+      "slug": "az-az-roc-302576-nicklaus-engineering-inc",
+      "displayName": "Nicklaus Engineering Inc",
+      "credentialKey": "AZ-ROC:302576"
+    }
+  ],
+  "toppedUpAt": "2026-09-18T22:31:03.662Z",
+  "topUpRule": "Scopes with fewer than two picks got one more: first eligible public profile at or BELOW the same seeded high-edge key (descending). Appended only; the original picks were not changed. Done before any holdout run.",
+  "topUpNotes": [
+    "FL: topped up",
+    "NJ: topped up",
+    "AZ: topped up"
+  ]
+}
