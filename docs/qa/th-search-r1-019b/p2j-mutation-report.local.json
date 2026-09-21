@@ -1,0 +1,84 @@
+{
+  "ranAt": "2026-09-21T18:22:26.933715+00:00",
+  "gate": "npx --yes tsx --test scripts/test_th_search_r1_019b.ts",
+  "baseline": "green",
+  "mutations": [
+    {
+      "id": "P2J_M1_lateral_reverted_to_flat_join",
+      "file": "lib/contractors/name-search-core.ts",
+      "meaning": "The P2J join-back regresses to the old flat JOIN -- exactly the shape whose cardinality misestimate the P2I evidence showed drives a Hash Join + Parallel Seq Scan of contractors in Production.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 21. TH-SEARCH-R1-019B-P2J: candidate-ID hydration is PK-driven (LATERAL), not a plain joinable shape (13.8741ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "P2J_M2_lateral_limit_boundary_removed",
+      "file": "lib/contractors/name-search-core.ts",
+      "meaning": "The LIMIT 1 optimizer boundary is dropped from the LATERAL subquery -- the per-candidate PK-lookup shape is no longer structurally enforced.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 21. TH-SEARCH-R1-019B-P2J: candidate-ID hydration is PK-driven (LATERAL), not a plain joinable shape (5.6319ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "P2J_M3_lateral_keyed_on_wrong_column",
+      "file": "lib/contractors/name-search-core.ts",
+      "meaning": "The LATERAL subquery is keyed on the wrong column (slug instead of id), silently breaking hydration -- candidates would no longer resolve to the correct contractor row.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 1. name-only structured request reaches name execution and keeps the whole name (2379.0856ms)",
+        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (27.1452ms)",
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (216.4622ms)",
+        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (31.8887ms)",
+        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (16.1161ms)",
+        "\u2716 17. an exact/normalized target is never buried behind 200+ names that merely start the same (41.5633ms)",
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (20.2032ms)",
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (46.7186ms)",
+        "\u2716 2. case, punctuation, legal-suffix and short distinctive variants retrieve the record (17.8771ms)",
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (23.1201ms)",
+        "\u2716 21. TH-SEARCH-R1-019B-P2J: candidate-ID hydration is PK-driven (LATERAL), not a plain joinable shape (0.6088ms)",
+        "\u2716 3. Allied finds every Allied-named public record; generic-word overlap alone admits nothing (17.5694ms)",
+        "\u2716 4. names containing a city or meaningful digits stay names in the explicit name operation (16.6782ms)",
+        "\u2716 5. explicit jurisdiction is applied; absent jurisdiction never claims nationwide coverage from FL alone (14.8805ms)",
+        "\u2716 6. inactive/unknown-status public profiles stay discoverable; publication restrictions stay enforced (15.5546ms)",
+        "\u2716 7. same-name identities stay separate and an exact string match is never an identity finding (13.4672ms)",
+        "\u2716 8. match field/value/method agree with the returned source record (15.0473ms)",
+        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (17.2584ms)"
+      ],
+      "restoredExactBytes": true
+    },
+    {
+      "id": "P2J_M4_lateral_keyword_dropped",
+      "file": "lib/contractors/name-search-core.ts",
+      "meaning": "The LATERAL keyword itself is dropped; the correlated reference to name_prefilter.id inside the subquery becomes invalid SQL (Postgres requires LATERAL for a FROM-item to reference an earlier FROM-item), so the query fails outright rather than silently full-scanning.",
+      "detected": true,
+      "failingTests": [
+        "\u2716 1. name-only structured request reaches name execution and keeps the whole name (2223.0403ms)",
+        "\u2716 11. empty, invalid and wildcard-like input never becomes an unrestricted cohort or unsafe SQL (3.5509ms)",
+        "\u2716 13. native Verify name search and the operation return the same identities under the same scope (2.2779ms)",
+        "\u2716 15. three-way agreement: independent expectation == semantic predicate with NO access path == optimized query (17.6933ms)",
+        "\u2716 16. initials and later words stay required; evidence never claims words it did not match (1.8589ms)",
+        "\u2716 17. an exact/normalized target is never buried behind 200+ names that merely start the same (1.6801ms)",
+        "\u2716 18. tiered retrieval pages exactly like one statement, and an unfinished token tier is declared, never hidden (10.8113ms)",
+        "\u2716 19. LOCAL DESIGN ONLY: the proposed normalized-name indexes serve both tiers and change no answer (34.4889ms)",
+        "\u2716 2. case, punctuation, legal-suffix and short distinctive variants retrieve the record (4.8471ms)",
+        "\u2716 20. TH-SEARCH-R1-019B-P2D: strong tier and token tier never share an access path (17.4145ms)",
+        "\u2716 21. TH-SEARCH-R1-019B-P2J: candidate-ID hydration is PK-driven (LATERAL), not a plain joinable shape (0.4689ms)",
+        "\u2716 3. Allied finds every Allied-named public record; generic-word overlap alone admits nothing (4.6567ms)",
+        "\u2716 4. names containing a city or meaningful digits stay names in the explicit name operation (2.6293ms)",
+        "\u2716 5. explicit jurisdiction is applied; absent jurisdiction never claims nationwide coverage from FL alone (1.9627ms)",
+        "\u2716 6. inactive/unknown-status public profiles stay discoverable; publication restrictions stay enforced (2.0097ms)",
+        "\u2716 7. same-name identities stay separate and an exact string match is never an identity finding (2.2933ms)",
+        "\u2716 8. match field/value/method agree with the returned source record (2.826ms)",
+        "\u2716 9. a true target beyond the first page is reachable; capped results carry a working continuation (2.0598ms)"
+      ],
+      "restoredExactBytes": true
+    }
+  ],
+  "gateGreenAfterRestore": true,
+  "detected": 4,
+  "total": 4
+}

@@ -1,0 +1,17 @@
+gin_trgm_ops operator family operators:
+  =(text,text)
+  ~(text,text)
+  ~~(text,text)
+  ~*(text,text)
+  ~~*(text,text)
+  %(text,text)
+  %>(text,text)
+  %>>(text,text)
+
+text_pattern_ops operator family operators:
+  =(text,text)
+  =(text,text)
+  ~<~(text,text)
+  ~<=~(text,text)
+  ~>=~(text,text)
+  ~>~(text,text)
