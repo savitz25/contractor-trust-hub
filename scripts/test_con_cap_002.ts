@@ -54,13 +54,15 @@ test("generic and General NJ requests never invent a population", async () => {
   // a bare capability response -- it runs a real broadened cohort query
   // (trade filter dropped) across NJ's other real credential classes and
   // returns actual cards, never relabeled as general contractors.
+  // POST-R1-CON-LOCAL-001: runCohortRows now issues a single merged CTE query; the mock must return
+  // `total` embedded on the row (matching buildCohortRowsSql's shape), not as a separate queryOne call.
   const generalDb = {
     queryOne: async () => ({ total: "1" }),
     query: async () => [{
       slug: "nj-hic-fixture", display_name: "Fixture NJ Home Improvement", license_number: "HIC900001",
       external_key: "HIC900001", occupation_code: "HIC", occupation_description: "Home Improvement Contractor",
       status_normalized: "active", primary_status: "Active", city: null, county: null, state: "NJ",
-      updated_at: "2026-01-01T00:00:00Z",
+      updated_at: "2026-01-01T00:00:00Z", total: "1",
     }],
   } as unknown as Parameters<typeof executeContractorSpecialistQuery>[1];
   const general = await executeContractorSpecialistQuery({ state: "NJ", trade: "general" }, generalDb);
@@ -111,7 +113,11 @@ test("publication gate, row privacy, ordering, and exact lookup remain determini
   assert.match(source, /c\.is_thin_profile = FALSE/); // 44
   assert.match(source, /c\.slug IS NOT NULL/); // 45
   assert.doesNotMatch(source, /profileId:/); // 46
-  assert.match(source, /ORDER BY LOWER\(c\.display_name\)/); // 47
+  // POST-R1-CON-LOCAL-001: runCohortRows' ORDER BY now sorts the merged CTE's own `display_name`
+  // column (aliased from c.display_name inside the `matched` CTE) rather than referencing `c.`
+  // directly at the ORDER BY site -- same deterministic name-based ordering guarantee, just via the
+  // CTE's column name. See buildCohortRowsSql.
+  assert.match(source, /ORDER BY LOWER\(display_name\)/); // 47
   assert.doesNotMatch(source, /ORDER BY[^\n]*(rating|review|paid|score)/i); // 48
   assert.match(source, /REGEXP_REPLACE\(COALESCE\(l\.external_key/); // 49
   assert.match(source, /REGEXP_REPLACE\(COALESCE\(l\.license_number/); // 50
@@ -121,7 +127,12 @@ test("pagination is bounded and stable by contract", () => {
   assert.throws(() => normalizeContractorExecutionRequest({ state: "NJ", trade: "HIC", limit: 51 }), /invalid_limit/); // 51
   assert.equal(normalizeContractorExecutionRequest({ state: "NJ", trade: "HIC", page: 2, limit: 10 }).page, 2); // 52
   assert.equal(normalizeContractorExecutionRequest({ state: "NJ", trade: "HIC" }).limit, 24); // 53
-  assert.match(source, /LIMIT \$\$\{built\.params\.length \+ 1\}/); // 54
+  // POST-R1-CON-LOCAL-001: runCohortRows now issues a single merged CTE query (buildCohortRowsSql)
+  // instead of two sequential queries; LIMIT/OFFSET are still safely parameterized positional
+  // placeholders computed the same way (built.params.length + 1 / + 2), just via named limitIdx/
+  // offsetIdx variables passed into the SQL-building function rather than inlined at the call site.
+  assert.match(source, /const limitIdx = built\.params\.length \+ 1/); // 54
+  assert.match(source, /LIMIT \$\$\{limitIdx\}/);
   assert.equal(normalizeContractorExecutionRequest({ state: "NJ", trade: "HIC", page: 5023, limit: 5 }).page, 5023);
   assert.match(source, /pageOutOfRange \? "INVALID_QUERY"/);
 });

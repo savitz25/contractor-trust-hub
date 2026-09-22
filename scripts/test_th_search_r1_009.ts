@@ -327,17 +327,28 @@ function fixtureDb(
       query: async (sql: string, params: unknown[]) => {
         calls.push(sql);
         sqlAssertions(sql, params);
-        return expected
-          .slice(
-            Number(params.at(-1)),
-            Number(params.at(-1)) + Number(params.at(-2)),
-          )
-          .map((r) => ({
-            ...r,
-            external_key: r.license_number,
-            primary_status: "Active",
-            updated_at: "2026-01-01T00:00:00Z",
-          }));
+        // POST-R1-CON-LOCAL-001: runCohortRows now issues a single merged CTE query
+        // (buildCohortRowsSql) instead of a separate queryOne(COUNT) + query(rows) pair; `total`
+        // must be embedded on each returned row, matching the real merged-query shape. When the
+        // page slice is empty (e.g. a genuinely zero-match fixture set), the real SQL's
+        // LEFT JOIN LATERAL still returns exactly one placeholder row (every column NULL except
+        // `total`) so the caller can read the total even with zero matching rows -- reproduce that
+        // here too, or ZERO_MATCHING_ROWS cases would hit "source_count_unavailable" instead.
+        const page = expected.slice(
+          Number(params.at(-1)),
+          Number(params.at(-1)) + Number(params.at(-2)),
+        );
+        const total = String(expected.length);
+        if (page.length === 0) {
+          return [{ slug: null, display_name: null, license_number: null, external_key: null, occupation_code: null, occupation_description: null, status_normalized: null, primary_status: null, city: null, county: null, state: null, updated_at: null, total }];
+        }
+        return page.map((r) => ({
+          ...r,
+          external_key: r.license_number,
+          primary_status: "Active",
+          updated_at: "2026-01-01T00:00:00Z",
+          total,
+        }));
       },
     } as unknown as Parameters<typeof executeContractorSpecialistQuery>[1],
   };
@@ -360,13 +371,21 @@ test("actual V2 execution uses source/class/county predicates before limit and b
     assert.equal(r.rows[0].credentialNumber, fixtures[0].license_number);
     assert.doesNotMatch(r.rows[0].whyShown, /Austin|serves/);
   }
-  assert.equal(f.calls.length, 2);
+  // POST-R1-CON-LOCAL-001: runCohortRows now issues a single merged CTE query instead of a separate
+  // COUNT + rows round trip -- see buildCohortRowsSql.
+  assert.equal(f.calls.length, 1);
 });
 test("actual V2 city equality is executed with state, not a statewide window", async () => {
   const f = fixtureDb([fixtures[0]], (sql, params) => {
-    assert.match(sql, /LOWER\(TRIM\(COALESCE\(l.city/);
+    // POST-R1-CON-LOCAL-001: FL city equality is now the sargable raw-column form (l.city = $n,
+    // uppercased param) instead of LOWER(TRIM(COALESCE(l.city, ''))) -- the wrapped form defeated
+    // licenses_state_city_idx and the planner's cardinality estimate, causing real production
+    // timeouts for e.g. "general contractor in miami" (proven via EXPLAIN ANALYZE against the real
+    // production DB; see docs/qa/post-r1-con-local-001/). FL data is confirmed always
+    // uppercase/trimmed already, so this is a pure query-shape fix, not a matching-semantics change.
+    assert.match(sql, /l\.city = \$/);
     assert.match(sql, /home_state.*OR l.state/);
-    assert.ok(params.includes("miami"));
+    assert.ok(params.includes("MIAMI"));
     assert.ok(params.includes("FL"));
   });
   const r = await executeContractorSpecialistQuery(
@@ -407,11 +426,17 @@ test("unsupported local scope blocks source calls; valid zero differs from sourc
     f.db,
   );
   assert.equal(zero.resultState, "ZERO_MATCHING_ROWS");
+  // POST-R1-CON-LOCAL-001: runCohortRows now calls only db.query (single merged CTE query), so the
+  // failure must come from `query`, not `queryOne`, to still exercise "the source call itself fails"
+  // rather than "source_count_unavailable" (a different, misleading failure mode this test would
+  // otherwise silently start asserting instead of the one it names).
   const failed = {
     queryOne: async () => {
       throw Error("fixture source unavailable");
     },
-    query: async () => [],
+    query: async () => {
+      throw Error("fixture source unavailable");
+    },
   } as unknown as Parameters<typeof executeContractorSpecialistQuery>[1];
   await assert.rejects(
     executeContractorSpecialistQuery({ state: "FL", trade: "roofing" }, failed),

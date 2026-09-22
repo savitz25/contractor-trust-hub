@@ -111,22 +111,40 @@ export function getExecutionCapability(stateCode: string): StateExecutionCapabil
   return CONTRACTOR_STATE_CAPABILITIES[stateCode.toUpperCase() as "FL" | "NJ" | "TX"] ?? null;
 }
 
+/**
+ * POST-R1-CON-LOCAL-001: pure trade-word -> canonical-family-id alias resolution, split out of
+ * getTradeCapability() so callers that need the resolved alias itself (not just whether a
+ * TradeCapability row exists for it) can use the SAME resolution -- e.g. the Florida electrical
+ * special-case in contractor-v2.ts used to compare against the raw, un-aliased input string, so
+ * "electrician"/"electricians" (aliased here to "electrical") never matched it and fell through to
+ * a generic UNSUPPORTED_TRADE_CAPABILITY instead of the existing, more useful
+ * unsupported_florida_electrical_source response with broadened alternatives.
+ * Added "roofer"/"roofers" -> "roofing" and "general contractor"(s) -> "general": both are
+ * consumer-intent trade words with an existing, source-backed FL trade family that previously had
+ * no alias, so a direct "roofer"/"general contractor" request fell through to
+ * UNSUPPORTED_TRADE_CAPABILITY even though FL_TRADES already supports "roofing" and "general".
+ * Bare "contractor"/"contractors" is intentionally NOT aliased to any single family -- that
+ * ambiguity is the existing, correct CLARIFICATION_REQUIRED narrowing behavior (see
+ * semanticCapabilityResult's trade_or_identifier_required branch), not a bug.
+ */
+export function resolveTradeAlias(rawTrade: string | null): string | null {
+  if (!rawTrade) return null;
+  const normalized = rawTrade.toLowerCase().replace(/[\s/-]+/g, "_");
+  if (normalized === "hic" || normalized === "home_improvement_contractor" || normalized === "home_improvement_contractors") return "home_improvement";
+  if (normalized === "electrician" || normalized === "electricians") return "electrical";
+  if (normalized === "plumber" || normalized === "plumbers") return "plumbing";
+  if (normalized === "hvacr" || normalized === "hvac_contractors") return "hvac";
+  if (normalized === "roofer" || normalized === "roofers") return "roofing";
+  if (normalized === "general_contractor" || normalized === "general_contractors" || normalized === "general_contracting") return "general";
+  return normalized;
+}
+
 export function getTradeCapability(
   stateCode: "FL" | "NJ" | "TX",
   rawTrade: string | null
 ): TradeCapability | null {
-  if (!rawTrade) return null;
-  const normalized = rawTrade.toLowerCase().replace(/[\s/-]+/g, "_");
-  const alias =
-    normalized === "hic" || normalized === "home_improvement_contractor" || normalized === "home_improvement_contractors"
-      ? "home_improvement"
-      : normalized === "electrician" || normalized === "electricians"
-        ? "electrical"
-        : normalized === "plumber" || normalized === "plumbers"
-          ? "plumbing"
-          : normalized === "hvacr" || normalized === "hvac_contractors"
-            ? "hvac"
-            : normalized;
+  const alias = resolveTradeAlias(rawTrade);
+  if (!alias) return null;
   return CONTRACTOR_STATE_CAPABILITIES[stateCode].trades.find((trade) => trade.id === alias) ?? null;
 }
 

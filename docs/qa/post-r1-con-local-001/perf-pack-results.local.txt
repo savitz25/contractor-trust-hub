@@ -1,0 +1,8 @@
+=== PERFORMANCE PACK: POST-R1-CON-LOCAL-001 (post-fix, real prod-pointed DB, separate process each) ===
+{"label":"plumber_in_miami","request":{"queryType":"cohort","state":"FL","trade":"plumbing","county":"miami-dade"},"elapsedMs":1074,"resultState":"SUPPORTED_RESULTS","total":1134,"rowCount":24,"errorCode":null,"error":null}
+{"label":"electrician_in_miami","request":{"queryType":"cohort","state":"FL","trade":"electrician","county":"miami-dade"},"elapsedMs":1,"resultState":null,"total":null,"rowCount":null,"errorCode":null,"error":"unsupported_florida_electrical_source"}
+{"label":"roofer_in_miami","request":{"queryType":"cohort","state":"FL","trade":"roofer","county":"miami-dade"},"elapsedMs":990,"resultState":"SUPPORTED_RESULTS","total":1156,"rowCount":24,"errorCode":null,"error":null}
+{"label":"general_contractor_in_miami","request":{"queryType":"cohort","state":"FL","trade":"general contractor","county":"miami-dade"},"elapsedMs":1238,"resultState":"SUPPORTED_RESULTS","total":5535,"rowCount":24,"errorCode":null,"error":null}
+{"label":"contractor_in_miami_generic","request":{"queryType":"cohort","state":"FL","county":"miami-dade"},"elapsedMs":2,"resultState":"CLARIFICATION_REQUIRED","total":null,"rowCount":null,"errorCode":"trade_or_identifier_required","error":null}
+{"label":"exact_credential_control","request":{"queryType":"identifier","state":"FL","identifier":"1428587"},"elapsedMs":10788,"resultState":null,"total":null,"rowCount":null,"errorCode":null,"error":"canceling statement due to statement timeout"}
+{"label":"no_result_control","request":{"queryType":"identifier","state":"FL","identifier":"ZZZZZZZZ-NONEXISTENT-9999"},"elapsedMs":3381,"resultState":"ZERO_MATCHING_ROWS","total":0,"rowCount":0,"errorCode":null,"error":null}
