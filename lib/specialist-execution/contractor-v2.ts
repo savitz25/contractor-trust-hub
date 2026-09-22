@@ -8,6 +8,7 @@ import {
   getExecutionCapability,
   getTradeCapability,
   publicCapabilityMatrix,
+  resolveTradeAlias,
   type ContractorResearchFamily,
   type StateExecutionCapability,
   type TradeCapability,
@@ -69,6 +70,16 @@ export type NormalizedContractorExecutionRequest = {
   state: "FL" | "NJ" | string;
   capability: StateExecutionCapability | null;
   tradeRaw: string | null;
+  /**
+   * POST-R1-CON-LOCAL-001: the alias-resolved trade word (e.g. "electrician" -> "electrical",
+   * "roofer" -> "roofing", "general contractor" -> "general"), same resolution getTradeCapability()
+   * already applies internally to look up a TradeCapability row. Special-case branches that compare
+   * a trade string against a canonical family id (the FL electrical carve-out, the NJ "general"
+   * carve-out) must use THIS field, not tradeRaw, or an aliased spelling silently skips the branch
+   * and falls through to a generic UNSUPPORTED_TRADE_CAPABILITY instead of the existing, more useful
+   * dedicated response.
+   */
+  tradeAlias: string | null;
   /** Backwards-compatible normalized family id used by ATH-CAP-PILOT-001. */
   trade: string | null;
   tradeCapability: TradeCapability | null;
@@ -233,6 +244,7 @@ export function normalizeContractorExecutionRequest(value: unknown): NormalizedC
   const confirmStatewide = input.confirmStatewide === true;
   const geography = state === "FL" ? normalizeFloridaGeography(city, county, intent) : state === "NJ" ? normalizeNewJerseyGeography(city, county, zip, intent, confirmStatewide) : {state:"TX" as const,county:null,city:confirmStatewide?null:city,zip:confirmStatewide?null:zip,intent,meaning:"Texas TDLR credential jurisdiction. Recorded city is unavailable in this published cohort; not service territory.",authoritativeSource:null,requiresStatewideConfirmation:Boolean((city||county||zip)&&!confirmStatewide),fallbackApplied:Boolean((city||county||zip)&&confirmStatewide)};
   const tradeRaw = cleanText(input.trade, 64)?.toLowerCase() ?? null;
+  const tradeAlias = resolveTradeAlias(tradeRaw);
   const tradeCapability = getTradeCapability(state, tradeRaw);
   const credentialClass = cleanText(input.credentialClass, 32)?.toUpperCase() ?? null;
   const identifier = cleanText(input.identifier, 80);
@@ -240,7 +252,7 @@ export function normalizeContractorExecutionRequest(value: unknown): NormalizedC
   const limit = Number(input.limit ?? CONTRACTOR_RESULT_LIMIT);
   if (!Number.isInteger(page) || page < 1 || page > MAX_PAGE) throw new Error("invalid_page");
   if (!Number.isInteger(limit) || limit < 1 || limit > MAX_LIMIT) throw new Error("invalid_limit");
-  return { state, capability, tradeRaw, trade: tradeCapability?.id ?? tradeRaw, tradeCapability, credentialClass, geography, county: geography?.county ?? null, city: geography?.city ?? null,
+  return { state, capability, tradeRaw, tradeAlias, trade: tradeCapability?.id ?? tradeRaw, tradeCapability, credentialClass, geography, county: geography?.county ?? null, city: geography?.city ?? null,
     credentialStatus: status as NormalizedContractorExecutionRequest["credentialStatus"], identifier,
     queryType: queryTypeRaw as NormalizedContractorExecutionRequest["queryType"], confirmStatewide, page, limit };
 }
@@ -282,7 +294,7 @@ function semanticCapabilityResult(input: NormalizedContractorExecutionRequest): 
   if (input.state === "NJ" && (!input.tradeRaw || input.tradeRaw === "contractor" || input.tradeRaw === "contractors") && !input.identifier && !input.credentialClass) {
     return capabilityResponse(input, "CLARIFICATION_REQUIRED", "clarification_required", "new_jersey_credential_class_required", ["New Jersey has HIC registration and separate specialty credentials, not one statewide General contractor population."], njTradeChoices());
   }
-  if (input.state === "NJ" && input.tradeRaw === "general") {
+  if (input.state === "NJ" && input.tradeAlias === "general") {
     return capabilityResponse(input, "UNSUPPORTED_TRADE_CAPABILITY", "unsupported_capability", "no_new_jersey_statewide_general_contractor_class", ["The accepted New Jersey source architecture has no single statewide General contractor license class. HIC is not relabeled General."], njTradeChoices());
   }
   if (input.tradeRaw && !input.tradeCapability) {
@@ -305,16 +317,97 @@ export function buildWhere(input: NormalizedContractorExecutionRequest) {
   if (input.state === "FL") { params.push(input.state); terms.push(`(c.home_state = $${params.length} OR l.state = $${params.length})`); }
   if (input.state === "TX") { params.push(input.state); terms.push(`l.state = $${params.length}`); }
   const occupationCodes = input.credentialClass ? [input.credentialClass] : input.tradeCapability?.occupationCodes ?? [];
-  if (occupationCodes.length) { params.push(occupationCodes); terms.push(input.state === "TX" ? `l.occupation_code = ANY($${params.length}::text[])` : `UPPER(TRIM(l.occupation_code)) = ANY($${params.length}::text[])`); }
+  // POST-R1-CON-LOCAL-001: occupation_code is confirmed always-clean (uppercase, trimmed) for every
+  // source system we accept -- see scripts/_post_r1_con_local_001_data_cleanliness.local.mjs (a
+  // read-only full-table scan of fl_dbpr/nj_dca/nj_enforcement/tx_tdlr found zero rows where
+  // occupation_code differs from UPPER(TRIM(occupation_code))). The previous UPPER(TRIM(...))
+  // wrapper here was a semantic no-op that made the predicate non-sargable: it defeated both the
+  // existing licenses_occupation_source_idx/licenses_source_status_occ_idx indexes AND the planner's
+  // row-count estimate for this column, which for common/broad trade families (e.g. FL "general",
+  // CGC/RG) caused a ~1,845x cardinality underestimate (EXPLAIN: estimated rows=3, actual rows=5535)
+  // and made the planner pick a Nested Loop into contractors_pkey instead of a Hash Join --
+  // EXPLAIN ANALYZE showed 11.8s of the query's 11.8s total execution time inside that Nested Loop's
+  // per-row contractors_pkey probes alone. Params (occupationCodes / credentialClass) are already
+  // uppercased and trimmed at normalization time (state-capabilities.ts / cleanText), so this is a
+  // pure query-shape fix with no data-matching change and no index/schema change.
+  if (occupationCodes.length) { params.push(occupationCodes); terms.push(`l.occupation_code = ANY($${params.length}::text[])`); }
   if (input.credentialStatus === "active_current") terms.push("l.status_normalized IN ('active', 'current')");
   if (input.credentialStatus === "expired") terms.push("l.status_normalized IN ('expired', 'inactive')");
   if (input.geography.county) {
     if (input.state === "NJ") { params.push(input.geography.county.label.toLowerCase()); terms.push(`LOWER(REGEXP_REPLACE(TRIM(COALESCE(l.county_name, '')), '\\s+county$', '', 'i')) = $${params.length}`); terms.push("l.state = 'NJ'"); }
     else { params.push(input.geography.county.code ?? input.geography.county.label); terms.push(input.geography.county.code ? `l.county_code = $${params.length}` : `l.county_name = $${params.length}`); }
   }
-  if (input.geography.city) { params.push(input.state); terms.push(`l.state = $${params.length}`); params.push(input.geography.city.toLowerCase()); terms.push(`LOWER(TRIM(COALESCE(l.city, ''))) = $${params.length}`); }
+  if (input.geography.city) {
+    params.push(input.state);
+    terms.push(`l.state = $${params.length}`);
+    // POST-R1-CON-LOCAL-001: same non-sargable-predicate pattern as occupation_code above, found
+    // while tracing why "general contractor in miami" still timed out with the occupation_code fix
+    // alone -- Ask's real request (lib/guided-research/specialists.ts's executeContractor) sends BOTH
+    // city and county together, so this branch is always exercised for "___ in miami" queries, not
+    // just county alone. licenses_state_city_idx is on the RAW (state, city) columns; wrapping city
+    // in LOWER(TRIM(COALESCE(...))) defeats it the same way. FL data is confirmed always
+    // uppercase/trimmed already (scripts/_post_r1_con_local_001_city_cleanliness.local.mjs: only one
+    // raw spelling, "MIAMI", matches lower(trim())='miami' across 8,692 rows; zero whitespace-dirty
+    // rows), so FL can safely use the sargable raw-column form. NJ city data is genuinely mixed-case
+    // ("Brooklyn", "Tenafly", "Brick" -- scripts/_post_r1_con_local_001_nj_city_cleanliness.local.mjs)
+    // so NJ keeps the original case-insensitive form to avoid a real matching regression; NJ city
+    // resolution also goes through resolveNjMunicipality's own lookup table, not raw free text, and
+    // is out of this ticket's Miami-specific scope.
+    if (input.state === "FL") {
+      params.push(input.geography.city.toUpperCase());
+      terms.push(`l.city = $${params.length}`);
+    } else {
+      params.push(input.geography.city.toLowerCase());
+      terms.push(`LOWER(TRIM(COALESCE(l.city, ''))) = $${params.length}`);
+    }
+  }
   if (input.identifier) { params.push(input.identifier.toUpperCase().replace(/[\s-]+/g, "")); terms.push(`(UPPER(REGEXP_REPLACE(COALESCE(l.external_key, ''), '[\\s-]+', '', 'g')) = $${params.length} OR UPPER(REGEXP_REPLACE(COALESCE(l.license_number, ''), '[\\s-]+', '', 'g')) = $${params.length})`); }
   return { sql: terms.join(" AND "), params, occupationCodes };
+}
+
+type CohortRow = {
+  slug: string | null; display_name: string | null; license_number: string | null; external_key: string | null;
+  occupation_code: string | null; occupation_description: string | null; status_normalized: string | null;
+  primary_status: string | null; city: string | null; county: string | null; state: string | null;
+  updated_at: Date | string | null; total: string;
+};
+
+/**
+ * POST-R1-CON-LOCAL-001: the count query and the row query used to be two fully separate,
+ * sequential db.queryOne/db.query calls -- each independently acquires and releases a Postgres pool
+ * client (lib/db.ts's queryOnce: connect -> BEGIN -> SET LOCAL statement_timeout -> query -> COMMIT
+ * -> release). Under the production single-client-per-serverless-isolate Supabase session pooler,
+ * that doubles connection-acquisition contention and doubles the cold-page I/O this request pays for
+ * (each query independently touches the licenses/contractors pages its own scan needs). This is the
+ * exact pattern lib/ask/execute.ts's buildCohortRowsSql already fixed under TH-DISCOVERY-FINAL-REPAIR-A
+ * ("the list path used to run two sequential DB round trips... their combined statement-timeout
+ * budgets... could exceed the platform's real function duration") -- that fix was never applied here,
+ * which is the endpoint AskTrustHub actually calls (contractor-v2.ts, not lib/ask/execute.ts).
+ * Computing the filtered join once in a materialized CTE and reading both the paginated page and the
+ * total out of it in a single round trip removes the duplicate scan and the second connection
+ * acquisition/release, mirroring that same fix here.
+ */
+function buildCohortRowsSql(limitIdx: number, offsetIdx: number, where: string): string {
+  return `
+    WITH matched AS MATERIALIZED (
+      SELECT c.slug, c.display_name, l.license_number, l.external_key, l.occupation_code, l.occupation_description,
+             l.status_normalized, l.primary_status, l.city, l.county_name AS county, l.state, l.updated_at, l.id AS license_id
+      FROM licenses l JOIN contractors c ON c.id = l.contractor_id
+      WHERE ${where}
+    ),
+    totals AS (
+      SELECT COUNT(*)::text AS total FROM matched
+    )
+    SELECT sub.slug, sub.display_name, sub.license_number, sub.external_key, sub.occupation_code, sub.occupation_description,
+           sub.status_normalized, sub.primary_status, sub.city, sub.county, sub.state, sub.updated_at, totals.total
+    FROM totals
+    LEFT JOIN LATERAL (
+      SELECT * FROM matched
+      ORDER BY LOWER(display_name), UPPER(COALESCE(license_number, external_key, '')), license_id
+      LIMIT $${limitIdx}::int OFFSET $${offsetIdx}::int
+    ) sub ON true
+    ORDER BY LOWER(sub.display_name), UPPER(COALESCE(sub.license_number, sub.external_key, '')), sub.license_id
+    `;
 }
 
 async function runCohortRows(
@@ -323,15 +416,20 @@ async function runCohortRows(
 ) {
   const built = buildWhere(input);
   const offset = (input.page - 1) * input.limit;
-  const count = await db.queryOne<{ total: string }>(`SELECT COUNT(*)::text AS total FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE ${built.sql}`, built.params, { statementTimeoutMs: 10_000 });
-  const params = [...built.params, input.limit, offset];
-  const rows = await db.query<{ slug: string; display_name: string; license_number: string | null; external_key: string | null; occupation_code: string | null; occupation_description: string | null; status_normalized: string | null; primary_status: string | null; city: string | null; county: string | null; state: string | null; updated_at: Date | string | null }>(
-    `SELECT c.slug, c.display_name, l.license_number, l.external_key, l.occupation_code, l.occupation_description, l.status_normalized, l.primary_status, l.city, l.county_name AS county, l.state, l.updated_at
-     FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE ${built.sql}
-     ORDER BY LOWER(c.display_name), UPPER(COALESCE(l.license_number, l.external_key, '')), l.id
-     LIMIT $${built.params.length + 1}::int OFFSET $${built.params.length + 2}::int`, params, { statementTimeoutMs: 15_000 });
-  const total = Number(count?.total);
-  if (!count || !Number.isSafeInteger(total) || total < 0) throw new Error("source_count_unavailable");
+  const limitIdx = built.params.length + 1;
+  const offsetIdx = built.params.length + 2;
+  const fetched = await db.query<CohortRow>(
+    buildCohortRowsSql(limitIdx, offsetIdx, built.sql),
+    [...built.params, input.limit, offset],
+    { statementTimeoutMs: 15_000 }
+  );
+  const total = Number(fetched[0]?.total);
+  if (!fetched.length || !Number.isSafeInteger(total) || total < 0) throw new Error("source_count_unavailable");
+  // LEFT JOIN LATERAL always returns exactly one outer row from `totals` even when zero rows match;
+  // that placeholder row has every `sub.*` column NULL. slug/display_name are NOT NULL on both
+  // source tables (contractors.slug is gated non-null/non-empty by buildWhere's own WHERE clause),
+  // so a non-null slug is a safe, narrowing proof this is a real matched row, not the placeholder.
+  const rows = fetched.filter((r): r is CohortRow & { slug: string; display_name: string } => r.slug != null && r.display_name != null);
   const totalPages = Math.ceil(total / input.limit);
   const pageOutOfRange = totalPages > 0 && input.page > totalPages;
   return { built, rows, total, totalPages, pageOutOfRange };
@@ -381,7 +479,7 @@ async function njGeneralContractorBroadenedResponse(
   db: { query: typeof query; queryOne: typeof queryOne }
 ): Promise<ContractorExecutionResponse> {
   if (!input.geography || !input.capability) throw new Error("invalid_geography");
-  const broadened: NormalizedContractorExecutionRequest = { ...input, tradeRaw: null, trade: null, tradeCapability: null, credentialClass: null };
+  const broadened: NormalizedContractorExecutionRequest = { ...input, tradeRaw: null, tradeAlias: null, trade: null, tradeCapability: null, credentialClass: null };
   const { built, rows, total, totalPages, pageOutOfRange } = await runCohortRows(broadened, db);
   const resultState: ContractorExecutionResponse["resultState"] = pageOutOfRange ? "INVALID_QUERY" : total === 0 ? "ZERO_MATCHING_ROWS" : "SUPPORTED_RESULTS";
   return {
@@ -410,8 +508,8 @@ async function njGeneralContractorBroadenedResponse(
 
 export async function executeContractorSpecialistQuery(raw: unknown, db: {query:typeof query;queryOne:typeof queryOne} = {query,queryOne}): Promise<ContractorExecutionResponse | ContractorCapabilityResponse> {
   const input = normalizeContractorExecutionRequest(raw);
-  if (input.state === "FL" && input.tradeRaw === "electrical") throw new Error("unsupported_florida_electrical_source");
-  if (input.state === "NJ" && input.tradeRaw === "general" && input.geography && !input.geography.requiresStatewideConfirmation) {
+  if (input.state === "FL" && input.tradeAlias === "electrical") throw new Error("unsupported_florida_electrical_source");
+  if (input.state === "NJ" && input.tradeAlias === "general" && input.geography && !input.geography.requiresStatewideConfirmation) {
     return njGeneralContractorBroadenedResponse(input, db);
   }
   const semantic = semanticCapabilityResult(input);
@@ -452,7 +550,7 @@ export function contractorUnsupportedElectricalResponse(raw: unknown): Contracto
   provenance: { source: string; capabilityState: "source_not_present" };
 } {
   const input = normalizeContractorExecutionRequest(raw);
-  if (input.state !== "FL" || input.tradeRaw !== "electrical") throw new Error("not_electrical_request");
+  if (input.state !== "FL" || input.tradeAlias !== "electrical") throw new Error("not_electrical_request");
   const response = capabilityResponse(input, "UNSUPPORTED_TRADE_CAPABILITY", "unsupported_capability", "unsupported_florida_electrical_source", ["The accepted Florida CILB construction source does not contain Florida electrical credentials; no New Jersey or other-state class is substituted."], CONTRACTOR_STATE_CAPABILITIES.FL.trades.slice(0, 6).map((trade) => ({ id: trade.id, label: trade.label, supported: true, request: { state: "FL", trade: trade.id } })));
   return Object.assign(response, {
     requestedTrade: "electrical" as const,

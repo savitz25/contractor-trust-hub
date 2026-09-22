@@ -55,8 +55,12 @@ test("NJ general-contractor request runs a real broadened cohort query, not a ba
   };
   const calls: { sql: string; params: unknown[] }[] = [];
   const db = {
+    // POST-R1-CON-LOCAL-001: runCohortRows now issues a single merged CTE query (was two sequential
+    // queryOne/query calls) -- see contractor-v2.ts's buildCohortRowsSql. queryOne is kept in the type
+    // for backward compatibility but is no longer called; the mock must return `total` embedded on
+    // each row from `query`, matching the real merged-query shape.
     queryOne: async (sql: string, params: unknown[]) => { calls.push({ sql, params }); return { total: "1" }; },
-    query: async (sql: string, params: unknown[]) => { calls.push({ sql, params }); return [fixtureRow]; },
+    query: async (sql: string, params: unknown[]) => { calls.push({ sql, params }); return [{ ...fixtureRow, total: "1" }]; },
   } as unknown as Parameters<typeof executeContractorSpecialistQuery>[1];
   const resp = await executeContractorSpecialistQuery(discovery("general contractor in Newark NJ").request, db);
   assert.equal(resp.resultState, "SUPPORTED_RESULTS");

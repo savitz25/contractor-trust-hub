@@ -1,0 +1,50 @@
+{
+  "ranAt": "2026-09-22T14:07:47.142Z",
+  "note": "READ-ONLY POST-R1-CON-LOCAL-001 investigation. Real statements from executeContractorSpecialistQuery's own {query,queryOne} calls -- SQL never hand-reconstructed. Each statement is EXPLAIN ANALYZE'd AND then actually executed so the operation completes normally.",
+  "cases": [
+    {
+      "label": "general_contractor_miami_dade_city_and_county",
+      "request": {
+        "queryType": "cohort",
+        "state": "FL",
+        "trade": "general contractor",
+        "city": "Miami",
+        "county": "miami-dade"
+      },
+      "totalMs": 5797,
+      "resultState": "SUPPORTED_RESULTS",
+      "total": 3293,
+      "statementCount": 1,
+      "statements": [
+        {
+          "kind": "query",
+          "text": "\n    WITH matched AS MATERIALIZED (\n      SELECT c.slug, c.display_name, l.license_number, l.external_key, l.occupation_code, l.occupation_description,\n             l.status_normalized, l.primary_status, l.city, l.county_name AS county, l.state, l.updated_at, l.id AS license_id\n      FROM licenses l JOIN contractors c ON c.id = l.contractor_id\n      WHERE l.source_system = ANY($1::text[]) AND c.is_thin_profile = FALSE AND c.slug IS NOT NULL AND c.slug <> '' AND (c.home_state = $2 OR l.state = $2) AND l.occupation_code = ANY($3::text[]) AND l.status_normalized IN ('active', 'current') AND l.county_code = $4 AND l.state = $5 AND l.city = $6\n    ),\n    totals AS (\n      SELECT COUNT(*)::text AS total FROM matched\n    )\n    SELECT sub.slug, sub.display_name, sub.license_number, sub.external_key, sub.occupation_code, sub.occupation_description,\n           sub.status_normalized, sub.primary_status, sub.city, sub.county, sub.state, sub.updated_at, totals.total\n    FROM totals\n    LEFT JOIN LATERAL (\n      SELECT * FROM matched\n      ORDER BY LOWER(display_name), UPPER(COALESCE(license_number, external_key, '')), license_id\n      LIMIT $7::int OFFSET $8::int\n    ) sub ON true\n    ORDER BY LOWER(sub.display_name), UPPER(COALESCE(sub.license_number, sub.external_key, '')), sub.license_id\n    ",
+          "wallMsIncludingExplainOverhead": 5685
+        }
+      ],
+      "error": null
+    },
+    {
+      "label": "plumbing_miami_dade_city_and_county",
+      "request": {
+        "queryType": "cohort",
+        "state": "FL",
+        "trade": "plumbing",
+        "city": "Miami",
+        "county": "miami-dade"
+      },
+      "totalMs": 3531,
+      "resultState": "SUPPORTED_RESULTS",
+      "total": 693,
+      "statementCount": 1,
+      "statements": [
+        {
+          "kind": "query",
+          "text": "\n    WITH matched AS MATERIALIZED (\n      SELECT c.slug, c.display_name, l.license_number, l.external_key, l.occupation_code, l.occupation_description,\n             l.status_normalized, l.primary_status, l.city, l.county_name AS county, l.state, l.updated_at, l.id AS license_id\n      FROM licenses l JOIN contractors c ON c.id = l.contractor_id\n      WHERE l.source_system = ANY($1::text[]) AND c.is_thin_profile = FALSE AND c.slug IS NOT NULL AND c.slug <> '' AND (c.home_state = $2 OR l.state = $2) AND l.occupation_code = ANY($3::text[]) AND l.status_normalized IN ('active', 'current') AND l.county_code = $4 AND l.state = $5 AND l.city = $6\n    ),\n    totals AS (\n      SELECT COUNT(*)::text AS total FROM matched\n    )\n    SELECT sub.slug, sub.display_name, sub.license_number, sub.external_key, sub.occupation_code, sub.occupation_description,\n           sub.status_normalized, sub.primary_status, sub.city, sub.county, sub.state, sub.updated_at, totals.total\n    FROM totals\n    LEFT JOIN LATERAL (\n      SELECT * FROM matched\n      ORDER BY LOWER(display_name), UPPER(COALESCE(license_number, external_key, '')), license_id\n      LIMIT $7::int OFFSET $8::int\n    ) sub ON true\n    ORDER BY LOWER(sub.display_name), UPPER(COALESCE(sub.license_number, sub.external_key, '')), sub.license_id\n    ",
+          "wallMsIncludingExplainOverhead": 3445
+        }
+      ],
+      "error": null
+    }
+  ]
+}
