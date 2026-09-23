@@ -87,6 +87,7 @@
     "check:th-search-r1-009": "npx --yes tsx --test scripts/test_th_search_r1_009.ts",
     "check:th-search-r1-010": "npx --yes tsx --test scripts/test_th_search_r1_010.ts",
     "check:th-search-r1-019b": "npx --yes tsx --test scripts/test_th_search_r1_019b.ts",
+    "check:contractor-name-parity-001": "npx --yes tsx --test lib/ask/contractor-name-parity-001.test.ts lib/ask/parity-001a.test.ts scripts/test_ask_interpret.ts",
     "check:metrics-r2": "node --import tsx scripts/build_network_metrics_v1.mjs --check && tsx --test scripts/test_metrics_r2.ts scripts/test_metrics_homepage_r2.tsx"
   },
   "dependencies": {
