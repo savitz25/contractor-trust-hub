@@ -31,8 +31,10 @@ test("new mints use independent secure nonces", () => {
 });
 
 test("success redirect and every failure are non-cacheable and non-indexable", () => {
-  const route = readFileSync("app/api/claim/handoff/[profileId]/route.ts", "utf8");
-  assert.match(route, /new Response\(null, \{ status: 302, headers: \{ \.\.\.NO_STORE, Location:/);
+  // ATH-CLAIM-V2-001: mint happens only on POST and answers 303 (see lib/claim/start-core.ts); GET is 405.
+  const route = `${readFileSync("app/api/claim/handoff/[profileId]/route.ts", "utf8")}\n${readFileSync("lib/claim/start-core.ts", "utf8")}`;
+  assert.match(route, /new Response\(null, \{ status: 303, headers: \{ \.\.\.NO_STORE_HEADERS, Location:/);
+  assert.match(route, /export function GET\(\) \{\s*return handleClaimHandoffGet\(\);/);
   assert.match(route, /Cache-Control[^\n]+no-store/);
   assert.match(route, /X-Robots-Tag[^\n]+noindex, nofollow/);
   assert.doesNotMatch(route, /Response\.redirect\(/);
@@ -49,7 +51,7 @@ test("claim rollout gates only intake while exact-profile Layer C and replies re
 });
 
 test("handoff failures provide bounded safe recovery without leaking internals", () => {
-  const route = readFileSync("app/api/claim/handoff/[profileId]/route.ts", "utf8");
+  const route = `${readFileSync("app/api/claim/handoff/[profileId]/route.ts", "utf8")}\n${readFileSync("lib/claim/start-core.ts", "utf8")}`;
   assert.match(route, /Find your profile/);
   assert.match(route, /Verify a credential/);
   assert.match(route, /Request help/);
@@ -57,7 +59,7 @@ test("handoff failures provide bounded safe recovery without leaking internals",
 });
 
 test("repair contains no DB writes, ranking, publication, or token-in-HTML path", () => {
-  const files = ["lib/claim/handoff-contract.ts", "lib/claim/server.ts", "app/api/claim/handoff/[profileId]/route.ts", "app/contractors/[slug]/page.tsx"];
+  const files = ["lib/claim/handoff-contract.ts", "lib/claim/server.ts", "lib/claim/start-core.ts", "app/api/claim/handoff/[profileId]/route.ts", "app/contractors/[slug]/page.tsx"];
   const source = files.map((file) => readFileSync(file, "utf8")).join("\n");
   assert.doesNotMatch(source, /\b(?:INSERT\s+INTO|UPDATE\s+\w+\s+SET|DELETE\s+FROM|UPSERT|trust_score|rank_score)\b/i);
   const cta = readFileSync("components/contractor/ManageProfileCta.tsx", "utf8");
