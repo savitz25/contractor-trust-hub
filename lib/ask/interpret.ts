@@ -26,6 +26,7 @@ import { interpretOregonCcb } from "./oregon-ccb";
 import { interpretPennsylvaniaHic } from "./pennsylvania-hic";
 import { interpretNorthCarolinaNclbgc } from "./north-carolina-nclbgc";
 import { interpretOhioOcilb } from "./ohio-ocilb";
+import { CONTRACTOR_STATE_NAMES } from "@/lib/search/state-names";
 
 const EMPTY_INTERPRET: AskInterpretation = {
   identifier: null,
@@ -63,6 +64,90 @@ export const ASK_CHIPS = [
 
 function includesAny(text: string, phrases: string[]): boolean {
   return phrases.some((p) => phraseInText(text, p));
+}
+
+/** Name limits of the contractor name-candidate operation (lib/specialist-execution/contractor-name-candidates.ts). */
+export const COMPANY_NAME_MIN_LENGTH = 2;
+export const COMPANY_NAME_MAX_LENGTH = 120;
+export const COMPANY_NAME_MAX_WORDS = 10;
+
+/** Words that make a query a structured / discovery request rather than a bare business name. */
+const STRUCTURED_QUERY_WORDS = /\b(?:in|near|nearby|around|within|serving|serve|serves|with|without|show|find|list|search|which|what|who|whom|how|many|is|are|was|were|does|do|did|can|could|should|would|licensed|unlicensed|active|current|expired|contractor|contractors|county|counties|statewide|me|my|i|i'm|im|we|our|need|looking|want|help|please|verify|check|research|compare)\b/i;
+/** A name never starts with one of these. */
+const NON_NAME_LEAD_WORDS = /^(?:show|find|who|what|how|looking|help|can|is|are|does|licensed|active|current|please|the|a|an|my|this|i)$/i;
+/** Two-letter state codes that are also ordinary English words: honored only when typed in upper case. */
+const AMBIGUOUS_LOWER_STATE_CODES = new Set(["in", "or", "me", "co", "de", "hi", "ok", "oh", "id", "ma", "pa", "mo", "ms", "la", "ne", "al", "ar"]);
+
+export type CompanyNameLikeQuery = { name: string; jurisdiction: string | null };
+
+/**
+ * A trailing state name or code is the name-candidate operation's own `jurisdiction` constraint
+ * ("vantage construction nj" -> name "vantage construction", jurisdiction NJ). Nothing else about
+ * the query is reinterpreted; an unsupported jurisdiction is reported by the operation, not substituted.
+ */
+export function trailingJurisdiction(query: string): CompanyNameLikeQuery {
+  const trimmed = query.trim().replace(/\s+/g, " ");
+  const lower = trimmed.toLowerCase();
+  const named = Object.entries(CONTRACTOR_STATE_NAMES)
+    .sort(([a], [b]) => b.length - a.length)
+    .find(([name]) => lower.endsWith(` ${name}`) || lower.endsWith(`, ${name}`));
+  if (named) {
+    const name = trimmed.slice(0, trimmed.length - named[0].length).replace(/[\s,]+$/, "").trim();
+    if (name.length >= COMPANY_NAME_MIN_LENGTH) return { name, jurisdiction: named[1] };
+  }
+  const words = trimmed.split(" ");
+  const last = words[words.length - 1] ?? "";
+  const code = last.toUpperCase();
+  const codes = new Set(Object.values(CONTRACTOR_STATE_NAMES));
+  if (words.length >= 2 && /^[A-Za-z]{2}$/.test(last) && codes.has(code) && (last === code || !AMBIGUOUS_LOWER_STATE_CODES.has(last))) {
+    const name = words.slice(0, -1).join(" ").replace(/[\s,]+$/, "").trim();
+    if (name.length >= COMPANY_NAME_MIN_LENGTH) return { name, jurisdiction: code };
+  }
+  return { name: trimmed, jurisdiction: null };
+}
+
+/**
+ * CONTRACTOR-NAME-PARITY-001: is this a bare company-name-like query? Called only after every
+ * structured branch of the interpreter declined (no trade, no evidence family). Case-insensitive.
+ */
+export function detectCompanyNameLikeQuery(query: string): CompanyNameLikeQuery | null {
+  const split = trailingJurisdiction(query);
+  const name = split.name;
+  if (name.length < COMPANY_NAME_MIN_LENGTH || name.length > COMPANY_NAME_MAX_LENGTH) return null;
+  const words = name.split(" ");
+  if (words.length > COMPANY_NAME_MAX_WORDS) return null;
+  if (!/\p{L}/u.test(name)) return null;
+  if (/[?]/.test(name)) return null;
+  if (NON_NAME_LEAD_WORDS.test(words[0])) return null;
+  if (STRUCTURED_QUERY_WORDS.test(name)) return null;
+  const text = normalizeAskText(name);
+  // A place word inside a name is part of the name ("Roto-Rooter Colorado Springs"); only a query that
+  // is nothing but a place is not a name. The name operation then requires that word like any other.
+  if (GEO_ONTOLOGY.some((g) => g.phrases.some((p) => normalizeAskText(p) === text))) return null;
+  if (TRADE_ONTOLOGY.some((t) => t.phrases.some((p) => phraseInText(text, p)))) return null;
+  if (EVIDENCE_ONTOLOGY.some((e) => e.phrases.some((p) => phraseInText(text, p)))) return null;
+  return split;
+}
+
+function companyNameResult(query: string, interpretation: AskInterpretation, nameLike: CompanyNameLikeQuery): AskResult {
+  interpretation.entityQuery = nameLike.name.slice(0, COMPANY_NAME_MAX_LENGTH);
+  interpretation.nameJurisdiction = nameLike.jurisdiction;
+  interpretation.entityType = "Company-name candidates";
+  interpretation.location = nameLike.jurisdiction
+    ? `${stateLabel(nameLike.jurisdiction)} (credential jurisdiction, not address)`
+    : "Every jurisdiction served by ContractorTrustHub name search";
+  interpretation.notes.push("Name matching identifies candidate records; it does not prove similarly named businesses are the same entity.");
+  return {
+    version: ASK_CONTRACT_VERSION, query, mode: "entity", supported: true, interpretation,
+    href: `/verify?q=${encodeURIComponent(nameLike.name)}${nameLike.jurisdiction ? `&state=${nameLike.jurisdiction.toLowerCase()}` : ""}`,
+    count: null, aggregate: null, comparison: null,
+    failMessage: null, changeHints: ["Add a credential number", "Add a state to narrow", "Confirm the exact identity"],
+  };
+}
+
+function stateLabel(code: string): string {
+  const named = Object.entries(CONTRACTOR_STATE_NAMES).find(([, value]) => value === code);
+  return named ? named[0].replace(/\b\w/g, (c) => c.toUpperCase()) : code;
 }
 
 export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): AskResult {
@@ -137,18 +222,15 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
   // present in the text -- a genuine brand name ("Roto-Rooter Colorado Springs")
   // has no trade phrase to match and still routes to entity lookup correctly.
   const matchesKnownTrade = TRADE_ONTOLOGY.some((t) => t.phrases.some((p) => phraseInText(text, p)));
-  const looksLikeCompany = /\b(llc|inc|corp|corporation|company|group|holdings)\b/i.test(query)
-    && !/\b(in|near|with|active|current|licensed)\b/i.test(query)
-    && !matchesKnownTrade;
-  if (looksLikeCompany) {
-    interpretation.entityQuery = query.slice(0, 120);
-    interpretation.notes.push("Name matching identifies candidate records; it does not prove similarly named businesses are the same entity.");
-    return {
-      version: ASK_CONTRACT_VERSION, query, mode: "entity", supported: true, interpretation,
-      href: `/verify?q=${encodeURIComponent(query)}`, count: null, aggregate: null, comparison: null,
-      failMessage: null, changeHints: ["Add a credential number", "Confirm the exact identity"],
-    };
-  }
+  // CONTRACTOR-NAME-PARITY-001: a legal-entity suffix (LLC / Inc / Corp ...) is explicit evidence of
+  // a specific business name even when the name also carries a trade word ("123 Roofing Inc"). The
+  // weaker organization-form words ("company", "group", "holdings") keep the PARITY-001A rule and
+  // only count when no trade phrase is present ("kitchen remodeling company Denver" is a category).
+  const legalSuffix = /\b(?:llc|l\.l\.c\.?|inc|incorporated|corp|corporation|ltd|llp|pllc)\b/i.test(query);
+  const orgForm = /\b(?:company|group|holdings)\b/i.test(query);
+  const looksLikeCompany = (legalSuffix || (orgForm && !matchesKnownTrade))
+    && !/\b(in|near|with|active|current|licensed)\b/i.test(query);
+  if (looksLikeCompany) return companyNameResult(query, interpretation, trailingJurisdiction(query));
 
   const nycResult = interpretNycDcwp(query, text);
   if (nycResult) return nycResult;
@@ -508,30 +590,19 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
     };
   }
 
-  // TH-DISCOVERY-PARITY-001A: "Roto-Rooter Colorado Springs" names a specific,
-  // well-known company brand -- no TRADE_ONTOLOGY phrase to match ("Roto-Rooter"
-  // isn't a trade word), so it fell all the way through to the generic "we could
-  // not map that question" dead end instead of reaching the exact-identity search
-  // this hub already runs for a genuine business name (the same real search
-  // `looksLikeCompany` above hands off to via /verify -- this is the same
-  // destination, just recognizing a bare brand name with no llc/inc/company suffix
-  // and no trade word as a company-identity candidate instead of an unmapped
-  // question). A leading run of capitalized words (a proper-noun brand pattern)
-  // that matched no known trade phrase is treated as a candidate business name.
-  const brandNameCandidate = !trade
-    ? query.trim().match(/^[A-Z][A-Za-z0-9'&.-]*(?:[\s-]+[A-Z][A-Za-z0-9'&.-]*)*/)?.[0]
-    : null;
-  const brandLeadWord = brandNameCandidate?.split(/\s+/)[0]?.toLowerCase();
-  const notABrandLeadWord = brandLeadWord && /^(?:show|find|who|what|how|looking|help|can|is|are|does|licensed|active|current|please|the|a|an|my|this|i)$/.test(brandLeadWord);
-  if (brandNameCandidate && !notABrandLeadWord) {
-    interpretation.entityQuery = query.slice(0, 120);
-    interpretation.notes.push("Name matching identifies candidate records; it does not prove similarly named businesses are the same entity.");
-    return {
-      version: ASK_CONTRACT_VERSION, query, mode: "entity", supported: true, interpretation,
-      href: `/verify?q=${encodeURIComponent(query)}`, count: null, aggregate: null, comparison: null,
-      failMessage: null, changeHints: ["Add a credential number", "Confirm the exact identity"],
-    };
-  }
+  // TH-DISCOVERY-PARITY-001A recognized "Roto-Rooter Colorado Springs" (a Capitalized proper-noun
+  // run) as a business name. CONTRACTOR-NAME-PARITY-001 generalizes that rule: ANY query that
+  // resolved no structured intent at all -- no trade phrase, no evidence family, no ontology
+  // geography, no locative / structured wording -- and reads as a company name ("vantage",
+  // "vantage construction", "worsham construction", "allied builders") is a company-name search,
+  // exactly as it already is on AskTrustHub, which consumes this hub's own name-candidate operation
+  // for these inputs. The old rule was case-sensitive, so an ordinary lower-case name landed in the
+  // "could not map that question" dead end while the page itself invites "enter a company or
+  // credential". Precedence is preserved: exact credential first, then every structured research
+  // branch above, then -- only when none applied -- name search. A trailing state ("... nj",
+  // "... new jersey") becomes the operation's own jurisdiction constraint, never part of the name.
+  const nameLike = !trade && !evidence ? detectCompanyNameLikeQuery(query) : null;
+  if (nameLike) return companyNameResult(query, interpretation, nameLike);
 
   return {
     version: ASK_CONTRACT_VERSION,

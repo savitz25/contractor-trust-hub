@@ -55,7 +55,7 @@ export type ContractorResearchQuery = {
   geographyAction?: string | null;
   geographyChoice?: string | null;
   geographyCorrection?: string | null;
-  identity: { identifier: string | null; entityQuery: string | null };
+  identity: { identifier: string | null; entityQuery: string | null; nameJurisdiction?: string | null };
   geography: {
     state: "FL" | null;
     city?: string | null;
@@ -257,6 +257,7 @@ export function buildContractorResearchQuery(
     identity: {
       identifier: interpreted.interpretation.identifier,
       entityQuery: interpreted.interpretation.entityQuery,
+      nameJurisdiction: interpreted.interpretation.nameJurisdiction ?? null,
     },
     geography: {
       state,

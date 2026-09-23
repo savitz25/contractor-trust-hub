@@ -6,6 +6,7 @@ import type { ContractorResearchQuery } from "@/lib/ask/plan";
 import { askHref, chipHref, planToOverrides } from "@/lib/ask/plan";
 import type { AskExecution } from "@/lib/ask/execute";
 import { formatIntelCount } from "@/lib/home/intel-v2";
+import { NAME_MATCH_DISCLAIMER } from "@/lib/ask/execute";
 import { AskResultCard } from "./AskResultCard";
 
 export function AskResults({
@@ -50,11 +51,11 @@ export function AskResults({
         <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
           <div>
             <dt className="text-[var(--muted)]">Location</dt>
-            <dd className="font-medium">{plan.geographyRequirement?.normalizedPlace || plan.geography.countyLabel || plan.geography.state || "Not specified"}</dd>
+            <dd className="font-medium">{execution.nameSearch ? interpreted.interpretation.location : plan.geographyRequirement?.normalizedPlace || plan.geography.countyLabel || plan.geography.state || "Not specified"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Geography basis</dt>
-            <dd className="font-medium">Indexed DBPR address county — not service territory</dd>
+            <dd className="font-medium">{execution.nameSearch ? "Credential jurisdiction and recorded address on each card — not service territory" : "Indexed DBPR address county — not service territory"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Trade</dt>
@@ -207,6 +208,24 @@ export function AskResults({
         </section>
       ) : null}
 
+      {execution.nameSearch ? (
+        <section aria-labelledby="ask-name-candidates" className="space-y-3">
+          <h2 id="ask-name-candidates" className="text-lg font-semibold">Company-name candidates</h2>
+          <p className="text-sm text-[var(--muted)]">{execution.nameSearch.scopeMeaning}</p>
+          {execution.nameSearch.optionalWordsDropped.length > 0 ? (
+            <p className="text-sm text-[var(--muted)]">Legal endings not required for a match: {execution.nameSearch.optionalWordsDropped.join(", ")}. Required words: {execution.nameSearch.requiredWords.join(", ")}.</p>
+          ) : null}
+          {!execution.blocked ? (
+            <p role="status" className="text-sm">
+              <strong className="text-xl tabular-nums">{execution.nameSearch.returned}</strong> name candidate{execution.nameSearch.returned === 1 ? "" : "s"} on page {plan.page}
+              {execution.nameSearch.hasMore ? " · more candidates exist" : execution.nameSearch.returned > 0 ? " · no further candidates" : ""}. Source order only — not a ranking or recommendation.
+            </p>
+          ) : null}
+          <p className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" role="note">{NAME_MATCH_DISCLAIMER}</p>
+          {execution.nameSearch.completeness ? <p className="text-xs text-[var(--muted)]">{execution.nameSearch.completeness}</p> : null}
+        </section>
+      ) : null}
+
       {execution.contractorCount != null || execution.credentialCount != null ? (
         <p role="status" className="text-sm">
           {execution.contractorCount != null ? (
@@ -253,6 +272,47 @@ export function AskResults({
         </section>
       ) : null}
 
+      {execution.nameSearch && execution.ok && execution.nameSearch.returned === 0 ? (
+        <section className="rounded-xl border border-[var(--border)] bg-white p-5" role="status">
+          <h2 className="text-lg font-semibold">{plan.page > 1 ? "No further name candidates" : "No published contractor profile matches that name"}</h2>
+          <p className="mt-2 text-sm text-[var(--muted)]">
+            {execution.nameSearch.resultState === "UNSUPPORTED_SCOPE"
+              ? "That state is not served by ContractorTrustHub name search. The constraint was kept; no other state was substituted and nothing was searched."
+              : "No public, non-thin ContractorTrustHub profile has a source name containing every required word. Missing here does not prove the business is unlicensed or that no record exists; try fewer or different words, or confirm with the issuing agency."}
+          </p>
+        </section>
+      ) : null}
+
+      {execution.nameSearch ? (
+        <>
+          {execution.nameSearch.limitations.length > 0 ? (
+            <details className="text-sm">
+              <summary className="cursor-pointer font-semibold text-[var(--navy)]">Name-search limitations</summary>
+              <ul className="mt-2 list-disc pl-5 text-[var(--muted)]">
+                {execution.nameSearch.limitations.map((row) => <li key={row}>{row}</li>)}
+              </ul>
+            </details>
+          ) : null}
+          {execution.nameSearch.hasMore || plan.page > 1 ? (
+            <nav className="flex gap-4 text-sm" aria-label="Name candidate pagination">
+              {plan.page > 1 ? <Link prefetch={false} href={prevPage}>Previous</Link> : <span className="text-[var(--muted)]">Previous</span>}
+              <span>Page {plan.page}</span>
+              {execution.nameSearch.hasMore ? <Link prefetch={false} href={nextPage}>View more candidates</Link> : <span className="text-[var(--muted)]">No more candidates</span>}
+            </nav>
+          ) : null}
+          {execution.nameSearch.continuation.length > 0 ? (
+            <div className="text-sm">
+              <p className="font-semibold">Continue in ContractorTrustHub Verify</p>
+              <ul className="mt-1 flex flex-wrap gap-2">
+                {execution.nameSearch.continuation.map((link) => (
+                  <li key={link.href}><Link prefetch={false} href={link.href} className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs">{link.label}</Link></li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </>
+      ) : null}
+
       {execution.ok && execution.contractorCount != null && execution.contractorCount > plan.limit ? (
         <nav className="flex gap-4 text-sm" aria-label="Result pagination">
           {plan.page > 1 ? <Link prefetch={false} href={prevPage}>Previous</Link> : <span className="text-[var(--muted)]">Previous</span>}
@@ -276,7 +336,7 @@ export function AskResults({
           </div>
           <div>
             <dt className="text-[var(--muted)]">Source datasets</dt>
-            <dd>{execution.blocked ? "No provider query executed" : "fl_dbpr construction licenses; optional public-eligible discipline_actions"}</dd>
+            <dd>{execution.blocked ? "No provider query executed" : execution.nameSearch ? `Name-searchable credential sources: ${execution.nameSearch.searchedJurisdictions.join(", ") || "none"}` : "fl_dbpr construction licenses; optional public-eligible discipline_actions"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Snapshot / as-of</dt>

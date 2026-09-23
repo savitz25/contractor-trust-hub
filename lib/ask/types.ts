@@ -20,6 +20,8 @@ export type AskSort = "default" | "count_desc" | "unsupported_rate";
 export type AskInterpretation = {
   identifier: string | null;
   entityQuery: string | null;
+  /** Credential jurisdiction constraint for a company-name search (the name-candidate operation's own `jurisdiction`). */
+  nameJurisdiction?: string | null;
   location: string;
   trade: string;
   credentialStatus: string;
