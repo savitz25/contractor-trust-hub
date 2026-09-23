@@ -51,11 +51,11 @@ export function AskResults({
         <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
           <div>
             <dt className="text-[var(--muted)]">Location</dt>
-            <dd className="font-medium">{plan.geographyRequirement?.normalizedPlace || plan.geography.countyLabel || plan.geography.state || "Not specified"}</dd>
+            <dd className="font-medium">{execution.nameSearch ? interpreted.interpretation.location : plan.geographyRequirement?.normalizedPlace || plan.geography.countyLabel || plan.geography.state || "Not specified"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Geography basis</dt>
-            <dd className="font-medium">Indexed DBPR address county — not service territory</dd>
+            <dd className="font-medium">{execution.nameSearch ? "Credential jurisdiction and recorded address on each card — not service territory" : "Indexed DBPR address county — not service territory"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Trade</dt>
