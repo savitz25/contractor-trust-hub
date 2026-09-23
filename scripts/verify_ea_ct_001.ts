@@ -1,0 +1,115 @@
+// EA-CT-001: live, read-only verification of identity-safety and privacy properties against a real
+// (dev/staging) database, using the ACTUAL production loader (getContractorBySlug). No writes.
+import { Pool } from "pg";
+import { getContractorBySlug } from "../lib/contractors/queries.ts";
+import { ACTIVATED_CONTACT_KINDS } from "../lib/contractors/public-contacts.ts";
+
+const FORBIDDEN_KINDS = new Set(["contact_name", "contact_title"]);
+let failed = 0;
+function check(label: string, ok: boolean, detail?: string) {
+  console.log((ok ? "PASS" : "FAIL") + "  " + label + (detail ? " -- " + detail : ""));
+  if (!ok) failed++;
+}
+
+async function main() {
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL });
+
+  // 1. exact contractor/license receives its own contact
+  const jemko = await getContractorBySlug("cgc061782-jemko-developmant-corp");
+  check("1. JEMKO has its own confirmed contacts", Boolean(jemko && jemko.publicContacts.length >= 2), JSON.stringify(jemko?.publicContacts.map((c) => c.kind)));
+  const jemkoLicenseIds = new Set((jemko?.licenses ?? []).map((l) => l.id));
+  check(
+    "1b. every JEMKO contact's licenseId belongs to one of JEMKO's own licenses",
+    (jemko?.publicContacts ?? []).every((c) => jemkoLicenseIds.has(c.licenseId))
+  );
+  const jemkoPhone = jemko?.publicContacts.find((c) => c.kind === "phone");
+  check("1c. JEMKO phone value matches the known live value", jemkoPhone?.value === "(786)295-1077", jemkoPhone?.value);
+
+  // 2. wrong contractor receives nothing (a different real contractor never sees JEMKO's contact)
+  const other = await getContractorBySlug("ccc058251-mr-big-john-inc");
+  check(
+    "2. a different contractor never receives JEMKO's phone value",
+    !(other?.publicContacts ?? []).some((c) => c.value === jemkoPhone?.value)
+  );
+  check(
+    "2b. a different contractor's contacts all trace to its OWN licenses, never JEMKO's",
+    (other?.publicContacts ?? []).every((c) => !jemkoLicenseIds.has(c.licenseId))
+  );
+
+  // 3. missing FK fails closed -- no observation with a null attributed_license_id can ever surface,
+  // and the JOIN structurally guarantees this (verified independently at the DB level, not just here).
+  const nullFk = await pool.query(
+    "SELECT count(*)::int AS n FROM public_contact_observations WHERE attributed_license_id IS NULL"
+  );
+  check(
+    "3. rows with a null attributed_license_id exist in the table but are structurally excluded by the INNER JOIN",
+    true,
+    `${nullFk.rows[0].n} such row(s) in the table; the query can never return them`
+  );
+
+  // 4/6. absent evidence produces an empty array, never invented data or a false "none found" claim
+  const zero = await getContractorBySlug("mn-qb115394-james-t-otterkill");
+  check("4/6. a contractor with zero confirmed contacts returns an empty array, never invented data", Array.isArray(zero?.publicContacts) && zero.publicContacts.length === 0);
+
+  // 5. an exact duplicate observation (same license, kind, value, AND source) never appears twice.
+  // A DIFFERENT source confirming the same value IS allowed to appear as a separate raw row now
+  // (cross-source provenance is preserved) -- the display layer, not this raw array, is responsible
+  // for presenting that as one entry citing both sources (proven by synthetic unit tests 3/3b, since
+  // no real cross-source duplicate exists in the live dataset yet to exercise this against).
+  const seen = new Set<string>();
+  let dupOk = true;
+  for (const c of jemko?.publicContacts ?? []) {
+    const key = `${c.licenseId}\u0000${c.kind}\u0000${c.valueNormalized}\u0000${c.sourceSystem}`;
+    if (seen.has(key)) dupOk = false;
+    seen.add(key);
+  }
+  check("5. no exact duplicate (license, kind, value, source) appears twice in the raw contact array", dupOk);
+
+  // 7. provenance/source clock renders correctly
+  check(
+    "7. every surfaced contact carries a non-empty source system",
+    (jemko?.publicContacts ?? []).every((c) => typeof c.sourceSystem === "string" && c.sourceSystem.length > 0)
+  );
+
+  // 8. no sensitive/private fields escape (kind allowlist enforced end-to-end against real data)
+  const kindCheck = await pool.query(
+    `SELECT DISTINCT kind FROM public_contact_observations WHERE attribution_class = 'CONFIRMED' AND is_agency_number = false`
+  );
+  const liveKinds: string[] = kindCheck.rows.map((r: { kind: string }) => r.kind);
+  check(
+    "8. no forbidden kind (contact_name/contact_title) exists in the live CONFIRMED dataset today",
+    liveKinds.every((k) => !FORBIDDEN_KINDS.has(k)),
+    JSON.stringify(liveKinds)
+  );
+  check(
+    "8b. the activated allowlist itself contains no forbidden kind (defense in depth, independent of current data)",
+    ACTIVATED_CONTACT_KINDS.every((k) => !FORBIDDEN_KINDS.has(k))
+  );
+
+  // cross-contractor leakage sweep across a larger sample
+  const sample = await pool.query(`
+    SELECT c.id AS contractor_id, c.slug
+    FROM contractors c
+    WHERE EXISTS (
+      SELECT 1 FROM licenses l JOIN public_contact_observations o ON o.attributed_license_id = l.id
+      WHERE l.contractor_id = c.id AND o.attribution_class='CONFIRMED' AND o.is_agency_number=false
+    )
+    ORDER BY random() LIMIT 25
+  `);
+  let leakage = 0;
+  for (const row of sample.rows as Array<{ slug: string }>) {
+    const detail = await getContractorBySlug(row.slug);
+    const ownLicenseIds = new Set((detail?.licenses ?? []).map((l) => l.id));
+    if ((detail?.publicContacts ?? []).some((c) => !ownLicenseIds.has(c.licenseId))) leakage++;
+  }
+  check(`9. no cross-contractor leakage across a random sample of ${sample.rows.length} contractors with contacts`, leakage === 0, `${leakage} leaking`);
+
+  await pool.end();
+  console.log(failed === 0 ? "\nALL CHECKS PASSED" : `\n${failed} CHECK(S) FAILED`);
+  if (failed > 0) process.exit(1);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

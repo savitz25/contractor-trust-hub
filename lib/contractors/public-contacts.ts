@@ -1,0 +1,97 @@
+import type { PublicContactDetail, PublicContactKind } from "./types";
+
+/** The only kinds this activation ever surfaces. contact_name/contact_title are deliberately excluded. */
+export const ACTIVATED_CONTACT_KINDS: readonly PublicContactKind[] = [
+  "phone",
+  "phone_extension",
+  "email",
+  "website",
+  "physical_address",
+  "mailing_address",
+  "additional_location",
+];
+
+export const CONTACT_KIND_LABEL: Record<PublicContactKind, string> = {
+  phone: "Business phone",
+  phone_extension: "Extension",
+  email: "Business email",
+  website: "Website",
+  physical_address: "Physical business address",
+  mailing_address: "Mailing address",
+  additional_location: "Additional business location",
+};
+
+/** One source's citation of a contact fact, kept distinct from every other source's citation of the same fact. */
+export type ContactSourceCitation = {
+  sourceSystem: string;
+  sourceUrl: string | null;
+  retrievedAt: string | null;
+};
+
+/** One value, as it will be displayed, citing every source that independently confirmed it. */
+export type DisplayContact = {
+  kind: PublicContactKind;
+  value: string;
+  valueNormalized: string;
+  licenseId: string;
+  sources: ContactSourceCitation[];
+};
+
+/**
+ * Collapses only an EXACT duplicate observation: same license, kind, value, AND source. The
+ * table's own unique index already prevents this at the database level
+ * (source_system, kind, value_normalized, attributed_license_id) -- this is a defensive second
+ * layer only, e.g. against a future join fanning a row out more than once. Freshest retrievedAt
+ * wins within that exact tuple.
+ *
+ * A DIFFERENT source confirming the SAME value is never collapsed here -- that is corroborating
+ * provenance, not a duplicate, and is preserved as a separate row. See groupContactsForDisplay for
+ * how two sources confirming one fact are presented without rendering the value twice.
+ */
+export function dedupeExactObservations(
+  contacts: readonly PublicContactDetail[]
+): PublicContactDetail[] {
+  const byKey = new Map<string, PublicContactDetail>();
+  for (const contact of contacts) {
+    const key = `${contact.licenseId}\u0000${contact.kind}\u0000${contact.valueNormalized}\u0000${contact.sourceSystem}`;
+    const existing = byKey.get(key);
+    if (!existing) {
+      byKey.set(key, contact);
+      continue;
+    }
+    const existingTime = existing.retrievedAt ? Date.parse(existing.retrievedAt) : Number.NEGATIVE_INFINITY;
+    const nextTime = contact.retrievedAt ? Date.parse(contact.retrievedAt) : Number.NEGATIVE_INFINITY;
+    if (nextTime > existingTime) byKey.set(key, contact);
+  }
+  return [...byKey.values()];
+}
+
+/**
+ * Groups observations for display: buckets by kind (fixed order), then within a kind merges rows
+ * that share the same (license, value) into ONE display entry citing every corroborating source.
+ * A repeated value is never rendered as two separate cards, and a source is never dropped to avoid
+ * that -- both requirements are satisfied by presenting one value with a source list. Repetition of
+ * a value is never treated as evidence of shared identity between licenses (grouping is scoped to
+ * one license's own rows only, one call per contractor).
+ */
+export function groupContactsForDisplay(
+  contacts: readonly PublicContactDetail[]
+): Array<{ kind: PublicContactKind; items: DisplayContact[] }> {
+  const deduped = dedupeExactObservations(contacts);
+  return ACTIVATED_CONTACT_KINDS.map((kind) => {
+    const rows = deduped.filter((c) => c.kind === kind);
+    const byFact = new Map<string, DisplayContact>();
+    for (const row of rows) {
+      const factKey = `${row.licenseId}\u0000${row.valueNormalized}`;
+      const citation: ContactSourceCitation = {
+        sourceSystem: row.sourceSystem,
+        sourceUrl: row.sourceUrl,
+        retrievedAt: row.retrievedAt,
+      };
+      const existing = byFact.get(factKey);
+      if (existing) existing.sources.push(citation);
+      else byFact.set(factKey, { kind, value: row.value, valueNormalized: row.valueNormalized, licenseId: row.licenseId, sources: [citation] });
+    }
+    return { kind, items: [...byFact.values()] };
+  }).filter((group) => group.items.length > 0);
+}

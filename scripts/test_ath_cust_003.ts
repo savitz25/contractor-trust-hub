@@ -54,6 +54,7 @@ function contractor(overrides: Partial<ContractorDetail> = {}): ContractorDetail
     ],
     entities: [],
     discipline: [],
+    publicContacts: [],
     ...overrides,
   };
 }

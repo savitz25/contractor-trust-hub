@@ -7,6 +7,7 @@ import { CautionSummary } from "@/components/contractor/CautionSummary";
 import { InsuranceGuidance } from "@/components/contractor/InsuranceGuidance";
 import { PermitEvidenceSection } from "@/components/contractor/PermitEvidenceSection";
 import { ProjectFitBanner } from "@/components/contractor/ProjectFitBanner";
+import { PublicContactSection } from "@/components/contractor/PublicContactSection";
 import { RelatedEntitySection } from "@/components/contractor/RelatedEntitySection";
 import {
   ConsumerMeaning,
@@ -566,6 +567,8 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         <WhatWeChecked contractor={contractor} />
 
         <LicensesSection licenses={contractor.licenses} />
+
+        <PublicContactSection contractor={contractor} />
 
         {!isThin || isAz || isNj || isFlFull ? (
           <DisciplineSection
