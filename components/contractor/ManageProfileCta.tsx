@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type Props = { profileId: string; managed?: boolean };
 
-function track(event: "manage_profile_cta_view" | "manage_profile_cta_click") {
+/**
+ * ATH-CLAIM-V2-001 — the claim CTA is an explicit human action: a same-origin POST form (works without
+ * JavaScript) instead of a crawlable link. Analytics stay low-cardinality: no profile id, no licence number.
+ */
+function track(event: "claim_cta_viewed" | "claim_cta_activated") {
   const payload = {
     event,
     hub: "contractor",
@@ -25,19 +29,32 @@ function track(event: "manage_profile_cta_view" | "manage_profile_cta_click") {
 }
 
 export function ManageProfileCta({ profileId, managed = false }: Props) {
-  useEffect(() => track("manage_profile_cta_view"), []);
+  const [pending, setPending] = useState(false);
+  useEffect(() => track("claim_cta_viewed"), []);
+  const buttonClass = "mt-3 inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--accent)] px-4 text-sm font-semibold text-[var(--navy)] no-underline hover:bg-[var(--surface)] disabled:opacity-60";
   return (
-    <aside className="rounded-2xl border border-[var(--border)] bg-white p-5 shadow-sm sm:p-6 print:hidden">
+    <aside id="manage-profile" className="rounded-2xl border border-[var(--border)] bg-white p-5 shadow-sm sm:p-6 print:hidden">
       <p className="text-sm font-semibold text-[var(--text)]">{managed ? "Profile managed by an authorized representative" : "Is this your business?"}</p>
-      <a
-        href={managed ? "https://www.asktrusthub.com/manage" : `/api/claim/handoff/${encodeURIComponent(profileId)}`}
-        onClick={() => track("manage_profile_cta_click")}
-        className="mt-3 inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--accent)] px-4 text-sm font-semibold text-[var(--navy)] no-underline hover:bg-[var(--surface)]"
-      >
-        {managed ? "Manage on AskTrustHub" : "Manage this profile on AskTrustHub"}
-      </a>
+      {managed ? (
+        <a href="https://www.asktrusthub.com/manage" className={buttonClass}>Manage on AskTrustHub</a>
+      ) : (
+        <form
+          method="post"
+          action={`/api/claim/handoff/${encodeURIComponent(profileId)}`}
+          onSubmit={(event) => {
+            if (pending) { event.preventDefault(); return; }
+            setPending(true);
+            track("claim_cta_activated");
+          }}
+        >
+          <input type="hidden" name="source" value="organic" />
+          <button type="submit" disabled={pending} className={buttonClass}>
+            {pending ? "Opening AskTrustHub…" : "Claim or manage this profile — free"}
+          </button>
+        </form>
+      )}
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
-        {managed ? "Business-supplied information is managed separately from licensing, regulatory records, and TrustHub research." : <>Verify your relationship to manage business-supplied information and responses. Regulatory records remain independently sourced.</>}
+        {managed ? "Business-supplied information is managed separately from licensing, regulatory records, and TrustHub research." : <>Claiming is free and is not an endorsement. Verify your relationship to manage business-supplied information and responses. Regulatory records remain independently sourced, and corrections can be requested without claiming.</>}
       </p>
     </aside>
   );

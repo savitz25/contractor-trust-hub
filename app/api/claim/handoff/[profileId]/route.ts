@@ -1,47 +1,40 @@
-import { claimCtaEnabledFor, loadEligibleClaimProfile, logClaimHandoff, mintClaimHandoff } from "@/lib/claim/server";
+import { claimCtaEnabledFor, loadEligibleClaimProfile, mintClaimHandoff } from "@/lib/claim/server";
+import { MemoryRateLimitStore, handleClaimHandoffGet, handleClaimStart } from "@/lib/claim/start-core";
+import { getSiteUrl } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const NO_STORE = { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" };
+/**
+ * ATH-CLAIM-V2-001. Production Ask origin is fixed. A non-production override exists only so the
+ * cross-repo flow can be exercised against a local Ask (`ATH_CLAIM_ASK_ORIGIN_DEV`); it is ignored in
+ * production builds.
+ */
+const ASK_ORIGIN = process.env.NODE_ENV === "production" ? "https://www.asktrusthub.com" : (process.env.ATH_CLAIM_ASK_ORIGIN_DEV || "https://www.asktrusthub.com");
 
-function safeFailure(message: string, status: 404 | 503) {
-  return Response.json({
-    error: message,
-    next: {
-      primary: { label: "Find your profile", href: "/search" },
-      alternative: { label: "Verify a credential", href: "/verify" },
-      support: { label: "Request help", href: "/contact" },
-    },
-  }, { status, headers: NO_STORE });
+/** Per-isolate, non-durable, bounded. See lib/claim/start-core.ts header for the honest scope of this gate. */
+const store = new MemoryRateLimitStore();
+
+function log(event: string, fields?: Record<string, unknown>) {
+  console.info(JSON.stringify({ src: "cth-claim", event, ...fields }));
 }
 
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ profileId: string }> }
-) {
+/** V2 rule: GET never mints a signed handoff. */
+export function GET() {
+  return handleClaimHandoffGet();
+}
+
+/** V2 rule: an explicit same-origin POST is the only way to mint a signed handoff. */
+export async function POST(request: Request, { params }: { params: Promise<{ profileId: string }> }) {
   const { profileId } = await params;
-  try {
-    if (!claimCtaEnabledFor(profileId)) {
-      logClaimHandoff("claim_handoff_failed", { reason: "unavailable" });
-      return safeFailure("Profile management is unavailable for this profile.", 404);
-    }
-    const profile = await loadEligibleClaimProfile(profileId);
-    if (!profile) {
-      logClaimHandoff("claim_handoff_failed", { reason: "ineligible" });
-      return safeFailure("This profile is not eligible for management.", 404);
-    }
-    const { token } = mintClaimHandoff(profile);
-    logClaimHandoff("claim_handoff_minted", {
-      state: "FL",
-      source_system: "fl_dbpr",
-    });
-    console.info(JSON.stringify({ event: "claim_cta_clicked", hub: "contractor", profile_class: "contractor", state: "FL", acquisition_source: "organic" }));
-    const target = new URL("https://www.asktrusthub.com/claim/continue");
-    target.searchParams.set("handoff", token);
-    return new Response(null, { status: 302, headers: { ...NO_STORE, Location: target.toString() } });
-  } catch {
-    logClaimHandoff("claim_handoff_failed", { reason: "unavailable" });
-    return safeFailure("Profile management is temporarily unavailable.", 503);
-  }
+  return handleClaimStart(request, profileId, {
+    enabled: claimCtaEnabledFor,
+    loadProfile: loadEligibleClaimProfile,
+    mint: (profile) => mintClaimHandoff(profile),
+    store,
+    now: () => Date.now(),
+    askOrigin: ASK_ORIGIN,
+    allowedOrigins: [getSiteUrl()],
+    log,
+  });
 }
