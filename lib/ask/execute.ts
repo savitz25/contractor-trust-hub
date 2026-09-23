@@ -14,6 +14,13 @@ import type { ContractorResearchQuery, EvidenceFamilyId } from "./plan";
 import { ASK_PAGE_SIZE } from "./plan";
 import { CLASS_LABELS, TRADE_ONTOLOGY, TRADE_TO_DISCOVERY_SLUG } from "./ontology";
 import { stateName } from "./geography";
+import { NAME_CANDIDATES_CONTRACT, NAME_CANDIDATES_OPERATION, NAME_DEFAULT_LIMIT, executeContractorNameCandidates } from "@/lib/specialist-execution/contractor-name-candidates";
+import type { NameCandidateDb } from "@/lib/contractors/name-candidates-query";
+
+/** Same first-page size AskTrustHub receives from the name-candidate operation (parity); later pages via ?page=. */
+export const NAME_CANDIDATE_PAGE_SIZE = NAME_DEFAULT_LIMIT;
+
+export const NAME_MATCH_DISCLAIMER = "A matching name is not proof that the record is the specific business you mean.";
 
 const SOURCE_LABEL: Record<string, string> = {
   fl_dbpr: "Florida DBPR",
@@ -88,6 +95,31 @@ export type AskEntityCard = {
   whyMatched: string;
   evidence: AskEvidenceRow[];
   profileHref: string | null;
+  /** Company-name candidates only: issuing jurisdiction + source board of the representative credential row. */
+  credentialJurisdictionLabel?: string | null;
+  /** Company-name candidates only: the source field/value that satisfied the name predicate and how. */
+  matchedOn?: { field: string; value: string; method: string } | null;
+};
+
+/** Company-name search state, carried alongside the cards. Same operation AskTrustHub consumes. */
+export type AskNameSearch = {
+  resultState: string;
+  supplied: string;
+  normalized: string;
+  requiredWords: string[];
+  optionalWordsDropped: string[];
+  jurisdiction: string | null;
+  scopeMeaning: string;
+  searchedJurisdictions: string[];
+  returned: number;
+  hasMore: boolean;
+  nextPage: number | null;
+  truncated: boolean;
+  completeness: string | null;
+  limitations: string[];
+  continuation: Array<{ label: string; href: string }>;
+  failure: { kind: string; message: string } | null;
+  timingMs: number;
 };
 
 export type AskExecution = {
@@ -110,6 +142,7 @@ export type AskExecution = {
     right: { label: string; href: string; contractors: number; credentials: number };
     limitation: string;
   } | null;
+  nameSearch?: AskNameSearch | null;
 };
 
 function emptyExecution(partial: Partial<AskExecution> = {}): AskExecution {
@@ -568,7 +601,7 @@ async function cohortUnavailableBroaderResults(
 
 const EXEC_MEMO = new Map<string, AskExecution>();
 
-export async function executeContractorResearchQuery(plan: ContractorResearchQuery): Promise<AskExecution> {
+export async function executeContractorResearchQuery(plan: ContractorResearchQuery, deps: { nameDb?: NameCandidateDb } = {}): Promise<AskExecution> {
   if (plan.mode === "guidance") {
     const intel = loadContractorHubIntel();
     if (plan.recovery?.capabilityState === "COHORT_UNAVAILABLE") {
@@ -595,10 +628,14 @@ export async function executeContractorResearchQuery(plan: ContractorResearchQue
   if(plan.geographyRequirement&&!plan.geographyRequirement.executionGeography)return emptyExecution({blocked:true,blockMessage:plan.geographyRequirement.message,sqlContract:"No query: requested geography not authorized for execution."});
   const hit = EXEC_MEMO.get(key);
   if (hit) return hit;
-  const lookup = plan.identity.identifier || plan.identity.entityQuery;
-  const out = lookup
-    ? await executeIdentityLookup(lookup, plan, intel.generatedAt.slice(0, 10), intel.sourceFingerprint)
-    : await executeUncached(plan);
+  // CONTRACTOR-NAME-PARITY-001: an exact credential keeps the Florida Verify lookup; a company name
+  // runs the hub's own name-candidate operation (every name-searchable jurisdiction, bounded), the
+  // same operation AskTrustHub consumes -- previously it ran a Florida-only Verify name search.
+  const out = plan.identity.identifier
+    ? await executeIdentityLookup(plan.identity.identifier, plan, intel.generatedAt.slice(0, 10), intel.sourceFingerprint)
+    : plan.identity.entityQuery
+      ? await executeNameCandidates(plan.identity.entityQuery, plan, intel.generatedAt.slice(0, 10), intel.sourceFingerprint, deps.nameDb)
+      : await executeUncached(plan);
   if (EXEC_MEMO.size > 48) EXEC_MEMO.clear();
   if(out.ok&&!out.blocked)EXEC_MEMO.set(key, out);
   return out;
@@ -654,6 +691,126 @@ async function executeIdentityLookup(
       evidence: [],
       profileHref: `/contractors/${row.slug}`,
     })),
+  });
+}
+
+type NameCandidateView = {
+  stableKey: string;
+  displayName: string;
+  match: { field: string; value: string; method: string; explanation: string };
+  credential: { number: string | null; class: string | null; occupationCode: string | null; status: string | null; sourceNativeStatus: string | null };
+  credentialJurisdiction: { code: string; label: string; sourceSystem: string | null; sourceLabel: string };
+  recordedLocation: { city: string | null; county: string | null; state: string | null; meaning: string };
+  source: { system: string | null };
+  action: { href: string };
+};
+
+const MATCH_FIELD_LABEL: Record<string, string> = {
+  display_name: "public display name",
+  legal_name: "recorded legal/licensee name",
+  dba_name: "documented DBA name",
+  licensee_name_raw: "source licensee name on the credential row",
+  dba_name_raw: "source DBA name on the credential row",
+};
+
+function nameCandidateCard(c: NameCandidateView): AskEntityCard {
+  const slug = c.stableKey.replace(/^contractor:profile:/, "");
+  const status = c.credential.sourceNativeStatus ?? c.credential.status;
+  const location = c.recordedLocation;
+  return {
+    contractorId: c.stableKey,
+    slug,
+    displayName: c.displayName,
+    credentialKey: c.credential.number,
+    occupationCode: c.credential.occupationCode,
+    occupationLabel: c.credential.class,
+    statusNormalized: asLicenseStatus(c.credential.status),
+    statusLabel: status ? `${status} in indexed ${c.credentialJurisdiction.label} record` : "Status not reported",
+    city: location.city,
+    county: location.county ? `${location.county}${location.state ? `, ${location.state}` : ""}` : location.state,
+    state: location.state,
+    sourceLabel: c.credentialJurisdiction.sourceLabel,
+    sourceSystem: c.source.system,
+    geographyNote: location.meaning,
+    evidenceCount: 0,
+    newestEvidenceDate: null,
+    whyMatched: `${c.match.explanation} Matched on the ${MATCH_FIELD_LABEL[c.match.field] ?? c.match.field}: “${c.match.value}”. ${NAME_MATCH_DISCLAIMER}`,
+    evidence: [],
+    profileHref: `/contractors/${slug}`,
+    credentialJurisdictionLabel: `${c.credentialJurisdiction.label} · ${c.credentialJurisdiction.sourceLabel}`,
+    matchedOn: { field: c.match.field, value: c.match.value, method: c.match.method },
+  };
+}
+
+function record(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
+}
+
+/**
+ * CONTRACTOR-NAME-PARITY-001: company-name research through the hub's own name-candidate
+ * operation, in process. Matching semantics, ordering, limits and publishability rules are the
+ * operation's; nothing is re-implemented here.
+ */
+async function executeNameCandidates(name: string, plan: ContractorResearchQuery, asOf: string, fingerprint: string, db?: NameCandidateDb): Promise<AskExecution> {
+  const base = { asOf, snapshotFingerprint: fingerprint, grainLabel: "contractor profile (one card per public profile with a representative credential row)", sqlContract: "contractor-name-candidates-v1 (shared name core; every name-searchable jurisdiction)" };
+  const jurisdiction = plan.identity.nameJurisdiction ?? null;
+  const body = { contract: NAME_CANDIDATES_CONTRACT, operation: NAME_CANDIDATES_OPERATION, name, page: plan.page, limit: NAME_CANDIDATE_PAGE_SIZE, ...(jurisdiction ? { jurisdiction } : {}) };
+  let response: Awaited<ReturnType<typeof executeContractorNameCandidates>>;
+  try {
+    response = await executeContractorNameCandidates(body, db);
+  } catch (error) {
+    const code = error instanceof Error ? error.message : "";
+    return emptyExecution({
+      ...base, blocked: true,
+      blockMessage: code === "invalid_page"
+        ? "That page is past the bounded company-name search. Go back to the first page, or add more of the name or a state to narrow."
+        : code === "invalid_jurisdiction"
+          ? "That state is not a jurisdiction ContractorTrustHub can constrain a company-name search to. Nothing was searched or substituted."
+          : "Company-name research could not run for that input. No result was inferred or substituted.",
+    });
+  }
+  const r = response as Record<string, unknown>;
+  const nameEcho = record(r.name);
+  const scope = record(r.scope);
+  const pagination = record(r.pagination);
+  const continuation = record(r.continuation);
+  const completeness = record(r.completeness);
+  const searched = (Array.isArray(scope.searched) ? scope.searched : []).map((s) => String(record(s).code));
+  const scoped = (Array.isArray(continuation.scoped) ? continuation.scoped : []).map((link) => ({ label: String(record(link).label), href: String(record(link).href) }));
+  const nameSearch: AskNameSearch = {
+    resultState: String(r.resultState),
+    supplied: String(nameEcho.supplied ?? name),
+    normalized: String(nameEcho.normalized ?? ""),
+    requiredWords: Array.isArray(nameEcho.requiredWords) ? nameEcho.requiredWords.map(String) : [],
+    optionalWordsDropped: Array.isArray(nameEcho.optionalWordsDropped) ? nameEcho.optionalWordsDropped.map(String) : [],
+    jurisdiction,
+    scopeMeaning: String(scope.meaning ?? ""),
+    searchedJurisdictions: searched,
+    returned: Number(pagination.returned ?? 0),
+    hasMore: pagination.hasMore === true,
+    nextPage: typeof pagination.nextPage === "number" ? pagination.nextPage : null,
+    truncated: pagination.truncated === true,
+    completeness: typeof completeness.meaning === "string" ? completeness.meaning : null,
+    limitations: Array.isArray(r.limitations) ? r.limitations.map(String) : [],
+    continuation: scoped,
+    failure: null,
+    timingMs: Number(record(r.timing).queryMs ?? 0),
+  };
+  if (response.resultState === "SOURCE_FAILURE") {
+    const kind = String(r.failureKind ?? "unavailable");
+    nameSearch.failure = { kind, message: kind === "timeout" ? "The name search did not finish in time." : "The license database did not complete the name search." };
+    return emptyExecution({ ...base, blocked: true, blockMessage: `Company-name research is temporarily unavailable (${kind}). No result was inferred or substituted -- retry, or search the same name in ContractorTrustHub Verify for a state.`, nameSearch });
+  }
+  if (response.resultState === "INVALID_QUERY") {
+    return emptyExecution({ ...base, blocked: true, blockMessage: "That company name could not be searched. No result was inferred or substituted.", nameSearch });
+  }
+  const candidates = (Array.isArray(r.candidates) ? (r.candidates as NameCandidateView[]) : []).map(nameCandidateCard);
+  return emptyExecution({
+    ...base, ok: true,
+    contractorCount: null, credentialCount: null,
+    results: candidates,
+    page: plan.page, pageSize: NAME_CANDIDATE_PAGE_SIZE,
+    nameSearch,
   });
 }
 

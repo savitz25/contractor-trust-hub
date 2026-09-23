@@ -19,6 +19,7 @@ export function AskResultCard({ card }: { card: AskEntityCard }) {
         <li className="rounded-full bg-[var(--bg)] px-2.5 py-1 text-xs">{card.statusLabel}</li>
         {card.occupationLabel ? <li className="rounded-full bg-[var(--bg)] px-2.5 py-1 text-xs">{card.occupationLabel}</li> : null}
         {card.county ? <li className="rounded-full bg-[var(--bg)] px-2.5 py-1 text-xs">{card.county} recorded address</li> : null}
+        {card.credentialJurisdictionLabel ? <li className="rounded-full bg-[var(--bg)] px-2.5 py-1 text-xs">Credential jurisdiction: {card.credentialJurisdictionLabel}</li> : null}
         {card.evidenceCount > 0 ? (
           <li className="rounded-full bg-[var(--bg)] px-2.5 py-1 text-xs">
             {card.sourceLabel} discipline: {card.evidenceCount} indexed records
@@ -29,6 +30,11 @@ export function AskResultCard({ card }: { card: AskEntityCard }) {
       <section aria-label="Why this result matched">
         <h4 className="text-sm font-semibold">Why this matched</h4>
         <p className="mt-1 text-sm text-[var(--muted)]">{card.whyMatched}</p>
+        {card.matchedOn ? (
+          <p className="mt-1 text-xs text-[var(--muted)]">
+            Match method: {card.matchedOn.method.replaceAll("_", " ").toLowerCase()} · field: {card.matchedOn.field.replaceAll("_", " ")}
+          </p>
+        ) : null}
       </section>
       <details>
         <summary className="cursor-pointer text-sm font-semibold text-[var(--navy)]">Trace this result</summary>
