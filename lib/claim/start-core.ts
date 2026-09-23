@@ -42,13 +42,20 @@ export class MemoryRateLimitStore implements RateLimitStore {
   size(): number { return this.buckets.size; }
 }
 
+export type ClaimStartPolicy = {
+  perIp: { max: number; windowMs: number };
+  perIpProfile: { max: number; windowMs: number };
+  perIpHourly: { max: number; windowMs: number };
+  retryAfterSeconds: number;
+};
+
 /** Starting policy (Section 3E). Tune only with evidence. */
-export const CLAIM_START_POLICY = {
+export const CLAIM_START_POLICY: Readonly<ClaimStartPolicy> = {
   perIp: { max: 5, windowMs: 15 * 60 * 1000 },
   perIpProfile: { max: 3, windowMs: 15 * 60 * 1000 },
   perIpHourly: { max: 20, windowMs: 60 * 60 * 1000 },
   retryAfterSeconds: 900,
-} as const;
+};
 
 export const SPECIALIST_DECLARABLE_SOURCES = ["organic", "manual_outreach", "internal_test"] as const;
 export type SpecialistDeclaredSource = (typeof SPECIALIST_DECLARABLE_SOURCES)[number];
@@ -109,7 +116,7 @@ export type ClaimStartDeps = {
   askOrigin: string;
   allowedOrigins?: readonly string[];
   log(event: string, fields?: Record<string, unknown>): void;
-  policy?: typeof CLAIM_START_POLICY;
+  policy?: Readonly<ClaimStartPolicy>;
 };
 
 export type ClaimStartOutcome = "minted" | "cross_origin" | "invalid_profile" | "rate_limited" | "unavailable" | "ineligible" | "store_failure" | "mint_failure";
