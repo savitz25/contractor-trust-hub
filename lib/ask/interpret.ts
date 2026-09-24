@@ -26,6 +26,7 @@ import { interpretOregonCcb } from "./oregon-ccb";
 import { interpretPennsylvaniaHic } from "./pennsylvania-hic";
 import { interpretNorthCarolinaNclbgc } from "./north-carolina-nclbgc";
 import { interpretOhioOcilb } from "./ohio-ocilb";
+import { interpretGeorgiaSos } from "./georgia-sos";
 import { CONTRACTOR_STATE_NAMES } from "@/lib/search/state-names";
 
 const EMPTY_INTERPRET: AskInterpretation = {
@@ -209,6 +210,8 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
   if (ncEarly) return ncEarly;
   const ohEarly = interpretOhioOcilb(query, text);
   if (ohEarly) return ohEarly;
+  const gaEarly = interpretGeorgiaSos(query, text);
+  if (gaEarly) return gaEarly;
 
   const recovery = interpretRecovery(query);
   if (recovery) return { version: ASK_CONTRACT_VERSION, query, mode: "guidance", supported: true, interpretation: {...interpretation, location: recovery.locationLabel, trade: recovery.requestedTrade ?? "Not specified", entityType: recovery.requestedTask}, recovery, href: recovery.actions[0]?.destination ?? null, count: null, aggregate: null, comparison: null, failMessage: null, changeHints: [] };
