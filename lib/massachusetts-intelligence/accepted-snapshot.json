@@ -1,0 +1,306 @@
+{
+  "contract_name": "contractor-ma-state-intel-v1",
+  "ticket": "MA-CON-001",
+  "path": "/massachusetts",
+  "generated_at": "2026-09-24T16:00:00Z",
+  "credential_systems": [
+    {
+      "id": "hic",
+      "label": "Home Improvement Contractor (HIC) registration",
+      "agency": "Office of Consumer Affairs and Business Regulation — Home Improvement Contractor Program",
+      "grain": "registration (business or individual contractor) for covered residential home-improvement work",
+      "identifier": "HIC registration number",
+      "lookup": "KNOWN",
+      "lookupUrl": "https://contractorhub.mass.gov/s/hic-contractor-search",
+      "bulk": "NOT_ACQUIRED",
+      "bulkReason": "The MA Contractor Hub search is an interactive form (business name, contractor name, HIC number, city, ZIP) with reCAPTCHA. No download or export. Not bypassed.",
+      "rowsAcquired": null
+    },
+    {
+      "id": "csl",
+      "label": "Construction Supervisor License (CSL)",
+      "agency": "Division of Occupational Licensure — Office of Public Safety and Inspections / Board of Building Regulations and Standards",
+      "grain": "individual license for supervising building construction under 780 CMR",
+      "identifier": "CSL number",
+      "lookup": "KNOWN",
+      "lookupUrl": "https://madpl.mylicense.com/Verification/",
+      "bulk": "NOT_ACQUIRED",
+      "bulkReason": "License Verification Site is a search form. No statewide export was found.",
+      "rowsAcquired": null
+    },
+    {
+      "id": "electrician",
+      "label": "Electrician licenses",
+      "agency": "Division of Occupational Licensure — Board of State Examiners of Electricians",
+      "grain": "individual license (journeyman/master) and business license classes",
+      "identifier": "DOL license number",
+      "lookup": "KNOWN",
+      "lookupUrl": "https://www.mass.gov/info-details/division-of-occupational-licensure-check-a-license",
+      "bulk": "NOT_ACQUIRED",
+      "bulkReason": "Search-only license verification.",
+      "rowsAcquired": null
+    },
+    {
+      "id": "plumber-gas",
+      "label": "Plumber and gas fitter licenses",
+      "agency": "Division of Occupational Licensure — Board of State Examiners of Plumbers and Gas Fitters",
+      "grain": "individual license (journeyman/master) and business classes",
+      "identifier": "DOL license number",
+      "lookup": "KNOWN",
+      "lookupUrl": "https://www.mass.gov/info-details/division-of-occupational-licensure-check-a-license",
+      "bulk": "NOT_ACQUIRED",
+      "bulkReason": "Search-only license verification.",
+      "rowsAcquired": null
+    },
+    {
+      "id": "dcamm",
+      "label": "DCAMM contractor certification (public building work)",
+      "agency": "Division of Capital Asset Management and Maintenance",
+      "grain": "public-contracting prequalification, not a residential license",
+      "identifier": "DCAMM certification",
+      "lookup": "KNOWN",
+      "lookupUrl": "https://www.mass.gov/lists/contractors-standing-with-dcamm",
+      "bulk": "NOT_ACQUIRED",
+      "bulkReason": "Directory deferred; not a residential contractor census.",
+      "rowsAcquired": null
+    }
+  ],
+  "hic_context": {
+    "complaintIntake": "KNOWN",
+    "complaintOutcomes": "NOT_ACQUIRED",
+    "arbitration": "KNOWN process; outcomes NOT_ACQUIRED",
+    "guarantyFund": "KNOWN process; claims and payments NOT_ACQUIRED",
+    "providerLevelDetail": "Shown per contractor on the MA Contractor Hub search only (complaints, arbitration outcome, Guaranty Fund payouts owed). Not acquired.",
+    "hicDiscipline": "NOT_ACQUIRED",
+    "complaintUrl": "https://contractorhub.mass.gov/s/"
+  },
+  "dol_discipline": {
+    "coverage": "PARTIAL",
+    "agency": "Division of Occupational Licensure",
+    "pages": [
+      "https://www.mass.gov/info-details/division-of-occupational-licensure-disciplinary-actions",
+      "https://www.mass.gov/info-details/past-division-of-occupational-licensure-dol-disciplinary-actions"
+    ],
+    "files": [
+      {
+        "year": 2021,
+        "url": "https://www.mass.gov/files/csv/2024-04/Discipline_Inspection_Report_2021.csv",
+        "sha256": "4a97d8222b2c05d3e1df0b3c0a64d2d7127db5030417882097f1c5df4a7e1c25",
+        "retrieved_at": "2026-09-24T15:53:30Z",
+        "period": "Calendar year 2021",
+        "all_board_rows": 1223
+      },
+      {
+        "year": 2022,
+        "url": "https://www.mass.gov/files/csv/2024-04/Discipline_Inspection_Report_2022.csv",
+        "sha256": "e96d9b99cba7aa88a3089d9867132956b0a0a60fe369d0c6f03b48d2a040745c",
+        "retrieved_at": "2026-09-24T15:53:28Z",
+        "period": "Calendar year 2022",
+        "all_board_rows": 1158
+      },
+      {
+        "year": 2023,
+        "url": "https://www.mass.gov/files/csv/2024-05/Discipline_Inspection_Report_2023.csv",
+        "sha256": "ad1de9528c1931443534bea7c9737a795e100a2d06b4525c36f5769803a93c60",
+        "retrieved_at": "2026-09-24T15:53:26Z",
+        "period": "Calendar year 2023",
+        "all_board_rows": 1407
+      },
+      {
+        "year": 2024,
+        "url": "https://www.mass.gov/files/csv/2025-06/Discipline_Inspection_Report_2024.csv",
+        "sha256": "dffdc71c8c1800d8282669a36a37f5538c6e1fb5aeb2741c75335b8123cc27e6",
+        "retrieved_at": "2026-09-24T15:53:13Z",
+        "period": "Calendar year 2024",
+        "all_board_rows": 1502
+      },
+      {
+        "year": 2025,
+        "url": "https://www.mass.gov/files/csv/2025-04/website_Discipline_Inspection_report_2025_Q1.csv",
+        "sha256": "f9297cb8d147a5057d87c48aa875e7b723e10bc9afcca70f498abe80fa25cd85",
+        "retrieved_at": "2026-09-24T15:53:36Z",
+        "period": "2025 year-to-date through Q1 (latest file DOL published)",
+        "all_board_rows": 267
+      }
+    ],
+    "window": "Closed dates in DOL report years 2021-2024 plus the 2025 Q1 year-to-date file; DOL had not published a later 2025 or 2026 file on 2026-09-24",
+    "boards": {
+      "EL": "Board of State Examiners of Electricians",
+      "PL": "Board of State Examiners of Plumbers and Gas Fitters",
+      "GF": "Board of State Examiners of Plumbers and Gas Fitters",
+      "SM": "Sheet Metal Board"
+    },
+    "rows": 518,
+    "distinctComplaints": 364,
+    "rowsWithLicenseNumber": 414,
+    "rowsWithoutLicenseNumber": 104,
+    "rowsByBoard": {
+      "EL": 209,
+      "GF": 1,
+      "PL": 240,
+      "SM": 68
+    },
+    "rowsByReportYear": {
+      "2021": 36,
+      "2022": 85,
+      "2023": 124,
+      "2024": 225,
+      "2025": 48
+    },
+    "decisionTerms": {
+      "Fine Assessed": 470,
+      "Probation": 37,
+      "Stayed Suspension": 23,
+      "License Revoked": 21,
+      "Voluntary Surrender": 19,
+      "Reprimand": 6,
+      "License Suspended": 4,
+      "Conditions": 1
+    },
+    "excluded": "All non-construction boards (cosmetology, massage, real estate, health, etc.) and home inspectors",
+    "notInReport": "DOL notes the report omits child-support suspensions and summary emergency suspensions.",
+    "profileAttachments": 0
+  },
+  "dcamm_debarment": {
+    "coverage": "KNOWN",
+    "agency": "Division of Capital Asset Management and Maintenance",
+    "source": "https://www.mass.gov/info-details/contractors-and-vendors-suspended-or-debarred-by-dcamm",
+    "sourceSha256": "42470851ce656026e2d50c2cbcf12a6f1f346d6fef24b724fa9082abed5f5a42",
+    "retrievedAt": "2026-09-24T15:47:00Z",
+    "scope": "Parties suspended or debarred by DCAMM under M.G.L. c.29 §29F and c.149 §44C only. Excludes MassDOT, AG, and DIA debarments.",
+    "rows": 7,
+    "profileAttachments": 0
+  },
+  "ag_fair_labor_debarment": {
+    "coverage": "KNOWN",
+    "agency": "Office of the Attorney General — Fair Labor Division",
+    "source": "https://www.mass.gov/doc/ags-fair-labor-division-debarment-list/download",
+    "page": "https://www.mass.gov/info-details/fair-labor-division-data",
+    "sourceSha256": "7ed991b5f2ef353bf8e29a12b18b90867dd1684cfc3ccf94ca1fba17e3f09084",
+    "retrievedAt": "2026-09-24T15:53:44Z",
+    "scope": "Employers debarred from public construction and public works contracts (e.g. M.G.L. c.149 §27C, §148B, settlement agreements). Includes past periods.",
+    "rows": 464,
+    "rowsWherePeriodIncludesRetrievalDate": 9,
+    "statuteCounts": {
+      "(blank in source)": 209,
+      "M.G.L. c. 149, § 27C": 137,
+      "Settlement Agreement": 32,
+      "M.G.L. c. 149 §27C": 14,
+      "M.G.L. c. 149, §§ 27, 27B and 27C": 11,
+      "Criminal conviction/sentence": 9,
+      "M.G.L. c. 149, § 27B": 8,
+      "M.G.L. c. 149, § 27 and 27C": 6,
+      "M.G.L. c. 149, §§ 27B and 27C": 5,
+      "Guilty plea/sentence": 4,
+      "M.G.L. c. 149, §§ 27 and 27B": 4,
+      "M.G.L. c. 149, §§ 27 and 27C": 3,
+      "Admitted to sufficient facts for a finding of guilty": 3,
+      "M.G.L c. 149, § 148B": 2,
+      "M.G.L. c. 149, § 27B and 27C": 2,
+      "M.G.L. c. 149 §27 and 148B": 2,
+      "M.G.L. c. 149, §§ 27 27B": 2,
+      "M.G.L. c. 149, § 27 and 27B": 2,
+      "M.G.L. c. 149, §§ 27, 27B": 2,
+      "M.G.L. c. 149, § 27C, and 27B": 1,
+      "M.G.L. c. 149, § 27, M.G.L c. 151, § 19(3)": 1,
+      "M.G.L. c. 149, §§ 27, 27B, 27C, 148": 1,
+      "M.G.L. c. 149, §§ 27B": 1,
+      "Failed to comply with a DALA order": 1,
+      "M.G.L. c. 149, §§ 27 and 27B; c. 266, § 30(1)": 1,
+      "M.G.L. c. 149, § 27": 1
+    },
+    "profileAttachments": 0
+  },
+  "existing_coverage": {
+    "statePage": "NONE (/massachusetts returned 404 before this ticket)",
+    "liveCredentialSource": "NONE (MA not in the live Verify cohort)",
+    "networkMetricsState": "UNKNOWN",
+    "hicIdentities": 0,
+    "cslIdentities": 0,
+    "tradeIdentities": 0,
+    "disciplineOrDebarment": 0,
+    "localPages": 0
+  },
+  "capability_matrix": [
+    {
+      "capability": "HIC registration lookup (official)",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "HIC statewide bulk roster",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "HIC complaint intake, arbitration, Guaranty Fund process",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "HIC complaint, arbitration, and Guaranty Fund outcomes",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "CSL lookup (official)",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "CSL bulk roster",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "Electrician / plumber / gas fitter bulk rosters",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "DOL construction-trade discipline 2021 to 2025 Q1",
+      "state": "PARTIAL"
+    },
+    {
+      "capability": "DOL discipline 2025 Q2 onward and 2026",
+      "state": "UNKNOWN"
+    },
+    {
+      "capability": "DCAMM suspended or debarred parties",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "AG Fair Labor debarment list",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "DCAMM certified contractor directory",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "HIC records by request",
+      "state": "REQUEST_ONLY"
+    },
+    {
+      "capability": "Name-only adverse attachment",
+      "state": "UNSUPPORTED"
+    },
+    {
+      "capability": "Combined Massachusetts licensed-contractor count",
+      "state": "UNSUPPORTED"
+    }
+  ],
+  "guardrails": [
+    "HIC != CSL != trade license != DCAMM != debarment",
+    "person license != contractor business",
+    "complaint != finding; arbitration != discipline; Guaranty Fund payment != revocation",
+    "not found != unlicensed; missing != zero",
+    "no combined Massachusetts licensed contractors count",
+    "no ranking, no Trust Score"
+  ],
+  "net_new": {
+    "HIC_ROWS": 0,
+    "CSL_ROWS": 0,
+    "DOL_DISCIPLINE_ROWS": 518,
+    "DCAMM_DEBARMENT_ROWS": 7,
+    "AG_FAIR_LABOR_DEBARMENT_ROWS": 464,
+    "PROFILE_ATTACHMENTS": 0,
+    "NEW_PROFILES": 0
+  },
+  "eventsFile": "lib/massachusetts-intelligence/events.json",
+  "eventsSha256": "f92aa7bddab4f6bfbe99127148f0cc037381491327a42ef35010cd41e66568ef",
+  "fingerprint": "d40024ca5490514a33c5c6f0329b16be8f0f05bb8802f5a1997730fb368fba94"
+}

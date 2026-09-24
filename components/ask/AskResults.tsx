@@ -136,6 +136,13 @@ export function AskResults({
         <article className="cth-intel-card">
           <h2>{interpreted.definition.title}</h2>
           <p className="mt-2 text-sm text-[var(--muted)]">{interpreted.definition.body}</p>
+          {interpreted.definition.href ? (
+            <p className="mt-2 text-sm">
+              <Link prefetch={false} href={interpreted.definition.href} className="text-[var(--navy)] underline">
+                Open the source page
+              </Link>
+            </p>
+          ) : null}
         </article>
       ) : null}
 
@@ -336,7 +343,7 @@ export function AskResults({
           </div>
           <div>
             <dt className="text-[var(--muted)]">Source datasets</dt>
-            <dd>{execution.blocked ? "No provider query executed" : execution.nameSearch ? `Name-searchable credential sources: ${execution.nameSearch.searchedJurisdictions.join(", ") || "none"}` : "fl_dbpr construction licenses; optional public-eligible discipline_actions"}</dd>
+            <dd>{execution.blocked || plan.mode === "fail_closed" || plan.mode === "definition" || (plan.mode === "guidance" && !execution.results.length) ? "No provider query executed" : execution.nameSearch ? `Name-searchable credential sources: ${execution.nameSearch.searchedJurisdictions.join(", ") || "none"}` : "fl_dbpr construction licenses; optional public-eligible discipline_actions"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Snapshot / as-of</dt>
