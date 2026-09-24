@@ -27,6 +27,7 @@ export const EXPLORE_GROUP: HeaderGroup = {
     { href: "/pennsylvania", label: "Pennsylvania research", hint: "HICPA registration — not a statewide GC" },
     { href: "/north-carolina", label: "North Carolina research", hint: "NCLBGC licensing — search-only census" },
     { href: "/ohio", label: "Ohio research", hint: "OCILB five-trade commercial specialty licensing" },
+    { href: "/georgia", label: "Georgia research", hint: "SOS credential classes and cease-and-desist orders" },
     { href: "/texas", label: "Texas research", hint: "Specialty trades — no statewide GC license" },
     { href: "/texas/austin", label: "Austin permits", hint: "City of Austin local intelligence" },
     { href: "/california", label: "California research", hint: "Acquired CSLB public-data rows" },
