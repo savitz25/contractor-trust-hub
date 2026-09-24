@@ -3,7 +3,7 @@
  * Pure: injects fake loader/minter/store. No database, no network, no production connection.
  */
 import assert from "node:assert/strict";
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import React from "react";
@@ -14,7 +14,6 @@ import {
   CLAIM_START_POLICY,
   MemoryRateLimitStore,
   checkSameOrigin,
-  declaredSource,
   handleClaimHandoffGet,
   handleClaimStart,
   type ClaimStartDeps,
@@ -91,18 +90,19 @@ test("A: 1,000 GET requests against the former mint route mint 0 tokens and answ
 
 test("B: an explicit same-origin POST mints exactly one short-lived signed handoff that Ask exact validation accepts", async () => {
   const { deps, minted, logs } = harness();
-  const res = await handleClaimStart(post(PROFILE.id, { body: "source=organic" }), PROFILE.id, deps);
+  const res = await handleClaimStart(post(PROFILE.id), PROFILE.id, deps);
   assert.equal(res.status, 303);
   const location = new URL(res.headers.get("location") ?? "");
-  assert.equal(location.origin, ASK); assert.equal(location.pathname, "/claim/continue"); assert.equal(location.searchParams.get("source"), "organic");
+  assert.equal(location.origin, ASK); assert.equal(location.pathname, "/claim/continue");
+  assert.equal(location.searchParams.get("source"), null, "Q2: acquisition source is never a query string; Ask reads it from the signed payload");
   assert.equal(minted.length, 1); assert.equal(location.searchParams.get("handoff"), minted[0]);
-  askAccepts(minted[0]);
+  assert.equal(askAccepts(minted[0]).acquisition_source, "organic");
   assert.equal(res.headers.get("cache-control"), "no-store"); assert.match(res.headers.get("x-robots-tag") ?? "", /noindex/);
   const mintLog = logs.find((l) => l.event === "claim_handoff_minted");
   assert.ok(mintLog); assert.doesNotMatch(JSON.stringify(logs), new RegExp(minted[0].slice(0, 20)), "token is never logged");
   assert.doesNotMatch(JSON.stringify(logs), new RegExp(PROFILE.id), "profile id is never logged");
   assert.ok(logs.some((l) => l.event === "claim_cta_activated"));
-  const again = await handleClaimStart(post(PROFILE.id, { body: "source=organic" }), PROFILE.id, deps);
+  const again = await handleClaimStart(post(PROFILE.id), PROFILE.id, deps);
   assert.equal(again.status, 303); assert.equal(minted.length, 2); assert.notEqual(askAccepts(minted[1]).nonce, askAccepts(minted[0]).nonce, "fresh nonce per mint");
 });
 
@@ -165,22 +165,79 @@ test("abuse gate fails closed when the store errors; memory store is bounded and
   assert.equal((await handleClaimStart(post(PROFILE.id), PROFILE.id, deps)).status, 503); assert.equal(minted.length, 0);
   const store = new MemoryRateLimitStore(100);
   assert.equal(store.durable, false);
-  for (let i = 0; i < 1000; i += 1) await store.hit(`flood:${i}`, 60_000, i);
-  assert.ok(store.size() <= 100, "flood cannot grow memory without bound");
+  for (let i = 0; i < 1000; i += 1) await store.hit(`ip:203.0.113.${i}`, 60_000, i);
+  assert.ok(store.size() <= 100, "flood of distinct IPs cannot grow memory without bound");
   const core = readFileSync("lib/claim/start-core.ts", "utf8");
   assert.match(core, /NON-DURABLE/); assert.match(core, /FAILS CLOSED/);
 });
 
-test("Section 6: specialists may declare organic / manual_outreach / internal_test only; email_campaign is never self-declared", async () => {
-  assert.equal(declaredSource("internal_test"), "internal_test"); assert.equal(declaredSource("manual_outreach"), "manual_outreach");
-  assert.equal(declaredSource("email_campaign"), "organic"); assert.equal(declaredSource("<script>"), "organic"); assert.equal(declaredSource(undefined), "organic");
+test("Q3: profile-key churn from one IP cannot evict or reset that IP's own aggregate rate-limit counters", async () => {
+  const store = new MemoryRateLimitStore(5_000, 64);
+  const now = 1_000_000;
+  // Saturate the per-IP aggregate window first.
+  for (let i = 0; i < 5; i += 1) assert.equal(await store.hit("ip:198.51.100.50", 15 * 60 * 1000, now + i), i + 1);
+  const aggAfterSaturation = await store.hit("ip:198.51.100.50", 15 * 60 * 1000, now + 5);
+  assert.equal(aggAfterSaturation, 6, "aggregate keeps counting past the caller's policy max (the caller decides what to do with the count)");
+  // Flood 10,000 distinct UUID-shaped profile keys from the SAME IP. Under the old flat-map design with a
+  // small maxKeys this would evict the `ip:` aggregate entry itself; it must not happen here.
+  for (let i = 0; i < 10_000; i += 1) {
+    await store.hit(`ip-profile:198.51.100.50:${randomUUID()}`, 15 * 60 * 1000, now + 6);
+  }
+  const aggAfterFlood = await store.hit("ip:198.51.100.50", 15 * 60 * 1000, now + 7);
+  assert.equal(aggAfterFlood, 7, "the IP aggregate was never reset by unrelated profile-key churn");
+  // Per-IP profile cardinality is bounded well below 10,000 despite the flood.
+  assert.ok(store.size() >= 1, "the flooding IP's own state is retained, not evicted by its own churn");
+});
+
+test("Q3 adversarial: 20,000 requests from one IP across >5,000 distinct UUID-shaped profiles hold the hourly bound", async () => {
+  const { deps } = harness({ store: new MemoryRateLimitStore() });
+  const ip = "198.51.100.77";
+  let minted = 0;
+  const seenProfiles = new Set<string>();
+  for (let i = 0; i < 20_000; i += 1) {
+    // >5,000 distinct profiles: reuse each profile id at most 3 times so the per-profile bound (3/15m) is not
+    // what's being exercised here — the hourly aggregate bound is.
+    const profileId = `6${String(Math.floor(i / 3)).padStart(7, "0")}-6666-4666-8666-${String(i).padStart(12, "0")}`;
+    seenProfiles.add(profileId);
+    const res = await handleClaimStart(post(profileId, { ip }), profileId, { ...deps, loadProfile: async () => ({ ...PROFILE, id: profileId }) });
+    if (res.status === 303) minted += 1;
+  }
+  assert.ok(seenProfiles.size > 5_000, `test setup should exercise >5,000 distinct profiles, got ${seenProfiles.size}`);
+  assert.ok(minted <= CLAIM_START_POLICY.perIpHourly.max, `successful mints (${minted}) must not exceed the hourly policy (${CLAIM_START_POLICY.perIpHourly.max})`);
+});
+
+test("Q2: the public route never reads acquisition source from the browser; only signed, trusted-server-side minting can produce a non-organic source", async () => {
   const { deps } = harness();
-  const form = await handleClaimStart(post(PROFILE.id, { body: "source=internal_test" }), PROFILE.id, deps);
-  assert.equal(new URL(form.headers.get("location") ?? "").searchParams.get("source"), "internal_test");
-  const json = await handleClaimStart(post(PROFILE.id, { body: JSON.stringify({ source: "manual_outreach" }), contentType: "application/json" }), PROFILE.id, deps);
-  assert.equal(new URL(json.headers.get("location") ?? "").searchParams.get("source"), "manual_outreach");
-  const bogus = await handleClaimStart(post(PROFILE.id, { body: "source=email_campaign" }), PROFILE.id, deps);
-  assert.equal(new URL(bogus.headers.get("location") ?? "").searchParams.get("source"), "organic");
+  // A browser posting any of these bodies gets exactly the same signed "organic" mint — the body is never
+  // parsed for it. Each iteration uses its own IP so the abuse gate (an unrelated concern) never interferes.
+  const bodies = ["source=internal_test", JSON.stringify({ source: "manual_outreach" }), "source=email_campaign", "source=<script>alert(1)</script>"];
+  for (const [i, body] of bodies.entries()) {
+    const contentType = body.startsWith("{") ? "application/json" : "application/x-www-form-urlencoded";
+    const res = await handleClaimStart(post(PROFILE.id, { body, contentType, ip: `203.0.113.${50 + i}` }), PROFILE.id, deps);
+    assert.equal(res.status, 303);
+    const location = new URL(res.headers.get("location") ?? "");
+    assert.equal(location.searchParams.get("source"), null, `no query-string source regardless of body: ${body}`);
+  }
+  const allOrganic = (await Promise.all(
+    ["source=internal_test", JSON.stringify({ source: "manual_outreach" }), "source=email_campaign"].map(async (body, i) => {
+      const contentType = body.startsWith("{") ? "application/json" : "application/x-www-form-urlencoded";
+      const id = `5555555${i}-5555-4555-8555-55555555555${i}`;
+      const res = await handleClaimStart(post(id, { body, contentType }), id, { ...deps, loadProfile: async () => PROFILE });
+      const location = new URL(res.headers.get("location") ?? "");
+      const payload = JSON.parse(Buffer.from((location.searchParams.get("handoff") ?? "").split(".")[0], "base64url").toString("utf8")) as AthHandoffPayload;
+      return payload.acquisition_source;
+    })
+  ));
+  assert.deepEqual(allOrganic, ["organic", "organic", "organic"], "browser body never overrides the signed acquisition_source");
+  // Trusted server-side code (never the public route) may mint a different source directly.
+  const trusted = mintAthHandoffToken(SECRET, PROFILE, { acquisitionSource: "internal_test" });
+  assert.equal(trusted.payload.acquisition_source, "internal_test");
+  const trustedOutreach = mintAthHandoffToken(SECRET, PROFILE, { acquisitionSource: "manual_outreach" });
+  assert.equal(trustedOutreach.payload.acquisition_source, "manual_outreach");
+  const core = readFileSync("lib/claim/start-core.ts", "utf8");
+  assert.doesNotMatch(core, /readSource|declaredSource|SPECIALIST_DECLARABLE_SOURCES/, "the public route must not read or trust a browser-declared source");
+  const cta = readFileSync("components/contractor/ManageProfileCta.tsx", "utf8");
+  assert.doesNotMatch(cta, /name="source"/, "the CTA form no longer offers a source field to edit");
 });
 
 test("B/T: the public CTA is an explicit same-origin POST form, never a crawlable mint link, and uses authorized-representative language", () => {
@@ -188,7 +245,7 @@ test("B/T: the public CTA is an explicit same-origin POST form, never a crawlabl
   const form = html.slice(html.indexOf("<form"), html.indexOf("<form") + 200);
   assert.match(form, /<form[^>]*\bmethod="post"/); assert.match(form, new RegExp(`<form[^>]*\\baction="/api/claim/handoff/${PROFILE.id}"`));
   assert.doesNotMatch(html, new RegExp(`<a[^>]+href="/api/claim/handoff`));
-  assert.match(html, /name="source" value="organic"/); assert.match(html, /free/i); assert.match(html, /not an endorsement/i);
+  assert.doesNotMatch(html, /name="source"/, "Q2: no browser-editable source field"); assert.match(html, /free/i); assert.match(html, /not an endorsement/i);
   assert.doesNotMatch(html, /verified owner|verified business|Trust Score/i);
   const managed = renderToStaticMarkup(<ManageProfileCta profileId={PROFILE.id} managed />);
   assert.match(managed, /Profile managed by an authorized representative/); assert.doesNotMatch(managed, /<form/);

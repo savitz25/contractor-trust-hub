@@ -47,7 +47,8 @@ export function ManageProfileCta({ profileId, managed = false }: Props) {
             track("claim_cta_activated");
           }}
         >
-          <input type="hidden" name="source" value="organic" />
+          {/* ATH-CLAIM-V2-001R2 (Q2): no source field. The server never reads a browser-supplied source; every
+              mint from this form is signed as "organic" inside the handoff token itself. */}
           <button type="submit" disabled={pending} className={buttonClass}>
             {pending ? "Opening AskTrustHub…" : "Claim or manage this profile — free"}
           </button>

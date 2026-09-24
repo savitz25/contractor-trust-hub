@@ -19,7 +19,10 @@ test("new Contractor handoffs are complete exact v2 payloads", () => {
     slug: profile.slug, external_key: profile.externalKey, source_system: "fl_dbpr", home_state: "FL",
     identifier_namespace: "credential", entity_class: "contractor",
     canonical_profile_url: `https://www.contractortrusthub.com/contractors/${profile.slug}`,
-    display_name: profile.displayName, iat: 1788350400, exp: 1788350400 + ATH_HANDOFF_TTL_SECONDS,
+    display_name: profile.displayName,
+    // ATH-CLAIM-V2-001R2 (Q2): every normal mint signs acquisition_source; the public route never overrides it.
+    acquisition_source: "organic",
+    iat: 1788350400, exp: 1788350400 + ATH_HANDOFF_TTL_SECONDS,
     nonce: "secure-test-nonce",
   });
   assert.equal(payload.exp - payload.iat, 900);

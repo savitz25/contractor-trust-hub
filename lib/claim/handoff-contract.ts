@@ -3,6 +3,16 @@ import { createHmac, randomBytes } from "node:crypto";
 export const ATH_HANDOFF_AUDIENCE = "asktrusthub" as const;
 export const ATH_HANDOFF_TTL_SECONDS = 15 * 60;
 
+/**
+ * ATH-CLAIM-V2-001R2 (Q2) — `acquisition_source` travels INSIDE the signed payload, authenticated by the same
+ * HMAC as everything else here. It is never read from an unauthenticated query string or browser POST body.
+ * The public claim-start route (`lib/claim/start-core.ts`) always mints `organic` and offers no way for
+ * request data to change that. Only trusted server-side callers of `mintAthHandoffToken` directly — never
+ * reachable from a browser — may set `manual_outreach` or `internal_test`.
+ */
+export const ATH_HANDOFF_ACQUISITION_SOURCES = ["organic", "manual_outreach", "internal_test", "email_campaign"] as const;
+export type AthHandoffAcquisitionSource = (typeof ATH_HANDOFF_ACQUISITION_SOURCES)[number];
+
 export type AthHandoffPayload = {
   v: 2;
   aud: typeof ATH_HANDOFF_AUDIENCE;
@@ -16,6 +26,7 @@ export type AthHandoffPayload = {
   entity_class: "contractor";
   canonical_profile_url: string;
   display_name: string;
+  acquisition_source: AthHandoffAcquisitionSource;
   iat: number;
   exp: number;
   nonce: string;
@@ -24,7 +35,7 @@ export type AthHandoffPayload = {
 export function mintAthHandoffToken(
   secret: string,
   profile: { id: string; slug: string; externalKey: string; displayName: string },
-  options: { now?: Date; nonce?: string } = {}
+  options: { now?: Date; nonce?: string; acquisitionSource?: AthHandoffAcquisitionSource } = {}
 ): { token: string; payload: AthHandoffPayload } {
   if (secret.length < 32) {
     throw new Error("ATH_HANDOFF_SECRET is unavailable");
@@ -43,6 +54,7 @@ export function mintAthHandoffToken(
     entity_class: "contractor",
     canonical_profile_url: `https://www.contractortrusthub.com/contractors/${profile.slug}`,
     display_name: profile.displayName,
+    acquisition_source: options.acquisitionSource ?? "organic",
     iat,
     exp: iat + ATH_HANDOFF_TTL_SECONDS,
     nonce: options.nonce ?? randomBytes(24).toString("base64url"),

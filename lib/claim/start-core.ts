@@ -23,23 +23,93 @@ export type RateLimitStore = {
   hit(key: string, windowMs: number, now: number): Promise<number>;
 };
 
+/**
+ * ATH-CLAIM-V2-001R2 (Q3) — per-IP state, not a flat key map.
+ *
+ * The prior design kept `ip:`, `ip-hour:`, and `ip-profile:*` counters as unrelated entries in one flat
+ * global-oldest-eviction map. An attacker could flood with thousands of distinct (UUID-shaped) profile ids
+ * from a single IP; each one inserted a new `ip-profile:` key, and once the map's global size bound was
+ * exceeded, the OLDEST key was evicted — which could be that same attacker's own `ip:`/`ip-hour:` aggregate
+ * counter, resetting the very protection meant to bound them. Profile-key churn could evict IP-aggregate
+ * protection.
+ *
+ * Fix: each IP gets one retained `IpState` with three independent slots — `agg` (15m), `hourly` (1h), and a
+ * `profiles` map bounded to `maxProfilesPerIp` distinct, recently-active profile ids. Growing the profile map
+ * never touches `agg`/`hourly`, so an aggregate counter can only be reset by that IP itself falling out of the
+ * (separately, generously bounded) global IP LRU — never by its own profile-key churn. Once an IP's profile
+ * cardinality bound is exceeded, a HITHERTO-UNSEEN profile key fails closed (counts as effectively over any
+ * policy max) rather than resetting or displacing anything.
+ */
+type IpRateState = { agg: number[]; hourly: number[]; profiles: Map<string, number[]> };
+
+/** Generous horizon for reclaiming a per-IP profile slot that has had no hits in a long time — independent of
+ * any single call's `windowMs`, so a legitimate high-volume shared IP does not get permanently capped by
+ * profiles it touched once, long ago. Comfortably above the largest real window used here (1h). */
+const PROFILE_SLOT_STALE_MS = 24 * 60 * 60 * 1000;
+
+type ParsedRateLimitKey = { ip: string; kind: 'agg' | 'hourly' | 'profile'; profileId?: string };
+function parseRateLimitKey(key: string): ParsedRateLimitKey | null {
+  if (key.startsWith('ip-profile:')) {
+    const rest = key.slice('ip-profile:'.length);
+    const sep = rest.indexOf(':');
+    if (sep < 0) return null;
+    return { ip: rest.slice(0, sep), kind: 'profile', profileId: rest.slice(sep + 1) };
+  }
+  if (key.startsWith('ip-hour:')) return { ip: key.slice('ip-hour:'.length), kind: 'hourly' };
+  if (key.startsWith('ip:')) return { ip: key.slice('ip:'.length), kind: 'agg' };
+  return null;
+}
+
+function trimAndPush(hits: number[], windowMs: number, now: number): number[] {
+  const floor = now - windowMs;
+  const kept = hits.filter((t) => t > floor);
+  kept.push(now);
+  return kept;
+}
+
 export class MemoryRateLimitStore implements RateLimitStore {
   readonly durable = false as const;
-  private readonly buckets = new Map<string, number[]>();
-  constructor(private readonly maxKeys = 5_000) {}
-  async hit(key: string, windowMs: number, now: number): Promise<number> {
-    const floor = now - windowMs;
-    const hits = (this.buckets.get(key) ?? []).filter((t) => t > floor);
-    hits.push(now);
-    this.buckets.set(key, hits);
-    if (this.buckets.size > this.maxKeys) {
-      // Bounded memory: evict the oldest-inserted key. A flood cannot grow the map without limit.
-      const oldest = this.buckets.keys().next().value;
-      if (oldest !== undefined) this.buckets.delete(oldest);
+  private readonly ips = new Map<string, IpRateState>();
+  constructor(private readonly maxIps = 5_000, private readonly maxProfilesPerIp = 64) {}
+
+  /** Retains (and LRU-touches) one IP's state. Only whole IPs are ever evicted here — never a single profile
+   * key reaching into and clearing another key's aggregate. */
+  private ipState(ip: string, now: number): IpRateState {
+    let state = this.ips.get(ip);
+    if (state) this.ips.delete(ip); // re-insert below to mark most-recently-used
+    else state = { agg: [], hourly: [], profiles: new Map() };
+    this.ips.set(ip, state);
+    if (this.ips.size > this.maxIps) {
+      const oldestIp = this.ips.keys().next().value;
+      if (oldestIp !== undefined && oldestIp !== ip) this.ips.delete(oldestIp);
     }
-    return hits.length;
+    // Reclaim profile slots this IP hasn't touched in a long time, independent of maxProfilesPerIp pressure.
+    for (const [profileId, hits] of state.profiles) {
+      const last = hits[hits.length - 1];
+      if (last === undefined || now - last > PROFILE_SLOT_STALE_MS) state.profiles.delete(profileId);
+    }
+    return state;
   }
-  size(): number { return this.buckets.size; }
+
+  async hit(key: string, windowMs: number, now: number): Promise<number> {
+    const parsed = parseRateLimitKey(key);
+    if (!parsed) throw new Error(`MemoryRateLimitStore: unrecognized key shape "${key}"`);
+    const state = this.ipState(parsed.ip, now);
+    if (parsed.kind === 'agg') { state.agg = trimAndPush(state.agg, windowMs, now); return state.agg.length; }
+    if (parsed.kind === 'hourly') { state.hourly = trimAndPush(state.hourly, windowMs, now); return state.hourly.length; }
+    const profileId = parsed.profileId!;
+    const existing = state.profiles.get(profileId);
+    if (!existing && state.profiles.size >= this.maxProfilesPerIp) {
+      // Cardinality bound exceeded: fail this (new) profile key closed. agg/hourly are untouched, so the
+      // IP-level aggregate protections keep counting this IP's flood correctly regardless.
+      return Number.MAX_SAFE_INTEGER;
+    }
+    const next = trimAndPush(existing ?? [], windowMs, now);
+    state.profiles.set(profileId, next);
+    return next.length;
+  }
+
+  size(): number { return this.ips.size; }
 }
 
 export type ClaimStartPolicy = {
@@ -57,9 +127,6 @@ export const CLAIM_START_POLICY: Readonly<ClaimStartPolicy> = {
   retryAfterSeconds: 900,
 };
 
-export const SPECIALIST_DECLARABLE_SOURCES = ["organic", "manual_outreach", "internal_test"] as const;
-export type SpecialistDeclaredSource = (typeof SPECIALIST_DECLARABLE_SOURCES)[number];
-
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export const NO_STORE_HEADERS = { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } as const;
 
@@ -76,19 +143,6 @@ function safeOrigin(value: string): string { try { return new URL(value).origin;
 
 export function clientIp(headers: Headers): string {
   return headers.get("x-forwarded-for")?.split(",")[0]?.trim() || headers.get("x-real-ip")?.trim() || "unknown";
-}
-
-export function declaredSource(value: unknown): SpecialistDeclaredSource {
-  return typeof value === "string" && (SPECIALIST_DECLARABLE_SOURCES as readonly string[]).includes(value) ? (value as SpecialistDeclaredSource) : "organic";
-}
-
-async function readSource(request: Request): Promise<SpecialistDeclaredSource> {
-  const type = request.headers.get("content-type") || "";
-  try {
-    if (type.includes("application/json")) { const body = (await request.json()) as { source?: unknown }; return declaredSource(body?.source); }
-    if (type.includes("application/x-www-form-urlencoded") || type.includes("multipart/form-data")) { const form = await request.formData(); return declaredSource(form.get("source")); }
-  } catch { /* malformed body is not an error: default to organic */ }
-  return "organic";
 }
 
 export function safeFailure(message: string, status: 403 | 404 | 405 | 429 | 503, extraHeaders: Record<string, string> = {}): Response {
@@ -150,13 +204,15 @@ export async function handleClaimStart(request: Request, profileId: string, deps
   try { profile = await deps.loadProfile(profileId); } catch { log("unavailable"); return safeFailure("Profile management is temporarily unavailable.", 503); }
   if (!profile) { log("ineligible"); return safeFailure("This profile is not eligible for management.", 404); }
 
-  const source = await readSource(request);
+  // ATH-CLAIM-V2-001R2 (Q2): the public route never reads a source from the request. Every browser-initiated
+  // mint carries `acquisition_source: "organic"` signed inside the token itself (see handoff-contract.ts /
+  // deps.mint); Ask authenticates it there and never trusts a query string. This is not a place to add a
+  // source override — a trusted server-side caller of deps.mint's underlying function does that directly.
   let token: string;
   try { token = deps.mint(profile).token; } catch { log("mint_failure"); return safeFailure("Profile management is temporarily unavailable.", 503); }
-  log("minted", { state: "FL", source_system: "fl_dbpr", acquisition_source: source });
-  deps.log("claim_cta_activated", { hub: "contractor", profile_class: "contractor", state: "FL", acquisition_source: source });
+  log("minted", { state: "FL", source_system: "fl_dbpr", acquisition_source: "organic" });
+  deps.log("claim_cta_activated", { hub: "contractor", profile_class: "contractor", state: "FL", acquisition_source: "organic" });
   const target = new URL("/claim/continue", deps.askOrigin);
   target.searchParams.set("handoff", token);
-  target.searchParams.set("source", source);
   return new Response(null, { status: 303, headers: { ...NO_STORE_HEADERS, Location: target.toString() } });
 }
