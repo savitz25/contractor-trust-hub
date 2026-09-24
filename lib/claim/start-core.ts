@@ -24,10 +24,61 @@ import { isIP } from 'node:net';
 
 export type ClaimStartProfile = { id: string; slug: string; externalKey: string; displayName: string };
 
+/**
+ * ATH-CLAIM-V2-001R4 — structured rate-limit key. The previous string key (`ip-profile:${ip}:${uuid}`) had to be
+ * re-parsed, and splitting it at the first colon collapsed every IPv6 client into one shared state (C-B2). A
+ * structured key has nothing to parse. `bucket` is `abuseBucket(clientIp(headers))`.
+ */
+export type RateLimitKey =
+  | { kind: 'agg'; bucket: string }
+  | { kind: 'hourly'; bucket: string }
+  | { kind: 'profile'; bucket: string; profileId: string };
+
 export type RateLimitStore = {
   /** Records a hit and returns the number of hits for `key` inside the trailing window, including this one. */
-  hit(key: string, windowMs: number, now: number): Promise<number>;
+  hit(key: RateLimitKey, windowMs: number, now: number): Promise<number>;
 };
+
+/**
+ * ATH-CLAIM-V2-001R4 — abuse bucket for an address (rate limiting only; never identity).
+ *  - IPv4: the full address (unchanged behaviour).
+ *  - IPv4-mapped / IPv4-compatible IPv6 (::ffff:a.b.c.d): the embedded IPv4, so one client can't get two buckets.
+ *  - Other IPv6: the /64 prefix, written canonically as `xxxx:xxxx:xxxx:xxxx::/64`. A subscriber or device is
+ *    normally delegated a whole /64 (RFC 6177; mobile carriers assign one per device), so per-address buckets are
+ *    free to rotate around; /64 is the smallest unit an attacker does not control for free. Trade-off, same as
+ *    IPv4 NAT today: unrelated users behind one shared /64 share a bucket.
+ *  - Anything not a valid IP (including the 'unknown' fallback) maps to 'unknown'.
+ */
+export function abuseBucket(ip: string): string {
+  const version = isIP(ip);
+  if (version === 4) return ip;
+  if (version !== 6) return 'unknown';
+  const hextets = expandIPv6(ip);
+  if (!hextets) return 'unknown';
+  const isMapped = hextets.slice(0, 5).every((h) => h === 0) && (hextets[5] === 0xffff || hextets[5] === 0);
+  if (isMapped && (hextets[6] !== 0 || hextets[7] > 1)) {
+    return [hextets[6] >> 8, hextets[6] & 0xff, hextets[7] >> 8, hextets[7] & 0xff].join('.');
+  }
+  return `${hextets.slice(0, 4).map((h) => h.toString(16)).join(':')}::/64`;
+}
+
+/** Expands a validated IPv6 literal (incl. `::` compression and an embedded IPv4 tail) to 8 numeric hextets. */
+function expandIPv6(ip: string): number[] | null {
+  let text = ip.toLowerCase().split('%')[0];
+  const v4 = /(\d+\.\d+\.\d+\.\d+)$/.exec(text);
+  if (v4) {
+    const o = v4[1].split('.').map(Number);
+    text = text.slice(0, -v4[1].length) + `${((o[0] << 8) | o[1]).toString(16)}:${((o[2] << 8) | o[3]).toString(16)}`;
+  }
+  const [head, tail] = text.includes('::') ? text.split('::') : [text, null];
+  const left = head ? head.split(':') : [];
+  const right = tail !== null && tail ? tail.split(':') : [];
+  const fill = tail !== null ? 8 - left.length - right.length : 0;
+  const parts = [...left, ...Array(Math.max(0, fill)).fill('0'), ...right];
+  if (parts.length !== 8) return null;
+  const nums = parts.map((h) => parseInt(h, 16));
+  return nums.every((n) => Number.isInteger(n) && n >= 0 && n <= 0xffff) ? nums : null;
+}
 
 /**
  * ATH-CLAIM-V2-001R2 (Q3) — per-IP state, not a flat key map.
@@ -53,18 +104,16 @@ type IpRateState = { agg: number[]; hourly: number[]; profiles: Map<string, numb
  * profiles it touched once, long ago. Comfortably above the largest real window used here (1h). */
 const PROFILE_SLOT_STALE_MS = 24 * 60 * 60 * 1000;
 
-type ParsedRateLimitKey = { ip: string; kind: 'agg' | 'hourly' | 'profile'; profileId?: string };
-function parseRateLimitKey(key: string): ParsedRateLimitKey | null {
+/** Legacy string keys (kept only for callers outside this module; the route passes structured keys). */
+function parseRateLimitKey(key: string): RateLimitKey | null {
   if (key.startsWith('ip-profile:')) {
-    const rest = key.slice('ip-profile:'.length);
-    // ATH-CLAIM-V2-001R4: split at the LAST colon. IPv6 addresses contain colons and profile UUIDs never do;
-    // splitting at the first one collapsed every 2600:* client into one shared 64-slot profile map.
-    const sep = rest.lastIndexOf(':');
-    if (sep < 0) return null;
-    return { ip: rest.slice(0, sep), kind: 'profile', profileId: rest.slice(sep + 1) };
+    // The profile id is a fixed-shape UUID suffix (no colons), so it is peeled off the END; whatever precedes it
+    // is the bucket, colons and all (IPv6).
+    const m = /^ip-profile:(.+):([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i.exec(key);
+    return m ? { kind: 'profile', bucket: m[1], profileId: m[2] } : null;
   }
-  if (key.startsWith('ip-hour:')) return { ip: key.slice('ip-hour:'.length), kind: 'hourly' };
-  if (key.startsWith('ip:')) return { ip: key.slice('ip:'.length), kind: 'agg' };
+  if (key.startsWith('ip-hour:')) return { kind: 'hourly', bucket: key.slice('ip-hour:'.length) };
+  if (key.startsWith('ip:')) return { kind: 'agg', bucket: key.slice('ip:'.length) };
   return null;
 }
 
@@ -99,13 +148,13 @@ export class MemoryRateLimitStore implements RateLimitStore {
     return state;
   }
 
-  async hit(key: string, windowMs: number, now: number): Promise<number> {
-    const parsed = parseRateLimitKey(key);
-    if (!parsed) throw new Error(`MemoryRateLimitStore: unrecognized key shape "${key}"`);
-    const state = this.ipState(parsed.ip, now);
+  async hit(key: RateLimitKey | string, windowMs: number, now: number): Promise<number> {
+    const parsed = typeof key === 'string' ? parseRateLimitKey(key) : key;
+    if (!parsed || !parsed.bucket) throw new Error('MemoryRateLimitStore: unrecognized key shape');
+    const state = this.ipState(parsed.bucket, now);
     if (parsed.kind === 'agg') { state.agg = trimAndPush(state.agg, windowMs, now); return state.agg.length; }
     if (parsed.kind === 'hourly') { state.hourly = trimAndPush(state.hourly, windowMs, now); return state.hourly.length; }
-    const profileId = parsed.profileId!;
+    const profileId = parsed.profileId.toLowerCase();
     const existing = state.profiles.get(profileId);
     if (!existing && state.profiles.size >= this.maxProfilesPerIp) {
       // Cardinality bound exceeded: fail this (new) profile key closed. agg/hourly are untouched, so the
@@ -243,14 +292,14 @@ export async function handleClaimStart(request: Request, profileId: string, deps
   if (!origin.ok) { log("cross_origin", { reason: origin.reason }); return safeFailure("This request did not come from a ContractorTrustHub profile page.", 403); }
   if (!UUID.test(profileId)) { log("invalid_profile"); return safeFailure("This profile is not eligible for management.", 404); }
 
-  const ip = clientIp(request.headers);
+  const bucket = abuseBucket(clientIp(request.headers));
   const now = deps.now();
   let counts: [number, number, number];
   try {
     counts = [
-      await deps.store.hit(`ip:${ip}`, policy.perIp.windowMs, now),
-      await deps.store.hit(`ip-profile:${ip}:${profileId.toLowerCase()}`, policy.perIpProfile.windowMs, now),
-      await deps.store.hit(`ip-hour:${ip}`, policy.perIpHourly.windowMs, now),
+      await deps.store.hit({ kind: 'agg', bucket }, policy.perIp.windowMs, now),
+      await deps.store.hit({ kind: 'profile', bucket, profileId: profileId.toLowerCase() }, policy.perIpProfile.windowMs, now),
+      await deps.store.hit({ kind: 'hourly', bucket }, policy.perIpHourly.windowMs, now),
     ];
   } catch {
     log("store_failure");

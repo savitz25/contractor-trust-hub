@@ -37,7 +37,8 @@ export async function loadEligibleClaimProfile(profileId: string): Promise<Claim
         AND source_system = 'fl_dbpr'
         AND NULLIF(TRIM(external_key), '') IS NOT NULL
       ORDER BY CASE WHEN status_normalized = 'active' THEN 0 ELSE 1 END,
-               last_seen_at DESC NULLS LAST
+               last_seen_at DESC NULLS LAST,
+               external_key ASC -- ATH-CLAIM-V2-001R4: deterministic tiebreak, identical to Ask cth-read
       LIMIT 1
     ) l ON TRUE
     WHERE c.id = $1::uuid

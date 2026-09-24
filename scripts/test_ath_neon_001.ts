@@ -14,7 +14,9 @@ test("ATH-NEON-001: contractor profile uses one public-state fetch and honors ca
   assert.match(fetchState, /export const ASK_PUBLIC_REVALIDATE_S = 60;/);
   assert.match(fetchState, /revalidate: ASK_PUBLIC_REVALIDATE_S/);
   assert.match(profileFetch, /revalidate: ASK_PUBLIC_REVALIDATE_S/);
-  assert.match(replyFetch, /revalidate:ASK_PUBLIC_REVALIDATE_S/);
+  assert.match(replyFetch, /revalidate:ASK_PUBLIC_REVALIDATE_S,tags:\[askPublicStateTag\(id\)\]/);
+  assert.match(fetchState, /tags: \[askPublicStateTag\(profileId\)\]/);
+  assert.match(profileFetch, /tags: \[askPublicStateTag\(profileId\)\]/);
   for (const src of [fetchState, profileFetch, replyFetch]) assert.doesNotMatch(src, /revalidate:s*21600/);
   assert.doesNotMatch(fetchState, /cache:\s*["']no-store["']/);
   assert.doesNotMatch(profileFetch, /cache:\s*["']no-store["']/);

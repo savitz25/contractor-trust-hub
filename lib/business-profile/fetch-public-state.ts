@@ -7,6 +7,12 @@ import { parsePublicBusinessReplies, type PublicBusinessReplies } from "../busin
  * Neon, so a short window here costs no Neon work. Kept as a cache (not no-store) per ATH-NEON-001.
  */
 export const ASK_PUBLIC_REVALIDATE_S = 60;
+/**
+ * Per-profile data-cache tag on every Ask public read. It makes an owner-layer entry precisely purgeable
+ * (revalidateTag(askPublicStateTag(id), { expire: 0 })) by a future trusted server path; there is deliberately no
+ * public purge route (that would be an attacker-triggerable surface). Until one exists the bound is the 60s window.
+ */
+export const askPublicStateTag = (profileId: string) => `ask-public-state:${profileId}`;
 
 export type PublicContractorTrustState = {
   contractorId: string;
@@ -25,7 +31,7 @@ export async function fetchPublicContractorState(
     const response = await fetcher(
       `${origin.replace(/\/+$/, "")}/api/public/contractor-profiles/${encodeURIComponent(profileId)}/public-state`,
       {
-        next: { revalidate: ASK_PUBLIC_REVALIDATE_S },
+        next: { revalidate: ASK_PUBLIC_REVALIDATE_S, tags: [askPublicStateTag(profileId)] },
         signal: AbortSignal.timeout(1500),
         headers: { accept: "application/json" },
       },

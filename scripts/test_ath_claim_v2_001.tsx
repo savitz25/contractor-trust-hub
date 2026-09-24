@@ -341,6 +341,7 @@ test("R4: first-approval visibility — Ask public reads use a 60s shared window
   const none = await fetchPublicContractorState(PROFILE.id, ASK, before);
   assert.equal(none?.hasPublicBusinessProfile, false);
   assert.equal((seen as { next?: { revalidate?: number } }).next?.revalidate, 60, "Contractor data-cache window for Ask public state is 60s");
+  assert.deepEqual((seen as { next?: { tags?: string[] } }).next?.tags, [`ask-public-state:${PROFILE.id}`], "per-profile purgeable tag");
   const src = readFileSync("lib/business-profile/fetch-public-state.ts", "utf8");
   assert.doesNotMatch(src, /revalidate:\s*21600/);
   // A 503 from Ask (outage) is never treated as "no business layer" data: it is omitted for this render only.
@@ -360,4 +361,62 @@ test("R4 (C-B2 finding): IPv6 clients are keyed by their full address — 200 di
   const ip = "2600:1f18:ffff::1";
   for (let n = 1; n <= 4; n += 1) assert.equal(await store.hit(`ip-profile:${ip}:${profile}`, CLAIM_START_POLICY.perIpProfile.windowMs, now), n);
   assert.equal(store.size(), 201, "one state per full IPv6 address");
+});
+
+test("R4 IPV6_RATE_LIMIT: abuse buckets for IPv4, ::1, full, compressed, mapped, zoned and garbage addresses", async () => {
+  const { abuseBucket } = await import("../lib/claim/start-core.ts");
+  assert.equal(abuseBucket("203.0.113.9"), "203.0.113.9", "IPv4 keeps the full address");
+  assert.equal(abuseBucket("::1"), "0:0:0:0::/64");
+  assert.equal(abuseBucket("2001:0db8:85a3:0000:0000:8a2e:0370:7334"), "2001:db8:85a3:0::/64", "full form");
+  assert.equal(abuseBucket("2001:db8:85a3::8a2e:370:7334"), "2001:db8:85a3:0::/64", "compressed form of the same address -> same bucket");
+  assert.equal(abuseBucket("2001:DB8:85A3:0:ffff::1"), "2001:db8:85a3:0::/64", "case-insensitive, same /64");
+  assert.equal(abuseBucket("::ffff:192.0.2.5"), "192.0.2.5", "IPv4-mapped collapses to the IPv4 bucket");
+  assert.equal(abuseBucket("64:ff9b::1.2.3.4"), "64:ff9b:0:0::/64", "embedded IPv4 tail parsed");
+  assert.equal(abuseBucket("fe80::1%eth0"), "fe80:0:0:0::/64", "zone id ignored (link-local never reaches the server anyway)");
+  assert.equal(abuseBucket("unknown"), "unknown");
+  assert.equal(abuseBucket("garbage"), "unknown");
+});
+
+test("R4 IPV6_RATE_LIMIT: many addresses in one /64 share one bound; two different /64s are independent; 65+ profiles fail closed without resetting aggregates", async () => {
+  // Distinct profile per request so the per-bucket AGGREGATE bound (5 / 15 min) is what is exercised.
+  const run = async (headers: Record<string, string>, deps: ClaimStartDeps, profileId = randomUUID()) =>
+    handleClaimStart(new Request(`${SITE}/api/claim/handoff/${profileId}`, { method: "POST", headers: { origin: SITE, ...headers } }), profileId, deps);
+  const { deps: base } = harness({ store: new MemoryRateLimitStore() });
+  const deps: ClaimStartDeps = { ...base, enabled: () => true, loadProfile: async (id) => ({ ...PROFILE, id }) };
+  // 5 requests from 5 DIFFERENT addresses inside 2001:db8:aaaa:1::/64 exhaust the per-bucket bound together.
+  for (let i = 1; i <= 5; i += 1) assert.equal((await run({ "x-vercel-forwarded-for": `2001:db8:aaaa:1::${i.toString(16)}` }, deps)).status, 303, `address ${i}`);
+  assert.equal((await run({ "x-vercel-forwarded-for": "2001:db8:aaaa:1:ffff:ffff:ffff:ffff" }, deps)).status, 429, "rotating inside the same /64 does not buy more attempts");
+  // A different /64 (neighbouring prefix) is unaffected.
+  assert.equal((await run({ "x-vercel-forwarded-for": "2001:db8:aaaa:2::1" }, deps)).status, 303, "different /64 has its own bound");
+  // Spoofed x-forwarded-for rotation with a stable trusted header stays in ONE bucket.
+  const { deps: spoofBase } = harness({ store: new MemoryRateLimitStore() });
+  const spoofDeps: ClaimStartDeps = { ...spoofBase, enabled: () => true, loadProfile: async (id) => ({ ...PROFILE, id }) };
+  for (let i = 0; i < 5; i += 1) await run({ "x-vercel-forwarded-for": "2001:db8:bbbb:1::1", "x-forwarded-for": `198.51.100.${i}` }, spoofDeps);
+  assert.equal((await run({ "x-vercel-forwarded-for": "2001:db8:bbbb:1::1", "x-forwarded-for": "198.51.100.200" }, spoofDeps)).status, 429);
+  // 65+ distinct profile ids from one /64: new profile keys fail closed past the cardinality bound, and the
+  // bucket aggregate is never reset by that churn.
+  const store = new MemoryRateLimitStore(5_000, 64);
+  const bucket = "2001:db8:cccc:1::/64";
+  for (let i = 0; i < 64; i += 1) assert.equal(await store.hit({ kind: "profile", bucket, profileId: randomUUID() }, 15 * 60 * 1000, 1_000 + i), 1);
+  assert.equal(await store.hit({ kind: "profile", bucket, profileId: randomUUID() }, 15 * 60 * 1000, 2_000), Number.MAX_SAFE_INTEGER, "65th distinct profile fails closed");
+  for (let i = 0; i < 3; i += 1) await store.hit({ kind: "agg", bucket }, 15 * 60 * 1000, 3_000 + i);
+  for (let i = 0; i < 200; i += 1) await store.hit({ kind: "profile", bucket, profileId: randomUUID() }, 15 * 60 * 1000, 4_000 + i);
+  assert.equal(await store.hit({ kind: "agg", bucket }, 15 * 60 * 1000, 5_000), 4, "aggregate survives profile churn");
+  // Structured keys and legacy string keys address the same state (IPv6 string keys parse from the UUID suffix).
+  const legacy = new MemoryRateLimitStore();
+  const pid = randomUUID();
+  await legacy.hit(`ip-profile:2001:db8:dddd:1::/64:${pid}`, 60_000, 1);
+  assert.equal(await legacy.hit({ kind: "profile", bucket: "2001:db8:dddd:1::/64", profileId: pid }, 60_000, 2), 2);
+  await assert.rejects(() => legacy.hit("ip-profile:2001:db8::1:not-a-uuid", 60_000, 3), /unrecognized key shape/);
+});
+
+test("R4 IPV6_RATE_LIMIT: 20,000 adversarial requests from one IPv6 /64 across rotating addresses and profiles stay bounded", async () => {
+  const { deps } = harness({ store: new MemoryRateLimitStore() });
+  let minted = 0;
+  for (let i = 0; i < 20_000; i += 1) {
+    const profileId = randomUUID();
+    const res = await handleClaimStart(new Request(`${SITE}/api/claim/handoff/${profileId}`, { method: "POST", headers: { origin: SITE, "x-vercel-forwarded-for": `2001:db8:eeee:1:${(i % 65536).toString(16)}::${(i % 7) + 1}` } }), profileId, { ...deps, enabled: () => true, loadProfile: async (id) => ({ ...PROFILE, id }) });
+    if (res.status === 303) minted += 1;
+  }
+  assert.ok(minted <= CLAIM_START_POLICY.perIp.max, `at most ${CLAIM_START_POLICY.perIp.max} mints for the whole /64 (got ${minted})`);
 });
