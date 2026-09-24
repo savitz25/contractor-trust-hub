@@ -14,7 +14,12 @@
  * 10/15m/IP), and — decisively — a minted token no longer creates any durable Ask state until a human
  * presses Continue. A durable Contractor store can be plugged in through `RateLimitStore` after Founder
  * review (see docs/claim-v2/ATH-CLAIM-V2-001-ABUSE-MODEL.md). The gate FAILS CLOSED if the store errors.
+ *
+ * ATH-CLAIM-V2-001R3 — client-IP source hardening (see clientIp() below). This does not make the gate
+ * durable/fleet-wide; it only fixes which header the per-isolate gate trusts. CANARY_ABUSE_GATE stays
+ * CONDITIONAL, ALL_ABUSE_GATE stays BLOCKED.
  */
+import { isIP } from 'node:net';
 
 export type ClaimStartProfile = { id: string; slug: string; externalKey: string; displayName: string };
 
@@ -141,8 +146,60 @@ export function checkSameOrigin(headers: Headers, requestUrl: string, allowedOri
 }
 function safeOrigin(value: string): string { try { return new URL(value).origin; } catch { return ""; } }
 
+/** Bounded before any parsing: a header this long is never a legitimate address list, and we must not spend
+ * unbounded work (split/regex/validate) on attacker-controlled header content. */
+const MAX_FORWARDED_HEADER_LENGTH = 512;
+/** Longest textual IPv6 representation (with an embedded IPv4 tail) is 45 characters. */
+const MAX_IP_TEXT_LENGTH = 45;
+
+/** Strips an optional bracketed-IPv6-with-port wrapper ("[::1]:8080" -> "::1"); otherwise returns the trimmed,
+ * length-bounded input unchanged. Pure normalization — validity is checked separately by isIP(). */
+function normalizeAddressCandidate(value: string): string {
+  const trimmed = value.trim();
+  const bracketed = /^\[([^\]]+)\](?::\d+)?$/.exec(trimmed);
+  return (bracketed ? bracketed[1] : trimmed).slice(0, MAX_IP_TEXT_LENGTH);
+}
+
+/** The first entry of a (possibly chained) forwarding header, validated as IPv4 or IPv6. Anything else —
+ * empty, oversized, malformed, a hostname, garbage — returns null so the caller can apply a safe fallback
+ * instead of propagating an unvalidated string into a rate-limit key. */
+function firstValidAddress(headerValue: string): string | null {
+  if (!headerValue) return null;
+  const bounded = headerValue.slice(0, MAX_FORWARDED_HEADER_LENGTH);
+  const first = bounded.split(",", 1)[0];
+  if (!first) return null;
+  const candidate = normalizeAddressCandidate(first);
+  return candidate.length > 0 && isIP(candidate) !== 0 ? candidate : null;
+}
+
+/**
+ * ATH-CLAIM-V2-001R3 — client IP for the abuse-rate-limit bucket key ONLY. This is never an identity or
+ * authentication claim; it exists solely to key MemoryRateLimitStore.
+ *
+ * `x-vercel-forwarded-for` is set by Vercel's own edge network and cannot be supplied or overwritten by the
+ * client or by an arbitrary upstream `x-forwarded-for` — Vercel's routing layer sets it from the real
+ * connecting peer. Documented Vercel behavior already strips a client-supplied `x-forwarded-for` in
+ * Production, but that is a hosting-platform assumption, not something this code can verify at runtime, and a
+ * Trusted Proxy / future proxy topology could change it. So: whenever `x-vercel-forwarded-for` is present at
+ * all, it is authoritative and `x-forwarded-for` is never consulted, even if the Vercel header turns out to be
+ * malformed — falling through to `x-forwarded-for` in that case would hand control right back to a client that
+ * can freely set it. A malformed-but-present Vercel header degrades to the shared 'unknown' bucket, not to a
+ * client-controlled value.
+ *
+ * When `x-vercel-forwarded-for` is absent entirely (local dev, tests, or any non-Vercel deployment), behavior
+ * falls back to the conventional `x-forwarded-for` / `x-real-ip` headers exactly as before this change.
+ */
 export function clientIp(headers: Headers): string {
-  return headers.get("x-forwarded-for")?.split(",")[0]?.trim() || headers.get("x-real-ip")?.trim() || "unknown";
+  const vercelForwardedFor = headers.get("x-vercel-forwarded-for");
+  if (vercelForwardedFor !== null) {
+    return firstValidAddress(vercelForwardedFor) ?? "unknown";
+  }
+  const forwardedFor = headers.get("x-forwarded-for");
+  const fromForwardedFor = forwardedFor !== null ? firstValidAddress(forwardedFor) : null;
+  if (fromForwardedFor) return fromForwardedFor;
+  const realIp = headers.get("x-real-ip");
+  const fromRealIp = realIp !== null ? firstValidAddress(realIp) : null;
+  return fromRealIp ?? "unknown";
 }
 
 export function safeFailure(message: string, status: 403 | 404 | 405 | 429 | 503, extraHeaders: Record<string, string> = {}): Response {

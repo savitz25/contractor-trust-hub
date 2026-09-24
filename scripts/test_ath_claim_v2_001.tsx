@@ -14,6 +14,7 @@ import {
   CLAIM_START_POLICY,
   MemoryRateLimitStore,
   checkSameOrigin,
+  clientIp,
   handleClaimHandoffGet,
   handleClaimStart,
   type ClaimStartDeps,
@@ -204,6 +205,74 @@ test("Q3 adversarial: 20,000 requests from one IP across >5,000 distinct UUID-sh
   }
   assert.ok(seenProfiles.size > 5_000, `test setup should exercise >5,000 distinct profiles, got ${seenProfiles.size}`);
   assert.ok(minted <= CLAIM_START_POLICY.perIpHourly.max, `successful mints (${minted}) must not exceed the hourly policy (${CLAIM_START_POLICY.perIpHourly.max})`);
+});
+
+// ---------------------------------------------------------------- ATH-CLAIM-V2-001R3
+test("R3: a valid x-vercel-forwarded-for wins over a spoofed x-forwarded-for", () => {
+  const headers = new Headers({ "x-vercel-forwarded-for": "203.0.113.9", "x-forwarded-for": "198.51.100.250" });
+  assert.equal(clientIp(headers), "203.0.113.9");
+});
+
+test("R3: same Vercel IP with different spoofed x-forwarded-for values maps to the same limiter identity", () => {
+  const a = clientIp(new Headers({ "x-vercel-forwarded-for": "203.0.113.9", "x-forwarded-for": "1.1.1.1" }));
+  const b = clientIp(new Headers({ "x-vercel-forwarded-for": "203.0.113.9", "x-forwarded-for": "2.2.2.2, 3.3.3.3" }));
+  const c = clientIp(new Headers({ "x-vercel-forwarded-for": "203.0.113.9" })); // no XFF at all
+  assert.equal(a, "203.0.113.9"); assert.equal(b, "203.0.113.9"); assert.equal(c, "203.0.113.9");
+  assert.equal(a, b); assert.equal(b, c);
+});
+
+test("R3: different Vercel IPs map to different limiter identities", () => {
+  const a = clientIp(new Headers({ "x-vercel-forwarded-for": "203.0.113.9", "x-forwarded-for": "1.1.1.1" }));
+  const b = clientIp(new Headers({ "x-vercel-forwarded-for": "203.0.113.10", "x-forwarded-for": "1.1.1.1" })); // same spoofed XFF, different real Vercel IP
+  assert.notEqual(a, b);
+});
+
+test("R3: a malformed x-vercel-forwarded-for degrades to the shared safe fallback, never to the spoofed x-forwarded-for", () => {
+  for (const malformed of ["", "not-an-ip", "999.999.999.999", "<script>alert(1)</script>", "a".repeat(5000), ", , ,"]) {
+    const ip = clientIp(new Headers({ "x-vercel-forwarded-for": malformed, "x-forwarded-for": "198.51.100.250" }));
+    assert.equal(ip, "unknown", `malformed Vercel header ${JSON.stringify(malformed.slice(0, 30))} must not fall through to x-forwarded-for`);
+  }
+});
+
+test("R3: IPv6 is supported from both the Vercel header and the local-dev fallback path", () => {
+  assert.equal(clientIp(new Headers({ "x-vercel-forwarded-for": "2001:db8::1" })), "2001:db8::1");
+  assert.equal(clientIp(new Headers({ "x-vercel-forwarded-for": "[2001:db8::1]:443" })), "2001:db8::1", "bracketed IPv6-with-port normalizes");
+  assert.equal(clientIp(new Headers({ "x-forwarded-for": "2001:db8::2" })), "2001:db8::2", "no Vercel header: conventional fallback still supports IPv6");
+  assert.equal(clientIp(new Headers({ "x-real-ip": "::1" })), "::1");
+});
+
+test("R3: local/dev/test behavior without any Vercel header is unchanged, and a chained header uses the first entry", () => {
+  assert.equal(clientIp(new Headers({ "x-forwarded-for": "203.0.113.5, 70.41.3.18, 150.172.238.178" })), "203.0.113.5");
+  assert.equal(clientIp(new Headers({})), "unknown");
+  assert.equal(clientIp(new Headers({ "x-real-ip": "203.0.113.5" })), "203.0.113.5");
+});
+
+test("R3: no raw IP reaches a log call, and the rate-limit key itself never appears in a log line", async () => {
+  const { deps, logs } = harness();
+  await handleClaimStart(post(PROFILE.id, { extra: { "x-vercel-forwarded-for": "203.0.113.201" } }), PROFILE.id, deps);
+  const serialized = JSON.stringify(logs);
+  assert.doesNotMatch(serialized, /203\.0\.113\.201/, "the Vercel-sourced client IP never reaches a log call");
+  const core = readFileSync("lib/claim/start-core.ts", "utf8");
+  const handleBody = core.slice(core.indexOf("export async function handleClaimStart"));
+  assert.doesNotMatch(handleBody, /log\([^)]*\bip\b[^)]*\)/, "no log(...) call in handleClaimStart passes the ip variable");
+});
+
+test("R3 adversarial re-run: 20,000 requests, one real Vercel IP, a different spoofed x-forwarded-for on every request, still holds the hourly bound", async () => {
+  const { deps } = harness({ store: new MemoryRateLimitStore() });
+  const vercelIp = "198.51.100.201";
+  let minted = 0;
+  for (let i = 0; i < 20_000; i += 1) {
+    const profileId = `7${String(Math.floor(i / 3)).padStart(7, "0")}-7777-4777-8777-${String(i).padStart(12, "0")}`;
+    // Every request spoofs a fresh, distinct x-forwarded-for -- under the pre-R3 header trust this alone would
+    // have looked like 20,000 different clients. The real Vercel-assigned IP is constant and authoritative.
+    const res = await handleClaimStart(
+      post(profileId, { ip: `10.${i % 256}.${(i >> 8) % 256}.${(i >> 16) % 256}`, extra: { "x-vercel-forwarded-for": vercelIp } }),
+      profileId,
+      { ...deps, loadProfile: async () => ({ ...PROFILE, id: profileId }) }
+    );
+    if (res.status === 303) minted += 1;
+  }
+  assert.ok(minted <= CLAIM_START_POLICY.perIpHourly.max, `successful mints (${minted}) must not exceed the hourly policy (${CLAIM_START_POLICY.perIpHourly.max}) even with a fresh spoofed x-forwarded-for on every request`);
 });
 
 test("Q2: the public route never reads acquisition source from the browser; only signed, trusted-server-side minting can produce a non-organic source", async () => {
