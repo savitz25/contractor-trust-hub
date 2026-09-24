@@ -21,8 +21,9 @@
  * CONDITIONAL, ALL_ABUSE_GATE stays BLOCKED.
  */
 import { isIP } from 'node:net';
+import type { ClaimState } from './eligibility';
 
-export type ClaimStartProfile = { id: string; slug: string; externalKey: string; displayName: string };
+export type ClaimStartProfile = { id: string; slug: string; externalKey: string; displayName: string; homeState: ClaimState; sourceSystem: string };
 
 /**
  * ATH-CLAIM-V2-001R4 — structured rate-limit key. The previous string key (`ip-profile:${ip}:${uuid}`) had to be
@@ -271,7 +272,10 @@ export function handleClaimHandoffGet(): Response {
 }
 
 export type ClaimStartDeps = {
+  /** Mode / canary gate (pre-DB). */
   enabled(profileId: string): boolean;
+  /** ATH-CLAIM-V2-FLNJ-001: rollout state allow-list, checked against the loaded profile's claim state. */
+  stateEnabled(homeState: string): boolean;
   loadProfile(profileId: string): Promise<ClaimStartProfile | null>;
   mint(profile: ClaimStartProfile): { token: string };
   store: RateLimitStore;
@@ -312,6 +316,7 @@ export async function handleClaimStart(request: Request, profileId: string, deps
   let profile: ClaimStartProfile | null;
   try { profile = await deps.loadProfile(profileId); } catch { log("unavailable"); return safeFailure("Profile management is temporarily unavailable.", 503); }
   if (!profile) { log("ineligible"); return safeFailure("This profile is not eligible for management.", 404); }
+  if (!deps.stateEnabled(profile.homeState)) { log("unavailable", { state: profile.homeState }); return safeFailure("Profile management is unavailable for this profile.", 404); }
 
   // ATH-CLAIM-V2-001R2 (Q2): the public route never reads a source from the request. Every browser-initiated
   // mint carries `acquisition_source: "organic"` signed inside the token itself (see handoff-contract.ts /
@@ -319,8 +324,8 @@ export async function handleClaimStart(request: Request, profileId: string, deps
   // source override — a trusted server-side caller of deps.mint's underlying function does that directly.
   let token: string;
   try { token = deps.mint(profile).token; } catch { log("mint_failure"); return safeFailure("Profile management is temporarily unavailable.", 503); }
-  log("minted", { state: "FL", source_system: "fl_dbpr", acquisition_source: "organic" });
-  deps.log("claim_cta_activated", { hub: "contractor", profile_class: "contractor", state: "FL", acquisition_source: "organic" });
+  log("minted", { state: profile.homeState, source_system: profile.sourceSystem, acquisition_source: "organic" });
+  deps.log("claim_cta_activated", { hub: "contractor", profile_class: "contractor", state: profile.homeState, acquisition_source: "organic" });
   const target = new URL("/claim/continue", deps.askOrigin);
   target.searchParams.set("handoff", token);
   return new Response(null, { status: 303, headers: { ...NO_STORE_HEADERS, Location: target.toString() } });

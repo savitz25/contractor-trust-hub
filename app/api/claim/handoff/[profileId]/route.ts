@@ -1,4 +1,4 @@
-import { claimCtaEnabledFor, loadEligibleClaimProfile, mintClaimHandoff } from "@/lib/claim/server";
+import { claimModeEnabledFor, claimStateEnabled, loadEligibleClaimProfile, mintClaimHandoff } from "@/lib/claim/server";
 import { MemoryRateLimitStore, handleClaimHandoffGet, handleClaimStart } from "@/lib/claim/start-core";
 import { getSiteUrl } from "@/lib/site";
 
@@ -28,7 +28,8 @@ export function GET() {
 export async function POST(request: Request, { params }: { params: Promise<{ profileId: string }> }) {
   const { profileId } = await params;
   return handleClaimStart(request, profileId, {
-    enabled: claimCtaEnabledFor,
+    enabled: claimModeEnabledFor,
+    stateEnabled: claimStateEnabled,
     loadProfile: loadEligibleClaimProfile,
     mint: (profile) => mintClaimHandoff(profile),
     store,

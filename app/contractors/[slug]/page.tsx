@@ -196,7 +196,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
     primary?.externalKey ? `&license=${encodeURIComponent(primary.externalKey)}` : ""
   }`;
   const claimProfile = eligibleClaimProfile(contractor);
-  const customerRolloutEnabled = Boolean(claimProfile && claimCtaEnabledFor(claimProfile.id));
+  const customerRolloutEnabled = Boolean(claimProfile && claimCtaEnabledFor(claimProfile.id, claimProfile.homeState));
   const showClaimCta = customerRolloutEnabled;
   // Publication is governed by Ask's active-authority projection. Claim-intake
   // rollout only controls whether a new claim CTA is offered.
@@ -612,7 +612,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         ) : null}
 
         {businessProfile ? <BusinessSuppliedProfile profile={businessProfile} officialFormationDate={contractor.entities[0]?.formationDate} /> : null}
-        {claimProfile && (businessProfile || showClaimCta) ? <ManageProfileCta profileId={claimProfile.id} managed={Boolean(businessProfile)} /> : null}
+        {claimProfile && (businessProfile || showClaimCta) ? <ManageProfileCta profileId={claimProfile.id} state={claimProfile.homeState} sourceSystem={claimProfile.sourceSystem} managed={Boolean(businessProfile)} /> : null}
 
         <SourcesFooter contractor={contractor} state={state} />
 

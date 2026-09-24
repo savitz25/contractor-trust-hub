@@ -28,7 +28,7 @@ import { fetchPublicContractorState } from "../lib/business-profile/fetch-public
 const SECRET = "ath-claim-v2-001-contractor-test-secret-32-chars";
 const SITE = "https://www.contractortrusthub.com";
 const ASK = "https://www.asktrusthub.com";
-const PROFILE = { id: "11111111-1111-4111-8111-111111111111", slug: "cbc015082-acme-roofing", externalKey: "CBC015082", displayName: "Acme Roofing" };
+const PROFILE = { id: "11111111-1111-4111-8111-111111111111", slug: "cbc015082-acme-roofing", externalKey: "CBC015082", displayName: "Acme Roofing", homeState: "FL" as const, sourceSystem: "fl_dbpr" };
 const THIN_ID = "22222222-2222-4222-8222-222222222222";
 const DISABLED_ID = "33333333-3333-4333-8333-333333333333";
 
@@ -39,6 +39,7 @@ function harness(overrides: Partial<ClaimStartDeps> = {}) {
   const clock = { now: Date.parse("2026-09-22T14:00:00Z") };
   const deps: ClaimStartDeps = {
     enabled: (id) => id.toLowerCase() !== DISABLED_ID,
+    stateEnabled: (state) => state === "FL" || state === "NJ",
     loadProfile: async (id) => { loads.push(id); return id.toLowerCase() === PROFILE.id ? PROFILE : null; },
     mint: (profile) => { const { token } = mintAthHandoffToken(SECRET, profile, { now: new Date(clock.now) }); minted.push(token); return { token }; },
     store: new MemoryRateLimitStore(),

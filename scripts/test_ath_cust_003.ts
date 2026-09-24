@@ -17,6 +17,8 @@ const PROFILE = {
   slug: "cbc015082-acme-roofing",
   externalKey: "CBC015082",
   displayName: "Acme Roofing",
+  homeState: "FL" as const,
+  sourceSystem: "fl_dbpr",
 };
 
 function contractor(overrides: Partial<ContractorDetail> = {}): ContractorDetail {
