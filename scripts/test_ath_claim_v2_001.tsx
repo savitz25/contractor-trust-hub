@@ -40,6 +40,7 @@ function harness(overrides: Partial<ClaimStartDeps> = {}) {
   const deps: ClaimStartDeps = {
     enabled: (id) => id.toLowerCase() !== DISABLED_ID,
     stateEnabled: (state) => state === "FL" || state === "NJ",
+    durablePreflight: async () => ({ status: "allowed" as const }),
     loadProfile: async (id) => { loads.push(id); return id.toLowerCase() === PROFILE.id ? PROFILE : null; },
     mint: (profile) => { const { token } = mintAthHandoffToken(SECRET, profile, { now: new Date(clock.now) }); minted.push(token); return { token }; },
     store: new MemoryRateLimitStore(),

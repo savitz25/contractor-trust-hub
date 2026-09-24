@@ -43,7 +43,12 @@ export function ManageProfileCta({ profileId, managed = false, state = "FL", sou
           method="post"
           action={`/api/claim/handoff/${encodeURIComponent(profileId)}`}
           onSubmit={(event) => {
-            if (pending) { event.preventDefault(); return; }
+            // ATH-CLAIM-V2-FLNJ-001R1: a synchronous DOM guard in addition to React state, so a double-click or a
+            // tag-manager re-submit cannot post this form twice before React re-renders (each post would mint a
+            // separate signed handoff). Ask also collapses a second mint for one click into one intent.
+            const form = event.currentTarget;
+            if (pending || form.dataset.submitted === "1") { event.preventDefault(); return; }
+            form.dataset.submitted = "1";
             setPending(true);
             track("claim_cta_activated", state, sourceSystem);
           }}

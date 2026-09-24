@@ -22,6 +22,7 @@
  */
 import { isIP } from 'node:net';
 import type { ClaimState } from './eligibility';
+import type { DurablePreflightDecision } from './preflight-client';
 
 export type ClaimStartProfile = { id: string; slug: string; externalKey: string; displayName: string; homeState: ClaimState; sourceSystem: string };
 
@@ -276,6 +277,12 @@ export type ClaimStartDeps = {
   enabled(profileId: string): boolean;
   /** ATH-CLAIM-V2-FLNJ-001: rollout state allow-list, checked against the loaded profile's claim state. */
   stateEnabled(homeState: string): boolean;
+  /**
+   * ATH-CLAIM-V2-FLNJ-001R1: Ask-hosted DURABLE admission (ath_rate_events, serialized per client bucket), called
+   * after eligibility and BEFORE mint. `unavailable` (timeout, error, bad shape) fails closed: no token.
+   * `bucket` is the local abuse bucket; the client sends only an opaque keyed digest of it.
+   */
+  durablePreflight(input: { bucket: string; profileId: string }): Promise<DurablePreflightDecision>;
   loadProfile(profileId: string): Promise<ClaimStartProfile | null>;
   mint(profile: ClaimStartProfile): { token: string };
   store: RateLimitStore;
@@ -286,7 +293,7 @@ export type ClaimStartDeps = {
   policy?: Readonly<ClaimStartPolicy>;
 };
 
-export type ClaimStartOutcome = "minted" | "cross_origin" | "invalid_profile" | "rate_limited" | "unavailable" | "ineligible" | "store_failure" | "mint_failure";
+export type ClaimStartOutcome = "minted" | "cross_origin" | "invalid_profile" | "rate_limited" | "unavailable" | "ineligible" | "store_failure" | "mint_failure" | "preflight_unavailable";
 
 export async function handleClaimStart(request: Request, profileId: string, deps: ClaimStartDeps): Promise<Response> {
   const policy = deps.policy ?? CLAIM_START_POLICY;
@@ -317,6 +324,13 @@ export async function handleClaimStart(request: Request, profileId: string, deps
   try { profile = await deps.loadProfile(profileId); } catch { log("unavailable"); return safeFailure("Profile management is temporarily unavailable.", 503); }
   if (!profile) { log("ineligible"); return safeFailure("This profile is not eligible for management.", 404); }
   if (!deps.stateEnabled(profile.homeState)) { log("unavailable", { state: profile.homeState }); return safeFailure("Profile management is unavailable for this profile.", 404); }
+
+  // ATH-CLAIM-V2-FLNJ-001R1: durable cross-isolate admission before any token exists. The local memory limiter
+  // above stays as defense in depth; the Vercel firewall stays as the outer backstop. Uncertain = no mint.
+  let admission: DurablePreflightDecision;
+  try { admission = await deps.durablePreflight({ bucket, profileId: profile.id }); } catch { admission = { status: "unavailable", reason: "threw" }; }
+  if (admission.status === "unavailable") { log("preflight_unavailable", { reason: admission.reason }); return safeFailure("Profile management is temporarily unavailable.", 503); }
+  if (admission.status === "limited") { log("rate_limited", { bound: `durable_${admission.reason}` }); return safeFailure("Too many claim attempts. Please wait a few minutes and try again from the profile page.", 429, { "Retry-After": String(admission.retryAfterSeconds || policy.retryAfterSeconds) }); }
 
   // ATH-CLAIM-V2-001R2 (Q2): the public route never reads a source from the request. Every browser-initiated
   // mint carries `acquisition_source: "organic"` signed inside the token itself (see handoff-contract.ts /

@@ -129,6 +129,7 @@ function harness(states: string[], profiles: ClaimProfile[]) {
   const deps: ClaimStartDeps = {
     enabled: () => true,
     stateEnabled: (s) => states.includes(s),
+    durablePreflight: async () => ({ status: "allowed" as const }),
     loadProfile: async (id) => profiles.find((p) => p.id === id.toLowerCase()) ?? null,
     mint: (profile) => { const { token } = mintAthHandoffToken(SECRET, profile); minted.push(token); return { token }; },
     store: new MemoryRateLimitStore(), now: () => Date.now(), askOrigin: ASK, allowedOrigins: [SITE], log: (event, fields = {}) => logs.push({ event, fields }),
