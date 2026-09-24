@@ -51,6 +51,8 @@ export function researchRoute(
     /\bPA\s*#?\s*\d{5,10}\b/.test(query) ||
     // MA-CON-001: statewide Massachusetts guidance lives in /ask, not provider discovery.
     /\b(?:massachusetts|boston|worcester|dcamm|construction supervisor|csl|hic)\b/i.test(query) ||
+    // TN-CON-001: statewide Tennessee guidance lives in /ask.
+    /\b(?:tennessee|nashville|memphis|knoxville|chattanooga)\b/i.test(query) ||
     /\b(?:EL|HV|HY|PL|RE)\.\d{3,6}\b/i.test(query) ||
     /\bcompar(?:e|ison)\b/i.test(query)
   )

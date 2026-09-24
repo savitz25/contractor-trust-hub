@@ -28,6 +28,7 @@ import { interpretNorthCarolinaNclbgc } from "./north-carolina-nclbgc";
 import { interpretOhioOcilb } from "./ohio-ocilb";
 import { interpretGeorgiaSos } from "./georgia-sos";
 import { interpretMassachusetts } from "./massachusetts";
+import { interpretTennessee } from "./tennessee";
 import { CONTRACTOR_STATE_NAMES } from "@/lib/search/state-names";
 
 const EMPTY_INTERPRET: AskInterpretation = {
@@ -213,6 +214,9 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
   if (ohEarly) return ohEarly;
   const gaEarly = interpretGeorgiaSos(query, text);
   if (gaEarly) return gaEarly;
+  // TN before MA: the MA handler treats any "hic" as Massachusetts intent ("HIC Nashville" is Tennessee).
+  const tnEarly = interpretTennessee(query, text);
+  if (tnEarly) return tnEarly;
   const maEarly = interpretMassachusetts(query, text);
   if (maEarly) return maEarly;
 
