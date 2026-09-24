@@ -47,7 +47,11 @@ export function interpretGeorgiaSos(query: string, text: string): AskResult | nu
       supported: true,
       interpretation,
       href: "/georgia",
-      count: GA_CEASE_AND_DESIST.length,
+      count: {
+        value: GA_CEASE_AND_DESIST.length,
+        grain: "unlicensed-practice cease-and-desist order",
+        caveat: "Not a count of licensed Georgia contractors. Not joined to a license record.",
+      },
       aggregate: null,
       comparison: null,
       failMessage: null,

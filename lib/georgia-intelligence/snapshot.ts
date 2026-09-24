@@ -92,7 +92,7 @@ export const GA_CREDENTIAL_CLASSES: GaCredentialClass[] = [
 ];
 
 /** Parsed from the public SOS HTML list. No order date is printed on that page. Not joined to licensees. */
-export const GA_CEASE_AND_DESIST: GaCeaseAndDesist[] = [
+const RAW_ORDERS: Array<[string, string, string | null, string, string]> = [
   ["ga-cnd-001", "Clifford Merritt", null, "Americus", "Residential/General Contractor"],
   ["ga-cnd-002", "Richard Deloach", null, "Claxton", "Residential/General Contractor"],
   ["ga-cnd-003", "Leland McCall", null, "Reidsville", "Residential/General Contractor"],
@@ -129,7 +129,9 @@ export const GA_CEASE_AND_DESIST: GaCeaseAndDesist[] = [
   ["ga-cnd-034", "Buba Bojang", null, "Smyrna", "Residential/General Contractor"],
   ["ga-cnd-035", "Terry Roberts", "Roberts Rehab Consulting", "Clermont", "Residential/General Contractor"],
   ["ga-cnd-036", "John Wesley Turner", null, "College Park", "Residential/General Contractor"],
-].map(([id, respondent, dba, location, practiceCategory]) => ({
+];
+
+export const GA_CEASE_AND_DESIST: GaCeaseAndDesist[] = RAW_ORDERS.map(([id, respondent, dba, location, practiceCategory]) => ({
   id,
   respondent,
   dba,

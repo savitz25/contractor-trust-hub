@@ -23,6 +23,7 @@ test("GA-CON-001 search does not invent a licensee census", () => {
   assert.equal(license?.count, null);
   assert.match(license?.failMessage ?? "", /not in this hub/i);
   const orders = interpretGeorgiaSos("Georgia cease and desist", "georgia cease and desist");
-  assert.equal(orders?.count, GA_CEASE_AND_DESIST.length);
+  assert.equal(orders?.count?.value, GA_CEASE_AND_DESIST.length);
+  assert.match(orders?.count?.grain ?? "", /cease-and-desist/);
   assert.match(orders?.changeHints?.[0] ?? "", /not licensed contractors/i);
 });
