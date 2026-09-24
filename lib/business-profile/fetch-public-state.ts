@@ -1,6 +1,19 @@
 import { parsePublicBusinessProfile, type PublicBusinessProfile } from "./public-contract";
 import { parsePublicBusinessReplies, type PublicBusinessReplies } from "../business-replies/public-contract";
 
+/**
+ * Contractor-side data-cache window for Ask public reads (ATH-CLAIM-V2-001R4). Was 21600s, which made a first
+ * approval / first owner save invisible for up to 6 hours. Ask's own edge (s-maxage=60) and existence set protect
+ * Neon, so a short window here costs no Neon work. Kept as a cache (not no-store) per ATH-NEON-001.
+ */
+export const ASK_PUBLIC_REVALIDATE_S = 60;
+/**
+ * Per-profile data-cache tag on every Ask public read. It makes an owner-layer entry precisely purgeable
+ * (revalidateTag(askPublicStateTag(id), { expire: 0 })) by a future trusted server path; there is deliberately no
+ * public purge route (that would be an attacker-triggerable surface). Until one exists the bound is the 60s window.
+ */
+export const askPublicStateTag = (profileId: string) => `ask-public-state:${profileId}`;
+
 export type PublicContractorTrustState = {
   contractorId: string;
   hasPublicBusinessProfile: boolean;
@@ -18,7 +31,7 @@ export async function fetchPublicContractorState(
     const response = await fetcher(
       `${origin.replace(/\/+$/, "")}/api/public/contractor-profiles/${encodeURIComponent(profileId)}/public-state`,
       {
-        next: { revalidate: 21600 },
+        next: { revalidate: ASK_PUBLIC_REVALIDATE_S, tags: [askPublicStateTag(profileId)] },
         signal: AbortSignal.timeout(1500),
         headers: { accept: "application/json" },
       },

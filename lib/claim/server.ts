@@ -37,7 +37,8 @@ export async function loadEligibleClaimProfile(profileId: string): Promise<Claim
         AND source_system = 'fl_dbpr'
         AND NULLIF(TRIM(external_key), '') IS NOT NULL
       ORDER BY CASE WHEN status_normalized = 'active' THEN 0 ELSE 1 END,
-               last_seen_at DESC NULLS LAST
+               last_seen_at DESC NULLS LAST,
+               external_key ASC -- ATH-CLAIM-V2-001R4: deterministic tiebreak, identical to Ask cth-read
       LIMIT 1
     ) l ON TRUE
     WHERE c.id = $1::uuid
@@ -51,8 +52,13 @@ export async function loadEligibleClaimProfile(profileId: string): Promise<Claim
   return row ? { id: row.id, slug: row.slug, externalKey: row.external_key, displayName: row.display_name } : null;
 }
 
-export function mintClaimHandoff(profile: ClaimProfile, now?: Date) {
-  return mintAthHandoffToken(process.env.ATH_HANDOFF_SECRET || "", profile, { now });
+/**
+ * ATH-CLAIM-V2-001R2 (Q2) — `acquisitionSource` is a trusted-server-only parameter, never derived from a
+ * request. The public route never passes it, so every browser-initiated mint is `organic`. Only server-side
+ * code that calls this function directly (a QA fixture, an internal tool) may set another allow-listed value.
+ */
+export function mintClaimHandoff(profile: ClaimProfile, now?: Date, acquisitionSource?: import("./handoff-contract").AthHandoffAcquisitionSource) {
+  return mintAthHandoffToken(process.env.ATH_HANDOFF_SECRET || "", profile, { now, acquisitionSource });
 }
 
 export function logClaimHandoff(

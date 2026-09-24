@@ -134,7 +134,8 @@ test("expired token is rejected by Ask contract", () => {
 
 test("secret and token remain server-side and claim route is non-indexable", () => {
   const component = readFileSync("components/contractor/ManageProfileCta.tsx", "utf8");
-  const route = readFileSync("app/api/claim/handoff/[profileId]/route.ts", "utf8");
+  // ATH-CLAIM-V2-001: the route delegates to lib/claim/start-core.ts, which owns the response headers.
+  const route = `${readFileSync("app/api/claim/handoff/[profileId]/route.ts", "utf8")}\n${readFileSync("lib/claim/start-core.ts", "utf8")}`;
   const server = readFileSync("lib/claim/server.ts", "utf8");
   assert.doesNotMatch(component, /ATH_HANDOFF_SECRET|handoff=|externalKey/);
   assert.doesNotMatch(server, /NEXT_PUBLIC_ATH_HANDOFF_SECRET/);
