@@ -13,7 +13,8 @@
  * for the network is on AskTrustHub (`ath_rate_events`: handoff receipt 30/15m/IP, explicit Continue
  * 10/15m/IP), and — decisively — a minted token no longer creates any durable Ask state until a human
  * presses Continue. A durable Contractor store can be plugged in through `RateLimitStore` after Founder
- * review (see docs/claim-v2/ATH-CLAIM-V2-001-ABUSE-MODEL.md). The gate FAILS CLOSED if the store errors.
+ * review (see the Ask repo's `docs/claim-v2/ATH-CLAIM-V2-001-ABUSE-MODEL.md` — savitz25/Conumers-Trust-Hub,
+ * not this repo; there is no `docs/claim-v2/` here). The gate FAILS CLOSED if the store errors.
  *
  * ATH-CLAIM-V2-001R3 — client-IP source hardening (see clientIp() below). This does not make the gate
  * durable/fleet-wide; it only fixes which header the per-isolate gate trusts. CANARY_ABUSE_GATE stays
