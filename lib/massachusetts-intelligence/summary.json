@@ -1,0 +1,17 @@
+{
+  "fingerprint": "f2f23b3f687b9fc0d37bd26bd966e1b8425d683ad852a002927662edb082eacd",
+  "generatedAt": "2026-09-24T16:00:00Z",
+  "dolRows": 518,
+  "dolDistinctComplaints": 364,
+  "dolRowsByBoard": {
+    "EL": 209,
+    "GF": 1,
+    "PL": 240,
+    "SM": 68
+  },
+  "dolWindow": "2021 to 2025 Q1",
+  "dcammRows": 7,
+  "agRows": 464,
+  "agRowsCoveringRetrievalDate": 9,
+  "retrievalDate": "2026-09-24"
+}

@@ -1,0 +1,75 @@
+{
+ "source_sha256": "42470851ce656026e2d50c2cbcf12a6f1f346d6fef24b724fa9082abed5f5a42",
+ "rows": [
+  {
+   "id": "MA-DCAMM-DEBAR:1",
+   "grain": "DCAMM_SUSPENSION_OR_DEBARMENT_ROW",
+   "party": "Ami Desai",
+   "basis": "Simultaneous debarment pursuant to M.G.L. c. 29, § 29F(c)(2)",
+   "extent": "All public contracts or subcontracts",
+   "terminationDate": "Indefinite",
+   "hearingDate": "N/A",
+   "attribution": "standalone_event_no_profile_join"
+  },
+  {
+   "id": "MA-DCAMM-DEBAR:2",
+   "grain": "DCAMM_SUSPENSION_OR_DEBARMENT_ROW",
+   "party": "Jesus Merino",
+   "basis": "Simultaneous debarment pursuant to M.G.L. c. 29, § 29F(c)(2)",
+   "extent": "All public contracts or subcontracts",
+   "terminationDate": "Oct. 26, 2026",
+   "hearingDate": "N/A",
+   "attribution": "standalone_event_no_profile_join"
+  },
+  {
+   "id": "MA-DCAMM-DEBAR:3",
+   "grain": "DCAMM_SUSPENSION_OR_DEBARMENT_ROW",
+   "party": "Stone Art, Inc.",
+   "basis": "Simultaneous debarment pursuant to M.G.L. c. 29, § 29F(c)(2)",
+   "extent": "All public contracts or subcontracts",
+   "terminationDate": "Oct. 26, 2026",
+   "hearingDate": "N/A",
+   "attribution": "standalone_event_no_profile_join"
+  },
+  {
+   "id": "MA-DCAMM-DEBAR:4",
+   "grain": "DCAMM_SUSPENSION_OR_DEBARMENT_ROW",
+   "party": "VJ Associates of New England, Inc.",
+   "basis": "Simultaneous debarment pursuant to M.G.L. c. 29, § 29F(c)(2)",
+   "extent": "All public contracts or subcontracts",
+   "terminationDate": "Indefinite",
+   "hearingDate": "N/A",
+   "attribution": "standalone_event_no_profile_join"
+  },
+  {
+   "id": "MA-DCAMM-DEBAR:5",
+   "grain": "DCAMM_SUSPENSION_OR_DEBARMENT_ROW",
+   "party": "VJ Associates, Inc. New Jersey",
+   "basis": "Simultaneous debarment pursuant to M.G.L. c. 29, § 29F(c)(2)",
+   "extent": "All public contracts or subcontracts",
+   "terminationDate": "Indefinite",
+   "hearingDate": "N/A",
+   "attribution": "standalone_event_no_profile_join"
+  },
+  {
+   "id": "MA-DCAMM-DEBAR:6",
+   "grain": "DCAMM_SUSPENSION_OR_DEBARMENT_ROW",
+   "party": "VJ Associates, Inc. of Suffolk",
+   "basis": "Simultaneous debarment pursuant to M.G.L. c. 29, § 29F(c)(2)",
+   "extent": "All public contracts or subcontracts",
+   "terminationDate": "Indefinite",
+   "hearingDate": "N/A",
+   "attribution": "standalone_event_no_profile_join"
+  },
+  {
+   "id": "MA-DCAMM-DEBAR:7",
+   "grain": "DCAMM_SUSPENSION_OR_DEBARMENT_ROW",
+   "party": "VJ Associates, Inc. of Washington, D.C.",
+   "basis": "Simultaneous debarment pursuant to M.G.L. c. 29, § 29F(c)(2)",
+   "extent": "All public contracts or subcontracts",
+   "terminationDate": "Indefinite",
+   "hearingDate": "N/A",
+   "attribution": "standalone_event_no_profile_join"
+  }
+ ]
+}
