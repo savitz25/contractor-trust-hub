@@ -1,0 +1,356 @@
+{
+  "contract_name": "contractor-tn-state-intel-v1",
+  "ticket": "TN-CON-001",
+  "path": "/tennessee",
+  "generated_at": "2026-09-24T21:27:00Z",
+  "regulator": {
+    "board": "Tennessee Board for Licensing Contractors",
+    "department": "Tennessee Department of Commerce & Insurance",
+    "law": "Tenn. Code Ann. Title 62, Chapter 6",
+    "verify": "https://search.cloud.commerce.tn.gov/",
+    "dashboard": "https://www.tn.gov/commerce/regboards/contractors/consumer/verify-qa.html",
+    "complaints": "https://access.cloud.commerce.tn.gov/portal/public/information/complaint",
+    "disciplinaryActions": "https://www.tn.gov/commerce/dar/rb.html"
+  },
+  "credential_rules": [
+    {
+      "id": "contractor",
+      "label": "Contractor license",
+      "rule": "Required before contracting, including bidding, offering to engage, or negotiating a price, for projects of $25,000 or more when acting as a prime contractor, certain subcontractor, or construction manager/consultant. Electrical, mechanical, plumbing, HVAC, or roofing subcontractors contracting with a contractor need a license when their portion is $25,000 or more; masonry subcontractors at $100,000 or more.",
+      "source": "https://www.tn.gov/commerce/regboards/contractors/license/get/contractor.html",
+      "bulk": "KNOWN"
+    },
+    {
+      "id": "home-improvement",
+      "label": "Home Improvement Contractor license",
+      "rule": "Required for residential remodeling projects from $3,000 to $24,999, only in counties that adopted the law: Bradley, Davidson, Hamilton, Haywood, Knox, Marion, Robertson, Rutherford, and Shelby.",
+      "counties": [
+        "Bradley",
+        "Davidson",
+        "Hamilton",
+        "Haywood",
+        "Knox",
+        "Marion",
+        "Robertson",
+        "Rutherford",
+        "Shelby"
+      ],
+      "source": "https://www.tn.gov/commerce/regboards/contractors/license/get/home-improvement.html",
+      "bulk": "NOT_ACQUIRED"
+    },
+    {
+      "id": "lle",
+      "label": "Limited Licensed Electrician (LLE)",
+      "rule": "Required only for electricians working in a municipality that uses the Division of Fire Prevention for permits or inspections, for work under $25,000 per project. Check local requirements first. Issued to individuals.",
+      "source": "https://www.tn.gov/commerce/regboards/contractors/license/get/lle.html",
+      "bulk": "NOT_ACQUIRED"
+    },
+    {
+      "id": "llp",
+      "label": "Limited Licensed Plumber (LLP)",
+      "rule": "Required only for plumbers working in a municipality that uses the Division of Fire Prevention for permits or inspections, for work under $25,000 per project; general maintenance under $500 is exempt. Check local requirements first. Issued to individuals.",
+      "source": "https://www.tn.gov/commerce/regboards/contractors/license/get/llp.html",
+      "bulk": "NOT_ACQUIRED"
+    }
+  ],
+  "contractor_licenses": {
+    "coverage": "KNOWN",
+    "source": "https://data.tn.gov/t/Public/views/ContractorandQAdata/PublicDashboard",
+    "method": "Public Tableau toolbar: Download -> Crosstab -> sheet 'Contractor and QA Data_Public' -> CSV",
+    "retrievedAt": "2026-09-24T21:09:18Z",
+    "sourceAsOf": null,
+    "sha256": "151167b9424885c448cb8d6b6e11856223c677bc8776c3d52ae6db575e6243ff",
+    "columns": [
+      "License Number",
+      "License Status",
+      "License Expiration Date",
+      "License Origination Date",
+      "Name and Address",
+      "Classifications",
+      "Qualifying Agent Name"
+    ],
+    "exportRows": 33994,
+    "licenseByQualifyingAgentRows": 32941,
+    "applicationRowsWithoutLicense": 1053,
+    "applicationStatuses": {
+      "App Expired": 575,
+      "Closed": 407,
+      "Applicant": 44,
+      "App Denied": 26,
+      "App Withdrawn": 1
+    },
+    "distinctLicenseNumbers": 29096,
+    "statusCounts": {
+      "Active": 20460,
+      "Expired": 6137,
+      "Expired-Grace": 1513,
+      "Retired": 639,
+      "Closed": 291,
+      "Revoked": 22,
+      "Invalid": 19,
+      "Inactive": 7,
+      "Suspended": 4,
+      "App Denied": 2,
+      "Active - Temp": 1,
+      "Applicant": 1
+    },
+    "licensesWithTennesseeAddress": 19592,
+    "licensesWithOutOfStateAddress": 9482,
+    "classificationCodes": 970,
+    "topClassifications": [
+      {
+        "classification": "A - BC-A Residential",
+        "licenses": 9549
+      },
+      {
+        "classification": "B - BC-B Commercial",
+        "licenses": 5230
+      },
+      {
+        "classification": "CE - CE Electrical Contracting",
+        "licenses": 3658
+      },
+      {
+        "classification": "BC - BC Residential, Commercial and Industrial",
+        "licenses": 3215
+      },
+      {
+        "classification": "BSM - BC-BSM Small Commercial",
+        "licenses": 2749
+      },
+      {
+        "classification": "MCC - CMC-C HVAC and Refrigeration",
+        "licenses": 1874
+      },
+      {
+        "classification": "AR - BC-A Residential Restricted",
+        "licenses": 1243
+      },
+      {
+        "classification": "MCA - CMC-A Plumbing and Gas Piping",
+        "licenses": 1177
+      },
+      {
+        "classification": "A - MU-A Underground Piping",
+        "licenses": 1160
+      },
+      {
+        "classification": "CMC - CMC Mechanical Contracting",
+        "licenses": 1082
+      },
+      {
+        "classification": "C - MU-C Grading and Drainage",
+        "licenses": 977
+      },
+      {
+        "classification": "HRA - HRA Highway, Railroad, and Airport",
+        "licenses": 816
+      },
+      {
+        "classification": "BC21 - 21. Roofing – incls gutters & vinyl siding (BC-21)",
+        "licenses": 769
+      },
+      {
+        "classification": "MU - MU Municipal and Utility Construction",
+        "licenses": 742
+      },
+      {
+        "classification": "HC - HC Heavy Construction",
+        "licenses": 694
+      },
+      {
+        "classification": "C - BC-C Industrial",
+        "licenses": 641
+      },
+      {
+        "classification": "D - MU-D Base and Paving",
+        "licenses": 603
+      },
+      {
+        "classification": "BC28 - 28. Excavation (BC-28)",
+        "licenses": 494
+      },
+      {
+        "classification": "BC19 - 19. Concrete (BC-19)",
+        "licenses": 438
+      },
+      {
+        "classification": "BC31 - 31. Demolition (BC-31)",
+        "licenses": 433
+      },
+      {
+        "classification": "A - HRA-A Grading and Drainage",
+        "licenses": 427
+      },
+      {
+        "classification": "BC29 - 29. Landscaping (BC-29)",
+        "licenses": 416
+      },
+      {
+        "classification": "BC2 - 2. Carpentry, Framing and Millwork, etc. (BC-2)",
+        "licenses": 357
+      },
+      {
+        "classification": "BC11 - 11. Painting, Interior Decorating (BC-11)",
+        "licenses": 341
+      },
+      {
+        "classification": "MCB - CMC-B Process Piping",
+        "licenses": 282
+      }
+    ],
+    "monetaryLimitCounts": {
+      "UNLIMITED": 4868,
+      "$1,500,000.00": 2343,
+      "$1,000,000.00": 1845,
+      "$500,000.00": 1572,
+      "$3,000,000.00": 1542,
+      "$125,000.00": 904,
+      "$750,000.00": 627,
+      "$250,000.00": 587,
+      "$300,000.00": 570,
+      "$100,000.00": 569,
+      "$200,000.00": 455,
+      "$ 3,000,000.00": 431
+    },
+    "monetaryLimitIsNotRevenueOrQuality": true,
+    "cityOfLicenseeAddress": {
+      "Nashville": 1626,
+      "Memphis": 1235,
+      "Knoxville": 1513,
+      "Chattanooga": 809
+    },
+    "addressIsNotServiceArea": true,
+    "fieldsDropped": [
+      "email",
+      "phone",
+      "street address",
+      "qualifying agent name"
+    ],
+    "homeImprovementLleLlpInExport": false
+  },
+  "qualifying_agents": {
+    "grain": "person linked to a contractor license",
+    "relationships": 32941,
+    "distinctNamesAsPrinted": 30439,
+    "licensesWithMoreThanOneQA": 3194,
+    "namesPublished": false,
+    "notContractors": true,
+    "verify": "https://www.tn.gov/commerce/regboards/contractors/consumer/verify-qa.html"
+  },
+  "discipline": {
+    "coverage": "PARTIAL",
+    "window": "TDCI Disciplinary Action Reports January 2024 through August 2026",
+    "program": "Board for Licensing Contractors (one program label covers Contractors, Home Improvement, LLE, and LLP)",
+    "reports": 32,
+    "rows": 679,
+    "rowsByReportYear": {
+      "2024": 297,
+      "2025": 217,
+      "2026": 165
+    },
+    "unlicensedActivityRows": 587,
+    "topViolations": {
+      "Unlicensed activity": 573,
+      "Gross negligence": 9,
+      "Misconduct": 6,
+      "Contracted in an amount that exceeded monetary limit on license": 4,
+      "Failed to cooperate with an open investigation": 3,
+      "Failure to cooperate with an open investigation": 3,
+      "Unlicensed contracting": 3,
+      "Contracting in amounts that exceeded monetary licensed limits": 3
+    },
+    "rowsWithCivilPenalty": 662,
+    "rowsWithActionDateOutsideReportPeriod": 1,
+    "licenseNumbersPrinted": 0,
+    "profileAttachments": 0,
+    "credentialClassNotStated": true
+  },
+  "complaints": {
+    "intake": "KNOWN",
+    "records": "NOT_ACQUIRED",
+    "outcomes": "PARTIAL (only adjudicated actions appear in Disciplinary Action Reports)",
+    "complaintIsNotDiscipline": true
+  },
+  "existing_coverage": {
+    "statePage": "NONE (/tennessee returned 404 before this ticket)",
+    "databaseSource": "tn_blc credential rows already in the licenses database (28,852 rows across classification codes BC, CE, CMC, SPEC, MU, HC, HRA, TN per network metrics), excluded from the live cohort; vintage and grain not documented in this repo; not used or modified here",
+    "networkMetricsState": "STATE_SOURCE_ACQUIRED"
+  },
+  "capability_matrix": [
+    {
+      "capability": "Contractor & Qualifying Agent dashboard export",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Live license verification (state search)",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Home Improvement rule (nine counties, $3,000-$24,999)",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Home Improvement license roster",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "LLE and LLP rules",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "LLE and LLP rosters",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "Qualifying-agent relationships (counts)",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Board discipline January 2024 - August 2026",
+      "state": "PARTIAL"
+    },
+    {
+      "capability": "Complaint intake",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Complaint records and outcomes",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "Local (city/county) licensing",
+      "state": "UNKNOWN"
+    },
+    {
+      "capability": "Name-only discipline attachment",
+      "state": "UNSUPPORTED"
+    },
+    {
+      "capability": "Combined Tennessee contractor total",
+      "state": "UNSUPPORTED"
+    }
+  ],
+  "guardrails": [
+    "contractor license != Home Improvement != LLE != LLP",
+    "contractor != qualifying agent",
+    "the $25,000 contractor threshold is not the whole Tennessee licensing system",
+    "monetary limit is a license limitation, not revenue or quality",
+    "unlicensed activity != licensed contractor record",
+    "complaint != discipline; address != service area",
+    "no combined Tennessee contractor count; no ranking; no Trust Score"
+  ],
+  "net_new": {
+    "CONTRACTOR_LICENSES": 29096,
+    "QUALIFYING_AGENT_RELATIONSHIPS": 32941,
+    "DISCIPLINE_ROWS": 679,
+    "HIC_ROWS": 0,
+    "LLE_ROWS": 0,
+    "LLP_ROWS": 0,
+    "PROFILE_ATTACHMENTS": 0,
+    "NEW_PROFILES": 0
+  },
+  "licenseShardsSha256": "229eda5201abb8ed4663bd42f0dd7f56f751364c5d9e3f72d4045d7295990c37",
+  "eventsSha256": "7d2ef5b78ebec258ac91f40e5bec57cec31057d0effac43e39e6d9b33e6f636c",
+  "fingerprint": "f9ff8de0df88d4f59ae19efea15aae25cac4ca42a02c4f9439f7d50959a0e680"
+}

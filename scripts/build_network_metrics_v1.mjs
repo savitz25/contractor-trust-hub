@@ -226,6 +226,7 @@ const states = {
   "north-carolina": "NC",
   ohio: "OH",
   massachusetts: "MA",
+  tennessee: "TN",
 };
 for (const [slug, state] of Object.entries(states)) {
   const path =

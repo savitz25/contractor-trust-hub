@@ -1,0 +1,15 @@
+{
+  "fingerprint": "f9ff8de0df88d4f59ae19efea15aae25cac4ca42a02c4f9439f7d50959a0e680",
+  "distinctLicenseNumbers": 29096,
+  "activeLicenses": 20460,
+  "qualifyingAgentRelationships": 32941,
+  "disciplineRows": 679,
+  "unlicensedActivityRows": 587,
+  "disciplineWindow": "January 2024 - August 2026",
+  "cityOfLicenseeAddress": {
+    "Nashville": 1626,
+    "Memphis": 1235,
+    "Knoxville": 1513,
+    "Chattanooga": 809
+  }
+}
