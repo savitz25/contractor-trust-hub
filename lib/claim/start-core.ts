@@ -57,7 +57,9 @@ type ParsedRateLimitKey = { ip: string; kind: 'agg' | 'hourly' | 'profile'; prof
 function parseRateLimitKey(key: string): ParsedRateLimitKey | null {
   if (key.startsWith('ip-profile:')) {
     const rest = key.slice('ip-profile:'.length);
-    const sep = rest.indexOf(':');
+    // ATH-CLAIM-V2-001R4: split at the LAST colon. IPv6 addresses contain colons and profile UUIDs never do;
+    // splitting at the first one collapsed every 2600:* client into one shared 64-slot profile map.
+    const sep = rest.lastIndexOf(':');
     if (sep < 0) return null;
     return { ip: rest.slice(0, sep), kind: 'profile', profileId: rest.slice(sep + 1) };
   }

@@ -23,8 +23,11 @@ test("canonical V1 fixture parses and renders unmistakable provenance without co
 
 test("claim intake flag is decoupled from profile and response publication", () => {
   assert.match(page, /const showClaimCta = customerRolloutEnabled/);
-  assert.match(page, /const \[businessProfile, businessReplies\] = claimProfile\s*\? await Promise\.all/);
-  assert.doesNotMatch(page, /\[businessProfile, businessReplies\] = customerRolloutEnabled/);
+  // ATH-NEON-001 replaced the two-fetch Promise.all with one public-state fetch; the invariant is unchanged:
+  // publication is gated by the exact claimable profile, never by the claim-intake rollout flag.
+  // (Stale assertion was failing on clean main 9b6ee8e; updated in ATH-CLAIM-V2-001R4.)
+  assert.match(page, /const publicState = claimProfile \? await getPublicContractorState\(claimProfile\.id\) : null/);
+  assert.doesNotMatch(page, /publicState = (customerRolloutEnabled|showClaimCta)/);
   assert.match(page, /businessReplies\?\.replies\.length/);
 });
 

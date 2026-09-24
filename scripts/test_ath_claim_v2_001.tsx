@@ -333,3 +333,31 @@ test("S: official evidence remains readable when the Ask customer layer is unava
   assert.match(page, /const publicState = claimProfile \? await getPublicContractorState\(claimProfile\.id\) : null/);
   assert.match(page, /claimProfile && \(businessProfile \|\| showClaimCta\) \? <ManageProfileCta/);
 });
+
+test("R4: first-approval visibility — Ask public reads use a 60s shared window (not 6h) and the owner layer appears on the next fetch", async () => {
+  let seen: RequestInit | undefined;
+  const ownerState = { contractVersion: 1, hub: "contractor", contractorId: PROFILE.id, hasPublicBusinessProfile: false, hasPublicReply: false, profile: null, replies: { contractVersion: 1, hub: "contractor", nativeProfileId: PROFILE.id, replies: [] } };
+  const before: typeof fetch = async (_url, init) => { seen = init; return new Response(JSON.stringify(ownerState), { status: 200 }); };
+  const none = await fetchPublicContractorState(PROFILE.id, ASK, before);
+  assert.equal(none?.hasPublicBusinessProfile, false);
+  assert.equal((seen as { next?: { revalidate?: number } }).next?.revalidate, 60, "Contractor data-cache window for Ask public state is 60s");
+  const src = readFileSync("lib/business-profile/fetch-public-state.ts", "utf8");
+  assert.doesNotMatch(src, /revalidate:\s*21600/);
+  // A 503 from Ask (outage) is never treated as "no business layer" data: it is omitted for this render only.
+  const outage: typeof fetch = async () => new Response(JSON.stringify({ error: "unavailable" }), { status: 503 });
+  assert.equal(await fetchPublicContractorState(PROFILE.id, ASK, outage), null);
+});
+
+test("R4 (C-B2 finding): IPv6 clients are keyed by their full address — 200 distinct 2600:* owners on one profile are never collectively capped", async () => {
+  const store = new MemoryRateLimitStore();
+  const profile = randomUUID();
+  const now = Date.now();
+  for (let i = 0; i < 200; i += 1) {
+    const ip = `2600:1f18:${i.toString(16)}::1`;
+    assert.equal(await store.hit(`ip-profile:${ip}:${profile}`, CLAIM_START_POLICY.perIpProfile.windowMs, now), 1, `client ${i} gets its own counter`);
+  }
+  // Same IPv6 client, same profile: its own bound still applies.
+  const ip = "2600:1f18:ffff::1";
+  for (let n = 1; n <= 4; n += 1) assert.equal(await store.hit(`ip-profile:${ip}:${profile}`, CLAIM_START_POLICY.perIpProfile.windowMs, now), n);
+  assert.equal(store.size(), 201, "one state per full IPv6 address");
+});
