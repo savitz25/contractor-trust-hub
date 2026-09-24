@@ -361,9 +361,22 @@ def build() -> dict:
             "NEW_PROFILES": 0,
         },
     }
+    # Event rows live in events.json (read server-side by /massachusetts). The accepted snapshot stays
+    # aggregate-sized like other states because the network-metrics build embeds every accepted snapshot.
+    events = {
+        "dol_discipline": snapshot["dol_discipline"].pop("events"),
+        "dcamm_debarment": snapshot["dcamm_debarment"].pop("events"),
+        "ag_fair_labor_debarment": snapshot["ag_fair_labor_debarment"].pop("events"),
+    }
+    snapshot["eventsFile"] = "lib/massachusetts-intelligence/events.json"
+    snapshot["eventsSha256"] = hashlib.sha256(events_bytes(events)).hexdigest()
     blob = json.dumps(snapshot, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     snapshot["fingerprint"] = hashlib.sha256(blob).hexdigest()
-    return snapshot
+    return snapshot, events
+
+
+def events_bytes(events: dict) -> bytes:
+    return (json.dumps(events, separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8")
 
 
 def summary(snap: dict) -> dict:
@@ -386,20 +399,24 @@ def summary(snap: dict) -> dict:
 def main() -> int:
     if "--acquire-parse" in sys.argv:
         acquire_parse()
-    snap = build()
+    snap, events = build()
     target = LIB / "accepted-snapshot.json"
     summary_path = LIB / "summary.json"
+    events_path = LIB / "events.json"
     if "--check" in sys.argv:
         committed = json.loads(target.read_text(encoding="utf-8"))
         if committed.get("fingerprint") != snap["fingerprint"]:
             raise SystemExit(f"MA snapshot drifted: builder={snap['fingerprint']} committed={committed.get('fingerprint')}")
         if json.loads(summary_path.read_text(encoding="utf-8")) != summary(snap):
             raise SystemExit("MA summary drifted from snapshot")
+        if hashlib.sha256(events_path.read_bytes().replace(b"\r\n", b"\n")).hexdigest() != snap["eventsSha256"]:
+            raise SystemExit("MA events.json drifted from the accepted snapshot")
         print("fingerprint check OK", snap["fingerprint"])
         return 0
     LIB.mkdir(parents=True, exist_ok=True)
-    target.write_text(json.dumps(snap, separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
+    target.write_text(json.dumps(snap, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     summary_path.write_text(json.dumps(summary(snap), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    events_path.write_bytes(events_bytes(events))
     d = snap["dol_discipline"]
     print("fingerprint", snap["fingerprint"])
     print("dol", d["rows"], d["distinctComplaints"], d["rowsByBoard"], d["rowsByReportYear"])

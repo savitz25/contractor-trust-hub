@@ -7,7 +7,7 @@ import { normalizeAskText } from "../ask/ontology";
 import { normalizedPublishedStatePath } from "../seo/published-state-path";
 import { researchRoute } from "../ask/request";
 import summary from "./summary.json";
-import { assertMassachusettsSnapshot, findMaDolEvents, MASSACHUSETTS_SNAPSHOT } from "./snapshot";
+import { assertMassachusettsSnapshot, findMaDolEvents, MASSACHUSETTS_EVENTS, MASSACHUSETTS_SNAPSHOT } from "./snapshot";
 
 const ask = (q: string) => interpretMassachusetts(q, normalizeAskText(q));
 const s = assertMassachusettsSnapshot();
@@ -22,7 +22,7 @@ test("MA-CON-001 credential systems stay separate and uncounted", () => {
 
 test("MA-CON-001 evidence families keep their own grain and are never summed", () => {
   const d = s.dol_discipline;
-  assert.equal(d.rows, d.events.length);
+  assert.equal(d.rows, MASSACHUSETTS_EVENTS.dol_discipline.length);
   assert.equal(d.rowsByBoard.EL + d.rowsByBoard.PL + d.rowsByBoard.GF + d.rowsByBoard.SM, d.rows);
   assert.equal(d.rowsWithLicenseNumber + d.rowsWithoutLicenseNumber, d.rows);
   assert.ok(d.distinctComplaints < d.rows, "rows are complaint x license, not complaints");
@@ -38,12 +38,13 @@ test("MA-CON-001 adverse evidence is standalone and exact-identifier only", () =
   for (const family of [s.dol_discipline, s.dcamm_debarment, s.ag_fair_labor_debarment]) {
     assert.equal(family.profileAttachments, 0);
   }
-  const withLicense = s.dol_discipline.events.find((e) => e.licenseNumber);
+  const withLicense = MASSACHUSETTS_EVENTS.dol_discipline.find((e) => e.licenseNumber);
   assert.ok(withLicense);
   const found = findMaDolEvents(withLicense!.licenseNumber!, [withLicense!.boardCode]);
   assert.ok(found.every((e) => e.licenseNumber === withLicense!.licenseNumber && e.boardCode === withLicense!.boardCode));
   assert.equal(findMaDolEvents(withLicense!.respondent).length, 0, "names are not identifiers");
-  assert.ok(s.ag_fair_labor_debarment.events.every((e) => !("status" in e)), "no invented ACTIVE status");
+  assert.ok(MASSACHUSETTS_EVENTS.ag_fair_labor_debarment.every((e) => !("status" in e)), "no invented ACTIVE status");
+  assert.ok(JSON.stringify(s).length < 40000, "accepted snapshot stays aggregate-sized for network metrics");
 });
 
 test("MA-CON-001 search acceptance", () => {

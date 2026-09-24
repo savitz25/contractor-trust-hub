@@ -13,7 +13,7 @@ import {
   MA_HIC_SEARCH,
   MASSACHUSETTS_INTELLIGENCE_GATE,
 } from "@/lib/massachusetts-intelligence/publication";
-import { findMaDolEvents, MASSACHUSETTS_SNAPSHOT, type MaDolEvent } from "@/lib/massachusetts-intelligence/snapshot";
+import { findMaDolEvents, MASSACHUSETTS_EVENTS, MASSACHUSETTS_SNAPSHOT, type MaDolEvent } from "@/lib/massachusetts-intelligence/snapshot";
 
 export const metadata: Metadata = pageMetadata({
   title: MASSACHUSETTS_INTELLIGENCE_GATE.title,
@@ -69,7 +69,8 @@ export default async function MassachusettsContractorPage({ searchParams }: Prop
     .map((b) => b.trim().toUpperCase())
     .filter((b) => ["EL", "PL", "GF", "SM"].includes(b));
   const matches = license ? findMaDolEvents(license, boards.length ? boards : undefined) : null;
-  const agCurrent = ag.events.filter((e) => e.periodIncludesRetrievalDate);
+  const agEvents = MASSACHUSETTS_EVENTS.ag_fair_labor_debarment;
+  const agCurrent = agEvents.filter((e) => e.periodIncludesRetrievalDate);
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
@@ -170,7 +171,7 @@ export default async function MassachusettsContractorPage({ searchParams }: Prop
 
       <details className="mt-4">
         <summary className="cursor-pointer text-sm font-semibold">Show all {fmt(d.rows)} DOL discipline rows</summary>
-        <DolTable rows={d.events} />
+        <DolTable rows={MASSACHUSETTS_EVENTS.dol_discipline} />
       </details>
 
       <h2 id="dcamm" className="mt-10 text-xl font-semibold">DCAMM suspended or debarred parties ({dcamm.rows})</h2>
@@ -181,7 +182,7 @@ export default async function MassachusettsContractorPage({ searchParams }: Prop
         <a className="underline" href={MA_DCAMM_CERTIFIED}>DCAMM certified contractors (not acquired)</a>
       </p>
       <ul className="mt-3 space-y-2 text-sm">
-        {dcamm.events.map((e) => (
+        {MASSACHUSETTS_EVENTS.dcamm_debarment.map((e) => (
           <li key={e.id} className="border-b border-[var(--border)] py-2">
             <span className="font-medium">{e.party}</span> · {e.basis} · {e.extent} · ends: {e.terminationDate} · hearing: {e.hearingDate}
           </li>
@@ -208,7 +209,7 @@ export default async function MassachusettsContractorPage({ searchParams }: Prop
       <details className="mt-4">
         <summary className="cursor-pointer text-sm font-semibold">Show all {fmt(ag.rows)} list rows</summary>
         <ul className="mt-3 space-y-1 text-sm">
-          {ag.events.map((e) => (
+          {agEvents.map((e) => (
             <li key={e.id} className="border-b border-[var(--border)] py-1">
               {e.businessNames ?? e.employerNames}
               {e.businessNames && e.employerNames ? ` · ${e.employerNames}` : ""} · {e.city ?? "—"}, {e.state ?? "—"} · {e.statute ?? "statute not listed"} ·{" "}

@@ -1,5 +1,5 @@
 export const MA_STATE_INTEL_VERSION = "contractor-ma-state-intel-v1" as const;
-export const MA_STATE_PUBLIC_FINGERPRINT = "f2f23b3f687b9fc0d37bd26bd966e1b8425d683ad852a002927662edb082eacd";
+export const MA_STATE_PUBLIC_FINGERPRINT = "d40024ca5490514a33c5c6f0329b16be8f0f05bb8802f5a1997730fb368fba94";
 
 export const MASSACHUSETTS_INTELLIGENCE_GATE = {
   path: "/massachusetts",
