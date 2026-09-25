@@ -1,6 +1,7 @@
-import { claimCtaEnabledFor, loadEligibleClaimProfile, mintClaimHandoff } from "@/lib/claim/server";
+import { claimModeEnabledFor, claimStateEnabled, loadEligibleClaimProfile, mintClaimHandoff } from "@/lib/claim/server";
 import { MemoryRateLimitStore, handleClaimHandoffGet, handleClaimStart } from "@/lib/claim/start-core";
 import { getSiteUrl } from "@/lib/site";
+import { durableClaimStartPreflight } from "@/lib/claim/preflight-client";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -28,7 +29,10 @@ export function GET() {
 export async function POST(request: Request, { params }: { params: Promise<{ profileId: string }> }) {
   const { profileId } = await params;
   return handleClaimStart(request, profileId, {
-    enabled: claimCtaEnabledFor,
+    enabled: claimModeEnabledFor,
+    stateEnabled: claimStateEnabled,
+    // Durable Ask preflight: fixed Production Ask origin, short timeout, no retry, fails closed.
+    durablePreflight: (input) => durableClaimStartPreflight({ fetcher: fetch, askOrigin: ASK_ORIGIN, secret: process.env.ATH_HANDOFF_SECRET || "" }, input),
     loadProfile: loadEligibleClaimProfile,
     mint: (profile) => mintClaimHandoff(profile),
     store,

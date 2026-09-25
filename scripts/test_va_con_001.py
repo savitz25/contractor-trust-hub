@@ -227,7 +227,9 @@ class PublicationTests(unittest.TestCase):
         self.assertNotIn("2026-09-08", (ROOT / "scripts/virginia/build_va_con_001_snapshot.py").read_text(encoding="utf-8"))
         self.assertTrue((ROOT / "app/virginia/page.tsx").exists())
         self.assertIn("VIRGINIA_INTELLIGENCE_GATE", PAGE)
-        self.assertIn('sourceSystem === "fl_dbpr"', CLAIM)
+        # ATH-CLAIM-V2-FLNJ-001: claimability is an explicit per-state source allow-list (FL + NJ); Virginia is not in it.
+        self.assertIn('FL: ["fl_dbpr"]', CLAIM)
+        self.assertNotIn('"VA"', CLAIM)
         self.assertNotIn("va_dpor", CLAIM)
         self.assertEqual(SNAP["claim_safety"]["still_florida_dbpr_only"], True)
         self.assertEqual(SNAP["expansion_ledger"]["NET_NEW_PUBLIC_CONTRACTOR_PROFILES"], 0)

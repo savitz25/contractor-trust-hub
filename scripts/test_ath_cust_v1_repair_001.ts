@@ -8,6 +8,8 @@ const profile = {
   slug: "ccc1332036-infinite-construction-services-llc",
   externalKey: "CCC1332036",
   displayName: "Infinite Construction Services LLC",
+  homeState: "FL" as const,
+  sourceSystem: "fl_dbpr",
 };
 const secret = "contractor-v2-repair-test-secret-is-long-enough";
 

@@ -2,19 +2,20 @@
 
 import { useEffect, useState } from "react";
 
-type Props = { profileId: string; managed?: boolean };
+type Props = { profileId: string; managed?: boolean; state?: string; sourceSystem?: string };
 
 /**
  * ATH-CLAIM-V2-001 — the claim CTA is an explicit human action: a same-origin POST form (works without
  * JavaScript) instead of a crawlable link. Analytics stay low-cardinality: no profile id, no licence number.
  */
-function track(event: "claim_cta_viewed" | "claim_cta_activated") {
+function track(event: "claim_cta_viewed" | "claim_cta_activated", state: string, sourceSystem: string) {
+  // Low-cardinality only: claim state and credential source (no profile id, no credential number).
   const payload = {
     event,
     hub: "contractor",
     profile_class: "contractor",
-    state: "FL",
-    source_system: "fl_dbpr",
+    state,
+    source_system: sourceSystem,
   };
   try {
     const w = window as unknown as {
@@ -28,9 +29,9 @@ function track(event: "claim_cta_viewed" | "claim_cta_activated") {
   }
 }
 
-export function ManageProfileCta({ profileId, managed = false }: Props) {
+export function ManageProfileCta({ profileId, managed = false, state = "FL", sourceSystem = "fl_dbpr" }: Props) {
   const [pending, setPending] = useState(false);
-  useEffect(() => track("claim_cta_viewed"), []);
+  useEffect(() => track("claim_cta_viewed", state, sourceSystem), [state, sourceSystem]);
   const buttonClass = "mt-3 inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--accent)] px-4 text-sm font-semibold text-[var(--navy)] no-underline hover:bg-[var(--surface)] disabled:opacity-60";
   return (
     <aside id="manage-profile" className="rounded-2xl border border-[var(--border)] bg-white p-5 shadow-sm sm:p-6 print:hidden">
@@ -42,9 +43,14 @@ export function ManageProfileCta({ profileId, managed = false }: Props) {
           method="post"
           action={`/api/claim/handoff/${encodeURIComponent(profileId)}`}
           onSubmit={(event) => {
-            if (pending) { event.preventDefault(); return; }
+            // ATH-CLAIM-V2-FLNJ-001R1: a synchronous DOM guard in addition to React state, so a double-click or a
+            // tag-manager re-submit cannot post this form twice before React re-renders (each post would mint a
+            // separate signed handoff). Ask also collapses a second mint for one click into one intent.
+            const form = event.currentTarget;
+            if (pending || form.dataset.submitted === "1") { event.preventDefault(); return; }
+            form.dataset.submitted = "1";
             setPending(true);
-            track("claim_cta_activated");
+            track("claim_cta_activated", state, sourceSystem);
           }}
         >
           {/* ATH-CLAIM-V2-001R2 (Q2): no source field. The server never reads a browser-supplied source; every

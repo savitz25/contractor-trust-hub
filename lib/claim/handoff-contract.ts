@@ -1,4 +1,5 @@
 import { createHmac, randomBytes } from "node:crypto";
+import { isClaimableCredentialPair, type ClaimState } from "./eligibility";
 
 export const ATH_HANDOFF_AUDIENCE = "asktrusthub" as const;
 export const ATH_HANDOFF_TTL_SECONDS = 15 * 60;
@@ -20,8 +21,9 @@ export type AthHandoffPayload = {
   native_profile_id: string;
   slug: string;
   external_key: string;
-  source_system: "fl_dbpr";
-  home_state: "FL";
+  /** ATH-CLAIM-V2-FLNJ-001: the selected credential's real source and the claim state it establishes. */
+  source_system: "fl_dbpr" | "nj_dca";
+  home_state: ClaimState;
   identifier_namespace: "credential";
   entity_class: "contractor";
   canonical_profile_url: string;
@@ -34,11 +36,15 @@ export type AthHandoffPayload = {
 
 export function mintAthHandoffToken(
   secret: string,
-  profile: { id: string; slug: string; externalKey: string; displayName: string },
+  profile: { id: string; slug: string; externalKey: string; displayName: string; homeState: ClaimState; sourceSystem: string },
   options: { now?: Date; nonce?: string; acquisitionSource?: AthHandoffAcquisitionSource } = {}
 ): { token: string; payload: AthHandoffPayload } {
   if (secret.length < 32) {
     throw new Error("ATH_HANDOFF_SECRET is unavailable");
+  }
+  // Only an allow-listed (source, state) pair from the trusted server-side lookup is ever signed.
+  if (!isClaimableCredentialPair(profile.sourceSystem, profile.homeState)) {
+    throw new Error("claim credential pair is not claimable");
   }
   const iat = Math.floor((options.now ?? new Date()).getTime() / 1000);
   const payload: AthHandoffPayload = {
@@ -48,8 +54,8 @@ export function mintAthHandoffToken(
     native_profile_id: profile.id,
     slug: profile.slug,
     external_key: profile.externalKey,
-    source_system: "fl_dbpr",
-    home_state: "FL",
+    source_system: profile.sourceSystem as AthHandoffPayload["source_system"],
+    home_state: profile.homeState,
     identifier_namespace: "credential",
     entity_class: "contractor",
     canonical_profile_url: `https://www.contractortrusthub.com/contractors/${profile.slug}`,

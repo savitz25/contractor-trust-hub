@@ -150,7 +150,9 @@ class RegressionTests(unittest.TestCase):
         self.assertIn('path: "/florida"', SITEMAP)
 
     def test_17_claim_remains_florida(self):
-        self.assertIn('sourceSystem === "fl_dbpr"', CLAIM)
+        # ATH-CLAIM-V2-FLNJ-001: claimability is an explicit per-state source allow-list (FL + NJ); Texas is not in it.
+        self.assertIn('FL: ["fl_dbpr"]', CLAIM)
+        self.assertNotIn('"TX"', CLAIM)
         self.assertNotIn("tx_tdlr", CLAIM)
         self.assertNotIn("tx_tsbpe", CLAIM)
         self.assertNotIn("/texas", CLAIM)
