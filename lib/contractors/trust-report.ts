@@ -2,11 +2,10 @@ import { occupationLabel } from "@/lib/states/config";
 import { getOrCcbTypeInfo, orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { getTxTradeInfo, txTradePlainLabel } from "@/lib/states/tx-trades";
 import {
-  evidenceSlugFromHomeState,
   boardShortLabel,
   type EvidenceStateSlug,
 } from "@/lib/states/evidence-copy";
-import { issuingStateForLicenses, reportEvidenceSlug } from "@/lib/states/jurisdiction";
+import { issuingStateForLicenses } from "@/lib/states/jurisdiction";
 import { formatDate, matchMethodLabel, statusLabel } from "./format";
 import { getOccupationInfo } from "./occupations";
 import type { ContractorDetail, EntityDetail, LicenseDetail } from "./types";
@@ -65,10 +64,19 @@ function isInactiveish(status: string | null | undefined): boolean {
 
 const EVIDENCE_COPY_SLUGS = new Set<string>(["fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms", "ky", "wi"]);
 
-function homeSlug(contractor: ContractorDetail): EvidenceStateSlug {
-  const slug = reportEvidenceSlug(contractor.licenses, contractor.homeState);
-  if (EVIDENCE_COPY_SLUGS.has(slug)) return slug as EvidenceStateSlug;
-  return evidenceSlugFromHomeState(issuingStateForLicenses(contractor.licenses) ? null : contractor.homeState);
+/** Evidence-copy slug for a recognized source. Unknown sources stay null — never Florida. */
+function homeSlug(contractor: ContractorDetail): EvidenceStateSlug | null {
+  const issuing = issuingStateForLicenses(contractor.licenses);
+  if (!issuing || !EVIDENCE_COPY_SLUGS.has(issuing.slug)) return null;
+  return issuing.slug as EvidenceStateSlug;
+}
+
+function boardPhrase(slug: EvidenceStateSlug | null): string {
+  return slug ? boardName(slug) : "the issuing board";
+}
+
+function extractPhraseFor(slug: EvidenceStateSlug | null): string {
+  return slug ? extractPhrase(slug) : "published credential extract";
 }
 
 /** States with high-confidence entity auto-linking in product today. */
@@ -197,7 +205,7 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
                   ? "No California CSLB license linked here."
                   : isNj
                     ? "No New Jersey registration or specialty credential linked here."
-                    : "No Florida DBPR construction license linked here.";
+                    : "No construction credential linked here.";
 
   const pillars: EvidencePillar[] = [
     {
@@ -298,7 +306,7 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
       tone: "neutral",
       lastVerifiedAt: lic?.lastVerifiedAt ?? null,
     });
-  } else if (stateHasEntityLinking(slug)) {
+  } else if (slug && stateHasEntityLinking(slug)) {
     pillars.push({
       id: "entity",
       label: isNj ? "Business filing" : "Entity",
@@ -316,7 +324,7 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
       id: "entity",
       label: "Business filing",
       statusLine: "Not auto-linked",
-      detail: `${boardName(slug)} path does not auto-link SOS entity records in this extract.`,
+      detail: `${boardPhrase(slug)} path does not auto-link SOS entity records in this extract.`,
       tone: "neutral",
       lastVerifiedAt: null,
     });
@@ -431,7 +439,7 @@ export function buildEvidencePillars(contractor: ContractorDetail): EvidencePill
       id: "insurance",
       label: "Insurance path",
       statusLine: "Ask the contractor",
-      detail: `We do not invent bond or insurance from the ${extractPhrase(slug)}. Request current certificates and confirm with the carrier.`,
+      detail: `We do not invent bond or insurance from the ${extractPhraseFor(slug)}. Request current certificates and confirm with the carrier.`,
       tone: "neutral",
       lastVerifiedAt: null,
     });
@@ -465,7 +473,7 @@ export function findDiscrepancies(contractor: ContractorDetail): DataDiscrepancy
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
   const slug = homeSlug(contractor);
-  if (!lic || !ent || !stateHasEntityLinking(slug)) return [];
+  if (!lic || !ent || !slug || !stateHasEntityLinking(slug)) return [];
 
   const out: DataDiscrepancy[] = [];
   const registry = slug === "nj" ? "linked entity filing" : "Sunbiz";
@@ -544,8 +552,8 @@ export function buildConsumerMeaning(contractor: ContractorDetail): HiringPoint[
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
   const slug = homeSlug(contractor);
-  const board = boardName(slug);
-  const extract = extractPhrase(slug);
+  const board = boardPhrase(slug);
+  const extract = extractPhraseFor(slug);
   const points: HiringPoint[] = [];
   const isTsbpe = (lic?.sourceSystem || "").toLowerCase() === "tx_tsbpe";
 
@@ -649,7 +657,7 @@ export function buildConsumerMeaning(contractor: ContractorDetail): HiringPoint[
   }
 
   // Entity (only when linking exists or mismatch signal)
-  if (stateHasEntityLinking(slug)) {
+  if (slug && stateHasEntityLinking(slug)) {
     if (ent) {
       const licActive = lic ? isActiveStatus(lic.statusNormalized) : false;
       const entInactive = isInactiveish(ent.status);
@@ -726,18 +734,11 @@ export function primaryLicense(contractor: ContractorDetail): LicenseDetail | un
 /** Official board verify / search URL for actions. */
 export function officialBoardVerifyUrl(contractor: ContractorDetail): string {
   const issuing = issuingStateForLicenses(contractor.licenses);
-  const slug = homeSlug(contractor);
-  if (issuing && issuing.slug !== "fl" && slug === "fl") return issuing.boardUrl;
-  const home = (contractor.homeState || "").toUpperCase();
-  // evidenceSlugFromHomeState defaults unknown to fl — never send non-FL profiles to DBPR
-  const treatAsFl = slug === "fl" && (!home || home === "FL");
-  if (!treatAsFl && slug === "fl") {
-    if (home === "ID") return "https://dopl.idaho.gov/";
-    return "https://www.usa.gov/state-consumer";
-  }
-  switch (slug) {
+  if (!issuing) return "https://www.usa.gov/state-consumer";
+  const src = (contractor.licenses[0]?.sourceSystem || "").toLowerCase();
+  switch (issuing.slug) {
     case "tx":
-      return (contractor.licenses[0]?.sourceSystem || "").toLowerCase() === "tx_tsbpe"
+      return src === "tx_tsbpe"
         ? "https://tsbpe.texas.gov/"
         : "https://www.tdlr.texas.gov/LicenseSearch/";
     case "or":
@@ -758,26 +759,17 @@ export function officialBoardVerifyUrl(contractor: ContractorDetail): string {
       return "https://dhbc.ky.gov/Search/HBC_List_Licensees.aspx";
     case "wi":
       return "https://license.wi.gov/s/license-lookup";
+    case "fl":
+      return "https://www2.myfloridalicense.com/construction-industry/";
     default:
-      return treatAsFl
-        ? "https://www2.myfloridalicense.com/construction-industry/"
-        : "https://www.usa.gov/state-consumer";
+      return issuing.boardUrl;
   }
 }
 
 export function officialBoardVerifyLabel(contractor: ContractorDetail): string {
   const issuing = issuingStateForLicenses(contractor.licenses);
-  const slug = homeSlug(contractor);
-  if (issuing && issuing.slug !== "fl" && slug === "fl") return `Open official ${issuing.boardShortLabel} search`;
-  const home = (contractor.homeState || "").toUpperCase();
-  const treatAsFl = slug === "fl" && (!home || home === "FL");
-  if (!treatAsFl && slug === "fl") {
-    if (home === "ID") return "Open official Idaho DOPL";
-    return home
-      ? `Open official ${home} board search`
-      : "Open official board search";
-  }
-  switch (slug) {
+  if (!issuing) return "Open official board search";
+  switch (issuing.slug) {
     case "tx":
       return "Open official TDLR / TSBPE search";
     case "or":
@@ -798,7 +790,9 @@ export function officialBoardVerifyLabel(contractor: ContractorDetail): string {
       return "Open official DHBC search";
     case "wi":
       return "Open official LicensE lookup";
+    case "fl":
+      return "Open official DBPR search";
     default:
-      return treatAsFl ? "Open official DBPR search" : "Open official board search";
+      return `Open official ${issuing.boardShortLabel} search`;
   }
 }

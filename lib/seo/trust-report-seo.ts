@@ -2,37 +2,25 @@ import type { Metadata } from "next";
 import { statusLabel } from "@/lib/contractors/format";
 import type { ContractorDetail } from "@/lib/contractors/types";
 import { occupationLabel } from "@/lib/states/config";
-import {
-  boardShortLabel,
-  evidenceSlugFromHomeState,
-  sourceExtractLabel,
-  trustReportTitleSuffix,
-  type EvidenceStateSlug,
-} from "@/lib/states/evidence-copy";
-import { isEvidenceCopySlug, issuingStateForLicenses, reportEvidenceSlug } from "@/lib/states/jurisdiction";
+import { reportJurisdiction } from "@/lib/states/jurisdiction";
 import { pageMetadata } from "@/lib/seo/page-meta";
 import { shareRouteOgImage } from "@/lib/seo/share-hub";
 import { absoluteUrl } from "@/lib/site";
 
 /** Unique title + description + OG for an indexable Trust Report. */
 export function trustReportMetadata(c: ContractorDetail): Metadata {
-  const issuing = issuingStateForLicenses(c.licenses);
-  const reported = reportEvidenceSlug(c.licenses, c.homeState);
-  const slug: EvidenceStateSlug = isEvidenceCopySlug(reported)
-    ? reported
-    : evidenceSlugFromHomeState(issuing ? null : c.homeState);
+  const report = reportJurisdiction(c.licenses);
   const lic = c.licenses[0];
   const occ = lic ? occupationLabel(lic.occupationCode) : "construction credential";
   const status = lic ? statusLabel(lic.statusNormalized) : "status unknown";
   const city = c.primaryCity ? ` in ${c.primaryCity}` : "";
   const cred = lic?.licenseNumber || lic?.externalKey || null;
   const path = `/contractors/${encodeURIComponent(c.slug)}`;
-  const extract = isEvidenceCopySlug(reported) ? sourceExtractLabel(slug) : (issuing?.boardLabel ?? sourceExtractLabel(slug));
 
   const description = [
     `Trust Report for ${c.displayName}${city}.`,
     cred ? `${occ} ${cred} — ${status}.` : `Published ${occ} when linked.`,
-    `Source: ${extract}.`,
+    `Source: ${report.sourceLabel}.`,
     "Evidence from official public records — not a ranking, marketplace, or endorsement.",
   ].join(" ");
 
@@ -42,7 +30,7 @@ export function trustReportMetadata(c: ContractorDetail): Metadata {
   );
 
   return pageMetadata({
-    title: `${c.displayName} — ${issuing ? `${issuing.name} Contractor Trust Report` : trustReportTitleSuffix(slug)}`,
+    title: `${c.displayName} — ${report.title}`,
     description,
     path,
     ogType: "profile",
@@ -56,22 +44,18 @@ export function trustReportMetadata(c: ContractorDetail): Metadata {
  * Never emit AggregateRating, reviews, or “best of.”
  */
 export function trustReportJsonLd(c: ContractorDetail, path: string): Record<string, unknown> {
-  const issuing = issuingStateForLicenses(c.licenses);
-  const reported = reportEvidenceSlug(c.licenses, c.homeState);
-  const slug: EvidenceStateSlug = isEvidenceCopySlug(reported)
-    ? reported
-    : evidenceSlugFromHomeState(issuing ? null : c.homeState);
+  const report = reportJurisdiction(c.licenses);
   const lic = c.licenses[0];
   const cred = lic?.licenseNumber || lic?.externalKey || null;
   const region = (c.homeState || "").toUpperCase() || undefined;
-  const credentialName = `${isEvidenceCopySlug(reported) ? boardShortLabel(slug) : (issuing?.boardShortLabel ?? boardShortLabel(slug))} credential`;
+  const credentialName = report.state ? `${report.credentialLabel} credential` : report.credentialLabel;
 
   return {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
-    name: `${c.displayName} — ${issuing ? `${issuing.name} Contractor Trust Report` : trustReportTitleSuffix(slug)}`,
+    name: `${c.displayName} — ${report.title}`,
     url: absoluteUrl(path),
-    description: `Independent ${isEvidenceCopySlug(reported) ? boardShortLabel(slug) : (issuing?.boardShortLabel ?? boardShortLabel(slug))} evidence report for ${c.displayName}. Public-record research — not a ranking or endorsement.`,
+    description: `Independent ${report.credentialLabel} evidence report for ${c.displayName}. Public-record research — not a ranking or endorsement.`,
     mainEntity: {
       "@type": "Organization",
       name: c.displayName,

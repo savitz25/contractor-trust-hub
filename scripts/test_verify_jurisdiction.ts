@@ -3,13 +3,15 @@
  * Verify state filters follow source_system. Statement timeout is not a database outage.
  */
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { SEARCH_DATABASE_UNAVAILABLE_MESSAGE, SEARCH_TIMEOUT_MESSAGE, dbUserFacingError } from "../lib/db.ts";
 import { searchContractors } from "../lib/contractors/queries.ts";
 import { officialBoardVerifyLabel, officialBoardVerifyUrl } from "../lib/contractors/trust-report.ts";
 import type { ContractorDetail } from "../lib/contractors/types.ts";
 import { trustReportJsonLd, trustReportMetadata } from "../lib/seo/trust-report-seo.ts";
-import { stateForLicenseSource } from "../lib/states/jurisdiction.ts";
+import { evidenceSlugFromHomeState } from "../lib/states/evidence-copy.ts";
+import { reportEvidenceSlug, reportJurisdiction, stateForLicenseSource } from "../lib/states/jurisdiction.ts";
 
 function profile(source: string, homeState: string, key: string, city = "Mulberry"): ContractorDetail {
   return {
@@ -135,6 +137,68 @@ test("exact Florida credential lookup still queries fl_dbpr and does not require
   await searchContractors("CBC1268883", { stateSlug: "fl" }, db);
   assert.doesNotMatch(calls[0].sql, /home_state = \$/);
   assert.deepEqual(calls[0].params[1], ["fl_dbpr"]);
+});
+
+function surface(source: string, home: string, city = "Atlanta") {
+  const contractor = profile(source, home, "X-1", city);
+  const report = reportJurisdiction(contractor.licenses);
+  const title = titleOf(trustReportMetadata(contractor));
+  const json = JSON.stringify(trustReportJsonLd(contractor, "/contractors/example"));
+  return { contractor, report, title, json };
+}
+
+test("unknown sources do not manufacture a Florida issuing jurisdiction", () => {
+  for (const [source, home] of [
+    ["ga_sos", "GA"],
+    ["", "NC"],
+    ["tn_board", "TN"],
+    ["ma_board", "MA"],
+    ["pa_board", "PA"],
+    ["unmapped", "OH"],
+  ] as const) {
+    const { report, title, json, contractor } = surface(source, home);
+    assert.equal(reportEvidenceSlug(contractor.licenses, home), null, source || "empty source");
+    assert.equal(report.slug, null);
+    assert.equal(report.title, "Contractor Trust Report");
+    assert.equal(report.kicker, "Contractor Trust Report 2.0");
+    assert.equal(report.credentialLabel, "Credential");
+    assert.doesNotMatch(`${title} ${report.kicker} ${json}`, /Florida|DBPR|Arizona|Colorado/);
+    const main = JSON.parse(json).mainEntity as { address?: { addressRegion?: string } };
+    assert.equal(main.address?.addressRegion, home);
+    assert.equal(officialBoardVerifyLabel(contractor), "Open official board search");
+    assert.doesNotMatch(officialBoardVerifyUrl(contractor), /myfloridalicense|dbpr/i);
+  }
+  // Business-location helper may still default unknown home states. The report path must not use it.
+  assert.equal(evidenceSlugFromHomeState("GA"), "fl");
+  assert.equal(evidenceSlugFromHomeState("NC"), "fl");
+});
+
+test("registered boards use one jurisdiction for the title and the visible kicker", () => {
+  const cases = [
+    ["co_dora", "Colorado"],
+    ["va_dpor", "Virginia"],
+    ["ny_dol_pw", "New York"],
+    ["il_idfpr_roofing", "Illinois"],
+    ["wi_dsps", "Wisconsin"],
+    ["fl_dbpr", "Florida"],
+    ["nj_dca", "New Jersey"],
+    ["tx_tdlr", "Texas"],
+    ["tx_tsbpe", "Texas"],
+    ["az_roc", "Arizona"],
+  ] as const;
+  for (const [source, name] of cases) {
+    const { report, title } = surface(source, "FL", "Mulberry");
+    assert.equal(report.kicker, `${name} · Contractor Trust Report 2.0`, source);
+    assert.match(title, new RegExp(`${name} Contractor Trust Report`), source);
+    if (name !== "Florida") assert.doesNotMatch(report.kicker, /Florida/);
+  }
+});
+
+test("the profile header kicker is the registry string, not a Florida else branch", () => {
+  const page = readFileSync(new URL("../app/contractors/[slug]/page.tsx", import.meta.url), "utf8");
+  assert.match(page, /\{report\.kicker\}/);
+  assert.doesNotMatch(page, /Florida · Contractor Trust Report 2\.0/);
+  assert.doesNotMatch(page, /getStateBySlug\("fl"\)/);
 });
 
 test("statement timeout and database unavailability use different copy", () => {

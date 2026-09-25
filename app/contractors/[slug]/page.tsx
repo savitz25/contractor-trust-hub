@@ -52,8 +52,8 @@ import {
 } from "@/lib/contractors/trust-report";
 import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
 import { trustReportJsonLd, trustReportMetadata } from "@/lib/seo/trust-report-seo";
-import { getStateBySlug } from "@/lib/states/config";
-import { reportEvidenceSlug } from "@/lib/states/jurisdiction";
+import { verifyPathFor } from "@/lib/states/config";
+import { reportJurisdiction } from "@/lib/states/jurisdiction";
 import { azClassPlainLabel } from "@/lib/states/az-roc";
 import { caClassPlainLabel } from "@/lib/states/ca-classifications";
 import { njCredentialPlainLabel } from "@/lib/states/nj-credentials";
@@ -150,7 +150,8 @@ export default async function ContractorPage({ params, searchParams }: Props) {
 
   if (!contractor) notFound();
 
-  const stateSlug = reportEvidenceSlug(contractor.licenses, contractor.homeState);
+  const report = reportJurisdiction(contractor.licenses);
+  const stateSlug = report.slug;
   const isTx = stateSlug === "tx";
   const isNj = stateSlug === "nj";
   const isOr = stateSlug === "or";
@@ -164,9 +165,8 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   /** Verify-first thin reports (no FL plan/activity stack). */
   const isThin =
     isTx || isOr || isCa || isAz || isWa || isLa || isMs || isKy;
-  const state = getStateBySlug(stateSlug) || getStateBySlug("fl")!;
-  const verifyHref =
-    stateSlug === "fl" ? "/verify" : `/verify?state=${stateSlug}`;
+  const state = report.state;
+  const verifyHref = state ? verifyPathFor(state) : "/verify";
   const primary = contractor.licenses[0];
   const entity = contractor.entities[0];
   const path = `/contractors/${encodeURIComponent(contractor.slug)}`;
@@ -340,25 +340,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         className="mt-3 scroll-mt-24 border-b border-[var(--border)] pb-5 sm:mt-4 sm:scroll-mt-28 sm:pb-8"
       >
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--accent)] sm:text-xs">
-          {isNj
-            ? "New Jersey · HIC + specialty · Trust Report"
-            : isTx
-              ? "Texas · TDLR / TSBPE · Trust Report"
-              : isOr
-                ? "Oregon · CCB statewide · Trust Report"
-                : isCa
-                  ? "California · CSLB counties · Trust Report"
-                  : isAz
-                    ? "Arizona · ROC statewide · Trust Report"
-                    : isWa
-                      ? "Washington · L&I statewide · Trust Report"
-                      : isLa
-                        ? "Louisiana · LSLBC · Trust Report"
-                        : isMs
-                          ? "Mississippi · MSBOC · Trust Report"
-                          : isKy
-                            ? "Kentucky · DHBC specialty · Trust Report"
-                            : "Florida · Contractor Trust Report 2.0"}
+          {report.kicker}
         </p>
         <h1 className="mt-1.5 text-[1.5rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:mt-2 sm:text-4xl">
           {contractor.displayName}

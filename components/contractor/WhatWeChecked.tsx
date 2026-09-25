@@ -2,21 +2,33 @@ import { formatDateTime } from "@/lib/contractors/format";
 import type { ContractorDetail } from "@/lib/contractors/types";
 import {
   checkedItems,
-  evidenceSlugFromHomeState,
   notCheckedItems,
-  type EvidenceStateSlug,
 } from "@/lib/states/evidence-copy";
-import { reportEvidenceSlug } from "@/lib/states/jurisdiction";
+import { isEvidenceCopySlug, reportJurisdiction } from "@/lib/states/jurisdiction";
+
+const NEUTRAL_CHECKED = [
+  "Published credential record when linked",
+  "Source attribution and extract freshness on this profile",
+  "Business location as recorded on the profile",
+];
+
+const NEUTRAL_UNCHECKED = [
+  "A live board check at page load",
+  "Insurance certificate validity",
+  "Reviews, rankings, or a hire recommendation",
+];
 
 export function WhatWeChecked({ contractor }: { contractor: ContractorDetail }) {
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
-  const reported = reportEvidenceSlug(contractor.licenses, contractor.homeState);
-  const slug = (["fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms", "ky", "wi"].includes(reported)
-    ? reported
-    : evidenceSlugFromHomeState(contractor.homeState)) as EvidenceStateSlug;
-  const checked = checkedItems(slug);
-  const notChecked = notCheckedItems(slug);
+  const report = reportJurisdiction(contractor.licenses);
+  const copySlug = report.slug && isEvidenceCopySlug(report.slug) ? report.slug : null;
+  const checked = copySlug
+    ? checkedItems(copySlug)
+    : report.state
+      ? [`${report.state.name} credential record when linked`, ...NEUTRAL_CHECKED.slice(1)]
+      : NEUTRAL_CHECKED;
+  const notChecked = copySlug ? notCheckedItems(copySlug) : NEUTRAL_UNCHECKED;
   const freshest =
     [lic?.lastVerifiedAt, ent?.lastVerifiedAt, contractor.discipline[0]?.lastVerifiedAt]
       .filter(Boolean)

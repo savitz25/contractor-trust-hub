@@ -21,9 +21,8 @@ import type { EvidenceState } from "@/lib/states/config";
 import {
   disciplineSectionBlurb,
   disciplineSectionTitle,
-  evidenceSlugFromHomeState,
 } from "@/lib/states/evidence-copy";
-import { reportEvidenceSlug } from "@/lib/states/jurisdiction";
+import { isEvidenceCopySlug, licenseSourcePresentation, reportEvidenceSlug } from "@/lib/states/jurisdiction";
 import {
   getNjCredentialInfo,
   njCredentialPlainLabel,
@@ -347,13 +346,10 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
           const isAz = src === "az_roc";
           const isLa = src === "la_lslbc";
           const isMs = src === "ms_sbc";
-          const isOr = src === "or_ccb" || (lic.state === "OR" && !isWa && !isAz && !isLa && !isMs);
-          const isTx =
-            src === "tx_tdlr" ||
-            isTsbpe ||
-            (lic.state === "TX" && !isWa && !isAz && !isLa && !isMs && src !== "or_ccb");
-          const isNj =
-            src === "nj_dca" || (lic.state === "NJ" && !isWa && !isAz && !isLa && !isMs && src !== "or_ccb");
+          const isOr = src === "or_ccb";
+          const isTx = src === "tx_tdlr" || isTsbpe;
+          const isNj = src === "nj_dca";
+          const sourceCopy = licenseSourcePresentation(lic.sourceSystem);
           const occ = getOccupationInfo(lic.occupationCode);
           const txTrade = isTx ? getTxTradeInfo(lic.occupationCode) : null;
           const njCred = isNj ? getNjCredentialInfo(lic.occupationCode) : null;
@@ -666,30 +662,7 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                 </div>
                 <div>
                   <dt className="text-[var(--muted)]">Board / source</dt>
-                  <dd className="text-[var(--text)]">
-                    {lic.boardNumber ||
-                      (isNj
-                        ? "NJ DCA"
-                        : isOr
-                          ? "CCB"
-                          : isWa
-                            ? "L&I"
-                            : isAz
-                              ? "ROC"
-                              : isLa
-                                ? "LSLBC"
-                                : isMs
-                                  ? "MSBOC"
-                                  : isTsbpe
-                                    ? "TSBPE"
-                                    : isTx
-                                      ? "TDLR"
-                                      : src === "ky_dhbc"
-                                        ? "DHBC"
-                                        : src === "ca_cslb"
-                                          ? "CSLB"
-                                          : "CILB / DBPR")}
-                  </dd>
+                  <dd className="text-[var(--text)]">{lic.boardNumber || sourceCopy.board}</dd>
                 </div>
                 <div className="sm:col-span-2">
                   <dt className="text-[var(--muted)]">Address / county on file</dt>
@@ -702,28 +675,8 @@ export function LicensesSection({ licenses }: { licenses: ContractorDetail["lice
                 <div className="sm:col-span-2">
                   <dt className="text-[var(--muted)]">Source / last verified</dt>
                   <dd className="break-words text-[var(--text)]">
-                    {isNj
-                      ? "New Jersey registration extract"
-                      : isOr
-                        ? "Oregon CCB"
-                        : isWa
-                          ? "Washington L&I"
-                          : isAz
-                            ? "Arizona ROC"
-                            : isLa
-                              ? "Louisiana LSLBC"
-                              : isMs
-                                ? "Mississippi MSBOC"
-                                : isTsbpe
-                                  ? "Texas TSBPE"
-                                  : isTx
-                                    ? "Texas TDLR"
-                                    : src === "ky_dhbc"
-                                      ? "Kentucky DHBC"
-                                      : src === "ca_cslb"
-                                        ? "California CSLB"
-                                        : "Florida DBPR"}{" "}
-                    ({lic.sourceSystem}) · {formatDateTime(lic.lastVerifiedAt)}
+                    {sourceCopy.extract}
+                    {lic.sourceSystem ? ` (${lic.sourceSystem})` : ""} · {formatDateTime(lic.lastVerifiedAt)}
                   </dd>
                 </div>
               </dl>
@@ -740,8 +693,9 @@ export function EntitySection({
   state,
 }: {
   entities: ContractorDetail["entities"];
-  state: EvidenceState;
+  state: EvidenceState | null;
 }) {
+  const registryName = state?.entityRegistryLabel.split("(")[0].trim();
   if (entities.length === 0) {
     return (
       <section
@@ -749,7 +703,7 @@ export function EntitySection({
         className="scroll-mt-28 rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-5 sm:p-6"
       >
         <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
-          Business / entity signals ({state.entityRegistryLabel.split("(")[0].trim()})
+          Business / entity signals{registryName ? ` (${registryName})` : ""}
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
           No high-confidence entity link for this contractor yet. We only link exact name/geo
@@ -821,7 +775,7 @@ export function EntitySection({
               <div className="sm:col-span-2">
                 <dt className="text-[var(--muted)]">Source / last verified</dt>
                 <dd className="text-[var(--text)]">
-                  {state.entityRegistryLabel} ({ent.sourceSystem}) ·{" "}
+                  {state?.entityRegistryLabel ?? "Business filing"} ({ent.sourceSystem}) ·{" "}
                   {formatDateTime(ent.lastVerifiedAt)}
                 </dd>
               </div>
@@ -860,11 +814,12 @@ export function DisciplineSection({
   reportSlug?: string | null;
 }) {
   const hasActions = discipline.length > 0;
-  const slug = reportSlug && ["fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms", "ky", "wi"].includes(reportSlug)
-    ? reportSlug as ReturnType<typeof evidenceSlugFromHomeState>
-    : evidenceSlugFromHomeState(homeState);
-  const title = disciplineSectionTitle(slug);
-  const blurb = disciplineSectionBlurb(slug);
+  const slug = reportSlug && isEvidenceCopySlug(reportSlug) ? reportSlug : null;
+  void homeState;
+  const title = slug ? disciplineSectionTitle(slug) : "Caution & regulatory history";
+  const blurb = slug
+    ? disciplineSectionBlurb(slug)
+    : "Board actions linked in our extracts. A missing row is not a finding that the record is clear.";
   const recordWord = slug === "nj" ? "Enforcement" : "Discipline";
 
   return (
@@ -1022,7 +977,9 @@ export function DisciplineSection({
                           ? "Arizona ROC disciplinary extract"
                           : slug === "nj"
                             ? "NJ DCA Standard Files extract"
-                            : "Florida board discipline extract")}
+                            : slug === "fl"
+                              ? "Florida board discipline extract"
+                              : "Board discipline extract")}
                     {d.lastVerifiedAt
                       ? ` · in our data ${formatDateTime(d.lastVerifiedAt)}`
                       : ""}
@@ -1042,21 +999,21 @@ export function SourcesFooter({
   state,
 }: {
   contractor: ContractorDetail;
-  state: EvidenceState;
+  state: EvidenceState | null;
 }) {
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
-  const hs = (contractor.homeState || "").toUpperCase();
-  const isTx = state.slug === "tx" || hs === "TX";
-  const isNj = state.slug === "nj" || hs === "NJ";
-  const isOr = state.slug === "or" || hs === "OR";
-  const isWa = state.slug === "wa" || hs === "WA";
-  const isAz = state.slug === "az" || hs === "AZ";
-  const isLa = state.slug === "la" || hs === "LA";
-  const isMs = state.slug === "ms" || hs === "MS";
-  const isKy = state.slug === "ky" || hs === "KY";
-  const isCa = state.slug === "ca" || hs === "CA";
-  const isFl = !isTx && !isNj && !isOr && !isWa && !isAz && !isLa && !isMs && !isKy && !isCa;
+  const slug = state?.slug ?? "";
+  const isTx = slug === "tx";
+  const isNj = slug === "nj";
+  const isOr = slug === "or";
+  const isWa = slug === "wa";
+  const isAz = slug === "az";
+  const isLa = slug === "la";
+  const isMs = slug === "ms";
+  const isKy = slug === "ky";
+  const isCa = slug === "ca";
+  const isFl = slug === "fl";
 
   return (
     <aside className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-elevated)]/50 px-4 py-5 text-sm leading-relaxed text-[var(--muted)] sm:px-5">
@@ -1086,36 +1043,24 @@ export function SourcesFooter({
                             ? "License (California CSLB)"
               : isTx
                 ? "License (TDLR)"
-                : "License (DBPR)"}
+                : isFl
+                  ? "License (DBPR)"
+                  : state
+                    ? `License (${state.boardShortLabel})`
+                    : "Credential"}
           </span>
           <br />
-          <a href={state.boardUrl} target="_blank" rel="noreferrer">
-            {state.boardLabel}
-          </a>
+          {state ? (
+            <a href={state.boardUrl} target="_blank" rel="noreferrer">
+              {state.boardLabel}
+            </a>
+          ) : (
+            <span>Issuing board is not mapped for this credential.</span>
+          )}
           <br />
           <span className="text-xs">
             Source system:{" "}
-            {lic?.sourceSystem ||
-              state.licenseSource ||
-              (isNj
-                ? "nj_dca"
-                : isOr
-                  ? "or_ccb"
-                  : isWa
-                    ? "wa_lni"
-                    : isAz
-                      ? "az_roc"
-                      : isLa
-                        ? "la_lslbc"
-                        : isMs
-                          ? "ms_sbc"
-                          : isKy
-                            ? "ky_dhbc"
-                            : isCa
-                              ? "ca_cslb"
-                      : isTx
-                        ? "tx_tdlr"
-                        : "fl_dbpr")}
+            {lic?.sourceSystem || state?.licenseSource || "not mapped"}
             {lic?.lastVerifiedAt
               ? ` · in our data ${formatDateTime(lic.lastVerifiedAt)}`
               : " · timestamp not on file"}
@@ -1189,7 +1134,7 @@ export function SourcesFooter({
             Florida-depth (no full permit history or planning journey in this pilot). Coverage
             differs by state.
           </li>
-        ) : isFl ? (
+        ) : isFl && state ? (
           <>
             <li>
               <span className="font-medium text-[var(--text)]">Business entity (Sunbiz)</span>
