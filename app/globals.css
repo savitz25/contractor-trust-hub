@@ -701,6 +701,7 @@ header img[data-brand-logo] {
   color: var(--navy);
 }
 .cth-result-card {
+  position: relative;
   min-width: 0;
   border: 1px solid var(--border);
   border-radius: var(--th-radius-card);
@@ -715,11 +716,28 @@ header img[data-brand-logo] {
 .cth-profile-link {
   display: block;
   min-width: 0;
-  padding: 1.25rem 1.25rem 0.5rem;
+  padding: 1.25rem 1.25rem 0.35rem;
   color: inherit;
   text-decoration: none;
   user-select: text;
   -webkit-user-select: text;
+}
+.cth-profile-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.cth-profile-link > span,
+.cth-result-card__facts,
+.cth-result-card__actions {
+  position: relative;
+  z-index: 1;
+}
+.cth-profile-link--static::after {
+  content: none;
+}
+.cth-result-card__facts {
+  padding: 0.35rem 1.25rem 0;
 }
 .cth-profile-link h3,
 .cth-profile-link p,

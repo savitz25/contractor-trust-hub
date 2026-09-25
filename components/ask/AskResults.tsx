@@ -7,17 +7,22 @@ import type { ContractorResearchQuery } from "@/lib/ask/plan";
 import { askHref, chipHref, planToOverrides } from "@/lib/ask/plan";
 import type { AskExecution } from "@/lib/ask/execute";
 import { formatIntelCount } from "@/lib/home/intel-v2";
-import { NAME_CANDIDATE_LIST_NOTICE, unappliedNameSearchPlace } from "@/lib/ask/candidate-card-presentation";
+import { NAME_CANDIDATE_LIST_NOTICE } from "@/lib/ask/candidate-card-presentation";
+import { nameSearchFilterAccount } from "@/lib/ask/recorded-address-display";
 import { AskResultCard } from "./AskResultCard";
 
 export function AskResults({
   interpreted,
   plan,
   execution,
+  addressQueries = 0,
+  addressTimingMs = 0,
 }: {
   interpreted: AskResult;
   plan: ContractorResearchQuery;
   execution: AskExecution;
+  addressQueries?: number;
+  addressTimingMs?: number;
 }) {
   if (plan.recovery) {
     return (
@@ -60,19 +65,19 @@ export function AskResults({
           </div>
           <div>
             <dt className="text-[var(--muted)]">Trade</dt>
-            <dd className="font-medium">{plan.trade.label || "Not specified"}</dd>
+            <dd className="font-medium">{execution.nameSearch ? "Not applied to this name search" : plan.trade.label || "Not specified"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Included credential classes</dt>
-            <dd className="font-medium">{plan.trade.classLabels.join(", ") || "Not specified"}</dd>
+            <dd className="font-medium">{execution.nameSearch ? "Not applied to this name search" : plan.trade.classLabels.join(", ") || "Not specified"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Status</dt>
-            <dd className="font-medium">{plan.credentialStatus.replace("_", "/")}</dd>
+            <dd className="font-medium">{execution.nameSearch ? "Not applied to this name search" : plan.credentialStatus.replace("_", "/")}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Evidence</dt>
-            <dd className="font-medium">{interpreted.interpretation.evidenceFamily}</dd>
+            <dd className="font-medium">{execution.nameSearch ? "Not applied to this name search" : interpreted.interpretation.evidenceFamily}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Sort</dt>
@@ -98,7 +103,7 @@ export function AskResults({
         ))}
       </section>
 
-      <div className="flex flex-wrap gap-2" aria-label="Active filters">
+      {execution.nameSearch ? null : <div className="flex flex-wrap gap-2" aria-label="Active filters">
         {plan.geography.countySlug ? (
           <Link prefetch={false} className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs" href={chipHref(plan.rawQuery, plan, "geo")}>
             Broaden from {plan.geography.countyLabel} to Florida ×
@@ -119,7 +124,7 @@ export function AskResults({
             Evidence: {interpreted.interpretation.evidenceFamily} ×
           </Link>
         ) : null}
-      </div>
+      </div>}
 
       <p className="text-sm">
         Change interpretation: {plan.changeHints.join(" · ")}
@@ -232,10 +237,11 @@ export function AskResults({
           {!execution.blocked ? (
             <p className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" role="note">{NAME_CANDIDATE_LIST_NOTICE}</p>
           ) : null}
-          {!execution.blocked && unappliedNameSearchPlace(plan, execution.nameSearch) ? (
-            <p className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" role="note">
-              {unappliedNameSearchPlace(plan, execution.nameSearch)} is selected, but this company-name search did not apply that place filter. Every name-searchable jurisdiction was searched, in source order. Same-name records stay on separate cards. This search does not decide whether they are the same business.
-            </p>
+          {!execution.blocked ? (
+            <div className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" data-testid="name-search-filters">
+              <p><span className="font-semibold">Selected on the form. </span>{nameSearchFilterAccount(plan, execution.nameSearch).selected.join(" · ") || "None."}</p>
+              <p className="mt-1"><span className="font-semibold">Applied to these name candidates. </span>{nameSearchFilterAccount(plan, execution.nameSearch).applied}</p>
+            </div>
           ) : null}
           {execution.nameSearch.completeness ? <p className="text-xs text-[var(--muted)]">{execution.nameSearch.completeness}</p> : null}
         </section>
@@ -271,20 +277,10 @@ export function AskResults({
       ) : null}
 
       {execution.results.length > 0 ? (
-        <ul className="space-y-4">
+        <ul className="space-y-4" data-address-queries={addressQueries} data-address-ms={addressTimingMs}>
           {execution.results.map((card) => (
             <li key={card.contractorId}>
-              <AskResultCard
-                card={card}
-                matchQuery={execution.nameSearch ? execution.nameSearch.supplied : null}
-                outsidePlace={
-                  unappliedNameSearchPlace(plan, execution.nameSearch) &&
-                  card.credentialJurisdictionCode &&
-                  card.credentialJurisdictionCode !== "FL"
-                    ? unappliedNameSearchPlace(plan, execution.nameSearch)
-                    : null
-                }
-              />
+              <AskResultCard card={card} />
             </li>
           ))}
         </ul>

@@ -18,6 +18,8 @@ import {
 } from "../lib/ask/candidate-card-presentation";
 import { NAME_MATCH_DISCLAIMER, type AskEntityCard } from "../lib/ask/execute";
 import { RESEARCH_QUERY_VERSION, type ContractorResearchQuery } from "../lib/ask/plan";
+import { attachRecordedAddresses } from "../lib/ask/recorded-address-projection";
+import { formatLicenseAddress, nameSearchFilterAccount } from "../lib/ask/recorded-address-display";
 import { classifySpecialistSearchClick } from "../lib/specialist-search/analytics";
 import { ASK_CONTRACT_VERSION, type AskResult } from "../lib/ask/types";
 import type { AskExecution } from "../lib/ask/execute";
@@ -160,7 +162,7 @@ test("name-candidate card uses one profile anchor, keeps the destination, and le
     displayName: LONG_NAME,
     profileHref: "/contractors/ca-ca-cslb-718694-vantage-air-inc",
   });
-  const html = renderToStaticMarkup(<AskResultCard card={row} matchQuery="VANTAGE" />);
+  const html = renderToStaticMarkup(<AskResultCard card={row} />);
   const links = html.match(/data-testid="ask-profile-link"/g) ?? [];
   assert.equal(links.length, 1);
   assert.match(html, /href="\/contractors\/ca-ca-cslb-718694-vantage-air-inc"/);
@@ -209,10 +211,11 @@ test("out-of-state address, unknown status, alias, and exact source name stay di
     credentialJurisdictionLabel: "Louisiana · Louisiana State Licensing Board for Contractors (LSLBC)",
     matchedOn: { field: "dba_name", value: "Vantage Architectural Solutions, LLC", method: "DOCUMENTED_ALIAS" },
   });
-  const html = renderToStaticMarkup(<AskResultCard card={out} matchQuery="VANTAGE" />);
+  const html = renderToStaticMarkup(<AskResultCard card={out} />);
   assert.match(html, /Status · <\/span>Status not reported/);
   assert.doesNotMatch(html, /Active\/current|CLEAR/);
-  assert.match(html, /Recorded address · <\/span>Out-of-State, LA/);
+  assert.match(html, /Source marks this address as out of jurisdiction/);
+  assert.doesNotMatch(html, /Out-of-State County|Out-of-State, LA/);
   assert.match(html, /Credential jurisdiction · <\/span>Louisiana/);
   assert.match(html, /documented alias · field: dba name/);
   assert.doesNotMatch(face(html), /documented alias/);
@@ -271,8 +274,9 @@ test("exact identifier results are not name-candidate cards and rows without a p
   const exactHtml = renderToStaticMarkup(<AskResultCard card={exact} />);
   assert.match(exactHtml, /Exact credential identifier match/);
   assert.match(exactHtml, /href="\/contractors\/cbc015082-worsham-construction-company-inc"/);
-  assert.doesNotMatch(exactHtml, /prefix\/token|does not establish that the record is the exact business/);
-  assert.match(exactHtml, /Recorded address · <\/span>Jacksonville, Duval County, FL/);
+  assert.doesNotMatch(exactHtml, /prefix\/token|does not establish that the record is the exact business|Name matched/);
+  assert.match(exactHtml, /Recorded address · <\/span>Jacksonville, FL/);
+  assert.match(exactHtml, /County · <\/span>Duval County/);
 
   const hidden = card({
     contractorId: "none",
@@ -357,11 +361,9 @@ test("trace text drops only the shared disclaimer and address lines do not dupli
   const why = `The public display name equals the supplied name. ${NAME_MATCH_DISCLAIMER}`;
   assert.equal(traceMatchText(why), "The public display name equals the supplied name.");
   assert.equal(traceMatchText("Matches the submitted credential identifier in the published licensing corpus."), "Matches the submitted credential identifier in the published licensing corpus.");
-  assert.equal(recordedAddressLine({ city: null, county: "Out-of-State", state: "LA" }), "Out-of-State, LA");
-  assert.equal(recordedAddressLine({ city: "BOCA RATON", county: "Palm Beach", state: "FL", postalCode: "33432" }), "BOCA RATON, Palm Beach County, FL 33432");
-  assert.equal(recordedAddressLine({ city: "JACKSONVILLE", county: "Duval", state: "FL", postalCode: "32216" }), "JACKSONVILLE, Duval County, FL 32216");
-  assert.equal(recordedAddressLine({ city: null, county: "Cameron", state: "TX" }), "Cameron County, TX");
   assert.equal(recordedAddressLine({ city: "Jacksonville", county: "Duval", state: "FL" }), "Jacksonville, Duval County, FL");
+  assert.equal(recordedAddressLine({ city: null, county: "Cameron", state: "TX" }), "Cameron County, TX");
+  assert.equal(recordedAddressLine({ city: "Little Rock", county: "Out-of-State", state: "LA" }), "Little Rock");
   assert.equal(
     NAME_CANDIDATE_RECORDED_ADDRESS_MEANING,
     "Recorded address on the profile. Separate from the credential jurisdiction; not service territory or current availability.",
@@ -377,7 +379,6 @@ test("Florida place filter that name search ignores stays visible and does not r
     county: "Palm Beach",
     city: "BOCA RATON",
     state: "FL",
-    postalCode: null,
     statusLabel: "C in indexed Florida record",
     credentialJurisdictionCode: "FL",
     credentialJurisdictionLabel: "Florida · Florida DBPR — Construction Industry Licensing Board",
@@ -390,7 +391,6 @@ test("Florida place filter that name search ignores stays visible and does not r
     county: "Cameron",
     city: null,
     state: "TX",
-    postalCode: null,
     statusLabel: "active in indexed Texas record",
     sourceLabel: "Texas Department of Licensing and Regulation",
     credentialJurisdictionCode: "TX",
@@ -400,16 +400,96 @@ test("Florida place filter that name search ignores stays visible and does not r
   const html = renderToStaticMarkup(
     <AskResults interpreted={interpreted()} plan={{ ...plan(), geography }} execution={execution([florida, texas], true)} />,
   );
-  assert.match(html, /Florida is selected, but this company-name search did not apply that place filter/);
+  assert.match(html, /Selected on the form/);
+  assert.match(html, /Applied to these name candidates/);
+  assert.match(html, /Place, trade, status, and evidence selections were not applied/);
+  assert.match(html, /Name matched — not proof this is the firm you mean/);
   assert.match(html, /BOCA RATON, Palm Beach County, FL/);
   assert.match(html, /Cameron County, TX/);
   assert.match(html, /C in indexed Florida record/);
   assert.match(html, /active in indexed Texas record/);
-  assert.match(html, /Credential jurisdiction is Texas/);
-  assert.equal(html.includes("Credential jurisdiction is Florida. The selected"), false);
+  assert.equal(html.includes("Credential jurisdiction is Texas. The selected"), false);
+  assert.equal(html.includes("Trade: HVAC"), false);
   assert.ok(html.indexOf("/contractors/cac1815743-snyder-air-conditioning-plumbing-electric-llc") < html.indexOf("/contractors/tx-tdlr-a-c-contractor-97866-be-snyder-air-conditioning-llc"));
-  assert.match(html, /does not decide whether they are the same business/);
   assert.doesNotMatch(html, /office|headquarters|service area/);
+});
+
+test("license address keeps street and ZIP on that credential and leaves the v1 files untouched", async () => {
+  const florida = formatLicenseAddress({
+    street: "100 EXAMPLE WAY",
+    city: "BOCA RATON",
+    state: "FL",
+    postalCode: "33432",
+    county: "Palm Beach",
+  });
+  assert.equal(florida.line, "100 EXAMPLE WAY, BOCA RATON, FL 33432");
+  assert.equal(florida.countyLabel, "Palm Beach County");
+  assert.equal(florida.outOfJurisdiction, false);
+  const texas = formatLicenseAddress({ county: "Cameron", state: "TX" });
+  assert.equal(texas.line, "Cameron County, TX");
+  assert.equal(texas.countyLabel, null);
+  const outside = formatLicenseAddress({ city: "Little Rock", state: "AR", county: "Out-of-State", postalCode: "72201" });
+  assert.equal(outside.line, "Little Rock, AR 72201");
+  assert.equal(outside.countyLabel, null);
+  assert.equal(outside.outOfJurisdiction, true);
+  const cityOnly = formatLicenseAddress({ city: "Little Rock", county: "Out-of-State" });
+  assert.equal(cityOnly.line, null);
+  assert.equal(cityOnly.locationOnly, "Little Rock");
+
+  const calls: string[] = [];
+  const db = {
+    query: async (sql: string) => {
+      calls.push(sql);
+      return [
+        { slug: "fl-boca", license_number: "1815743", external_key: "CAC1815743", address_line_1: "100 EXAMPLE WAY", city: "BOCA RATON", state: "FL", postal_code: "33432", county_name: "Palm Beach", is_thin_profile: false },
+        { slug: "fl-jax", license_number: "1822714", external_key: "CAC1822714", address_line_1: null, city: "JACKSONVILLE", state: "FL", postal_code: "32216", county_name: "Duval", is_thin_profile: false },
+        { slug: "tx", license_number: "97866", external_key: "TX-TDLR:97866", address_line_1: null, city: null, state: "TX", postal_code: null, county_name: "Cameron", is_thin_profile: false },
+        { slug: "other", license_number: "1815743", external_key: "OTHER", address_line_1: "999 OTHER ST", city: "MIAMI", state: "FL", postal_code: "33101", county_name: "Miami-Dade", is_thin_profile: false },
+      ];
+    },
+  };
+  const cards = [
+    card({ contractorId: "a", slug: "fl-boca", displayName: "A", profileHref: "/contractors/fl-boca", credentialKey: "1815743" }),
+    card({ contractorId: "b", slug: "fl-jax", displayName: "B", profileHref: "/contractors/fl-jax", credentialKey: "1822714", city: "JACKSONVILLE", county: "Duval", state: "FL" }),
+    card({ contractorId: "c", slug: "tx", displayName: "C", profileHref: "/contractors/tx", credentialKey: "97866", city: null, county: "Cameron", state: "TX" }),
+  ];
+  const projected = await attachRecordedAddresses(cards, db as never);
+  assert.equal(projected.queries, 1);
+  assert.equal(calls.length, 1);
+  assert.match(calls[0], /address_line_1/);
+  assert.doesNotMatch(calls[0], /email|phone|raw_payload|claim/i);
+  assert.equal(projected.results[0].publicAddress?.line, "100 EXAMPLE WAY, BOCA RATON, FL 33432");
+  assert.equal(projected.results[0].publicAddress?.countyLabel, "Palm Beach County");
+  assert.equal(projected.results[1].publicAddress?.line, "JACKSONVILLE, FL 32216");
+  assert.equal(projected.results[1].publicAddress?.countyLabel, "Duval County");
+  assert.equal(projected.results[2].publicAddress?.line, "Cameron County, TX");
+  assert.notEqual(projected.results[0].publicAddress?.line, projected.results[2].publicAddress?.line);
+  assert.equal(projected.results.map((row) => row.credentialKey).join(), "1815743,1822714,97866");
+  const html = renderToStaticMarkup(<AskResultCard card={projected.results[0]} />);
+  assert.match(html, /100 EXAMPLE WAY, BOCA RATON, FL 33432/);
+  assert.match(html, /Palm Beach County/);
+  assert.doesNotMatch(html, /999 OTHER ST|phone|email/);
+  const link = html.match(/<a[^>]*data-testid="ask-profile-link"[\s\S]*?<\/a>/)?.[0] ?? "";
+  assert.match(link, /View profile/);
+  assert.doesNotMatch(link, /1815743|100 EXAMPLE WAY/);
+
+  const failed = await attachRecordedAddresses(cards, { query: async () => { throw new Error("down"); } } as never);
+  assert.equal(failed.status, "unavailable");
+  assert.equal(failed.queries, 1);
+  const failedHtml = renderToStaticMarkup(<AskResultCard card={failed.results[2]} />);
+  assert.match(failedHtml, /not a finding that the source has no address/);
+
+  const account = nameSearchFilterAccount(
+    { geography: { state: "FL", countySlug: null, countyLabel: null }, trade: { label: "HVAC" }, credentialStatus: "active_current", evidenceFamily: null },
+    { jurisdiction: null },
+  );
+  assert.deepEqual(account.selected, ["Florida", "HVAC", "Active/current"]);
+  assert.match(account.applied, /were not applied/);
+  const constrained = nameSearchFilterAccount(
+    { geography: { state: "FL", countySlug: null, countyLabel: null }, trade: { label: null }, credentialStatus: "all", evidenceFamily: null },
+    { jurisdiction: "NJ" },
+  );
+  assert.match(constrained.applied, /Credential jurisdiction NJ was applied/);
 });
 
 test("one profile activation is not also a save or a trace", () => {

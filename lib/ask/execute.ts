@@ -87,8 +87,8 @@ export type AskEntityCard = {
   city: string | null;
   county: string | null;
   state: string | null;
-  /** Optional. Name-candidate results do not include a ZIP; the public query excludes it. */
-  postalCode?: string | null;
+  /** Optional page-level address. Absent on the name-candidate v1 response. */
+  publicAddress?: import("@/lib/ask/recorded-address-display").PublicAddressView;
   sourceLabel: string;
   sourceSystem: string | null;
   geographyNote: string;
@@ -704,7 +704,7 @@ type NameCandidateView = {
   match: { field: string; value: string; method: string; explanation: string };
   credential: { number: string | null; class: string | null; occupationCode: string | null; status: string | null; sourceNativeStatus: string | null };
   credentialJurisdiction: { code: string; label: string; sourceSystem: string | null; sourceLabel: string };
-  recordedLocation: { city: string | null; county: string | null; state: string | null; postalCode?: string | null; meaning: string };
+  recordedLocation: { city: string | null; county: string | null; state: string | null; meaning: string };
   source: { system: string | null };
   action: { href: string };
 };
@@ -733,7 +733,6 @@ function nameCandidateCard(c: NameCandidateView): AskEntityCard {
     city: location.city,
     county: location.county,
     state: location.state,
-    postalCode: location.postalCode ?? null,
     sourceLabel: c.credentialJurisdiction.sourceLabel,
     sourceSystem: c.source.system,
     geographyNote: location.meaning,

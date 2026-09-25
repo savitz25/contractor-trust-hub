@@ -7,6 +7,15 @@ import {
   showGeographyOnFace,
   traceMatchText,
 } from "@/lib/ask/candidate-card-presentation";
+import {
+  ADDRESS_NOT_CONFIRMED_NOTE,
+  ADDRESS_UNAVAILABLE_NOTE,
+  formatLicenseAddress,
+  NAME_CANDIDATE_CARD_CAUTION,
+  OUT_OF_JURISDICTION_NOTE,
+  type PublicAddressView,
+} from "@/lib/ask/recorded-address-display";
+import { isOutOfJurisdictionMarker } from "@/lib/ask/candidate-card-presentation";
 import { SaveToResearch } from "./SaveToResearch";
 
 function credentialLine(card: AskEntityCard): string {
@@ -15,31 +24,51 @@ function credentialLine(card: AskEntityCard): string {
   return classification ? `${identifier} · ${classification}` : identifier;
 }
 
-function CardFacts({
-  card,
-  matchQuery,
-  linked,
-  outsidePlace,
-}: {
-  card: AskEntityCard;
-  matchQuery?: string | null;
-  linked: boolean;
-  outsidePlace?: string | null;
-}) {
-  const summary = matchSummary(card, matchQuery);
-  const address = recordedAddressLine(card);
+function AddressView({ address, confirmStreet }: { address: PublicAddressView; confirmStreet?: boolean }) {
+  return (
+    <>
+      {address.line ? (
+        <p className="mt-1 break-words text-sm text-[var(--muted)]">
+          <span className="font-medium text-[var(--text)]">Recorded address · </span>
+          {address.line}
+        </p>
+      ) : null}
+      {address.locationOnly ? <p className="mt-1 break-words text-sm text-[var(--text)]">Recorded location: {address.locationOnly}</p> : null}
+      {address.countyLabel ? (
+        <p className="mt-1 break-words text-sm text-[var(--muted)]">
+          <span className="font-medium text-[var(--text)]">County · </span>
+          {address.countyLabel}
+        </p>
+      ) : null}
+      {address.outOfJurisdiction ? <p className="mt-1 text-sm text-[var(--text)]">{OUT_OF_JURISDICTION_NOTE}</p> : null}
+      {confirmStreet ? <p className="mt-1 text-sm text-[var(--text)]">{ADDRESS_NOT_CONFIRMED_NOTE}</p> : null}
+    </>
+  );
+}
+
+function AddressFacts({ card }: { card: AskEntityCard }) {
+  const address = card.publicAddress;
+  if (!address) {
+    const marker = isOutOfJurisdictionMarker(card.county);
+    return <AddressView address={{ status: "loaded", ...formatLicenseAddress({ city: card.city, state: marker ? null : card.state, county: card.county }) }} />;
+  }
+  if (address.status === "unavailable") {
+    const marker = isOutOfJurisdictionMarker(card.county);
+    return (
+      <>
+        <AddressView address={{ status: "loaded", ...formatLicenseAddress({ city: card.city, state: marker ? null : card.state, county: card.county }) }} />
+        <p className="mt-1 text-sm text-[var(--text)]">{ADDRESS_UNAVAILABLE_NOTE}</p>
+      </>
+    );
+  }
+  return <AddressView address={address} confirmStreet={address.status === "missing_row"} />;
+}
+
+function CardFacts({ card }: { card: AskEntityCard }) {
   const jurisdiction = card.credentialJurisdictionLabel?.trim() || "";
   return (
     <>
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-        <h3 className="min-w-0 break-words text-xl font-semibold leading-snug text-[var(--text)]">{card.displayName}</h3>
-        {linked ? (
-          <span className="inline-flex min-h-11 shrink-0 items-center text-sm font-semibold text-[var(--navy)] underline-offset-2 group-hover:underline">
-            View profile →
-          </span>
-        ) : null}
-      </div>
-      <p className="mt-2 break-words text-sm text-[var(--text)]">{credentialLine(card)}</p>
+      <p className="break-words text-sm text-[var(--text)]">{credentialLine(card)}</p>
       <p className="mt-2 text-sm font-medium text-[var(--text)]">
         <span className="font-semibold">Status · </span>
         {card.statusLabel}
@@ -55,42 +84,26 @@ function CardFacts({
           {card.sourceLabel}
         </p>
       ) : null}
-      {address ? (
-        <p className="mt-1 break-words text-sm text-[var(--muted)]">
-          <span className="font-medium text-[var(--text)]">Recorded address · </span>
-          {address}
-        </p>
-      ) : null}
+      <AddressFacts card={card} />
       {card.evidenceCount > 0 ? (
         <p className="mt-1 text-sm text-[var(--muted)]">
           {card.sourceLabel} discipline: {card.evidenceCount} indexed records
         </p>
       ) : null}
       {showGeographyOnFace(card) ? <p className="mt-2 text-sm text-[var(--muted)]">{card.geographyNote}</p> : null}
-      {summary?.startsWith("Exact credential identifier") ? <p className="mt-3 text-sm text-[var(--text)]">{summary}</p> : null}
-      {outsidePlace ? (
-        <p className="mt-3 text-sm text-[var(--text)]">
-          Credential jurisdiction is {jurisdiction.split(" · ")[0] || jurisdiction}. The selected {outsidePlace} filter was not applied to this name search.
-        </p>
+      {matchSummary(card)?.startsWith("Exact credential identifier") ? (
+        <p className="mt-3 text-sm text-[var(--text)]">{matchSummary(card)}</p>
       ) : null}
-      {!linked ? <p className="mt-3 text-sm text-[var(--muted)]">No public profile is published for this row.</p> : null}
+      {card.matchedOn ? <p className="mt-3 text-sm text-[var(--text)]">{NAME_CANDIDATE_CARD_CAUTION}</p> : null}
     </>
   );
 }
 
-export function AskResultCard({
-  card,
-  matchQuery = null,
-  outsidePlace = null,
-}: {
-  card: AskEntityCard;
-  matchQuery?: string | null;
-  /** Set only when a place filter was selected and this card’s jurisdiction is outside it. */
-  outsidePlace?: string | null;
-}) {
+export function AskResultCard({ card }: { card: AskEntityCard }) {
   const profile = card.profileHref;
   const traceWhy = traceMatchText(card.whyMatched);
-  const address = recordedAddressLine(card);
+  const address = card.publicAddress?.line || recordedAddressLine(card);
+  const headingId = `ask-card-${(card.slug || card.contractorId).replace(/[^A-Za-z0-9_-]/g, "-")}`;
   return (
     <article className="cth-result-card" data-testid="ask-result-card">
       {profile ? (
@@ -100,14 +113,24 @@ export function AskResultCard({
           data-search-action="profile"
           data-testid="ask-profile-link"
           className="cth-profile-link group"
+          aria-labelledby={headingId}
         >
-          <CardFacts card={card} matchQuery={matchQuery} linked outsidePlace={outsidePlace} />
+          <span id={headingId} className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+            <h3 className="min-w-0 break-words text-xl font-semibold leading-snug text-[var(--text)]">{card.displayName}</h3>
+            <span className="inline-flex min-h-11 shrink-0 items-center text-sm font-semibold text-[var(--navy)] underline-offset-2 group-hover:underline">
+              View profile →
+            </span>
+          </span>
         </Link>
       ) : (
-        <div className="cth-profile-link">
-          <CardFacts card={card} matchQuery={matchQuery} linked={false} outsidePlace={outsidePlace} />
+        <div className="cth-profile-link cth-profile-link--static">
+          <h3 className="min-w-0 break-words text-xl font-semibold leading-snug text-[var(--text)]">{card.displayName}</h3>
+          <p className="mt-3 text-sm text-[var(--muted)]">No public profile is published for this row.</p>
         </div>
       )}
+      <div className="cth-result-card__facts">
+        <CardFacts card={card} />
+      </div>
       <div className="cth-result-card__actions">
         {card.slug ? (
           <SaveToResearch

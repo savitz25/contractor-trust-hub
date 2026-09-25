@@ -10,6 +10,7 @@ import { planContractorSearch } from "@/lib/search/contractor-discovery";
 import { readAskRequest,researchRoute } from "@/lib/ask/request";
 import { askHref } from "@/lib/ask/url";
 import { redirect } from "next/navigation";
+import { attachRecordedAddresses } from "@/lib/ask/recorded-address-projection";
 import { SearchAnalytics } from "@/components/specialist-search/SearchAnalytics";
 import { searchResultCountBucket } from "@/lib/specialist-search/analytics";
 
@@ -37,7 +38,7 @@ export default async function AskPage({ searchParams }: Props) {
   const intel = loadContractorHubIntel();
   const interpreted = interpretAskQuery(q, intel);
   const plan = buildContractorResearchQuery(interpreted, overrides);
-  const execution = q ? await executeContractorResearchQuery(plan) : {
+  const executed = q ? await executeContractorResearchQuery(plan) : {
     ok: false,
     blocked: false,
     blockMessage: null,
@@ -54,6 +55,8 @@ export default async function AskPage({ searchParams }: Props) {
     evidenceJoinable: null,
     compare: null,
   };
+  const addressed = executed.results.length ? await attachRecordedAddresses(executed.results) : { results: executed.results, queries: 0, timingMs: 0, status: "ok" as const };
+  const execution = { ...executed, results: addressed.results };
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
@@ -68,7 +71,7 @@ export default async function AskPage({ searchParams }: Props) {
       {q ? (
         <div className="mt-10">
           {!plan.recovery && <SearchAnalytics dimensions={{ hub: "contractor", intent: interpreted.mode, state: plan.geography.state || undefined, classification: plan.trade.familyId || undefined, hasIdentifier: Boolean(plan.identity.identifier), hasEvidenceFilter: Boolean(plan.evidenceFamily), resultCountBucket: searchResultCountBucket(execution.contractorCount || 0), coverageState: execution.blocked ? "PARTIAL" : "KNOWN" }} hasResults={execution.results.length > 0} />}
-          <AskResults interpreted={interpreted} plan={plan} execution={execution} />
+          <AskResults interpreted={interpreted} plan={plan} execution={execution} addressQueries={addressed.queries} addressTimingMs={addressed.timingMs} />
         </div>
       ) : (
         <p className="mt-6 text-sm text-[var(--muted)]">Enter a question to run a deterministic research query.</p>

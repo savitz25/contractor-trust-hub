@@ -61,7 +61,13 @@ export function traceMatchText(whyMatched: string): string {
 }
 
 const COUNTY_KIND = /\b(county|parish|borough|census area|municipality)\b/i;
-const NOT_A_COUNTY = /^(out[-\s]?of[-\s]?state|unknown|n\/a|na|none|not reported|other)$/i;
+const NOT_A_COUNTY = /^(out[-\s]?of[-\s]?state|out of jurisdiction|unknown|n\/a|na|none|not reported|other)$/i;
+
+/** Source marker stored in a county field. It is not a county name and not an address state. */
+export function isOutOfJurisdictionMarker(value: string | null | undefined): boolean {
+  const raw = value?.replace(/\s+/g, " ").trim() || "";
+  return /^(out[-\s]?of[-\s]?state|out of jurisdiction)$/i.test(raw);
+}
 
 /** Bare county names become "Palm Beach County". Louisiana uses Parish. Two-letter codes and "Out-of-State" stay as stored. */
 export function explicitCountyLabel(county: string | null | undefined, state: string | null | undefined): string | null {
@@ -73,14 +79,19 @@ export function explicitCountyLabel(county: string | null | undefined, state: st
   return `${raw} County`;
 }
 
-export function recordedAddressLine(card: Pick<AskEntityCard, "city" | "county" | "state" | "postalCode">): string | null {
+export function recordedAddressLine(card: { city: string | null; county: string | null; state: string | null }): string | null {
+  const formatted = formatProfilePlace(card);
+  return formatted;
+}
+
+function formatProfilePlace(card: { city: string | null; county: string | null; state: string | null }): string | null {
   const city = card.city?.replace(/\s+/g, " ").trim() || "";
   const state = card.state?.replace(/\s+/g, " ").trim() || "";
-  const county = explicitCountyLabel(card.county, state) || "";
-  const zip = card.postalCode?.replace(/\s+/g, " ").trim() || "";
-  const place = [city, county, state].filter(Boolean).join(", ");
-  const line = [place, zip].filter(Boolean).join(" ");
-  return line || null;
+  const countyRaw = card.county?.replace(/\s+/g, " ").trim() || "";
+  const marker = isOutOfJurisdictionMarker(countyRaw);
+  const county = marker ? "" : explicitCountyLabel(countyRaw, state) || "";
+  const parts = [city, county, marker ? "" : state].filter(Boolean);
+  return parts.join(", ") || null;
 }
 
 /** Visible when a place filter is selected but company-name search did not use it. */
