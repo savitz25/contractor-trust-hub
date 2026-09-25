@@ -7,7 +7,7 @@ import type { ContractorResearchQuery } from "@/lib/ask/plan";
 import { askHref, chipHref, planToOverrides } from "@/lib/ask/plan";
 import type { AskExecution } from "@/lib/ask/execute";
 import { formatIntelCount } from "@/lib/home/intel-v2";
-import { NAME_CANDIDATE_LIST_NOTICE } from "@/lib/ask/candidate-card-presentation";
+import { NAME_CANDIDATE_LIST_NOTICE, unappliedNameSearchPlace } from "@/lib/ask/candidate-card-presentation";
 import { AskResultCard } from "./AskResultCard";
 
 export function AskResults({
@@ -232,6 +232,11 @@ export function AskResults({
           {!execution.blocked ? (
             <p className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" role="note">{NAME_CANDIDATE_LIST_NOTICE}</p>
           ) : null}
+          {!execution.blocked && unappliedNameSearchPlace(plan, execution.nameSearch) ? (
+            <p className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" role="note">
+              {unappliedNameSearchPlace(plan, execution.nameSearch)} is selected, but this company-name search did not apply that place filter. Every name-searchable jurisdiction was searched, in source order. Same-name records stay on separate cards. This search does not decide whether they are the same business.
+            </p>
+          ) : null}
           {execution.nameSearch.completeness ? <p className="text-xs text-[var(--muted)]">{execution.nameSearch.completeness}</p> : null}
         </section>
       ) : null}
@@ -269,7 +274,17 @@ export function AskResults({
         <ul className="space-y-4">
           {execution.results.map((card) => (
             <li key={card.contractorId}>
-              <AskResultCard card={card} matchQuery={execution.nameSearch ? execution.nameSearch.supplied : null} />
+              <AskResultCard
+                card={card}
+                matchQuery={execution.nameSearch ? execution.nameSearch.supplied : null}
+                outsidePlace={
+                  unappliedNameSearchPlace(plan, execution.nameSearch) &&
+                  card.credentialJurisdictionCode &&
+                  card.credentialJurisdictionCode !== "FL"
+                    ? unappliedNameSearchPlace(plan, execution.nameSearch)
+                    : null
+                }
+              />
             </li>
           ))}
         </ul>

@@ -15,7 +15,17 @@ function credentialLine(card: AskEntityCard): string {
   return classification ? `${identifier} · ${classification}` : identifier;
 }
 
-function CardFacts({ card, matchQuery, linked }: { card: AskEntityCard; matchQuery?: string | null; linked: boolean }) {
+function CardFacts({
+  card,
+  matchQuery,
+  linked,
+  outsidePlace,
+}: {
+  card: AskEntityCard;
+  matchQuery?: string | null;
+  linked: boolean;
+  outsidePlace?: string | null;
+}) {
   const summary = matchSummary(card, matchQuery);
   const address = recordedAddressLine(card);
   const jurisdiction = card.credentialJurisdictionLabel?.trim() || "";
@@ -57,18 +67,27 @@ function CardFacts({ card, matchQuery, linked }: { card: AskEntityCard; matchQue
         </p>
       ) : null}
       {showGeographyOnFace(card) ? <p className="mt-2 text-sm text-[var(--muted)]">{card.geographyNote}</p> : null}
-      {summary ? <p className="mt-3 text-sm text-[var(--text)]">{summary}</p> : card.whyMatched ? (
-        <section className="mt-3" aria-label="Why this result matched">
-          <h4 className="text-sm font-semibold">Why this matched</h4>
-          <p className="mt-1 text-sm text-[var(--muted)]">{card.whyMatched}</p>
-        </section>
+      {summary?.startsWith("Exact credential identifier") ? <p className="mt-3 text-sm text-[var(--text)]">{summary}</p> : null}
+      {outsidePlace ? (
+        <p className="mt-3 text-sm text-[var(--text)]">
+          Credential jurisdiction is {jurisdiction.split(" · ")[0] || jurisdiction}. The selected {outsidePlace} filter was not applied to this name search.
+        </p>
       ) : null}
       {!linked ? <p className="mt-3 text-sm text-[var(--muted)]">No public profile is published for this row.</p> : null}
     </>
   );
 }
 
-export function AskResultCard({ card, matchQuery = null }: { card: AskEntityCard; matchQuery?: string | null }) {
+export function AskResultCard({
+  card,
+  matchQuery = null,
+  outsidePlace = null,
+}: {
+  card: AskEntityCard;
+  matchQuery?: string | null;
+  /** Set only when a place filter was selected and this card’s jurisdiction is outside it. */
+  outsidePlace?: string | null;
+}) {
   const profile = card.profileHref;
   const traceWhy = traceMatchText(card.whyMatched);
   const address = recordedAddressLine(card);
@@ -82,11 +101,11 @@ export function AskResultCard({ card, matchQuery = null }: { card: AskEntityCard
           data-testid="ask-profile-link"
           className="cth-profile-link group"
         >
-          <CardFacts card={card} matchQuery={matchQuery} linked />
+          <CardFacts card={card} matchQuery={matchQuery} linked outsidePlace={outsidePlace} />
         </Link>
       ) : (
         <div className="cth-profile-link">
-          <CardFacts card={card} matchQuery={matchQuery} linked={false} />
+          <CardFacts card={card} matchQuery={matchQuery} linked={false} outsidePlace={outsidePlace} />
         </div>
       )}
       <div className="cth-result-card__actions">

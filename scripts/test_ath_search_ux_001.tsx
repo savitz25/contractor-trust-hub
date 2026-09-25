@@ -34,7 +34,7 @@ function card(partial: Partial<AskEntityCard> & Pick<AskEntityCard, "contractorI
     statusNormalized: "current",
     statusLabel: "CLEAR in indexed California record",
     city: null,
-    county: "Los Angeles, CA",
+    county: "Los Angeles",
     state: "CA",
     sourceLabel: "California Contractors State License Board (CSLB)",
     sourceSystem: "ca_cslb",
@@ -179,8 +179,9 @@ test("name-candidate card uses one profile anchor, keeps the destination, and le
   assert.match(html, /Credential jurisdiction/);
   assert.match(html, /California Contractors State License Board \(CSLB\)/);
   assert.match(html, /Recorded address/);
-  assert.match(html, /Los Angeles, CA/);
-  assert.match(html, /Matched “VANTAGE” · prefix\/token match on display name/);
+  assert.match(html, /Los Angeles County, CA/);
+  assert.doesNotMatch(face(html), /prefix\/token|Why this matched/);
+  assert.match(html, /prefix or token · field: display name · “VANTAGE AIR INC”/);
   assert.doesNotMatch(face(html), /exact/i);
   assert.doesNotMatch(html, /Safe|Trusted|Verified by TrustHub|Get a Quote|Preferred|Contact/);
   assert.doesNotMatch(html, /text-\[var\(--success\)\]|bg-green|text-green/);
@@ -201,7 +202,7 @@ test("out-of-state address, unknown status, alias, and exact source name stay di
     occupationCode: null,
     statusLabel: "Status not reported",
     statusNormalized: null,
-    county: "Out-of-State, LA",
+    county: "Out-of-State",
     state: "LA",
     city: null,
     sourceLabel: "Louisiana State Licensing Board for Contractors (LSLBC)",
@@ -213,7 +214,8 @@ test("out-of-state address, unknown status, alias, and exact source name stay di
   assert.doesNotMatch(html, /Active\/current|CLEAR/);
   assert.match(html, /Recorded address · <\/span>Out-of-State, LA/);
   assert.match(html, /Credential jurisdiction · <\/span>Louisiana/);
-  assert.match(html, /documented alias on DBA name/);
+  assert.match(html, /documented alias · field: dba name/);
+  assert.doesNotMatch(face(html), /documented alias/);
   assert.doesNotMatch(matchSummary(out, "VANTAGE") ?? "", /exact/i);
 
   const exact = matchSummary(
@@ -270,7 +272,7 @@ test("exact identifier results are not name-candidate cards and rows without a p
   assert.match(exactHtml, /Exact credential identifier match/);
   assert.match(exactHtml, /href="\/contractors\/cbc015082-worsham-construction-company-inc"/);
   assert.doesNotMatch(exactHtml, /prefix\/token|does not establish that the record is the exact business/);
-  assert.match(exactHtml, /Recorded address · <\/span>Jacksonville, Duval, FL/);
+  assert.match(exactHtml, /Recorded address · <\/span>Jacksonville, Duval County, FL/);
 
   const hidden = card({
     contractorId: "none",
@@ -344,7 +346,7 @@ test("cohort cards keep their own explanation and destination", () => {
     statusLabel: "Active/current in indexed DBPR record",
   });
   const html = renderToStaticMarkup(<AskResultCard card={cohort} />);
-  assert.match(html, /Why this matched/);
+  assert.equal(face(html).includes("Why this matched"), false);
   assert.match(html, /indexed Florida DBPR credential record matched the structured filters/);
   assert.match(html, /href="\/contractors\/sample-roofing"/);
   assert.match(html, /Broward County recorded address/);
@@ -355,12 +357,59 @@ test("trace text drops only the shared disclaimer and address lines do not dupli
   const why = `The public display name equals the supplied name. ${NAME_MATCH_DISCLAIMER}`;
   assert.equal(traceMatchText(why), "The public display name equals the supplied name.");
   assert.equal(traceMatchText("Matches the submitted credential identifier in the published licensing corpus."), "Matches the submitted credential identifier in the published licensing corpus.");
-  assert.equal(recordedAddressLine({ city: null, county: "Out-of-State, LA", state: "LA" }), "Out-of-State, LA");
-  assert.equal(recordedAddressLine({ city: "Jacksonville", county: "Duval", state: "FL" }), "Jacksonville, Duval, FL");
+  assert.equal(recordedAddressLine({ city: null, county: "Out-of-State", state: "LA" }), "Out-of-State, LA");
+  assert.equal(recordedAddressLine({ city: "BOCA RATON", county: "Palm Beach", state: "FL", postalCode: "33432" }), "BOCA RATON, Palm Beach County, FL 33432");
+  assert.equal(recordedAddressLine({ city: "JACKSONVILLE", county: "Duval", state: "FL", postalCode: "32216" }), "JACKSONVILLE, Duval County, FL 32216");
+  assert.equal(recordedAddressLine({ city: null, county: "Cameron", state: "TX" }), "Cameron County, TX");
+  assert.equal(recordedAddressLine({ city: "Jacksonville", county: "Duval", state: "FL" }), "Jacksonville, Duval County, FL");
   assert.equal(
     NAME_CANDIDATE_RECORDED_ADDRESS_MEANING,
     "Recorded address on the profile. Separate from the credential jurisdiction; not service territory or current availability.",
   );
+});
+
+test("Florida place filter that name search ignores stays visible and does not reorder cards", () => {
+  const florida = card({
+    contractorId: "fl-1815743",
+    displayName: "SNYDER AIR CONDITIONING, PLUMBING & ELECTRIC, LLC",
+    profileHref: "/contractors/cac1815743-snyder-air-conditioning-plumbing-electric-llc",
+    credentialKey: "1815743",
+    county: "Palm Beach",
+    city: "BOCA RATON",
+    state: "FL",
+    postalCode: null,
+    statusLabel: "C in indexed Florida record",
+    credentialJurisdictionCode: "FL",
+    credentialJurisdictionLabel: "Florida · Florida DBPR — Construction Industry Licensing Board",
+  });
+  const texas = card({
+    contractorId: "tx-97866",
+    displayName: "SNYDER AIR CONDITIONING LLC",
+    profileHref: "/contractors/tx-tdlr-a-c-contractor-97866-be-snyder-air-conditioning-llc",
+    credentialKey: "97866",
+    county: "Cameron",
+    city: null,
+    state: "TX",
+    postalCode: null,
+    statusLabel: "active in indexed Texas record",
+    sourceLabel: "Texas Department of Licensing and Regulation",
+    credentialJurisdictionCode: "TX",
+    credentialJurisdictionLabel: "Texas · Texas Department of Licensing and Regulation",
+  });
+  const geography = { ...plan().geography, state: "FL" as const, countyLabel: "Florida (statewide in this extract)" };
+  const html = renderToStaticMarkup(
+    <AskResults interpreted={interpreted()} plan={{ ...plan(), geography }} execution={execution([florida, texas], true)} />,
+  );
+  assert.match(html, /Florida is selected, but this company-name search did not apply that place filter/);
+  assert.match(html, /BOCA RATON, Palm Beach County, FL/);
+  assert.match(html, /Cameron County, TX/);
+  assert.match(html, /C in indexed Florida record/);
+  assert.match(html, /active in indexed Texas record/);
+  assert.match(html, /Credential jurisdiction is Texas/);
+  assert.equal(html.includes("Credential jurisdiction is Florida. The selected"), false);
+  assert.ok(html.indexOf("/contractors/cac1815743-snyder-air-conditioning-plumbing-electric-llc") < html.indexOf("/contractors/tx-tdlr-a-c-contractor-97866-be-snyder-air-conditioning-llc"));
+  assert.match(html, /does not decide whether they are the same business/);
+  assert.doesNotMatch(html, /office|headquarters|service area/);
 });
 
 test("one profile activation is not also a save or a trace", () => {

@@ -28,13 +28,9 @@ export function SaveToResearch({
       data-search-action="save"
       aria-pressed={saved}
       onClick={() => {
-        if (saved) {
-          unwatchContractor(slug);
-          setSaved(false);
-        } else {
-          watchContractor({ slug, name, licenseKey, licenseStatus });
-          setSaved(true);
-        }
+        if (saved) unwatchContractor(slug);
+        else watchContractor({ slug, name, licenseKey, licenseStatus });
+        setSaved(loadStore().watches.some((w) => w.slug === slug));
       }}
     >
       {saved ? "Saved to research" : "Save to research"}

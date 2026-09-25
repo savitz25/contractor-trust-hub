@@ -60,17 +60,35 @@ export function traceMatchText(whyMatched: string): string {
   return whyMatched;
 }
 
-export function recordedAddressLine(card: Pick<AskEntityCard, "city" | "county" | "state">): string | null {
-  const city = card.city?.trim() || "";
-  const state = card.state?.trim() || "";
-  let county = card.county?.trim() || "";
-  if (county && state && (county === state || county.endsWith(`, ${state}`) || county.endsWith(` ${state}`))) {
-    // County text already names the state, as name candidates store "County, ST".
-  } else if (county && state) county = `${county}, ${state}`;
-  else if (!county && state) county = state;
-  const parts = [city, county].filter(Boolean);
-  const line = parts.join(", ");
+const COUNTY_KIND = /\b(county|parish|borough|census area|municipality)\b/i;
+const NOT_A_COUNTY = /^(out[-\s]?of[-\s]?state|unknown|n\/a|na|none|not reported|other)$/i;
+
+/** Bare county names become "Palm Beach County". Louisiana uses Parish. Two-letter codes and "Out-of-State" stay as stored. */
+export function explicitCountyLabel(county: string | null | undefined, state: string | null | undefined): string | null {
+  const raw = county?.replace(/\s+/g, " ").trim() || "";
+  if (!raw) return null;
+  if (NOT_A_COUNTY.test(raw) || /^[A-Za-z]{2}$/.test(raw) || COUNTY_KIND.test(raw)) return raw;
+  if ((state || "").trim().toUpperCase() === "LA") return `${raw} Parish`;
+  if ((state || "").trim().toUpperCase() === "AK") return raw;
+  return `${raw} County`;
+}
+
+export function recordedAddressLine(card: Pick<AskEntityCard, "city" | "county" | "state" | "postalCode">): string | null {
+  const city = card.city?.replace(/\s+/g, " ").trim() || "";
+  const state = card.state?.replace(/\s+/g, " ").trim() || "";
+  const county = explicitCountyLabel(card.county, state) || "";
+  const zip = card.postalCode?.replace(/\s+/g, " ").trim() || "";
+  const place = [city, county, state].filter(Boolean).join(", ");
+  const line = [place, zip].filter(Boolean).join(" ");
   return line || null;
+}
+
+/** Visible when a place filter is selected but company-name search did not use it. */
+export function unappliedNameSearchPlace(plan: { geography: { state: string | null; countySlug: string | null; countyLabel: string | null } }, nameSearch: { jurisdiction: string | null } | null | undefined): string | null {
+  if (!nameSearch || nameSearch.jurisdiction) return null;
+  if (plan.geography.countySlug && plan.geography.countyLabel) return plan.geography.countyLabel;
+  if (plan.geography.state === "FL") return "Florida";
+  return null;
 }
 
 export function showGeographyOnFace(card: Pick<AskEntityCard, "geographyNote">): boolean {

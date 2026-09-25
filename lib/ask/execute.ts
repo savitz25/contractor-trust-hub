@@ -87,6 +87,8 @@ export type AskEntityCard = {
   city: string | null;
   county: string | null;
   state: string | null;
+  /** Optional. Name-candidate results do not include a ZIP; the public query excludes it. */
+  postalCode?: string | null;
   sourceLabel: string;
   sourceSystem: string | null;
   geographyNote: string;
@@ -97,6 +99,8 @@ export type AskEntityCard = {
   profileHref: string | null;
   /** Company-name candidates only: issuing jurisdiction + source board of the representative credential row. */
   credentialJurisdictionLabel?: string | null;
+  /** Issuing jurisdiction code, e.g. FL or TX. Display only. */
+  credentialJurisdictionCode?: string | null;
   /** Company-name candidates only: the source field/value that satisfied the name predicate and how. */
   matchedOn?: { field: string; value: string; method: string } | null;
 };
@@ -700,7 +704,7 @@ type NameCandidateView = {
   match: { field: string; value: string; method: string; explanation: string };
   credential: { number: string | null; class: string | null; occupationCode: string | null; status: string | null; sourceNativeStatus: string | null };
   credentialJurisdiction: { code: string; label: string; sourceSystem: string | null; sourceLabel: string };
-  recordedLocation: { city: string | null; county: string | null; state: string | null; meaning: string };
+  recordedLocation: { city: string | null; county: string | null; state: string | null; postalCode?: string | null; meaning: string };
   source: { system: string | null };
   action: { href: string };
 };
@@ -727,8 +731,9 @@ function nameCandidateCard(c: NameCandidateView): AskEntityCard {
     statusNormalized: asLicenseStatus(c.credential.status),
     statusLabel: status ? `${status} in indexed ${c.credentialJurisdiction.label} record` : "Status not reported",
     city: location.city,
-    county: location.county ? `${location.county}${location.state ? `, ${location.state}` : ""}` : location.state,
+    county: location.county,
     state: location.state,
+    postalCode: location.postalCode ?? null,
     sourceLabel: c.credentialJurisdiction.sourceLabel,
     sourceSystem: c.source.system,
     geographyNote: location.meaning,
@@ -738,6 +743,7 @@ function nameCandidateCard(c: NameCandidateView): AskEntityCard {
     evidence: [],
     profileHref: `/contractors/${slug}`,
     credentialJurisdictionLabel: `${c.credentialJurisdiction.label} · ${c.credentialJurisdiction.sourceLabel}`,
+    credentialJurisdictionCode: c.credentialJurisdiction.code,
     matchedOn: { field: c.match.field, value: c.match.value, method: c.match.method },
   };
 }
