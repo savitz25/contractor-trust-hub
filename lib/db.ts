@@ -100,13 +100,21 @@ export function isDbQueryTimeout(err: unknown): boolean {
   );
 }
 
+/** Shown when PostgreSQL cancels the statement. This is not a connection outage. */
+export const SEARCH_TIMEOUT_MESSAGE =
+  "Search took too long — try a more specific business name or license number.";
+
+/** Shown when the pool cannot connect or is out of capacity. */
+export const SEARCH_DATABASE_UNAVAILABLE_MESSAGE =
+  "We could not reach the license database right now. Please try again in a few minutes.";
+
 /** Stable product-facing error; technical detail stays in logs. */
 export function dbUserFacingError(err: unknown): string {
   if (isDbConnectTimeout(err) || isDbCapacityError(err)) {
-    return "timeout exceeded when trying to connect";
+    return SEARCH_DATABASE_UNAVAILABLE_MESSAGE;
   }
   if (isDbQueryTimeout(err)) {
-    return "search took too long — try a more specific name or license number";
+    return SEARCH_TIMEOUT_MESSAGE;
   }
   return err instanceof Error ? err.message : "database error";
 }

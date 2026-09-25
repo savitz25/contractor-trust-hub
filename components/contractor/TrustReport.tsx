@@ -23,6 +23,7 @@ import {
   disciplineSectionTitle,
   evidenceSlugFromHomeState,
 } from "@/lib/states/evidence-copy";
+import { reportEvidenceSlug } from "@/lib/states/jurisdiction";
 import {
   getNjCredentialInfo,
   njCredentialPlainLabel,
@@ -76,7 +77,7 @@ export function EvidenceSummary({ contractor }: { contractor: ContractorDetail }
   const mainPillars = pillars.filter((p) => p.id !== "freshness");
   const entity = contractor.entities[0];
   const conf = matchConfidenceLine(entity);
-  const slug = evidenceSlugFromHomeState(contractor.homeState);
+  const slug = reportEvidenceSlug(contractor.licenses, contractor.homeState);
   const freshest = freshestVerifiedAt(contractor);
   const intro =
     slug === "tx"
@@ -266,7 +267,7 @@ export function HiringGuidance({ contractor }: { contractor: ContractorDetail })
 export function DiscrepanciesSection({ contractor }: { contractor: ContractorDetail }) {
   const items = findDiscrepancies(contractor);
   if (items.length === 0) return null;
-  const slug = evidenceSlugFromHomeState(contractor.homeState);
+  const slug = reportEvidenceSlug(contractor.licenses, contractor.homeState);
   const title =
     slug === "fl"
       ? "Notes comparing license and Sunbiz"
@@ -852,12 +853,16 @@ export function EntitySection({
 export function DisciplineSection({
   discipline,
   homeState,
+  reportSlug,
 }: {
   discipline: ContractorDetail["discipline"];
   homeState?: string | null;
+  reportSlug?: string | null;
 }) {
   const hasActions = discipline.length > 0;
-  const slug = evidenceSlugFromHomeState(homeState);
+  const slug = reportSlug && ["fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms", "ky", "wi"].includes(reportSlug)
+    ? reportSlug as ReturnType<typeof evidenceSlugFromHomeState>
+    : evidenceSlugFromHomeState(homeState);
   const title = disciplineSectionTitle(slug);
   const blurb = disciplineSectionBlurb(slug);
   const recordWord = slug === "nj" ? "Enforcement" : "Discipline";

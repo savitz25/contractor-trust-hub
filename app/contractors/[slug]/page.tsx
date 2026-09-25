@@ -53,7 +53,7 @@ import {
 import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
 import { trustReportJsonLd, trustReportMetadata } from "@/lib/seo/trust-report-seo";
 import { getStateBySlug } from "@/lib/states/config";
-import { evidenceSlugFromHomeState } from "@/lib/states/evidence-copy";
+import { reportEvidenceSlug } from "@/lib/states/jurisdiction";
 import { azClassPlainLabel } from "@/lib/states/az-roc";
 import { caClassPlainLabel } from "@/lib/states/ca-classifications";
 import { njCredentialPlainLabel } from "@/lib/states/nj-credentials";
@@ -150,7 +150,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
 
   if (!contractor) notFound();
 
-  const stateSlug = evidenceSlugFromHomeState(contractor.homeState);
+  const stateSlug = reportEvidenceSlug(contractor.licenses, contractor.homeState);
   const isTx = stateSlug === "tx";
   const isNj = stateSlug === "nj";
   const isOr = stateSlug === "or";
@@ -571,6 +571,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           <DisciplineSection
             discipline={contractor.discipline}
             homeState={contractor.homeState}
+            reportSlug={stateSlug}
           />
         ) : null}
         {businessReplies?.replies.length ? <BusinessResponses data={businessReplies} /> : null}

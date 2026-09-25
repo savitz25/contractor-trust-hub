@@ -6,6 +6,7 @@ import {
   boardShortLabel,
   type EvidenceStateSlug,
 } from "@/lib/states/evidence-copy";
+import { issuingStateForLicenses, reportEvidenceSlug } from "@/lib/states/jurisdiction";
 import { formatDate, matchMethodLabel, statusLabel } from "./format";
 import { getOccupationInfo } from "./occupations";
 import type { ContractorDetail, EntityDetail, LicenseDetail } from "./types";
@@ -62,8 +63,12 @@ function isInactiveish(status: string | null | undefined): boolean {
   return s === "inactive" || s === "dissolved" || s === "revoked" || s === "expired";
 }
 
+const EVIDENCE_COPY_SLUGS = new Set<string>(["fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms", "ky", "wi"]);
+
 function homeSlug(contractor: ContractorDetail): EvidenceStateSlug {
-  return evidenceSlugFromHomeState(contractor.homeState);
+  const slug = reportEvidenceSlug(contractor.licenses, contractor.homeState);
+  if (EVIDENCE_COPY_SLUGS.has(slug)) return slug as EvidenceStateSlug;
+  return evidenceSlugFromHomeState(issuingStateForLicenses(contractor.licenses) ? null : contractor.homeState);
 }
 
 /** States with high-confidence entity auto-linking in product today. */
@@ -720,7 +725,9 @@ export function primaryLicense(contractor: ContractorDetail): LicenseDetail | un
 
 /** Official board verify / search URL for actions. */
 export function officialBoardVerifyUrl(contractor: ContractorDetail): string {
+  const issuing = issuingStateForLicenses(contractor.licenses);
   const slug = homeSlug(contractor);
+  if (issuing && issuing.slug !== "fl" && slug === "fl") return issuing.boardUrl;
   const home = (contractor.homeState || "").toUpperCase();
   // evidenceSlugFromHomeState defaults unknown to fl — never send non-FL profiles to DBPR
   const treatAsFl = slug === "fl" && (!home || home === "FL");
@@ -759,7 +766,9 @@ export function officialBoardVerifyUrl(contractor: ContractorDetail): string {
 }
 
 export function officialBoardVerifyLabel(contractor: ContractorDetail): string {
+  const issuing = issuingStateForLicenses(contractor.licenses);
   const slug = homeSlug(contractor);
+  if (issuing && issuing.slug !== "fl" && slug === "fl") return `Open official ${issuing.boardShortLabel} search`;
   const home = (contractor.homeState || "").toUpperCase();
   const treatAsFl = slug === "fl" && (!home || home === "FL");
   if (!treatAsFl && slug === "fl") {

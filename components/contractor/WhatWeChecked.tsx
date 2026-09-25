@@ -4,12 +4,17 @@ import {
   checkedItems,
   evidenceSlugFromHomeState,
   notCheckedItems,
+  type EvidenceStateSlug,
 } from "@/lib/states/evidence-copy";
+import { reportEvidenceSlug } from "@/lib/states/jurisdiction";
 
 export function WhatWeChecked({ contractor }: { contractor: ContractorDetail }) {
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
-  const slug = evidenceSlugFromHomeState(contractor.homeState);
+  const reported = reportEvidenceSlug(contractor.licenses, contractor.homeState);
+  const slug = (["fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms", "ky", "wi"].includes(reported)
+    ? reported
+    : evidenceSlugFromHomeState(contractor.homeState)) as EvidenceStateSlug;
   const checked = checkedItems(slug);
   const notChecked = notCheckedItems(slug);
   const freshest =

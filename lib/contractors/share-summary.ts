@@ -12,6 +12,7 @@ import {
   sourceExtractLabel,
   type EvidenceStateSlug,
 } from "@/lib/states/evidence-copy";
+import { issuingStateForLicenses } from "@/lib/states/jurisdiction";
 import { njCredentialPlainLabel } from "@/lib/states/nj-credentials";
 import { orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { txTradePlainLabel } from "@/lib/states/tx-trades";
@@ -86,6 +87,30 @@ function resolveShareBoard(contractor: ContractorDetail): {
   isNj: boolean;
 } {
   const home = (contractor.homeState || "").toUpperCase();
+  const licensed = issuingStateForLicenses(contractor.licenses);
+  if (licensed && (KNOWN as readonly string[]).includes(licensed.slug)) {
+    const slug = licensed.slug as EvidenceStateSlug;
+    return {
+      slug,
+      home: home || licensed.code,
+      boardSource: boardShortLabel(slug),
+      extractLabel: sourceExtractLabel(slug),
+      stateContextLine: stateContextLine(slug),
+      isFl: slug === "fl",
+      isNj: slug === "nj",
+    };
+  }
+  if (licensed) {
+    return {
+      slug: null,
+      home: home || licensed.code,
+      boardSource: licensed.boardShortLabel,
+      extractLabel: licensed.boardLabel,
+      stateContextLine: `${licensed.name} · Evidence summary`,
+      isFl: false,
+      isNj: false,
+    };
+  }
   const raw = evidenceSlugFromHomeState(contractor.homeState);
   const src = (contractor.licenses[0]?.sourceSystem || "").toLowerCase();
 
