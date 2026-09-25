@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import { RecoveryAnswer } from "./RecoveryAnswer";
 import { GeographyNotice } from "./GeographyNotice";
@@ -6,7 +7,7 @@ import type { ContractorResearchQuery } from "@/lib/ask/plan";
 import { askHref, chipHref, planToOverrides } from "@/lib/ask/plan";
 import type { AskExecution } from "@/lib/ask/execute";
 import { formatIntelCount } from "@/lib/home/intel-v2";
-import { NAME_MATCH_DISCLAIMER } from "@/lib/ask/execute";
+import { NAME_CANDIDATE_LIST_NOTICE } from "@/lib/ask/candidate-card-presentation";
 import { AskResultCard } from "./AskResultCard";
 
 export function AskResults({
@@ -225,10 +226,12 @@ export function AskResults({
           {!execution.blocked ? (
             <p role="status" className="text-sm">
               <strong className="text-xl tabular-nums">{execution.nameSearch.returned}</strong> name candidate{execution.nameSearch.returned === 1 ? "" : "s"} on page {plan.page}
-              {execution.nameSearch.hasMore ? " · more candidates exist" : execution.nameSearch.returned > 0 ? " · no further candidates" : ""}. Source order only — not a ranking or recommendation.
+              {execution.nameSearch.hasMore ? " · more candidates exist" : execution.nameSearch.returned > 0 ? " · no further candidates" : ""}.
             </p>
           ) : null}
-          <p className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" role="note">{NAME_MATCH_DISCLAIMER}</p>
+          {!execution.blocked ? (
+            <p className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" role="note">{NAME_CANDIDATE_LIST_NOTICE}</p>
+          ) : null}
           {execution.nameSearch.completeness ? <p className="text-xs text-[var(--muted)]">{execution.nameSearch.completeness}</p> : null}
         </section>
       ) : null}
@@ -266,7 +269,7 @@ export function AskResults({
         <ul className="space-y-4">
           {execution.results.map((card) => (
             <li key={card.contractorId}>
-              <AskResultCard card={card} />
+              <AskResultCard card={card} matchQuery={execution.nameSearch ? execution.nameSearch.supplied : null} />
             </li>
           ))}
         </ul>

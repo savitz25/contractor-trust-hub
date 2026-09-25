@@ -700,6 +700,85 @@ header img[data-brand-logo] {
   background: #fff;
   color: var(--navy);
 }
+.cth-result-card {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--th-radius-card);
+  background: #fff;
+  transition: border-color var(--th-motion), box-shadow var(--th-motion), transform var(--th-motion);
+}
+.cth-result-card:hover {
+  border-color: var(--navy);
+  box-shadow: var(--th-shadow-elevated);
+  transform: translateY(-2px);
+}
+.cth-profile-link {
+  display: block;
+  min-width: 0;
+  padding: 1.25rem 1.25rem 0.5rem;
+  color: inherit;
+  text-decoration: none;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.cth-profile-link h3,
+.cth-profile-link p,
+.cth-result-card__actions dd {
+  overflow-wrap: anywhere;
+}
+.cth-profile-link:focus-visible {
+  outline: var(--th-focus);
+  outline-offset: -3px;
+  border-radius: 12px;
+}
+.cth-result-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.25rem 1.25rem 1.25rem;
+}
+.cth-result-secondary {
+  display: inline-flex;
+  min-height: var(--th-control);
+  min-width: var(--th-control);
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--th-radius-control);
+  background: #fff;
+  color: var(--navy);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.cth-result-secondary:focus-visible {
+  outline: var(--th-focus);
+  outline-offset: 2px;
+}
+.cth-result-disclosure {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+.cth-result-disclosure summary {
+  width: fit-content;
+  max-width: 100%;
+  list-style: none;
+}
+.cth-result-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cth-result-card,
+  .cth-result-card:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
 .cth-intel-card,
 .cth-intel-geo li,
 .cth-intel-trade li,
