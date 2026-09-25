@@ -1,0 +1,43 @@
+{
+  "fingerprint": "a0fd24f0af96fda1408c53af35675961dc7beb529b1e90336162e12a433ccbaa",
+  "distinctLicenseNumbers": 19213,
+  "activeLicenses": 19212,
+  "activeProbationLicenses": 1,
+  "classificationRelationships": 21937,
+  "licensesCarryingFamily": {
+    "General Engineering (A)": 2502,
+    "General Engineering and General Building (AB)": 112,
+    "General Building (B)": 3945,
+    "Specialty (C)": 12639,
+    "Owner/Builder (E)": 15
+  },
+  "licensesByCode": {
+    "A": 916,
+    "B": 1135,
+    "AB": 112,
+    "B-2": 2677,
+    "C-1": 388,
+    "C-2": 1584,
+    "C-15": 163,
+    "C-15A": 212
+  },
+  "unlimitedMonetaryLimit": 4022,
+  "disciplineRows": 609,
+  "disciplineAttachedByExactLicense": 287,
+  "disciplineWindow": "January 2023 - September 2026",
+  "disciplineActionTypes": {
+    "Administrative Citation": 399,
+    "Disciplinary Hearing": 208,
+    "Pending Administrative Citation": 1,
+    "Pending Disciplinary Hearing": 1
+  },
+  "cityOfLicenseeAddress": {
+    "Las Vegas": 6013,
+    "Henderson": 1093,
+    "Reno": 1777,
+    "North Las Vegas": 518,
+    "Sparks": 873,
+    "Carson City": 446
+  },
+  "sourceAsOfPrinted": "9/25/2026 10:32:43 AM"
+}
