@@ -5,6 +5,7 @@ import { GeographyNotice } from "./GeographyNotice";
 import type { AskResult } from "@/lib/ask/types";
 import type { ContractorResearchQuery } from "@/lib/ask/plan";
 import { askHref, chipHref, planToOverrides } from "@/lib/ask/plan";
+import type { AskUrlOverrides } from "@/lib/ask/url";
 import type { AskExecution } from "@/lib/ask/execute";
 import { formatIntelCount } from "@/lib/home/intel-v2";
 import { NAME_CANDIDATE_LIST_NOTICE } from "@/lib/ask/candidate-card-presentation";
@@ -17,12 +18,15 @@ export function AskResults({
   execution,
   addressQueries = 0,
   addressTimingMs = 0,
+  requestOverrides = {},
 }: {
   interpreted: AskResult;
   plan: ContractorResearchQuery;
   execution: AskExecution;
   addressQueries?: number;
   addressTimingMs?: number;
+  /** Controls accepted by the request reader. Not reconstructed from the interpreted plan. */
+  requestOverrides?: AskUrlOverrides;
 }) {
   if (plan.recovery) {
     return (
@@ -239,8 +243,8 @@ export function AskResults({
           ) : null}
           {!execution.blocked ? (
             <div className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" data-testid="name-search-filters">
-              <p><span className="font-semibold">Selected on the form. </span>{nameSearchFilterAccount(plan, execution.nameSearch).selected.join(" · ") || "None."}</p>
-              <p className="mt-1"><span className="font-semibold">Applied to these name candidates. </span>{nameSearchFilterAccount(plan, execution.nameSearch).applied}</p>
+              <p><span className="font-semibold">Selected on the form. </span>{nameSearchFilterAccount(requestOverrides, execution.nameSearch).selected.join(" · ") || "None."}</p>
+              <p className="mt-1"><span className="font-semibold">Applied to these name candidates. </span>{nameSearchFilterAccount(requestOverrides, execution.nameSearch).applied}</p>
             </div>
           ) : null}
           {execution.nameSearch.completeness ? <p className="text-xs text-[var(--muted)]">{execution.nameSearch.completeness}</p> : null}

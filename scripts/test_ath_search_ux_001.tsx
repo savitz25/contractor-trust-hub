@@ -16,7 +16,7 @@ import {
   recordedAddressLine,
   traceMatchText,
 } from "../lib/ask/candidate-card-presentation";
-import { NAME_MATCH_DISCLAIMER, type AskEntityCard } from "../lib/ask/execute";
+import { NAME_MATCH_DISCLAIMER, executeContractorResearchQuery, type AskEntityCard } from "../lib/ask/execute";
 import { RESEARCH_QUERY_VERSION, type ContractorResearchQuery } from "../lib/ask/plan";
 import { readAskRequest } from "../lib/ask/request";
 import { interpretAskQuery } from "../lib/ask/interpret";
@@ -484,15 +484,24 @@ test("license address keeps street and ZIP on that credential and leaves the v1 
   assert.match(failedHtml, /not a finding that the source has no address/);
 
   const account = nameSearchFilterAccount(
-    { geography: { state: "FL", countySlug: null, countyLabel: null }, trade: { label: "HVAC" }, credentialStatus: "active_current", evidenceFamily: null },
+    { geo: "fl", trade: "hvac", status: "active_current" },
     { jurisdiction: null },
   );
-  assert.deepEqual(account.selected, ["Florida", "HVAC", "Active/current"]);
+  assert.deepEqual(account.selected, ["Florida", "HVAC / air conditioning", "Active/current"]);
   assert.match(account.applied, /were not applied/);
+  const inferred = nameSearchFilterAccount({}, { jurisdiction: "FL" });
+  assert.deepEqual(inferred.selected, []);
+  assert.match(inferred.applied, /Credential jurisdiction FL was applied/);
+  const rejected = nameSearchFilterAccount(
+    { geo: "not-a-place", trade: "roofers", status: "nope", evidence: "raw payload" },
+    { jurisdiction: null },
+  );
+  assert.deepEqual(rejected.selected, []);
   const constrained = nameSearchFilterAccount(
-    { geography: { state: "FL", countySlug: null, countyLabel: null }, trade: { label: null }, credentialStatus: "all", evidenceFamily: null },
+    { geo: "fl" },
     { jurisdiction: "NJ" },
   );
+  assert.deepEqual(constrained.selected, ["Florida"]);
   assert.match(constrained.applied, /Credential jurisdiction NJ was applied/);
 });
 
@@ -560,33 +569,63 @@ test("one profile with two credential keys stays unconfirmed, and two profiles k
   assert.equal(thin.results[0].publicAddress?.line?.includes("9 THIN ST"), false);
 });
 
-test("name-search form selections are not described as applied filters", () => {
+test("form selections come from explicit controls, and an interpreted jurisdiction stays applied", async () => {
   const intel = loadContractorHubIntel();
-  const render = (search: string) => {
+  const emptyDb = { query: async () => [] };
+  const render = async (search: string) => {
     const params = Object.fromEntries(new URLSearchParams(search));
     const request = readAskRequest(params);
+    assert.equal(request.error, null);
     const interpreted = interpretAskQuery(request.query, intel);
     const planned = buildContractorResearchQuery(interpreted, request.overrides);
+    const executed = await executeContractorResearchQuery(planned, { nameDb: emptyDb as never });
     const html = renderToStaticMarkup(
-      <AskResults interpreted={interpreted} plan={planned} execution={execution([], true)} />,
+      <AskResults interpreted={interpreted} plan={planned} execution={executed} requestOverrides={request.overrides} />,
     );
-    return { html, planned };
+    const filters = html.match(/data-testid="name-search-filters"[\s\S]*?<\/div>/)?.[0] ?? "";
+    return { filters, planned, request, executed, interpreted };
   };
-  const bare = render("q=snyder");
-  assert.match(bare.html, /Selected on the form/);
-  assert.match(bare.html, /None\./);
-  assert.match(bare.html, /The supplied name only\. Place, trade, status, and evidence selections were not applied/);
-  assert.equal(bare.html.includes("HVAC"), false);
-  assert.equal(bare.html.includes("Active/current"), false);
-  const place = render("q=snyder&geo=fl");
-  assert.match(place.html, /Selected on the form\. <\/span>Florida/);
-  assert.match(place.html, /were not applied/);
-  assert.equal(place.html.includes("Credential jurisdiction FL was applied"), false);
-  const filters = render("q=snyder&geo=fl&trade=hvac&status=active_current");
-  assert.match(filters.html, /Florida · HVAC \/ air conditioning · Active\/current/);
-  assert.match(filters.html, /Place, trade, status, and evidence selections were not applied/);
-  assert.equal(filters.planned.trade.label?.toLowerCase().includes("hvac") || filters.planned.trade.familyId === "hvac", true);
-  assert.equal(filters.html.includes("Trade: HVAC"), false);
+  const selected = (filters: string) => filters.match(/Selected on the form\. <\/span>[^<]*/)?.[0] ?? "";
+
+  const bare = await render("q=snyder");
+  assert.equal(bare.executed.nameSearch?.jurisdiction, null);
+  assert.equal(selected(bare.filters), "Selected on the form. </span>None.");
+  assert.match(bare.filters, /The supplied name only\. Place, trade, status, and evidence selections were not applied/);
+  assert.equal(bare.filters.includes("HVAC"), false);
+  assert.equal(bare.filters.includes("Active/current"), false);
+
+  const spoken = await render("q=snyder%20florida");
+  assert.equal(spoken.request.overrides.geo, undefined);
+  assert.equal(spoken.planned.identity.nameJurisdiction, "FL");
+  assert.equal(spoken.executed.nameSearch?.jurisdiction, "FL");
+  assert.match(spoken.interpreted.interpretation.location, /credential jurisdiction/);
+  assert.equal(selected(spoken.filters), "Selected on the form. </span>None.");
+  assert.match(spoken.filters, /Credential jurisdiction FL was applied\. Place, trade, status, and evidence selections were not applied/);
+
+  const explicitPlace = await render("q=snyder&geo=fl");
+  assert.equal(selected(explicitPlace.filters), "Selected on the form. </span>Florida");
+  assert.match(explicitPlace.filters, /were not applied/);
+  assert.equal(explicitPlace.filters.includes("Credential jurisdiction FL was applied"), false);
+
+  const controls = await render("q=snyder&geo=fl&trade=hvac&status=active_current");
+  assert.equal(controls.planned.trade.familyId, "hvac");
+  assert.equal(controls.executed.nameSearch?.jurisdiction, null);
+  assert.equal(selected(controls.filters), "Selected on the form. </span>Florida · HVAC / air conditioning · Active/current");
+  assert.match(controls.filters, /The supplied name only\. Place, trade, status, and evidence selections were not applied/);
+  assert.equal(controls.filters.includes("Trade: HVAC"), false);
+
+  const namedTrade = await render("q=123%20roofing%20inc");
+  assert.equal(namedTrade.request.overrides.trade, undefined);
+  assert.equal(namedTrade.planned.identity.entityQuery, "123 roofing inc");
+  assert.equal(namedTrade.planned.trade.familyId, null);
+  assert.equal(namedTrade.executed.nameSearch == null, false);
+  assert.equal(selected(namedTrade.filters), "Selected on the form. </span>None.");
+  assert.equal(namedTrade.filters.includes("Roofing"), false);
+  assert.match(namedTrade.filters, /The supplied name only\. Place, trade, status, and evidence selections were not applied/);
+
+  const unknown = await render("q=snyder&geo=not-a-place&trade=-&status=all");
+  assert.equal(selected(unknown.filters), "Selected on the form. </span>None.");
+  assert.equal(unknown.filters.includes("not-a-place"), false);
 });
 
 test("address projection docs do not equate thin-profile exclusion with the public profile page", () => {

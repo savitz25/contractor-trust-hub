@@ -71,7 +71,7 @@ export default async function AskPage({ searchParams }: Props) {
       {q ? (
         <div className="mt-10">
           {!plan.recovery && <SearchAnalytics dimensions={{ hub: "contractor", intent: interpreted.mode, state: plan.geography.state || undefined, classification: plan.trade.familyId || undefined, hasIdentifier: Boolean(plan.identity.identifier), hasEvidenceFilter: Boolean(plan.evidenceFamily), resultCountBucket: searchResultCountBucket(execution.contractorCount || 0), coverageState: execution.blocked ? "PARTIAL" : "KNOWN" }} hasResults={execution.results.length > 0} />}
-          <AskResults interpreted={interpreted} plan={plan} execution={execution} addressQueries={addressed.queries} addressTimingMs={addressed.timingMs} />
+          <AskResults interpreted={interpreted} plan={plan} execution={execution} addressQueries={addressed.queries} addressTimingMs={addressed.timingMs} requestOverrides={overrides} />
         </div>
       ) : (
         <p className="mt-6 text-sm text-[var(--muted)]">Enter a question to run a deterministic research query.</p>

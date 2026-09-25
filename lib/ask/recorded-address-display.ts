@@ -8,6 +8,10 @@
  */
 import type { AskEntityCard } from "@/lib/ask/execute";
 import { explicitCountyLabel, isOutOfJurisdictionMarker } from "@/lib/ask/candidate-card-presentation";
+import { TRADE_ONTOLOGY } from "@/lib/ask/ontology";
+import { ASK_CLEARED, type AskUrlOverrides } from "@/lib/ask/url";
+import { FLORIDA_COUNTIES } from "@/lib/discovery/counties";
+import { CONTRACTOR_STATE_NAMES } from "@/lib/search/state-names";
 
 export const NAME_CANDIDATE_CARD_CAUTION = "Name matched — not proof this is the firm you mean.";
 export const ADDRESS_UNAVAILABLE_NOTE =
@@ -80,25 +84,50 @@ export type NameSearchFilterAccount = {
   applied: string;
 };
 
-/** Form selections are not name-search filters unless the name operation's jurisdiction constraint ran. */
+const VISIBLE_STATUS: Record<string, string> = {
+  active_current: "Active/current",
+  expired: "Expired/inactive",
+};
+const ACCEPTED_EVIDENCE = new Set(["dbpr_discipline", "unlicensed_activity", "stop_work", "recovery_fund"]);
+
+function supplied(value: string | null | undefined): string {
+  return value && value !== ASK_CLEARED ? value : "";
+}
+
+function stateName(code: string): string {
+  const named = Object.entries(CONTRACTOR_STATE_NAMES).find(([, value]) => value === code);
+  if (!named) return "";
+  return named[0].replace(/(^|\s)\p{L}/gu, (letter) => letter.toUpperCase());
+}
+
+/** Labels for controls the request reader accepted. A resolved plan value is not a form selection. */
+export function explicitFormSelections(explicit: AskUrlOverrides): string[] {
+  const selected: string[] = [];
+  const geo = supplied(explicit.geo);
+  if (geo === "fl") {
+    const label = stateName("FL");
+    if (label) selected.push(label);
+  } else if (geo) {
+    const county = FLORIDA_COUNTIES.find((item) => item.slug === geo);
+    const state = stateName("FL");
+    if (county && state) selected.push(`${county.name} County, ${state}`);
+  }
+  const trade = TRADE_ONTOLOGY.find((item) => item.id === supplied(explicit.trade));
+  if (trade) selected.push(trade.label);
+  const status = VISIBLE_STATUS[supplied(explicit.status)];
+  if (status) selected.push(status);
+  const evidence = supplied(explicit.evidence);
+  if (ACCEPTED_EVIDENCE.has(evidence)) selected.push(evidence.replaceAll("_", " "));
+  return selected;
+}
+
+/** Form selections are not name-search filters. An interpreted credential jurisdiction is applied separately. */
 export function nameSearchFilterAccount(
-  plan: {
-    geography: { state: string | null; countySlug: string | null; countyLabel: string | null };
-    trade: { label: string | null };
-    credentialStatus: string;
-    evidenceFamily: string | null;
-  },
+  explicit: AskUrlOverrides,
   nameSearch: { jurisdiction: string | null },
 ): NameSearchFilterAccount {
-  const selected: string[] = [];
-  if (plan.geography.countySlug && plan.geography.countyLabel) selected.push(plan.geography.countyLabel);
-  else if (plan.geography.state === "FL") selected.push("Florida");
-  if (plan.trade.label) selected.push(plan.trade.label);
-  if (plan.credentialStatus === "active_current") selected.push("Active/current");
-  else if (plan.credentialStatus === "expired") selected.push("Expired/inactive");
-  if (plan.evidenceFamily) selected.push(plan.evidenceFamily.replaceAll("_", " "));
   const applied = nameSearch.jurisdiction
     ? `Credential jurisdiction ${nameSearch.jurisdiction} was applied. Place, trade, status, and evidence selections were not applied.`
     : "The supplied name only. Place, trade, status, and evidence selections were not applied.";
-  return { selected, applied };
+  return { selected: explicitFormSelections(explicit), applied };
 }
