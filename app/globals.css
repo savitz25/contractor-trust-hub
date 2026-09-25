@@ -708,10 +708,12 @@ header img[data-brand-logo] {
   background: #fff;
   transition: border-color var(--th-motion), box-shadow var(--th-motion), transform var(--th-motion);
 }
-.cth-result-card:hover {
-  border-color: var(--navy);
-  box-shadow: var(--th-shadow-elevated);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .cth-result-card:hover {
+    border-color: var(--navy);
+    box-shadow: var(--th-shadow-elevated);
+    transform: translateY(-2px);
+  }
 }
 .cth-profile-link {
   display: block;

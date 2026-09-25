@@ -18,6 +18,10 @@ import {
 } from "../lib/ask/candidate-card-presentation";
 import { NAME_MATCH_DISCLAIMER, type AskEntityCard } from "../lib/ask/execute";
 import { RESEARCH_QUERY_VERSION, type ContractorResearchQuery } from "../lib/ask/plan";
+import { readAskRequest } from "../lib/ask/request";
+import { interpretAskQuery } from "../lib/ask/interpret";
+import { buildContractorResearchQuery } from "../lib/ask/plan";
+import { loadContractorHubIntel } from "../lib/home/load-intel-v2";
 import { attachRecordedAddresses } from "../lib/ask/recorded-address-projection";
 import { formatLicenseAddress, nameSearchFilterAccount } from "../lib/ask/recorded-address-display";
 import { classifySpecialistSearchClick } from "../lib/specialist-search/analytics";
@@ -506,7 +510,89 @@ test("focus, hover, and reduced motion stay on separate selectors", () => {
   const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /\.cth-profile-link:focus-visible/);
   assert.match(css, /\.cth-result-secondary:focus-visible/);
-  assert.match(css, /\.cth-result-card:hover[\s\S]*translateY\(-2px\)/);
+  assert.match(css, /@media \(hover: hover\) and \(pointer: fine\) \{[\s\S]*\.cth-result-card:hover[\s\S]*translateY\(-2px\)/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*\.cth-result-card:hover \{[\s\S]*transform: none;/);
   assert.match(css, /min-height: var\(--th-control\)/);
+});
+
+test("one profile with two credential keys stays unconfirmed, and two profiles keep their own addresses", async () => {
+  const row = (slug: string, license: string, external: string, street: string | null, city: string) => ({
+    slug, license_number: license, external_key: external, address_line_1: street, city, state: "FL", postal_code: "33101", county_name: "Miami-Dade", is_thin_profile: false,
+  });
+  const same = card({ contractorId: "same", slug: "one-profile", displayName: "ONE", profileHref: "/contractors/one-profile", credentialKey: "SHARED", city: "TAMPA", county: "Hillsborough", state: "FL" });
+  async function project(rows: ReturnType<typeof row>[]) {
+    const calls: string[] = [];
+    const result = await attachRecordedAddresses([same], { query: async (sql: string) => { calls.push(sql); return rows; } } as never);
+    assert.equal(calls.length, 1);
+    assert.match(calls[0], /is_thin_profile = FALSE/);
+    assert.doesNotMatch(calls[0], /email|phone|raw_payload|claim/i);
+    return result.results[0].publicAddress;
+  }
+  const first = await project([
+    row("one-profile", "SHARED", "LIC-A", "10 ADDRESSED ST", "MIAMI"),
+    row("one-profile", "LIC-B", "SHARED", null, "ORLANDO"),
+  ]);
+  assert.equal(first?.status, "missing_row");
+  assert.equal(first?.line?.includes("10 ADDRESSED ST"), false);
+  assert.equal(first?.line?.includes("ORLANDO"), false);
+  const reversed = await project([
+    row("one-profile", "LIC-B", "SHARED", "20 REVERSED ST", "ORLANDO"),
+    row("one-profile", "SHARED", "LIC-A", "30 OTHER ST", "MIAMI"),
+  ]);
+  assert.equal(reversed?.status, "missing_row");
+  assert.equal(reversed?.line?.includes("20 REVERSED ST") || reversed?.line?.includes("30 OTHER ST"), false);
+
+  const own = await attachRecordedAddresses([
+    card({ contractorId: "p1", slug: "profile-a", displayName: "A", profileHref: "/contractors/profile-a", credentialKey: "100" }),
+    card({ contractorId: "p2", slug: "profile-b", displayName: "B", profileHref: "/contractors/profile-b", credentialKey: "100" }),
+  ], { query: async () => [
+    row("profile-a", "100", "EXT-A", "1 ALPHA ST", "MIAMI"),
+    row("profile-b", "100", "EXT-B", "2 BETA ST", "TAMPA"),
+  ] } as never);
+  assert.equal(own.queries, 1);
+  assert.equal(own.results[0].publicAddress?.line, "1 ALPHA ST, MIAMI, FL 33101");
+  assert.equal(own.results[1].publicAddress?.line, "2 BETA ST, TAMPA, FL 33101");
+
+  const thin = await attachRecordedAddresses([same], { query: async () => [
+    { ...row("one-profile", "SHARED", "LIC-A", "9 THIN ST", "MIAMI"), is_thin_profile: true },
+  ] } as never);
+  assert.equal(thin.results[0].publicAddress?.status, "missing_row");
+  assert.equal(thin.results[0].publicAddress?.line?.includes("9 THIN ST"), false);
+});
+
+test("name-search form selections are not described as applied filters", () => {
+  const intel = loadContractorHubIntel();
+  const render = (search: string) => {
+    const params = Object.fromEntries(new URLSearchParams(search));
+    const request = readAskRequest(params);
+    const interpreted = interpretAskQuery(request.query, intel);
+    const planned = buildContractorResearchQuery(interpreted, request.overrides);
+    const html = renderToStaticMarkup(
+      <AskResults interpreted={interpreted} plan={planned} execution={execution([], true)} />,
+    );
+    return { html, planned };
+  };
+  const bare = render("q=snyder");
+  assert.match(bare.html, /Selected on the form/);
+  assert.match(bare.html, /None\./);
+  assert.match(bare.html, /The supplied name only\. Place, trade, status, and evidence selections were not applied/);
+  assert.equal(bare.html.includes("HVAC"), false);
+  assert.equal(bare.html.includes("Active/current"), false);
+  const place = render("q=snyder&geo=fl");
+  assert.match(place.html, /Selected on the form\. <\/span>Florida/);
+  assert.match(place.html, /were not applied/);
+  assert.equal(place.html.includes("Credential jurisdiction FL was applied"), false);
+  const filters = render("q=snyder&geo=fl&trade=hvac&status=active_current");
+  assert.match(filters.html, /Florida · HVAC \/ air conditioning · Active\/current/);
+  assert.match(filters.html, /Place, trade, status, and evidence selections were not applied/);
+  assert.equal(filters.planned.trade.label?.toLowerCase().includes("hvac") || filters.planned.trade.familyId === "hvac", true);
+  assert.equal(filters.html.includes("Trade: HVAC"), false);
+});
+
+test("address projection docs do not equate thin-profile exclusion with the public profile page", () => {
+  const doc = readFileSync(new URL("../docs/ask/recorded-address-display.md", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../lib/ask/recorded-address-projection.ts", import.meta.url), "utf8");
+  assert.match(doc, /public profile page can still render a limited thin profile/);
+  assert.match(doc, /eligibility is narrower than that page/);
+  assert.equal(source.includes("same publication gate as a public profile"), false);
 });

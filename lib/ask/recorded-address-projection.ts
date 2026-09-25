@@ -9,7 +9,8 @@
  *   postal_code, and county_name.
  * - Rows are paired by the card's stored profile slug and the card's credential
  *   key. A name is never the join.
- * - Thin profiles are excluded, the same publication gate as a public profile.
+ * - Thin profiles are excluded here. A public profile page can still show a
+ *   limited thin profile, so this gate is not the same as that page.
  * - One statement covers the whole page. A failed statement is "could not be
  *   loaded," not "the source has no address."
  * - Phone, email, claim, account, and raw license payloads are not selected.
