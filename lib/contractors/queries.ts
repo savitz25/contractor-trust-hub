@@ -163,7 +163,6 @@ export async function searchContractors(
         JOIN contractors c ON c.id = l.contractor_id
         WHERE l.source_system = ANY($2::text[])
           AND c.is_thin_profile = FALSE
-          AND (c.home_state = $4 OR l.state = $4)
           AND (
             UPPER(REPLACE(l.external_key, ' ', '')) = $1
             OR UPPER(REPLACE(COALESCE(l.license_number, ''), ' ', '')) = $1
@@ -206,9 +205,9 @@ export async function searchContractors(
         JOIN entities ent ON ent.id = ce.entity_id
         WHERE ce.contractor_id = h.id
           AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
-          AND ent.source_system = $5
+          AND ent.source_system = $4
           AND ce.confidence IS NOT NULL
-          AND ce.confidence >= $6
+          AND ce.confidence >= $5
         ORDER BY ce.confidence DESC NULLS LAST
         LIMIT 1
       ) e ON TRUE`
@@ -222,11 +221,10 @@ export async function searchContractors(
             key,
             licenseSourcesFor(state),
             limit,
-            state.code,
             state.entitySource,
             MIN_SUNBIZ_CONFIDENCE,
           ]
-        : [key, licenseSourcesFor(state), limit, state.code]
+        : [key, licenseSourcesFor(state), limit]
     );
 
     return {
@@ -237,12 +235,12 @@ export async function searchContractors(
   }
 
   if (q.length < 2 && workFilter) {
-    // $1 sources $2 state $3 limit; optional $4/$5 entity; work from next index
-    const workStart = wantEntity ? 6 : 4;
+    // $1 sources $2 limit; optional $3/$4 entity; work from the next index.
+    // Issuing jurisdiction is source_system, not the business address.
+    const workStart = wantEntity ? 5 : 3;
     const extra = workFilterSql(workFilter, workStart);
     const workParams: unknown[] = [
       licenseSourcesFor(state),
-      state.code,
       limit,
     ];
     if (wantEntity) {
@@ -291,12 +289,11 @@ export async function searchContractors(
         FROM contractors c
         JOIN licenses l ON l.contractor_id = c.id AND l.source_system = ANY($1::text[])
         WHERE c.is_thin_profile = FALSE
-          AND (c.home_state = $2 OR l.state = $2)
           ${extra.sql}
         ORDER BY c.id,
           CASE l.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
           l.updated_at DESC NULLS LAST
-        LIMIT $3
+        LIMIT $2
       )
       SELECT
         m.*,
@@ -318,16 +315,16 @@ export async function searchContractors(
         JOIN entities ent ON ent.id = ce.entity_id
         WHERE ce.contractor_id = m.id
           AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
-          AND ent.source_system = $4
+          AND ent.source_system = $3
           AND ce.confidence IS NOT NULL
-          AND ce.confidence >= $5
+          AND ce.confidence >= $4
         ORDER BY ce.confidence DESC NULLS LAST
         LIMIT 1
       ) e ON TRUE`
           : ""
       }
       ORDER BY m.display_name
-      LIMIT $3
+      LIMIT $2
       `,
       workParams
     );
@@ -344,15 +341,16 @@ export async function searchContractors(
 
   // Cap candidate set early so a broad name cannot pin the pool client.
   const candidateCap = Math.min(Math.max(limit * 8, 80), 200);
-  // $1 sources, $2 state, $3 limit, $4 cap; entity $5-$6 only when wantEntity; then work filters; then name params.
-  const workStart = wantEntity ? 7 : 5;
+  // $1 sources, $2 limit, $3 cap; entity $4-$5 only when wantEntity; then work filters; then name params.
+  // Issuing jurisdiction is source_system. home_state is the business address and is not required.
+  const workStart = wantEntity ? 6 : 4;
   const workExtra = workFilter
     ? workFilterSql(workFilter, workStart)
     : { sql: "", params: [] as unknown[] };
 
-  const baseParams: unknown[] = [licenseSourcesFor(state), state.code, limit, candidateCap];
+  const baseParams: unknown[] = [licenseSourcesFor(state), limit, candidateCap];
   if (wantEntity) {
-    baseParams.push(state.entitySource, MIN_SUNBIZ_CONFIDENCE); // $5-$6
+    baseParams.push(state.entitySource, MIN_SUNBIZ_CONFIDENCE); // $4-$5
   }
   baseParams.push(...workExtra.params);
   const nameMatch = buildNameMatchSql(nameTerms, baseParams.length + 1);
@@ -400,7 +398,6 @@ export async function searchContractors(
       FROM ${nameMatch.fromSql}
       JOIN licenses l ON l.contractor_id = c.id AND l.source_system = ANY($1::text[])
       WHERE c.is_thin_profile = FALSE
-        AND (c.home_state = $2 OR l.state = $2)
         AND ${nameMatch.predicateSql}
         ${workExtra.sql}
       ORDER BY c.id,
@@ -413,7 +410,7 @@ export async function searchContractors(
       ORDER BY rank_score,
         CASE occupation_code WHEN 'TRMP' THEN 0 WHEN 'TMP' THEN 1 ELSE 2 END,
         display_name
-      LIMIT $4
+      LIMIT $3
     )
     SELECT
       m.*,
@@ -437,9 +434,9 @@ export async function searchContractors(
       JOIN entities ent ON ent.id = ce.entity_id
       WHERE ce.contractor_id = m.id
         AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
-        AND ent.source_system = $5
+        AND ent.source_system = $4
         AND ce.confidence IS NOT NULL
-        AND ce.confidence >= $6
+        AND ce.confidence >= $5
       ORDER BY ce.confidence DESC NULLS LAST
       LIMIT 1
     ) e ON TRUE`
@@ -448,7 +445,7 @@ export async function searchContractors(
     ORDER BY m.rank_score,
       CASE m.occupation_code WHEN 'TRMP' THEN 0 WHEN 'TMP' THEN 1 ELSE 2 END,
       m.display_name
-    LIMIT $3
+    LIMIT $2
     `,
     baseParams
   );

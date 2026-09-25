@@ -504,6 +504,13 @@ export default async function VerifyPage({ searchParams }: Props) {
           role="alert"
           className="mt-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-4 text-sm leading-relaxed text-rose-900 sm:mt-8"
         >
+          {error.startsWith("Search took too long") ? (
+            <>
+              <p className="font-medium text-rose-950">Search took too long</p>
+              <p className="mt-1 text-rose-900/90">{error}</p>
+            </>
+          ) : (
+            <>
           <p className="font-medium text-rose-950">Search is temporarily unavailable</p>
           <p className="mt-1 text-rose-900/90">
             We could not reach the license database right now. Please try again in a few minutes.
@@ -532,6 +539,8 @@ export default async function VerifyPage({ searchParams }: Props) {
             )}{" "}
             <span className="opacity-70">(Technical: {error})</span>
           </p>
+            </>
+          )}
         </div>
       ) : null}
 
