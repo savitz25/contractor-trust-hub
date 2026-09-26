@@ -32,6 +32,10 @@ export const NAME_MAX_LIMIT = 25;
 /** Rows reachable through this operation for one name + scope; beyond it, use the native continuation. */
 export const NAME_SOURCE_CAP = 200;
 
+/** Shared recorded-address meaning. The card face does not repeat it; Trace and this field still carry it. */
+export const NAME_CANDIDATE_RECORDED_ADDRESS_MEANING =
+  "Recorded address on the profile. Separate from the credential jurisdiction; not service territory or current availability.";
+
 export type NameCandidatesResultState =
   | "COMPLETED_WITH_CANDIDATES"
   | "COMPLETED_NO_CANDIDATES"
@@ -178,7 +182,7 @@ function toCandidate(row: NameCandidateDbRow, name: string, scopes: ScopeDescrip
     credentialJurisdiction: { code: scope.code, label: scope.label, sourceSystem: row.source_system, sourceLabel: scope.sourceLabel },
     recordedLocation: {
       city: row.primary_city, county: row.primary_county, state: row.home_state,
-      meaning: "Recorded address on the profile. Separate from the credential jurisdiction; not service territory or current availability.",
+      meaning: NAME_CANDIDATE_RECORDED_ADDRESS_MEANING,
     },
     source: {
       system: row.source_system,

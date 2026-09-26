@@ -75,3 +75,7 @@ service-account*.json
 .env.local
 .env.*.local
 .vercel/
+
+# Playwright output
+/test-results/
+/playwright-report/

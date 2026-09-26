@@ -1,22 +1,32 @@
+import React from "react";
 import Link from "next/link";
 import { RecoveryAnswer } from "./RecoveryAnswer";
 import { GeographyNotice } from "./GeographyNotice";
 import type { AskResult } from "@/lib/ask/types";
 import type { ContractorResearchQuery } from "@/lib/ask/plan";
 import { askHref, chipHref, planToOverrides } from "@/lib/ask/plan";
+import type { AskUrlOverrides } from "@/lib/ask/url";
 import type { AskExecution } from "@/lib/ask/execute";
 import { formatIntelCount } from "@/lib/home/intel-v2";
-import { NAME_MATCH_DISCLAIMER } from "@/lib/ask/execute";
+import { NAME_CANDIDATE_LIST_NOTICE } from "@/lib/ask/candidate-card-presentation";
+import { nameSearchFilterAccount } from "@/lib/ask/recorded-address-display";
 import { AskResultCard } from "./AskResultCard";
 
 export function AskResults({
   interpreted,
   plan,
   execution,
+  addressQueries = 0,
+  addressTimingMs = 0,
+  requestOverrides = {},
 }: {
   interpreted: AskResult;
   plan: ContractorResearchQuery;
   execution: AskExecution;
+  addressQueries?: number;
+  addressTimingMs?: number;
+  /** Controls accepted by the request reader. Not reconstructed from the interpreted plan. */
+  requestOverrides?: AskUrlOverrides;
 }) {
   if (plan.recovery) {
     return (
@@ -59,19 +69,19 @@ export function AskResults({
           </div>
           <div>
             <dt className="text-[var(--muted)]">Trade</dt>
-            <dd className="font-medium">{plan.trade.label || "Not specified"}</dd>
+            <dd className="font-medium">{execution.nameSearch ? "Not applied to this name search" : plan.trade.label || "Not specified"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Included credential classes</dt>
-            <dd className="font-medium">{plan.trade.classLabels.join(", ") || "Not specified"}</dd>
+            <dd className="font-medium">{execution.nameSearch ? "Not applied to this name search" : plan.trade.classLabels.join(", ") || "Not specified"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Status</dt>
-            <dd className="font-medium">{plan.credentialStatus.replace("_", "/")}</dd>
+            <dd className="font-medium">{execution.nameSearch ? "Not applied to this name search" : plan.credentialStatus.replace("_", "/")}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Evidence</dt>
-            <dd className="font-medium">{interpreted.interpretation.evidenceFamily}</dd>
+            <dd className="font-medium">{execution.nameSearch ? "Not applied to this name search" : interpreted.interpretation.evidenceFamily}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Sort</dt>
@@ -97,7 +107,7 @@ export function AskResults({
         ))}
       </section>
 
-      <div className="flex flex-wrap gap-2" aria-label="Active filters">
+      {execution.nameSearch ? null : <div className="flex flex-wrap gap-2" aria-label="Active filters">
         {plan.geography.countySlug ? (
           <Link prefetch={false} className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs" href={chipHref(plan.rawQuery, plan, "geo")}>
             Broaden from {plan.geography.countyLabel} to Florida ×
@@ -118,7 +128,7 @@ export function AskResults({
             Evidence: {interpreted.interpretation.evidenceFamily} ×
           </Link>
         ) : null}
-      </div>
+      </div>}
 
       <p className="text-sm">
         Change interpretation: {plan.changeHints.join(" · ")}
@@ -225,10 +235,18 @@ export function AskResults({
           {!execution.blocked ? (
             <p role="status" className="text-sm">
               <strong className="text-xl tabular-nums">{execution.nameSearch.returned}</strong> name candidate{execution.nameSearch.returned === 1 ? "" : "s"} on page {plan.page}
-              {execution.nameSearch.hasMore ? " · more candidates exist" : execution.nameSearch.returned > 0 ? " · no further candidates" : ""}. Source order only — not a ranking or recommendation.
+              {execution.nameSearch.hasMore ? " · more candidates exist" : execution.nameSearch.returned > 0 ? " · no further candidates" : ""}.
             </p>
           ) : null}
-          <p className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" role="note">{NAME_MATCH_DISCLAIMER}</p>
+          {!execution.blocked ? (
+            <p className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" role="note">{NAME_CANDIDATE_LIST_NOTICE}</p>
+          ) : null}
+          {!execution.blocked ? (
+            <div className="rounded-xl border border-[var(--border)] bg-white p-3 text-sm" data-testid="name-search-filters">
+              <p><span className="font-semibold">Selected on the form. </span>{nameSearchFilterAccount(requestOverrides, execution.nameSearch).selected.join(" · ") || "None."}</p>
+              <p className="mt-1"><span className="font-semibold">Applied to these name candidates. </span>{nameSearchFilterAccount(requestOverrides, execution.nameSearch).applied}</p>
+            </div>
+          ) : null}
           {execution.nameSearch.completeness ? <p className="text-xs text-[var(--muted)]">{execution.nameSearch.completeness}</p> : null}
         </section>
       ) : null}
@@ -263,7 +281,7 @@ export function AskResults({
       ) : null}
 
       {execution.results.length > 0 ? (
-        <ul className="space-y-4">
+        <ul className="space-y-4" data-address-queries={addressQueries} data-address-ms={addressTimingMs}>
           {execution.results.map((card) => (
             <li key={card.contractorId}>
               <AskResultCard card={card} />

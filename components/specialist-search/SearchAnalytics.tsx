@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import type { SpecialistSearchDimensions } from "@/lib/specialist-search/analytics";
-import type { SpecialistSearchEvent } from "@/lib/specialist-search/analytics";
+import type { SpecialistSearchDimensions, SpecialistSearchEvent } from "@/lib/specialist-search/analytics";
+import { classifySpecialistSearchClick } from "@/lib/specialist-search/analytics";
 
 function emit(event: SpecialistSearchEvent, dimensions: SpecialistSearchDimensions) {
   const detail = { event, ...dimensions };
@@ -16,10 +16,11 @@ export function SearchAnalytics({ dimensions, hasResults }: { dimensions: Specia
     emit("specialist_search_interpreted", dimensions);
     emit(hasResults ? "specialist_search_results" : "specialist_search_zero_results", dimensions);
     const onClick = (event: MouseEvent) => {
-      const element = event.target instanceof Element ? event.target.closest("a, summary") : null;
+      const element = event.target instanceof Element ? event.target.closest("a, button, summary") : null;
       if (!element) return;
-      if (element.textContent?.includes("Trace this result")) emit("specialist_search_trace_open", dimensions);
-      if (element.textContent?.includes("Research this contractor")) emit("specialist_search_profile_open", dimensions);
+      const kind = classifySpecialistSearchClick(element.getAttribute("data-search-action"), element.textContent ?? "");
+      if (kind === "trace") emit("specialist_search_trace_open", dimensions);
+      else if (kind === "profile") emit("specialist_search_profile_open", dimensions);
     };
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
