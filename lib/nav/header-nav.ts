@@ -31,6 +31,7 @@ export const EXPLORE_GROUP: HeaderGroup = {
     { href: "/massachusetts", label: "Massachusetts research", hint: "HIC, CSL, and trade licenses are separate; DOL discipline and debarments" },
     { href: "/tennessee", label: "Tennessee research", hint: "Contractor licenses, Home Improvement in nine counties, LLE/LLP, discipline" },
     { href: "/nevada", label: "Nevada research", hint: "NSCB business licenses, A/B/AB/C classifications, monetary limits, discipline" },
+    { href: "/minnesota", label: "Minnesota research", hint: "DLI licenses, bonds, and registrations; business and individual kept apart; enforcement" },
     { href: "/texas", label: "Texas research", hint: "Specialty trades — no statewide GC license" },
     { href: "/texas/austin", label: "Austin permits", hint: "City of Austin local intelligence" },
     { href: "/california", label: "California research", hint: "Acquired CSLB public-data rows" },

@@ -30,6 +30,7 @@ import { interpretGeorgiaSos } from "./georgia-sos";
 import { interpretMassachusetts } from "./massachusetts";
 import { interpretTennessee } from "./tennessee";
 import { interpretNevada } from "./nevada";
+import { interpretMinnesota } from "./minnesota";
 import { CONTRACTOR_STATE_NAMES } from "@/lib/search/state-names";
 
 const EMPTY_INTERPRET: AskInterpretation = {
@@ -192,6 +193,10 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
       changeHints: unsupported.alternatives,
     };
   }
+
+  // MN-CON-001: Minnesota DLI numbers (RR, RC, RF ...) share prefixes with Florida credentials; Minnesota intent wins first.
+  const mnEarly = interpretMinnesota(query, text);
+  if (mnEarly) return mnEarly;
 
   const identifier = query.toUpperCase().match(/\b(?:CCC|CBC|CGC|CAC|CMC|CFC|CRC|CPC|CVC|CUC|SCC|RC|RB|RG|RA|RM|RF|RR|RP|RV|RU|RX)\s*-?\s*\d{5,10}\b/)?.[0].replace(/[\s-]+/g, "") ?? "";
   if (identifier) {
