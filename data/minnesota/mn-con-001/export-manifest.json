@@ -1,0 +1,840 @@
+{
+ "source": {
+  "lookupPage": "https://www.dli.mn.gov/license-and-registration-lookup",
+  "exportBase": "https://secure.doli.state.mn.us/ccld/data/",
+  "ims": "https://ims.dli.mn.gov/"
+ },
+ "dliStatement": "The spreadsheet includes all licenses, bonds, certifications and registrations issued by DLI's Construction Codes and Licensing Division. It is updated nightly. Current, active licenses or registrations will have a status of 'Issued.'",
+ "asOfPrintedByDli": null,
+ "retrievedAt": "2026-09-26T14:11:34Z",
+ "files": {
+  "MNDLILicRegCertExport.zip": {
+   "sha256": "68b661f19a63466840e58db3c8a79c5bf7c937819b2b65fdf9d41c9152498749",
+   "bytes": 11103041,
+   "member": "LIC_SNAP_09_26_2026.csv",
+   "memberBytes": 51362967,
+   "memberDateTime": "2026-09-26T04:32:00",
+   "rows": 259136
+  },
+  "MNDLILicRegCertExport_Contractor_Registrations.csv": {
+   "sha256": "6cad6c3059449ec359232fe5dba9b6f93a994537f4840fc15e882009d2176c28",
+   "bytes": 4442959,
+   "rows": 21412
+  },
+  "MNDLILicRegCertExport_Residential_Contractors.csv": {
+   "sha256": "366b49bf8ecaf5868579538b1d708a15bbda413cd4086c83b440d9ed024e7d91",
+   "bytes": 12211746,
+   "subsetOf": "LIC_SNAP",
+   "licenseType": "Residential Contractors"
+  },
+  "MNDLILicRegCertExport_Electrical.csv": {
+   "sha256": "dee82227384218e2bc603a17e8700d2402f63d7c8815f6874ff4cd7209506297",
+   "bytes": 22029721,
+   "subsetOf": "LIC_SNAP",
+   "licenseType": "Electrical"
+  },
+  "MNDLILicRegCertExport_Plumbing.csv": {
+   "sha256": "20d29c5b3d99c99bd124ef65dc7b59f078859480234cc2cffef29bb81a2a0906",
+   "bytes": 7021198,
+   "subsetOf": "LIC_SNAP",
+   "licenseType": "Plumbing"
+  },
+  "MNDLILicRegCertExport_Mechanical_Contractor_Bond.csv": {
+   "sha256": "d3f1318f55b5eebdc922287bdae54233f26d5fb147ebebf143dd1b84d8b24052",
+   "bytes": 1185600,
+   "subsetOf": "LIC_SNAP",
+   "licenseType": "Mechanical Contractor Bond"
+  }
+ },
+ "columns": [
+  "Bus_Pers",
+  "License_Type",
+  "License_Subtype",
+  "Name",
+  "DBA_Name",
+  "Addr1",
+  "Addr2",
+  "City",
+  "St",
+  "Zip",
+  "Phone_No",
+  "Email_Address",
+  "Lic_Number",
+  "Status",
+  "Orig_Date",
+  "Exp_Date",
+  "Enforcement_Action",
+  "Renewal_in_Progress"
+ ],
+ "rows": 280548,
+ "distinctCredentialNumbers": 280548,
+ "numbersPrintedWithWhitespace": 2,
+ "fieldsDroppedForEveryRow": [
+  "Addr1",
+  "Addr2",
+  "Phone_No",
+  "Email_Address"
+ ],
+ "fieldsDroppedForPersonRows": [
+  "Addr1",
+  "Addr2",
+  "Phone_No",
+  "Email_Address",
+  "Name",
+  "DBA_Name",
+  "City",
+  "Zip"
+ ],
+ "droppedFieldCounts": {
+  "Addr1": 280517,
+  "Addr2": 23830,
+  "City(person)": 220741,
+  "Name(person)": 220830,
+  "Phone_No": 247228,
+  "Zip(person)": 220821
+ },
+ "labels": [
+  {
+   "id": 0,
+   "type": "Boiler",
+   "subtype": "1st Class A Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 1526
+  },
+  {
+   "id": 1,
+   "type": "Boiler",
+   "subtype": "1st Class B Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 1491
+  },
+  {
+   "id": 2,
+   "type": "Boiler",
+   "subtype": "1st Class C Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 2949
+  },
+  {
+   "id": 3,
+   "type": "Boiler",
+   "subtype": "1st Class P Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 126
+  },
+  {
+   "id": 4,
+   "type": "Boiler",
+   "subtype": "2nd Class A Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 1082
+  },
+  {
+   "id": 5,
+   "type": "Boiler",
+   "subtype": "2nd Class B Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 1503
+  },
+  {
+   "id": 6,
+   "type": "Boiler",
+   "subtype": "2nd Class C Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 3587
+  },
+  {
+   "id": 7,
+   "type": "Boiler",
+   "subtype": "Boat Master",
+   "kind": "license",
+   "grain": "person",
+   "rows": 288
+  },
+  {
+   "id": 8,
+   "type": "Boiler",
+   "subtype": "Boiler Inspector Competency",
+   "kind": "certification",
+   "grain": "person",
+   "rows": 208
+  },
+  {
+   "id": 9,
+   "type": "Boiler",
+   "subtype": "Chief A Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 1625
+  },
+  {
+   "id": 10,
+   "type": "Boiler",
+   "subtype": "Chief B Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 933
+  },
+  {
+   "id": 11,
+   "type": "Boiler",
+   "subtype": "Chief C Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 1948
+  },
+  {
+   "id": 12,
+   "type": "Boiler",
+   "subtype": "Historical Boiler Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 1137
+  },
+  {
+   "id": 13,
+   "type": "Boiler",
+   "subtype": "Special Engineer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 16652
+  },
+  {
+   "id": 14,
+   "type": "Building Officials",
+   "subtype": "Accessibility Specialist",
+   "kind": "certification",
+   "grain": "person",
+   "rows": 96
+  },
+  {
+   "id": 15,
+   "type": "Building Officials",
+   "subtype": "Certified Building Official",
+   "kind": "certification",
+   "grain": "person",
+   "rows": 665
+  },
+  {
+   "id": 16,
+   "type": "Building Officials",
+   "subtype": "Certified Building Official - Limited",
+   "kind": "certification",
+   "grain": "person",
+   "rows": 349
+  },
+  {
+   "id": 17,
+   "type": "Continuing Education",
+   "subtype": "CE Sponsor",
+   "kind": "sponsor_approval",
+   "grain": "business",
+   "rows": 591
+  },
+  {
+   "id": 18,
+   "type": "Continuing Education",
+   "subtype": "CE Sponsor Out-of-State",
+   "kind": "sponsor_approval",
+   "grain": "business",
+   "rows": 415
+  },
+  {
+   "id": 19,
+   "type": "Contractor Registration",
+   "subtype": "Business Entity",
+   "kind": "registration",
+   "grain": "business",
+   "rows": 19216
+  },
+  {
+   "id": 20,
+   "type": "Contractor Registration",
+   "subtype": "Sole Proprietor or Individual",
+   "kind": "registration",
+   "grain": "business",
+   "rows": 2196
+  },
+  {
+   "id": 21,
+   "type": "Electrical",
+   "subtype": "Class A Electrical Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 3729
+  },
+  {
+   "id": 22,
+   "type": "Electrical",
+   "subtype": "Class A Master Electrician",
+   "kind": "license",
+   "grain": "person",
+   "rows": 7277
+  },
+  {
+   "id": 23,
+   "type": "Electrical",
+   "subtype": "Class B Electrical Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 4
+  },
+  {
+   "id": 24,
+   "type": "Electrical",
+   "subtype": "Class B Installer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 19
+  },
+  {
+   "id": 25,
+   "type": "Electrical",
+   "subtype": "Class B Master Electrician",
+   "kind": "license",
+   "grain": "person",
+   "rows": 5
+  },
+  {
+   "id": 26,
+   "type": "Electrical",
+   "subtype": "Journeyworker A Electrician",
+   "kind": "license",
+   "grain": "person",
+   "rows": 13876
+  },
+  {
+   "id": 27,
+   "type": "Electrical",
+   "subtype": "Journeyworker B Electrician",
+   "kind": "license",
+   "grain": "person",
+   "rows": 7
+  },
+  {
+   "id": 28,
+   "type": "Electrical",
+   "subtype": "Lineman",
+   "kind": "license",
+   "grain": "person",
+   "rows": 92
+  },
+  {
+   "id": 29,
+   "type": "Electrical",
+   "subtype": "Maintenance Electrician",
+   "kind": "license",
+   "grain": "person",
+   "rows": 119
+  },
+  {
+   "id": 30,
+   "type": "Electrical",
+   "subtype": "Power Limited Technician",
+   "kind": "license",
+   "grain": "person",
+   "rows": 4522
+  },
+  {
+   "id": 31,
+   "type": "Electrical",
+   "subtype": "Registered Electrical Employer",
+   "kind": "registration",
+   "grain": "business",
+   "rows": 1005
+  },
+  {
+   "id": 32,
+   "type": "Electrical",
+   "subtype": "Registered Unlicensed Electrician",
+   "kind": "registration",
+   "grain": "person",
+   "rows": 52532
+  },
+  {
+   "id": 33,
+   "type": "Electrical",
+   "subtype": "Registered Unlicensed Power Limited Technician",
+   "kind": "registration",
+   "grain": "person",
+   "rows": 25138
+  },
+  {
+   "id": 34,
+   "type": "Electrical",
+   "subtype": "Satellite System Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 7
+  },
+  {
+   "id": 35,
+   "type": "Electrical",
+   "subtype": "Satellite System Installer",
+   "kind": "license",
+   "grain": "person",
+   "rows": 12
+  },
+  {
+   "id": 36,
+   "type": "Electrical",
+   "subtype": "Sign Contractor Bond",
+   "kind": "bond",
+   "grain": "business",
+   "rows": 207
+  },
+  {
+   "id": 37,
+   "type": "Electrical",
+   "subtype": "Technology Systems Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 1199
+  },
+  {
+   "id": 38,
+   "type": "Elevator",
+   "subtype": "Elevator Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 30
+  },
+  {
+   "id": 39,
+   "type": "Elevator",
+   "subtype": "Journeyworker Elevator Constructor",
+   "kind": "license",
+   "grain": "person",
+   "rows": 511
+  },
+  {
+   "id": 40,
+   "type": "Elevator",
+   "subtype": "Limited Elevator Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 21
+  },
+  {
+   "id": 41,
+   "type": "Elevator",
+   "subtype": "Limited Journeyworker Elevator Constructor",
+   "kind": "license",
+   "grain": "person",
+   "rows": 33
+  },
+  {
+   "id": 42,
+   "type": "Elevator",
+   "subtype": "Limited Master Elevator Constructor",
+   "kind": "license",
+   "grain": "person",
+   "rows": 34
+  },
+  {
+   "id": 43,
+   "type": "Elevator",
+   "subtype": "Master Elevator Constructor",
+   "kind": "license",
+   "grain": "person",
+   "rows": 79
+  },
+  {
+   "id": 44,
+   "type": "Elevator",
+   "subtype": "Registered Unlicensed Elevator Constructor",
+   "kind": "registration",
+   "grain": "person",
+   "rows": 1232
+  },
+  {
+   "id": 45,
+   "type": "High Pressure Piping",
+   "subtype": "HPP Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 177
+  },
+  {
+   "id": 46,
+   "type": "High Pressure Piping",
+   "subtype": "HPP Journeyworker Pipefitter",
+   "kind": "license",
+   "grain": "person",
+   "rows": 2731
+  },
+  {
+   "id": 47,
+   "type": "High Pressure Piping",
+   "subtype": "Master HPP Pipefitter",
+   "kind": "license",
+   "grain": "person",
+   "rows": 402
+  },
+  {
+   "id": 48,
+   "type": "High Pressure Piping",
+   "subtype": "Registered Unlicensed HPP Pipefitter",
+   "kind": "registration",
+   "grain": "person",
+   "rows": 4169
+  },
+  {
+   "id": 49,
+   "type": "Manufactured Structures",
+   "subtype": "Manufactured Home Dealer",
+   "kind": "license",
+   "grain": "business",
+   "rows": 136
+  },
+  {
+   "id": 50,
+   "type": "Manufactured Structures",
+   "subtype": "Manufactured Home Dealer Subagency",
+   "kind": "license",
+   "grain": "business",
+   "rows": 60
+  },
+  {
+   "id": 51,
+   "type": "Manufactured Structures",
+   "subtype": "Manufactured Home Limited Dealer",
+   "kind": "license",
+   "grain": "business",
+   "rows": 24
+  },
+  {
+   "id": 52,
+   "type": "Manufactured Structures",
+   "subtype": "Manufactured Home Manufacturer",
+   "kind": "license",
+   "grain": "business",
+   "rows": 20
+  },
+  {
+   "id": 53,
+   "type": "Mechanical Contractor Bond",
+   "subtype": "Mechanical Contractor Bond",
+   "kind": "bond",
+   "grain": "business",
+   "rows": 5351
+  },
+  {
+   "id": 54,
+   "type": "Plumbing",
+   "subtype": "Backflow Prevention Rebuilder",
+   "kind": "certification",
+   "grain": "person",
+   "rows": 3560
+  },
+  {
+   "id": 55,
+   "type": "Plumbing",
+   "subtype": "Backflow Prevention Tester",
+   "kind": "certification",
+   "grain": "person",
+   "rows": 2348
+  },
+  {
+   "id": 56,
+   "type": "Plumbing",
+   "subtype": "Journeyworker Plumber",
+   "kind": "license",
+   "grain": "person",
+   "rows": 4013
+  },
+  {
+   "id": 57,
+   "type": "Plumbing",
+   "subtype": "MPCA Pipelaying Bond",
+   "kind": "bond",
+   "grain": "person",
+   "rows": 1339
+  },
+  {
+   "id": 58,
+   "type": "Plumbing",
+   "subtype": "Master Plumber",
+   "kind": "license",
+   "grain": "person",
+   "rows": 3646
+  },
+  {
+   "id": 59,
+   "type": "Plumbing",
+   "subtype": "Medical Gas Certification",
+   "kind": "certification",
+   "grain": "person",
+   "rows": 299
+  },
+  {
+   "id": 60,
+   "type": "Plumbing",
+   "subtype": "Pipelaying Bond",
+   "kind": "bond",
+   "grain": "business",
+   "rows": 1094
+  },
+  {
+   "id": 61,
+   "type": "Plumbing",
+   "subtype": "Plumbing Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 2110
+  },
+  {
+   "id": 62,
+   "type": "Plumbing",
+   "subtype": "Registered Plumbing Employer",
+   "kind": "registration",
+   "grain": "business",
+   "rows": 78
+  },
+  {
+   "id": 63,
+   "type": "Plumbing",
+   "subtype": "Registered Unlicensed Plumber",
+   "kind": "registration",
+   "grain": "person",
+   "rows": 17715
+  },
+  {
+   "id": 64,
+   "type": "Plumbing",
+   "subtype": "Restricted Journeyworker Plumber",
+   "kind": "license",
+   "grain": "person",
+   "rows": 64
+  },
+  {
+   "id": 65,
+   "type": "Plumbing",
+   "subtype": "Restricted Master Plumber",
+   "kind": "license",
+   "grain": "person",
+   "rows": 361
+  },
+  {
+   "id": 66,
+   "type": "Plumbing",
+   "subtype": "Restricted Plumbing Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 238
+  },
+  {
+   "id": 67,
+   "type": "Residential Contractors",
+   "subtype": "Certificate of Exemption",
+   "kind": "exemption",
+   "grain": "business",
+   "rows": 5497
+  },
+  {
+   "id": 68,
+   "type": "Residential Contractors",
+   "subtype": "Manufactured Home Installer",
+   "kind": "license",
+   "grain": "business",
+   "rows": 84
+  },
+  {
+   "id": 69,
+   "type": "Residential Contractors",
+   "subtype": "Qualifying Builder",
+   "kind": "registration",
+   "grain": "person",
+   "rows": 35074
+  },
+  {
+   "id": 70,
+   "type": "Residential Contractors",
+   "subtype": "Qualifying Installer",
+   "kind": "registration",
+   "grain": "person",
+   "rows": 244
+  },
+  {
+   "id": 71,
+   "type": "Residential Contractors",
+   "subtype": "Qualifying Remodeler",
+   "kind": "registration",
+   "grain": "person",
+   "rows": 1657
+  },
+  {
+   "id": 72,
+   "type": "Residential Contractors",
+   "subtype": "Qualifying Roofer",
+   "kind": "registration",
+   "grain": "person",
+   "rows": 586
+  },
+  {
+   "id": 73,
+   "type": "Residential Contractors",
+   "subtype": "Residential Building Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 15291
+  },
+  {
+   "id": 74,
+   "type": "Residential Contractors",
+   "subtype": "Residential Remodeler Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 627
+  },
+  {
+   "id": 75,
+   "type": "Residential Contractors",
+   "subtype": "Residential Roofer Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 224
+  },
+  {
+   "id": 76,
+   "type": "Water Conditioning",
+   "subtype": "Journeyworker Water Conditioning",
+   "kind": "license",
+   "grain": "person",
+   "rows": 229
+  },
+  {
+   "id": 77,
+   "type": "Water Conditioning",
+   "subtype": "Master Water Conditioning",
+   "kind": "license",
+   "grain": "person",
+   "rows": 146
+  },
+  {
+   "id": 78,
+   "type": "Water Conditioning",
+   "subtype": "Registered Unlicensed Water Conditioning Installer",
+   "kind": "registration",
+   "grain": "person",
+   "rows": 594
+  },
+  {
+   "id": 79,
+   "type": "Water Conditioning",
+   "subtype": "Water Conditioning Contractor",
+   "kind": "license",
+   "grain": "business",
+   "rows": 87
+  }
+ ],
+ "shardSha256": {
+  "00": "363b2ceca58ab8d1067b238f82a225b0bae88900f989efeec65f932bf029043c",
+  "01": "00e56bf8fb4ba3d2ce53dc6c11f8806978927079c444d081bf6409dda80e920a",
+  "02": "3b315a41e2045ec97760b7e5dbbb27d29891fbdeac89c719b6535993ca54437d",
+  "03": "eae3ebfaddc2cc955cb5fa849509148f181adff281947adcdc4a7ef3bdf776ba",
+  "04": "c20a86264092cbeb9805c8ec57e73025c4e7f0f82ba22b2dbfafd94a62fe9138",
+  "05": "c35c89e2157c0c1dc66857b8d31664ea3d55b293fe547196d04ada4794bd3343",
+  "06": "4407dae4ff6f4660f9fc508343b8a8bb016a5e37d46f35e0f67a4adc4e46ed33",
+  "07": "add796b2d7d10c3825dbd3320db8fc9da6177b995f02cbe6bcf696a40aee36dd",
+  "08": "f36259bcf7b5a715b1c2653856db069a2a742a378c70d7da30513d965191e956",
+  "09": "9f676e3eb477ad3901794b85c74234e2861542927d2bee157fb6faa3c62f2aed",
+  "10": "00465071b7f6e66a3ea7ccb1d6ea05bf47ba1fbc555e9ae7f86d7ce208a6b040",
+  "11": "23097dd05d6cb1768e6e7d3a228d16ea1ceab3d5292159173e4d28a8bc1bdb80",
+  "12": "7629d0a7205b6bd3dc6ef159378868be9f6304a3de10be575877425c10368f22",
+  "13": "99ca5bb53294f14aa2cac4b574a6c7b9598489c9bd7c9ab482fb5a97520c43bd",
+  "14": "1f5af72de8b311838c1a1e99572d9b048dd1f339923c19b709d2c3f058b06ac8",
+  "15": "f451a904d31bb9505c2bf1019da6aef8aacd5b1409966b6ec8f32906e7dcb19f",
+  "16": "a6c562ab73f587432cee4ed925af857f1c9b134ac79b4251913cd4c6a003c71b",
+  "17": "be2edeb1aa9d2504f1be61179992654b946c406170c7c29d86c6285de7af7aca",
+  "18": "87854755e2e4834e480b9ef8cb7826826f31555d23e529b442e0bac4287202ea",
+  "19": "e3b90a1f39cbcb65d81c0ebb79356e425ccfe875c4c3c532cfd4da888f88f8d8",
+  "20": "93152d155e68f759cab7d9295c372f75f739460bd296e18427a6b6b5bf8b2507",
+  "21": "d9760500d64fea65bb8804b11e623542b593ee0d41ce727391c24a9e28e5579c",
+  "22": "b55039be1b03a1bf74219936416095c1634310485398a9e45eccf228ce3b9c4c",
+  "23": "0fc00c20a2456c0dc4f6b754ed38724b83c689aa828fa8216e64370c1cfcc62f",
+  "24": "eadf4fc23499614fae1e1243e9a4a004fda33902be84f6287243c9d1201fbe24",
+  "25": "d089b58dd7dd99790ad133add0effd671f0f48e6fd1d825188c033efbd2363fe",
+  "26": "31d8bb089268e55fa78c007d8db6660415dc8bb642d5cdc3f437f3e6519e4b6a",
+  "27": "03f8f01867175de147413ed0e633433e6941a6ad17e6252759787275cdfc1da9",
+  "28": "ac7d35758809afa42b02030bad6a359f6d0368cc53034cea6eaa76233f0ae58d",
+  "29": "feca420ad34c6dc44c4a24f24607d564cf0dc6371a25347b7821f04ea43bbb79",
+  "30": "252739ab6698d088261bb48a0e27188bb3ca620216421422835741940903f652",
+  "31": "3f181de30f9263c8e463e8e6e135e5d556fef7cd23f32828365fa3ffe606ea69",
+  "32": "1ea198ed6ebece96b72262bf365c4b8d9d34bc92607a472b7b0c8ebc105b081b",
+  "33": "0c61f7941e9e89b62557e0d7faf0556de8eb2dcc9babe3cc7ce3ff9a94629d22",
+  "34": "7a3a6920498c138b103da864e0cb2b853264331004c4703ef6a146c64378a8f1",
+  "35": "01d1968ce7d6f170322093e0ac1bf5dfc5661558cbaa4608d57ba52954e21abc",
+  "36": "d96b78c47017479c7de16898f1cfdf012654bbcad80a464d21c1a4e56f885536",
+  "37": "81e36b7a0eba188ec9cb0d24d872408185cec37bbd3219f4657b52b22cd90cee",
+  "38": "36f0e4f339256adcfac80c508b3061753c96ef580ad1b4ddaa2be9cc4c32980c",
+  "39": "60cc9d9a44dc8334fb177920e5f1285f074eab7977a8542e75621ff0511e0ee8",
+  "40": "2ea679bb068809f9f5d4c2dddea3c05c712964716ad0f70099537da7b2ca4469",
+  "41": "13226eb357d6ae70468ad28ded293629d5785ecf92077a58eff5720f4b148ee4",
+  "42": "46ee30e3088207b49a31b430dbc69321a3616dd9e7d4581c129fa7ac4a386259",
+  "43": "23b005b3312a7f52fc2051cfe4e1e27cfe96348661c493065b3249563e9cf176",
+  "44": "6919af1fadd5f9441ea760392f0559477031c5798ac11cc1e5d5ca4981c1d6f1",
+  "45": "a39184f70e7bbceb529b205b013386f1a3402cc92b5a2777c262fb4c8aa2e267",
+  "46": "5b0124190ff9fcffe65eca4c195da2ac8d2948a3b23d39bc103ffa43de4832ed",
+  "47": "dacae5abaaba96218e82af736c880c42041e877de0fff6cb38f898c245a7cafa",
+  "48": "55040820b6d67f6666ad7c4c566f887029c8ab7e6db6b30fe51de683a2f76f59",
+  "49": "e8811c15b3a924007a49cdcf6889667c34f6a550649a3458d49385c5345583a3",
+  "50": "7403b741bc679c1123fe9fb647f8e667be81c664ac34a42a54054ceea5c8a177",
+  "51": "42cb2ee8129e491c4bac6e819fec80367384e76e10f9573ac125448ce6ee77cb",
+  "52": "06edde37153bbe7d3ff4ab5efd36f0450ccfc6b60fceb4050de23e65b91b62a3",
+  "53": "6f0e0f3ac2254fdd06f4fb444a68990c863490c68d0f6d649ac6502aa39619cd",
+  "54": "047ff73ff8d8a969bddcef8247d9e81a08fbd8c95d5580c0686de74b176d78da",
+  "55": "cce4cd612c5342e38fe46e27f196c800057cc33f3a96d75088b95a1923ee8ba5",
+  "56": "32564fb078794025cd323aa82b5afa8ab8d0e2cb42606dd666db7f9629af968e",
+  "57": "cfd6e7f3ef4e93c1dde008692fba68bd2ed245fb8fe71ad3d5c384a396cfb1e8",
+  "58": "f3eb76ac1d244b97b100c7e0bea7bf7004fec9fe7d98293aa19c7caf7e1c689a",
+  "59": "eeae84dc79af4f8a7467c39a9fafffc51d479b08a819873dd0d0a73753c771e2",
+  "60": "d799ad9b97321315e1cbc172cfeb0578d4b0ef960e60e600807a53a3fdc31a34",
+  "61": "39b2c2cf43706659562c0f8aeac2ca87781a083077a404d36f81e43c16e86217",
+  "62": "5d6a6f6e2bad7494ec54bfb3231d66d16bc03a72fc4f9fec89bb6ce989d115c7",
+  "63": "2e9f28d1518dcb12b0db107677c7198631da3fa208103a8387c0529724b69647",
+  "64": "e7d7ffcc32fce375e30a78c9b10049db5b4c3e1a33b2e00850afcbd97b1103ea",
+  "65": "0488409331b2f09bb6d9e0cf0c467c07b25aa835a42dabd8eaa9caae10de31dd",
+  "66": "6b5fd6ae6ff5802936f56b44922245e4c8de18302625102cd0a31217af9e6092",
+  "67": "28fb95ad12580efea07f7786a401dc146d1851a6b5c3b91dd16c1bcfa08e9fb1",
+  "68": "607e500a502e72f6584559131205604d500234564f2d98904f7adbd81dd7faf8",
+  "69": "8978f99a9100e47c6daa84f3aa26d7a8b267c326d7b7921864f958261ca459f9",
+  "70": "d2be4ec60e0c427c317bc165f02e1e616cc6e8b1b975cd3fab82effac19ac4c2",
+  "71": "3d30a275bd87af34d77dc7a13f905e5d1e26e83eaa439263ddd2f633e83d0811",
+  "72": "0172085329a82d9c7fdb8acc47e2c95cc98bde0f5b1e882bd6ac6f24aaf7f7cc",
+  "73": "c5fc0f2eee43a2f0492accdd86ef7c811a795062e9319a2de009ace229a89280",
+  "74": "f53d316840845575e029596f03fe84fdb9183cf435672ab6fba7a5fb688f2524",
+  "75": "bd3ce39dce2042136b696d01baeb3b23048f8884d48f8ff17357ec37e6d6e091",
+  "76": "104576f15fe70d88251d8a6795386c7a577ca32c439c55a046953573627f78a3",
+  "77": "1e9042113931eee51f4995ed0e1d6fc31103f0b105cd8903550b22bbfc9690ca",
+  "78": "66e47fb8019ff3e83ff745adc8df6745577fe7d9b30c14efe6ba148297d1c0bc",
+  "79": "2aa425ffc4296092e2540c0fb68f9bba164e9747b5558db3f17f67fa4db83e06",
+  "80": "1bf1f2a18e3f4e7f469211f6fa75a7b066605979ddaba3c33cb7517178e2faf5",
+  "81": "ef90b7b0886f6ac267f97286d3298e6573954246c70086baadec31c592b2edbf",
+  "82": "fe7293b0f3bca279797ca8b2a545a6a6b3a95298a96b200846b4169fa1acb274",
+  "83": "0e451b1b4b9919a44b26141d5e3110f771046e9aec1c84e65a3ebea4c08b12ad",
+  "84": "3f0ee37de1e4983faadb613f668a0793c2f0c89270abdad8f678726c32ac5dec",
+  "85": "75cb3c96f62895a64b652472b7146119020f2c2f07a8cee87fd523df576159db",
+  "86": "3a11ff9d12539209801eb3dbfcb2736e1a46383c20a4ae8b6cf10e91f30fb52d",
+  "87": "7712f48313e865430ba459de04a0c9f7297024e8c21abdb2abb647090d732856",
+  "88": "7f840fd4d3534cb942af12e6a1809a2667c8e7812bea35846c7583877db25eb9",
+  "89": "8ad9f2e7bbba7f5145dd9a35a470f7978910d0de1c0e999fbad175c3d8cf383e",
+  "90": "06c6a3eb0fd4cea5f4882418fbf9880699121840df43a1f4f13fac28592f496a",
+  "91": "54053b02bfa93bc1e580fed7e4b7b3a6b743001598ff8793488bde7fb5e30563",
+  "92": "68438e56424f77a1010dd78a5b24b20ec7c626a5235a41d9c5d190216882dab6",
+  "93": "cb4aad1ab6055239c8db4f1b20f9482f4d3231d414f57552695aef1c2bf5ba58",
+  "94": "98886b8002b7f7552d37eacf1160d899e499cf275bf754cded15c6bdb9b53a7a",
+  "95": "a0881410d67c0262982e08f4664c7129918d0799308cc17b3d6964b53d1e9c92",
+  "96": "845260822e6fa69deacaa3f1f416eec853ec77529c563a04062b0da266118fa1",
+  "97": "47ea01bc1fdc7bba9bfc0a07bd25a3065dcfe2d8c1468ce6a36b10573f141eb7",
+  "98": "f8063778fa5b977bb221b13c982919cb05a2dfb6ee19337e77d062779db1673f",
+  "99": "65ce3eb998c529ee7332a776b4cf19f1b3c62cef44332b2ab9e612bbff7e193f"
+ }
+}

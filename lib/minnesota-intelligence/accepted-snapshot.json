@@ -1,0 +1,1889 @@
+{
+  "contract_name": "contractor-mn-state-intel-v1",
+  "ticket": "MN-CON-001",
+  "path": "/minnesota",
+  "generated_at": "2026-09-26T16:30:00Z",
+  "regulator": {
+    "agency": "Minnesota Department of Labor and Industry (DLI), Construction Codes and Licensing Division",
+    "law": "Minn. Stat. ch. 326B (construction codes and licensing); Minn. Stat. § 326B.845 (violation of a Commissioner's order); Minn. Stat. § 181.723 (contractor registration)",
+    "lookup": "https://www.dli.mn.gov/license-and-registration-lookup",
+    "ims": "https://ims.dli.mn.gov/",
+    "exportBase": "https://secure.doli.state.mn.us/ccld/data/",
+    "enforcement": "https://www.dli.mn.gov/business/residential-contractors/residential-building-contractor-enforcement-actions",
+    "contractorComplaint": "https://www.dli.mn.gov/business/residential-contractors/residential-building-contractor-complaints",
+    "residentialLicensing": "https://www.dli.mn.gov/business/residential-contractors/residential-contractor-licensing"
+  },
+  "statewide_export": {
+    "coverage": "KNOWN",
+    "dliStatement": "The spreadsheet includes all licenses, bonds, certifications and registrations issued by DLI's Construction Codes and Licensing Division. It is updated nightly. Current, active licenses or registrations will have a status of 'Issued.'",
+    "asOfPrintedByDli": null,
+    "asOfPolicy": "DLI says the export is updated nightly and prints no as-of date; the retrieval time and the zip member's own date stamp are the only clocks, and none is invented",
+    "retrievedAt": "2026-09-26T14:11:34Z",
+    "files": {
+      "MNDLILicRegCertExport.zip": {
+        "sha256": "68b661f19a63466840e58db3c8a79c5bf7c937819b2b65fdf9d41c9152498749",
+        "bytes": 11103041,
+        "member": "LIC_SNAP_09_26_2026.csv",
+        "memberBytes": 51362967,
+        "memberDateTime": "2026-09-26T04:32:00",
+        "rows": 259136
+      },
+      "MNDLILicRegCertExport_Contractor_Registrations.csv": {
+        "sha256": "6cad6c3059449ec359232fe5dba9b6f93a994537f4840fc15e882009d2176c28",
+        "bytes": 4442959,
+        "rows": 21412
+      },
+      "MNDLILicRegCertExport_Residential_Contractors.csv": {
+        "sha256": "366b49bf8ecaf5868579538b1d708a15bbda413cd4086c83b440d9ed024e7d91",
+        "bytes": 12211746,
+        "subsetOf": "LIC_SNAP",
+        "licenseType": "Residential Contractors"
+      },
+      "MNDLILicRegCertExport_Electrical.csv": {
+        "sha256": "dee82227384218e2bc603a17e8700d2402f63d7c8815f6874ff4cd7209506297",
+        "bytes": 22029721,
+        "subsetOf": "LIC_SNAP",
+        "licenseType": "Electrical"
+      },
+      "MNDLILicRegCertExport_Plumbing.csv": {
+        "sha256": "20d29c5b3d99c99bd124ef65dc7b59f078859480234cc2cffef29bb81a2a0906",
+        "bytes": 7021198,
+        "subsetOf": "LIC_SNAP",
+        "licenseType": "Plumbing"
+      },
+      "MNDLILicRegCertExport_Mechanical_Contractor_Bond.csv": {
+        "sha256": "d3f1318f55b5eebdc922287bdae54233f26d5fb147ebebf143dd1b84d8b24052",
+        "bytes": 1185600,
+        "subsetOf": "LIC_SNAP",
+        "licenseType": "Mechanical Contractor Bond"
+      }
+    },
+    "columns": [
+      "Bus_Pers",
+      "License_Type",
+      "License_Subtype",
+      "Name",
+      "DBA_Name",
+      "Addr1",
+      "Addr2",
+      "City",
+      "St",
+      "Zip",
+      "Phone_No",
+      "Email_Address",
+      "Lic_Number",
+      "Status",
+      "Orig_Date",
+      "Exp_Date",
+      "Enforcement_Action",
+      "Renewal_in_Progress"
+    ],
+    "rows": 280548,
+    "distinctCredentialNumbers": 280548,
+    "credentialNumberForm": "two-character prefix plus six digits as printed (for example BC, QB, EA, PC, MB, IR)",
+    "credentialNumbersOutsidePrefixSixDigitForm": {
+      "count": 1341,
+      "bySubtype": {
+        "MPCA Pipelaying Bond": 1339,
+        "Certificate of Exemption": 1,
+        "Registered Unlicensed Electrician": 1
+      },
+      "examples": [
+        "554906",
+        "585402",
+        "L100",
+        "L1000",
+        "L1001"
+      ]
+    },
+    "credentialNumbersPrintedWithSurroundingWhitespace": 2,
+    "busPers": {
+      "Business": 59718,
+      "Personal": 220830
+    },
+    "statusAsPrinted": {
+      "Issued": 137258,
+      "EXPIRED": 83581,
+      "Expired": 39916,
+      "LICENSED": 8744,
+      "Voluntary Termination": 3959,
+      "VOLUNTARY TERMINATION": 3140,
+      "REVOKED": 1296,
+      "ISSUED": 1078,
+      "SUSPENDED": 910,
+      "Revoked": 344,
+      "Suspended": 216,
+      "Withdrawn": 61,
+      "Denied": 44,
+      "Denied- Duplicate": 1
+    },
+    "statusGroupedCaseInsensitive": {
+      "ISSUED": 138336,
+      "EXPIRED": 123497,
+      "LICENSED": 8744,
+      "VOLUNTARY TERMINATION": 7099,
+      "REVOKED": 1640,
+      "SUSPENDED": 1126,
+      "WITHDRAWN": 61,
+      "DENIED": 44,
+      "DENIED- DUPLICATE": 1
+    },
+    "statusPolicy": "status is kept exactly as DLI prints it; DLI prints the same word in mixed and upper case ('Issued' and 'ISSUED'), so grouped counts are shown beside the as-printed counts. 'Issued' is the only status DLI describes as current and active; 'LICENSED' is printed on some registrations and is not folded into Issued. A future expiration date does not make a credential current.",
+    "fieldsDroppedForEveryRow": [
+      "Addr1",
+      "Addr2",
+      "Phone_No",
+      "Email_Address"
+    ],
+    "fieldsDroppedForPersonRows": [
+      "Addr1",
+      "Addr2",
+      "Phone_No",
+      "Email_Address",
+      "Name",
+      "DBA_Name",
+      "City",
+      "Zip"
+    ],
+    "droppedFieldCounts": {
+      "Addr1": 280517,
+      "Addr2": 23830,
+      "City(person)": 220741,
+      "Name(person)": 220830,
+      "Phone_No": 247228,
+      "Zip(person)": 220821
+    },
+    "types": [
+      {
+        "type": "Boiler",
+        "rows": 35055,
+        "businessSubtypes": [],
+        "personSubtypes": [
+          {
+            "subtype": "1st Class A Engineer",
+            "kind": "license",
+            "rows": 1526,
+            "issuedPerDliStatement": 1310
+          },
+          {
+            "subtype": "1st Class B Engineer",
+            "kind": "license",
+            "rows": 1491,
+            "issuedPerDliStatement": 1285
+          },
+          {
+            "subtype": "1st Class C Engineer",
+            "kind": "license",
+            "rows": 2949,
+            "issuedPerDliStatement": 2511
+          },
+          {
+            "subtype": "1st Class P Engineer",
+            "kind": "license",
+            "rows": 126,
+            "issuedPerDliStatement": 110
+          },
+          {
+            "subtype": "2nd Class A Engineer",
+            "kind": "license",
+            "rows": 1082,
+            "issuedPerDliStatement": 919
+          },
+          {
+            "subtype": "2nd Class B Engineer",
+            "kind": "license",
+            "rows": 1503,
+            "issuedPerDliStatement": 1249
+          },
+          {
+            "subtype": "2nd Class C Engineer",
+            "kind": "license",
+            "rows": 3587,
+            "issuedPerDliStatement": 3011
+          },
+          {
+            "subtype": "Boat Master",
+            "kind": "license",
+            "rows": 288,
+            "issuedPerDliStatement": 253
+          },
+          {
+            "subtype": "Boiler Inspector Competency",
+            "kind": "certification",
+            "rows": 208,
+            "issuedPerDliStatement": 146
+          },
+          {
+            "subtype": "Chief A Engineer",
+            "kind": "license",
+            "rows": 1625,
+            "issuedPerDliStatement": 1484
+          },
+          {
+            "subtype": "Chief B Engineer",
+            "kind": "license",
+            "rows": 933,
+            "issuedPerDliStatement": 844
+          },
+          {
+            "subtype": "Chief C Engineer",
+            "kind": "license",
+            "rows": 1948,
+            "issuedPerDliStatement": 1718
+          },
+          {
+            "subtype": "Historical Boiler Engineer",
+            "kind": "license",
+            "rows": 1137,
+            "issuedPerDliStatement": 1137
+          },
+          {
+            "subtype": "Special Engineer",
+            "kind": "license",
+            "rows": 16652,
+            "issuedPerDliStatement": 13695
+          }
+        ]
+      },
+      {
+        "type": "Building Officials",
+        "rows": 1110,
+        "businessSubtypes": [],
+        "personSubtypes": [
+          {
+            "subtype": "Accessibility Specialist",
+            "kind": "certification",
+            "rows": 96,
+            "issuedPerDliStatement": 72
+          },
+          {
+            "subtype": "Certified Building Official",
+            "kind": "certification",
+            "rows": 665,
+            "issuedPerDliStatement": 595
+          },
+          {
+            "subtype": "Certified Building Official - Limited",
+            "kind": "certification",
+            "rows": 349,
+            "issuedPerDliStatement": 256
+          }
+        ]
+      },
+      {
+        "type": "Continuing Education",
+        "rows": 1006,
+        "businessSubtypes": [
+          {
+            "subtype": "CE Sponsor",
+            "kind": "sponsor_approval",
+            "rows": 591,
+            "issuedPerDliStatement": 191
+          },
+          {
+            "subtype": "CE Sponsor Out-of-State",
+            "kind": "sponsor_approval",
+            "rows": 415,
+            "issuedPerDliStatement": 5
+          }
+        ],
+        "personSubtypes": []
+      },
+      {
+        "type": "Contractor Registration",
+        "rows": 21412,
+        "businessSubtypes": [
+          {
+            "subtype": "Business Entity",
+            "kind": "registration",
+            "rows": 19216,
+            "issuedPerDliStatement": 13917
+          },
+          {
+            "subtype": "Sole Proprietor or Individual",
+            "kind": "registration",
+            "rows": 2196,
+            "issuedPerDliStatement": 1053
+          }
+        ],
+        "personSubtypes": []
+      },
+      {
+        "type": "Electrical",
+        "rows": 109750,
+        "businessSubtypes": [
+          {
+            "subtype": "Class A Electrical Contractor",
+            "kind": "license",
+            "rows": 3729,
+            "issuedPerDliStatement": 2652
+          },
+          {
+            "subtype": "Class B Electrical Contractor",
+            "kind": "license",
+            "rows": 4,
+            "issuedPerDliStatement": 2
+          },
+          {
+            "subtype": "Registered Electrical Employer",
+            "kind": "registration",
+            "rows": 1005,
+            "issuedPerDliStatement": 423
+          },
+          {
+            "subtype": "Satellite System Contractor",
+            "kind": "license",
+            "rows": 7,
+            "issuedPerDliStatement": 3
+          },
+          {
+            "subtype": "Sign Contractor Bond",
+            "kind": "bond",
+            "rows": 207,
+            "issuedPerDliStatement": 113
+          },
+          {
+            "subtype": "Technology Systems Contractor",
+            "kind": "license",
+            "rows": 1199,
+            "issuedPerDliStatement": 789
+          }
+        ],
+        "personSubtypes": [
+          {
+            "subtype": "Class A Master Electrician",
+            "kind": "license",
+            "rows": 7277,
+            "issuedPerDliStatement": 6722
+          },
+          {
+            "subtype": "Class B Installer",
+            "kind": "license",
+            "rows": 19,
+            "issuedPerDliStatement": 19
+          },
+          {
+            "subtype": "Class B Master Electrician",
+            "kind": "license",
+            "rows": 5,
+            "issuedPerDliStatement": 3
+          },
+          {
+            "subtype": "Journeyworker A Electrician",
+            "kind": "license",
+            "rows": 13876,
+            "issuedPerDliStatement": 12413
+          },
+          {
+            "subtype": "Journeyworker B Electrician",
+            "kind": "license",
+            "rows": 7,
+            "issuedPerDliStatement": 5
+          },
+          {
+            "subtype": "Lineman",
+            "kind": "license",
+            "rows": 92,
+            "issuedPerDliStatement": 82
+          },
+          {
+            "subtype": "Maintenance Electrician",
+            "kind": "license",
+            "rows": 119,
+            "issuedPerDliStatement": 93
+          },
+          {
+            "subtype": "Power Limited Technician",
+            "kind": "license",
+            "rows": 4522,
+            "issuedPerDliStatement": 3990
+          },
+          {
+            "subtype": "Registered Unlicensed Electrician",
+            "kind": "registration",
+            "rows": 52532,
+            "issuedPerDliStatement": 12573
+          },
+          {
+            "subtype": "Registered Unlicensed Power Limited Technician",
+            "kind": "registration",
+            "rows": 25138,
+            "issuedPerDliStatement": 4547
+          },
+          {
+            "subtype": "Satellite System Installer",
+            "kind": "license",
+            "rows": 12,
+            "issuedPerDliStatement": 8
+          }
+        ]
+      },
+      {
+        "type": "Elevator",
+        "rows": 1940,
+        "businessSubtypes": [
+          {
+            "subtype": "Elevator Contractor",
+            "kind": "license",
+            "rows": 30,
+            "issuedPerDliStatement": 22
+          },
+          {
+            "subtype": "Limited Elevator Contractor",
+            "kind": "license",
+            "rows": 21,
+            "issuedPerDliStatement": 16
+          }
+        ],
+        "personSubtypes": [
+          {
+            "subtype": "Journeyworker Elevator Constructor",
+            "kind": "license",
+            "rows": 511,
+            "issuedPerDliStatement": 458
+          },
+          {
+            "subtype": "Limited Journeyworker Elevator Constructor",
+            "kind": "license",
+            "rows": 33,
+            "issuedPerDliStatement": 30
+          },
+          {
+            "subtype": "Limited Master Elevator Constructor",
+            "kind": "license",
+            "rows": 34,
+            "issuedPerDliStatement": 31
+          },
+          {
+            "subtype": "Master Elevator Constructor",
+            "kind": "license",
+            "rows": 79,
+            "issuedPerDliStatement": 75
+          },
+          {
+            "subtype": "Registered Unlicensed Elevator Constructor",
+            "kind": "registration",
+            "rows": 1232,
+            "issuedPerDliStatement": 226
+          }
+        ]
+      },
+      {
+        "type": "High Pressure Piping",
+        "rows": 7479,
+        "businessSubtypes": [
+          {
+            "subtype": "HPP Contractor",
+            "kind": "license",
+            "rows": 177,
+            "issuedPerDliStatement": 138
+          }
+        ],
+        "personSubtypes": [
+          {
+            "subtype": "HPP Journeyworker Pipefitter",
+            "kind": "license",
+            "rows": 2731,
+            "issuedPerDliStatement": 2502
+          },
+          {
+            "subtype": "Master HPP Pipefitter",
+            "kind": "license",
+            "rows": 402,
+            "issuedPerDliStatement": 383
+          },
+          {
+            "subtype": "Registered Unlicensed HPP Pipefitter",
+            "kind": "registration",
+            "rows": 4169,
+            "issuedPerDliStatement": 753
+          }
+        ]
+      },
+      {
+        "type": "Manufactured Structures",
+        "rows": 240,
+        "businessSubtypes": [
+          {
+            "subtype": "Manufactured Home Dealer",
+            "kind": "license",
+            "rows": 136,
+            "issuedPerDliStatement": 90
+          },
+          {
+            "subtype": "Manufactured Home Dealer Subagency",
+            "kind": "license",
+            "rows": 60,
+            "issuedPerDliStatement": 37
+          },
+          {
+            "subtype": "Manufactured Home Limited Dealer",
+            "kind": "license",
+            "rows": 24,
+            "issuedPerDliStatement": 16
+          },
+          {
+            "subtype": "Manufactured Home Manufacturer",
+            "kind": "license",
+            "rows": 20,
+            "issuedPerDliStatement": 15
+          }
+        ],
+        "personSubtypes": []
+      },
+      {
+        "type": "Mechanical Contractor Bond",
+        "rows": 5351,
+        "businessSubtypes": [
+          {
+            "subtype": "Mechanical Contractor Bond",
+            "kind": "bond",
+            "rows": 5351,
+            "issuedPerDliStatement": 2549
+          }
+        ],
+        "personSubtypes": []
+      },
+      {
+        "type": "Plumbing",
+        "rows": 36865,
+        "businessSubtypes": [
+          {
+            "subtype": "Pipelaying Bond",
+            "kind": "bond",
+            "rows": 1094,
+            "issuedPerDliStatement": 307
+          },
+          {
+            "subtype": "Plumbing Contractor",
+            "kind": "license",
+            "rows": 2110,
+            "issuedPerDliStatement": 1598
+          },
+          {
+            "subtype": "Registered Plumbing Employer",
+            "kind": "registration",
+            "rows": 78,
+            "issuedPerDliStatement": 57
+          },
+          {
+            "subtype": "Restricted Plumbing Contractor",
+            "kind": "license",
+            "rows": 238,
+            "issuedPerDliStatement": 158
+          }
+        ],
+        "personSubtypes": [
+          {
+            "subtype": "Backflow Prevention Rebuilder",
+            "kind": "certification",
+            "rows": 3560,
+            "issuedPerDliStatement": 959
+          },
+          {
+            "subtype": "Backflow Prevention Tester",
+            "kind": "certification",
+            "rows": 2348,
+            "issuedPerDliStatement": 856
+          },
+          {
+            "subtype": "Journeyworker Plumber",
+            "kind": "license",
+            "rows": 4013,
+            "issuedPerDliStatement": 3371
+          },
+          {
+            "subtype": "MPCA Pipelaying Bond",
+            "kind": "bond",
+            "rows": 1339,
+            "issuedPerDliStatement": 1017
+          },
+          {
+            "subtype": "Master Plumber",
+            "kind": "license",
+            "rows": 3646,
+            "issuedPerDliStatement": 3430
+          },
+          {
+            "subtype": "Medical Gas Certification",
+            "kind": "certification",
+            "rows": 299,
+            "issuedPerDliStatement": 224
+          },
+          {
+            "subtype": "Registered Unlicensed Plumber",
+            "kind": "registration",
+            "rows": 17715,
+            "issuedPerDliStatement": 2601
+          },
+          {
+            "subtype": "Restricted Journeyworker Plumber",
+            "kind": "license",
+            "rows": 64,
+            "issuedPerDliStatement": 35
+          },
+          {
+            "subtype": "Restricted Master Plumber",
+            "kind": "license",
+            "rows": 361,
+            "issuedPerDliStatement": 308
+          }
+        ]
+      },
+      {
+        "type": "Residential Contractors",
+        "rows": 59284,
+        "businessSubtypes": [
+          {
+            "subtype": "Certificate of Exemption",
+            "kind": "exemption",
+            "rows": 5497,
+            "issuedPerDliStatement": 145
+          },
+          {
+            "subtype": "Manufactured Home Installer",
+            "kind": "license",
+            "rows": 84,
+            "issuedPerDliStatement": 58
+          },
+          {
+            "subtype": "Residential Building Contractor",
+            "kind": "license",
+            "rows": 15291,
+            "issuedPerDliStatement": 10923
+          },
+          {
+            "subtype": "Residential Remodeler Contractor",
+            "kind": "license",
+            "rows": 627,
+            "issuedPerDliStatement": 429
+          },
+          {
+            "subtype": "Residential Roofer Contractor",
+            "kind": "license",
+            "rows": 224,
+            "issuedPerDliStatement": 140
+          }
+        ],
+        "personSubtypes": [
+          {
+            "subtype": "Qualifying Builder",
+            "kind": "registration",
+            "rows": 35074,
+            "issuedPerDliStatement": 12826
+          },
+          {
+            "subtype": "Qualifying Installer",
+            "kind": "registration",
+            "rows": 244,
+            "issuedPerDliStatement": 72
+          },
+          {
+            "subtype": "Qualifying Remodeler",
+            "kind": "registration",
+            "rows": 1657,
+            "issuedPerDliStatement": 562
+          },
+          {
+            "subtype": "Qualifying Roofer",
+            "kind": "registration",
+            "rows": 586,
+            "issuedPerDliStatement": 225
+          }
+        ]
+      },
+      {
+        "type": "Water Conditioning",
+        "rows": 1056,
+        "businessSubtypes": [
+          {
+            "subtype": "Water Conditioning Contractor",
+            "kind": "license",
+            "rows": 87,
+            "issuedPerDliStatement": 70
+          }
+        ],
+        "personSubtypes": [
+          {
+            "subtype": "Journeyworker Water Conditioning",
+            "kind": "license",
+            "rows": 229,
+            "issuedPerDliStatement": 172
+          },
+          {
+            "subtype": "Master Water Conditioning",
+            "kind": "license",
+            "rows": 146,
+            "issuedPerDliStatement": 136
+          },
+          {
+            "subtype": "Registered Unlicensed Water Conditioning Installer",
+            "kind": "registration",
+            "rows": 594,
+            "issuedPerDliStatement": 118
+          }
+        ]
+      }
+    ],
+    "credentialKinds": {
+      "all": {
+        "registration": 161436,
+        "license": 97093,
+        "bond": 7991,
+        "certification": 7525,
+        "exemption": 5497,
+        "sponsor_approval": 1006
+      },
+      "business": {
+        "license": 24068,
+        "registration": 22495,
+        "bond": 6652,
+        "exemption": 5497,
+        "sponsor_approval": 1006
+      },
+      "person": {
+        "registration": 138941,
+        "license": 73025,
+        "certification": 7525,
+        "bond": 1339
+      }
+    }
+  },
+  "business_credentials": {
+    "grain": "credential issued to a business (DLI Bus_Pers = Business)",
+    "rows": 59718,
+    "statusAsPrinted": {
+      "Issued": 35916,
+      "EXPIRED": 8459,
+      "Expired": 8033,
+      "Voluntary Termination": 3784,
+      "VOLUNTARY TERMINATION": 1913,
+      "REVOKED": 877,
+      "SUSPENDED": 402,
+      "Revoked": 227,
+      "Withdrawn": 48,
+      "Denied": 42,
+      "Suspended": 16,
+      "Denied- Duplicate": 1
+    },
+    "statusGroupedCaseInsensitive": {
+      "ISSUED": 35916,
+      "EXPIRED": 16492,
+      "VOLUNTARY TERMINATION": 5697,
+      "REVOKED": 1104,
+      "SUSPENDED": 418,
+      "WITHDRAWN": 48,
+      "DENIED": 42,
+      "DENIED- DUPLICATE": 1
+    },
+    "issuedPerDliStatement": 35916,
+    "dliEnforcementActionFlag": 2736,
+    "renewalInProgress": 479,
+    "expirationPrinted": 59710,
+    "namePublished": true,
+    "cityOfRecordMinnesota": {
+      "Minneapolis": 3322,
+      "St. Paul": 2630,
+      "Rochester": 798,
+      "Duluth": 902
+    },
+    "addressIsNotServiceArea": true,
+    "withMinnesotaAddress": 53888,
+    "withOutOfStateAddress": 5823
+  },
+  "person_credentials": {
+    "grain": "credential issued to an individual (DLI Bus_Pers = Personal)",
+    "rows": 220830,
+    "statusAsPrinted": {
+      "Issued": 101342,
+      "EXPIRED": 75122,
+      "Expired": 31883,
+      "LICENSED": 8744,
+      "VOLUNTARY TERMINATION": 1227,
+      "ISSUED": 1078,
+      "SUSPENDED": 508,
+      "REVOKED": 419,
+      "Suspended": 200,
+      "Voluntary Termination": 175,
+      "Revoked": 117,
+      "Withdrawn": 13,
+      "Denied": 2
+    },
+    "statusGroupedCaseInsensitive": {
+      "EXPIRED": 107005,
+      "ISSUED": 102420,
+      "LICENSED": 8744,
+      "VOLUNTARY TERMINATION": 1402,
+      "SUSPENDED": 708,
+      "REVOKED": 536,
+      "WITHDRAWN": 13,
+      "DENIED": 2
+    },
+    "issuedPerDliStatement": 102420,
+    "dliEnforcementActionFlag": 1287,
+    "renewalInProgress": 0,
+    "expirationPrinted": 219691,
+    "namePublished": false,
+    "cityPublished": false,
+    "exactNumberLookupOnly": true,
+    "notContractors": true,
+    "policy": "an individual's credential is verified by its exact number; the name on it is confirmed on DLI's lookup, not here"
+  },
+  "residential_contractors": {
+    "businessClasses": [
+      {
+        "subtype": "Residential Building Contractor",
+        "kind": "license",
+        "grain": "business",
+        "rows": 15291,
+        "issuedPerDliStatement": 10923,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 10923,
+          "VOLUNTARY TERMINATION": 2484,
+          "EXPIRED": 952,
+          "REVOKED": 825,
+          "SUSPENDED": 107
+        },
+        "dliEnforcementActionFlag": 1539,
+        "prefixesPrinted": [
+          "BC"
+        ]
+      },
+      {
+        "subtype": "Residential Remodeler Contractor",
+        "kind": "license",
+        "grain": "business",
+        "rows": 627,
+        "issuedPerDliStatement": 429,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 429,
+          "VOLUNTARY TERMINATION": 123,
+          "EXPIRED": 49,
+          "REVOKED": 25,
+          "SUSPENDED": 1
+        },
+        "dliEnforcementActionFlag": 54,
+        "prefixesPrinted": [
+          "CR"
+        ]
+      },
+      {
+        "subtype": "Residential Roofer Contractor",
+        "kind": "license",
+        "grain": "business",
+        "rows": 224,
+        "issuedPerDliStatement": 140,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 140,
+          "VOLUNTARY TERMINATION": 48,
+          "EXPIRED": 22,
+          "REVOKED": 14
+        },
+        "dliEnforcementActionFlag": 30,
+        "prefixesPrinted": [
+          "RR"
+        ]
+      },
+      {
+        "subtype": "Manufactured Home Installer",
+        "kind": "license",
+        "grain": "business",
+        "rows": 84,
+        "issuedPerDliStatement": 58,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 58,
+          "VOLUNTARY TERMINATION": 22,
+          "EXPIRED": 2,
+          "REVOKED": 2
+        },
+        "dliEnforcementActionFlag": 6,
+        "prefixesPrinted": [
+          "MI"
+        ]
+      },
+      {
+        "subtype": "Certificate of Exemption",
+        "kind": "exemption",
+        "grain": "business",
+        "rows": 5497,
+        "issuedPerDliStatement": 145,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 5260,
+          "ISSUED": 145,
+          "VOLUNTARY TERMINATION": 65,
+          "REVOKED": 25,
+          "SUSPENDED": 1,
+          "WITHDRAWN": 1
+        },
+        "dliEnforcementActionFlag": 241,
+        "prefixesPrinted": [
+          "58",
+          "XB",
+          "XM",
+          "XR"
+        ]
+      }
+    ],
+    "qualifyingPersons": [
+      {
+        "subtype": "Qualifying Builder",
+        "kind": "registration",
+        "grain": "person",
+        "rows": 35074,
+        "issuedPerDliStatement": 12826,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 21471,
+          "ISSUED": 12826,
+          "VOLUNTARY TERMINATION": 461,
+          "REVOKED": 185,
+          "SUSPENDED": 131
+        },
+        "dliEnforcementActionFlag": 415,
+        "prefixesPrinted": [
+          "QB"
+        ]
+      },
+      {
+        "subtype": "Qualifying Remodeler",
+        "kind": "registration",
+        "grain": "person",
+        "rows": 1657,
+        "issuedPerDliStatement": 562,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 1081,
+          "ISSUED": 562,
+          "REVOKED": 9,
+          "SUSPENDED": 3,
+          "VOLUNTARY TERMINATION": 2
+        },
+        "dliEnforcementActionFlag": 15,
+        "prefixesPrinted": [
+          "QC"
+        ]
+      },
+      {
+        "subtype": "Qualifying Roofer",
+        "kind": "registration",
+        "grain": "person",
+        "rows": 586,
+        "issuedPerDliStatement": 225,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 352,
+          "ISSUED": 225,
+          "VOLUNTARY TERMINATION": 5,
+          "REVOKED": 2,
+          "SUSPENDED": 2
+        },
+        "dliEnforcementActionFlag": 5,
+        "prefixesPrinted": [
+          "QR"
+        ]
+      },
+      {
+        "subtype": "Qualifying Installer",
+        "kind": "registration",
+        "grain": "person",
+        "rows": 244,
+        "issuedPerDliStatement": 72,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 171,
+          "ISSUED": 72,
+          "SUSPENDED": 1
+        },
+        "dliEnforcementActionFlag": 1,
+        "prefixesPrinted": [
+          "QI"
+        ]
+      }
+    ],
+    "rule": "A residential building contractor, residential remodeler, or residential roofer license is issued to the business and must have a qualifying person (qualifying builder, remodeler, or roofer registration) who passed the examination. The license and the qualifying registration are different credentials with different numbers and are never added. A Certificate of Exemption is not a license."
+  },
+  "electrical": {
+    "businessClasses": [
+      {
+        "subtype": "Class A Electrical Contractor",
+        "kind": "license",
+        "grain": "business",
+        "rows": 3729,
+        "issuedPerDliStatement": 2652,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 2652,
+          "VOLUNTARY TERMINATION": 853,
+          "EXPIRED": 144,
+          "REVOKED": 64,
+          "SUSPENDED": 15,
+          "DENIED": 1
+        },
+        "dliEnforcementActionFlag": 338,
+        "prefixesPrinted": [
+          "EA"
+        ]
+      },
+      {
+        "subtype": "Class B Electrical Contractor",
+        "kind": "license",
+        "grain": "business",
+        "rows": 4,
+        "issuedPerDliStatement": 2,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 2,
+          "VOLUNTARY TERMINATION": 2
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": [
+          "EB"
+        ]
+      },
+      {
+        "subtype": "Technology Systems Contractor",
+        "kind": "license",
+        "grain": "business",
+        "rows": 1199,
+        "issuedPerDliStatement": 789,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 789,
+          "VOLUNTARY TERMINATION": 299,
+          "EXPIRED": 102,
+          "REVOKED": 6,
+          "SUSPENDED": 2,
+          "DENIED": 1
+        },
+        "dliEnforcementActionFlag": 32,
+        "prefixesPrinted": [
+          "TS"
+        ]
+      },
+      {
+        "subtype": "Satellite System Contractor",
+        "kind": "license",
+        "grain": "business",
+        "rows": 7,
+        "issuedPerDliStatement": 3,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 3,
+          "VOLUNTARY TERMINATION": 3,
+          "EXPIRED": 1
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": [
+          "SC"
+        ]
+      },
+      {
+        "subtype": "Registered Electrical Employer",
+        "kind": "registration",
+        "grain": "business",
+        "rows": 1005,
+        "issuedPerDliStatement": 423,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 423,
+          "EXPIRED": 411,
+          "VOLUNTARY TERMINATION": 170,
+          "REVOKED": 1
+        },
+        "dliEnforcementActionFlag": 5,
+        "prefixesPrinted": [
+          "ER"
+        ]
+      },
+      {
+        "subtype": "Sign Contractor Bond",
+        "kind": "bond",
+        "grain": "business",
+        "rows": 207,
+        "issuedPerDliStatement": 113,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 113,
+          "EXPIRED": 71,
+          "VOLUNTARY TERMINATION": 22,
+          "DENIED": 1
+        },
+        "dliEnforcementActionFlag": 4,
+        "prefixesPrinted": [
+          "SB"
+        ]
+      }
+    ],
+    "personClasses": [
+      {
+        "subtype": "Class A Master Electrician",
+        "kind": "license",
+        "grain": "person",
+        "rows": 7277,
+        "issuedPerDliStatement": 6722,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 6722,
+          "EXPIRED": 467,
+          "VOLUNTARY TERMINATION": 43,
+          "REVOKED": 27,
+          "SUSPENDED": 18
+        },
+        "dliEnforcementActionFlag": 185,
+        "prefixesPrinted": [
+          "AM"
+        ]
+      },
+      {
+        "subtype": "Class B Master Electrician",
+        "kind": "license",
+        "grain": "person",
+        "rows": 5,
+        "issuedPerDliStatement": 3,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 3,
+          "EXPIRED": 1,
+          "VOLUNTARY TERMINATION": 1
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": [
+          "BM"
+        ]
+      },
+      {
+        "subtype": "Journeyworker A Electrician",
+        "kind": "license",
+        "grain": "person",
+        "rows": 13876,
+        "issuedPerDliStatement": 12413,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 12413,
+          "EXPIRED": 1353,
+          "VOLUNTARY TERMINATION": 58,
+          "SUSPENDED": 36,
+          "REVOKED": 16
+        },
+        "dliEnforcementActionFlag": 130,
+        "prefixesPrinted": [
+          "AJ"
+        ]
+      },
+      {
+        "subtype": "Journeyworker B Electrician",
+        "kind": "license",
+        "grain": "person",
+        "rows": 7,
+        "issuedPerDliStatement": 5,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 5,
+          "EXPIRED": 1,
+          "VOLUNTARY TERMINATION": 1
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": [
+          "BJ"
+        ]
+      },
+      {
+        "subtype": "Power Limited Technician",
+        "kind": "license",
+        "grain": "person",
+        "rows": 4522,
+        "issuedPerDliStatement": 3990,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 3990,
+          "EXPIRED": 464,
+          "VOLUNTARY TERMINATION": 38,
+          "SUSPENDED": 22,
+          "REVOKED": 8
+        },
+        "dliEnforcementActionFlag": 36,
+        "prefixesPrinted": [
+          "PL"
+        ]
+      },
+      {
+        "subtype": "Maintenance Electrician",
+        "kind": "license",
+        "grain": "person",
+        "rows": 119,
+        "issuedPerDliStatement": 93,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 93,
+          "EXPIRED": 23,
+          "VOLUNTARY TERMINATION": 3
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": [
+          "MN"
+        ]
+      },
+      {
+        "subtype": "Lineman",
+        "kind": "license",
+        "grain": "person",
+        "rows": 92,
+        "issuedPerDliStatement": 82,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 82,
+          "EXPIRED": 10
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": [
+          "LN"
+        ]
+      },
+      {
+        "subtype": "Class B Installer",
+        "kind": "license",
+        "grain": "person",
+        "rows": 19,
+        "issuedPerDliStatement": 19,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 19
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": [
+          "IB"
+        ]
+      },
+      {
+        "subtype": "Satellite System Installer",
+        "kind": "license",
+        "grain": "person",
+        "rows": 12,
+        "issuedPerDliStatement": 8,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 8,
+          "EXPIRED": 3,
+          "SUSPENDED": 1
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": [
+          "SI"
+        ]
+      },
+      {
+        "subtype": "Registered Unlicensed Electrician",
+        "kind": "registration",
+        "grain": "person",
+        "rows": 52532,
+        "issuedPerDliStatement": 12573,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 35781,
+          "ISSUED": 12573,
+          "LICENSED": 3904,
+          "VOLUNTARY TERMINATION": 171,
+          "REVOKED": 47,
+          "SUSPENDED": 45,
+          "WITHDRAWN": 10,
+          "DENIED": 1
+        },
+        "dliEnforcementActionFlag": 145,
+        "prefixesPrinted": [
+          "55",
+          "RE"
+        ]
+      },
+      {
+        "subtype": "Registered Unlicensed Power Limited Technician",
+        "kind": "registration",
+        "grain": "person",
+        "rows": 25138,
+        "issuedPerDliStatement": 4547,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 19508,
+          "ISSUED": 4547,
+          "LICENSED": 983,
+          "VOLUNTARY TERMINATION": 63,
+          "REVOKED": 29,
+          "SUSPENDED": 8
+        },
+        "dliEnforcementActionFlag": 98,
+        "prefixesPrinted": [
+          "RT"
+        ]
+      }
+    ],
+    "rule": "electrical contractor (business) != electrician (person); a registered unlicensed individual is a registration, not a license"
+  },
+  "plumbing": {
+    "businessClasses": [
+      {
+        "subtype": "Plumbing Contractor",
+        "kind": "license",
+        "grain": "business",
+        "rows": 2110,
+        "issuedPerDliStatement": 1598,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 1598,
+          "VOLUNTARY TERMINATION": 419,
+          "EXPIRED": 69,
+          "REVOKED": 21,
+          "SUSPENDED": 3
+        },
+        "dliEnforcementActionFlag": 110,
+        "prefixesPrinted": [
+          "PC"
+        ]
+      },
+      {
+        "subtype": "Restricted Plumbing Contractor",
+        "kind": "license",
+        "grain": "business",
+        "rows": 238,
+        "issuedPerDliStatement": 158,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 158,
+          "VOLUNTARY TERMINATION": 67,
+          "EXPIRED": 11,
+          "REVOKED": 1,
+          "SUSPENDED": 1
+        },
+        "dliEnforcementActionFlag": 8,
+        "prefixesPrinted": [
+          "PR"
+        ]
+      },
+      {
+        "subtype": "Registered Plumbing Employer",
+        "kind": "registration",
+        "grain": "business",
+        "rows": 78,
+        "issuedPerDliStatement": 57,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 57,
+          "VOLUNTARY TERMINATION": 12,
+          "EXPIRED": 9
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": [
+          "EP"
+        ]
+      },
+      {
+        "subtype": "Pipelaying Bond",
+        "kind": "bond",
+        "grain": "business",
+        "rows": 1094,
+        "issuedPerDliStatement": 307,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 585,
+          "ISSUED": 307,
+          "VOLUNTARY TERMINATION": 202
+        },
+        "dliEnforcementActionFlag": 11,
+        "prefixesPrinted": [
+          "PB"
+        ]
+      }
+    ],
+    "personClasses": [
+      {
+        "subtype": "Master Plumber",
+        "kind": "license",
+        "grain": "person",
+        "rows": 3646,
+        "issuedPerDliStatement": 3430,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 3430,
+          "EXPIRED": 185,
+          "VOLUNTARY TERMINATION": 13,
+          "SUSPENDED": 10,
+          "REVOKED": 8
+        },
+        "dliEnforcementActionFlag": 50,
+        "prefixesPrinted": [
+          "PM"
+        ]
+      },
+      {
+        "subtype": "Restricted Master Plumber",
+        "kind": "license",
+        "grain": "person",
+        "rows": 361,
+        "issuedPerDliStatement": 308,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 308,
+          "EXPIRED": 41,
+          "VOLUNTARY TERMINATION": 8,
+          "SUSPENDED": 4
+        },
+        "dliEnforcementActionFlag": 12,
+        "prefixesPrinted": [
+          "MR"
+        ]
+      },
+      {
+        "subtype": "Journeyworker Plumber",
+        "kind": "license",
+        "grain": "person",
+        "rows": 4013,
+        "issuedPerDliStatement": 3371,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 3371,
+          "EXPIRED": 576,
+          "SUSPENDED": 36,
+          "VOLUNTARY TERMINATION": 21,
+          "REVOKED": 9
+        },
+        "dliEnforcementActionFlag": 44,
+        "prefixesPrinted": [
+          "PJ"
+        ]
+      },
+      {
+        "subtype": "Restricted Journeyworker Plumber",
+        "kind": "license",
+        "grain": "person",
+        "rows": 64,
+        "issuedPerDliStatement": 35,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 35,
+          "LICENSED": 16,
+          "EXPIRED": 6,
+          "SUSPENDED": 6,
+          "REVOKED": 1
+        },
+        "dliEnforcementActionFlag": 6,
+        "prefixesPrinted": [
+          "JR"
+        ]
+      },
+      {
+        "subtype": "Registered Unlicensed Plumber",
+        "kind": "registration",
+        "grain": "person",
+        "rows": 17715,
+        "issuedPerDliStatement": 2601,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 11629,
+          "LICENSED": 3356,
+          "ISSUED": 2601,
+          "SUSPENDED": 86,
+          "VOLUNTARY TERMINATION": 40,
+          "WITHDRAWN": 2,
+          "REVOKED": 1
+        },
+        "dliEnforcementActionFlag": 25,
+        "prefixesPrinted": [
+          "PA"
+        ]
+      },
+      {
+        "subtype": "Backflow Prevention Tester",
+        "kind": "certification",
+        "grain": "person",
+        "rows": 2348,
+        "issuedPerDliStatement": 856,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 1432,
+          "ISSUED": 856,
+          "VOLUNTARY TERMINATION": 50,
+          "SUSPENDED": 8,
+          "REVOKED": 2
+        },
+        "dliEnforcementActionFlag": 15,
+        "prefixesPrinted": [
+          "BT"
+        ]
+      },
+      {
+        "subtype": "Backflow Prevention Rebuilder",
+        "kind": "certification",
+        "grain": "person",
+        "rows": 3560,
+        "issuedPerDliStatement": 959,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 2276,
+          "ISSUED": 959,
+          "VOLUNTARY TERMINATION": 306,
+          "SUSPENDED": 18,
+          "REVOKED": 1
+        },
+        "dliEnforcementActionFlag": 26,
+        "prefixesPrinted": [
+          "BF"
+        ]
+      },
+      {
+        "subtype": "Medical Gas Certification",
+        "kind": "certification",
+        "grain": "person",
+        "rows": 299,
+        "issuedPerDliStatement": 224,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 224,
+          "EXPIRED": 69,
+          "VOLUNTARY TERMINATION": 6
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": [
+          "MG"
+        ]
+      },
+      {
+        "subtype": "MPCA Pipelaying Bond",
+        "kind": "bond",
+        "grain": "person",
+        "rows": 1339,
+        "issuedPerDliStatement": 1017,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 1017,
+          "EXPIRED": 322
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": "various"
+      }
+    ],
+    "rule": "plumbing contractor (business) != plumber (person); backflow and medical gas are certifications; a pipelaying bond is a bond"
+  },
+  "bonds_and_registrations": {
+    "bonds": [
+      {
+        "subtype": "Mechanical Contractor Bond",
+        "kind": "bond",
+        "grain": "business",
+        "rows": 5351,
+        "issuedPerDliStatement": 2549,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 2549,
+          "EXPIRED": 2401,
+          "VOLUNTARY TERMINATION": 391,
+          "DENIED": 10
+        },
+        "dliEnforcementActionFlag": 45,
+        "prefixesPrinted": [
+          "MB"
+        ]
+      },
+      {
+        "subtype": "Pipelaying Bond",
+        "kind": "bond",
+        "grain": "business",
+        "rows": 1094,
+        "issuedPerDliStatement": 307,
+        "statusGroupedCaseInsensitive": {
+          "EXPIRED": 585,
+          "ISSUED": 307,
+          "VOLUNTARY TERMINATION": 202
+        },
+        "dliEnforcementActionFlag": 11,
+        "prefixesPrinted": [
+          "PB"
+        ]
+      },
+      {
+        "subtype": "MPCA Pipelaying Bond",
+        "kind": "bond",
+        "grain": "person",
+        "rows": 1339,
+        "issuedPerDliStatement": 1017,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 1017,
+          "EXPIRED": 322
+        },
+        "dliEnforcementActionFlag": 0,
+        "prefixesPrinted": "various"
+      },
+      {
+        "subtype": "Sign Contractor Bond",
+        "kind": "bond",
+        "grain": "business",
+        "rows": 207,
+        "issuedPerDliStatement": 113,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 113,
+          "EXPIRED": 71,
+          "VOLUNTARY TERMINATION": 22,
+          "DENIED": 1
+        },
+        "dliEnforcementActionFlag": 4,
+        "prefixesPrinted": [
+          "SB"
+        ]
+      }
+    ],
+    "contractorRegistration": [
+      {
+        "subtype": "Business Entity",
+        "kind": "registration",
+        "grain": "business",
+        "rows": 19216,
+        "issuedPerDliStatement": 13917,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 13917,
+          "EXPIRED": 4890,
+          "VOLUNTARY TERMINATION": 233,
+          "REVOKED": 63,
+          "WITHDRAWN": 45,
+          "SUSPENDED": 42,
+          "DENIED": 26
+        },
+        "dliEnforcementActionFlag": 74,
+        "prefixesPrinted": [
+          "IR"
+        ]
+      },
+      {
+        "subtype": "Sole Proprietor or Individual",
+        "kind": "registration",
+        "grain": "business",
+        "rows": 2196,
+        "issuedPerDliStatement": 1053,
+        "statusGroupedCaseInsensitive": {
+          "ISSUED": 1053,
+          "EXPIRED": 689,
+          "SUSPENDED": 244,
+          "VOLUNTARY TERMINATION": 154,
+          "REVOKED": 50,
+          "DENIED": 3,
+          "WITHDRAWN": 2,
+          "DENIED- DUPLICATE": 1
+        },
+        "dliEnforcementActionFlag": 192,
+        "prefixesPrinted": [
+          "IR"
+        ]
+      }
+    ],
+    "rule": "A bond is regulatory evidence of financial responsibility, not an identity, a count of contractors, a quality score, or insurance. Contractor Registration (Minn. Stat. § 181.723) is a registration for independent contractors in the building trades, not a license."
+  },
+  "other_ccld_credentials": {
+    "types": [
+      "Boiler",
+      "Building Officials",
+      "Continuing Education",
+      "Elevator",
+      "High Pressure Piping",
+      "Manufactured Structures",
+      "Water Conditioning"
+    ],
+    "note": "Boiler, Building Officials, Continuing Education, Elevator, High Pressure Piping, Manufactured Structures, and Water Conditioning credentials are in the same export, are counted by their own subtype above, and resolve in the exact-number lookup. They are not contractor licenses and are never added to one."
+  },
+  "enforcement": {
+    "coverage": "PARTIAL",
+    "scope": "DLI residential building contractor enforcement action lists for 2024, 2025, and 2026 year to date, as published on the retrieval date; 2023 and earlier lists were not acquired",
+    "source": "https://www.dli.mn.gov/business/residential-contractors/residential-building-contractor-enforcement-actions",
+    "method": "Three DLI year-to-date PDFs (2024, 2025, 2026) as published; text extracted with pypdf 6.16.1; one row per order bullet, respondent and credential numbers exactly as printed",
+    "retrievedAt": "2026-09-26T14:11:34Z",
+    "disclaimerPrinted": "A Consent Order is not a finding of fact or admission of guilt.",
+    "files": {
+      "2024": {
+        "year": "2024",
+        "file": "rbc-2024actions.pdf",
+        "sha256": "6479d934c08a21e355a5d117e0a870a2352db74290e8257eefb1b35dadeabe33",
+        "bytes": 420851,
+        "textSha256": "bc309bb1c9c874211f350d14bcca8589ee650b17c447196a0628c099b22f71ed",
+        "entries": 405,
+        "aliasCrossReferences": 214
+      },
+      "2025": {
+        "year": "2025",
+        "file": "rbc_2025actions.pdf",
+        "sha256": "4272eb3ad3e6b8b2214c77cdaaaa14f685c1c895952b7866ae246be91a24122e",
+        "bytes": 733150,
+        "textSha256": "bbd892fb0617b1b2bd1f5ab0ed2421796bf1d8fbbec133a1c4f5f02a958edb05",
+        "entries": 445,
+        "aliasCrossReferences": 244
+      },
+      "2026": {
+        "year": "2026",
+        "file": "rbc_2026actions.pdf",
+        "sha256": "6fb1f868457a1c981b13d21901f3e20c00eb13e92f53fd633e1cc5e9cf008dd8",
+        "bytes": 676193,
+        "textSha256": "889567ed62c4a2c35e3fd37e71282d8a076df33f60818a3cc54e9a26e05f111a",
+        "entries": 242,
+        "aliasCrossReferences": 123
+      }
+    },
+    "rows": 511,
+    "rowsByListYear": {
+      "2024": 191,
+      "2025": 201,
+      "2026": 119
+    },
+    "rowsByActionYear": {
+      "2024": 192,
+      "2025": 201,
+      "2026": 118
+    },
+    "actionTypes": {
+      "Consent Order": 247,
+      "Consent Cease and Desist Order": 156,
+      "Administrative Order with Penalty": 68,
+      "Licensing Order with Penalty": 26,
+      "Administrative Order With Penalty": 4,
+      "Findings of Fact, Conclusions of Law, and Order": 2,
+      "Licensing Order": 2,
+      "Licensing Order With Penalty": 2,
+      "Administrative Order": 1,
+      "Consent Cease and Deist Order": 1,
+      "Consent Order with Penalty": 1,
+      "Revocation and Summary Suspension Order": 1
+    },
+    "firstActionDate": "2024-01-05",
+    "lastActionDate": "2026-08-31",
+    "rowsWithCredentialNumberPrinted": 278,
+    "rowsWithoutCredentialNumber": 233,
+    "rowsWithPenaltyPrinted": 495,
+    "distinctCredentialNumbersPrinted": 493,
+    "rowsAttachedByExactCredentialNumber": 277,
+    "credentialsInExportWithEnforcement": 489,
+    "credentialsWithEnforcementByGrain": {
+      "business": 281,
+      "person": 208
+    },
+    "credentialsWithEnforcementBySubtype": {
+      "Residential Building Contractor": 239,
+      "Qualifying Builder": 183,
+      "Residential Remodeler Contractor": 12,
+      "Class A Electrical Contractor": 11,
+      "Qualifying Remodeler": 8,
+      "Plumbing Contractor": 7,
+      "Class A Master Electrician": 6,
+      "Residential Roofer Contractor": 5,
+      "Qualifying Roofer": 3,
+      "Business Entity": 2,
+      "Journeyworker A Electrician": 2,
+      "Mechanical Contractor Bond": 2,
+      "Registered Unlicensed Electrician": 2,
+      "Backflow Prevention Rebuilder": 1,
+      "Certificate of Exemption": 1,
+      "Certified Building Official - Limited": 1,
+      "Journeyworker Plumber": 1,
+      "Manufactured Home Dealer": 1,
+      "Manufactured Home Manufacturer": 1,
+      "Master Plumber": 1
+    },
+    "attachedCredentialsAlsoFlaggedByDli": 464,
+    "dliEnforcementFlagRowsInExport": 4023,
+    "nameOnlyAttachment": false,
+    "databaseProfileAttachments": 0,
+    "orderDetailFetched": false
+  },
+  "complaints": {
+    "intake": "KNOWN",
+    "contractorComplaint": "https://www.dli.mn.gov/business/residential-contractors/residential-building-contractor-complaints",
+    "records": "NOT_ACQUIRED",
+    "complaintIsNotEnforcement": true,
+    "consentOrderIsNotFinding": true
+  },
+  "existing_coverage": {
+    "statePage": "NONE (/minnesota returned 404 before this ticket)",
+    "database": {
+      "source_system": "mn_dli",
+      "licenseRows": 276793,
+      "distinctExternalKeys": 276793,
+      "linkedContractorProfiles": 276793,
+      "externalKeyForm": "MN-DLI:<Lic_Number>",
+      "sourceFiles": {
+        "MNDLILicRegCertExport.zip:LIC_SNAP_08_14_2026.csv": 255726,
+        "MNDLILicRegCertExport_Contractor_Registrations.csv": 21067
+      },
+      "loadedAt": "2026-08-14",
+      "busPersAsLoaded": {
+        "Personal": 218686,
+        "Business": 58107
+      },
+      "personRowsPublishedAsContractorProfiles": 218686,
+      "minnesotaHomeProfiles": 237782,
+      "rawPayloadHoldsPhoneAndStreet": true,
+      "minnesotaDisciplineRows": 0,
+      "grain": "one license row and one contractor profile per DLI credential number, for business and person rows alike (pre-existing; not changed by this ticket)"
+    },
+    "reconciliation": {
+      "exportCredentialsAlsoInDatabase": 276505,
+      "exportCredentialsNotInDatabase": 4043,
+      "databaseCredentialsNotInExport": 288,
+      "sharedCredentialsWithChangedStatus": 2662
+    },
+    "reconciliationMeaning": "exact credential-number matches between the 2026-09-26 export and the 2026-08-14 Production load; databaseCredentialsNotInExport are rows DLI no longer exports; sharedCredentialsWithChangedStatus compares status case-insensitively. Production was read only and not changed.",
+    "preExistingConcern": "Production publishes each DLI person row as a contractor profile with phone and street address in raw_payload; this ticket does not repeat that (person rows here are number-only) and does not modify it. Reported for the Founder.",
+    "databaseModified": false
+  },
+  "capability_matrix": [
+    {
+      "capability": "Statewide DLI export (nightly)",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Exact credential verification (DLI lookup / iMS)",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Business credentials (licenses, bonds, registrations, exemptions, approvals)",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Individual credentials (exact-number lookup, no names)",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Residential Building Contractor / Remodeler / Roofer classes",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Electrical business / person separation",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Plumbing business / person separation",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Bonds (mechanical, pipelaying, MPCA pipelaying, sign contractor)",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Contractor Registration (Minn. Stat. § 181.723)",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Residential building contractor enforcement 2024 - 2026 YTD",
+      "state": "PARTIAL"
+    },
+    {
+      "capability": "Enforcement before 2024",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "Order text / per-order detail",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "Electrical / plumbing / other trade enforcement lists",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "Complaint intake",
+      "state": "KNOWN"
+    },
+    {
+      "capability": "Complaint records",
+      "state": "NOT_ACQUIRED"
+    },
+    {
+      "capability": "Local (city/county) permits and licensing",
+      "state": "UNKNOWN"
+    },
+    {
+      "capability": "Name-only enforcement attachment",
+      "state": "UNSUPPORTED"
+    },
+    {
+      "capability": "Combined Minnesota contractor / trades / bond / certification total",
+      "state": "UNSUPPORTED"
+    }
+  ],
+  "guardrails": [
+    "business credential != individual credential != bond != certificate != registration != enforcement",
+    "residential building contractor != residential remodeler != residential roofer != qualifying builder/remodeler/roofer",
+    "electrical contractor (business) != electrician (person); plumbing contractor (business) != plumber (person)",
+    "status is as DLI prints it; a future expiration date does not make a credential current",
+    "enforcement attaches only through an exact credential number DLI printed; never by name; a Consent Order is not a finding",
+    "bond != identity != count != quality != insurance; complaint != enforcement; address != service area",
+    "no combined Minnesota contractor count; no ranking; no Trust Score; no person names, phones, or street addresses"
+  ],
+  "net_new": {
+    "EXPORT_ROWS": 280548,
+    "BUSINESS_CREDENTIAL_ROWS": 59718,
+    "PERSON_CREDENTIAL_ROWS_NUMBER_ONLY": 220830,
+    "ENFORCEMENT_ROWS": 511,
+    "ENFORCEMENT_ROWS_ATTACHED_BY_EXACT_CREDENTIAL": 277,
+    "NEW_PROFILES": 0,
+    "DATABASE_WRITES": 0
+  },
+  "credentialShardsSha256": "b6efe5b2a729dc65a0108457b7a0fb97a432850e12115a0bcd848714a3f2b53b",
+  "eventsSha256": "dfe0626daf061172b2e9cc11681c955c3bd4c4da70904e7096ed576771f67218",
+  "fingerprint": "7f9ba09a491f185178a511ede5c08311ec767362459ecce8aa8c2f044fa1105f"
+}
