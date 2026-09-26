@@ -55,6 +55,8 @@ export function researchRoute(
     /\b(?:tennessee|nashville|memphis|knoxville|chattanooga)\b/i.test(query) ||
     // NV-CON-001: statewide Nevada guidance lives in /ask.
     /\b(?:nevada|nscb|las vegas|henderson|reno)\b/i.test(query) ||
+    // MN-CON-001: statewide Minnesota guidance lives in /ask.
+    /\b(?:minnesota|minneapolis|st\.? paul|saint paul|duluth)\b/i.test(query) ||
     /\b(?:EL|HV|HY|PL|RE)\.\d{3,6}\b/i.test(query) ||
     /\bcompar(?:e|ison)\b/i.test(query)
   )

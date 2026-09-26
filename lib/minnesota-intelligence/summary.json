@@ -1,0 +1,78 @@
+{
+  "fingerprint": "7f9ba09a491f185178a511ede5c08311ec767362459ecce8aa8c2f044fa1105f",
+  "exportRows": 280548,
+  "businessRows": 59718,
+  "personRows": 220830,
+  "residentialBuildingContractor": {
+    "rows": 15291,
+    "issued": 10923
+  },
+  "residentialRemodeler": {
+    "rows": 627,
+    "issued": 429
+  },
+  "residentialRoofer": {
+    "rows": 224,
+    "issued": 140
+  },
+  "qualifyingBuilder": {
+    "rows": 35074,
+    "issued": 12826
+  },
+  "classAElectricalContractor": {
+    "rows": 3729,
+    "issued": 2652
+  },
+  "classAMasterElectrician": {
+    "rows": 7277,
+    "issued": 6722
+  },
+  "journeyworkerAElectrician": {
+    "rows": 13876,
+    "issued": 12413
+  },
+  "plumbingContractor": {
+    "rows": 2110,
+    "issued": 1598
+  },
+  "masterPlumber": {
+    "rows": 3646,
+    "issued": 3430
+  },
+  "journeyworkerPlumber": {
+    "rows": 4013,
+    "issued": 3371
+  },
+  "mechanicalContractorBond": {
+    "rows": 5351,
+    "issued": 2549
+  },
+  "contractorRegistration": {
+    "rows": 21412,
+    "issued": 14970
+  },
+  "enforcementRows": 511,
+  "enforcementAttachedByExactCredential": 277,
+  "enforcementWindow": "2024 through 2026 year to date",
+  "enforcementActionTypes": {
+    "Consent Order": 247,
+    "Consent Cease and Desist Order": 156,
+    "Administrative Order with Penalty": 68,
+    "Licensing Order with Penalty": 26,
+    "Administrative Order With Penalty": 4,
+    "Findings of Fact, Conclusions of Law, and Order": 2,
+    "Licensing Order": 2,
+    "Licensing Order With Penalty": 2,
+    "Administrative Order": 1,
+    "Consent Cease and Deist Order": 1,
+    "Consent Order with Penalty": 1,
+    "Revocation and Summary Suspension Order": 1
+  },
+  "cityOfRecordMinnesota": {
+    "Minneapolis": 3322,
+    "St. Paul": 2630,
+    "Rochester": 798,
+    "Duluth": 902
+  },
+  "retrievedAt": "2026-09-26T14:11:34Z"
+}
