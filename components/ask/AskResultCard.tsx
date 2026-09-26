@@ -17,6 +17,7 @@ import {
 } from "@/lib/ask/recorded-address-display";
 import { isOutOfJurisdictionMarker } from "@/lib/ask/candidate-card-presentation";
 import { SaveToResearch } from "./SaveToResearch";
+import { AskResultCardSurface } from "./AskResultCardSurface";
 
 function credentialLine(card: AskEntityCard): string {
   const identifier = card.credentialKey || "Credential number not published on this row";
@@ -105,7 +106,7 @@ export function AskResultCard({ card }: { card: AskEntityCard }) {
   const address = card.publicAddress?.line || recordedAddressLine(card);
   const headingId = `ask-card-${(card.slug || card.contractorId).replace(/[^A-Za-z0-9_-]/g, "-")}`;
   return (
-    <article className="cth-result-card" data-testid="ask-result-card">
+    <AskResultCardSurface hasProfile={Boolean(profile)}>
       {profile ? (
         <Link
           href={profile}
@@ -201,6 +202,6 @@ export function AskResultCard({ card }: { card: AskEntityCard }) {
           </details>
         ) : null}
       </div>
-    </article>
+    </AskResultCardSurface>
   );
 }

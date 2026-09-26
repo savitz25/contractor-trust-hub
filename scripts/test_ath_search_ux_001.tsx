@@ -25,6 +25,7 @@ import { loadContractorHubIntel } from "../lib/home/load-intel-v2";
 import { attachRecordedAddresses } from "../lib/ask/recorded-address-projection";
 import { formatLicenseAddress, nameSearchFilterAccount } from "../lib/ask/recorded-address-display";
 import { classifySpecialistSearchClick } from "../lib/specialist-search/analytics";
+import { CARD_SURFACE_ATTR, decideCardSurfaceActivation, type CardSurfaceClickFacts } from "../lib/ask/card-surface";
 import { ASK_CONTRACT_VERSION, type AskResult } from "../lib/ask/types";
 import type { AskExecution } from "../lib/ask/execute";
 
@@ -513,6 +514,35 @@ test("one profile activation is not also a save or a trace", () => {
   assert.equal(classifySpecialistSearchClick("trace", "Trace this result View profile"), "trace");
   assert.equal(classifySpecialistSearchClick(null, "Research in Verify"), null);
   assert.equal(classifySpecialistSearchClick(null, "View evidence"), null);
+});
+
+test("D1: the card surface is marked only for profile rows and forwards only ordinary clicks", () => {
+  const withProfile = renderToStaticMarkup(
+    <AskResultCard card={card({ contractorId: "p", slug: "cac1813307-snyder-co", displayName: "SNYDER CO.", profileHref: "/contractors/cac1813307-snyder-co" })} />,
+  );
+  assert.match(withProfile, new RegExp(`<article class="cth-result-card" data-testid="ask-result-card" ${CARD_SURFACE_ATTR}="profile"`));
+  const withoutProfile = renderToStaticMarkup(
+    <AskResultCard card={card({ contractorId: "n", slug: "", displayName: "Research only row", profileHref: null, matchedOn: null })} />,
+  );
+  assert.doesNotMatch(withoutProfile, new RegExp(CARD_SURFACE_ATTR));
+  assert.equal(withProfile.match(/data-testid="ask-profile-link"/g)?.length, 1);
+  assert.doesNotMatch(withProfile, /<article[^>]*tabindex/);
+
+  const ordinary: CardSurfaceClickFacts = {
+    button: 0, ctrlKey: false, metaKey: false, shiftKey: false, altKey: false, defaultPrevented: false,
+    targetIsInteractive: false, targetInsideDisclosure: false, selectionText: "", hasProfileLink: true,
+  };
+  assert.equal(decideCardSurfaceActivation(ordinary), "activate");
+  assert.equal(decideCardSurfaceActivation({ ...ordinary, targetIsInteractive: true }), "interactive");
+  assert.equal(decideCardSurfaceActivation({ ...ordinary, targetInsideDisclosure: true }), "disclosure");
+  assert.equal(decideCardSurfaceActivation({ ...ordinary, selectionText: "6831 POTTSBURG DRIVE" }), "selection");
+  assert.equal(decideCardSurfaceActivation({ ...ordinary, selectionText: "   " }), "activate");
+  assert.equal(decideCardSurfaceActivation({ ...ordinary, ctrlKey: true }), "modified");
+  assert.equal(decideCardSurfaceActivation({ ...ordinary, metaKey: true }), "modified");
+  assert.equal(decideCardSurfaceActivation({ ...ordinary, shiftKey: true }), "modified");
+  assert.equal(decideCardSurfaceActivation({ ...ordinary, button: 1 }), "secondary-button");
+  assert.equal(decideCardSurfaceActivation({ ...ordinary, defaultPrevented: true }), "prevented");
+  assert.equal(decideCardSurfaceActivation({ ...ordinary, hasProfileLink: false }), "no-profile");
 });
 
 test("focus, hover, and reduced motion stay on separate selectors", () => {

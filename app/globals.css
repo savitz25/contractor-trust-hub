@@ -738,6 +738,14 @@ header img[data-brand-logo] {
 .cth-profile-link--static::after {
   content: none;
 }
+/* D1: the facts and action blocks sit above the stretched overlay so Save and Trace stay independent;
+   the client surface handler forwards ordinary clicks on the rest of the card to the profile anchor. */
+.cth-result-card[data-card-surface="profile"] {
+  cursor: pointer;
+}
+.cth-result-card[data-card-surface="profile"] .cth-result-disclosure[open] > :not(summary) {
+  cursor: auto;
+}
 .cth-result-card__facts {
   padding: 0.35rem 1.25rem 0;
 }
