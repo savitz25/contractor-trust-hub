@@ -40,7 +40,7 @@ export const INSURANCE_UNSUPPORTED = ["insured contractors", "bonded and insured
 export const PERMIT_VOLUME_UNSUPPORTED = ["permit volume", "most permits", "compare permits"];
 export const PERMIT_SEARCH_UNAVAILABLE = ["permit records", "permit evidence", "with permits"];
 
-export function detectUnsupportedConcept(text: string): { key: string; message: string; alternatives: string[] } | null {
+export function detectUnsupportedConcept(text: string, raw = text): { key: string; message: string; alternatives: string[] } | null {
   if (/\b(no|without)\s+(enforcement|discipline)\b/.test(text)) {
     return {
       key: "negative_evidence",
@@ -48,7 +48,10 @@ export function detectUnsupportedConcept(text: string): { key: string; message: 
       alternatives: ["Search for available regulatory evidence", "Confirm with the issuing agency"],
     };
   }
-  if (/\b(best|top|cheapest|safest|fastest)\b/.test(text) || QUALITY_UNSUPPORTED.some((p) => phraseInText(text, p) || text.includes(p))) {
+  if (/\b(best|top|cheapest|safest|fastest|recommend|recommended|ranking)\b/.test(text)
+    || /\b(?:top|highest)[ -]?rated\b|\bnumber one\b|\bmost (?:trusted|trustworthy)\b|\btrust score\b|\baggregaterating\b|\bratingvalue\b/.test(text)
+    || /#\s*1\b/.test(raw)
+    || QUALITY_UNSUPPORTED.some((p) => phraseInText(text, p) || text.includes(p))) {
     return {
       key: "quality",
       message:

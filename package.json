@@ -30,6 +30,7 @@
     "test:tn-con-001": "python -X utf8 scripts/tennessee/build_tn_con_001.py --check && npx --yes tsx --test lib/tennessee-intelligence/tn-con-001.test.ts",
     "test:nv-con-001": "python -X utf8 scripts/nevada/build_nv_con_001.py --check && npx --yes tsx --test lib/nevada-intelligence/nv-con-001.test.ts",
     "test:mn-con-001": "python -X utf8 scripts/minnesota/build_mn_con_001.py --check && npx --yes tsx --test lib/minnesota-intelligence/mn-con-001.test.ts",
+    "test:ct-con-001": "node scripts/assert_connecticut_publication.mjs && npx --yes tsx --test scripts/test_ct_con_001.ts",
     "typecheck": "tsc --noEmit",
     "test:matcher": "node scripts/test_permit_matcher.mjs",
     "test:permit-evidence": "npx --yes tsx scripts/test_permit_evidence.ts",

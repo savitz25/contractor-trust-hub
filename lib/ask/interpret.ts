@@ -32,6 +32,7 @@ import { interpretTennessee } from "./tennessee";
 import { interpretNevada } from "./nevada";
 import { interpretMinnesota } from "./minnesota";
 import { interpretMichigan } from "./michigan";
+import { interpretConnecticut } from "./connecticut";
 import { CONTRACTOR_STATE_NAMES } from "@/lib/search/state-names";
 
 const EMPTY_INTERPRET: AskInterpretation = {
@@ -177,7 +178,7 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
     };
   }
 
-  const unsupported = detectUnsupportedConcept(text);
+  const unsupported = detectUnsupportedConcept(text, query);
   if (unsupported) {
     interpretation.notes.push(unsupported.message);
     return {
@@ -194,6 +195,9 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
       changeHints: unsupported.alternatives,
     };
   }
+
+  const ctEarly = interpretConnecticut(query);
+  if (ctEarly) return ctEarly;
 
   // MN-CON-001: Minnesota DLI numbers (RR, RC, RF ...) share prefixes with Florida credentials; Minnesota intent wins first.
   const mnEarly = interpretMinnesota(query, text);
