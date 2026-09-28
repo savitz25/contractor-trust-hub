@@ -58,6 +58,8 @@ export function researchRoute(
     // MN-CON-001: statewide Minnesota guidance lives in /ask.
     /\b(?:minnesota|minneapolis|st\.? paul|saint paul|duluth)\b/i.test(query) ||
     /\b(?:michigan|detroit|grand rapids|lansing|ann arbor)\b/i.test(query) ||
+    /\b(?:connecticut|hartford|new haven|stamford|bridgeport)\b/i.test(query) ||
+    /\b(?:HIC|NHC|ELC|PLM|HTG|SMT|FSP|ELV)\.\d{5,8}(?:[.-][A-Z0-9]+)?\b/i.test(query) ||
     /\b(?:EL|HV|HY|PL|RE)\.\d{3,6}\b/i.test(query) ||
     /\bcompar(?:e|ison)\b/i.test(query)
   )
