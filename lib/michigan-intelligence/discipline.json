@@ -1,0 +1,2546 @@
+{
+  "retrievedAt": "2026-09-28T13:28:16+00:00",
+  "sources": [
+    {
+      "report": "FY26",
+      "url": "https://www.michigan.gov/lara/-/media/Project/Websites/lara/bcc-media/DAR/Disciplinary-Action-Report-FY26.pdf?hash=40E0A203B382F5BF199017C62C7EB412&rev=39d3b33620e74950b6981c80c4d07efc",
+      "pages": 2,
+      "ordersServed": "1/1/2026 through 2/28/2026"
+    },
+    {
+      "report": "FY25",
+      "url": "https://www.michigan.gov/lara/-/media/Project/Websites/lara/bcc-media/DAR/Disciplinary-Action-Report-FY25.pdf?hash=11C500A85512B94B05C81C8B5E0D3B42&rev=73cb04067195455488fc46ce1716fbb9",
+      "pages": 24,
+      "ordersServed": "1/1/2025 through 12/31/2025"
+    },
+    {
+      "report": "FY24",
+      "url": "https://www.michigan.gov/lara/-/media/Project/Websites/lara/bcc-media/DAR/Disciplinary-Action-Report-FY24_2.pdf?hash=389076F212543550C9F185EBDC466CC7&rev=3ac0308d841c48188beb141f8684357d",
+      "pages": 38,
+      "ordersServed": "1/1/2024 through 12/31/2024"
+    },
+    {
+      "report": "FY23",
+      "url": "https://www.michigan.gov/lara/-/media/Project/Websites/lara/bcc-media/DAR/Disciplinary-Action-Report-FY23.pdf?hash=F0EF50309C06646BF935FC19D9612B3C&rev=7793b949aff345368e1323ec6c25539d",
+      "pages": 29,
+      "ordersServed": "10/1/2022 through 7/6/2023"
+    },
+    {
+      "report": "FY22",
+      "url": "https://www.michigan.gov/lara/-/media/Project/Websites/lara/bcc-media/DAR/Disciplinary-Action-Report-FY22.pdf?hash=27E5FA62A42F57D781642AD3333E1698&rev=62b26129b5c44c0192877772cfc661a5",
+      "pages": 12,
+      "ordersServed": "10/1/2021 through 9/30/2022"
+    }
+  ],
+  "rows": [
+    {
+      "report": "FY26",
+      "page": 1,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101111959",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2026-01-08",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY26",
+      "page": 2,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101171399",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2026-01-08",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Other"
+      ]
+    },
+    {
+      "report": "FY26",
+      "page": 2,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102219870",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2026-01-08",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Other"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 4,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101070870",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-04-17",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 4,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101081132",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-15",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 4,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101097042",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-15",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 5,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101117802",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-08-26",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 5,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101137443",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-04-17",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 5,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101141149",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-07-09",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 6,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101147360",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-09-02",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 6,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101147944",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-11-06",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 7,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101151244",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-22",
+      "actions": [
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 7,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101152182",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-04-23",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 7,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101162297",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-15",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 8,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101179077",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-15",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 8,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101180219",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-15",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 8,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101187901",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-04-17",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 9,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101194044",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-07-09",
+      "actions": [
+        "Fine Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 9,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101194044",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-07-09",
+      "actions": [
+        "Fine Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 9,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101197500",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 10,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101205523",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-04-17",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 10,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101208348",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-22",
+      "actions": [
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 11,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101208353",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 11,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101210601",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-04-23",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 12,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101211366",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-11-06",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 12,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101211366",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-11-06",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 12,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101213950",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-07-08",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 13,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101215010",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-08-26",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 14,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101217422",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-09-02",
+      "actions": [
+        "Revocation",
+        "Other"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 14,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101222043",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-07-09",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 15,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102124694",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-04-17",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 15,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102151134",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-15",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 16,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102182057",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-22",
+      "actions": [
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 16,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102204142",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-08-26",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 17,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102209508",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-09-02",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 17,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102210839",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-07-09",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 17,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102212297",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-07-09",
+      "actions": [
+        "Fine Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 18,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102212297",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-07-09",
+      "actions": [
+        "Fine Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 18,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102217135",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-08-26",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 19,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102218968",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-09-02",
+      "actions": [
+        "Revocation",
+        "Other"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 19,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102219500",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-11-06",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 20,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102219500",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-11-06",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 20,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102220252",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-11-06",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 21,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242200251",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-04-23",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 21,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242200366",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-08-26",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 22,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242200366",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-08-26",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 22,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "252200101",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 22,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "261900012",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-07-09",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 23,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "261900135",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-05-09",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 23,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262200144",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-04-23",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 24,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262200375",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-09-02",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY25",
+      "page": 24,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262200375",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2025-09-02",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 1,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101060064",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 1,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101060064",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 2,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101132840",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-13",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 2,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101132840",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-13",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 2,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101141686",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 3,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101158187",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered",
+        "Suspension"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 3,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101180730",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 3,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101193284",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 4,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101195283",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 5,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101195283",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 6,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101195283",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 7,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101195283",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 8,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101195283",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 8,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101203000",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 9,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101204723",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-06-25",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 9,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101205695",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-02-20",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 9,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101207111",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 10,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101210955",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 10,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101212513",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 10,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101213266",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 11,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101216375",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-02-20",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 11,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102111719",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-13",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 11,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102111719",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-13",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 12,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102182130",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 12,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102197627",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 13,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102198374",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 14,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102198374",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 15,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102198374",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 16,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102198374",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 17,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102198374",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 17,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102207012",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 18,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102207012",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 18,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102207618",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-22",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 18,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102212972",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 19,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102213100",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 19,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102220303",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-02-20",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 19,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2105216803",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-06-27",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 20,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "241900259",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered",
+        "Suspension",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 20,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000229",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-06-27",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 21,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 22,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 23,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 24,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 25,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 26,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 27,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 28,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 29,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242300197",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered",
+        "Suspension"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 29,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242300197",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered",
+        "Suspension"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 29,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "261900133",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-06-25",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 30,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 31,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 32,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 33,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 34,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 35,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 36,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 37,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-05-16",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 38,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262300279",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered",
+        "Suspension"
+      ]
+    },
+    {
+      "report": "FY24",
+      "page": 38,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262300279",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2024-11-07",
+      "actions": [
+        "Fine Ordered",
+        "Suspension"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 1,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101061647",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-01-17",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 1,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101108191",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-21",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 2,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101162668",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-31",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 3,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101177527",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-31",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 3,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101190539",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-10-06",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 3,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101193761",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered",
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 4,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101193780",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 4,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101202112",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-11-07",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 4,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101204424",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-31",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 5,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101210801",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-11-09",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 6,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101215010",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-11-07",
+      "actions": [
+        "Fine Ordered",
+        "Suspension",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 7,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102169539",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-31",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 7,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102210358",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-10-06",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 7,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102214395",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-11-09",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 8,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102217135",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-09-01",
+      "actions": [
+        "Fine Ordered",
+        "Suspension",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 9,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102217135",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-09-01",
+      "actions": [
+        "Fine Ordered",
+        "Suspension",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 10,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102220101",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-12-15",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 10,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2103187035",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-31",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 10,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2105219914",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-09-01",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 11,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 12,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 13,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 14,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 15,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "242000569",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 16,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 17,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 18,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 19,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 20,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "262000799",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-08-29",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 21,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101152182",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-22",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 21,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101164449",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-14",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 21,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101185712",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-10",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 22,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101187972",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-14",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 22,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101198509",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-14",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 22,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101203000",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-02-02",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 23,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101209469",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-01-17",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 23,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101212830",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-14",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 24,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101213304",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-14",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 24,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101217008",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-02-02",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 24,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101218177",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-10",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 25,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102163046",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-14",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 25,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102202130",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-22",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 25,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102207618",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-02-02",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 26,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102209311",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-05-26",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 26,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102210844",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-21",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 27,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102217647",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2023-01-17",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 27,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102218868",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-22",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 27,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102222666",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-10",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 28,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2103101467",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-22",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 28,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2103207008",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-22",
+      "actions": [
+        "Fine Ordered",
+        "Suspension"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 28,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2103216769",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-21",
+      "actions": [
+        "Fine Ordered",
+        "Suspension",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY23",
+      "page": 29,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2105180567",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-11-22",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 2,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101097042",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-07-06",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 2,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101122637",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-01-06",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 2,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101131998",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-15",
+      "actions": [
+        "Fine Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 3,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101131998",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-15",
+      "actions": [
+        "Fine Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 3,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101131998",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-15",
+      "actions": [
+        "Fine Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 3,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101172249",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-03-09",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 4,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101174038",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-07-06",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 4,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101180389",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-08-31",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 4,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101184199",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-12",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 5,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101185018",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-07-06",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 5,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101197016",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-07-06",
+      "actions": [
+        "Revocation"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 5,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101203000",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-03-10",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 6,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101210045",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-10",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 6,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101212513",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-08-31",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 7,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101213266",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-09-02",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 7,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101217163",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-24",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 8,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101217163",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-24",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 8,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2101217600",
+      "respondentType": "unresolved",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-07-06",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 9,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102169819",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-10",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 9,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102195986",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-15",
+      "actions": [
+        "Fine Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 9,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102195986",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-15",
+      "actions": [
+        "Fine Ordered",
+        "Probation"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 10,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102198880",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-12",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 10,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102203836",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-24",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 10,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102205038",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-07-07",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 11,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102207618",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-03-10",
+      "actions": [
+        "Fine Ordered",
+        "Revocation",
+        "Restitution Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 11,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102214237",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-03-09",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 11,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102217533",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2021-11-24",
+      "actions": [
+        "Fine Ordered"
+      ]
+    },
+    {
+      "report": "FY22",
+      "page": 12,
+      "licenseClass": "Residential Builder",
+      "licenseNumber": "2102218545",
+      "respondentType": "company-form name",
+      "licenseGrain": "unresolved",
+      "effectiveDate": "2022-07-06",
+      "actions": [
+        "Fine Ordered",
+        "Restitution Ordered"
+      ]
+    }
+  ]
+}
