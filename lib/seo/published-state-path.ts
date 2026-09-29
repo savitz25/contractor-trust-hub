@@ -10,6 +10,7 @@ export const PUBLISHED_STATEWIDE_SLUGS = [
   "florida",
   "georgia",
   "illinois",
+  "indiana",
   "massachusetts",
   "maryland",
   "michigan",
