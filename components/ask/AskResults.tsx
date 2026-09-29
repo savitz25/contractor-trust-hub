@@ -49,10 +49,12 @@ export function AskResults({
   const prevPage = askHref(plan.rawQuery, { ...overrides, page: String(Math.max(1, plan.page - 1)) });
   const totalPages =
     execution.contractorCount != null ? Math.max(1, Math.ceil(execution.contractorCount / plan.limit)) : 1;
+  // DSPS class totals are a statewide evidence gateway, not an executable credential list.
+  const wisconsinEvidenceGateway = interpreted.mode === "guidance" && interpreted.interpretation.location === "Wisconsin";
 
   return (
     <div className="space-y-8">
-      <GeographyNotice requirement={plan.geographyRequirement} query={plan.rawQuery} overrides={overrides} />
+      {wisconsinEvidenceGateway ? null : <GeographyNotice requirement={plan.geographyRequirement} query={plan.rawQuery} overrides={overrides} />}
       <section aria-labelledby="ask-interpreted">
         <p className="cth-intel-eyebrow">We interpreted your question as</p>
         <h2 id="ask-interpreted" className="sr-only">
@@ -65,7 +67,7 @@ export function AskResults({
           </div>
           <div>
             <dt className="text-[var(--muted)]">Geography basis</dt>
-            <dd className="font-medium">{execution.nameSearch ? "Credential jurisdiction and recorded address on each card — not service territory" : "Indexed DBPR address county — not service territory"}</dd>
+            <dd className="font-medium">{wisconsinEvidenceGateway ? "DSPS statewide credential-class totals; no provider-location search" : execution.nameSearch ? "Credential jurisdiction and recorded address on each card — not service territory" : "Indexed DBPR address county — not service territory"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Trade</dt>

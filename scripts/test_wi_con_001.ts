@@ -43,9 +43,12 @@ test("labeled credential only; bare number ambiguous; rankings fail closed", () 
 test("Wisconsin publication declares evidence gaps and avoids rating schema", () => {
   const page=readFileSync(new URL("../app/wisconsin/page.tsx",import.meta.url),"utf8");
   const sitemap=readFileSync(new URL("../lib/seo/sitemap-data.ts",import.meta.url),"utf8");
+  const askResults=readFileSync(new URL("../components/ask/AskResults.tsx",import.meta.url),"utf8");
   assert.match(page,/NOT_ACQUIRED/);
   assert.match(page,/not every order is formal discipline/);
   assert.match(page,/Dwelling Contractor Qualifier \(DCQ\) is a person credential/);
   assert.equal((sitemap.match(/path: "\/wisconsin"/g)??[]).length,1);
+  assert.match(askResults,/wisconsinEvidenceGateway \? null : <GeographyNotice/);
+  assert.match(askResults,/DSPS statewide credential-class totals; no provider-location search/);
   assert.doesNotMatch(page,/AggregateRating|ratingValue|Trust Score/);
 });
