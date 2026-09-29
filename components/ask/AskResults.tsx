@@ -51,10 +51,12 @@ export function AskResults({
     execution.contractorCount != null ? Math.max(1, Math.ceil(execution.contractorCount / plan.limit)) : 1;
   // DSPS class totals are a statewide evidence gateway, not an executable credential list.
   const wisconsinEvidenceGateway = interpreted.mode === "guidance" && interpreted.interpretation.location === "Wisconsin";
+  // IN-CON-001: Indiana plumbing evidence is statewide; cities are context, not a provider-location search.
+  const indianaEvidenceGateway = interpreted.mode === "guidance" && interpreted.interpretation.location === "Indiana";
 
   return (
     <div className="space-y-8">
-      {wisconsinEvidenceGateway ? null : <GeographyNotice requirement={plan.geographyRequirement} query={plan.rawQuery} overrides={overrides} />}
+      {indianaEvidenceGateway ? null : wisconsinEvidenceGateway ? null : <GeographyNotice requirement={plan.geographyRequirement} query={plan.rawQuery} overrides={overrides} />}
       <section aria-labelledby="ask-interpreted">
         <p className="cth-intel-eyebrow">We interpreted your question as</p>
         <h2 id="ask-interpreted" className="sr-only">
@@ -67,7 +69,7 @@ export function AskResults({
           </div>
           <div>
             <dt className="text-[var(--muted)]">Geography basis</dt>
-            <dd className="font-medium">{wisconsinEvidenceGateway ? "DSPS statewide credential-class totals; no provider-location search" : execution.nameSearch ? "Credential jurisdiction and recorded address on each card — not service territory" : "Indexed DBPR address county — not service territory"}</dd>
+            <dd className="font-medium">{indianaEvidenceGateway ? "PLA statewide plumbing evidence; other contractor licensing is local and not searched" : wisconsinEvidenceGateway ? "DSPS statewide credential-class totals; no provider-location search" : execution.nameSearch ? "Credential jurisdiction and recorded address on each card — not service territory" : "Indexed DBPR address county — not service territory"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Trade</dt>
