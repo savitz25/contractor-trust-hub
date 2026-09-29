@@ -61,7 +61,8 @@ def build():
             response = requests.get(url, timeout=30, headers={"User-Agent": "Mozilla/5.0 (compatible; public-evidence-research/1.0)"})
             if response.status_code != 200:
                 continue
-            html = response.text
+            # MHIC declares UTF-8 in the document, but the HTTP header omits a charset.
+            html = response.content.decode("utf-8-sig", "replace")
         except Exception:
             continue
         parser = Tables()
