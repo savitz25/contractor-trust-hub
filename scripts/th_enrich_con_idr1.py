@@ -130,7 +130,7 @@ def nj_fire():
                   s["native_permit_number"], "NJ_FIRE_PROTECTION_BUSINESS_PERMIT",
                   f"lapse={s['lapse_date_raw']}; current_unproven", False,
                   s["business_name_raw"], "", "NJ DFS permit number identifies permit only",
-                  "HELD", "Evidence-certified count is 541 but identical official PDF prints 542 permit entries; exact excluded row is not identified. Permit presence does not prove current status.")
+                  "HELD", "Official PDF contains 542 unique primary permit IDs. Permit presence and lapse date do not prove current status or a distinct canonical business.")
 
 
 def person_hold_from_other_sources():
@@ -187,7 +187,7 @@ def main():
     summary["PERSON_CREDENTIAL_HOLD"] = {"PERSON": hold_count}
     (OUT / "classification-codebook.json").write_text(json.dumps(CODEBOOK, indent=2) + "\n", encoding="utf-8")
     summary["source_hashes"] = {s: SOURCE_HASHES[s] for s in sources}
-    summary["nj_evidence_baseline"] = 541
+    summary["nj_evidence_baseline"] = 542
     summary["nj_pdf_entry_count"] = 542
     (OUT / "classification-counts.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2))

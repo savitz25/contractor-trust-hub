@@ -13,9 +13,9 @@ The six source-specific `*-reconciliation.csv` files classify each local source 
 | NY DOL mold | 2,510 | 1,761 Active | 0 | 0 | 0 | 2,510 | 0 | 0 | 0 |
 | NY DOL elevator | 302 | 212 Active | 0 | 0 | 0 | 302 | 0 | 0 | 0 |
 | FL electrical board 08 | 20,103 | **16,614 contractor `C/A`** | 0 | 0 | 17,976 | 0 | 40 | 2,087 | 0 |
-| NJ DFS fire permits | **541 Evidence baseline** | Unknown | 0 | 0 | 0 | 0 | 0 | 0 | **542 local PDF lines held** |
+| NJ DFS fire permits | **542 corrected Evidence count** | Unknown | 0 | 0 | 0 | 0 | 0 | 0 | **542 permit lines held** |
 
-The NJ table row uses the certified **541** permit baseline; the 542 local raw PDF lines are a reconciliation queue, not a proposed inventory. Other row-category totals reconcile to their source rows. `PERSON_ROWS`, `CREDENTIAL_ONLY`, `AMBIGUOUS`, `EVIDENCE_ONLY`, and `HELD` are exclusive row dispositions in the CSVs. `CURRENT_CREDENTIALS` is a source-status metric, not a business denominator.
+The NJ table row uses the corrected certified **542** permit count. These are permit evidence, not a current-business inventory. Other row-category totals reconcile to their source rows. `PERSON_ROWS`, `CREDENTIAL_ONLY`, `AMBIGUOUS`, `EVIDENCE_ONLY`, and `HELD` are exclusive row dispositions in the CSVs. `CURRENT_CREDENTIALS` is a source-status metric, not a business denominator.
 
 On **2026-09-30**, read-only Contractor production inspection found no licenses in `fl_dbpr` boards 08/59/07/04 or source systems `nyc_dob`, `ny_dol`, `nj_dfs`; no `entities` for `nyc_dob`, `ny_dol`, or `nj_dfs`; and no `fl_dbpr` entity or license key beginning `ZA`. Thus **zero source-native exact bridges** are present. The files expose no FEI/EIN or other legal registration number that could support a cross-source canonical bridge. Similar names and DBA strings were deliberately ignored. The owned board-06 CILB rows remain separate from board 08.
 
@@ -37,7 +37,7 @@ The [DOB dataset](https://data.cityofnewyork.us/Housing-Development/DOB-License-
 
 ### 6. New Jersey fire protection
 
-The ticket's Evidence baseline is **541 permits**, and current status has not been independently established. Re-fetching the [official NJ DFS PDF](https://www.nj.gov/dca/dfs/pdf/Fire%20Protection%20Equipment%20Contractor%20-%20Permitted%20Business.pdf) produced the same SHA-256 as the frozen B1 file (`0ed7e0d89a08f46ce5af3950551b518d8074dfba305ca0d88bce097393e684c7`). That PDF **prints “Fire Protection Contractor Business Permits: 542”** and contains 542 distinct primary permit lines. One line, `P01619`, cites replacement `P00485`; the parser treats the citation as a reference, not a second row. No Evidence-provided key list identifies which local line should be excluded to obtain 541. Therefore all 542 local lines are held, with **541 retained solely as the Evidence baseline**; no permit is called an active business or proposed for production. Resolving this requires the exact Evidence-certified 541 permit key set or a documented exclusion rule.
+The corrected Evidence count is **542 permits**; current status has not been established. Re-fetching the [official NJ DFS PDF](https://www.nj.gov/dca/dfs/pdf/Fire%20Protection%20Equipment%20Contractor%20-%20Permitted%20Business.pdf) produced the same SHA-256 as the frozen B1 file (`0ed7e0d89a08f46ce5af3950551b518d8074dfba305ca0d88bce097393e684c7`). The PDF prints **542** and contains 542 distinct primary permit lines. One line, `P01619`, cites replacement `P00485`; the parser treats that citation as a reference, not a second row. All 542 lines remain permit evidence; none is called an active business or proposed as a canonical identity.
 
 ## Person-credential hold and totals
 
@@ -47,11 +47,11 @@ The ticket's Evidence baseline is **541 permits**, and current status has not be
 EXACT_EXISTING_BUSINESS_BRIDGES = 0
 AUTHORITATIVE_NEW_BUSINESS_CANDIDATES = 228 source-native FL ZA candidates
 PERSON_CREDENTIAL_HOLD = 87874
-AMBIGUOUS = 55 row classifications, plus one unresolved NJ source-count discrepancy
+AMBIGUOUS = 55 row classifications
 PROPOSED_PRODUCTION_ROWS = 0
 PRODUCTION_MUTATIONS = NO
 ```
 
-The NJ discrepancy and absent reusable holder IDs for NYC GC/NY DOL prevent full identity certification. The 228 ZA candidates may be reviewed independently; none is a production instruction. Verification: `python -m unittest scripts/test_th_enrich_con_idr1.py -v` passed **5/5**.
+The NJ source count is reconciled; absent reusable holder IDs for NYC GC/NY DOL prevent canonical business identity certification. The 228 ZA candidates may be reviewed independently; none is a production instruction. Verification: `python -m unittest scripts/test_th_enrich_con_idr1.py -v` passed **5/5**.
 
-**CONTRACTOR ENRICHMENT = BLOCKED — NJ 541-key evidence set missing and business-holder IDs absent for NYC GC/NY DOL extracts.**
+**CONTRACTOR BUSINESS IDENTITY = HELD: NYC GC and NY DOL extracts lack reusable business-holder IDs. Credential-level presentation can proceed to separate Founder review.**

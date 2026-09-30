@@ -21,7 +21,7 @@
     "40c29ca87d": "Board 08 contractor license belongs to an individual; DBA is an associated qualified business name without a separate business ID in this extract.",
     "a4ca56787c": "Course/provider/other non-contractor record.",
     "59f2fcb045": "Repeated source-native education key; collision held.",
-    "fa0542a0bf": "Evidence-certified count is 541 but identical official PDF prints 542 permit entries; exact excluded row is not identified. Permit presence does not prove current status.",
+    "bc6955be30": "Official PDF contains 542 unique primary permit IDs. Permit presence and lapse date do not prove current status or a distinct canonical business.",
     "b68b63b0e4": "PERSON_CREDENTIAL_HOLD: product model deferred."
   }
 }

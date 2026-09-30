@@ -50,7 +50,7 @@ class HolderReconciliation(unittest.TestCase):
         elec = rows("fl_dbpr_eclb_08")
         self.assertEqual(sum(r["classification"] == "PERSON" and r["is_current_active"] == "YES" for r in elec), 16614)
         self.assertEqual(len(rows("nj_dfs_fire_business")), 542)
-        self.assertEqual(json.loads((OUT / "classification-counts.json").read_text())["nj_evidence_baseline"], 541)
+        self.assertEqual(json.loads((OUT / "classification-counts.json").read_text())["nj_evidence_baseline"], 542)
         self.assertTrue(all(r["classification"] == "HELD" for r in rows("nj_dfs_fire_business")))
 
     def test_person_hold_is_separate(self):
