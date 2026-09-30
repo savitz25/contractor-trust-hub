@@ -1,5 +1,7 @@
 # TH-ENRICH-2026-09-30-B1 — Contractor publication packet
 
+**Identity review update:** the earlier 80,802-key license projection is withdrawn as a publication proposal. Use the [typed Contractor identity review](TH-ENRICH-2026-09-30-B1-contractor-identity-review.md); it proposes zero license loads pending person and business-holder resolution.
+
 Production changed: **NO**. Eight official source snapshots were acquired and parsed into local `data/staging/th_enrich_b1/` JSONL with raw regulator fields retained. [Immutable source manifest](TH-ENRICH-2026-09-30-B1-source-manifest.json), [per-dataset QA](TH-ENRICH-2026-09-30-B1-qa.json), and [retrieval receipts](TH-ENRICH-2026-09-30-B1-retrieval.json) contain the detailed A–T checks. Raw files and staging are intentionally excluded from Git by repository rules.
 
 ## Source census and identity treatment
