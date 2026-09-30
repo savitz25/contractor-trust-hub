@@ -1,0 +1,27 @@
+{
+  "holder_authority": {
+    "ff73f08789": "DBPR individual asbestos credential",
+    "c8e4558bd3": "DBPR board 59 occupation ZA: Asbestos Business license, unique ZA number",
+    "33aff3115f": "DBPR officer/course/provider record",
+    "17eb117c0b": "DOB license serial/number identifies a licensee record; business-name field is not legal registration ID",
+    "c1d787d1b7": "NYS DOL business license; extract has license number and business name but no reusable legal-entity/holder ID",
+    "6574a386b6": "DBPR board 08 individual contractor credential; DBA text is qualifier association",
+    "7b95dbfa8b": "NJ DFS permit number identifies permit only",
+    "3044b076c7": "DBPR individual professional credential"
+  },
+  "reason": {
+    "88d06495f9": "Individual contractor/consultant credential; not a business holder ID.",
+    "550a2c612e": "Regulator directly licenses the named business; no exact owned ZA source/entity key. Secondary status blank on 172 rows, so active status is not inferred.",
+    "8c98bdbd2c": "Financial officer or education record; no contractor-business creation.",
+    "a1d8aa5dd2": "DOB profession record identifies an individual; no business identity authority.",
+    "e4b55d0800": "GC record names both individual registrant and business but exposes no business registration/EIN or other holder ID; license number is a credential.",
+    "42cafbe7dd": "Other DOB license type or non-active GC outside this business-resolution pass.",
+    "2a8954db5b": "Missing/duplicated native key or malformed status; held.",
+    "939a0ec586": "License number identifies a credential; multiple license types may attach to one business. Name or address alone cannot establish canonical identity.",
+    "40c29ca87d": "Board 08 contractor license belongs to an individual; DBA is an associated qualified business name without a separate business ID in this extract.",
+    "a4ca56787c": "Course/provider/other non-contractor record.",
+    "59f2fcb045": "Repeated source-native education key; collision held.",
+    "fa0542a0bf": "Evidence-certified count is 541 but identical official PDF prints 542 permit entries; exact excluded row is not identified. Permit presence does not prove current status.",
+    "b68b63b0e4": "PERSON_CREDENTIAL_HOLD: product model deferred."
+  }
+}
