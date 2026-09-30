@@ -1,0 +1,24 @@
+{
+  "retrieved_at": "2026-09-30T14:00:14.232963+00:00",
+  "method": "PostgREST HEAD count=exact",
+  "source_counts": {
+    "fl_dbpr": 143516,
+    "nj_dfs": 0,
+    "nyc_dob": 0,
+    "ny_dol": 0,
+    "nj_dca": 87355
+  },
+  "fl_dbpr_board_counts": {
+    "06": 143516,
+    "08": 0,
+    "07": 0,
+    "59": 0,
+    "04": 0
+  },
+  "production_changed": false,
+  "network_counts": {
+    "contractors": 1392730,
+    "licenses": 1266214
+  },
+  "live_ownership_verified": true
+}

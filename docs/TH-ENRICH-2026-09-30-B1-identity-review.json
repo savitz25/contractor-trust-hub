@@ -1,0 +1,479 @@
+{
+  "source": "frozen B1 stage",
+  "datasets": [
+    {
+      "dataset": "fl_dbpr_eclb_08",
+      "raw": 20103,
+      "unique_native": 20083,
+      "prior_identity_eligible": 17976,
+      "current_eligible": 16614,
+      "person": 0,
+      "business": 0,
+      "business_linked_not_proven_canonical": 0,
+      "mixed_unknown": 17976,
+      "evidence_only": 2107,
+      "held": 20083,
+      "collision_or_parse_rows": 20,
+      "proposed_license_rows": 0,
+      "types": {
+        "CRS1": {
+          "raw": 114,
+          "unique_native": 114,
+          "holder": "evidence_only",
+          "current": 0
+        },
+        "CRS2": {
+          "raw": 99,
+          "unique_native": 99,
+          "holder": "evidence_only",
+          "current": 0
+        },
+        "CRS3": {
+          "raw": 1725,
+          "unique_native": 1705,
+          "holder": "evidence_only",
+          "current": 1
+        },
+        "EC": {
+          "raw": 12323,
+          "unique_native": 12323,
+          "holder": "mixed_unknown",
+          "current": 11456
+        },
+        "EF": {
+          "raw": 1465,
+          "unique_native": 1465,
+          "holder": "mixed_unknown",
+          "current": 1353
+        },
+        "EG": {
+          "raw": 545,
+          "unique_native": 545,
+          "holder": "mixed_unknown",
+          "current": 512
+        },
+        "EH": {
+          "raw": 2,
+          "unique_native": 2,
+          "holder": "mixed_unknown",
+          "current": 2
+        },
+        "EI": {
+          "raw": 6,
+          "unique_native": 6,
+          "holder": "mixed_unknown",
+          "current": 5
+        },
+        "ER": {
+          "raw": 1656,
+          "unique_native": 1656,
+          "holder": "mixed_unknown",
+          "current": 1436
+        },
+        "ES": {
+          "raw": 1785,
+          "unique_native": 1785,
+          "holder": "mixed_unknown",
+          "current": 1671
+        },
+        "ET": {
+          "raw": 112,
+          "unique_native": 112,
+          "holder": "mixed_unknown",
+          "current": 102
+        },
+        "EY": {
+          "raw": 65,
+          "unique_native": 65,
+          "holder": "mixed_unknown",
+          "current": 63
+        },
+        "EZ": {
+          "raw": 17,
+          "unique_native": 17,
+          "holder": "mixed_unknown",
+          "current": 14
+        },
+        "PVDR": {
+          "raw": 189,
+          "unique_native": 189,
+          "holder": "evidence_only",
+          "current": 0
+        }
+      }
+    },
+    {
+      "dataset": "fl_dbpr_mold_07",
+      "raw": 6933,
+      "unique_native": 6933,
+      "prior_identity_eligible": 6558,
+      "current_eligible": 6060,
+      "person": 6558,
+      "business": 0,
+      "business_linked_not_proven_canonical": 0,
+      "mixed_unknown": 0,
+      "evidence_only": 375,
+      "held": 6933,
+      "collision_or_parse_rows": 0,
+      "proposed_license_rows": 0,
+      "types": {
+        "CRS1": {
+          "raw": 331,
+          "unique_native": 331,
+          "holder": "evidence_only",
+          "current": 0
+        },
+        "MRSA": {
+          "raw": 3339,
+          "unique_native": 3339,
+          "holder": "person",
+          "current": 3087
+        },
+        "MRSR": {
+          "raw": 3219,
+          "unique_native": 3219,
+          "holder": "person",
+          "current": 2973
+        },
+        "PVDR": {
+          "raw": 44,
+          "unique_native": 44,
+          "holder": "evidence_only",
+          "current": 0
+        }
+      }
+    },
+    {
+      "dataset": "fl_dbpr_asbestos_59",
+      "raw": 1157,
+      "unique_native": 1157,
+      "prior_identity_eligible": 486,
+      "current_eligible": 303,
+      "person": 258,
+      "business": 228,
+      "business_linked_not_proven_canonical": 0,
+      "mixed_unknown": 0,
+      "evidence_only": 671,
+      "held": 1157,
+      "collision_or_parse_rows": 0,
+      "proposed_license_rows": 0,
+      "types": {
+        "AF": {
+          "raw": 3,
+          "unique_native": 3,
+          "holder": "person",
+          "current": 1
+        },
+        "AX": {
+          "raw": 93,
+          "unique_native": 93,
+          "holder": "person",
+          "current": 91
+        },
+        "CJC": {
+          "raw": 139,
+          "unique_native": 139,
+          "holder": "person",
+          "current": 133
+        },
+        "CRS1": {
+          "raw": 65,
+          "unique_native": 65,
+          "holder": "evidence_only",
+          "current": 0
+        },
+        "CRS2": {
+          "raw": 126,
+          "unique_native": 126,
+          "holder": "evidence_only",
+          "current": 0
+        },
+        "DD": {
+          "raw": 1,
+          "unique_native": 1,
+          "holder": "person",
+          "current": 1
+        },
+        "EA": {
+          "raw": 16,
+          "unique_native": 16,
+          "holder": "person",
+          "current": 15
+        },
+        "FO": {
+          "raw": 431,
+          "unique_native": 431,
+          "holder": "evidence_only",
+          "current": 0
+        },
+        "IA": {
+          "raw": 6,
+          "unique_native": 6,
+          "holder": "person",
+          "current": 6
+        },
+        "PVDR": {
+          "raw": 49,
+          "unique_native": 49,
+          "holder": "evidence_only",
+          "current": 0
+        },
+        "ZA": {
+          "raw": 228,
+          "unique_native": 228,
+          "holder": "business",
+          "current": 56
+        }
+      }
+    },
+    {
+      "dataset": "fl_dbpr_home_04",
+      "raw": 9396,
+      "unique_native": 9396,
+      "prior_identity_eligible": 8026,
+      "current_eligible": 7628,
+      "person": 8026,
+      "business": 0,
+      "business_linked_not_proven_canonical": 0,
+      "mixed_unknown": 0,
+      "evidence_only": 1370,
+      "held": 9396,
+      "collision_or_parse_rows": 0,
+      "proposed_license_rows": 0,
+      "types": {
+        "CRS1": {
+          "raw": 1273,
+          "unique_native": 1273,
+          "holder": "evidence_only",
+          "current": 0
+        },
+        "HI": {
+          "raw": 8026,
+          "unique_native": 8026,
+          "holder": "person",
+          "current": 7628
+        },
+        "PVDR": {
+          "raw": 97,
+          "unique_native": 97,
+          "holder": "evidence_only",
+          "current": 0
+        }
+      }
+    },
+    {
+      "dataset": "nyc_dob_license_info",
+      "raw": 103236,
+      "unique_native": 103228,
+      "prior_identity_eligible": 44402,
+      "current_eligible": 12716,
+      "person": 55063,
+      "business": 43398,
+      "business_linked_not_proven_canonical": 43398,
+      "mixed_unknown": 4767,
+      "evidence_only": 0,
+      "held": 103228,
+      "collision_or_parse_rows": 8,
+      "proposed_license_rows": 0,
+      "types": {
+        "CONCRETE TEST LAB / SAFETY MANAGER": {
+          "raw": 1068,
+          "unique_native": 1068,
+          "holder": "mixed_unknown",
+          "current": 516
+        },
+        "ELECTRICAL CONTRACTOR": {
+          "raw": 5104,
+          "unique_native": 5104,
+          "holder": "person",
+          "current": 996
+        },
+        "ELECTRICAL FIRM": {
+          "raw": 5544,
+          "unique_native": 5544,
+          "holder": "business_linked",
+          "current": 1108
+        },
+        "ELEVATOR AGENCY / INSPECTOR": {
+          "raw": 3699,
+          "unique_native": 3699,
+          "holder": "mixed_unknown",
+          "current": 24
+        },
+        "FILING REPRESENTATIVE": {
+          "raw": 7864,
+          "unique_native": 7861,
+          "holder": "person",
+          "current": 2368
+        },
+        "FIRE SUPPRESSION CONTRACTOR": {
+          "raw": 1133,
+          "unique_native": 1133,
+          "holder": "person",
+          "current": 464
+        },
+        "GENERAL CONTRACTOR": {
+          "raw": 34650,
+          "unique_native": 34650,
+          "holder": "business_linked",
+          "current": 9752
+        },
+        "HOIST MACHINE OPERATOR": {
+          "raw": 3757,
+          "unique_native": 3756,
+          "holder": "person",
+          "current": 361
+        },
+        "JOURNEYMAN": {
+          "raw": 4993,
+          "unique_native": 4993,
+          "holder": "person",
+          "current": 1739
+        },
+        "MASTER PLUMBER": {
+          "raw": 3007,
+          "unique_native": 3007,
+          "holder": "person",
+          "current": 1137
+        },
+        "OIL BURNER INSTALLER": {
+          "raw": 413,
+          "unique_native": 413,
+          "holder": "person",
+          "current": 104
+        },
+        "RIGGER": {
+          "raw": 1875,
+          "unique_native": 1875,
+          "holder": "person",
+          "current": 652
+        },
+        "SIGN HANGER": {
+          "raw": 119,
+          "unique_native": 119,
+          "holder": "person",
+          "current": 42
+        },
+        "SITE SAFETY": {
+          "raw": 3206,
+          "unique_native": 3206,
+          "holder": "person",
+          "current": 1322
+        },
+        "SPECIAL INSPECTION AGENCY": {
+          "raw": 3204,
+          "unique_native": 3204,
+          "holder": "business_linked",
+          "current": 1392
+        },
+        "STATIONARY / PORTABLE ENGINEER": {
+          "raw": 4646,
+          "unique_native": 4646,
+          "holder": "person",
+          "current": 1376
+        },
+        "SUPERINTENDENT OF CONSTRUCTION": {
+          "raw": 11079,
+          "unique_native": 11078,
+          "holder": "person",
+          "current": 4385
+        },
+        "TOWER CRANE RIGGER": {
+          "raw": 29,
+          "unique_native": 29,
+          "holder": "person",
+          "current": 4
+        },
+        "WELDER": {
+          "raw": 7844,
+          "unique_native": 7843,
+          "holder": "person",
+          "current": 27
+        }
+      }
+    },
+    {
+      "dataset": "ny_dol_mold",
+      "raw": 2510,
+      "unique_native": 2510,
+      "prior_identity_eligible": 2510,
+      "current_eligible": 1761,
+      "person": 0,
+      "business": 2510,
+      "business_linked_not_proven_canonical": 0,
+      "mixed_unknown": 0,
+      "evidence_only": 0,
+      "held": 2510,
+      "collision_or_parse_rows": 0,
+      "proposed_license_rows": 0,
+      "types": {
+        "Mold Assessment Contractor License (SH125)": {
+          "raw": 1193,
+          "unique_native": 1193,
+          "holder": "business",
+          "current": 809
+        },
+        "Mold Remediation Contractor License (SH126)": {
+          "raw": 1317,
+          "unique_native": 1317,
+          "holder": "business",
+          "current": 952
+        }
+      }
+    },
+    {
+      "dataset": "ny_elevator",
+      "raw": 302,
+      "unique_native": 302,
+      "prior_identity_eligible": 302,
+      "current_eligible": 212,
+      "person": 0,
+      "business": 302,
+      "business_linked_not_proven_canonical": 0,
+      "mixed_unknown": 0,
+      "evidence_only": 0,
+      "held": 302,
+      "collision_or_parse_rows": 0,
+      "proposed_license_rows": 0,
+      "types": {
+        "Elevator Contractor License (SH131)": {
+          "raw": 193,
+          "unique_native": 193,
+          "holder": "business",
+          "current": 132
+        },
+        "Elevator Inspection Contractor License (SH131)": {
+          "raw": 109,
+          "unique_native": 109,
+          "holder": "business",
+          "current": 80
+        }
+      }
+    },
+    {
+      "dataset": "nj_dfs_fire_business",
+      "raw": 542,
+      "unique_native": 542,
+      "prior_identity_eligible": 542,
+      "current_eligible": 0,
+      "person": 0,
+      "business": 542,
+      "business_linked_not_proven_canonical": 0,
+      "mixed_unknown": 0,
+      "evidence_only": 0,
+      "held": 542,
+      "collision_or_parse_rows": 0,
+      "proposed_license_rows": 0,
+      "types": {
+        "FIRE PROTECTION BUSINESS PERMIT": {
+          "raw": 542,
+          "unique_native": 542,
+          "holder": "business",
+          "current": 0
+        }
+      }
+    }
+  ],
+  "production_changed": false,
+  "publication_rule": "No credential is a canonical business. Person and mixed credentials remain held; no license rows proposed before identity resolution."
+}
