@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import json
 from pathlib import Path
 
@@ -10,9 +11,20 @@ STAGE = ROOT / "data/staging/th_enrich_b1"
 OUT = ROOT / "data/preview/contractor-credential-lookup.json"
 MANIFEST = json.loads((ROOT / "docs/TH-ENRICH-2026-09-30-B1-source-manifest.json").read_text())
 SOURCES = {item["id"]: item for item in MANIFEST["sources"]}
+NY_PACKET = ROOT / "docs/TH-EA-UNPUBLISHED-2026-10-01-NY-CREDENTIALS"
+SOURCES.update({item["id"]: item for item in json.loads((NY_PACKET / "source-manifest.json").read_text())["sources"]})
 
 
 def staged(dataset: str):
+    if dataset in {"ny_dol_mold", "ny_elevator"}:
+        source = SOURCES[dataset]
+        with (NY_PACKET / source["filename"]).open(newline="", encoding="utf-8-sig") as stream:
+            for line, raw in enumerate(csv.DictReader(stream), 2):
+                yield {"source_dataset": dataset, "source_line": line,
+                       "native_key": f"{raw['license_type']}:{raw['license_number']}",
+                       "native_license_number": raw["license_number"],
+                       "credential_class": raw["license_type"], "raw": raw}
+        return
     with (STAGE / f"{dataset}.jsonl").open(encoding="utf-8") as stream:
         yield from (json.loads(line) for line in stream)
 

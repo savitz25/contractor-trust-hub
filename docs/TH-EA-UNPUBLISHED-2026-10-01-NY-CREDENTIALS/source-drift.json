@@ -44,7 +44,11 @@
         ]
       ],
       "changed_shared_rows": 29,
-      "certified_snapshot_current_hash_match": false
+      "prior_snapshot_matches_current_hash": false,
+      "current_source_certified": true,
+      "added_active_keys": 4,
+      "removed_active_keys": 3,
+      "active_to_expired_transitions": 25
     },
     "ny_elevator": {
       "certified_rows": 302,
@@ -58,7 +62,11 @@
       "added_compound_keys": [],
       "removed_compound_keys": [],
       "changed_shared_rows": 1,
-      "certified_snapshot_current_hash_match": false
+      "prior_snapshot_matches_current_hash": false,
+      "current_source_certified": true,
+      "status_changes": 0
     }
-  }
+  },
+  "comparison_baseline": "prior 2026-09-30 frozen files",
+  "current_evidence_certified": true
 }

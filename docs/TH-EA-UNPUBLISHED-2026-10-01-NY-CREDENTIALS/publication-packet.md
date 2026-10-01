@@ -1,42 +1,35 @@
-# NY DOL credential wave — Evidence recheck packet
+# NY DOL credential wave — Founder production gate packet
 
-**Disposition: HOLD for source drift review.** This branch stages the independently certified 2026-09-30 snapshots; it does not load production. The official exports changed by 2026-10-01. Evidence must decide whether to authorize the frozen snapshot as a dated credential observation or certify a refreshed source before any execution. No current-active or distinct-business count is asserted.
+**Prepared, not executed.** Evidence Activation certified the current official NY DOL exports on 2026-10-01. This packet replaces the prior frozen 2,510-row Mold proposal. The publication grain is a standalone regulator credential, never a distinct canonical business.
 
-## Certified staging
+## Current certified sources
 
-| Source | Official dataset | Pinned SHA-256 | Rows | Unique bare numbers | Unique type + number keys | Active | Expired | Batch UUID |
+| Source | Dataset | SHA-256 | Rows | Unique bare numbers | Unique type + number keys | Active | Expired | Batch UUID |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| NY DOL mold | `ikqx-ispy` | `bdbf258434d772810a2027a3fd5fa679b8210435ed1126cdc5fb1e34194bfb5c` | 2,510 | 2,482 | 2,510 | 1,761 | 749 | `ef3a17a2-75fd-5e1b-af1b-3ac5be7944ac` |
-| NY DOL elevator | `jrac-r9vc` | `9e5455d1aeec34a399d6e81c5bb55fba4dac42e4399ca01140a893fa5a982244` | 302 | 302 | 302 | 212 | 90 | `8875f5a5-a2f1-58fc-86f9-854b0cec6b7f` |
+| NY DOL Mold | `ikqx-ispy` | `5eda889f071350c8e1c1bed040f177de1b0a28e64619afabadb9a4fae468927c` | 2,511 | 2,483 | 2,511 | 1,737 | 774 | `637955be-0fc3-5beb-aa6f-52904f3184f0` |
+| NY DOL Elevator | `jrac-r9vc` | `4e7dd536aacb197589ffc0df56c35ffc2b6289912cb24bf6289bd141b2f741da` | 302 | 302 | 302 | 212 | 90 | `cf41ef92-452b-553d-927e-f3944c3d2dfd` |
 
-Official exports: [Mold Contractor Licenses](https://data.ny.gov/d/ikqx-ispy) and [Elevator Contractor License](https://data.ny.gov/d/jrac-r9vc). The pinned files are `data/raw/th_enrich_b1/ikqx-ispy.csv` and `data/raw/th_enrich_b1/jrac-r9vc.csv`. The exact stage is `ny-credentials-stage.csv` (SHA-256 in `receipt.json`). Every row retains license type, number, status, holder text, address, dates, source URL/hash, raw payload, and source line. `external_key = source_dataset + ':' + license_type + ':' + license_number` under `source_system = ny_dol`; a repeated mold number across SH125 and SH126 remains two credentials. The license number never identifies a canonical business.
+Official datasets: [Mold Contractor Licenses](https://data.ny.gov/d/ikqx-ispy) and [Elevator Contractor License](https://data.ny.gov/d/jrac-r9vc). The exact current exports are pinned in `sources/`; `source-manifest.json` records URLs, retrieval, bytes, and hashes. Independent fresh downloads reproduced both Evidence hashes. Relative to the prior snapshot, Mold added four Active keys, removed three Active keys, and changed 25 Active records to Expired. Elevator had no key or status changes; one record's sourced text/phone and CSV row order changed. The historical comparison remains in `source-drift.json`.
 
-## Fresh official export drift
+`ny-credentials-stage.csv` contains **2,813** rows. Its final, independently recomputed SHA-256 is **`8529bef17460a38efc1df6b37a4233872a1be1fceb5010dd4e78b0ee9e34a695`**, matching `receipt.json`. Stage keys are `source_dataset + ':' + license_type + ':' + license_number` under `source_system = ny_dol`. Repeated bare Mold numbers across SH125 and SH126 remain distinct credentials. Every row retains native type/number, raw Active or Expired status, holder text, address and dates, official source URL/hash, source line, and full raw payload.
 
-The 2026-10-01 official `?$limit=500000` recheck gave mold **2,511** rows, SHA-256 `5eda889f071350c8e1c1bed040f177de1b0a28e64619afabadb9a4fae468927c`, with 1,737 Active and 774 Expired. Relative to the certified file, 4 compound keys were added, 3 removed, and 29 shared rows changed. Elevator remained **302** rows and 212 Active / 90 Expired, but its SHA-256 changed to `4e7dd536aacb197589ffc0df56c35ffc2b6289bd141b2f741da`; one shared row changed sourced name casing, address casing, and phone. See `source-drift.json` for the exact changed-key set. The fresh files were inspected in a temporary directory and did not replace certified source artifacts.
+## Ownership, denominator, and transaction
 
-This is material source drift for mold and content drift for elevator. The reviewed load must **not** run while current source hashes differ unless Evidence explicitly certifies publication of the frozen 2026-09-30 observation. A refreshed wave would need a new source receipt, stage, and review.
+Read-only production inspection on 2026-10-01 reconfirmed **zero** `ny_dol` licenses and ingest batches, with **1,392,730** canonical contractors. The execution packet rechecks exact `(source_system,external_key)` ownership immediately before insert. Existing exact rows are accepted only as identical reruns of this release batch; differing rows stop the transaction. A Founder execution gate must repeat the live ownership check.
 
-## Production ownership and target grain
+`load.psql` uses two deterministic batch UUIDs and one transaction. It validates 2,511 Mold, 302 Elevator, 774 and 90 Expired, 2,483 bare Mold numbers, 2,813 unique external keys, and both source hashes. It inserts only `licenses` with `contractor_id = NULL`; it does not write `contractors` or `entities`. The `(source_system,external_key)` unique constraint and exact-rerun preflight yield **2,813 first-run inserts** at the inspected zero-owned baseline and **0 second-run inserts**. These are local deterministic packet results, not claims of production execution.
 
-Read-only inspection of ContractorTrustHub production on 2026-10-01 found **zero** `licenses` rows with `source_system IN ('ny_dol_mold','ny_elevator','ny_dol')`, zero other `source_system` names containing NY/mold/elevator, and zero NY DOL `ingest_batches`. Thus exact already-owned credentials are 0 at inspection time. The packet rechecks exact `(source_system, external_key)` ownership transactionally at execution; any existing row must be an identical rerun in the same batch.
+`rollback.psql` is bounded by the two batch IDs, `ny_dol`, source dataset and hash, standalone grain, null contractor link, and certified maximum row counts. No schema change is required. Ordinary Contractor business search remains unchanged because unattached licenses are excluded by its contractor join.
 
-`licenses.contractor_id` is nullable. The packet sets it to NULL for all 2,812 credentials. `contractors`, `entities`, and business search are untouched. Existing canonical business queries inner-join `licenses` to `contractors`, so unattached credentials cannot enter ordinary business search. Raw `Active` and `Expired` are retained in `primary_status`; `status_normalized` is the lowercase equivalent. The holder's address state is stored separately from the New York issuing jurisdiction in raw payload.
-
-## Execution and rollback design — not authorized
-
-`load.psql` stages the pinned CSV in a session-local table, validates counts, statuses, compound keys, source hashes, batch IDs and exact ownership, then inserts two `ingest_batches` and only unattached `licenses` in one transaction. The unique `(source_system, external_key)` constraint plus identical-rerun preflight makes a rerun insert zero rows. `rollback.psql` is bounded to the two batch UUIDs, `ny_dol` source, source hashes, dataset keys, standalone grain, null contractor links, and certified maximum row counts. It is not executed.
-
-The local credential preview now includes mold Active and Expired and elevator Active and Expired examples. The route remains development-only, noindex, and separate from canonical Contractor search. The pre-existing NJ permit fixture is not part of this wave or load packet.
-
-Local preview check: `http://127.0.0.1:3457/credential-lookup-preview` returned HTTP 200 in development. The [Expired elevator mobile capture](preview-elevator-expired.png) shows the source status as Expired and business identity linkage as Not established. Four staging tests, four existing preview tests, and TypeScript typecheck passed. The production route remains unavailable by design.
+The development-only credential preview shows Mold and Elevator Active/Expired examples. The [Expired Elevator mobile capture](preview-elevator-expired.png) shows Expired status and “Business identity linkage: Not established.” NJ Fire Protection is **HOLD** and excluded from both the 2,813-row stage and SQL packets.
 
 ```text
-CERTIFIED_ROWS = 2812
-EXACT_EXISTING_CREDENTIALS_AT_INSPECTION = 0
-PROPOSED_NEW_CREDENTIAL_ROWS_IF_FROZEN_SOURCE_APPROVED = 2812
+TOTAL_CERTIFIED_ROWS = 2813
+EXACT_EXISTING_CREDENTIALS_AT_LAST_READ_ONLY_INSPECTION = 0
+FIRST_RUN_INSERTS_AT_THAT_BASELINE = 2813
+SECOND_RUN_INSERTS = 0
 CANONICAL_BUSINESSES_CREATED = 0
 SCHEMA_CHANGE = NO
 PRODUCTION_MUTATIONS = NO
-NJ_FIRE_STATUS = HOLD — EVIDENCE COUNT CONFLICT 541 VS 542
+NJ_FIRE_STATUS = HOLD
 ```

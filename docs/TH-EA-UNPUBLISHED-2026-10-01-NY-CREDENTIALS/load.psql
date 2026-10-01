@@ -1,4 +1,4 @@
--- REVIEW PACKET ONLY. Do not execute until Evidence resolves source drift and Founder authorizes.
+-- REVIEW PACKET ONLY. Current sources are Evidence-certified; Founder execution GO is still required.
 -- Run with psql -X -v ON_ERROR_STOP=1 from the repository root.
 -- First verify the CSV SHA-256 in receipt.json and both official source hashes.
 BEGIN;
@@ -15,21 +15,21 @@ CREATE TEMP TABLE ny_credential_stage (
 
 DO $$
 BEGIN
-  IF (SELECT count(*) FROM ny_credential_stage) <> 2812
-     OR (SELECT count(*) FROM ny_credential_stage WHERE source_dataset='ny_dol_mold') <> 2510
+  IF (SELECT count(*) FROM ny_credential_stage) <> 2813
+     OR (SELECT count(*) FROM ny_credential_stage WHERE source_dataset='ny_dol_mold') <> 2511
      OR (SELECT count(*) FROM ny_credential_stage WHERE source_dataset='ny_elevator') <> 302
-     OR (SELECT count(*) FROM ny_credential_stage WHERE source_dataset='ny_dol_mold' AND source_status='Expired') <> 749
+     OR (SELECT count(*) FROM ny_credential_stage WHERE source_dataset='ny_dol_mold' AND source_status='Expired') <> 774
      OR (SELECT count(*) FROM ny_credential_stage WHERE source_dataset='ny_elevator' AND source_status='Expired') <> 90
-     OR (SELECT count(DISTINCT license_number) FROM ny_credential_stage WHERE source_dataset='ny_dol_mold') <> 2482
-     OR (SELECT count(DISTINCT (source_system,external_key)) FROM ny_credential_stage) <> 2812
+     OR (SELECT count(DISTINCT license_number) FROM ny_credential_stage WHERE source_dataset='ny_dol_mold') <> 2483
+     OR (SELECT count(DISTINCT (source_system,external_key)) FROM ny_credential_stage) <> 2813
      OR EXISTS (SELECT 1 FROM ny_credential_stage WHERE source_system <> 'ny_dol'
        OR source_status NOT IN ('Active','Expired') OR external_key IS NULL OR license_number IS NULL
        OR holder_name IS NULL OR holder_name='' OR source_dataset NOT IN ('ny_dol_mold','ny_elevator'))
      OR EXISTS (SELECT 1 FROM ny_credential_stage WHERE
-       (source_dataset='ny_dol_mold' AND (source_sha256 <> 'bdbf258434d772810a2027a3fd5fa679b8210435ed1126cdc5fb1e34194bfb5c'
-         OR batch_id <> 'ef3a17a2-75fd-5e1b-af1b-3ac5be7944ac'))
-       OR (source_dataset='ny_elevator' AND (source_sha256 <> '9e5455d1aeec34a399d6e81c5bb55fba4dac42e4399ca01140a893fa5a982244'
-         OR batch_id <> '8875f5a5-a2f1-58fc-86f9-854b0cec6b7f')))
+       (source_dataset='ny_dol_mold' AND (source_sha256 <> '5eda889f071350c8e1c1bed040f177de1b0a28e64619afabadb9a4fae468927c'
+         OR batch_id <> '637955be-0fc3-5beb-aa6f-52904f3184f0'))
+       OR (source_dataset='ny_elevator' AND (source_sha256 <> '4e7dd536aacb197589ffc0df56c35ffc2b6289912cb24bf6289bd141b2f741da'
+         OR batch_id <> 'cf41ef92-452b-553d-927e-f3944c3d2dfd')))
      OR EXISTS (SELECT 1 FROM ny_credential_stage WHERE external_key <> source_dataset || ':' || license_type || ':' || license_number)
   THEN RAISE EXCEPTION 'Certified NY credential stage invariant failed'; END IF;
 
@@ -46,20 +46,20 @@ BEGIN
 
   IF EXISTS (
     SELECT 1 FROM public.ingest_batches b
-    WHERE b.id IN ('ef3a17a2-75fd-5e1b-af1b-3ac5be7944ac','8875f5a5-a2f1-58fc-86f9-854b0cec6b7f')
+    WHERE b.id IN ('637955be-0fc3-5beb-aa6f-52904f3184f0','cf41ef92-452b-553d-927e-f3944c3d2dfd')
       AND (b.source_system <> 'ny_dol'
-        OR (b.id='ef3a17a2-75fd-5e1b-af1b-3ac5be7944ac' AND
-          (b.source_dataset <> 'ny_dol_mold' OR b.row_count <> 2510 OR b.checksum_sha256 <> 'bdbf258434d772810a2027a3fd5fa679b8210435ed1126cdc5fb1e34194bfb5c'))
-        OR (b.id='8875f5a5-a2f1-58fc-86f9-854b0cec6b7f' AND
-          (b.source_dataset <> 'ny_elevator' OR b.row_count <> 302 OR b.checksum_sha256 <> '9e5455d1aeec34a399d6e81c5bb55fba4dac42e4399ca01140a893fa5a982244')))
+        OR (b.id='637955be-0fc3-5beb-aa6f-52904f3184f0' AND
+          (b.source_dataset <> 'ny_dol_mold' OR b.row_count <> 2511 OR b.checksum_sha256 <> '5eda889f071350c8e1c1bed040f177de1b0a28e64619afabadb9a4fae468927c'))
+        OR (b.id='cf41ef92-452b-553d-927e-f3944c3d2dfd' AND
+          (b.source_dataset <> 'ny_elevator' OR b.row_count <> 302 OR b.checksum_sha256 <> '4e7dd536aacb197589ffc0df56c35ffc2b6289912cb24bf6289bd141b2f741da')))
   ) THEN RAISE EXCEPTION 'Existing ingest batch metadata differs'; END IF;
 END $$;
 
 INSERT INTO public.ingest_batches
   (id,source_system,source_dataset,source_url,source_file,row_count,checksum_sha256,notes)
 VALUES
-  ('ef3a17a2-75fd-5e1b-af1b-3ac5be7944ac','ny_dol','ny_dol_mold','https://data.ny.gov/resource/ikqx-ispy.csv','ikqx-ispy.csv',2510,'bdbf258434d772810a2027a3fd5fa679b8210435ed1126cdc5fb1e34194bfb5c','Certified frozen credential snapshot; no canonical business links'),
-  ('8875f5a5-a2f1-58fc-86f9-854b0cec6b7f','ny_dol','ny_elevator','https://data.ny.gov/resource/jrac-r9vc.csv','jrac-r9vc.csv',302,'9e5455d1aeec34a399d6e81c5bb55fba4dac42e4399ca01140a893fa5a982244','Certified frozen credential snapshot; no canonical business links')
+  ('637955be-0fc3-5beb-aa6f-52904f3184f0','ny_dol','ny_dol_mold','https://data.ny.gov/resource/ikqx-ispy.csv','ikqx-ispy.csv',2511,'5eda889f071350c8e1c1bed040f177de1b0a28e64619afabadb9a4fae468927c','Evidence-certified 2026-10-01 credential snapshot; no canonical business links'),
+  ('cf41ef92-452b-553d-927e-f3944c3d2dfd','ny_dol','ny_elevator','https://data.ny.gov/resource/jrac-r9vc.csv','jrac-r9vc.csv',302,'4e7dd536aacb197589ffc0df56c35ffc2b6289912cb24bf6289bd141b2f741da','Evidence-certified 2026-10-01 credential snapshot; no canonical business links')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.licenses (
@@ -80,10 +80,10 @@ ON CONFLICT (source_system,external_key) DO NOTHING;
 
 DO $$
 BEGIN
-  IF (SELECT count(*) FROM public.licenses WHERE ingest_batch_id='ef3a17a2-75fd-5e1b-af1b-3ac5be7944ac') <> 2510
-     OR (SELECT count(*) FROM public.licenses WHERE ingest_batch_id='8875f5a5-a2f1-58fc-86f9-854b0cec6b7f') <> 302
+  IF (SELECT count(*) FROM public.licenses WHERE ingest_batch_id='637955be-0fc3-5beb-aa6f-52904f3184f0') <> 2511
+     OR (SELECT count(*) FROM public.licenses WHERE ingest_batch_id='cf41ef92-452b-553d-927e-f3944c3d2dfd') <> 302
      OR EXISTS (SELECT 1 FROM public.licenses WHERE ingest_batch_id IN
-       ('ef3a17a2-75fd-5e1b-af1b-3ac5be7944ac','8875f5a5-a2f1-58fc-86f9-854b0cec6b7f')
+       ('637955be-0fc3-5beb-aa6f-52904f3184f0','cf41ef92-452b-553d-927e-f3944c3d2dfd')
        AND contractor_id IS NOT NULL)
   THEN RAISE EXCEPTION 'NY credential post-insert invariant failed; transaction rolled back'; END IF;
 END $$;
