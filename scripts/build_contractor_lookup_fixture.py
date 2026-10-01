@@ -51,6 +51,7 @@ def build() -> list[dict]:
     mold_active = select("ny_dol_mold", lambda r: r["raw"]["license_status"] == "Active")
     mold_expired = select("ny_dol_mold", lambda r: r["raw"]["license_status"] == "Expired")
     elevator = select("ny_elevator", lambda r: r["raw"]["license_status"] == "Active")
+    elevator_expired = select("ny_elevator", lambda r: r["raw"]["license_status"] == "Expired")
     za = select("fl_dbpr_asbestos_59", lambda r: r["credential_class"] == "ZA" and
                 r["raw"]["primary_status"] == "C" and r["raw"]["secondary_status"] == "A")
     nj = select("nj_dfs_fire_business", lambda r: True)
@@ -69,6 +70,10 @@ def build() -> list[dict]:
                jurisdiction="New York State", status="Active", holder=elevator["raw"]["business_name"],
                number=elevator["native_license_number"], grain="Credential record",
                credential_type=elevator["credential_class"]),
+        record("ny_elevator", elevator_expired, label="New York Elevator Contractor License",
+               jurisdiction="New York State", status="Expired", holder=elevator_expired["raw"]["business_name"],
+               number=elevator_expired["native_license_number"], grain="Credential record",
+               credential_type=elevator_expired["credential_class"]),
         record("fl_dbpr_asbestos_59", za, label="Florida Asbestos Business License",
                jurisdiction="Florida", status="Current; Active reported",
                holder=za["raw"]["licensee_name"], number=za["native_license_number"],

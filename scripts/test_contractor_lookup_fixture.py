@@ -16,14 +16,15 @@ class LookupFixtureTests(unittest.TestCase):
 
     def test_only_certified_grains_and_statuses(self):
         rows = self.records
-        self.assertEqual(len(rows), 6)
+        self.assertEqual(len(rows), 7)
         self.assertEqual([(r["dataset"], r["source_status"]) for r in rows], [
             ("nyc_dob_license_info", "Active"), ("ny_dol_mold", "Active"),
             ("ny_dol_mold", "Expired"), ("ny_elevator", "Active"),
+            ("ny_elevator", "Expired"),
             ("fl_dbpr_asbestos_59", "Current; Active reported"),
             ("nj_dfs_fire_business", "Current status not established"),
         ])
-        self.assertEqual(len({r["id"] for r in rows}), 6)
+        self.assertEqual(len({r["id"] for r in rows}), 7)
         self.assertTrue(all(r["source_url"].startswith("https://") and
                             len(r["source_sha256"]) == 64 for r in rows))
 

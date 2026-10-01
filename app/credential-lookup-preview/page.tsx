@@ -45,7 +45,7 @@ export default async function CredentialLookupPreview({ searchParams }: { search
         Search source records by credential number, holder text, jurisdiction, or type. These examples are not canonical business profiles.
       </p>
       <div className="mt-5 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 text-sm text-[var(--text)]">
-        <strong>Credential record — not a verified canonical business profile.</strong> The six results below are representative preview fixtures, not a complete public search index.
+        <strong>Credential record — not a verified canonical business profile.</strong> The results below are representative preview fixtures, not a complete public search index.
       </div>
 
       <form action="/credential-lookup-preview" method="get" role="search" className="mt-7 grid gap-3 rounded-2xl border border-[var(--border)] p-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
