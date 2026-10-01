@@ -1,0 +1,37 @@
+{
+  "checked_at_utc": "2026-10-01T14:00:58Z",
+  "method": "direct official HTTPS download; compared byte hashes and parsed class/native keys to frozen Evidence-certified September 30 snapshot",
+  "publication_source": "frozen September 30 Evidence-certified snapshot only",
+  "files": [
+    {
+      "file": "lic08el.csv",
+      "official_url": "https://www2.myfloridalicense.com/sto/file_download/extracts/lic08el.csv",
+      "frozen_sha256": "b1bbbd8f6c707869376357ec914ce98a3fb1269669e4b79ebe61442b74540754",
+      "current_sha256": "350053e24d84251300abaa6896fc0521df47f98abe639e5f7ce385c2a297ae32",
+      "frozen_raw_rows": 20103,
+      "current_raw_rows": 20117,
+      "frozen_certified_class_rows": 17976,
+      "current_class_rows": 17990,
+      "added_native_keys": 17,
+      "removed_native_keys": 3,
+      "changed_existing_native_rows": 13,
+      "treatment": "SOURCE_REVISION_HELD; do not substitute current file for certified set"
+    },
+    {
+      "file": "lic07mold.csv",
+      "official_url": "https://www2.myfloridalicense.com/sto/file_download/extracts/lic07mold.csv",
+      "frozen_sha256": "705bcf08e2b82f71c79fa0afffc906c5f853362dd9232d6506efdb546b3cd08e",
+      "current_sha256": "705bcf08e2b82f71c79fa0afffc906c5f853362dd9232d6506efdb546b3cd08e",
+      "current_raw_rows": 6933,
+      "treatment": "matches frozen certified source"
+    },
+    {
+      "file": "lic04home.csv",
+      "official_url": "https://www2.myfloridalicense.com/sto/file_download/extracts/lic04home.csv",
+      "frozen_sha256": "d403712866922381a124ec6def6c0f61e57a7cc3f51b46708029eecfd9b93cf1",
+      "current_sha256": "d403712866922381a124ec6def6c0f61e57a7cc3f51b46708029eecfd9b93cf1",
+      "current_raw_rows": 9396,
+      "treatment": "matches frozen certified source"
+    }
+  ]
+}

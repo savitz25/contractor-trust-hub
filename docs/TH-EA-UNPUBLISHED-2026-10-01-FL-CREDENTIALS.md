@@ -2,6 +2,8 @@
 
 This is a branch-only, unpublished credential packet. No production writes or business/profile creation are authorized. The stage derives from the frozen September 30 official DBPR extracts in the B1 source manifest; source hashes are verified before parsing. The complete normalized CSV and its SHA256 are in [the stage manifest](../artifacts/th-ea-fl-credentials/manifest.json).
 
+An October 1 [official source recheck](../artifacts/th-ea-fl-credentials/current-source-check.json) found that `lic07mold.csv` and `lic04home.csv` still match their frozen hashes. The current `lic08el.csv` hash differs: 20,117 raw rows and 17,990 selected-class rows, with 17 added native keys, three removed keys and 13 changed existing rows versus September 30. Those revisions are held outside this certified 17,976-row electrical packet. No logic or count was changed to absorb the new file.
+
 | Board | Official file | Raw rows | Certified person credentials | Exact native keys | Excluded source rows |
 | --- | --- | ---: | ---: | ---: | ---: |
 | Electrical 08 | `lic08el.csv` | 20,103 | 17,976 | 17,976 | 2,127 |
