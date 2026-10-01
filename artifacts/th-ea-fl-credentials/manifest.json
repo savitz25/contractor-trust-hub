@@ -1,0 +1,107 @@
+{
+  "ticket": "TH-EA-UNPUBLISHED-2026-10-01-FL-CREDENTIALS",
+  "grain": "person credential, never canonical business",
+  "contractor_id": null,
+  "canonical_business_denominator_change": 0,
+  "total_certified": 32560,
+  "stage_file": "artifacts/th-ea-fl-credentials/fl-certified-person-credentials.csv",
+  "stage_sha256": "ffae53913535323f1fcce3e941e58a59e026cc509337a8b38a87fa434ae34e18",
+  "stage_fields": [
+    "source_dataset",
+    "source_file",
+    "source_sha256",
+    "source_line",
+    "board_number",
+    "occupation_code",
+    "external_key",
+    "license_number",
+    "class_code",
+    "licensee_name_raw",
+    "dba_name_raw",
+    "primary_status",
+    "secondary_status",
+    "status_normalized",
+    "original_licensure_date",
+    "effective_date",
+    "expiration_date",
+    "address_line_1",
+    "address_line_2",
+    "address_line_3",
+    "city",
+    "state",
+    "postal_code",
+    "county_code"
+  ],
+  "native_key": "Florida DBPR board + occupation code + alternate license number (or code + numeric core)",
+  "sources": [
+    {
+      "source_file": "lic08el.csv",
+      "official_url": "https://www2.myfloridalicense.com/sto/file_download/extracts/lic08el.csv",
+      "retrieved_at": "2026-09-30T13:17:47.909697+00:00",
+      "source_sha256": "b1bbbd8f6c707869376357ec914ce98a3fb1269669e4b79ebe61442b74540754",
+      "raw_rows": 20103,
+      "certified_rows": 17976,
+      "board": "08",
+      "source_dataset": "fl_dbpr_eclb_08",
+      "classes": {
+        "EC": 12323,
+        "EF": 1465,
+        "EG": 545,
+        "EH": 2,
+        "EI": 6,
+        "ER": 1656,
+        "ES": 1785,
+        "ET": 112,
+        "EY": 65,
+        "EZ": 17
+      },
+      "status_codes": {
+        "C|A": 16614,
+        "C|I": 1208,
+        "P|A": 133,
+        "P|I": 4,
+        "S|A": 16,
+        "S|I": 1
+      },
+      "duplicate_native_keys": 0
+    },
+    {
+      "source_file": "lic07mold.csv",
+      "official_url": "https://www2.myfloridalicense.com/sto/file_download/extracts/lic07mold.csv",
+      "retrieved_at": "2026-09-30T13:17:47.844312+00:00",
+      "source_sha256": "705bcf08e2b82f71c79fa0afffc906c5f853362dd9232d6506efdb546b3cd08e",
+      "raw_rows": 6933,
+      "certified_rows": 6558,
+      "board": "07",
+      "source_dataset": "fl_dbpr_mold_07",
+      "classes": {
+        "MRSA": 3339,
+        "MRSR": 3219
+      },
+      "status_codes": {
+        "C|A": 6060,
+        "C|I": 498
+      },
+      "duplicate_native_keys": 0
+    },
+    {
+      "source_file": "lic04home.csv",
+      "official_url": "https://www2.myfloridalicense.com/sto/file_download/extracts/lic04home.csv",
+      "retrieved_at": "2026-09-30T13:17:47.873149+00:00",
+      "source_sha256": "d403712866922381a124ec6def6c0f61e57a7cc3f51b46708029eecfd9b93cf1",
+      "raw_rows": 9396,
+      "certified_rows": 8026,
+      "board": "04",
+      "source_dataset": "fl_dbpr_home_04",
+      "classes": {
+        "HI": 8026
+      },
+      "status_codes": {
+        "C|-": 9,
+        "C|A": 7628,
+        "C|I": 389
+      },
+      "duplicate_native_keys": 0
+    }
+  ]
+}

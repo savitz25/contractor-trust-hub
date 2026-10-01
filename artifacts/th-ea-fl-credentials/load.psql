@@ -1,0 +1,130 @@
+-- TH-EA-UNPUBLISHED-2026-10-01-FL-CREDENTIALS. Founder gate packet; NEVER run before authorization.
+-- Run from repository root with psql -v ON_ERROR_STOP=1 -f artifacts/th-ea-fl-credentials/load.psql.
+-- Verify the frozen CSV SHA256 in manifest.json before running. No contractor INSERT/UPDATE.
+BEGIN ISOLATION LEVEL SERIALIZABLE;
+SET LOCAL lock_timeout = '10s';
+SET LOCAL statement_timeout = '5min';
+CREATE TEMP TABLE fl_wave_stage (
+  source_dataset text, source_file text, source_sha256 text, source_line integer,
+  board_number text, occupation_code text, external_key text, license_number text,
+  class_code text, licensee_name_raw text, dba_name_raw text, primary_status text,
+  secondary_status text, status_normalized text, original_licensure_date text,
+  effective_date text, expiration_date text, address_line_1 text, address_line_2 text,
+  address_line_3 text, city text, state text, postal_code text, county_code text
+) ON COMMIT DROP;
+\copy fl_wave_stage FROM 'artifacts/th-ea-fl-credentials/fl-certified-person-credentials.csv' WITH (FORMAT csv, HEADER true, NULL '')
+
+DO $$
+BEGIN
+  IF (SELECT count(*) FROM fl_wave_stage)<>32560
+    OR (SELECT count(*) FROM fl_wave_stage WHERE board_number='08')<>17976
+    OR (SELECT count(*) FROM fl_wave_stage WHERE board_number='07')<>6558
+    OR (SELECT count(*) FROM fl_wave_stage WHERE board_number='04')<>8026
+    OR (SELECT count(*) FROM fl_wave_stage WHERE occupation_code='MRSA')<>3339
+    OR (SELECT count(*) FROM fl_wave_stage WHERE occupation_code='MRSR')<>3219
+    OR EXISTS (SELECT 1 FROM fl_wave_stage GROUP BY external_key HAVING count(*)<>1)
+    OR EXISTS (SELECT 1 FROM fl_wave_stage WHERE external_key IS NULL OR licensee_name_raw IS NULL)
+    OR EXISTS (SELECT 1 FROM fl_wave_stage s WHERE
+       NOT ((s.board_number='08' AND s.source_dataset='fl_dbpr_eclb_08'
+          AND s.source_file='lic08el.csv'
+          AND s.source_sha256='b1bbbd8f6c707869376357ec914ce98a3fb1269669e4b79ebe61442b74540754'
+          AND s.occupation_code IN ('EC','EF','EG','ES','ER','EY','EZ','ET','EH','EI','EJ'))
+         OR (s.board_number='07' AND s.source_dataset='fl_dbpr_mold_07'
+          AND s.source_file='lic07mold.csv'
+          AND s.source_sha256='705bcf08e2b82f71c79fa0afffc906c5f853362dd9232d6506efdb546b3cd08e'
+          AND s.occupation_code IN ('MRSA','MRSR'))
+         OR (s.board_number='04' AND s.source_dataset='fl_dbpr_home_04'
+          AND s.source_file='lic04home.csv'
+          AND s.source_sha256='d403712866922381a124ec6def6c0f61e57a7cc3f51b46708029eecfd9b93cf1'
+          AND s.occupation_code='HI')))
+  THEN RAISE EXCEPTION 'Florida certified stage counts, class, native key or source changed'; END IF;
+  IF EXISTS (
+    SELECT 1 FROM fl_wave_stage s JOIN licenses l
+      ON l.source_system='fl_dbpr' AND l.external_key=s.external_key
+    WHERE l.contractor_id IS NOT NULL
+      OR l.source_board IS DISTINCT FROM s.board_number
+      OR l.board_number IS DISTINCT FROM s.board_number
+      OR l.occupation_code IS DISTINCT FROM s.occupation_code
+      OR l.license_number IS DISTINCT FROM s.license_number
+      OR l.class_code IS DISTINCT FROM s.class_code
+      OR l.licensee_name_raw IS DISTINCT FROM s.licensee_name_raw
+      OR l.dba_name_raw IS DISTINCT FROM s.dba_name_raw
+      OR l.primary_status IS DISTINCT FROM s.primary_status
+      OR l.secondary_status IS DISTINCT FROM s.secondary_status
+      OR l.status_normalized IS DISTINCT FROM s.status_normalized
+      OR l.original_licensure_date IS DISTINCT FROM s.original_licensure_date::date
+      OR l.effective_date IS DISTINCT FROM s.effective_date::date
+      OR l.expiration_date IS DISTINCT FROM s.expiration_date::date
+      OR l.address_line_1 IS DISTINCT FROM s.address_line_1
+      OR l.address_line_2 IS DISTINCT FROM s.address_line_2
+      OR l.address_line_3 IS DISTINCT FROM s.address_line_3
+      OR l.city IS DISTINCT FROM s.city
+      OR l.state IS DISTINCT FROM s.state
+      OR l.postal_code IS DISTINCT FROM s.postal_code
+      OR l.county_code IS DISTINCT FROM s.county_code
+      OR l.raw_payload->>'source_dataset' IS DISTINCT FROM s.source_dataset
+      OR l.raw_payload->>'source_file' IS DISTINCT FROM s.source_file
+      OR (l.raw_payload->>'source_line')::integer IS DISTINCT FROM s.source_line
+      OR l.raw_payload->>'source_sha256' IS DISTINCT FROM s.source_sha256
+      OR l.raw_payload->>'credential_grain' IS DISTINCT FROM 'person'
+  ) THEN RAISE EXCEPTION 'Florida credential native key conflicts with existing record'; END IF;
+END $$;
+
+INSERT INTO ingest_batches(id,source_system,source_dataset,source_url,source_file,row_count,checksum_sha256,notes)
+VALUES
+ ('e3e1c7c3-e337-5bc4-8143-4631415db763','fl_dbpr','fl_dbpr_eclb_08','https://www2.myfloridalicense.com/sto/file_download/extracts/lic08el.csv','lic08el.csv',17976,'b1bbbd8f6c707869376357ec914ce98a3fb1269669e4b79ebe61442b74540754','TH-EA-UNPUBLISHED-2026-10-01-FL-CREDENTIALS; person credential; no business bridge'),
+ ('1a89ece4-7f97-576c-a639-ca15316054c5','fl_dbpr','fl_dbpr_mold_07','https://www2.myfloridalicense.com/sto/file_download/extracts/lic07mold.csv','lic07mold.csv',6558,'705bcf08e2b82f71c79fa0afffc906c5f853362dd9232d6506efdb546b3cd08e','TH-EA-UNPUBLISHED-2026-10-01-FL-CREDENTIALS; person credential; no business bridge'),
+ ('20a365ff-a740-515d-bd96-574809e62a4d','fl_dbpr','fl_dbpr_home_04','https://www2.myfloridalicense.com/sto/file_download/extracts/lic04home.csv','lic04home.csv',8026,'d403712866922381a124ec6def6c0f61e57a7cc3f51b46708029eecfd9b93cf1','TH-EA-UNPUBLISHED-2026-10-01-FL-CREDENTIALS; person credential; no business bridge')
+ON CONFLICT (id) DO NOTHING;
+
+DO $$
+BEGIN
+ IF (SELECT count(*) FROM ingest_batches WHERE id IN
+    ('e3e1c7c3-e337-5bc4-8143-4631415db763','1a89ece4-7f97-576c-a639-ca15316054c5','20a365ff-a740-515d-bd96-574809e62a4d'))<>3
+    OR EXISTS (SELECT 1 FROM (VALUES
+      ('e3e1c7c3-e337-5bc4-8143-4631415db763'::uuid,'fl_dbpr_eclb_08',17976,'b1bbbd8f6c707869376357ec914ce98a3fb1269669e4b79ebe61442b74540754'),
+      ('1a89ece4-7f97-576c-a639-ca15316054c5'::uuid,'fl_dbpr_mold_07',6558,'705bcf08e2b82f71c79fa0afffc906c5f853362dd9232d6506efdb546b3cd08e'),
+      ('20a365ff-a740-515d-bd96-574809e62a4d'::uuid,'fl_dbpr_home_04',8026,'d403712866922381a124ec6def6c0f61e57a7cc3f51b46708029eecfd9b93cf1')
+    ) AS expected(id,dataset,rows,sha)
+    JOIN ingest_batches b ON b.id=expected.id
+    WHERE b.source_system IS DISTINCT FROM 'fl_dbpr'
+      OR b.source_dataset IS DISTINCT FROM expected.dataset
+      OR b.row_count IS DISTINCT FROM expected.rows
+      OR b.checksum_sha256 IS DISTINCT FROM expected.sha
+      OR b.notes NOT LIKE 'TH-EA-UNPUBLISHED-2026-10-01-FL-CREDENTIALS%')
+ THEN RAISE EXCEPTION 'Florida credential batch provenance conflict'; END IF;
+END $$;
+
+DO $$
+DECLARE changed integer;
+BEGIN
+ INSERT INTO licenses (
+  contractor_id, source_system, source_board, external_key, occupation_code,
+  occupation_description, license_number, class_code, licensee_name_raw, dba_name_raw,
+  primary_status, secondary_status, status_normalized, original_licensure_date,
+  effective_date, expiration_date, address_line_1, address_line_2, address_line_3,
+  city, state, postal_code, county_code, board_number, raw_payload, ingest_batch_id)
+ SELECT NULL,'fl_dbpr',s.board_number,s.external_key,s.occupation_code,
+  'Florida DBPR board '||s.board_number||' person credential',s.license_number,s.class_code,
+  s.licensee_name_raw,s.dba_name_raw,s.primary_status,s.secondary_status,s.status_normalized,
+  s.original_licensure_date::date,s.effective_date::date,s.expiration_date::date,
+  s.address_line_1,s.address_line_2,s.address_line_3,s.city,s.state,s.postal_code,s.county_code,
+  s.board_number,jsonb_build_object('credential_grain','person','source_dataset',s.source_dataset,
+    'source_file',s.source_file,'source_sha256',s.source_sha256,'source_line',s.source_line,
+    'issuing_jurisdiction','Florida DBPR board '||s.board_number),
+  CASE s.board_number WHEN '08' THEN 'e3e1c7c3-e337-5bc4-8143-4631415db763'::uuid
+    WHEN '07' THEN '1a89ece4-7f97-576c-a639-ca15316054c5'::uuid
+    WHEN '04' THEN '20a365ff-a740-515d-bd96-574809e62a4d'::uuid END
+ FROM fl_wave_stage s
+ ON CONFLICT (source_system,external_key) DO NOTHING;
+ GET DIAGNOSTICS changed=ROW_COUNT;
+ IF (SELECT count(*) FROM fl_wave_stage s JOIN licenses l
+   ON l.source_system='fl_dbpr' AND l.external_key=s.external_key
+   WHERE l.contractor_id IS NULL AND l.source_board=s.board_number
+     AND l.occupation_code=s.occupation_code
+     AND l.raw_payload->>'credential_grain'='person'
+     AND l.raw_payload->>'source_sha256'=s.source_sha256)<>32560
+ THEN RAISE EXCEPTION 'Florida credential load incomplete or conflicting'; END IF;
+ RAISE NOTICE 'FL CERTIFIED CREDENTIAL NEW_ROWS=%',changed;
+END $$;
+COMMIT;
