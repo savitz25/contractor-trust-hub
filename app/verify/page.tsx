@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { credentialsPublished } from "@/lib/credentials/certified";
 import { EmptyResults } from "@/components/search/EmptyResults";
 import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
 import { ResultCard } from "@/components/search/ResultCard";
@@ -309,6 +310,7 @@ export default async function VerifyPage({ searchParams }: Props) {
       <h1 className="mt-1.5 text-[1.65rem] font-semibold leading-tight tracking-tight text-[var(--text)] sm:mt-2 sm:text-4xl">
         {heading}
       </h1>
+      {credentialsPublished() ? <nav aria-label="Search type" className="mt-3 flex gap-4 text-sm"><strong aria-current="page">Businesses</strong><Link href="/credentials" className="text-[var(--accent)] underline">Credential Lookup</Link></nav> : null}
       <p className="mt-2.5 max-w-2xl text-sm leading-relaxed text-[var(--muted)] sm:mt-3 sm:text-base">
         {lead}
       </p>

@@ -9,13 +9,14 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-type Params = Promise<{ q?: string; jurisdiction?: string; type?: string; record?: string }>;
+type Params = Promise<{ q?: string; jurisdiction?: string; type?: string; status?: string; record?: string }>;
 
-function detailUrl(recordId: string, q: string, jurisdiction: string, type: string) {
+function detailUrl(recordId: string, q: string, jurisdiction: string, type: string, status: string) {
   const params = new URLSearchParams();
   if (q) params.set("q", q);
   if (jurisdiction) params.set("jurisdiction", jurisdiction);
   if (type) params.set("type", type);
+  if (status) params.set("status", status);
   params.set("record", recordId);
   return `/credential-lookup-preview?${params.toString()}`;
 }
@@ -27,15 +28,18 @@ export default async function CredentialLookupPreview({ searchParams }: { search
   const q = (sp.q || "").trim().toLocaleLowerCase();
   const jurisdiction = sp.jurisdiction || "";
   const type = sp.type || "";
+  const status = sp.status || "";
   const rows = fixture.filter((row) =>
     (!jurisdiction || row.jurisdiction === jurisdiction) &&
-    (!type || row.dataset === type) &&
+    (!type || row.credential_type === type) &&
+    (!status || row.source_status === status) &&
     (!q || [row.native_id, row.holder_text, row.label, row.credential_type, row.jurisdiction]
       .some((value) => value.toLocaleLowerCase().includes(q)))
   );
   const selected = rows.find((row) => row.id === sp.record) || rows[0];
   const jurisdictions = [...new Set(fixture.map((row) => row.jurisdiction))];
-  const types = [...new Map(fixture.map((row) => [row.dataset, row.label])).entries()];
+  const types = [...new Map(fixture.map((row) => [row.credential_type, row.label])).entries()];
+  const statuses = [...new Set(fixture.map((row) => row.source_status))];
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
@@ -48,10 +52,16 @@ export default async function CredentialLookupPreview({ searchParams }: { search
         <strong>Credential record — not a verified canonical business profile.</strong> The results below are representative preview fixtures, not a complete public search index.
       </div>
 
-      <form action="/credential-lookup-preview" method="get" role="search" className="mt-7 grid gap-3 rounded-2xl border border-[var(--border)] p-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
+      <form action="/credential-lookup-preview" method="get" role="search" className="mt-7 grid gap-3 rounded-2xl border border-[var(--border)] p-4 sm:grid-cols-2 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto]">
         <label className="text-sm font-medium text-[var(--text)]">
           Credential number or holder text
           <input name="q" type="search" defaultValue={sp.q || ""} placeholder="Enter a license number or name" className="mt-1 w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]" />
+        </label>
+        <label className="text-sm font-medium text-[var(--text)]">Source status
+          <select name="status" defaultValue={status} className="mt-1 w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]">
+            <option value="">All source statuses</option>
+            {statuses.map((item) => <option key={item} value={item}>{item}</option>)}
+          </select>
         </label>
         <label className="text-sm font-medium text-[var(--text)]">
           Jurisdiction
@@ -64,7 +74,7 @@ export default async function CredentialLookupPreview({ searchParams }: { search
           Credential type
           <select name="type" defaultValue={type} className="mt-1 w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]">
             <option value="">All preview types</option>
-            {types.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
+            {types.map(([id, label]) => <option key={id} value={id}>{label} ({id})</option>)}
           </select>
         </label>
         <button type="submit" className="self-end rounded-lg bg-[var(--navy)] px-5 py-2 font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]">Search credentials</button>
@@ -76,7 +86,7 @@ export default async function CredentialLookupPreview({ searchParams }: { search
           {rows.length === 0 ? <p className="mt-3 text-[var(--muted)]">No preview fixture matches. Try another type or search term.</p> : null}
           <ul className="mt-3 space-y-3">
             {rows.map((row) => <li key={row.id}>
-              <Link href={detailUrl(row.id, sp.q || "", jurisdiction, type)} aria-current={selected?.id === row.id ? "page" : undefined} className={`block rounded-xl border p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${selected?.id === row.id ? "border-[var(--accent)] bg-[var(--surface)]" : "border-[var(--border)]"}`}>
+              <Link href={detailUrl(row.id, sp.q || "", jurisdiction, type, status)} aria-current={selected?.id === row.id ? "page" : undefined} className={`block rounded-xl border p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${selected?.id === row.id ? "border-[var(--accent)] bg-[var(--surface)]" : "border-[var(--border)]"}`}>
                 <span className="block text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">{row.grain}</span>
                 <span className="mt-1 block font-semibold text-[var(--text)]">{row.label}</span>
                 <span className="block text-sm text-[var(--muted)]">{row.holder_text} · {row.native_id}</span>
