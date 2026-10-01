@@ -16,7 +16,7 @@
     },
     {
       "id": "ny_elevator",
-      "authority": "New York State elevator regulator",
+      "authority": "New York State Department of Labor",
       "dataset_id": "jrac-r9vc",
       "official_url": "https://data.ny.gov/resource/jrac-r9vc.csv",
       "filename": "sources/jrac-r9vc.csv",
