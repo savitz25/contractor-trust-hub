@@ -22,8 +22,8 @@ function detailUrl(recordId: string, q: string, jurisdiction: string, type: stri
 }
 
 export default async function CredentialLookupPreview({ searchParams }: { searchParams: Params }) {
-  // This route is intentionally unavailable on production builds and deployments.
-  if (process.env.NODE_ENV !== "development") notFound();
+  // Vercel preview deployments require SSO; production remains sealed.
+  if (process.env.NODE_ENV !== "development" && process.env.VERCEL_ENV !== "preview") notFound();
   const sp = await searchParams;
   const q = (sp.q || "").trim().toLocaleLowerCase();
   const jurisdiction = sp.jurisdiction || "";

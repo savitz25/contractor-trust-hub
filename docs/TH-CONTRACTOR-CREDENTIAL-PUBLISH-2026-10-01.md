@@ -4,7 +4,7 @@ This branch adds a separate regulatory credential lookup. It does not load recor
 
 ## Publication boundary
 
-`CONTRACTOR_CREDENTIAL_PUBLICATION_BATCH=certified-2026-10-01` is the only activation value. The flag is unset by default. The public `/credentials` search and `/credentials/[id]` detail routes return 404 with the flag off. The `Verify` page shows its separate Credential Lookup entry point only with the flag on. `/credential-lookup-preview` remains development-only and uses eight certified representative fixtures; it is not a live index.
+`CONTRACTOR_CREDENTIAL_PUBLICATION_BATCH=certified-2026-10-01` is the only activation value. The flag is unset by default. The public `/credentials` search and `/credentials/[id]` detail routes return 404 with the flag off. The `Verify` page shows its separate Credential Lookup entry point only with the flag on. `/credential-lookup-preview` is available in local development and Vercel SSO-protected preview deployments, using eight certified representative fixtures; it is not a live index. The route remains 404 on production deployments.
 
 | Certified source | Batch ID | Eligible records | Source SHA-256 |
 |---|---|---:|---|
@@ -24,6 +24,6 @@ Rollback of **presentation** is to unset `CONTRACTOR_CREDENTIAL_PUBLICATION_BATC
 
 ## Preview and QA
 
-Local protected preview: `http://127.0.0.1:3107/credential-lookup-preview` while the dev server runs. Representative fixtures cover FL Electrical, FL Mold MRSA, FL Mold MRSR, FL Home Inspector, NY Mold Active and Expired, and NY Elevator Active and Expired. Desktop and 390px mobile screenshots accompany this packet. Browser snapshots confirmed all eight records, number/name lookup, status and type controls, detail content, keyboard-focusable controls, and no console errors. Gate-off `/credentials` returned HTTP 404. TypeScript passed. Live read-only SQL confirmed the certified eligibility counts, an exact NY number hit, FL holder-name hits, and 774 NY Mold Expired rows.
+Protected PR preview: `/credential-lookup-preview` on the Vercel preview URL. Its anonymous request redirects to Vercel SSO. Local development preview: `http://127.0.0.1:3107/credential-lookup-preview` while the dev server runs. Representative fixtures cover FL Electrical, FL Mold MRSA, FL Mold MRSR, FL Home Inspector, NY Mold Active and Expired, and NY Elevator Active and Expired. Desktop and 390px mobile screenshots accompany this packet. Browser snapshots confirmed all eight records, number/name lookup, status and type controls, detail content, keyboard-focusable controls, and no console errors. Gate-off `/credentials` returned HTTP 404. TypeScript passed. Live read-only SQL confirmed the certified eligibility counts, an exact NY number hit, FL holder-name hits, and 774 NY Mold Expired rows.
 
 Local runtime database credentials currently reject authentication. The complete production-backed route must therefore be exercised in an authenticated protected deployment during independent Evidence QA before public activation. The local eight-record preview is a UI demonstration, not proof of production route connectivity.
