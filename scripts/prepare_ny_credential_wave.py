@@ -79,7 +79,7 @@ def prepare() -> dict:
         raise ValueError("Cross-source credential key collision")
     target = OUT / "ny-credentials-stage.csv"
     with target.open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=FIELDS)
+        writer = csv.DictWriter(stream, fieldnames=FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(staged)
     receipt["stage_file"] = str(target.relative_to(ROOT)).replace("\\", "/")

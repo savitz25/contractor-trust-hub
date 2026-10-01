@@ -1,4 +1,4 @@
-# NY DOL credential wave — Founder production gate packet
+﻿# NY DOL credential wave — Founder production gate packet
 
 **Prepared, not executed.** Evidence Activation certified the current official NY DOL exports on 2026-10-01. This packet replaces the prior frozen 2,510-row Mold proposal. The publication grain is a standalone regulator credential, never a distinct canonical business.
 
@@ -11,7 +11,7 @@
 
 Official datasets: [Mold Contractor Licenses](https://data.ny.gov/d/ikqx-ispy) and [Elevator Contractor License](https://data.ny.gov/d/jrac-r9vc). The exact current exports are pinned in `sources/`; `source-manifest.json` records URLs, retrieval, bytes, and hashes. Independent fresh downloads reproduced both Evidence hashes. Relative to the prior snapshot, Mold added four Active keys, removed three Active keys, and changed 25 Active records to Expired. Elevator had no key or status changes; one record's sourced text/phone and CSV row order changed. The historical comparison remains in `source-drift.json`.
 
-`ny-credentials-stage.csv` contains **2,813** rows. Its final, independently recomputed SHA-256 is **`8529bef17460a38efc1df6b37a4233872a1be1fceb5010dd4e78b0ee9e34a695`**, matching `receipt.json`. Stage keys are `source_dataset + ':' + license_type + ':' + license_number` under `source_system = ny_dol`. Repeated bare Mold numbers across SH125 and SH126 remain distinct credentials. Every row retains native type/number, raw Active or Expired status, holder text, address and dates, official source URL/hash, source line, and full raw payload.
+`ny-credentials-stage.csv` contains **2,813** rows. Its final, independently recomputed SHA-256 is **`e252f288c34f42681d325deca4d62d3c5efc0a80658312463d3255f889c4c52b`**, matching `receipt.json`. Stage keys are `source_dataset + ':' + license_type + ':' + license_number` under `source_system = ny_dol`. Repeated bare Mold numbers across SH125 and SH126 remain distinct credentials. Every row retains native type/number, raw Active or Expired status, holder text, address and dates, official source URL/hash, source line, and full raw payload.
 
 ## Ownership, denominator, and transaction
 
