@@ -3,6 +3,7 @@
 import csv
 import hashlib
 import json
+import subprocess
 import unittest
 from collections import Counter
 from pathlib import Path
@@ -42,6 +43,11 @@ class NyCredentialWaveTests(unittest.TestCase):
         self.assertEqual(len(set(keys) - owned), 0)
         stage = OUT / "ny-credentials-stage.csv"
         self.assertEqual(hashlib.sha256(stage.read_bytes()).hexdigest(), self.receipt["stage_sha256"])
+        committed_bytes = subprocess.check_output(
+            ["git", "show", ":docs/TH-EA-UNPUBLISHED-2026-10-01-NY-CREDENTIALS/ny-credentials-stage.csv"],
+            cwd=ROOT,
+        )
+        self.assertEqual(hashlib.sha256(committed_bytes).hexdigest(), self.receipt["stage_sha256"])
         self.assertTrue(all(json.loads(r["raw_payload"])["_grain"] ==
                             "standalone regulator credential" for r in self.rows))
 
