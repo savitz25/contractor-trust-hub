@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { homepageEvidenceByFamily } from "@/lib/home-intel/evidence-inventory";
 import { HOMEPAGE_EVIDENCE_INVENTORY } from "@/lib/home-intel/evidence-inventory";
+import { PUBLISHED_STATE_COUNT, PUBLISHED_STATES } from "@/lib/states/published-coverage";
 
 const fmt = (count: number) => count.toLocaleString("en-US");
+// The published-state row follows the local published-state list, not the manifest map.
+const current = <T extends { id: string; count: number; geography: string }>(item: T): T =>
+  item.id === "state-pages" ? { ...item, count: PUBLISHED_STATE_COUNT, geography: PUBLISHED_STATES.map((s) => s.code).join(" · ") } : item;
 
 export function HomeEvidenceInventory() {
-  const groups = homepageEvidenceByFamily();
+  const groups = homepageEvidenceByFamily().map((group) => ({ ...group, items: group.items.map(current) }));
   const highlightIds = ["live-credentials", "nj-construction", "austin-permits", "wa-bond-rows", "regulatory-actions", "state-pages"];
-  const highlights = highlightIds.map((id) => HOMEPAGE_EVIDENCE_INVENTORY.find((item) => item.id === id)).filter((item): item is (typeof HOMEPAGE_EVIDENCE_INVENTORY)[number] => Boolean(item));
+  const highlights = highlightIds.map((id) => HOMEPAGE_EVIDENCE_INVENTORY.find((item) => item.id === id)).filter((item): item is (typeof HOMEPAGE_EVIDENCE_INVENTORY)[number] => Boolean(item)).map(current);
   return (
     <section id="scale" aria-labelledby="scale-title" className="cth-intel-inventory">
       <p className="cth-intel-eyebrow">Official evidence inventory</p>
