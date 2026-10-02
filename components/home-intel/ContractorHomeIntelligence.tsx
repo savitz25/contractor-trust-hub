@@ -7,12 +7,14 @@ import { HomeDiscoverySearch } from "@/components/home/HomeDiscoverySearch";
 import { HomeEvidenceLayers } from "@/components/home/HomeEvidenceLayers";
 import { HomeEvidenceInventory } from "@/components/home/HomeEvidenceInventory";
 import { HomeMethodology } from "@/components/home/HomeMethodology";
+import { HomeNetworkDepth } from "@/components/home/HomeNetworkDepth";
 import { HomeSearchBlock } from "@/components/home/HomeSearchBlock";
 import { ExplainDataDrawer } from "@/components/intel/ExplainDataDrawer";
 import { MarketCompare } from "@/components/intel/MarketCompare";
 import { JourneyNextStep } from "@/components/network/JourneyNextStep";
 import { loadContractorHubIntel } from "@/lib/home/load-intel-v2";
 import { researchDepthLabel } from "@/lib/home-intel/build";
+import { PUBLISHED_STATE_COUNT, PUBLISHED_STATES, RECENT_PUBLISHED_STATES } from "@/lib/states/published-coverage";
 import type { ContractorHomeIntel, FeaturedStory } from "@/lib/home-intel/types";
 import type { JourneyModule } from "@/lib/network/journey-handoff";
 import { ContractorHomeChecklist } from "./contractor-home-checklist";
@@ -26,7 +28,7 @@ const nj = network.acceptedStateDatasets["lib/new-jersey-intelligence/accepted-s
 const pa = network.acceptedStateDatasets["lib/pennsylvania-intelligence/accepted-snapshot.json"].snapshot;
 const oh = network.acceptedStateDatasets["lib/ohio-intelligence/accepted-snapshot.json"].snapshot;
 
-const INTELLIGENCE_CODES = new Set(network.stateCapabilities.filter(s => s.route).map(s => s.state));
+const INTELLIGENCE_CODES = new Set(PUBLISHED_STATES.map((s) => s.code));
 
 function Freshness({ date, label = "Source as of" }: { date: string; label?: string }) {
   return <span className="cth-intel-freshness"><span aria-hidden="true" />{label} {date}</span>;
@@ -113,6 +115,7 @@ export function ContractorHomeIntelligence({
     <div className="cth-intel-home">
       <HomeContinuity />
       <HomeIntelHero intel={scale} />
+      <HomeNetworkDepth />
       <HomeDiscoverySearch />
       <HomeEvidenceLayers />
 
@@ -225,9 +228,10 @@ export function ContractorHomeIntelligence({
 
       <section id="changes" aria-labelledby="changes-title" className="cth-intel-changes">
         <p className="cth-intel-eyebrow">Recently added / updated</p>
-        <h2 id="changes-title">The research network has changed</h2>
+        <h2 id="changes-title">The research network keeps expanding</h2>
         <div className="cth-intel-timeline">
           {[
+            ...RECENT_PUBLISHED_STATES.slice(0, 6).map((s) => [s.name, s.recentSummary ?? "", "", s.href]),
             ["Arizona", "Statewide ROC license, classification, discipline, unlicensed-activity, address, and qualifying-party evidence", az.current_posting.header_as_of, "/arizona"],
             ["Washington", "Exact registration → bond → insurance relationships plus UBI and public business contacts", wa.as_of, "/washington"],
             ["Texas · Austin", "Local permit/work-history evidence kept separate from state specialty credentials", txLocal.as_of, "/texas/austin"],
@@ -235,7 +239,7 @@ export function ContractorHomeIntelligence({
             ["New Jersey", "State construction-source, public-works enforcement, specialty, and four-county research", nj.as_of, "/new-jersey"],
             ["Pennsylvania", "HICPA, DLI asbestos/lead certifications, and prevailing-wage debarments as separate official datasets", pa.snapshotAsOf, "/pennsylvania"],
             ["Ohio", "OCILB five-trade commercial specialty licensing, person-to-company roster associations, and SFM fire-protection certifications", oh.snapshotAsOf, "/ohio"],
-          ].map(([place, change, date, href]) => <article key={place}><Freshness date={date} /><h3>{place}</h3><p>{change}</p><Link href={href}>Open the intelligence →</Link></article>)}
+          ].map(([place, change, date, href]) => <article key={place}>{date ? <Freshness date={date} /> : <span className="cth-intel-freshness"><span aria-hidden="true" />New state page</span>}<h3>{place}</h3><p>{change}</p><Link href={href}>Open the intelligence →</Link></article>)}
         </div>
       </section>
 
@@ -265,7 +269,7 @@ export function ContractorHomeIntelligence({
           State explorer
         </span>
         <p className="cth-intel-eyebrow">Explore contractor research</p>
-        <h2 id="explore-title">{network.stateCapabilities.filter(s => s.route).length} state intelligence pages</h2>
+        <h2 id="explore-title">{PUBLISHED_STATE_COUNT} state intelligence pages</h2>
         <p>Each destination reflects its own regulator, evidence families, and source clock. Research depth describes our coverage—not contractor quality.</p>
         <ul className="cth-intel-geo">
           {intel.geography.filter((row) => INTELLIGENCE_CODES.has(row.code)).map((row) => (
@@ -288,7 +292,7 @@ export function ContractorHomeIntelligence({
               <Link href={row.href}>{row.hrefLabel}</Link>
             </li>
           ))}
-          {network.stateCapabilities.filter(s => s.route && !intel.geography.some(g => g.code === s.state)).map(s => <li key={s.state}><p><strong>{s.state} &middot; {s.route!.slice(1).split("-").map(word => word[0].toUpperCase() + word.slice(1)).join(" ")}</strong></p><p>Accepted state licensing or registration evidence, with source-specific scope.</p><p>Credential numbers are not unique companies. Evidence coverage does not assert specialist completion.</p><Link href={s.route!}>Explore state intelligence</Link></li>)}
+          {PUBLISHED_STATES.filter((s) => !intel.geography.some((g) => g.code === s.code)).map((s) => <li key={s.code}><p><strong>{s.code} &middot; {s.name}</strong>{s.recentSummary ? <> <span>Recently added</span></> : null}</p><p>{s.recentSummary ?? "Accepted state licensing or registration evidence, with source-specific scope."}</p><p>Credential numbers are not unique companies. Evidence coverage does not assert specialist completion.</p><Link href={s.href}>Explore {s.name} intelligence</Link></li>)}
         </ul>
         <details className="mt-4">
           <summary className="cursor-pointer font-semibold text-[var(--navy)]">

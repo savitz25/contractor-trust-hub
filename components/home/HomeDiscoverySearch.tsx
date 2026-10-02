@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AskForm } from "@/components/ask/AskForm";
 
-const examples = ["roofers in Broward County", "home improvement contractors in New Jersey", "HVAC contractors in Florida", "plumbers in New Jersey", "CCC1332036"];
+const examples = ["roofers in Broward County", "home improvement contractors in Maryland", "plumbers in Indiana", "residential builders in Michigan", "home improvement contractors in New Jersey", "CCC1332036"];
 
 export function HomeDiscoverySearch() {
   return (

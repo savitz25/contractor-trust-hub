@@ -23,11 +23,12 @@ import {
 } from "./types";
 
 import { loadContractorNetworkMetrics } from "@/lib/metrics/load-network-metrics";
+import { PUBLISHED_STATES } from "@/lib/states/published-coverage";
 
 const networkMetrics = loadContractorNetworkMetrics();
 const RETRIEVED = networkMetrics.acceptedSources?.find(s => s.path.includes("accepted-network-census"))?.retrievedAt ?? "Unknown";
 const CONFIG_AS_OF = "product config live EvidenceState rows";
-const STATE_INTELLIGENCE_PATHS: Record<string, string> = Object.fromEntries((networkMetrics.stateCapabilities ?? []).filter(s => s.route).map(s => [s.state.toLowerCase(), s.route!]));
+const STATE_INTELLIGENCE_PATHS: Record<string, string> = Object.fromEntries(PUBLISHED_STATES.map((s) => [s.code.toLowerCase(), s.href]));
 
 function fmt(n: number): string {
   return n.toLocaleString("en-US");
@@ -111,7 +112,7 @@ export function buildContractorHomeIntel(generatedAt = networkMetrics.generatedA
   const specialty = geo.filter((s) => s.regulatoryClass === "specialty_only");
   const statewideBoard = geo.filter((s) => s.regulatoryClass !== "specialty_only");
   const intelligenceDestinations = new Set(Object.keys(STATE_INTELLIGENCE_PATHS).map(s => s.toUpperCase()));
-  const enhanced = networkMetrics.stateCapabilities!.filter(s => s.route).map(s => ({code:s.state,name:s.state,href:s.route!}));
+  const enhanced = PUBLISHED_STATES.map((s) => ({ code: s.code, name: s.name, href: s.href }));
   const noStatewideGc = geo.filter((s) => !s.statewideGc);
   const roofingCodes = INTELLIGENCE_TRADE_BUCKETS.roofing;
   const residentialCodes = INTELLIGENCE_TRADE_BUCKETS.residential;
@@ -129,7 +130,7 @@ export function buildContractorHomeIntel(generatedAt = networkMetrics.generatedA
       officialAsOf: CONFIG_AS_OF,
       retrievedAt: RETRIEVED,
       includedStates: live.map((s) => s.code),
-      limitations: [`${wisconsin.name} is configured but not live.`, "Live ≠ every U.S. state.", "States are not interchangeable licensing systems."],
+      limitations: [`${wisconsin.name} has a state intelligence page but is not in live Verify search.`, "Live ≠ every U.S. state.", "States are not interchangeable licensing systems."],
       components: live.map((s) => ({
         label: `${s.name} (${s.badge})`,
         value: s.scopeHint,
@@ -144,7 +145,7 @@ export function buildContractorHomeIntel(generatedAt = networkMetrics.generatedA
       value: enhanced.length,
       grain: "published state intelligence route",
       definition: "Published state intelligence destinations backed by accepted specialist artifacts; completion is not asserted.",
-      method: "Generated accepted state capability contract",
+      method: "Published statewide routes (lib/states/published-coverage.ts)",
       payloadKey: "coverage.enhancedIntelligence",
       officialAsOf: CONFIG_AS_OF,
       retrievedAt: RETRIEVED,
@@ -415,7 +416,7 @@ export function buildContractorHomeIntel(generatedAt = networkMetrics.generatedA
       "Discipline coverage differs by state. Absence of discipline is not a clean history.",
       "Entity links exist only where confidently connected. Unknown ownership is not independence.",
       "Insurance/bond fields are only as complete as the publishing source.",
-      `${wisconsin.name} is configured (${wisconsin.scopeHint}) but not live in Verify.`,
+      `${wisconsin.name} has a published state intelligence page (${wisconsin.scopeHint}) but is not yet in live Verify search.`,
     ],
     geography: geo,
     tradeAxis: [
@@ -497,7 +498,7 @@ export function buildContractorHomeIntel(generatedAt = networkMetrics.generatedA
     ],
     tools: [
       { id: "verify", label: "Verify a contractor", href: "/verify", note: "Name or license search across live states. Not a ranking." },
-      { id: "florida", label: "Florida Contractor Intelligence", href: "/florida", note: "Enhanced state Intelligence OS. Unchanged in this task except Ask roofing copy." },
+      { id: "florida", label: "Florida Contractor Intelligence", href: "/florida", note: "Enhanced state and selected-county intelligence." },
       { id: "texas", label: "Texas Contractor & Trade Intelligence", href: "/texas", note: "Specialty trades and plumbing. No statewide general-contractor license." },
       { id: "scope", label: "Scope Builder", href: "/tools/scope-builder", note: "Project scoping. Not a contractor score." },
       { id: "quote", label: "Quote Analyzer", href: "/tools/quote-analyzer", note: "Read a quote against a checklist." },
@@ -508,9 +509,9 @@ export function buildContractorHomeIntel(generatedAt = networkMetrics.generatedA
         id: "saved-research",
         label: "Saved Research",
         href: "/projects",
-        note: "Opens Projects. Watch and Home Passport remain available and unchanged.",
+        note: "Opens Projects. Watch and Home Passport remain available.",
       },
-      { id: "passport", label: "Home Passport", href: "/passport", note: "Household research workspace. Unchanged." },
+      { id: "passport", label: "Home Passport", href: "/passport", note: "Household research workspace." },
       { id: "guides", label: "Guides", href: "/guides", note: "Educational guides." },
       { id: "methodology", label: "Methodology", href: "/methodology", note: "How evidence is assembled." },
     ],
