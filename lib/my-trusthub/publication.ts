@@ -9,13 +9,14 @@
  *
  * Two exact questions, both server-side:
  *   bySlug      the profile being saved -> its identity (or why it has none)
- *   byIdentity  the parent's re-check: this exact credential -> the one public
- *               profile that carries it
+ *   byProfile   the parent's re-check: this exact credential identity -> the one
+ *               public profile that carries it
  * A credential must lead to exactly one public profile and that profile must
  * lead back to the same credential and slug. Anything else is not eligible.
  */
 import type { ContractorDetail } from "@/lib/contractors/types";
-import { CONTRACTOR_SLUG, isFloridaIdentityInput, parentSaveReadiness, type ContractorSaveIdentity, type NotReadyReason } from "./profile-identity";
+import { CONTRACTOR_PROFILE_CLASS, parseContractorNativeId } from "./manifest";
+import { CONTRACTOR_SLUG, parentSaveReadiness, type ContractorSaveIdentity, type NotReadyReason } from "./profile-identity";
 
 export type ProfileReader = {
   /** The Trust Report's own profile read. Null when not public. */
@@ -41,15 +42,21 @@ export async function resolveBySlug(reader: ProfileReader, slug: unknown): Promi
   }
 }
 
-/** The parent asks about one exact credential. Returns the identity with the
- * canonical slug, or null. No name, slug or UUID is ever accepted as input. */
-export async function resolveByIdentity(reader: ProfileReader, input: unknown): Promise<ContractorSaveIdentity | null> {
-  if (!isFloridaIdentityInput(input)) return null;
+/** The parent asks about one exact profile identity in the shared shape
+ * { hub, nativeId, profileClass }, where nativeId is fl.dbpr.license:<key>.
+ * Returns the identity with the canonical slug, or null. No name, slug or UUID
+ * is ever accepted as input. */
+export async function resolveByProfile(reader: ProfileReader, input: unknown): Promise<ContractorSaveIdentity | null> {
+  if (!input || typeof input !== "object" || Array.isArray(input)) return null;
+  const profile = input as Record<string, unknown>;
+  if (Object.keys(profile).sort().join() !== "hub,nativeId,profileClass" || profile.hub !== "contractor" || profile.profileClass !== CONTRACTOR_PROFILE_CLASS) return null;
+  const parsed = parseContractorNativeId(profile.nativeId);
+  if (!parsed) return null;
   try {
-    const slugs = await reader.slugsForFloridaCredential(input.sourceIdentifier);
+    const slugs = await reader.slugsForFloridaCredential(parsed.sourceIdentifier);
     if (slugs.length !== 1) return null;
     const resolved = await resolveBySlug(reader, slugs[0]);
-    return resolved.eligible && resolved.identity.sourceIdentifier === input.sourceIdentifier ? resolved.identity : null;
+    return resolved.eligible && resolved.identity.sourceIdentifier === parsed.sourceIdentifier ? resolved.identity : null;
   } catch {
     return null;
   }

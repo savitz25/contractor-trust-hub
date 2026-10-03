@@ -1,5 +1,7 @@
 /**
- * Browser side of the Contractor Save hand-off (the Move model).
+ * Browser side of the Contractor Save hand-off: the shared My TrustHub
+ * convention (top-level form POST of { continuationRef, intent } to the parent
+ * form, intents save | save_signin | unsave).
  *
  * The device Save is always written or cleared by the caller before any of this
  * runs. This only stages the hand-off through the same-origin endpoint and, if
@@ -15,8 +17,13 @@
  *
  * With production sync off the endpoint answers "unavailable" and every call
  * here returns without navigating.
+ *
+ * Signed out: a `save` returns from the parent without asking; the Save stays
+ * on the device and the profile offers "Sign in to My TrustHub", which hands off
+ * again with `save_signin` so the parent finishes the Save after sign-in with no
+ * second Save click.
  */
-export type DirectIntent = "save" | "unsave";
+export type DirectIntent = "save" | "save_signin" | "unsave";
 export type ParentSync = "synced" | "unknown";
 export type StartResult = "navigating" | "unavailable" | "not_eligible" | "dry_run";
 /** confirmed: the parent acknowledged this ticket. not_confirmed: it did not act. unknown: outcome unreadable. */
@@ -68,11 +75,12 @@ export async function startDirect(ports: DirectPorts, slug: string, intent: Dire
     const result = record(await ports.post({ action: "prepare", slug, intent }, csrf));
     if (result.state === "local_only") return "not_eligible";
     if (result.state === "staged_dry_run") return "dry_run";
-    const continuationRef = record(result.fields).continuationRef;
-    if (result.state !== "continue" || !OPAQUE.test(String(result.ticket)) || !OPAQUE.test(String(continuationRef)) || !handoffTargetAllowed(result.target)) return "unavailable";
+    const continuationRef = result.continuationRef;
+    // The server echoes the intent it staged; anything else is not handed off.
+    if (result.state !== "continue" || !OPAQUE.test(String(continuationRef)) || result.intent !== intent || !handoffTargetAllowed(result.target)) return "unavailable";
     if (!proceed()) return "unavailable";
-    // Opaque retry reference and the intent only; never research or account data.
-    write(ports.local, pendingKey(slug), JSON.stringify({ intent, ticket: result.ticket }));
+    // Opaque hand-off reference and the intent only; never research or account data.
+    write(ports.local, pendingKey(slug), JSON.stringify({ intent, continuationRef }));
     ports.submit(result.target, { continuationRef: String(continuationRef), intent });
     return "navigating";
   } catch { return "unavailable"; }
@@ -87,11 +95,11 @@ export async function resumeDirect(ports: DirectPorts, slug: string): Promise<Di
   let pending: Record<string, unknown>;
   try { pending = record(JSON.parse(raw)); } catch { return null; }
   const intent = pending.intent;
-  if ((intent !== "save" && intent !== "unsave") || !OPAQUE.test(String(pending.ticket))) return null;
+  if ((intent !== "save" && intent !== "save_signin" && intent !== "unsave") || !OPAQUE.test(String(pending.continuationRef))) return null;
   try {
     const csrf = record(await ports.post({ action: "bootstrap" })).csrf;
     if (typeof csrf !== "string") throw new Error("unavailable");
-    const state = record(await ports.post({ action: "status", ticket: pending.ticket }, csrf)).state;
+    const state = record(await ports.post({ action: "status", continuationRef: pending.continuationRef }, csrf)).state;
     if (state !== "parent_acknowledged" && state !== "pending") throw new Error("unavailable");
     const confirmed = state === "parent_acknowledged";
     if (intent === "unsave") {

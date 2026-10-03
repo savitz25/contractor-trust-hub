@@ -1,125 +1,98 @@
 /**
- * Signed Save manifest (Contractor -> My TrustHub), server-side only.
+ * Shared My TrustHub profile-transfer manifest, Contractor edition.
  *
- * The manifest is the only statement of identity the parent receives. It is
- * built on the server from Contractor's own publication read and signed with
- * the Contractor service key. The browser carries an opaque reference to it and
- * never supplies any of its fields.
+ * This is the production wire used by Move and Lender ("v2-3/selected-profiles/3",
+ * staged through "v2-3/parent-runtime/1"). Only the specialist identity differs.
+ * The digest is the shared positional SHA-256; field order matches Ask.
  *
- * Fields (fixed set, fixed order):
- *   hub = contractor, audience = ask, intent = save | unsave
- *   profile_class = contractor_profile
- *   identifier_namespace = fl.dbpr.license
- *   source_identifier = the exact DBPR external_key
- *   jurisdiction = FL
- *   canonical_return_path = /contractors/<slug>
- *   browser = SHA-256 of this browser's hand-off binding
- *   issued_at / expires_at (ten minutes) and a single-use nonce
+ * Contractor identity inside the shared ProfileIdentity {hub, nativeId, profileClass}:
  *
- * Deliberately absent: any network or contractor UUID, display or legal name,
- * email, a free-form license id.
+ *   hub          contractor
+ *   profileClass contractor_profile
+ *   nativeId     fl.dbpr.license:<DBPR external_key>     e.g. fl.dbpr.license:CCC057187
  *
- * Wire form: base64url(header).base64url(payload).base64url(Ed25519 signature)
- * over "header.payload". The shared parent runtime is still being built; this
- * envelope is Contractor's side of it and may be re-wrapped to match the final
- * shared contract without changing the manifest fields.
+ * The native id carries the whole locked identity: the identifier namespace
+ * (fl.dbpr.license), which fixes the jurisdiction (FL), and the exact DBPR
+ * license key as the source identifier. It is the same construction Lender
+ * uses (nmls:<number>). It never contains contractors.id, a slug or a name.
+ * The return path is /contractors/<slug>, the shared v3 route for this hub.
  */
-import { createHash, createPrivateKey, createPublicKey, randomBytes, sign, verify } from "node:crypto";
+import { createHash } from "node:crypto";
 import { CONTRACTOR_SLUG, FL_DBPR, FL_DBPR_KEY, type ContractorSaveIdentity } from "./profile-identity";
 
-export const MANIFEST_VERSION = "contractor-profile-save/1" as const;
-export const MANIFEST_TTL_SECONDS = 600;
-export type SaveIntent = "save" | "unsave";
-export type SaveManifest = {
-  version: typeof MANIFEST_VERSION;
-  hub: "contractor";
+export const TRANSFER_VERSION_V3 = "v2-3/selected-profiles/3" as const;
+export const RUNTIME_VERSION = "v2-3/parent-runtime/1" as const;
+export const PARENT_ORIGIN = "https://www.asktrusthub.com";
+export const CONTRACTOR_ORIGIN = "https://www.contractortrusthub.com";
+export const PARENT_API_PATH = "/api/my-trusthub/profile-save";
+export const PARENT_FORM_PATH = "/my/profile-save";
+export const SOURCE_PATH = PARENT_API_PATH + "/source";
+export const CONTRACTOR_PROFILE_CLASS = "contractor_profile" as const;
+
+export type ContractorProfile = { hub: "contractor"; nativeId: string; profileClass: typeof CONTRACTOR_PROFILE_CLASS };
+export type ContractorManifest = {
+  version: typeof TRANSFER_VERSION_V3;
+  sourceHub: "contractor";
   audience: "ask";
-  intent: SaveIntent;
-  profile_class: "contractor_profile";
-  identifier_namespace: typeof FL_DBPR.namespace;
-  source_identifier: string;
-  jurisdiction: typeof FL_DBPR.jurisdiction;
-  canonical_return_path: string;
-  browser: string;
-  nonce: string;
-  issued_at: number;
-  expires_at: number;
+  selected: Array<{ localItemId: string; revision: string; digest: string; profile: ContractorProfile }>;
+  returnTask: { kind: "profile"; hub: "contractor"; canonicalSlug: string; profile: ContractorProfile; returnPath: string };
 };
-export type ManifestKey = { kid: string; pem: string };
 
-const OPAQUE = /^[A-Za-z0-9_-]{43}$/;
-const KID = /^[A-Za-z0-9_-]{1,64}$/;
-const FIELDS = ["version", "hub", "audience", "intent", "profile_class", "identifier_namespace", "source_identifier", "jurisdiction",
-  "canonical_return_path", "browser", "nonce", "issued_at", "expires_at"] as const;
-const b64 = (value: Buffer | string) => Buffer.from(value).toString("base64url");
-export const sha256 = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
+const NATIVE_PREFIX = FL_DBPR.namespace + ":";
+/** fl.dbpr.license:<key> for a well-formed DBPR key, else null. */
+export function contractorNativeId(externalKey: string): string | null {
+  return FL_DBPR_KEY.test(externalKey) ? NATIVE_PREFIX + externalKey : null;
+}
+/** The locked identity fields carried by a native id, or null if it is not exactly this grain. */
+export function parseContractorNativeId(nativeId: unknown): { identifierNamespace: typeof FL_DBPR.namespace; sourceIdentifier: string; jurisdiction: typeof FL_DBPR.jurisdiction } | null {
+  if (typeof nativeId !== "string" || !nativeId.startsWith(NATIVE_PREFIX)) return null;
+  const key = nativeId.slice(NATIVE_PREFIX.length);
+  return FL_DBPR_KEY.test(key) ? { identifierNamespace: FL_DBPR.namespace, sourceIdentifier: key, jurisdiction: FL_DBPR.jurisdiction } : null;
+}
+export const contractorReturnPath = (slug: string) => `/contractors/${slug}`;
 
-export function buildManifest(identity: ContractorSaveIdentity, intent: SaveIntent, browserBinding: string, now = Date.now()): SaveManifest {
-  if (!OPAQUE.test(browserBinding)) throw new Error("invalid_browser_binding");
-  if (intent !== "save" && intent !== "unsave") throw new Error("invalid_intent");
-  const issued = Math.floor(now / 1000);
-  const manifest: SaveManifest = {
-    version: MANIFEST_VERSION, hub: "contractor", audience: "ask", intent,
-    profile_class: identity.profileClass, identifier_namespace: identity.identifierNamespace, source_identifier: identity.sourceIdentifier,
-    jurisdiction: identity.jurisdiction, canonical_return_path: identity.returnPath,
-    browser: sha256(browserBinding), nonce: randomBytes(32).toString("base64url"), issued_at: issued, expires_at: issued + MANIFEST_TTL_SECONDS,
+export function contractorItemDigest(nativeId: string, returnPath: string): string {
+  return createHash("sha256").update(JSON.stringify([nativeId, returnPath])).digest("hex");
+}
+
+/** Built on the server from the publication read. Throws on anything not exact. */
+export function contractorManifest(identity: Pick<ContractorSaveIdentity, "sourceIdentifier" | "canonicalSlug">): ContractorManifest {
+  const nativeId = contractorNativeId(identity.sourceIdentifier);
+  if (!nativeId || !CONTRACTOR_SLUG.test(identity.canonicalSlug)) throw new Error("invalid_identity");
+  const returnPath = contractorReturnPath(identity.canonicalSlug);
+  const profile: ContractorProfile = { hub: "contractor", nativeId, profileClass: CONTRACTOR_PROFILE_CLASS };
+  return {
+    version: TRANSFER_VERSION_V3, sourceHub: "contractor", audience: "ask",
+    selected: [{ localItemId: identity.canonicalSlug, revision: "1", digest: contractorItemDigest(nativeId, returnPath), profile }],
+    returnTask: { kind: "profile", hub: "contractor", canonicalSlug: identity.canonicalSlug, profile, returnPath },
   };
-  if (!isManifest(manifest)) throw new Error("invalid_manifest");
-  return manifest;
 }
 
-/** Closed shape: exactly the fields above with exactly these values. */
-export function isManifest(value: unknown): value is SaveManifest {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
-  const m = value as Record<string, unknown>;
-  if (Object.keys(m).length !== FIELDS.length || !FIELDS.every((field) => Object.hasOwn(m, field))) return false;
-  return m.version === MANIFEST_VERSION && m.hub === "contractor" && m.audience === "ask" && (m.intent === "save" || m.intent === "unsave") &&
-    m.profile_class === "contractor_profile" && m.identifier_namespace === FL_DBPR.namespace && m.jurisdiction === FL_DBPR.jurisdiction &&
-    typeof m.source_identifier === "string" && FL_DBPR_KEY.test(m.source_identifier) &&
-    typeof m.canonical_return_path === "string" && m.canonical_return_path.startsWith("/contractors/") && CONTRACTOR_SLUG.test(m.canonical_return_path.slice("/contractors/".length)) &&
-    typeof m.browser === "string" && /^[a-f0-9]{64}$/.test(m.browser) && typeof m.nonce === "string" && OPAQUE.test(m.nonce) &&
-    Number.isInteger(m.issued_at) && Number.isInteger(m.expires_at) && (m.expires_at as number) - (m.issued_at as number) === MANIFEST_TTL_SECONDS;
+/** Closed shape: exactly one selected Florida profile that is also the return task. */
+export function isContractorManifest(value: unknown): value is ContractorManifest {
+  const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
+  const exact = (v: Record<string, unknown>, keys: string[]) => Object.keys(v).length === keys.length && keys.every((k) => Object.hasOwn(v, k));
+  const profile = (v: unknown): v is ContractorProfile => object(v) && exact(v, ["hub", "nativeId", "profileClass"]) && v.hub === "contractor" &&
+    v.profileClass === CONTRACTOR_PROFILE_CLASS && parseContractorNativeId(v.nativeId) !== null;
+  if (!object(value) || !exact(value, ["version", "sourceHub", "audience", "selected", "returnTask"])) return false;
+  if (value.version !== TRANSFER_VERSION_V3 || value.sourceHub !== "contractor" || value.audience !== "ask") return false;
+  const task = value.returnTask, selected = value.selected;
+  if (!object(task) || !exact(task, ["kind", "hub", "canonicalSlug", "profile", "returnPath"]) || task.kind !== "profile" || task.hub !== "contractor" || !profile(task.profile)) return false;
+  if (typeof task.canonicalSlug !== "string" || !CONTRACTOR_SLUG.test(task.canonicalSlug) || task.returnPath !== contractorReturnPath(task.canonicalSlug)) return false;
+  if (!Array.isArray(selected) || selected.length !== 1) return false;
+  const item = selected[0] as unknown;
+  if (!object(item) || !exact(item, ["localItemId", "revision", "digest", "profile"]) || !profile(item.profile)) return false;
+  return item.localItemId === task.canonicalSlug && item.revision === "1" && item.profile.nativeId === task.profile.nativeId &&
+    item.digest === contractorItemDigest(task.profile.nativeId, task.returnPath as string);
 }
 
-/** Canonical bytes: the fixed field order above, no whitespace. */
-export function manifestBytes(manifest: SaveManifest): Buffer {
-  return Buffer.from(JSON.stringify(Object.fromEntries(FIELDS.map((field) => [field, manifest[field]]))));
-}
-export const manifestDigest = (manifest: SaveManifest) => sha256(manifestBytes(manifest));
-
-/** The Contractor signing key, or null when it is not configured. Ed25519 only. */
-export function manifestSigningKey(env: Record<string, string | undefined> = process.env): ManifestKey | null {
-  const kid = env.MY_TRUSTHUB_CONTRACTOR_KEY_ID ?? "", pem = env.MY_TRUSTHUB_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM ?? "";
-  if (!KID.test(kid) || !pem) return null;
-  try { return createPrivateKey(pem).asymmetricKeyType === "ed25519" ? { kid, pem } : null; } catch { return null; }
-}
-
-export function signManifest(manifest: SaveManifest, key: ManifestKey): string {
-  if (!isManifest(manifest) || !KID.test(key.kid)) throw new Error("invalid_manifest");
-  const priv = createPrivateKey(key.pem);
-  if (priv.asymmetricKeyType !== "ed25519") throw new Error("invalid_key");
-  const head = b64(JSON.stringify({ alg: "EdDSA", typ: "trusthub-save-manifest", kid: key.kid, v: MANIFEST_VERSION }));
-  const body = b64(manifestBytes(manifest));
-  return `${head}.${body}.${b64(sign(null, Buffer.from(`${head}.${body}`), priv))}`;
-}
-
-/** Reference verification (what the parent does): signature, key id, closed
- * shape, canonical encoding, time window, and the browser it was issued for. */
-export function verifyManifest(token: unknown, key: { kid: string; pem: string }, browserBinding: string, now = Date.now()): SaveManifest | null {
-  try {
-    if (typeof token !== "string" || token.length > 4096) return null;
-    const parts = token.split(".");
-    if (parts.length !== 3) return null;
-    const header = JSON.parse(Buffer.from(parts[0]!, "base64url").toString("utf8")) as Record<string, unknown>;
-    if (header.alg !== "EdDSA" || header.typ !== "trusthub-save-manifest" || header.kid !== key.kid || header.v !== MANIFEST_VERSION) return null;
-    const pub = createPublicKey(key.pem);
-    if (pub.asymmetricKeyType !== "ed25519" || !verify(null, Buffer.from(`${parts[0]}.${parts[1]}`), pub, Buffer.from(parts[2]!, "base64url"))) return null;
-    const raw = Buffer.from(parts[1]!, "base64url");
-    const manifest = JSON.parse(raw.toString("utf8")) as unknown;
-    if (!isManifest(manifest) || !manifestBytes(manifest).equals(raw)) return null;
-    const seconds = Math.floor(now / 1000);
-    if (manifest.issued_at > seconds + 2 || manifest.expires_at <= seconds) return null;
-    if (manifest.browser !== sha256(browserBinding)) return null;
-    return manifest;
-  } catch { return null; }
+/** Shared positional digest (identical to Ask's manifestDigest for version 3). */
+export function manifestDigest(v: ContractorManifest): string {
+  const profileKey = (p: { hub: string; nativeId: string; profileClass: string }) => JSON.stringify([p.hub, p.nativeId, p.profileClass]);
+  const task = [v.returnTask.kind, v.returnTask.hub, v.returnTask.canonicalSlug, v.returnTask.returnPath, profileKey(v.returnTask.profile)];
+  return createHash("sha256").update(JSON.stringify([
+    v.version, v.sourceHub, v.audience,
+    v.selected.map((i) => [i.localItemId, i.revision, i.digest, i.profile.hub, i.profile.nativeId, i.profile.profileClass]),
+    task,
+  ])).digest("hex");
 }
