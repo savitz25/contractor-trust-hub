@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { AlertPreferences, DurableWorkspace } from "@/lib/passport/types";
 import { DEFAULT_ALERT_PREFS } from "@/lib/passport/types";
 import { loadLocalWorkspace, saveLocalWorkspace } from "@/lib/passport/local-workspace";
+import { MY_TRUSTHUB_ACCOUNT_HREF, ONE_ACCOUNT_PRESENTATION } from "@/lib/my-trusthub/one-account";
 
 export function AccountClient() {
   const sp = useSearchParams();
@@ -173,8 +174,15 @@ export function AccountClient() {
   return (
     <div className="space-y-6">
       <div className="rounded-3xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)] sm:p-8">
+        {ONE_ACCOUNT_PRESENTATION ? (
+          <p className="mb-4 rounded-xl border border-[var(--border)] bg-[var(--accent-soft)] p-3 text-sm text-[var(--text)]" data-one-account-note="true">
+            Your TrustHub account is{" "}
+            <a href={MY_TRUSTHUB_ACCOUNT_HREF} className="font-semibold text-[var(--navy)]">My TrustHub</a>. This page is not a
+            separate account: it keeps your My Contractor workspace (projects, watches, Home Passport) in sync across your devices.
+          </p>
+        ) : null}
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
-          Account &amp; saved records
+          {ONE_ACCOUNT_PRESENTATION ? "My Contractor workspace sync" : "Account & saved records"}
         </p>
         <h1 className="mt-2 text-2xl font-semibold text-[var(--text)] sm:text-3xl">
           Save your work beyond one device

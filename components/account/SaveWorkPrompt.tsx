@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { workspaceSyncCopy } from "@/lib/my-trusthub/one-account";
 
 /** Gentle prompt when local data exists and user is not clearly signed in. */
 export function SaveWorkPrompt() {
@@ -21,17 +22,17 @@ export function SaveWorkPrompt() {
   }, []);
 
   if (!show) return null;
+  const copy = workspaceSyncCopy();
 
   return (
     <div className="border-b border-[var(--accent)]/30 bg-[var(--accent-soft)]">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6">
         <p className="text-xs text-[var(--text)]">
-          <strong>Save my work:</strong> projects on this device can be imported into an optional
-          account for long-term Home Passport storage.
+          <strong>{copy.promptLead}</strong> {copy.promptBody}
         </p>
         <div className="flex gap-2 text-xs font-semibold">
           <Link href="/account" className="text-[var(--navy)] no-underline hover:underline">
-            Save / sign in
+            {copy.promptAction}
           </Link>
           <button
             type="button"

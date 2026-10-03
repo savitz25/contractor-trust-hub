@@ -1,4 +1,5 @@
 /** Primary header IA — grouped menus. Not a marketplace. */
+import { MY_CONTRACTOR_PATH, ONE_ACCOUNT_PRESENTATION, workspaceSyncCopy } from "@/lib/my-trusthub/one-account";
 
 export type HeaderLink = {
   href: string;
@@ -67,6 +68,7 @@ export const TOOLS_GROUP: HeaderGroup = {
     { href: "/tools/quote-analyzer", label: "Quote Analyzer" },
     { href: "/tools/contract-analyzer", label: "Contract Analyzer" },
     { href: "/compare", label: "Compare" },
+    { href: MY_CONTRACTOR_PATH, label: "Saved contractors", hint: "My Contractor workspace, on this device" },
     { href: "/watch", label: "Watched list", hint: "Saved on this device" },
     { href: "/property", label: "Property / permits" },
     { href: "/tools/coverage", label: "Where we cover" },
@@ -85,14 +87,18 @@ export const GUIDES_GROUP: HeaderGroup = {
   ],
 };
 
+/** The specialist workspace. Under the one-account presentation it is named
+ * My Contractor and the Contractor sign-in is described as workspace sync, not
+ * as an account; the account itself is My TrustHub (linked from the header). */
 export const MY_PROJECT_GROUP: HeaderGroup = {
   id: "my-project",
-  label: "My Project",
+  label: ONE_ACCOUNT_PRESENTATION ? "My Contractor" : "My Project",
   links: [
+    { href: MY_CONTRACTOR_PATH, label: ONE_ACCOUNT_PRESENTATION ? "My Contractor" : "Saved contractors", hint: "Saved on this device" },
     { href: "/projects", label: "Projects" },
     { href: "/watch", label: "Watched contractors", hint: "Saved on this device" },
     { href: "/passport", label: "Home Passport" },
-    { href: "/account", label: "Account" },
+    { href: "/account", label: workspaceSyncCopy().navLabel },
   ],
 };
 

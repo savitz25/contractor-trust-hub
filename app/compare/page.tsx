@@ -77,7 +77,7 @@ export default async function ComparePage({ searchParams }: Props) {
           <p className="text-base font-medium text-[var(--text)]">No shortlist yet</p>
           <p className="mx-auto mt-2 max-w-md text-sm text-[var(--muted)]">
             From search, discovery, or a Trust Report, tap{" "}
-            <strong className="text-[var(--text)]">Save</strong> on up to {MAX_COMPARE} contractors.
+            <strong className="text-[var(--text)]">Compare</strong> on up to {MAX_COMPARE} contractors.
             Your shortlist stays on this device, then open Compare for evidence side-by-side — not a
             winner score.
           </p>
@@ -100,7 +100,7 @@ export default async function ComparePage({ searchParams }: Props) {
 
       {slugs.length === 1 && contractors.length === 1 && (
         <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-          Save at least one more contractor to compare (up to {MAX_COMPARE}). Shortlist is stored on
+          Add at least one more contractor to compare (up to {MAX_COMPARE}). Shortlist is stored on
           this device only.
         </div>
       )}

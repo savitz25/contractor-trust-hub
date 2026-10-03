@@ -7,6 +7,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { HeaderMenus } from "@/components/layout/HeaderMenus";
 import { SwitchHubMenu } from "@/components/network/SwitchHubMenu";
 import { MOBILE_GROUPS } from "@/lib/nav/header-nav";
+import { MY_TRUSTHUB_ACCOUNT_HREF, ONE_ACCOUNT_PRESENTATION } from "@/lib/my-trusthub/one-account";
 
 function MenuIcon({ open }: { open: boolean }) {
   if (open) {
@@ -83,6 +84,16 @@ export function SiteHeader() {
             >
               Verify
             </Link>
+            {/* One account across TrustHub: the account entry is My TrustHub. Off by default. */}
+            {ONE_ACCOUNT_PRESENTATION ? (
+              <a
+                href={MY_TRUSTHUB_ACCOUNT_HREF}
+                data-entry-path="header-my-trusthub"
+                className="inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] bg-white px-3 text-sm font-semibold text-[var(--navy)] no-underline"
+              >
+                My TrustHub
+              </a>
+            ) : null}
             <SwitchHubMenu />
           </div>
 

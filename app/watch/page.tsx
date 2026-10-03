@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { WatchedListClient } from "@/components/watch/WatchedListClient";
 import { pageMetadata } from "@/lib/seo/page-meta";
+import { MY_CONTRACTOR_PATH, workspaceSyncCopy } from "@/lib/my-trusthub/one-account";
 
 export const metadata: Metadata = pageMetadata({
   title: "Watched contractors",
@@ -46,7 +47,13 @@ export default function WatchPage() {
           href="/account"
           className="font-medium text-[var(--muted)] no-underline hover:text-[var(--text)] hover:underline"
         >
-          Optional account
+          {workspaceSyncCopy().linkLabel}
+        </Link>
+        <Link
+          href={MY_CONTRACTOR_PATH}
+          className="font-medium text-[var(--muted)] no-underline hover:text-[var(--text)] hover:underline"
+        >
+          Saved contractors
         </Link>
       </div>
 
