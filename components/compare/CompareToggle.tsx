@@ -8,8 +8,11 @@ import {
 } from "./compare-store";
 
 /**
- * Save / remove a contractor on the device shortlist (max 3 → Compare).
+ * Add / remove a contractor on the device compare shortlist (max 3 → Compare).
  * localStorage only — not a marketplace ranking.
+ *
+ * It reads "Compare", not "Save": Save is the saved-contractors toggle
+ * (SaveContractorToggle). The shortlist behaviour and storage are unchanged.
  */
 export function CompareToggle({
   slug,
@@ -47,12 +50,13 @@ export function CompareToggle({
         setFull(res.full);
       }}
       aria-pressed={selected}
+      data-compare-toggle="true"
       title={
         full && !selected
           ? `Shortlist is full (${MAX_COMPARE} max). Remove one first.`
           : selected
-            ? "Remove from shortlist (saved on this device)"
-            : "Save to shortlist (on this device)"
+            ? "Remove from compare shortlist (on this device)"
+            : "Add to compare shortlist (on this device)"
       }
       className={
         compact
@@ -64,7 +68,7 @@ export function CompareToggle({
             : "inline-flex min-h-10 items-center rounded-xl border border-[var(--border)] bg-white px-4 text-sm font-medium text-[var(--text)] hover:border-[var(--navy)]/25"
       }
     >
-      {selected ? "Saved" : full ? "Shortlist full" : "Save"}
+      {selected ? "Comparing" : full ? "Compare full" : "Compare"}
     </button>
   );
 }

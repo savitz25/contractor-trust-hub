@@ -62,6 +62,8 @@ import { txTradePlainLabel } from "@/lib/states/tx-trades";
 import { parseHandoffQuery } from "@/lib/studios/handoff";
 import { ManageProfileCta } from "@/components/contractor/ManageProfileCta";
 import { MyTrustHubSave } from "@/components/contractor/MyTrustHubSave";
+import { SaveContractorToggle } from "@/components/contractor/SaveContractorToggle";
+import { deviceSaveAllowed } from "@/lib/my-trusthub/profile-identity";
 import { eligibleClaimProfile } from "@/lib/claim/eligibility";
 import { claimCtaEnabledFor } from "@/lib/claim/server";
 import { getPublicContractorState } from "@/lib/business-profile/server";
@@ -486,6 +488,10 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <CompareToggle slug={contractor.slug} />
+          {/* Device Save: real, non-thin Trust Reports with an exact profile id only. Not a Watch. */}
+          {deviceSaveAllowed(contractor) ? (
+            <SaveContractorToggle slug={contractor.slug} name={contractor.displayName} profileId={contractor.id} />
+          ) : null}
           {isThin ? (
             <>
               <a

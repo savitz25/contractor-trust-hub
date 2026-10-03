@@ -3,6 +3,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { CONTRACTOR_NETWORK_LINKS } from "@/lib/network/network-links";
 import { getLiveVerifyNavLinks } from "@/lib/states/config";
 import { PUBLIC_CONTACT_EMAIL } from "@/lib/site";
+import { MY_CONTRACTOR_PATH, ONE_ACCOUNT_PRESENTATION } from "@/lib/my-trusthub/one-account";
 
 const planLinks = [
   { href: "/plan/start", label: "Plan a project" },
@@ -25,9 +26,10 @@ const decideLinks = [
 const protectLinks = [
   { href: "/tools/contract-analyzer", label: "Contract Analyzer" },
   { href: "/projects", label: "Projects" },
+  { href: MY_CONTRACTOR_PATH, label: "My Contractor" },
   { href: "/watch", label: "Watched contractors" },
   { href: "/passport", label: "Home Passport" },
-  { href: "/account", label: "Account & alerts" },
+  { href: "/account", label: ONE_ACCOUNT_PRESENTATION ? "Workspace sync & alerts" : "Account & alerts" },
 ] as const;
 
 export function SiteFooter() {
