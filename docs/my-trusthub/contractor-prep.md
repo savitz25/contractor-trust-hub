@@ -47,6 +47,11 @@ only control reading "Save" was the compare shortlist.
 
 ## Profile classes
 
+> Identity update: the first parent ship is Florida DBPR only and the native
+> identity is the DBPR license `external_key`, not `contractors.id`. See
+> `florida-integration.md`, which supersedes the identity and parent-ready
+> columns below.
+
 | Class | Page | Native identity | Namespace | Jurisdiction | Publication source | Grain | Parent-ready |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `contractor_profile` with a Florida DBPR credential | `/contractors/<slug>` | `contractors.id` + an attached license `external_key` | `fl.dbpr.license` | FL | `contractors` joined to `licenses` (`source_system = fl_dbpr`), non-thin, state live | one `contractors` row | YES |

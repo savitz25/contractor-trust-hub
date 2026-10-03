@@ -1,3 +1,6 @@
+// @deprecated LEGACY one-profile hand-off. Not the My TrustHub architecture; do not extend.
+// Retire together with components/contractor/MyTrustHubSave.tsx once the parent adapter
+// (lib/my-trusthub/*, /api/my-trusthub/profile-save) is activated.
 import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 const ASK = "https://www.asktrusthub.com";
