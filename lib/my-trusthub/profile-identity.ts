@@ -1,110 +1,109 @@
 /**
- * My TrustHub — Contractor profile classes and exact identity (PREP ONLY).
+ * My TrustHub — Contractor profile classes and exact identity.
  *
- * Nothing here talks to My TrustHub. It states, for each kind of public profile
- * Contractor Trust Hub renders, what its exact identity is and whether that
- * identity is safe to hand to the one My TrustHub account later.
+ * Nothing here talks to My TrustHub. It states which public profiles carry an
+ * identity that is safe to hand to the one My TrustHub account, and what that
+ * identity is.
  *
- * Contractor has more than one identity grain and they are kept apart:
+ * FIRST SHIP SCOPE (founder decision, 2026-10-03): Florida DBPR contractor
+ * profiles only.
  *
- *   contractor_profile   /contractors/<slug>   one `contractors` row (a resolved
- *                        licensee/business) with its attached regulator
- *                        credentials. Native id = contractors.id. The network
- *                        binding names the profile AND one exact credential
- *                        (namespace e.g. fl.dbpr.license, the regulator's own
- *                        license key, its jurisdiction), so the profile must
- *                        still carry that credential.
+ *   profile class         contractor_profile            (/contractors/<slug>)
+ *   identifier namespace  fl.dbpr.license
+ *   jurisdiction          FL
+ *   native identity       the ONE Florida DBPR license external_key attached to
+ *                         the profile (the regulator's own key, unique in
+ *                         `licenses` by (source_system, external_key))
+ *   return path           /contractors/<slug>
  *
- *   standalone_credential /credentials/<id>    one `licenses` row with no
- *                        contractor attached (a person or regulatory
- *                        credential record). Native id = (source_system,
- *                        external_key). A different grain: it is never folded
- *                        into a contractor profile and has no Save control.
+ * What is NOT the identity:
+ *   - contractors.id. It is a database-generated UUID whose durability across a
+ *     full re-ingest is unproven. It stays an internal local row reference only
+ *     and never appears in a parent identity or manifest.
+ *   - the slug. It is the return path, nothing more.
+ *   - display or legal name, email, a browser-made id, a fuzzy or name match, a
+ *     linked corporate entity, a permit, an enforcement row.
  *
- * Never an identity: display or legal name, a slug by itself, an email, a
- * browser-made id, a fuzzy or name match, a linked corporate entity, a permit,
- * an enforcement row. Anything ambiguous or unresolved is not parent-ready.
+ * Device Save only (never parent-synced in this ship): NJ DCA, CA CSLB, TX, WA,
+ * AZ, OR, CO, LA, MS, KY and every other source; standalone /credentials/<id>
+ * records; thin profiles; a Florida profile with more than one DBPR credential
+ * (no single credential can be selected without a rule nobody has decided);
+ * a profile that also carries a credential from another source (unresolved
+ * multi-jurisdiction identity).
  */
 import type { ContractorDetail } from "@/lib/contractors/types";
 
 export type ContractorProfileClass = "contractor_profile" | "standalone_credential";
 
-/** Reviewed exact credential sources per jurisdiction, with the network
- * identifier namespace each maps to. The inventory is the one the claim
- * doorway already relies on (lib/claim/eligibility.ts, 2026-09-24): FL
- * `fl_dbpr` and NJ `nj_dca` are the credential sources proven exact and
- * published. `fl.dbpr.license` is the namespace My TrustHub already uses for
- * Contractor bindings. Every other source is not parent-ready until reviewed. */
-export const PARENT_READY_CREDENTIAL_SOURCES = {
-  FL: { sourceSystem: "fl_dbpr", namespace: "fl.dbpr.license" },
-  NJ: { sourceSystem: "nj_dca", namespace: "nj.dca.license" },
-} as const;
-export type ParentReadyJurisdiction = keyof typeof PARENT_READY_CREDENTIAL_SOURCES;
+export const FL_DBPR = { sourceSystem: "fl_dbpr", namespace: "fl.dbpr.license", jurisdiction: "FL" } as const;
 
-export type ExactCredential = { namespace: string; jurisdiction: ParentReadyJurisdiction; sourceSystem: string; externalKey: string };
 export type ContractorSaveIdentity = {
   hub: "contractor";
   profileClass: "contractor_profile";
-  /** contractors.id */
-  nativeId: string;
+  identifierNamespace: typeof FL_DBPR.namespace;
+  /** The exact DBPR license external_key, e.g. CCC057187. */
+  sourceIdentifier: string;
+  jurisdiction: typeof FL_DBPR.jurisdiction;
   canonicalSlug: string;
   /** The only return destination: the canonical Trust Report. */
   returnPath: string;
-  /** Exact regulator credentials currently attached to this profile. A parent
-   * binding must name this profile and one of these, or it does not match. */
-  credentials: ExactCredential[];
 };
 export type NotReadyReason =
-  | "missing_profile_id"
   | "missing_slug"
   | "thin_profile"
-  | "no_reviewed_credential"
-  | "ambiguous_jurisdiction";
+  | "not_florida"
+  | "no_fl_dbpr_credential"
+  | "invalid_credential_key"
+  | "multiple_fl_credentials"
+  | "multi_jurisdiction";
 export type ParentSaveReadiness = { ready: true; identity: ContractorSaveIdentity } | { ready: false; reason: NotReadyReason };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const SLUG = /^[a-z0-9][a-z0-9-]{0,199}$/;
-/** Regulator license keys are short printable tokens; anything else is not exact. */
-const EXTERNAL_KEY = /^[A-Za-z0-9][A-Za-z0-9._:/-]{0,79}$/;
+export const CONTRACTOR_SLUG = /^[a-z0-9][a-z0-9-]{0,199}$/;
+/** DBPR license keys: a 1–4 letter occupation prefix and 3–9 digits (CCC057187, CGC1506243). */
+export const FL_DBPR_KEY = /^[A-Z]{1,4}[0-9]{3,9}$/;
 
 /** A profile may carry a device Save when it is a real, non-thin Trust Report
- * with an exact profile id and canonical slug. This is local only. */
+ * with a local row reference and a canonical slug. Local only. */
 export function deviceSaveAllowed(contractor: Pick<ContractorDetail, "id" | "slug" | "isThinProfile">): boolean {
-  return UUID.test(contractor.id ?? "") && SLUG.test(contractor.slug ?? "") && !contractor.isThinProfile;
+  return UUID.test(contractor.id ?? "") && CONTRACTOR_SLUG.test(contractor.slug ?? "") && !contractor.isThinProfile;
 }
 
-/** Exact identity for a future My TrustHub Save, or the reason there is none.
- * Fails closed: no id, no slug, a thin profile, no reviewed credential, or
- * reviewed credentials in more than one jurisdiction all return not ready. */
+/** Exact identity for a My TrustHub Save, or the reason there is none. Fails
+ * closed on anything that is not exactly one valid Florida DBPR credential on a
+ * public, non-thin, Florida-only profile. */
 export function parentSaveReadiness(contractor: ContractorDetail): ParentSaveReadiness {
-  if (!UUID.test(contractor.id ?? "")) return { ready: false, reason: "missing_profile_id" };
-  if (!SLUG.test(contractor.slug ?? "")) return { ready: false, reason: "missing_slug" };
+  if (!CONTRACTOR_SLUG.test(contractor.slug ?? "")) return { ready: false, reason: "missing_slug" };
   if (contractor.isThinProfile) return { ready: false, reason: "thin_profile" };
-  const credentials: ExactCredential[] = [];
-  for (const [jurisdiction, source] of Object.entries(PARENT_READY_CREDENTIAL_SOURCES) as Array<[ParentReadyJurisdiction, (typeof PARENT_READY_CREDENTIAL_SOURCES)[ParentReadyJurisdiction]]>) {
-    for (const license of contractor.licenses) {
-      const key = (license.externalKey ?? "").trim();
-      if (license.sourceSystem !== source.sourceSystem || !EXTERNAL_KEY.test(key)) continue;
-      if (!credentials.some((c) => c.namespace === source.namespace && c.externalKey === key))
-        credentials.push({ namespace: source.namespace, jurisdiction, sourceSystem: source.sourceSystem, externalKey: key });
-    }
-  }
-  if (credentials.length === 0) return { ready: false, reason: "no_reviewed_credential" };
-  // One profile, one jurisdiction. A profile holding reviewed credentials in two
-  // jurisdictions has no single binding grain yet; it is left unresolved.
-  if (new Set(credentials.map((c) => c.jurisdiction)).size !== 1) return { ready: false, reason: "ambiguous_jurisdiction" };
-  credentials.sort((a, b) => a.externalKey.localeCompare(b.externalKey));
-  return { ready: true, identity: { hub: "contractor", profileClass: "contractor_profile", nativeId: contractor.id, canonicalSlug: contractor.slug,
-    returnPath: "/contractors/" + contractor.slug, credentials } };
+  if (contractor.homeState !== FL_DBPR.jurisdiction) return { ready: false, reason: "not_florida" };
+  // Any credential from another source leaves the identity unresolved across jurisdictions.
+  if (contractor.licenses.some((license) => license.sourceSystem !== FL_DBPR.sourceSystem)) return { ready: false, reason: "multi_jurisdiction" };
+  const keys = [...new Set(contractor.licenses.map((license) => (license.externalKey ?? "").trim()))];
+  if (keys.length === 0) return { ready: false, reason: "no_fl_dbpr_credential" };
+  if (keys.some((key) => !FL_DBPR_KEY.test(key))) return { ready: false, reason: "invalid_credential_key" };
+  if (keys.length !== 1) return { ready: false, reason: "multiple_fl_credentials" };
+  return { ready: true, identity: { hub: "contractor", profileClass: "contractor_profile", identifierNamespace: FL_DBPR.namespace, sourceIdentifier: keys[0]!,
+    jurisdiction: FL_DBPR.jurisdiction, canonicalSlug: contractor.slug, returnPath: "/contractors/" + contractor.slug } };
 }
 
-/** A parent binding agrees with a profile only on the exact grain: same hub,
- * class and profile id, an accepted status, and a credential the profile still
- * carries in the same namespace and jurisdiction. */
+/** Shape check for an identity that arrives from outside (the parent's
+ * publication re-check). Exact keys, exact values, a well-formed DBPR key. */
+export function isFloridaIdentityInput(value: unknown): value is { hub: "contractor"; profileClass: "contractor_profile"; identifierNamespace: string; sourceIdentifier: string; jurisdiction: string } {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const v = value as Record<string, unknown>;
+  return Object.keys(v).sort().join() === "hub,identifierNamespace,jurisdiction,profileClass,sourceIdentifier" && v.hub === "contractor" &&
+    v.profileClass === "contractor_profile" && v.identifierNamespace === FL_DBPR.namespace && v.jurisdiction === FL_DBPR.jurisdiction &&
+    typeof v.sourceIdentifier === "string" && FL_DBPR_KEY.test(v.sourceIdentifier);
+}
+
+/** A parent binding agrees with an identity only on the exact grain: accepted,
+ * same hub and class, same namespace, same license key, same jurisdiction. The
+ * binding's specialist entity id is deliberately not compared: it may hold a
+ * contractor UUID, which is not an identity. */
 export function bindingMatchesIdentity(identity: ContractorSaveIdentity, binding: {
-  hub: string; specialistEntityType: string; specialistEntityId: string; identifierNamespace: string; sourceIdentifier: string; jurisdiction: string | null; status: string;
+  hub: string; specialistEntityType: string; identifierNamespace: string; sourceIdentifier: string; jurisdiction: string | null; status: string;
 }): boolean {
-  return binding.status === "accepted" && binding.hub === "contractor" && binding.specialistEntityType === identity.profileClass &&
-    binding.specialistEntityId === identity.nativeId &&
-    identity.credentials.some((c) => c.namespace === binding.identifierNamespace && c.externalKey === binding.sourceIdentifier && c.jurisdiction === binding.jurisdiction);
+  return binding.status === "accepted" && binding.hub === identity.hub && binding.specialistEntityType === identity.profileClass &&
+    binding.identifierNamespace === identity.identifierNamespace && binding.sourceIdentifier === identity.sourceIdentifier &&
+    binding.jurisdiction === identity.jurisdiction;
 }

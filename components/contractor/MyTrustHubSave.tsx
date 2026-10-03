@@ -1,3 +1,10 @@
+/**
+ * @deprecated LEGACY one-profile hand-off (old P13 protocol, one hard-coded
+ * profile id, off behind MY_TRUSTHUB_CONTRACTOR_SAVE_ENABLED). It is NOT the My
+ * TrustHub architecture: the Save toggle plus lib/my-trusthub/* is. Do not
+ * extend it. Remove this component, its use on the Trust Report and
+ * app/api/my-trusthub/issue/route.ts once the parent adapter is activated.
+ */
 export function MyTrustHubSave({ profileId }: { profileId: string }) {
   if (process.env.MY_TRUSTHUB_CONTRACTOR_SAVE_ENABLED !== "true" || profileId !== "0001ac38-0c96-4e2f-8bf6-9ab243f7b79b") return null;
   return <div className="my-4 rounded-xl border border-[var(--border)] p-4">
