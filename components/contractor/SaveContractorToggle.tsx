@@ -31,8 +31,9 @@ export function SaveContractorToggle({ slug, name, profileId, syncEligible = fal
   const [saved, setSaved] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [note, setNote] = useState<string | null>(null);
-  const [syncing, setSyncing] = useState<DirectIntent | null>(null);
+  const [syncing, setSyncing] = useState<"save" | "unsave" | null>(null);
   const [parentHeld, setParentHeld] = useState(false);
+  const [signInOffer, setSignInOffer] = useState(false);
   const pathname = usePathname();
   const direct = PARENT_SYNC_UI && syncEligible && pathname === "/contractors/" + slug;
   const here = useRef(true);
@@ -77,17 +78,27 @@ export function SaveContractorToggle({ slug, name, profileId, syncEligible = fal
       setParentHeld(parentSync(localStorage, slug) !== null);
       if (!result) return;
       if (result.intent === "unsave") setNote(result.outcome === "confirmed" ? "Removed from this device and My TrustHub" : "Removed from this device. My TrustHub did not confirm the removal.");
-      else setNote(result.outcome === "confirmed" ? "Saved to My TrustHub" : result.outcome === "not_confirmed" ? "Saved on this device. Sign in to My TrustHub to sync across devices." : "Saved on this device");
+      else {
+        setNote(result.outcome === "confirmed" ? "Saved to My TrustHub" : result.outcome === "not_confirmed" ? "Saved on this device. Sign in to My TrustHub to sync across devices." : "Saved on this device");
+        setSignInOffer(result.outcome === "not_confirmed");
+      }
     });
     return () => { active = false; };
   }, [direct, slug]);
 
   /** Stage and hand the browser to My TrustHub. Nothing navigates once the user has left this profile. */
   const handOff = async (intent: DirectIntent) => {
-    setSyncing(intent);
+    setSyncing(intent === "unsave" ? "unsave" : "save");
     const result = await startDirect(browserDirectPorts(), slug, intent, () => here.current);
     if (result !== "navigating") setSyncing(null);
     return result;
+  };
+
+  // Signed-out continuation: the parent shows its sign-in step and then finishes
+  // the Save. No second Save click, no Keep, no confirmation.
+  const signInToSync = () => {
+    setSignInOffer(false);
+    void handOff("save_signin").then((result) => { if (result !== "navigating") setNote("My TrustHub is unavailable right now. Your Save stays on this device."); });
   };
 
   const retryParentUnsave = () => {
@@ -96,6 +107,7 @@ export function SaveContractorToggle({ slug, name, profileId, syncEligible = fal
 
   const toggle = async () => {
     if (syncing) return;
+    setSignInOffer(false);
     if (saved) {
       const reachParent = direct && parentSync(localStorage, slug) !== null;
       // The device removal is immediate and never depends on the parent.
@@ -155,6 +167,13 @@ export function SaveContractorToggle({ slug, name, profileId, syncEligible = fal
       <span role="status" aria-live="polite" className="min-h-0 text-[11px] font-medium text-[var(--muted)]">
         {note}
       </span>
+      {direct && mounted && saved && signInOffer && !syncing ? (
+        <span className="text-[11px] text-[var(--muted)]" data-mth-sign-in="true">
+          <a href="#sign-in-to-my-trusthub" onClick={(event) => { event.preventDefault(); signInToSync(); }} className="font-medium text-[var(--navy)] underline">
+            Sign in to My TrustHub
+          </a>
+        </span>
+      ) : null}
       {direct && mounted && !saved && parentHeld && !syncing ? (
         <span className="text-[11px] text-[var(--muted)]" data-mth-parent-held="true">
           May still be saved in My TrustHub.{" "}

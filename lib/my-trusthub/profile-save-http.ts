@@ -4,11 +4,17 @@
  *
  *   { action: "bootstrap" }                      -> { csrf } + HttpOnly cookie
  *   { action: "prepare", slug, intent }          -> PrepareResult
- *   { action: "status", ticket }                 -> { state }
+ *   { action: "status", continuationRef }        -> { state }
  *
- * The browser sends the slug of the page it is on and an intent. It cannot
- * send an identity: any other field is rejected. With sync off (production)
- * every call, including bootstrap, answers 503 "unavailable" and sets nothing.
+ * The HttpOnly cookie value is this browser's hand-off binding: it is the
+ * browser claim of the service assertion and the key the parent's
+ * acknowledgement is held under.
+ *
+ * The browser sends the slug of the page it is on and an intent (save,
+ * save_signin, unsave). It cannot send an identity: any other field (license
+ * key, contractor or network UUID, name, jurisdiction, namespace, return path)
+ * is rejected. With the gate closed (production) every call, including
+ * bootstrap, answers 503 "unavailable" and sets nothing.
  */
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { parentStatus, prepareParentSave, type AdapterDeps } from "./parent-adapter";
@@ -53,7 +59,7 @@ export async function handleContractorProfileSave(request: Request, deps: Adapte
     const csrf = request.headers.get("x-cth-csrf");
     if (!existing || !csrf || !OPAQUE.test(existing) || !OPAQUE.test(csrf) || !timingSafeEqual(Buffer.from(existing), Buffer.from(csrf))) return keep("invalid", 403);
     if (input.action === "prepare" && keys === "action,intent,slug") return json(await prepareParentSave(deps, input.slug, input.intent, existing));
-    if (input.action === "status" && keys === "action,ticket") return json({ state: await parentStatus(deps, input.ticket, existing), localCopy: "keep" });
+    if (input.action === "status" && keys === "action,continuationRef") return json({ state: await parentStatus(deps, input.continuationRef, existing), localCopy: "keep" });
     return keep("invalid", 400);
   } catch {
     return keep("unavailable", 503);

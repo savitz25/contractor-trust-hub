@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import { generateKeyPairSync } from "node:crypto";
+import { createHash, generateKeyPairSync, randomBytes } from "node:crypto";
 import fs from "node:fs";
 import test from "node:test";
 
-// Device storage shim, installed before the stores are used. Any network call fails the test.
+// Device storage shim, installed before the stores are used. Any real network call fails the test.
 const device = new Map<string, string>();
 const g = globalThis as unknown as Record<string, unknown>;
 g.window = Object.assign(new EventTarget(), {});
@@ -15,20 +15,27 @@ const storage = {
 g.localStorage = storage;
 g.Event = Event;
 let networkCalls = 0;
-g.fetch = async () => { networkCalls++; throw new Error("no network in a device Save"); };
+g.fetch = async () => { networkCalls++; throw new Error("no real network in tests"); };
 
 import { SAVED_STORAGE_KEY, isContractorSaved, listSavedContractors, saveContractor, unsaveContractor } from "../lib/saved/store";
 import { PROJECTS_KEY, isWatching, listWatches, watchContractor } from "../lib/projects/store";
-import { FL_DBPR, bindingMatchesIdentity, deviceSaveAllowed, isFloridaIdentityInput, parentSaveReadiness } from "../lib/my-trusthub/profile-identity";
-import { resolveByIdentity, resolveBySlug, type ProfileReader } from "../lib/my-trusthub/publication";
-import { MANIFEST_VERSION, buildManifest, isManifest, manifestBytes, manifestDigest, manifestSigningKey, signManifest, verifyManifest, type SaveManifest } from "../lib/my-trusthub/manifest";
-import { DISABLED_PARENT_PORT, PARENT_FORM_TARGET, parentStatus, parentSyncMode, prepareParentSave, type AdapterDeps, type ContractorParentPort, type ParentSyncMode } from "../lib/my-trusthub/parent-adapter";
+import { FL_DBPR, bindingMatchesIdentity, deviceSaveAllowed, parentSaveReadiness } from "../lib/my-trusthub/profile-identity";
+import { resolveByProfile, resolveBySlug, type ProfileReader } from "../lib/my-trusthub/publication";
+import { CONTRACTOR_ORIGIN, PARENT_API_PATH, PARENT_FORM_PATH, PARENT_ORIGIN, RUNTIME_VERSION, SOURCE_PATH, TRANSFER_VERSION_V3, contractorManifest, contractorNativeId,
+  isContractorManifest, manifestDigest, parseContractorNativeId, type ContractorManifest } from "../lib/my-trusthub/manifest";
+import { ASSERTION_HEADER, ASSERTION_TTL_SECONDS, CONTRACTOR_PRODUCTION_PINS, signContractorAssertion, verifyContractorAssertion, type AssertionKey, type NonceStore } from "../lib/my-trusthub/contractor-assertion";
+import { memoryAckStore } from "../lib/my-trusthub/ack-store";
+import { CONTRACTOR_CANARIES, CONTRACTOR_CANARY_ACTIVE, CONTRACTOR_PARENT_SYNC_BROAD, gateAllows, parentStatus, parentSyncMode, prepareParentSave, productionHandoffDeps,
+  productionParentGate, type AdapterDeps, type ParentTransport } from "../lib/my-trusthub/parent-adapter";
 import { COOKIE_NAME, ENDPOINT_PATH, handleContractorProfileSave } from "../lib/my-trusthub/profile-save-http";
-import { handoffTargetAllowed, parentSync, resumeDirect, startDirect, type DirectPorts } from "../lib/my-trusthub/direct-save-client";
+import { contractorPublication, handleContractorSource } from "../lib/my-trusthub/source-callback";
+import { handoffTargetAllowed, parentSync, resumeDirect, startDirect, type DirectIntent, type DirectPorts } from "../lib/my-trusthub/direct-save-client";
 import { MY_TRUSTHUB_ACCOUNT_HREF, ONE_ACCOUNT_PRESENTATION, workspaceSyncCopy } from "../lib/my-trusthub/one-account";
 import type { ContractorDetail, LicenseDetail } from "../lib/contractors/types";
 
 const UUID = "0001ac38-0c96-4e2f-8bf6-9ab243f7b79b";
+const sha = (v: string) => createHash("sha256").update(v).digest("hex");
+const ref = () => randomBytes(32).toString("base64url");
 const license = (sourceSystem: string, externalKey: string, state: string | null = "FL"): LicenseDetail => ({
   id: "l-" + externalKey, externalKey, occupationCode: externalKey.replace(/\d/g, ""), licenseNumber: externalKey.replace(/\D/g, ""), statusNormalized: null, primaryStatus: null, secondaryStatus: null,
   originalLicensureDate: null, effectiveDate: null, expirationDate: null, addressLine1: null, city: null, state, postalCode: null, countyName: null, boardNumber: null,
@@ -37,7 +44,7 @@ const contractor = (patch: Partial<ContractorDetail> = {}): ContractorDetail => 
   id: UUID, slug: "ccc057187-a-r-roofing-inc", displayName: "A & R ROOFING INC", legalName: "A & R ROOFING INC", dbaName: null, primaryCity: null, primaryCounty: null,
   homeState: "FL", isThinProfile: false, licenses: [license("fl_dbpr", "CCC057187")], entities: [], discipline: [], ...patch });
 
-// Fixture publication source: the profiles the Trust Report read would return.
+// Fixture publication source: what the Trust Report read would return.
 const PROFILES: ContractorDetail[] = [
   contractor(),
   contractor({ id: "11111111-1111-4111-8111-111111111111", slug: "cfc1427249-a-sunny-plumbing-company", displayName: "A SUNNY PLUMBING COMPANY", licenses: [license("fl_dbpr", "CFC1427249")] }),
@@ -51,6 +58,7 @@ const PROFILES: ContractorDetail[] = [
   contractor({ id: "99999999-9999-4999-8999-999999999999", slug: "fixture-shared-key-a", licenses: [license("fl_dbpr", "CBC1250003")] }),
   contractor({ id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", slug: "fixture-shared-key-b", licenses: [license("fl_dbpr", "CBC1250003")] }),
   contractor({ id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb", slug: "fixture-bad-key", licenses: [license("fl_dbpr", "CCC 13 ; drop")] }),
+  contractor({ id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc", slug: "fixture-eligible-not-canary", licenses: [license("fl_dbpr", "CMC1249999")] }),
 ];
 function source(rows = PROFILES) {
   const reads: string[] = [];
@@ -60,61 +68,152 @@ function source(rows = PROFILES) {
   };
   return { reader, reads };
 }
-const keys = () => { const pair = generateKeyPairSync("ed25519"); return {
-  priv: { kid: "contractor-test", pem: pair.privateKey.export({ type: "pkcs8", format: "pem" }).toString() },
-  pub: { kid: "contractor-test", pem: pair.publicKey.export({ type: "spki", format: "pem" }).toString() } }; };
-const BROWSER = "b".repeat(43);
+const keypair = (kid: string) => { const pair = generateKeyPairSync("ed25519"); return {
+  priv: { kid, pem: pair.privateKey.export({ type: "pkcs8", format: "pem" }).toString() } as AssertionKey,
+  pub: { kid, pem: pair.publicKey.export({ type: "spki", format: "pem" }).toString() } as AssertionKey }; };
+const memoryNonces = (): NonceStore => { const seen = new Set<string>(); return { claim: async (k) => (seen.has(k) ? false : (seen.add(k), true)) }; };
 const IDENTITY = { hub: "contractor", profileClass: "contractor_profile", identifierNamespace: "fl.dbpr.license", sourceIdentifier: "CCC057187", jurisdiction: "FL",
   canonicalSlug: "ccc057187-a-r-roofing-inc", returnPath: "/contractors/ccc057187-a-r-roofing-inc" } as const;
-const deps = (mode: ParentSyncMode, patch: Partial<AdapterDeps> = {}): AdapterDeps => ({ mode, reader: source().reader, key: null, port: DISABLED_PARENT_PORT, now: Date.now, ...patch });
+const CANARY = [
+  { slug: "ccc057187-a-r-roofing-inc", key: "CCC057187", digest: "9c9f6fc29435beac2f7f90dda198d99d7468dac061cbe78725cc1d798df48f4f" },
+  { slug: "cfc1427249-a-sunny-plumbing-company", key: "CFC1427249", digest: "2d42c7d91683606664082cbb2adc6fe8b5ae7d7cfeb1d56686773c27193fe565" },
+  { slug: "cgc1506243-abs-contracting-inc", key: "CGC1506243", digest: "f104be2ddf33359ef8bb7ec31e740491323255710b703b6d3035c70be9aee93f" },
+] as const;
+const SLUG = CANARY[0].slug;
 
-test("F/G/H. device Save toggle: Save -> Saved -> Save -> Saved, one row, no network", () => {
+/**
+ * The pair, simulated end to end with the real Contractor modules.
+ *
+ * `ask` behaves as My TrustHub does for Move and Lender today: it verifies the
+ * hub's service assertion on the parent API, stages a transfer and a
+ * continuation, and when the browser arrives on the form it calls the hub's
+ * signed source callback (resolve, source, acknowledge). It acts on an account
+ * only under a session and only for an identity it holds one accepted binding for.
+ */
+function pair(options: { canary?: boolean; broad?: boolean } = {}) {
+  const contractorKey = keypair("contractor-v23-test"), askKey = keypair("ask-v23-test");
+  const { reader, reads } = source();
+  const acks = memoryAckStore();
+  const contractorNonces = memoryNonces(), askNonces = memoryNonces();
+  const ask = {
+    session: null as string | null, bindings: new Set(CANARY.map((c) => "fl.dbpr.license:" + c.key).concat(["fl.dbpr.license:CMC1249999"])), saved: new Set<string>(),
+    transfers: new Map<string, { manifest: ContractorManifest; browser: string; expiresAt: number }>(), continuations: new Map<string, string>(),
+    apiCalls: [] as Array<{ operation: string; claims: Record<string, unknown>; envelope: Record<string, unknown> }>, forms: [] as Array<{ target: string; fields: Record<string, string> }>,
+    abandon: false, refuseUnsave: false, sourceStatuses: [] as number[],
+  };
+  const parent: ParentTransport = async (call) => {
+    const url = PARENT_ORIGIN + PARENT_API_PATH, bytes = Buffer.from(call.body);
+    const request = new Request(url, { method: "POST", headers: { "content-type": "application/json", [ASSERTION_HEADER]: call.assertion }, body: bytes });
+    let claims;
+    try { claims = await verifyContractorAssertion(request, bytes, contractorKey.pub, "contractor", "transfer:stage", askNonces); } catch { return { ok: false }; }
+    const envelope = JSON.parse(call.body) as { version: string; operation: string; input: Record<string, unknown> };
+    ask.apiCalls.push({ operation: envelope.operation, claims: claims as unknown as Record<string, unknown>, envelope: envelope as unknown as Record<string, unknown> });
+    if (Object.keys(envelope).sort().join() !== "input,operation,version" || envelope.version !== RUNTIME_VERSION) return { ok: false };
+    if (envelope.operation === "prepareGuestProfileTransfer") {
+      const manifest = envelope.input as unknown as ContractorManifest;
+      // Exactly one accepted binding for this exact identity, or nothing is staged.
+      if (!isContractorManifest(manifest) || !ask.bindings.has(manifest.returnTask.profile.nativeId)) return { ok: false };
+      const transferRef = ref(), expiresAt = Date.now() + 600_000;
+      ask.transfers.set(transferRef, { manifest, browser: claims.browser, expiresAt });
+      return { ok: true, operation: envelope.operation, result: { transferRef, manifestDigest: manifestDigest(manifest), expiresAt } };
+    }
+    if (envelope.operation === "prepareProfileSaveContinuation") {
+      const input = envelope.input as { sourceHub: string; audience: string; transferRef: string; manifestDigest: string };
+      const transfer = ask.transfers.get(input.transferRef);
+      if (!transfer || transfer.browser !== claims.browser || input.sourceHub !== "contractor" || input.audience !== "ask" || input.manifestDigest !== manifestDigest(transfer.manifest)) return { ok: false };
+      const continuationRef = ref(); ask.continuations.set(continuationRef, input.transferRef);
+      return { ok: true, operation: envelope.operation, result: { continuationRef, expiresAt: transfer.expiresAt } };
+    }
+    return { ok: false };
+  };
+  const sourceOptions = { reader, key: askKey.pub, nonces: contractorNonces, acks };
+  const callSource = async (body: unknown, scope: "source:read" | "source:ack", browser: string, signer: AssertionKey = askKey.priv) => {
+    const bytes = Buffer.from(JSON.stringify(body)), url = CONTRACTOR_ORIGIN + SOURCE_PATH;
+    const response = await handleContractorSource(new Request(url, { method: "POST", body: bytes, headers: { "content-type": "application/json",
+      [ASSERTION_HEADER]: signContractorAssertion(signer, "ask", url, scope, bytes, browser) } }), sourceOptions);
+    ask.sourceStatuses.push(response.status);
+    return { status: response.status, body: await response.json() as { ok: boolean; result?: Record<string, unknown> } };
+  };
+  /** The browser's top-level form POST arriving at the parent, then the follow-up GET. */
+  const arrive = async (target: string, fields: Record<string, string>) => {
+    ask.forms.push({ target, fields });
+    if (ask.abandon) return;                                   // the user clicked away mid-chain
+    const transferRef = ask.continuations.get(fields.continuationRef!); const transfer = transferRef ? ask.transfers.get(transferRef) : null;
+    if (!transfer || !transferRef) return;
+    const snapshot = await callSource({ action: "source", continuationRef: fields.continuationRef, transferRef, manifest: transfer.manifest,
+      manifestDigest: manifestDigest(transfer.manifest), expiresAt: transfer.expiresAt }, "source:read", transfer.browser);
+    if (snapshot.status !== 200 || snapshot.body.result!.browserProof !== transfer.browser) return;
+    if (fields.intent === "save_signin" && !ask.session) ask.session = "owner-a";  // the customer signs in on My TrustHub
+    if (!ask.session) return;                                  // signed out: return without asking
+    const profile = transfer.manifest.returnTask.profile, row = ask.session + ":" + profile.nativeId;
+    const published = await callSource({ action: "resolve", profile }, "source:read", transfer.browser);
+    if (published.status !== 200) return;
+    let outcome: string;
+    if (fields.intent === "unsave") { if (ask.refuseUnsave) return; ask.saved.delete(row); outcome = "local_only"; }
+    else { outcome = ask.saved.has(row) ? "already_saved" : "saved"; ask.saved.add(row); }
+    await callSource({ action: "acknowledge", continuationRef: fields.continuationRef, receipts: [{ receiptRef: ref(), requestKey: snapshot.body.result!.requestPrefix + ":0",
+      accountContextRef: ref(), manifestDigest: manifestDigest(transfer.manifest), item: transfer.manifest.selected[0], parent: { outcome }, project: { outcome: "not_requested" }, localCopy: "keep" }] },
+      "source:ack", transfer.browser, askKey.priv);
+  };
+  const deps: AdapterDeps = { mode: "gated", gate: { broad: options.broad ?? false, canary: options.canary ?? true }, reader, key: contractorKey.priv, parent, acks, now: Date.now };
+  // The browser: one cookie jar, device storage, the same-origin endpoint, a native form POST.
+  let cookie = "";
+  const origin = CONTRACTOR_ORIGIN, bff: Array<{ action: string; status: number }> = [];
+  const pending: Promise<void>[] = [];
+  const ports: DirectPorts = {
+    async post(body, csrf) {
+      const response = await handleContractorProfileSave(new Request(origin + ENDPOINT_PATH, { method: "POST", body: JSON.stringify(body),
+        headers: { origin, "sec-fetch-site": "same-origin", "content-type": "application/json", ...(cookie ? { cookie } : {}), ...(csrf ? { "x-cth-csrf": csrf } : {}) } }), deps, origin);
+      bff.push({ action: (body as { action: string }).action, status: response.status });
+      const set = response.headers.get("set-cookie"); if (set) cookie = set.split(";")[0]!;
+      if (!response.ok) throw new Error("unavailable");
+      return response.json();
+    },
+    submit(target, fields) { pending.push(arrive(target, fields)); },
+    local: storage,
+  };
+  const click = async (slug: string, intent: DirectIntent) => { const result = await startDirect(ports, slug, intent); await Promise.all(pending.splice(0)); return result; };
+  return { ask, deps, ports, click, reads, acks, contractorKey, askKey, callSource, bff, browserBinding: () => cookie.split("=")[1]!, sourceOptions };
+}
+
+test("H/I/J. device Save toggle: Save -> Saved -> Save -> Saved, one row, no network", () => {
   device.clear(); networkCalls = 0;
-  const slug = "ccc057187-a-r-roofing-inc";
-  assert.equal(isContractorSaved(slug), false);
-  const first = saveContractor({ slug, name: "A & R ROOFING INC", profileId: UUID });
-  assert.equal(isContractorSaved(slug), true);
-  assert.deepEqual({ ...first, savedAt: "" }, { slug, name: "A & R ROOFING INC", profileId: UUID, profileClass: "contractor_profile", savedAt: "", sync: "device" });
-  unsaveContractor(slug);
-  assert.equal(isContractorSaved(slug), false); assert.deepEqual(listSavedContractors(), []);
-  saveContractor({ slug, name: "A & R ROOFING INC", profileId: UUID });
-  const again = saveContractor({ slug, name: "renamed", profileId: UUID });
+  assert.equal(isContractorSaved(SLUG), false);
+  const first = saveContractor({ slug: SLUG, name: "A & R ROOFING INC", profileId: UUID });
+  assert.equal(isContractorSaved(SLUG), true);
+  assert.deepEqual({ ...first, savedAt: "" }, { slug: SLUG, name: "A & R ROOFING INC", profileId: UUID, profileClass: "contractor_profile", savedAt: "", sync: "device" });
+  unsaveContractor(SLUG);
+  assert.equal(isContractorSaved(SLUG), false); assert.deepEqual(listSavedContractors(), []);
+  saveContractor({ slug: SLUG, name: "A & R ROOFING INC", profileId: UUID });
+  const again = saveContractor({ slug: SLUG, name: "renamed", profileId: UUID });
   assert.equal(listSavedContractors().length, 1); assert.equal(again?.name, "A & R ROOFING INC");
   unsaveContractor("not-saved"); assert.equal(saveContractor({ slug: "../x", name: "x" }), null); assert.equal(saveContractor({ slug: "Has Space", name: "x" }), null);
-  assert.equal(listSavedContractors().length, 1);
   device.set(SAVED_STORAGE_KEY, JSON.stringify([listSavedContractors()[0], listSavedContractors()[0], { slug: 7 }, null]));
   assert.equal(listSavedContractors().length, 1);
   assert.equal(networkCalls, 0);
 });
 
-test("I. Save is not Watch: neither store touches the other", () => {
+test("K. Save is not Watch: neither store touches the other", () => {
   device.clear();
   watchContractor({ slug: "watched-co", name: "Watched Co", licenseKey: "CGC1", licenseStatus: "active" });
   const watchesBefore = device.get(PROJECTS_KEY);
-  saveContractor({ slug: "ccc057187-a-r-roofing-inc", name: "A & R ROOFING INC", profileId: UUID });
-  unsaveContractor("ccc057187-a-r-roofing-inc");
-  saveContractor({ slug: "ccc057187-a-r-roofing-inc", name: "A & R ROOFING INC", profileId: UUID });
+  saveContractor({ slug: SLUG, name: "A & R ROOFING INC", profileId: UUID }); unsaveContractor(SLUG); saveContractor({ slug: SLUG, name: "A & R ROOFING INC", profileId: UUID });
   assert.equal(device.get(PROJECTS_KEY), watchesBefore, "the watch/projects store is byte-for-byte unchanged by Save and Unsave");
-  assert.equal(isWatching("ccc057187-a-r-roofing-inc"), false); assert.equal(listWatches().length, 1);
-  assert.equal(isContractorSaved("watched-co"), false);
-  for (const file of ["lib/saved/store.ts", "components/contractor/SaveContractorToggle.tsx", "components/saved/SavedContractorsClient.tsx", "lib/my-trusthub/direct-save-client.ts",
-    "lib/my-trusthub/parent-adapter.ts", "lib/my-trusthub/manifest.ts", "lib/my-trusthub/publication.ts", "lib/my-trusthub/profile-save-http.ts"]) {
+  assert.equal(isWatching(SLUG), false); assert.equal(listWatches().length, 1); assert.equal(isContractorSaved("watched-co"), false);
+  for (const file of fs.readdirSync("lib/my-trusthub").map((f) => "lib/my-trusthub/" + f).concat(["lib/saved/store.ts", "components/contractor/SaveContractorToggle.tsx", "components/saved/SavedContractorsClient.tsx"]))
     assert.doesNotMatch(fs.readFileSync(file, "utf8"), /from "@\/lib\/projects\/store"|watchContractor|unwatchContractor|consumer_watch/, file);
-  }
 });
 
-test("J/K. one toggle on the Trust Report; Compare, Watch and My Contractor are unchanged", () => {
+test("L/M. one toggle on the Trust Report; Compare, Watch and My Contractor are unchanged", () => {
   const toggle = fs.readFileSync("components/contractor/SaveContractorToggle.tsx", "utf8");
   assert.equal(toggle.split("<button").length - 1, 1);
-  assert.match(toggle, /aria-pressed=\{mounted \? saved : undefined\}/);
-  assert.match(toggle, /\{saved \? "Saved" : "Save"\}/);
+  assert.match(toggle, /aria-pressed=\{mounted \? saved : undefined\}/); assert.match(toggle, /\{saved \? "Saved" : "Save"\}/);
   assert.doesNotMatch(toggle, />\s*Unsave\s*<|Keep this in My TrustHub|Confirm Save/);
-  // Parent sync UI is off unless the build flag is set, and only on the canonical profile of an eligible profile.
   assert.match(toggle, /PARENT_SYNC_UI = process\.env\.NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC === "1"/);
   assert.match(toggle, /const direct = PARENT_SYNC_UI && syncEligible && pathname === "\/contractors\/" \+ slug/);
-  // Device change always precedes any hand-off.
   assert.ok(toggle.indexOf("saveContractor({ slug, name, profileId })") < toggle.indexOf('await handOff("save")'));
   assert.ok(toggle.indexOf("unsaveContractor(slug);") < toggle.indexOf('await handOff("unsave")'));
+  assert.match(toggle, /Keep this page open/); assert.match(toggle, /handOff\("save_signin"\)/); assert.match(toggle, /May still be saved in My TrustHub/);
   const page = fs.readFileSync("app/contractors/[slug]/page.tsx", "utf8");
   assert.match(page, /deviceSaveAllowed\(contractor\) \? \(\s*<SaveContractorToggle slug=\{contractor\.slug\} name=\{contractor\.displayName\} profileId=\{contractor\.id\} syncEligible=\{parentSaveReadiness\(contractor\)\.ready\} \/>/);
   assert.doesNotMatch(fs.readFileSync("app/credentials/[id]/page.tsx", "utf8"), /SaveContractorToggle/);
@@ -127,288 +226,329 @@ test("J/K. one toggle on the Trust Report; Compare, Watch and My Contractor are 
   assert.match(workspace, /<SavedContractorsClient \/>/);
 });
 
-test("identity: Florida DBPR license key is the native identity; the contractor UUID never is", () => {
+test("E/F/G. identity: the Florida DBPR license key is the identity; thin, multi-license and non-FL profiles are device only", () => {
   const ready = parentSaveReadiness(contractor());
   assert.deepEqual(ready, { ready: true, identity: IDENTITY });
-  // The UUID changing (a re-ingest) does not change the identity at all.
-  assert.deepEqual(parentSaveReadiness(contractor({ id: "ffffffff-ffff-4fff-8fff-ffffffffffff" })), ready);
+  assert.deepEqual(parentSaveReadiness(contractor({ id: "ffffffff-ffff-4fff-8fff-ffffffffffff" })), ready, "the contractor UUID is not part of the identity");
   assert.doesNotMatch(JSON.stringify(ready), new RegExp(UUID));
   assert.deepEqual(FL_DBPR, { sourceSystem: "fl_dbpr", namespace: "fl.dbpr.license", jurisdiction: "FL" });
   const not = (patch: Partial<ContractorDetail>) => { const r = parentSaveReadiness(contractor(patch)); return r.ready ? "ready" : r.reason; };
-  assert.equal(not({ licenses: [] }), "no_fl_dbpr_credential");                                    // B
-  assert.equal(not({ isThinProfile: true }), "thin_profile");                                       // C
-  assert.equal(not({ homeState: "NJ", licenses: [license("nj_dca", "13VH01234500", "NJ")] }), "not_florida");  // D wrong state
+  assert.equal(not({ isThinProfile: true }), "thin_profile");                                                                          // E
+  assert.equal(not({ licenses: [license("fl_dbpr", "CGC1500002"), license("fl_dbpr", "CCC1300002")] }), "multiple_fl_credentials");   // F
+  assert.equal(not({ homeState: "NJ", licenses: [license("nj_dca", "13VH01234500", "NJ")] }), "not_florida");                         // G
   assert.equal(not({ homeState: null }), "not_florida");
   for (const other of ["nj_dca", "ca_cslb", "tx_tdlr", "tx_tsbpe", "wa_lni", "az_roc", "or_ccb", "co_dora", "la_lslbc", "ms_sbc", "ky_dhbc"])
-    assert.equal(not({ licenses: [license(other, "X12345", null)] }), "multi_jurisdiction", other);  // D wrong source
-  assert.equal(not({ licenses: [license("fl_dbpr", "CGC1500001"), license("nj_dca", "13VH09999900", "NJ")] }), "multi_jurisdiction");  // E
-  assert.equal(not({ licenses: [license("fl_dbpr", "CGC1500002"), license("fl_dbpr", "CCC1300002")] }), "multiple_fl_credentials");
+    assert.equal(not({ licenses: [license(other, "X12345", null)] }), "multi_jurisdiction", other);
+  assert.equal(not({ licenses: [license("fl_dbpr", "CGC1500001"), license("nj_dca", "13VH09999900", "NJ")] }), "multi_jurisdiction");
+  assert.equal(not({ licenses: [] }), "no_fl_dbpr_credential");
   assert.equal(not({ licenses: [license("fl_dbpr", "CCC 13 ; drop")] }), "invalid_credential_key");
-  assert.equal(not({ licenses: [license("fl_dbpr", "   ")] }), "invalid_credential_key");
   assert.equal(not({ slug: "" }), "missing_slug");
-  // The same key listed twice is one credential.
   assert.equal(not({ licenses: [license("fl_dbpr", "CCC057187"), license("fl_dbpr", "CCC057187")] }), "ready");
-  // Device Save is wider than parent readiness: real non-thin Trust Reports only.
   assert.equal(deviceSaveAllowed(contractor({ homeState: "CA", licenses: [license("ca_cslb", "1012345", "CA")] })), true);
   assert.equal(deviceSaveAllowed(contractor({ isThinProfile: true })), false);
   const binding = { hub: "contractor", specialistEntityType: "contractor_profile", identifierNamespace: "fl.dbpr.license", sourceIdentifier: "CCC057187", jurisdiction: "FL", status: "accepted" };
   assert.equal(bindingMatchesIdentity(IDENTITY, binding), true);
-  for (const patch of [{ status: "review_required" }, { hub: "move" }, { specialistEntityType: "mover" }, { identifierNamespace: "nj.dca.license" }, { sourceIdentifier: "CCC0000000" },
-    { sourceIdentifier: "A & R ROOFING INC" }, { sourceIdentifier: UUID }, { jurisdiction: "NJ" }, { jurisdiction: null }])
+  for (const patch of [{ status: "review_required" }, { hub: "move" }, { specialistEntityType: "mover" }, { identifierNamespace: "nj.dca.license" }, { sourceIdentifier: "CCC0000000" }, { sourceIdentifier: UUID }, { jurisdiction: "NJ" }, { jurisdiction: null }])
     assert.equal(bindingMatchesIdentity(IDENTITY, { ...binding, ...patch }), false, JSON.stringify(patch));
 });
 
-test("A–E. publication: exact slug in, exact credential identity out; everything else is device only", async () => {
+test("publication: exact slug in, exact credential identity out; the parent's re-check takes the shared profile identity only", async () => {
   const { reader, reads } = source();
-  assert.deepEqual(await resolveBySlug(reader, "ccc057187-a-r-roofing-inc"), { eligible: true, identity: IDENTITY });                         // A
-  for (const [slug, key] of [["cfc1427249-a-sunny-plumbing-company", "CFC1427249"], ["cgc1506243-abs-contracting-inc", "CGC1506243"]] as const) {
-    const r = await resolveBySlug(reader, slug); assert.equal(r.eligible && r.identity.sourceIdentifier, key); assert.equal(r.eligible && r.identity.returnPath, "/contractors/" + slug);
-  }
+  assert.deepEqual(await resolveBySlug(reader, SLUG), { eligible: true, identity: IDENTITY });
   const reason = async (slug: unknown) => { const r = await resolveBySlug(reader, slug); return r.eligible ? "eligible" : r.reason; };
-  assert.equal(await reason("fixture-no-credential"), "no_fl_dbpr_credential");   // B
-  assert.equal(await reason("fixture-thin"), "thin_profile");                     // C
-  assert.equal(await reason("fixture-nj"), "not_florida");                        // D
-  assert.equal(await reason("fixture-ca"), "not_florida");                        // D
-  assert.equal(await reason("fixture-fl-and-nj"), "multi_jurisdiction");          // E
-  assert.equal(await reason("fixture-two-fl-licenses"), "multiple_fl_credentials");
-  assert.equal(await reason("fixture-shared-key-a"), "credential_not_unique");
-  assert.equal(await reason("fixture-bad-key"), "invalid_credential_key");
-  assert.equal(await reason("no-such-contractor"), "not_public");
+  for (const [slug, expected] of [["fixture-no-credential", "no_fl_dbpr_credential"], ["fixture-thin", "thin_profile"], ["fixture-nj", "not_florida"], ["fixture-ca", "not_florida"],
+    ["fixture-fl-and-nj", "multi_jurisdiction"], ["fixture-two-fl-licenses", "multiple_fl_credentials"], ["fixture-shared-key-a", "credential_not_unique"], ["fixture-bad-key", "invalid_credential_key"],
+    ["no-such-contractor", "not_public"]] as const) assert.equal(await reason(slug), expected, slug);
   reads.length = 0;
-  for (const bad of ["A & R ROOFING INC", "CCC057187", UUID.toUpperCase(), "../ccc057187-a-r-roofing-inc", "ccc057187-a-r-roofing-inc?x=1", "", null, 7, { slug: "x" }])
-    assert.equal(await reason(bad), "missing_slug", String(bad));
+  for (const bad of ["A & R ROOFING INC", "CCC057187", UUID.toUpperCase(), "../" + SLUG, SLUG + "?x=1", "", null, 7, { slug: "x" }]) assert.equal(await reason(bad), "missing_slug", String(bad));
   assert.deepEqual(reads, [], "malformed input never reaches the source");
-  // An alias that resolves to a different canonical slug is not the profile.
-  const alias: ProfileReader = { ...reader, bySlug: async () => contractor({ slug: "some-other-canonical-slug" }) };
-  assert.deepEqual(await resolveBySlug(alias, "ccc057187-a-r-roofing-inc"), { eligible: false, reason: "not_public" });
-  const down: ProfileReader = { bySlug: async () => { throw new Error("db"); }, slugsForFloridaCredential: async () => [] };
-  assert.deepEqual(await resolveBySlug(down, "ccc057187-a-r-roofing-inc"), { eligible: false, reason: "source_unavailable" });
-  // The parent's re-check takes the exact credential identity and nothing else.
-  const asked = { hub: "contractor", profileClass: "contractor_profile", identifierNamespace: "fl.dbpr.license", sourceIdentifier: "CCC057187", jurisdiction: "FL" };
-  assert.deepEqual(await resolveByIdentity(reader, asked), IDENTITY);
-  for (const bad of [{ ...asked, sourceIdentifier: "CBC1250003" }, { ...asked, sourceIdentifier: "CCC9999999" }, { ...asked, sourceIdentifier: "A & R ROOFING INC" }, { ...asked, sourceIdentifier: UUID },
-    { ...asked, jurisdiction: "NJ" }, { ...asked, identifierNamespace: "nj.dca.license" }, { ...asked, profileClass: "standalone_credential" }, { ...asked, hub: "move" },
-    { ...asked, contractorId: UUID }, { ...asked, slug: "ccc057187-a-r-roofing-inc" }, "CCC057187", null])
-    assert.equal(await resolveByIdentity(reader, bad), null, JSON.stringify(bad));
-  assert.equal(isFloridaIdentityInput(asked), true);
+  const asked = { hub: "contractor", nativeId: "fl.dbpr.license:CCC057187", profileClass: "contractor_profile" };
+  assert.deepEqual(await resolveByProfile(reader, asked), IDENTITY);
+  assert.deepEqual({ ...(await contractorPublication(reader, asked, 5))! }, { identity: asked, canonicalSlug: SLUG, publicationState: "PUBLISHABLE", reviewedClass: "contractor_profile", checkedAt: 5 });
+  for (const bad of [{ ...asked, nativeId: "fl.dbpr.license:CBC1250003" }, { ...asked, nativeId: "fl.dbpr.license:CCC9999999" }, { ...asked, nativeId: "nj.dca.license:CCC057187" }, { ...asked, nativeId: "CCC057187" },
+    { ...asked, nativeId: UUID }, { ...asked, nativeId: SLUG }, { ...asked, nativeId: "A & R ROOFING INC" }, { ...asked, profileClass: "standalone_credential" }, { ...asked, hub: "move" },
+    { ...asked, contractorId: UUID }, { ...asked, jurisdiction: "NJ" }, "fl.dbpr.license:CCC057187", null])
+    assert.equal(await resolveByProfile(reader, bad), null, JSON.stringify(bad));
 });
 
-test("signed manifest: exact credential identity, closed field set, no UUID or name, verifiable and tamper-evident", () => {
-  const k = keys(), now = 1_800_000_000_000;
-  const manifest = buildManifest(IDENTITY, "save", BROWSER, now);
-  assert.deepEqual(Object.keys(manifest), ["version", "hub", "audience", "intent", "profile_class", "identifier_namespace", "source_identifier", "jurisdiction",
-    "canonical_return_path", "browser", "nonce", "issued_at", "expires_at"]);
-  assert.deepEqual({ ...manifest, browser: "", nonce: "" }, { version: MANIFEST_VERSION, hub: "contractor", audience: "ask", intent: "save", profile_class: "contractor_profile",
-    identifier_namespace: "fl.dbpr.license", source_identifier: "CCC057187", jurisdiction: "FL", canonical_return_path: "/contractors/ccc057187-a-r-roofing-inc",
-    browser: "", nonce: "", issued_at: 1_800_000_000, expires_at: 1_800_000_600 });
-  const wire = manifestBytes(manifest).toString("utf8");
-  assert.doesNotMatch(wire, new RegExp(UUID)); assert.doesNotMatch(wire, /A & R ROOFING INC|displayName|display_name|legal|email|contractor_id|network_entity/i); assert.doesNotMatch(wire, new RegExp(BROWSER));
-  const token = signManifest(manifest, k.priv);
-  assert.deepEqual(verifyManifest(token, k.pub, BROWSER, now), manifest);
-  assert.equal(manifestDigest(manifest).length, 64);
-  // Wrong key, wrong browser, expired, not yet valid, tampered payload, wrong key id.
-  assert.equal(verifyManifest(token, keys().pub, BROWSER, now), null);
-  assert.equal(verifyManifest(token, k.pub, "c".repeat(43), now), null);
-  assert.equal(verifyManifest(token, k.pub, BROWSER, now + 601_000), null);
-  assert.equal(verifyManifest(token, k.pub, BROWSER, now - 60_000), null);
-  assert.equal(verifyManifest(token, { ...k.pub, kid: "other" }, BROWSER, now), null);
-  const [h, , s] = token.split(".");
-  for (const patch of [{ source_identifier: "CGC1506243" }, { jurisdiction: "NJ" }, { canonical_return_path: "/contractors/other" }, { intent: "unsave" }, { contractor_id: UUID }]) {
-    const forged = Buffer.from(JSON.stringify({ ...manifest, ...patch })).toString("base64url");
-    assert.equal(verifyManifest(`${h}.${forged}.${s}`, k.pub, BROWSER, now), null, JSON.stringify(patch));
+test("P. manifest: the shared v3 selected-profiles wire with the exact Florida identity (digests match Ask's contract code)", () => {
+  for (const c of CANARY) {
+    const m = contractorManifest({ sourceIdentifier: c.key, canonicalSlug: c.slug });
+    const profile = { hub: "contractor", nativeId: "fl.dbpr.license:" + c.key, profileClass: "contractor_profile" };
+    assert.deepEqual(m, { version: "v2-3/selected-profiles/3", sourceHub: "contractor", audience: "ask",
+      selected: [{ localItemId: c.slug, revision: "1", digest: sha(JSON.stringify([profile.nativeId, "/contractors/" + c.slug])), profile }],
+      returnTask: { kind: "profile", hub: "contractor", canonicalSlug: c.slug, profile, returnPath: "/contractors/" + c.slug } });
+    // Golden: computed by Ask's manifestDigest (Conumers-Trust-Hub main 39decff) for this exact manifest.
+    assert.equal(manifestDigest(m), c.digest, c.slug);
+    assert.equal(isContractorManifest(m), true);
+    assert.deepEqual(parseContractorNativeId(m.returnTask.profile.nativeId), { identifierNamespace: "fl.dbpr.license", sourceIdentifier: c.key, jurisdiction: "FL" });
+    assert.doesNotMatch(JSON.stringify(m), /[0-9a-f]{8}-[0-9a-f]{4}-4|displayName|legal|email|network/i);
   }
-  // The closed shape refuses extra fields and anything outside the Florida grain.
-  for (const patch of [{ contractor_id: UUID }, { display_name: "A & R" }, { identifier_namespace: "nj.dca.license" }, { jurisdiction: "NJ" }, { source_identifier: UUID },
-    { source_identifier: "A & R ROOFING INC" }, { canonical_return_path: "https://evil.example/contractors/x" }, { canonical_return_path: "/contractors/../x" }, { hub: "move" }, { profile_class: "standalone_credential" }])
-    assert.equal(isManifest({ ...manifest, ...patch }), false, JSON.stringify(patch));
-  assert.throws(() => buildManifest(IDENTITY, "watch" as never, BROWSER)); assert.throws(() => buildManifest(IDENTITY, "save", "short"));
-  // No signing key is configured anywhere today.
-  assert.equal(manifestSigningKey({}), null); assert.equal(manifestSigningKey({ MY_TRUSTHUB_CONTRACTOR_KEY_ID: "k", MY_TRUSTHUB_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM: "not a key" }), null);
-  assert.deepEqual(manifestSigningKey({ MY_TRUSTHUB_CONTRACTOR_KEY_ID: "contractor-test", MY_TRUSTHUB_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM: k.priv.pem }), k.priv);
+  assert.equal(TRANSFER_VERSION_V3, "v2-3/selected-profiles/3"); assert.equal(RUNTIME_VERSION, "v2-3/parent-runtime/1");
+  assert.equal(PARENT_ORIGIN + PARENT_API_PATH, "https://www.asktrusthub.com/api/my-trusthub/profile-save");
+  assert.equal(PARENT_ORIGIN + PARENT_FORM_PATH, "https://www.asktrusthub.com/my/profile-save");
+  assert.equal(CONTRACTOR_ORIGIN + SOURCE_PATH, "https://www.contractortrusthub.com/api/my-trusthub/profile-save/source");
+  assert.equal(contractorNativeId("CCC057187"), "fl.dbpr.license:CCC057187");
+  for (const bad of ["ccc057187", "CCC 057187", UUID, "A & R", ""]) assert.equal(contractorNativeId(bad), null);
+  for (const bad of ["nj.dca.license:13VH01234500", "fl.dbpr.license:", "fl.dbpr.license:ccc057187", "fl.dbpr:CCC057187", "usdot-1002530", "nmls:123456", UUID, null, 7]) assert.equal(parseContractorNativeId(bad), null, String(bad));
+  const m = contractorManifest(IDENTITY);
+  // B/C: any change to the key, the namespace (jurisdiction), the class, the slug or the return path breaks the closed shape.
+  const clone = () => JSON.parse(JSON.stringify(m)) as ContractorManifest;
+  const tampered: Array<(x: ContractorManifest) => void> = [
+    (x) => { x.returnTask.profile.nativeId = "fl.dbpr.license:CGC1506243"; }, (x) => { x.selected[0]!.profile.nativeId = "fl.dbpr.license:CGC1506243"; },
+    (x) => { x.returnTask.profile.nativeId = "nj.dca.license:CCC057187"; x.selected[0]!.profile.nativeId = "nj.dca.license:CCC057187"; },
+    (x) => { x.returnTask.profile.nativeId = UUID; x.selected[0]!.profile.nativeId = UUID; }, (x) => { (x.returnTask.profile as { profileClass: string }).profileClass = "standalone_credential"; },
+    (x) => { x.returnTask.returnPath = "/contractors/some-other-slug"; }, (x) => { x.returnTask.canonicalSlug = "some-other-slug"; }, (x) => { (x as { sourceHub: string }).sourceHub = "move"; },
+    (x) => { (x as unknown as Record<string, unknown>).jurisdiction = "NJ"; }, (x) => { (x.returnTask as unknown as Record<string, unknown>).contractorId = UUID; }, (x) => { x.selected.push(x.selected[0]!); },
+  ];
+  for (const [i, change] of tampered.entries()) { const x = clone(); change(x); assert.equal(isContractorManifest(x), false, "tamper " + i); }
+  assert.throws(() => contractorManifest({ sourceIdentifier: "not a key", canonicalSlug: SLUG })); assert.throws(() => contractorManifest({ sourceIdentifier: "CCC057187", canonicalSlug: "Bad Slug" }));
 });
 
-test("A. adapter: an eligible Florida profile stages its exact identity; ineligible profiles stage nothing", async () => {
-  const k = keys();
-  // dry run: resolve + build + sign, then stop. Nobody is contacted.
-  let staged = 0; const counting: ContractorParentPort = { stage: async () => { staged++; return null; }, acknowledged: async () => false };
-  const dry = await prepareParentSave(deps("dry_run", { key: k.priv, port: counting }), "ccc057187-a-r-roofing-inc", "save", BROWSER);
-  assert.equal(dry.state, "staged_dry_run");
-  if (dry.state === "staged_dry_run") {
-    assert.deepEqual(dry.identity, { profileClass: "contractor_profile", identifierNamespace: "fl.dbpr.license", sourceIdentifier: "CCC057187", jurisdiction: "FL", returnPath: "/contractors/ccc057187-a-r-roofing-inc" });
-    assert.equal(dry.signed, true); assert.match(dry.manifestDigest, /^[a-f0-9]{64}$/); assert.doesNotMatch(JSON.stringify(dry), new RegExp(UUID));
+test("P. assertion: the shared v23 service assertion with a contractor_origin claim", async () => {
+  const k = keypair("contractor-v23-test"), nonces = memoryNonces(), now = 1_800_000_000_000;
+  const url = PARENT_ORIGIN + PARENT_API_PATH, body = Buffer.from(JSON.stringify({ version: RUNTIME_VERSION, operation: "prepareGuestProfileTransfer", input: {} })), browser = "b".repeat(43);
+  const token = signContractorAssertion(k.priv, "contractor", url, "transfer:stage", body, browser, null, null, now);
+  const [h, c] = token.split(".").slice(0, 2).map((part) => JSON.parse(Buffer.from(part, "base64url").toString("utf8")) as Record<string, unknown>);
+  assert.deepEqual(h, { alg: "EdDSA", typ: "trusthub-v23+jws", kid: "contractor-v23-test" });
+  // Same claim set as Move and Lender, with the hub claim named for Contractor.
+  assert.equal(Object.keys(c!).sort().join(), "ask_origin,aud,body_sha256,browser,contractor_origin,exp,grant,iat,iss,jti,method,path,scope,session,sub,v");
+  assert.deepEqual({ ...c, jti: "" }, { v: 1, iss: "urn:trusthub:v23:qvvxvbcdmbjzrgvwjatw:contractor", sub: "svc:trusthub:contractor:v23:production", aud: url, scope: "transfer:stage",
+    method: "POST", path: "/api/my-trusthub/profile-save", body_sha256: sha(body.toString()), iat: 1_800_000_000, exp: 1_800_000_030, jti: "",
+    ask_origin: "https://www.asktrusthub.com", contractor_origin: "https://www.contractortrusthub.com", browser, session: null, grant: null });
+  assert.equal(ASSERTION_HEADER, "x-trusthub-v23-assertion"); assert.equal(ASSERTION_TTL_SECONDS, 30);
+  assert.deepEqual(CONTRACTOR_PRODUCTION_PINS, { parentOrigin: "https://www.asktrusthub.com", contractorOrigin: "https://www.contractortrusthub.com", project: "qvvxvbcdmbjzrgvwjatw", assertionEnvironment: "production" });
+  const request = (t = token, b = body, target = url) => new Request(target, { method: "POST", headers: { [ASSERTION_HEADER]: t }, body: b });
+  const claims = await verifyContractorAssertion(request(), body, k.pub, "contractor", "transfer:stage", nonces, now);
+  assert.equal(claims.browser, browser);
+  await assert.rejects(verifyContractorAssertion(request(), body, k.pub, "contractor", "transfer:stage", nonces, now), "replay");
+  const fresh = () => signContractorAssertion(k.priv, "contractor", url, "transfer:stage", body, browser, null, null, now);
+  await assert.rejects(verifyContractorAssertion(request(fresh(), Buffer.from("{}")), Buffer.from("{}"), k.pub, "contractor", "transfer:stage", memoryNonces(), now), "tampered body");
+  await assert.rejects(verifyContractorAssertion(request(fresh()), body, keypair("contractor-v23-test").pub, "contractor", "transfer:stage", memoryNonces(), now), "wrong key");
+  await assert.rejects(verifyContractorAssertion(request(fresh()), body, { ...k.pub, kid: "other" }, "contractor", "transfer:stage", memoryNonces(), now), "wrong kid");
+  await assert.rejects(verifyContractorAssertion(request(fresh()), body, k.pub, "contractor", "source:ack", memoryNonces(), now), "wrong scope");
+  await assert.rejects(verifyContractorAssertion(request(fresh()), body, k.pub, "ask", "transfer:stage", memoryNonces(), now), "wrong service");
+  await assert.rejects(verifyContractorAssertion(request(fresh()), body, k.pub, "contractor", "transfer:stage", memoryNonces(), now + 31_000), "expired");
+  await assert.rejects(verifyContractorAssertion(request(fresh(), body, PARENT_ORIGIN + "/api/other"), body, k.pub, "contractor", "transfer:stage", memoryNonces(), now), "wrong audience");
+  // A token carrying another hub's origin claim (Move or Lender shape) never verifies as Contractor.
+  for (const other of ["lender_origin", "move_origin"]) {
+    const forgedClaims = { ...c, jti: ref() } as Record<string, unknown>; forgedClaims[other] = forgedClaims.contractor_origin; delete forgedClaims.contractor_origin;
+    const unsigned = Buffer.from(JSON.stringify(h)).toString("base64url") + "." + Buffer.from(JSON.stringify(forgedClaims)).toString("base64url");
+    const { sign, createPrivateKey } = await import("node:crypto");
+    const forged = unsigned + "." + sign(null, Buffer.from(unsigned), createPrivateKey(k.priv.pem)).toString("base64url");
+    await assert.rejects(verifyContractorAssertion(request(forged), body, k.pub, "contractor", "transfer:stage", memoryNonces(), now), other);
   }
-  assert.equal(staged, 0);
-  for (const [slug, reason] of [["fixture-no-credential", "no_fl_dbpr_credential"], ["fixture-thin", "thin_profile"], ["fixture-nj", "not_florida"], ["fixture-ca", "not_florida"],
-    ["fixture-fl-and-nj", "multi_jurisdiction"], ["fixture-two-fl-licenses", "multiple_fl_credentials"], ["fixture-shared-key-a", "credential_not_unique"], ["no-such-contractor", "not_public"]] as const)
-    assert.deepEqual(await prepareParentSave(deps("dry_run", { key: k.priv, port: counting }), slug, "save", BROWSER), { state: "local_only", reason, localCopy: "keep" }, slug);
-  assert.equal(staged, 0);
-  // The shape of the eventual live path (no deployment can select it): the port
-  // receives a manifest whose signature verifies and whose identity is exact.
-  let seen: { manifest: SaveManifest; signed: string } | null = null;
-  const live: ContractorParentPort = { stage: async (manifest, signed) => { seen = { manifest, signed }; return { ticket: "t".repeat(43), target: PARENT_FORM_TARGET, continuationRef: "c".repeat(43) }; }, acknowledged: async (ticket) => ticket === "t".repeat(43) };
-  const liveDeps = deps("live" as ParentSyncMode, { key: k.priv, port: live });
-  assert.deepEqual(await prepareParentSave(liveDeps, "cfc1427249-a-sunny-plumbing-company", "unsave", BROWSER),
-    { state: "continue", ticket: "t".repeat(43), target: "https://www.asktrusthub.com/my/profile-save", fields: { continuationRef: "c".repeat(43) }, localCopy: "keep" });
-  assert.ok(seen); const captured = seen as unknown as { manifest: SaveManifest; signed: string };
-  assert.deepEqual(verifyManifest(captured.signed, k.pub, BROWSER), captured.manifest);
-  assert.equal(captured.manifest.source_identifier, "CFC1427249"); assert.equal(captured.manifest.intent, "unsave"); assert.equal(captured.manifest.canonical_return_path, "/contractors/cfc1427249-a-sunny-plumbing-company");
-  assert.equal(await parentStatus(liveDeps, "t".repeat(43), BROWSER), "parent_acknowledged"); assert.equal(await parentStatus(liveDeps, "x".repeat(43), BROWSER), "pending");
-  // No key, no accepted binding, or a parent target other than the fixed Ask form: nothing continues.
-  assert.equal((await prepareParentSave(deps("live" as ParentSyncMode, { port: live }), "ccc057187-a-r-roofing-inc", "save", BROWSER)).state, "unavailable");
-  assert.deepEqual(await prepareParentSave(deps("live" as ParentSyncMode, { key: k.priv }), "ccc057187-a-r-roofing-inc", "save", BROWSER), { state: "local_only", reason: "no_accepted_binding", localCopy: "keep" });
-  const elsewhere: ContractorParentPort = { ...live, stage: async () => ({ ticket: "t".repeat(43), target: "https://www.asktrusthub.com/my/saved", continuationRef: "c".repeat(43) }) };
-  assert.equal((await prepareParentSave(deps("live" as ParentSyncMode, { key: k.priv, port: elsewhere }), "ccc057187-a-r-roofing-inc", "save", BROWSER)).state, "unavailable");
+  // Contractor only ever signs toward the pinned parent origin; Ask only toward the pinned Contractor origin.
+  assert.throws(() => signContractorAssertion(k.priv, "contractor", "https://evil.example/api/my-trusthub/profile-save", "transfer:stage", body, browser));
+  assert.throws(() => signContractorAssertion(k.priv, "ask", url, "source:read", body, browser));
+  assert.throws(() => signContractorAssertion(k.priv, "contractor", url, "transfer:stage", body, "short"));
 });
 
-test("L. production parent sync is OFF: no environment enables it and the endpoint does nothing", async () => {
-  for (const env of [{}, { VERCEL_ENV: "production" }, { VERCEL_ENV: "production", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }, { VERCEL_ENV: "production", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "live" },
-    { VERCEL_ENV: "production", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "production" }, { MY_TRUSTHUB_CONTRACTOR_SAVE_ENABLED: "true" }, { NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC: "1" },
-    { MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "live" }, { MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "production" }]) assert.equal(parentSyncMode(env), "off", JSON.stringify(env));
-  assert.equal(parentSyncMode({ VERCEL_ENV: "preview", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }), "dry_run");
-  const { reader, reads } = source();
-  const off = deps("off", { reader, key: keys().priv });
-  assert.deepEqual(await prepareParentSave(off, "ccc057187-a-r-roofing-inc", "save", BROWSER), { state: "unavailable", localCopy: "keep" });
-  assert.equal(await parentStatus(off, "t".repeat(43), BROWSER), "unavailable");
-  const origin = "https://www.contractortrusthub.com", url = origin + ENDPOINT_PATH;
-  const post = (body: unknown, headers: Record<string, string> = {}, d: AdapterDeps = off) => handleContractorProfileSave(new Request(url, { method: "POST",
-    headers: { origin, "sec-fetch-site": "same-origin", "content-type": "application/json", ...headers }, body: JSON.stringify(body) }), d, origin);
-  for (const body of [{ action: "bootstrap" }, { action: "prepare", slug: "ccc057187-a-r-roofing-inc", intent: "save" }, { action: "status", ticket: "t".repeat(43) }]) {
-    const response = await post(body); assert.equal(response.status, 503); assert.equal(response.headers.get("set-cookie"), null);
-    assert.deepEqual(await response.json(), { state: "unavailable", localCopy: "keep" });
+test("A. signed hand-off: all three Florida canaries stage their exact signed identity and complete Save -> Unsave", async () => {
+  device.clear(); const p = pair(); p.ask.session = "owner-a";
+  for (const c of CANARY) {
+    saveContractor({ slug: c.slug, name: c.slug, profileId: UUID });
+    assert.equal(await p.click(c.slug, "save"), "navigating", c.slug);
+    const staged = p.ask.apiCalls.at(-2)!, continued = p.ask.apiCalls.at(-1)!;
+    assert.equal(staged.operation, "prepareGuestProfileTransfer"); assert.equal(continued.operation, "prepareProfileSaveContinuation");
+    const manifest = staged.envelope.input as unknown as ContractorManifest;
+    assert.equal(manifestDigest(manifest), c.digest); assert.equal(manifest.returnTask.profile.nativeId, "fl.dbpr.license:" + c.key); assert.equal(manifest.returnTask.returnPath, "/contractors/" + c.slug);
+    assert.equal(staged.claims.browser, p.browserBinding()); assert.equal(staged.claims.scope, "transfer:stage"); assert.equal(staged.claims.session, null); assert.equal(staged.claims.grant, null);
+    assert.deepEqual(Object.keys(continued.envelope.input as object).sort(), ["audience", "manifestDigest", "sourceHub", "transferRef"]);
+    // Top-level browser hand-off: exactly the parent form, exactly two fields.
+    assert.deepEqual([p.ask.forms.at(-1)!.target, Object.keys(p.ask.forms.at(-1)!.fields).sort().join(), p.ask.forms.at(-1)!.fields.intent], ["https://www.asktrusthub.com/my/profile-save", "continuationRef,intent", "save"]);
+    assert.deepEqual(await resumeDirect(p.ports, c.slug), { intent: "save", outcome: "confirmed" });
+    assert.equal(parentSync(storage, c.slug), "synced");
   }
-  assert.deepEqual(reads, [], "with sync off the publication source is never read");
-  assert.equal(await DISABLED_PARENT_PORT.stage(buildManifest(IDENTITY, "save", BROWSER), "x"), null);
-  assert.equal(await DISABLED_PARENT_PORT.acknowledged("t".repeat(43), BROWSER), false);
-  // Nothing on the server path can reach Ask: no transport exists in these modules.
-  for (const file of ["lib/my-trusthub/parent-adapter.ts", "lib/my-trusthub/manifest.ts", "lib/my-trusthub/publication.ts", "lib/my-trusthub/publication-server.ts", "lib/my-trusthub/profile-save-http.ts",
-    "lib/my-trusthub/profile-identity.ts", "app/api/my-trusthub/profile-save/route.ts"]) assert.doesNotMatch(fs.readFileSync(file, "utf8"), /fetch\(|Authorization|MY_TRUSTHUB_P13/, file);
-  assert.match(fs.readFileSync("app/api/my-trusthub/profile-save/route.ts", "utf8"), /port: DISABLED_PARENT_PORT/);
+  assert.deepEqual([...p.ask.saved].sort(), CANARY.map((c) => "owner-a:fl.dbpr.license:" + c.key).sort());
+  // Repeated Save: acknowledged as already saved, still one parent row per profile.
+  assert.equal(await p.click(SLUG, "save"), "navigating"); assert.equal((await resumeDirect(p.ports, SLUG))!.outcome, "confirmed"); assert.equal(p.ask.saved.size, 3);
+  // Unsave: device row removed first, parent row removed, acknowledged, control back to Save.
+  for (const c of CANARY) {
+    unsaveContractor(c.slug); assert.equal(isContractorSaved(c.slug), false);
+    assert.equal(await p.click(c.slug, "unsave"), "navigating"); assert.equal(p.ask.forms.at(-1)!.fields.intent, "unsave");
+    assert.deepEqual(await resumeDirect(p.ports, c.slug), { intent: "unsave", outcome: "confirmed" }); assert.equal(parentSync(storage, c.slug), null);
+  }
+  assert.equal(p.ask.saved.size, 0);
+  assert.ok(p.ask.sourceStatuses.every((status) => status === 200));
+  assert.equal(networkCalls, 0);
 });
 
-test("endpoint (dry run): same-origin + CSRF bound; the browser can send a slug and an intent, never an identity", async () => {
-  const origin = "http://localhost:3222", url = origin + ENDPOINT_PATH, k = keys();
-  const d = deps("dry_run", { key: k.priv });
-  const base = { origin, "sec-fetch-site": "same-origin", "content-type": "application/json" };
-  const call = (body: unknown, headers: Record<string, string> = base) => handleContractorProfileSave(new Request(url, { method: "POST", headers, body: JSON.stringify(body) }), d, origin);
-  const boot = await call({ action: "bootstrap" }); assert.equal(boot.status, 200);
-  const { csrf } = await boot.json() as { csrf: string };
-  assert.match(boot.headers.get("set-cookie") ?? "", new RegExp(`^${COOKIE_NAME}=${csrf}; Path=/api/my-trusthub/profile-save; HttpOnly; SameSite=Strict`));
-  const auth = { ...base, cookie: `${COOKIE_NAME}=${csrf}`, "x-cth-csrf": csrf };
-  const ok = await call({ action: "prepare", slug: "cgc1506243-abs-contracting-inc", intent: "save" }, auth);
-  assert.equal(ok.status, 200);
-  const staged = await ok.json() as { state: string; identity: { sourceIdentifier: string; returnPath: string } };
-  assert.equal(staged.state, "staged_dry_run"); assert.equal(staged.identity.sourceIdentifier, "CGC1506243"); assert.equal(staged.identity.returnPath, "/contractors/cgc1506243-abs-contracting-inc");
-  assert.equal((await (await call({ action: "prepare", slug: "fixture-thin", intent: "save" }, auth)).json() as { state: string }).state, "local_only");
-  // Any browser-supplied identity field is refused outright.
-  for (const extra of [{ sourceIdentifier: "CCC057187" }, { externalKey: "CCC057187" }, { contractorId: UUID }, { networkEntityId: UUID }, { name: "A & R ROOFING INC" }, { jurisdiction: "FL" }, { returnPath: "/contractors/x" }])
-    assert.equal((await call({ action: "prepare", slug: "cgc1506243-abs-contracting-inc", intent: "save", ...extra }, auth)).status, 400, JSON.stringify(extra));
-  assert.equal((await call({ action: "prepare", slug: "cgc1506243-abs-contracting-inc" }, auth)).status, 400);
-  assert.equal((await (await call({ action: "prepare", slug: "cgc1506243-abs-contracting-inc", intent: "watch" }, auth)).json() as { state: string }).state, "unavailable");
-  assert.equal((await (await call({ action: "prepare", slug: UUID, intent: "save" }, auth)).json() as { state: string }).state, "local_only");
-  // No CSRF, wrong CSRF, cross-origin, cross-site, GET, query string, oversized body.
-  assert.equal((await call({ action: "prepare", slug: "x", intent: "save" })).status, 403);
-  assert.equal((await call({ action: "prepare", slug: "x", intent: "save" }, { ...auth, "x-cth-csrf": "z".repeat(43) })).status, 403);
-  assert.equal((await call({ action: "bootstrap" }, { ...base, origin: "https://evil.example" })).status, 403);
-  assert.equal((await call({ action: "bootstrap" }, { ...base, "sec-fetch-site": "cross-site" })).status, 403);
-  assert.equal((await handleContractorProfileSave(new Request(url + "?x=1", { method: "POST", headers: base, body: "{}" }), d, origin)).status, 403);
-  assert.equal((await handleContractorProfileSave(new Request(url, { method: "GET", headers: base }), d, origin)).status, 403);
-  assert.equal((await call({ action: "bootstrap", pad: "x".repeat(5000) })).status, 503);
-  assert.equal((await (await call({ action: "status", ticket: "t".repeat(43) }, auth)).json() as { state: string }).state, "pending");
+test("B/C/D. tampered DBPR key, tampered jurisdiction and browser-supplied identity are all rejected", async () => {
+  device.clear(); const p = pair(); p.ask.session = "owner-a";
+  assert.equal(await p.click(SLUG, "save"), "navigating"); await resumeDirect(p.ports, SLUG);
+  const browser = p.browserBinding(), good = contractorManifest(IDENTITY);
+  const rebuild = (nativeId: string, slug = SLUG): ContractorManifest => { const profile = { hub: "contractor" as const, nativeId, profileClass: "contractor_profile" as const }, returnPath = "/contractors/" + slug;
+    return { version: TRANSFER_VERSION_V3, sourceHub: "contractor", audience: "ask", selected: [{ localItemId: slug, revision: "1", digest: sha(JSON.stringify([nativeId, returnPath])), profile }],
+      returnTask: { kind: "profile", hub: "contractor", canonicalSlug: slug, profile, returnPath } }; };
+  const sourceCall = (manifest: ContractorManifest, digest = manifestDigest(manifest)) => p.callSource({ action: "source", continuationRef: ref(), transferRef: ref(), manifest, manifestDigest: digest, expiresAt: Date.now() + 60_000 }, "source:read", browser);
+  assert.equal((await sourceCall(good)).status, 200);
+  // B. a different DBPR key under this profile's slug, or this key under another profile's slug.
+  assert.equal((await sourceCall(rebuild("fl.dbpr.license:CGC1506243"))).status, 403);
+  assert.equal((await sourceCall(rebuild("fl.dbpr.license:CCC057187", "cgc1506243-abs-contracting-inc"))).status, 403);
+  assert.equal((await sourceCall(good, "0".repeat(64))).status, 403);
+  // C. a different namespace / jurisdiction for the same key.
+  assert.equal((await sourceCall(rebuild("nj.dca.license:CCC057187"))).status, 403);
+  assert.equal((await sourceCall(rebuild("ca.cslb.license:CCC057187"))).status, 403);
+  for (const profile of [{ hub: "contractor", nativeId: "nj.dca.license:CCC057187", profileClass: "contractor_profile" }, { hub: "contractor", nativeId: "fl.dbpr.license:CCC0000000", profileClass: "contractor_profile" },
+    { hub: "contractor", nativeId: UUID, profileClass: "contractor_profile" }, { hub: "move", nativeId: "fl.dbpr.license:CCC057187", profileClass: "contractor_profile" }])
+    assert.equal((await p.callSource({ action: "resolve", profile }, "source:read", browser)).status, 503, JSON.stringify(profile));
+  // A body changed after signing, a caller without Ask's key, a wrong scope, a replay: unauthorized.
+  const url = CONTRACTOR_ORIGIN + SOURCE_PATH, signedBody = Buffer.from(JSON.stringify({ action: "resolve", profile: good.returnTask.profile }));
+  const token = signContractorAssertion(p.askKey.priv, "ask", url, "source:read", signedBody, browser);
+  const swapped = Buffer.from(JSON.stringify({ action: "resolve", profile: { ...good.returnTask.profile, nativeId: "fl.dbpr.license:CGC1506243" } }));
+  const raw = (body: Buffer, assertion: string) => handleContractorSource(new Request(url, { method: "POST", body, headers: { "content-type": "application/json", [ASSERTION_HEADER]: assertion } }), p.sourceOptions);
+  assert.equal((await raw(swapped, token)).status, 403);
+  assert.equal((await raw(signedBody, token)).status, 200); assert.equal((await raw(signedBody, token)).status, 403, "replay");
+  assert.equal((await p.callSource({ action: "resolve", profile: good.returnTask.profile }, "source:read", browser, p.contractorKey.priv)).status, 403, "Contractor's own key is not Ask's");
+  assert.equal((await p.callSource({ action: "resolve", profile: good.returnTask.profile }, "source:ack", browser)).status, 403);
+  // An acknowledgement for another browser, a Watch-bearing receipt, an unknown outcome, or another identity is refused and not recorded.
+  const before = p.acks.size();
+  const receipt = (patch: Record<string, unknown> = {}, prefix = browser) => ({ receiptRef: ref(), requestKey: prefix + ":0", accountContextRef: ref(), manifestDigest: manifestDigest(good), item: good.selected[0],
+    parent: { outcome: "saved" }, project: { outcome: "not_requested" }, localCopy: "keep", ...patch });
+  const ack = (r: unknown) => p.callSource({ action: "acknowledge", continuationRef: ref(), receipts: [r] }, "source:ack", browser);
+  assert.equal((await ack(receipt({}, "x".repeat(43)))).status, 403);
+  assert.equal((await ack(receipt({ watchCreated: true }))).status, 403); assert.equal((await ack(receipt({ watch: { id: 1 } }))).status, 403);
+  assert.equal((await ack(receipt({ parent: { outcome: "failed" } }))).status, 403);
+  assert.equal((await ack(receipt({ item: { ...good.selected[0], profile: { ...good.selected[0]!.profile, nativeId: "fl.dbpr.license:CCC0000000" } } }))).status, 403);
+  assert.equal(p.acks.size(), before);
+  assert.equal((await ack(receipt())).status, 200); assert.equal(p.acks.size(), before + 1);
+  // D. the browser may send only { slug, intent }.
+  const csrf = p.browserBinding();
+  const post = (body: unknown) => handleContractorProfileSave(new Request(CONTRACTOR_ORIGIN + ENDPOINT_PATH, { method: "POST", body: JSON.stringify(body),
+    headers: { origin: CONTRACTOR_ORIGIN, "sec-fetch-site": "same-origin", "content-type": "application/json", cookie: `${COOKIE_NAME}=${csrf}`, "x-cth-csrf": csrf } }), p.deps, CONTRACTOR_ORIGIN);
+  const calls = p.ask.apiCalls.length;
+  for (const extra of [{ contractorId: UUID }, { profileId: UUID }, { networkEntityId: UUID }, { externalKey: "CCC057187" }, { sourceIdentifier: "CGC1506243" }, { nativeId: "fl.dbpr.license:CGC1506243" },
+    { name: "A & R ROOFING INC" }, { jurisdiction: "FL" }, { identifierNamespace: "fl.dbpr.license" }, { returnPath: "/contractors/x" }])
+    assert.equal((await post({ action: "prepare", slug: SLUG, intent: "save", ...extra })).status, 400, JSON.stringify(extra));
+  for (const slug of [UUID, "CCC057187", "A & R ROOFING INC"]) assert.equal((await (await post({ action: "prepare", slug, intent: "save" })).json() as { state: string }).state, "local_only", slug);
+  assert.equal((await (await post({ action: "prepare", slug: SLUG, intent: "watch" })).json() as { state: string }).state, "unavailable");
+  assert.equal(p.ask.apiCalls.length, calls, "nothing reached the parent");
 });
 
-/** Stand-in for the pair as the browser sees it: the same-origin endpoint and
- * the parent form. The parent acts only under a session and acknowledges only
- * what it did. */
-function world() {
-  const calls: string[] = [], submitted: Array<{ target: string; fields: Record<string, string> }> = [];
-  const tickets = new Map<string, { continuationRef: string; acknowledged: boolean }>();
-  const parent = { account: null as string | null, saved: new Set<string>(), up: true, statusUp: true, abandon: false, refuse: false, eligible: true, dryRun: false };
-  let n = 0; const ref = () => Buffer.from(String(++n).padStart(32, "0")).toString("base64url").slice(0, 43);
-  const ports: DirectPorts = {
-    async post(body, csrf) {
-      const b = body as { action: string; slug?: string; intent?: string; ticket?: string };
-      calls.push(b.action); assert.deepEqual(Object.keys(b).sort().join(), b.action === "bootstrap" ? "action" : b.action === "prepare" ? "action,intent,slug" : "action,ticket");
-      if (!parent.up) throw new Error("unavailable");
-      if (b.action === "bootstrap") return { csrf: "c".repeat(43) };
-      assert.equal(csrf, "c".repeat(43));
-      if (b.action === "prepare") {
-        if (!parent.eligible) return { state: "local_only", reason: "multi_jurisdiction", localCopy: "keep" };
-        if (parent.dryRun) return { state: "staged_dry_run", localCopy: "keep" };
-        const ticket = ref(), continuationRef = ref(); tickets.set(ticket, { continuationRef, acknowledged: false });
-        return { state: "continue", ticket, target: PARENT_FORM_TARGET, fields: { continuationRef }, localCopy: "keep" };
-      }
-      if (!parent.statusUp) throw new Error("unavailable");
-      return { state: tickets.get(b.ticket!)?.acknowledged ? "parent_acknowledged" : "pending", localCopy: "keep" };
-    },
-    submit(target, fields) {
-      submitted.push({ target, fields });
-      const stage = [...tickets.values()].find((t) => t.continuationRef === fields.continuationRef);
-      if (!stage || parent.abandon || !parent.account) return;
-      const row = parent.account + ":fl.dbpr.license:CCC057187";
-      if (fields.intent === "unsave") { if (parent.refuse) return; parent.saved.delete(row); stage.acknowledged = true; }
-      else { parent.saved.add(row); stage.acknowledged = true; }
-    },
-    local: storage,
-  };
-  return { ports, parent, calls, submitted, pending: () => device.has("cth-mth-direct:ccc057187-a-r-roofing-inc") };
-}
-const SLUG = "ccc057187-a-r-roofing-inc";
+test("E/F/G. ineligible profiles and profiles outside the canary stage nothing with the parent", async () => {
+  device.clear(); const p = pair(); p.ask.session = "owner-a";
+  for (const [slug, reason] of [["fixture-thin", "thin_profile"], ["fixture-two-fl-licenses", "multiple_fl_credentials"], ["fixture-nj", "not_florida"], ["fixture-ca", "not_florida"],
+    ["fixture-fl-and-nj", "multi_jurisdiction"], ["fixture-no-credential", "no_fl_dbpr_credential"], ["fixture-shared-key-a", "credential_not_unique"], ["no-such-contractor", "not_public"],
+    ["fixture-eligible-not-canary", "sync_off"]] as const) {
+    assert.deepEqual(await prepareParentSave(p.deps, slug, "save", "b".repeat(43)), { state: "local_only", reason, localCopy: "keep" }, slug);
+    saveContractor({ slug, name: slug }); assert.equal(await p.click(slug, "save"), "not_eligible", slug); assert.equal(isContractorSaved(slug), true, "the device Save stands");
+  }
+  assert.deepEqual(p.ask.apiCalls, []); assert.deepEqual(p.ask.forms, []);
+  // The parent declines when it holds no single accepted binding: device only.
+  p.ask.bindings.delete("fl.dbpr.license:CCC057187");
+  assert.deepEqual(await prepareParentSave(p.deps, SLUG, "save", "b".repeat(43)), { state: "local_only", reason: "parent_declined", localCopy: "keep" });
+  // No signing key: nothing is sent.
+  const unsigned = pair(); unsigned.deps.key = null;
+  assert.deepEqual(await prepareParentSave(unsigned.deps, SLUG, "save", "b".repeat(43)), { state: "local_only", reason: "unsigned", localCopy: "keep" }); assert.deepEqual(unsigned.ask.apiCalls, []);
+  // A parent that answers with another digest, an expired window or a malformed reference is not followed.
+  for (const corrupt of [(r: Record<string, unknown>) => { r.manifestDigest = "0".repeat(64); }, (r: Record<string, unknown>) => { r.expiresAt = 1; }, (r: Record<string, unknown>) => { r.transferRef = "short"; }]) {
+    const q = pair(), inner = q.deps.parent!;
+    q.deps.parent = async (call) => { const response = await inner(call); if (response.ok && response.operation === "prepareGuestProfileTransfer") corrupt(response.result as Record<string, unknown>); return response; };
+    assert.equal((await prepareParentSave(q.deps, SLUG, "save", "b".repeat(43))).state, "unavailable");
+  }
+});
 
-test("hand-off client: Save and Unsave are reported only on the parent's acknowledgement; abandoned hand-offs stay recoverable", async () => {
-  device.clear(); let w = world(); w.parent.account = "owner-a";
+test("N. signed-out continuation: the Save stays on the device, then sign-in finishes it with no second Save click", async () => {
+  device.clear(); const p = pair();
   saveContractor({ slug: SLUG, name: "A & R ROOFING INC", profileId: UUID });
-  assert.equal(await startDirect(w.ports, SLUG, "save"), "navigating");
-  assert.deepEqual(w.submitted.map((s) => [s.target, Object.keys(s.fields).sort().join(), s.fields.intent]), [["https://www.asktrusthub.com/my/profile-save", "continuationRef,intent", "save"]]);
-  assert.deepEqual(await resumeDirect(w.ports, SLUG), { intent: "save", outcome: "confirmed" });
-  assert.equal(parentSync(storage, SLUG), "synced"); assert.equal(w.parent.saved.size, 1); assert.equal(await resumeDirect(w.ports, SLUG), null);
-  // Repeated Save: still one parent row.
-  await startDirect(w.ports, SLUG, "save"); await resumeDirect(w.ports, SLUG); assert.equal(w.parent.saved.size, 1);
-  // Unsave abandoned mid-chain (the Move production failure): device row gone, account row kept, not reported as removed, retry completes it.
-  unsaveContractor(SLUG); w.parent.abandon = true;
-  assert.equal(await startDirect(w.ports, SLUG, "unsave"), "navigating"); assert.equal(w.pending(), true);
-  assert.deepEqual(await resumeDirect(w.ports, SLUG), { intent: "unsave", outcome: "not_confirmed" });
-  assert.equal(parentSync(storage, SLUG), "synced"); assert.equal(w.parent.saved.size, 1); assert.equal(isContractorSaved(SLUG), false);
-  w.parent.abandon = false;
-  assert.equal(await startDirect(w.ports, SLUG, "unsave"), "navigating");
-  assert.deepEqual(await resumeDirect(w.ports, SLUG), { intent: "unsave", outcome: "confirmed" });
-  assert.equal(parentSync(storage, SLUG), null); assert.equal(w.parent.saved.size, 0);
-  // Refused by the account (filed in a Project) or signed out: never claimed.
-  for (const fault of ["refuse", "signed_out", "status_down"] as const) {
-    device.clear(); w = world(); w.parent.account = "owner-a";
-    await startDirect(w.ports, SLUG, "save"); await resumeDirect(w.ports, SLUG);
-    if (fault === "refuse") w.parent.refuse = true; if (fault === "signed_out") w.parent.account = null;
-    await startDirect(w.ports, SLUG, "unsave"); if (fault === "status_down") w.parent.statusUp = false;
-    assert.equal((await resumeDirect(w.ports, SLUG))!.outcome, fault === "status_down" ? "unknown" : "not_confirmed"); assert.equal(parentSync(storage, SLUG), "synced", fault);
-  }
-  // Signed out Save: device only, nothing claimed.
-  device.clear(); w = world();
-  assert.equal(await startDirect(w.ports, SLUG, "save"), "navigating");
-  assert.deepEqual(await resumeDirect(w.ports, SLUG), { intent: "save", outcome: "not_confirmed" }); assert.equal(parentSync(storage, SLUG), null); assert.equal(w.parent.saved.size, 0);
-  // Not eligible, dry run, endpoint down, user already left: nothing navigates, nothing pending.
-  for (const [setup, expected] of [[(x: ReturnType<typeof world>) => { x.parent.eligible = false; }, "not_eligible"], [(x: ReturnType<typeof world>) => { x.parent.dryRun = true; }, "dry_run"],
-    [(x: ReturnType<typeof world>) => { x.parent.up = false; }, "unavailable"]] as const) {
-    device.clear(); w = world(); setup(w);
-    assert.equal(await startDirect(w.ports, SLUG, "save"), expected); assert.equal(w.submitted.length, 0); assert.equal(w.pending(), false); assert.equal(parentSync(storage, SLUG), null);
-  }
-  device.clear(); w = world(); w.parent.account = "owner-a";
-  assert.equal(await startDirect(w.ports, SLUG, "save", () => false), "unavailable"); assert.equal(w.submitted.length, 0); assert.equal(w.pending(), false);
+  assert.equal(await p.click(SLUG, "save"), "navigating");
+  assert.deepEqual(await resumeDirect(p.ports, SLUG), { intent: "save", outcome: "not_confirmed" });
+  assert.equal(isContractorSaved(SLUG), true); assert.equal(p.ask.saved.size, 0); assert.equal(parentSync(storage, SLUG), null);
+  // "Sign in to My TrustHub": one hand-off with save_signin; the parent signs the customer in and saves.
+  assert.equal(await p.click(SLUG, "save_signin"), "navigating"); assert.equal(p.ask.forms.at(-1)!.fields.intent, "save_signin");
+  assert.deepEqual(await resumeDirect(p.ports, SLUG), { intent: "save_signin", outcome: "confirmed" });
+  assert.deepEqual([...p.ask.saved], ["owner-a:fl.dbpr.license:CCC057187"]); assert.equal(parentSync(storage, SLUG), "synced");
+  assert.equal(listSavedContractors().length, 1);
+});
+
+test("O. abandoned hand-off recovery: nothing is claimed, the device keeps the belief, a retry completes it", async () => {
+  device.clear(); const p = pair(); p.ask.session = "owner-a";
+  saveContractor({ slug: SLUG, name: "A & R ROOFING INC", profileId: UUID });
+  await p.click(SLUG, "save"); await resumeDirect(p.ports, SLUG); assert.equal(p.ask.saved.size, 1);
+  // The customer clicks away while the hand-off is in flight: device row gone, account row kept.
+  unsaveContractor(SLUG); p.ask.abandon = true;
+  assert.equal(await p.click(SLUG, "unsave"), "navigating");
+  assert.ok(device.has("cth-mth-direct:" + SLUG), "the pending marker is on the device, not the tab");
+  assert.deepEqual(await resumeDirect(p.ports, SLUG), { intent: "unsave", outcome: "not_confirmed" });
+  assert.equal(isContractorSaved(SLUG), false); assert.equal(p.ask.saved.size, 1); assert.equal(parentSync(storage, SLUG), "synced");
+  assert.equal(await resumeDirect(p.ports, SLUG), null, "consumed once");
+  p.ask.abandon = false;
+  assert.equal(await p.click(SLUG, "unsave"), "navigating");
+  assert.deepEqual(await resumeDirect(p.ports, SLUG), { intent: "unsave", outcome: "confirmed" }); assert.equal(p.ask.saved.size, 0); assert.equal(parentSync(storage, SLUG), null);
+  // An abandoned Save is not claimed either.
+  p.ask.abandon = true; saveContractor({ slug: SLUG, name: "A & R ROOFING INC", profileId: UUID });
+  await p.click(SLUG, "save"); assert.deepEqual(await resumeDirect(p.ports, SLUG), { intent: "save", outcome: "not_confirmed" }); assert.equal(p.ask.saved.size, 0); p.ask.abandon = false;
+  // Project conflict: the parent refuses the removal and acknowledges nothing; the account row and the belief stay.
+  await p.click(SLUG, "save"); await resumeDirect(p.ports, SLUG); p.ask.refuseUnsave = true; unsaveContractor(SLUG);
+  await p.click(SLUG, "unsave"); assert.deepEqual(await resumeDirect(p.ports, SLUG), { intent: "unsave", outcome: "not_confirmed" }); assert.equal(p.ask.saved.size, 1); assert.equal(parentSync(storage, SLUG), "synced");
+  // The acknowledgement is held for the browser it was staged for and nobody else.
+  const held = p.ask.forms.find((f) => f.fields.intent === "save")!.fields.continuationRef!;
+  assert.equal(await parentStatus(p.deps, held, p.browserBinding()), "parent_acknowledged");
+  assert.equal(await parentStatus(p.deps, held, "z".repeat(43)), "pending"); assert.equal(await parentStatus(p.deps, ref(), p.browserBinding()), "pending");
+  // No acknowledgement store (table not applied) or a failing one: status is unavailable and the device claims nothing.
+  assert.equal(await parentStatus({ ...p.deps, acks: null }, held, p.browserBinding()), "unavailable");
+  assert.equal(await parentStatus({ ...p.deps, acks: { record: async () => { throw new Error("db"); }, read: async () => { throw new Error("db"); } } }, held, p.browserBinding()), "unavailable");
+  const lost = pair(); lost.ask.session = "owner-a"; lost.sourceOptions.acks = { record: async () => { throw new Error("relation does not exist"); }, read: async () => null } as never;
+  await lost.click(SLUG, "save"); assert.ok(lost.ask.sourceStatuses.includes(503)); assert.equal((await resumeDirect(lost.ports, SLUG))!.outcome, "not_confirmed");
   // The browser is only ever handed to the production Ask form (or a local/test host).
   assert.equal(handoffTargetAllowed("https://www.asktrusthub.com/my/profile-save"), true);
   for (const bad of ["https://www.asktrusthub.com/my/handoff/start", "https://www.asktrusthub.com/my/saved", "https://asktrusthub.com/my/profile-save", "https://www.asktrusthub.com/my/profile-save?x=1",
     "https://www.asktrusthub.com.evil.example/my/profile-save", "https://evil.vercel.app/my/profile-save", "javascript:alert(1)", "", null]) assert.equal(handoffTargetAllowed(bad), false, String(bad));
 });
 
-test("legacy hand-off is not used or extended; one-account presentation stays off", () => {
+test("production parent sync is OFF and the canary is OFF: nothing is read, signed or sent", async () => {
+  assert.equal(CONTRACTOR_PARENT_SYNC_BROAD, false); assert.equal(CONTRACTOR_CANARY_ACTIVE, false);
+  assert.deepEqual(productionParentGate(), { broad: false, canary: false });
+  assert.deepEqual(CONTRACTOR_CANARIES.map((c) => [c.slug, c.externalKey]), CANARY.map((c) => [c.slug, c.key]));
+  for (const env of [{}, { VERCEL_ENV: "production" }, { VERCEL_ENV: "production", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }, { VERCEL_ENV: "production", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "gated" },
+    { MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "gated" }, { MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "live" }, { MY_TRUSTHUB_CONTRACTOR_SAVE_ENABLED: "true" }, { NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC: "1" },
+    { VERCEL_ENV: "production", MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID: "k", MY_TRUSTHUB_V23_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM: "-----BEGIN PRIVATE KEY-----" }]) assert.equal(parentSyncMode(env), "off", JSON.stringify(env));
+  assert.equal(parentSyncMode({ VERCEL_ENV: "preview", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }), "dry_run");
+  assert.equal(parentSyncMode({ VERCEL_ENV: "production" }, { broad: false, canary: true }), "gated", "only the reviewed gate constant opens it");
+  for (const c of CANARY) { assert.equal(gateAllows(c.slug, productionParentGate()), false); assert.equal(gateAllows(c.slug, { broad: false, canary: true }), true); }
+  assert.equal(gateAllows("fixture-eligible-not-canary", { broad: false, canary: true }), false);
+  const { reader, reads } = source(); let sent = 0;
+  const off: AdapterDeps = { mode: "off", gate: productionParentGate(), reader, key: keypair("k").priv, parent: async () => { sent++; return { ok: false }; }, acks: memoryAckStore(), now: Date.now };
+  assert.deepEqual(await prepareParentSave(off, SLUG, "save", "b".repeat(43)), { state: "unavailable", localCopy: "keep" });
+  assert.equal(await parentStatus(off, "t".repeat(43), "b".repeat(43)), "unavailable");
+  const origin = CONTRACTOR_ORIGIN;
+  for (const body of [{ action: "bootstrap" }, { action: "prepare", slug: SLUG, intent: "save" }, { action: "status", continuationRef: "t".repeat(43) }]) {
+    const response = await handleContractorProfileSave(new Request(origin + ENDPOINT_PATH, { method: "POST", headers: { origin, "sec-fetch-site": "same-origin", "content-type": "application/json" }, body: JSON.stringify(body) }), off, origin);
+    assert.equal(response.status, 503); assert.equal(response.headers.get("set-cookie"), null); assert.deepEqual(await response.json(), { state: "unavailable", localCopy: "keep" });
+  }
+  assert.deepEqual(reads, []); assert.equal(sent, 0);
+  // Dry run (non-production): resolves and builds, contacts nobody.
+  const dry = await prepareParentSave({ ...off, mode: "dry_run" }, "cgc1506243-abs-contracting-inc", "save", "b".repeat(43));
+  assert.deepEqual(dry, { state: "staged_dry_run", nativeId: "fl.dbpr.license:CGC1506243", manifestDigest: CANARY[2].digest, localCopy: "keep",
+    identity: { profileClass: "contractor_profile", identifierNamespace: "fl.dbpr.license", sourceIdentifier: "CGC1506243", jurisdiction: "FL", returnPath: "/contractors/cgc1506243-abs-contracting-inc" } });
+  assert.equal(sent, 0);
+  // The source callback is unavailable without Ask's verification key.
+  const closed = await handleContractorSource(new Request(CONTRACTOR_ORIGIN + SOURCE_PATH, { method: "POST", body: "{}", headers: { "content-type": "application/json" } }), { reader, key: null, nonces: memoryNonces(), acks: null });
+  assert.equal(closed.status, 503);
+  // Signer/transport come only from the dedicated Contractor values and only toward the pinned parent origin.
+  assert.deepEqual(productionHandoffDeps({}), { key: null, parent: null });
+  const k = keypair("contractor-v23-prod");
+  assert.deepEqual(productionHandoffDeps({ MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID: k.priv.kid, MY_TRUSTHUB_V23_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM: k.priv.pem, MY_TRUSTHUB_V23_PARENT_ORIGIN: "https://evil.example" }), { key: null, parent: null });
+  assert.deepEqual(productionHandoffDeps({ MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID: k.priv.kid, MY_TRUSTHUB_V23_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM: k.priv.pem, MY_TRUSTHUB_V23_PARENT_ORIGIN: "https://www.asktrusthub.com" }).key, k.priv);
+  // The only outbound request in the whole path is the gated parent transport; routes construct it only when gated.
+  const route = fs.readFileSync("app/api/my-trusthub/profile-save/route.ts", "utf8");
+  assert.match(route, /const signer = mode === "gated" \? productionHandoffDeps\(\) : \{ key: null, parent: null \}/);
+  for (const file of fs.readdirSync("lib/my-trusthub").map((f) => "lib/my-trusthub/" + f).concat(["app/api/my-trusthub/profile-save/route.ts", "app/api/my-trusthub/profile-save/source/route.ts"])) {
+    const text = fs.readFileSync(file, "utf8"), fetches = text.split("fetch(").length - 1;
+    assert.equal(fetches, file.endsWith("parent-adapter.ts") || file.endsWith("direct-save-client.ts") ? 1 : 0, file);
+  }
+  assert.equal(networkCalls, 0);
+});
+
+test("the provisional envelope and the legacy hand-off are gone from the new path; one-account presentation stays off", () => {
+  const manifest = fs.readFileSync("lib/my-trusthub/manifest.ts", "utf8");
+  assert.doesNotMatch(manifest, /contractor-profile-save\/1|trusthub-save-manifest|signManifest|verifyManifest|MY_TRUSTHUB_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM/);
   const legacy = fs.readFileSync("components/contractor/MyTrustHubSave.tsx", "utf8"), issue = fs.readFileSync("app/api/my-trusthub/issue/route.ts", "utf8");
   assert.match(legacy, /@deprecated LEGACY/); assert.match(issue, /@deprecated LEGACY/);
-  assert.match(legacy, /MY_TRUSTHUB_CONTRACTOR_SAVE_ENABLED !== "true"/); assert.match(issue, /MY_TRUSTHUB_CONTRACTOR_SAVE_ENABLED !== "true"/);
-  for (const file of fs.readdirSync("lib/my-trusthub").map((f) => "lib/my-trusthub/" + f).concat(["components/contractor/SaveContractorToggle.tsx", "app/api/my-trusthub/profile-save/route.ts"])) {
-    const text = fs.readFileSync(file, "utf8");
-    assert.doesNotMatch(text, /MyTrustHubSave|my\/handoff\/start|my\/handoff\/arrive|handoff\/issue|MY_TRUSTHUB_P13_CONTRACTOR_SECRET|MY_TRUSTHUB_CONTRACTOR_SAVE_ENABLED/, file);
-  }
-  assert.equal(ONE_ACCOUNT_PRESENTATION, false);
-  assert.equal(MY_TRUSTHUB_ACCOUNT_HREF, "https://www.asktrusthub.com/my");
-  assert.equal(workspaceSyncCopy(false).linkLabel, "Optional account");
+  for (const file of fs.readdirSync("lib/my-trusthub").map((f) => "lib/my-trusthub/" + f).concat(["components/contractor/SaveContractorToggle.tsx", "app/api/my-trusthub/profile-save/route.ts", "app/api/my-trusthub/profile-save/source/route.ts"]))
+    assert.doesNotMatch(fs.readFileSync(file, "utf8"), /MyTrustHubSave|my\/handoff\/start|my\/handoff\/arrive|handoff\/issue|MY_TRUSTHUB_P13_CONTRACTOR_SECRET|MY_TRUSTHUB_CONTRACTOR_SAVE_ENABLED/, file);
+  assert.equal(ONE_ACCOUNT_PRESENTATION, false); assert.equal(MY_TRUSTHUB_ACCOUNT_HREF, "https://www.asktrusthub.com/my"); assert.equal(workspaceSyncCopy(false).linkLabel, "Optional account");
   for (const route of ["app/account/page.tsx", "app/watch/page.tsx", "app/projects/page.tsx", "app/compare/page.tsx", "app/passport/page.tsx", "app/tools/page.tsx", "app/my-contractor/page.tsx",
-    "app/api/auth/request-link/route.ts", "app/api/account/sync/route.ts", "app/api/account/import-local/route.ts"]) assert.ok(fs.existsSync(route), route);
+    "schema/migrations/016_my_trusthub_handoff_acks.sql"]) assert.ok(fs.existsSync(route), route);
 });

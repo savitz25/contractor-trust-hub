@@ -86,16 +86,6 @@ export function parentSaveReadiness(contractor: ContractorDetail): ParentSaveRea
     jurisdiction: FL_DBPR.jurisdiction, canonicalSlug: contractor.slug, returnPath: "/contractors/" + contractor.slug } };
 }
 
-/** Shape check for an identity that arrives from outside (the parent's
- * publication re-check). Exact keys, exact values, a well-formed DBPR key. */
-export function isFloridaIdentityInput(value: unknown): value is { hub: "contractor"; profileClass: "contractor_profile"; identifierNamespace: string; sourceIdentifier: string; jurisdiction: string } {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
-  const v = value as Record<string, unknown>;
-  return Object.keys(v).sort().join() === "hub,identifierNamespace,jurisdiction,profileClass,sourceIdentifier" && v.hub === "contractor" &&
-    v.profileClass === "contractor_profile" && v.identifierNamespace === FL_DBPR.namespace && v.jurisdiction === FL_DBPR.jurisdiction &&
-    typeof v.sourceIdentifier === "string" && FL_DBPR_KEY.test(v.sourceIdentifier);
-}
-
 /** A parent binding agrees with an identity only on the exact grain: accepted,
  * same hub and class, same namespace, same license key, same jurisdiction. The
  * binding's specialist entity id is deliberately not compared: it may hold a
