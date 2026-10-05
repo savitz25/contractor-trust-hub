@@ -32,10 +32,12 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   washington: "WA",
   wisconsin: "WI",
   louisiana: "LA",
+  kentucky: "KY",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  kentucky: "DHBC electrical, HVAC, and plumbing business licenses, kept separate",
   louisiana: "LSLBC commercial, residential, home improvement, and mold certificate rows, kept separate",
   alabama: "Licensing Board for General Contractors roster, with specialty text kept source-native",
   indiana: "Plumbing Commission credential classes, discipline documents, and the local licensing boundary",

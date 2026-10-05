@@ -36,6 +36,7 @@
     "test:in-con-001": "python -X utf8 scripts/build_indiana_snapshot.py --check && node scripts/assert_indiana_publication.mjs && npx --yes tsx --test scripts/test_in_con_001.ts",
     "test:al-con-001": "node scripts/alabama/build_al_con_001.mjs --check && node scripts/assert_alabama_publication.mjs && npx --yes tsx --test scripts/test_al_con_001.ts",
     "test:la-con-001": "npx --yes tsx --test scripts/test_la_con_001.ts",
+    "test:ky-con-001": "npx --yes tsx --test scripts/test_ky_con_001.ts",
     "typecheck": "tsc --noEmit",
     "test:matcher": "node scripts/test_permit_matcher.mjs",
     "test:permit-evidence": "npx --yes tsx scripts/test_permit_evidence.ts",
