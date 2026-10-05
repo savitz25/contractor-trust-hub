@@ -17,6 +17,8 @@ jobs:
       - run: npm ci
       - name: Alabama ALBGC publication (AL-CON-001)
         run: npm run test:al-con-001
+      - name: Mississippi MSBOC publication (MS-CON-001)
+        run: npm run test:ms-con-001
       - name: Fail if publication catalogs and live config diverge from the checked-in manifest
         run: node scripts/assert_network_metrics_v1.mjs
       - name: Homepage intel projection matches v1

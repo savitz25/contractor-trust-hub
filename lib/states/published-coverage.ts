@@ -34,10 +34,12 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   louisiana: "LA",
   kentucky: "KY",
   "south-carolina": "SC",
+  mississippi: "MS",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  mississippi: "MSBOC Licensed status kept separate from expired, unlicensed, revoked, and suspended keys",
   "south-carolina": "LLR commercial and residential board category counts, kept separate",
   kentucky: "DHBC electrical, HVAC, and plumbing business licenses, kept separate",
   louisiana: "LSLBC commercial, residential, home improvement, and mold certificate rows, kept separate",
