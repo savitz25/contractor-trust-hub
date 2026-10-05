@@ -64,7 +64,7 @@ export function interpretLouisiana(query: string): AskResult | null {
   const key = query.match(KEY);
   if (!(STATE.test(query) || (CITY.test(query) && TOPIC.test(query)) || key)) return null;
 
-  const labeled = !key && query.match(LABELED);
+  const labeled = key ? null : query.match(LABELED);
   const exact = key?.[1] ?? labeled?.[1] ?? null;
   const bare = !exact && /\b\d{3,}\b/.test(query);
   const identifier = exact ? `LA-LSLBC:${exact}` : null;
