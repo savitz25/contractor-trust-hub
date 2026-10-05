@@ -30,10 +30,12 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   virginia: "VA",
   washington: "WA",
   wisconsin: "WI",
+  louisiana: "LA",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  louisiana: "LSLBC commercial, residential, home improvement, and mold certificate rows, kept separate",
   indiana: "Plumbing Commission credential classes, discipline documents, and the local licensing boundary",
   wisconsin: "DSPS dwelling, electrical, and HVAC contractor credential classes with live verification",
   connecticut: "DCP home-improvement, new-home, and trade credential classes plus administrative decisions",
