@@ -62,6 +62,8 @@ export function researchRoute(
     /\b(?:maryland|mhic|baltimore|annapolis|frederick|rockville|guaranty fund)\b/i.test(query) ||
     // IN-CON-001: statewide Indiana plumbing and local-boundary guidance lives in /ask.
     /\b(?:indiana|indianapolis|fort wayne|evansville|south bend|plumbing commission)\b/i.test(query) ||
+    // AL-CON-001: ALBGC roster guidance lives in /ask. Mobile is not a city trigger.
+    /\b(?:alabama|albgc|birmingham|montgomery|huntsville|tuscaloosa)\b/i.test(query) ||
     /\b(?:HIC|NHC|ELC|PLM|HTG|SMT|FSP|ELV)\.\d{5,8}(?:[.-][A-Z0-9]+)?\b/i.test(query) ||
     /\b(?:EL|HV|HY|PL|RE)\.\d{3,6}\b/i.test(query) ||
     /\bcompar(?:e|ison)\b/i.test(query)
