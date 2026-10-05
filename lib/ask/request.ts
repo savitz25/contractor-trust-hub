@@ -67,6 +67,7 @@ export function researchRoute(
     // LA-CON-001: statewide LSLBC certificate evidence lives in /ask, not a parish or city roster.
     /\b(?:louisiana|lslbc|new orleans|baton rouge|shreveport|lafayette)\b/i.test(query) ||
     /\b(?:kentucky|dhbc|louisville|lexington)\b|\bin ky\b/i.test(query) ||
+    /\b(?:south carolina|llr)\b|\bin sc\b/i.test(query) ||
     /\b(?:HIC|NHC|ELC|PLM|HTG|SMT|FSP|ELV)\.\d{5,8}(?:[.-][A-Z0-9]+)?\b/i.test(query) ||
     /\b(?:EL|HV|HY|PL|RE)\.\d{3,6}\b/i.test(query) ||
     /\bcompar(?:e|ison)\b/i.test(query)
