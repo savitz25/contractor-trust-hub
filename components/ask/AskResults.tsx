@@ -55,10 +55,11 @@ export function AskResults({
   const indianaEvidenceGateway = interpreted.mode === "guidance" && interpreted.interpretation.location === "Indiana";
   // LA-CON-001: LSLBC certificate types are statewide; cities and parishes are not a provider search.
   const louisianaEvidenceGateway = interpreted.interpretation.location === "Louisiana" && (interpreted.mode === "guidance" || interpreted.mode === "fail_closed");
+  const alabamaEvidenceGateway = interpreted.mode === "guidance" && interpreted.interpretation.location === "Alabama";
 
   return (
     <div className="space-y-8">
-      {(indianaEvidenceGateway || louisianaEvidenceGateway) ? null : wisconsinEvidenceGateway ? null : <GeographyNotice requirement={plan.geographyRequirement} query={plan.rawQuery} overrides={overrides} />}
+      {alabamaEvidenceGateway || indianaEvidenceGateway || louisianaEvidenceGateway || wisconsinEvidenceGateway ? null : <GeographyNotice requirement={plan.geographyRequirement} query={plan.rawQuery} overrides={overrides} />}
       <section aria-labelledby="ask-interpreted">
         <p className="cth-intel-eyebrow">We interpreted your question as</p>
         <h2 id="ask-interpreted" className="sr-only">
@@ -71,7 +72,7 @@ export function AskResults({
           </div>
           <div>
             <dt className="text-[var(--muted)]">Geography basis</dt>
-            <dd className="font-medium">{indianaEvidenceGateway ? "PLA statewide plumbing evidence; other contractor licensing is local and not searched" : louisianaEvidenceGateway ? "LSLBC certificate types kept separate; parish is an address, not a service area" : wisconsinEvidenceGateway ? "DSPS statewide credential-class totals; no provider-location search" : execution.nameSearch ? "Credential jurisdiction and recorded address on each card — not service territory" : "Indexed DBPR address county — not service territory"}</dd>
+            <dd className="font-medium">{alabamaEvidenceGateway ? "ALBGC license roster only; other Alabama contractor boards are separate and were not searched" : indianaEvidenceGateway ? "PLA statewide plumbing evidence; other contractor licensing is local and not searched" : louisianaEvidenceGateway ? "LSLBC certificate types kept separate; parish is an address, not a service area" : wisconsinEvidenceGateway ? "DSPS statewide credential-class totals; no provider-location search" : execution.nameSearch ? "Credential jurisdiction and recorded address on each card — not service territory" : "Indexed DBPR address county — not service territory"}</dd>
           </div>
           <div>
             <dt className="text-[var(--muted)]">Trade</dt>

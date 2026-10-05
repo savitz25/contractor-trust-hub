@@ -36,6 +36,7 @@ import { interpretConnecticut } from "./connecticut";
 import { interpretMaryland } from "./maryland";
 import { interpretWisconsin } from "./wisconsin";
 import { interpretIndiana } from "./indiana";
+import { interpretAlabama } from "./alabama";
 import { interpretLouisiana } from "./louisiana";
 import { CONTRACTOR_STATE_NAMES } from "@/lib/search/state-names";
 
@@ -208,6 +209,8 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
   if (wiEarly) return wiEarly;
   const inEarly = interpretIndiana(query);
   if (inEarly) return inEarly;
+  const alEarly = interpretAlabama(query);
+  if (alEarly) return alEarly;
   const laEarly = interpretLouisiana(query);
   if (laEarly) return laEarly;
 

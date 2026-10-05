@@ -1,9 +1,9 @@
 {
   "schemaVersion": "contractor-network-metrics-v1",
-  "generatedAt": "2026-09-26T14:36:56.830Z",
+  "generatedAt": "2026-10-05T13:25:24.398Z",
   "newestDocumentedSourceAsOf": "2026-09-18",
   "newestDocumentedSourceAsOfNote": "Newest documented official source-effective date among metrics that carry a sourceAsOf. Not the live-credential board extract date and not Git/deploy time.",
-  "sourceFingerprint": "c10fd3b21f4bd2879dea26b00692cc5e4b2f6ff5f628a8f63fe98829f736f36f",
+  "sourceFingerprint": "6f14614146922152839832d34f33bb0b88efa0170dc5324fc1d7129e79ddfca4",
   "liveCohort": {
     "liveStates": 11,
     "liveStateCodes": [
@@ -92,7 +92,7 @@
         "wa_lni"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "One row per license/credential in live source systems.",
@@ -113,7 +113,7 @@
         ],
         "geographicCoverage": "11 live researched states",
         "sourceDates": "Board extract dates vary by state; not represented by Git or deploy time.",
-        "generationDate": "2026-09-26",
+        "generationDate": "2026-10-05",
         "currentActiveRule": "This metric is all live-cohort rows, not only active/current."
       },
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
@@ -143,7 +143,7 @@
         "wa_lni"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Live-cohort license rows with status_normalized active or current.",
@@ -164,7 +164,7 @@
         ],
         "geographicCoverage": "11 live researched states",
         "sourceDates": "Board extract dates vary by state.",
-        "generationDate": "2026-09-26",
+        "generationDate": "2026-10-05",
         "currentActiveRule": "status_normalized IN ('active','current')"
       },
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
@@ -194,7 +194,7 @@
         "wa_lni"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "States currently live in ContractorTrustHub Verify/config.",
@@ -204,7 +204,7 @@
         ],
         "geographicCoverage": "FL, TX, NJ, OR, WA, CA, AZ, LA, MS, KY, CO",
         "sourceDates": "Product configuration, not a regulator extract date.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": null,
       "retrievedAt": null
@@ -240,7 +240,7 @@
         "co_dora"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
       "trace": {
         "counts": "Database credential rows plus accepted local CO business credentials; no additional canonical companies are created.",
@@ -268,7 +268,7 @@
         ],
         "geographicCoverage": "All populated source systems",
         "sourceDates": "Board extract dates vary.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
@@ -290,7 +290,7 @@
         "co_dora"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted database discipline_actions plus non-overlapping local CO credential-linked observations",
@@ -304,7 +304,7 @@
         ],
         "geographicCoverage": "FL, NJ, AZ, CO; separate evidence families",
         "sourceDates": "Family source dates vary; not interchangeable severity.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
@@ -322,7 +322,7 @@
         "permit_source_records"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Rows in permit_source_records.",
@@ -332,7 +332,7 @@
         ],
         "geographicCoverage": "Selected indexed permit sources",
         "sourceDates": "Permit file dates vary.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
@@ -350,7 +350,7 @@
         "nj_construction_permits"
       ],
       "sourceAsOf": "2026-08-07",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Permit-issued and certificate-issued SOURCE RECORDS in the NJ DCA construction extract.",
@@ -360,7 +360,7 @@
         ],
         "geographicCoverage": "New Jersey municipalities in the extract",
         "sourceDates": "Official data received as of 2026-08-07",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": "2026-08-13",
       "retrievedAt": null
@@ -379,7 +379,7 @@
         "nj-county-intel"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Published county intelligence routes.",
@@ -390,7 +390,7 @@
         ],
         "geographicCoverage": "Selected FL and NJ counties",
         "sourceDates": "NJ county publication fingerprints as of 2026-08-13; FL county pages are statewide coverage until the enhanced gate is activated.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": null,
       "retrievedAt": null
@@ -408,7 +408,7 @@
         "nj_dca_construction_metadata"
       ],
       "sourceAsOf": "2026-08-13",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Canonical current NJ municipality universe.",
@@ -418,7 +418,7 @@
         ],
         "geographicCoverage": "New Jersey",
         "sourceDates": "Metadata as of 2026-08-13",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": "2026-08-13",
       "retrievedAt": null
@@ -436,7 +436,7 @@
         "public_contact_observations"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
       "trace": {
         "counts": "Public contact observation rows.",
@@ -446,7 +446,7 @@
         ],
         "geographicCoverage": "Research graph",
         "sourceDates": "As published on board extracts.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
@@ -464,7 +464,7 @@
         "contractors"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC_RESEARCH_GRAPH",
       "trace": {
         "counts": "Rows in contractors.",
@@ -474,7 +474,7 @@
         ],
         "geographicCoverage": "Research graph",
         "sourceDates": "Identity rows are not a national census.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
@@ -492,7 +492,7 @@
         "ca-local-intel"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Indexed CA city local intelligence routes.",
@@ -502,7 +502,7 @@
         ],
         "geographicCoverage": "City and County of San Francisco; City of Los Angeles only",
         "sourceDates": "Local publication alongside CSLB stream as_of 2026-09-02",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": null,
       "retrievedAt": null
@@ -520,7 +520,7 @@
         "nyc-dcwp-hic"
       ],
       "sourceAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Indexed NYC local intelligence route /new-york/new-york-city.",
@@ -530,7 +530,7 @@
         ],
         "geographicCoverage": "New York City DCWP HIC",
         "sourceDates": "Issued Licenses Home Improvement Contractor slice rowsUpdatedAt 2026-08-20",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": null,
       "retrievedAt": null
@@ -548,7 +548,7 @@
         "ca_cslb_master_truncated"
       ],
       "sourceAsOf": "2026-09-02",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC_PARTIAL",
       "trace": {
         "counts": "Rows in the truncated CSLB License Master acquisition.",
@@ -558,7 +558,7 @@
         ],
         "geographicCoverage": "California",
         "sourceDates": "Acquisition as_of 2026-09-02; coverage ACQUIRED_PARTIAL_STREAM_TRUNCATED",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       },
       "snapshotAsOf": "2026-09-02",
       "retrievedAt": null
@@ -578,7 +578,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "License and registration rows in live public source systems.",
@@ -588,7 +588,7 @@
         ],
         "geographicCoverage": "Live public state cohort",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -606,7 +606,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "License rows across populated source systems.",
@@ -616,7 +616,7 @@
         ],
         "geographicCoverage": "Populated research graph",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -634,7 +634,7 @@
       "sourceAsOf": "2026-09-02",
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-04",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "License rows on ROC’s All Current Contractors posting.",
@@ -644,7 +644,7 @@
         ],
         "geographicCoverage": "Arizona",
         "sourceDates": "2026-09-02",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -662,7 +662,7 @@
       "sourceAsOf": "2026-09-08",
       "retrievedAt": "2026-09-10T12:59:41.003456+00:00",
       "snapshotAsOf": "2026-09-08",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Distinct Class A, B, and C contractor-business licenses on official regulant lists.",
@@ -672,7 +672,7 @@
         ],
         "geographicCoverage": "Virginia",
         "sourceDates": "2026-09-08",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -690,7 +690,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Official Contractor Registry Certificate rows.",
@@ -700,7 +700,7 @@
         ],
         "geographicCoverage": "New York public-work registration (address may be out of state)",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -718,7 +718,7 @@
       "sourceAsOf": "2026-08-20",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Active license_status rows in the official Home Improvement Contractor slice.",
@@ -728,7 +728,7 @@
         ],
         "geographicCoverage": "New York City DCWP HIC (address may be outside NYC)",
         "sourceDates": "2026-08-20",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -746,7 +746,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Distinct active licensed roofing business IDs after collapsing disciplinary-action repeats.",
@@ -756,7 +756,7 @@
         ],
         "geographicCoverage": "Illinois roofing credentials (address may be out of state)",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -774,7 +774,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-17T13:04:02Z",
       "snapshotAsOf": "2026-09-17",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Distinct certified asbestos abatement contracting firms.",
@@ -784,7 +784,7 @@
         ],
         "geographicCoverage": "Pennsylvania specialty certification (address may be out of state)",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -802,7 +802,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-17T13:04:02Z",
       "snapshotAsOf": "2026-09-17",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Distinct certified lead abatement contracting firms.",
@@ -812,7 +812,7 @@
         ],
         "geographicCoverage": "Pennsylvania specialty certification (address may be out of state)",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -830,7 +830,7 @@
       "sourceAsOf": "2026-09-18",
       "retrievedAt": "2026-09-18T13:30:18.794218+00:00",
       "snapshotAsOf": "2026-09-18",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Distinct numeric license identities after collapsing five trade prefixes.",
@@ -840,7 +840,7 @@
         ],
         "geographicCoverage": "Ohio commercial specialty trades (address may be out of state)",
         "sourceDates": "2026-09-18",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -858,7 +858,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-04",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Source-native contractor registration/license numbers.",
@@ -868,7 +868,7 @@
         ],
         "geographicCoverage": "Washington",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -886,7 +886,7 @@
       "sourceAsOf": "2026-09-02",
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-02",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Rows acquired from the CSLB License Master stream.",
@@ -896,7 +896,7 @@
         ],
         "geographicCoverage": "California",
         "sourceDates": "2026-09-02",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -914,7 +914,7 @@
       "sourceAsOf": "2026-09-03",
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-03",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "TDLR specialty/company contractor credentials.",
@@ -924,7 +924,7 @@
         ],
         "geographicCoverage": "Texas",
         "sourceDates": "2026-09-03",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -942,7 +942,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Family-separated discipline and enforcement source rows.",
@@ -952,7 +952,7 @@
         ],
         "geographicCoverage": "Florida, New Jersey, Arizona and Colorado source families",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -970,7 +970,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "An accepted official-source evidence-family row.",
@@ -980,7 +980,7 @@
         ],
         "geographicCoverage": "Florida",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -998,7 +998,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "An accepted official-source evidence-family row.",
@@ -1008,7 +1008,7 @@
         ],
         "geographicCoverage": "Florida",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1026,7 +1026,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "An accepted official-source evidence-family row.",
@@ -1036,7 +1036,7 @@
         ],
         "geographicCoverage": "Florida",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1054,7 +1054,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "An accepted official-source evidence-family row.",
@@ -1064,7 +1064,7 @@
         ],
         "geographicCoverage": "Florida",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1082,7 +1082,7 @@
       "sourceAsOf": "2026-08-13",
       "retrievedAt": null,
       "snapshotAsOf": "2026-08-13",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "WALL, Wage Watchlist, and Treasury construction/vendor rows retained by family.",
@@ -1092,7 +1092,7 @@
         ],
         "geographicCoverage": "New Jersey",
         "sourceDates": "2026-08-13",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1110,7 +1110,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-04",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Disciplinary rows already in the research graph.",
@@ -1120,7 +1120,7 @@
         ],
         "geographicCoverage": "Arizona",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1138,7 +1138,7 @@
       "sourceAsOf": "2026-08-25",
       "retrievedAt": "2026-09-10T12:59:41.003456+00:00",
       "snapshotAsOf": "2026-09-08",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Official DPOR contractor revocation-release observations.",
@@ -1148,7 +1148,7 @@
         ],
         "geographicCoverage": "Virginia",
         "sourceDates": "2026-08-25",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1166,7 +1166,7 @@
       "sourceAsOf": "2026-02-12",
       "retrievedAt": "2026-09-17T13:04:02Z",
       "snapshotAsOf": "2026-09-17",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Current Prevailing Wage Act debarment table rows.",
@@ -1176,7 +1176,7 @@
         ],
         "geographicCoverage": "Pennsylvania public contracts",
         "sourceDates": "2026-02-12",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1194,7 +1194,7 @@
       "sourceAsOf": "2021-06-01",
       "retrievedAt": "2026-09-17T17:30:00Z",
       "snapshotAsOf": "2026-09-17",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Official debarred-vendor file rows last revised 2021-06-01.",
@@ -1204,7 +1204,7 @@
         ],
         "geographicCoverage": "North Carolina state procurement",
         "sourceDates": "2021-06-01",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1222,7 +1222,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Rows in production permit_source_records.",
@@ -1232,7 +1232,7 @@
         ],
         "geographicCoverage": "Selected indexed permit sources",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1250,7 +1250,7 @@
       "sourceAsOf": "2026-08-07",
       "retrievedAt": null,
       "snapshotAsOf": "2026-08-13",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "DCA permit-issued and certificate-issued source records.",
@@ -1260,7 +1260,7 @@
         ],
         "geographicCoverage": "New Jersey municipalities",
         "sourceDates": "2026-08-07",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1278,7 +1278,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "City-issued construction permit rows.",
@@ -1288,7 +1288,7 @@
         ],
         "geographicCoverage": "City of Austin—not Travis County or metro",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1306,7 +1306,7 @@
       "sourceAsOf": "2026-09-02",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Permit records at address grain.",
@@ -1316,7 +1316,7 @@
         ],
         "geographicCoverage": "City and County of San Francisco",
         "sourceDates": "2026-09-02",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1334,7 +1334,7 @@
       "sourceAsOf": "2026-08-31",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Issued building permit rows in the current local source.",
@@ -1344,7 +1344,7 @@
         ],
         "geographicCoverage": "City of Los Angeles—not LA County",
         "sourceDates": "2026-08-31",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1362,7 +1362,7 @@
       "sourceAsOf": "weekly / 2026-08-31",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Certificate-of-occupancy source rows.",
@@ -1372,7 +1372,7 @@
         ],
         "geographicCoverage": "City of Los Angeles",
         "sourceDates": "weekly / 2026-08-31",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1390,7 +1390,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Bond filing rows associated with L&I contractor numbers.",
@@ -1400,7 +1400,7 @@
         ],
         "geographicCoverage": "Washington",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1418,7 +1418,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Exact contractor IDs appearing in the bond file.",
@@ -1428,7 +1428,7 @@
         ],
         "geographicCoverage": "Washington",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1446,7 +1446,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Liability-insurance filing rows associated with L&I contractor numbers.",
@@ -1456,7 +1456,7 @@
         ],
         "geographicCoverage": "Washington",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1474,7 +1474,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Exact contractor IDs appearing in the insurance file.",
@@ -1484,7 +1484,7 @@
         ],
         "geographicCoverage": "Washington",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1502,7 +1502,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Exact IDs present in General, Bond, and Insurance files.",
@@ -1512,7 +1512,7 @@
         ],
         "geographicCoverage": "Washington",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1530,7 +1530,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Published contact observation rows.",
@@ -1540,7 +1540,7 @@
         ],
         "geographicCoverage": "Research graph",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1558,7 +1558,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Public-eligible phone fields on L&I registration rows.",
@@ -1568,7 +1568,7 @@
         ],
         "geographicCoverage": "Washington",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1586,7 +1586,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Owner/member/partner/officer relationships published by L&I.",
@@ -1596,7 +1596,7 @@
         ],
         "geographicCoverage": "Washington",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1614,7 +1614,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Public-eligible business addresses published by ROC.",
@@ -1624,7 +1624,7 @@
         ],
         "geographicCoverage": "Arizona",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1642,7 +1642,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Named qualifying-party strings on license rows.",
@@ -1652,7 +1652,7 @@
         ],
         "geographicCoverage": "Arizona",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1670,7 +1670,7 @@
       "sourceAsOf": "2026-09-03",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "CMBL vendors selected by accepted construction codes/categories.",
@@ -1680,7 +1680,7 @@
         ],
         "geographicCoverage": "Texas",
         "sourceDates": "2026-09-03",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1698,7 +1698,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Project-detail rows carrying Prime Contractor UBI.",
@@ -1708,25 +1708,25 @@
         ],
         "geographicCoverage": "Washington",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
       "key": "evidence_state_pages",
       "label": "Published state intelligence pages",
-      "value": 18,
+      "value": 19,
       "unit": "count",
       "grain": "published state intelligence route",
       "denominator": "Published statewide intelligence destinations.",
       "description": "All live Verify states or a research-depth rating.",
-      "coverage": "FL · NJ · CA · TX · WA · AZ · CO · VA · NY · IL · OR · PA · NC · OH · MA · TN · NV · MN",
+      "coverage": "FL · NJ · CA · TX · WA · AZ · CO · VA · NY · IL · OR · PA · NC · OH · MA · TN · NV · MN · AL",
       "contributingSourceSystems": [
         "Accepted state publication snapshots"
       ],
       "sourceAsOf": null,
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Published statewide intelligence destinations.",
@@ -1734,9 +1734,9 @@
         "contributingSourceSystems": [
           "Accepted state publication snapshots"
         ],
-        "geographicCoverage": "FL · NJ · CA · TX · WA · AZ · CO · VA · NY · IL · OR · PA · NC · OH · MA · TN · NV · MN",
+        "geographicCoverage": "FL · NJ · CA · TX · WA · AZ · CO · VA · NY · IL · OR · PA · NC · OH · MA · TN · NV · MN · AL",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1754,7 +1754,7 @@
       "sourceAsOf": "2026-08-13",
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Published county intelligence routes.",
@@ -1764,7 +1764,7 @@
         ],
         "geographicCoverage": "Selected Florida and New Jersey counties",
         "sourceDates": "2026-08-13",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1782,7 +1782,7 @@
       "sourceAsOf": "2026-09-02",
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Published local city intelligence routes.",
@@ -1792,7 +1792,7 @@
         ],
         "geographicCoverage": "San Francisco and City of Los Angeles",
         "sourceDates": "2026-09-02",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1810,7 +1810,7 @@
       "sourceAsOf": "2026-08-20",
       "retrievedAt": "2026-09-12T21:08:12.298Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Published NYC local intelligence route.",
@@ -1820,7 +1820,7 @@
         ],
         "geographicCoverage": "New York City DCWP HIC",
         "sourceDates": "2026-08-20",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1838,7 +1838,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": null,
       "snapshotAsOf": null,
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Dedicated published Texas local intelligence routes.",
@@ -1848,7 +1848,7 @@
         ],
         "geographicCoverage": "City of Austin",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1866,7 +1866,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted business_credential; business_credentials.EC.active_exact.",
@@ -1876,7 +1876,7 @@
         ],
         "geographicCoverage": "CO",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1894,7 +1894,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted business_credential; business_credentials.PC.active_exact.",
@@ -1904,7 +1904,7 @@
         ],
         "geographicCoverage": "CO",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1922,7 +1922,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted business_credential; business_credentials.combined_active_exact_if_shown.value.",
@@ -1932,7 +1932,7 @@
         ],
         "geographicCoverage": "CO",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1950,7 +1950,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted disciplinary_observation; discipline.contractor_relevant_rows.",
@@ -1960,7 +1960,7 @@
         ],
         "geographicCoverage": "CO",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -1978,7 +1978,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted person_credential; individual_trades.prefixes.ME.active_exact.",
@@ -1988,7 +1988,7 @@
         ],
         "geographicCoverage": "CO",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2006,7 +2006,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted person_credential; individual_trades.prefixes.JW.active_exact.",
@@ -2016,7 +2016,7 @@
         ],
         "geographicCoverage": "CO",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2034,7 +2034,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted person_credential; individual_trades.prefixes.RW.active_exact.",
@@ -2044,7 +2044,7 @@
         ],
         "geographicCoverage": "CO",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2062,7 +2062,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted person_credential; individual_trades.prefixes.MP.active_exact.",
@@ -2072,7 +2072,7 @@
         ],
         "geographicCoverage": "CO",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2090,7 +2090,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted person_credential; individual_trades.prefixes.JP.active_exact.",
@@ -2100,7 +2100,7 @@
         ],
         "geographicCoverage": "CO",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2118,7 +2118,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted person_credential; individual_trades.prefixes.RP.active_exact.",
@@ -2128,7 +2128,7 @@
         ],
         "geographicCoverage": "CO",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2146,7 +2146,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted historical_debarment_period; debarment.registry_field_has_been_debarred_yes.",
@@ -2156,7 +2156,7 @@
         ],
         "geographicCoverage": "NY",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2174,7 +2174,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted roofing_source_row; roofing.source_rows.",
@@ -2184,7 +2184,7 @@
         ],
         "geographicCoverage": "IL",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2202,7 +2202,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted business_or_person_credential_id; roofing.distinct_license_ids.",
@@ -2212,7 +2212,7 @@
         ],
         "geographicCoverage": "IL",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2230,7 +2230,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted business_credential_source_row; business_licenses.active_business_y_rows.",
@@ -2240,7 +2240,7 @@
         ],
         "geographicCoverage": "IL",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2258,7 +2258,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted person_credential_id; qualifying_parties.active_distinct_license_ids.",
@@ -2268,7 +2268,7 @@
         ],
         "geographicCoverage": "IL",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2286,7 +2286,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted disciplinary_observation; discipline.flag_rows.",
@@ -2296,7 +2296,7 @@
         ],
         "geographicCoverage": "IL",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2314,7 +2314,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted credential_id_with_evidence; discipline.flag_distinct_license_ids.",
@@ -2324,7 +2324,7 @@
         ],
         "geographicCoverage": "IL",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2342,7 +2342,7 @@
       "sourceAsOf": "2026-08-20",
       "retrievedAt": "2026-09-12T13:47:42Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted license_id; licenses.distinct_license_ids.",
@@ -2352,7 +2352,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-08-20",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2370,7 +2370,7 @@
       "sourceAsOf": "2026-08-20",
       "retrievedAt": "2026-09-12T13:47:42Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted dcwp_buid; licenses.distinct_business_unique_ids.",
@@ -2380,7 +2380,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-08-20",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2398,7 +2398,7 @@
       "sourceAsOf": "2026-09-02",
       "retrievedAt": "2026-09-12T13:47:46Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted complaint_observation; complaints.parsed_rows.",
@@ -2408,7 +2408,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-02",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2426,7 +2426,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": "2026-09-12T13:47:49Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted inspection_observation; inspections.parsed_rows.",
@@ -2436,7 +2436,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-04",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2454,7 +2454,7 @@
       "sourceAsOf": "2026-09-02",
       "retrievedAt": "2026-09-12T13:47:47Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted charge_observation; charges.parsed_rows.",
@@ -2464,7 +2464,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-02",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2482,7 +2482,7 @@
       "sourceAsOf": "2026-09-01",
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted published_name; wall_of_shame.name_count.",
@@ -2492,7 +2492,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-01",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2510,7 +2510,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted permit_observation; dob_now.parsed_rows.",
@@ -2520,7 +2520,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2538,7 +2538,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted dobnow_permit_id; dob_now.distinct_permit_ids.",
@@ -2548,7 +2548,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2566,7 +2566,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted job_filing_id; dob_now.distinct_job_filing_numbers.",
@@ -2576,7 +2576,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2594,7 +2594,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted bbl; dob_now.distinct_bbls.",
@@ -2604,7 +2604,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2622,7 +2622,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted bin; dob_now.distinct_bins.",
@@ -2632,7 +2632,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2650,7 +2650,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted bis_permit_id; legacy.distinct_permit_ids.",
@@ -2660,7 +2660,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2678,7 +2678,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted bis_job_id; legacy.distinct_job_ids.",
@@ -2688,7 +2688,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-11",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2706,7 +2706,7 @@
       "sourceAsOf": "2026-08-24",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted tax_lot; pluto.universe_rows.",
@@ -2716,7 +2716,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-08-24",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2734,7 +2734,7 @@
       "sourceAsOf": "2026-08-24",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted matched_bbl; pluto.matched_rows.",
@@ -2744,7 +2744,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-08-24",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2762,7 +2762,7 @@
       "sourceAsOf": "2026-09-08",
       "retrievedAt": "2026-09-12T17:05:27Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted document_observation; master.parsed_rows.",
@@ -2772,7 +2772,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-08",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2790,7 +2790,7 @@
       "sourceAsOf": "2026-09-08",
       "retrievedAt": "2026-09-12T17:05:27Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted document_id; master.distinct_document_ids.",
@@ -2800,7 +2800,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-08",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2818,7 +2818,7 @@
       "sourceAsOf": "2026-09-08",
       "retrievedAt": "2026-09-12T17:05:27Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted legal_row; legals.parsed_rows.",
@@ -2828,7 +2828,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-08",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2846,7 +2846,7 @@
       "sourceAsOf": null,
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted bbl; linking.distinct_bbls.",
@@ -2856,7 +2856,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2874,7 +2874,7 @@
       "sourceAsOf": null,
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted document_id; linking.documents_with_bbl.",
@@ -2884,7 +2884,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2902,7 +2902,7 @@
       "sourceAsOf": "2026-09-08",
       "retrievedAt": "2026-09-12T17:05:27Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted deed_type_observation; master.display_group_counts.deed.",
@@ -2912,7 +2912,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-08",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2930,7 +2930,7 @@
       "sourceAsOf": "2026-09-08",
       "retrievedAt": "2026-09-12T17:05:27Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted mortgage_type_observation; master.display_group_counts.mortgage.",
@@ -2940,7 +2940,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "2026-09-08",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     },
     {
@@ -2958,7 +2958,7 @@
       "sourceAsOf": null,
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "publicationStatus": "PUBLIC",
       "trace": {
         "counts": "Accepted document_id; linking.documents_with_gt1_bbl.",
@@ -2968,7 +2968,7 @@
         ],
         "geographicCoverage": "New York City",
         "sourceDates": "Official date unknown; source clocks retained separately.",
-        "generationDate": "2026-09-26"
+        "generationDate": "2026-10-05"
       }
     }
   ],
@@ -27220,6 +27220,1034 @@
         "fingerprint": "7f9ba09a491f185178a511ede5c08311ec767362459ecce8aa8c2f044fa1105f"
       }
     },
+    "AL": {
+      "path": "lib/alabama-intelligence/accepted-snapshot.json",
+      "snapshot": {
+        "contract_name": "contractor-al-state-intel-v1",
+        "path": "/alabama",
+        "regulator": "Alabama Licensing Board for General Contractors",
+        "source": {
+          "name": "FullRosterReport",
+          "url": "https://licensesearch.alabama.gov/genconbd/FullRosterReport",
+          "portal": "https://licensesearch.alabama.gov/genconbd",
+          "retrievedAt": "2026-10-05",
+          "sourceAsOf": null,
+          "bytes": 1585911,
+          "sha256": "9c927ca399bde657d3b02b1adeb0afed48f55fe9d8de7519de748bcc5448981d",
+          "lineScanDataRows": 8848,
+          "parsedRows": 8848
+        },
+        "rows": 8848,
+        "distinctLicenses": 8848,
+        "duplicateLicenses": 0,
+        "emptyLicenses": 0,
+        "explicitSubcontractorSpecialtyRows": 3312,
+        "inactiveSpecialtyRows": 76,
+        "otherSpecialtyRows": 5460,
+        "unclassifiedRows": 5536,
+        "primeContractorLabel": "NOT_IN_SOURCE",
+        "businessPersonGrain": "NOT_LABELED",
+        "statusColumn": "NOT_IN_SOURCE",
+        "bidLimitIsLicenseClass": false,
+        "expirationIsNotStatus": true,
+        "expirationDatePresent": 8848,
+        "extensionDatePresent": 99,
+        "mailingAddressStateIsNotLicensingState": true,
+        "addressIsNotServiceArea": true,
+        "specialtyDistinctStrings": 3360,
+        "nameOnlySubcontractorText": [
+          {
+            "license": "11104",
+            "name": "ALL-SOUTH SUBCONTRACTORS INC",
+            "specialty": "BC: BUILDING CONSTRUCTION"
+          },
+          {
+            "license": "27994",
+            "name": "THOMAS & ASSOCIATES SUBCONTRACTORS, INC",
+            "specialty": "BC-S: ACOUSTICAL TREATMENTS AND INSULATION, BC-S: DRYWALL AND METAL STUDS, BC-S: METAL STUDS, BC: BUILDING CONSTRUCTION"
+          },
+          {
+            "license": "45133",
+            "name": "MID-SOUTH SUBCONTRACTORS INC",
+            "specialty": "BC-S: ROOFING AND SHEET METAL, BC-S: SIDING INSTALLATION, BC: BUILDING CONSTRUCTION, REP: RECIPROCITY STATE OF MISSISSIPPI"
+          }
+        ],
+        "prefixCounts": {
+          "S-": 3312,
+          "IA-": 76,
+          "numeric": 5460
+        },
+        "bidLimits": [
+          {
+            "value": "U UNLIMITED",
+            "count": 4534,
+            "label": "U UNLIMITED"
+          },
+          {
+            "value": "",
+            "count": 3378,
+            "label": "blank in source"
+          },
+          {
+            "value": "D 1000000",
+            "count": 376,
+            "label": "D 1000000"
+          },
+          {
+            "value": "E 3000000",
+            "count": 275,
+            "label": "E 3000000"
+          },
+          {
+            "value": "C 500000",
+            "count": 130,
+            "label": "C 500000"
+          },
+          {
+            "value": "B 250000",
+            "count": 101,
+            "label": "B 250000"
+          },
+          {
+            "value": "A 100000",
+            "count": 54,
+            "label": "A 100000"
+          }
+        ],
+        "topSpecialtyStrings": [
+          {
+            "specialty": "BC: BUILDING CONSTRUCTION",
+            "count": 660
+          },
+          {
+            "specialty": "SUBCONTRACTOR:  ELECTRICAL",
+            "count": 322
+          },
+          {
+            "specialty": "BCU4: BUILDING CONSTRUCTION UNDER FOUR STORIES",
+            "count": 230
+          },
+          {
+            "specialty": "SUBCONTRACTOR:  HEATING, VENTILATION, AND AIR CONDITIONING",
+            "count": 186
+          },
+          {
+            "specialty": "BC: BUILDING CONSTRUCTION, REP: RECIPROCITY STATE OF TENNESSEE",
+            "count": 178
+          },
+          {
+            "specialty": "E: ELECTRICAL",
+            "count": 145
+          },
+          {
+            "specialty": "BC-S: REMODELING AND ALTERATION",
+            "count": 132
+          },
+          {
+            "specialty": "SP: SWIMMING POOLS",
+            "count": 118
+          },
+          {
+            "specialty": "BC: BUILDING CONSTRUCTION, REP: RECIPROCITY STATE OF LOUISIANA",
+            "count": 114
+          },
+          {
+            "specialty": "SUBCONTRACTOR:  CONCRETE",
+            "count": 114
+          },
+          {
+            "specialty": "SUBCONTRACTOR:  PLUMBING",
+            "count": 113
+          }
+        ],
+        "mailingAddressStates": [
+          {
+            "value": "AL",
+            "count": 4155
+          },
+          {
+            "value": "GA",
+            "count": 1044
+          },
+          {
+            "value": "TN",
+            "count": 500
+          },
+          {
+            "value": "FL",
+            "count": 433
+          },
+          {
+            "value": "MS",
+            "count": 359
+          },
+          {
+            "value": "TX",
+            "count": 326
+          },
+          {
+            "value": "LA",
+            "count": 300
+          },
+          {
+            "value": "NC",
+            "count": 165
+          },
+          {
+            "value": "OH",
+            "count": 128
+          },
+          {
+            "value": "MO",
+            "count": 97
+          },
+          {
+            "value": "SC",
+            "count": 96
+          },
+          {
+            "value": "IN",
+            "count": 92
+          },
+          {
+            "value": "KY",
+            "count": 90
+          },
+          {
+            "value": "MI",
+            "count": 89
+          },
+          {
+            "value": "IL",
+            "count": 86
+          },
+          {
+            "value": "PA",
+            "count": 86
+          },
+          {
+            "value": "AR",
+            "count": 76
+          },
+          {
+            "value": "WI",
+            "count": 66
+          },
+          {
+            "value": "MN",
+            "count": 55
+          },
+          {
+            "value": "CA",
+            "count": 46
+          },
+          {
+            "value": "",
+            "count": 44
+          },
+          {
+            "value": "KS",
+            "count": 44
+          },
+          {
+            "value": "VA",
+            "count": 43
+          },
+          {
+            "value": "MD",
+            "count": 37
+          },
+          {
+            "value": "NJ",
+            "count": 32
+          },
+          {
+            "value": "OK",
+            "count": 32
+          },
+          {
+            "value": "AZ",
+            "count": 30
+          },
+          {
+            "value": "NY",
+            "count": 30
+          },
+          {
+            "value": "CO",
+            "count": 25
+          },
+          {
+            "value": "MA",
+            "count": 25
+          },
+          {
+            "value": "A",
+            "count": 22
+          },
+          {
+            "value": "UT",
+            "count": 21
+          },
+          {
+            "value": "IA",
+            "count": 20
+          },
+          {
+            "value": "NE",
+            "count": 17
+          },
+          {
+            "value": "WA",
+            "count": 16
+          },
+          {
+            "value": "L",
+            "count": 13
+          },
+          {
+            "value": "CT",
+            "count": 8
+          },
+          {
+            "value": "OR",
+            "count": 7
+          },
+          {
+            "value": "ID",
+            "count": 6
+          },
+          {
+            "value": "ON",
+            "count": 6
+          },
+          {
+            "value": "WV",
+            "count": 6
+          },
+          {
+            "value": "DE",
+            "count": 5
+          },
+          {
+            "value": "M",
+            "count": 5
+          },
+          {
+            "value": "NV",
+            "count": 5
+          },
+          {
+            "value": "GE",
+            "count": 4
+          },
+          {
+            "value": "MT",
+            "count": 4
+          },
+          {
+            "value": "N",
+            "count": 4
+          },
+          {
+            "value": "NH",
+            "count": 4
+          },
+          {
+            "value": "X",
+            "count": 4
+          },
+          {
+            "value": "ME",
+            "count": 3
+          },
+          {
+            "value": "ND",
+            "count": 3
+          },
+          {
+            "value": "TE",
+            "count": 3
+          },
+          {
+            "value": "35",
+            "count": 2
+          },
+          {
+            "value": "AK",
+            "count": 2
+          },
+          {
+            "value": "AU",
+            "count": 2
+          },
+          {
+            "value": "G",
+            "count": 2
+          },
+          {
+            "value": "IO",
+            "count": 2
+          },
+          {
+            "value": "NM",
+            "count": 2
+          },
+          {
+            "value": "QU",
+            "count": 2
+          },
+          {
+            "value": "SD",
+            "count": 2
+          },
+          {
+            "value": "UP",
+            "count": 2
+          },
+          {
+            "value": "3",
+            "count": 1
+          },
+          {
+            "value": "A,",
+            "count": 1
+          },
+          {
+            "value": "CZ",
+            "count": 1
+          },
+          {
+            "value": "DC",
+            "count": 1
+          },
+          {
+            "value": "KA",
+            "count": 1
+          },
+          {
+            "value": "P3",
+            "count": 1
+          },
+          {
+            "value": "PO",
+            "count": 1
+          },
+          {
+            "value": "RO",
+            "count": 1
+          },
+          {
+            "value": "S",
+            "count": 1
+          },
+          {
+            "value": "SO",
+            "count": 1
+          },
+          {
+            "value": "T",
+            "count": 1
+          },
+          {
+            "value": "WE",
+            "count": 1
+          },
+          {
+            "value": "WY",
+            "count": 1
+          }
+        ],
+        "columnsRepublished": [
+          "Name",
+          "License_Number",
+          "City",
+          "State",
+          "Zip",
+          "Bid_Limit",
+          "Specialty",
+          "Expiration_Date",
+          "Extension_Date"
+        ],
+        "columnsNotRepublished": [
+          "Address",
+          "Phone_Number",
+          "fax"
+        ],
+        "otherBoards": [
+          {
+            "id": "hblb",
+            "name": "Home Builders Licensure Board",
+            "site": "https://hblb.alabama.gov/",
+            "search": "https://alhobv7prod.glsuite.us/GLSuiteWeb/Clients/ALHOB/Public/LicenseeSearch.aspx",
+            "retrievedAt": "2026-10-05",
+            "bulkRoster": "NOT_ACQUIRED",
+            "rows": null,
+            "grain": "The board site prints separate individual and corporate license instructions. Public verification is a search form.",
+            "note": "Separate from the ALBGC FullRosterReport. No bulk roster was downloaded."
+          },
+          {
+            "id": "aecb",
+            "name": "Alabama Board of Electrical Contractors",
+            "site": "https://aecb.alabama.gov/",
+            "search": "https://alecb-search.kalmservices.net/",
+            "retrievedAt": "2026-10-05",
+            "bulkRoster": "NOT_ACQUIRED",
+            "rows": null,
+            "grain": "NOT_ACQUIRED",
+            "note": "The consumer page links a licensee search. No bulk roster was found. ALBGC specialty text that says ELECTRICAL is an ALBGC classification, not this board."
+          },
+          {
+            "id": "hacr",
+            "name": "Alabama Board of Heating, Air Conditioning and Refrigeration Contractors",
+            "site": "https://hacr.alabama.gov/",
+            "search": "https://hacr.igovsolution.net/online/Lookups/Individual_Lookup.aspx",
+            "retrievedAt": "2026-10-05",
+            "bulkRoster": "NOT_ACQUIRED",
+            "rows": null,
+            "grain": "Public verification is an individual lookup form.",
+            "note": "ALBGC specialty text that says HVAC is an ALBGC classification, not this board."
+          },
+          {
+            "id": "pgfb",
+            "name": "Alabama Plumbers and Gas Fitters Examining Board",
+            "site": "https://pgfb.alabama.gov/",
+            "search": "https://alpgfb.igovsolution.net/online/Lookups/Individual.aspx",
+            "businessSearch": "https://alpgfb.igovsolution.net/online/Lookups/Business.aspx",
+            "retrievedAt": "2026-10-05",
+            "bulkRoster": "NOT_ACQUIRED",
+            "rows": null,
+            "grain": "Individual lookup and business lookup are separate search forms. Neither roster was downloaded.",
+            "note": "ALBGC specialty text that says PLUMBING is an ALBGC classification, not this board."
+          }
+        ],
+        "existingMatches": 0,
+        "netNewCanonicalEntities": 0,
+        "unresolvedIdentities": 8848,
+        "newProfiles": 0,
+        "profileAttachments": 0,
+        "graphWrites": 0,
+        "claimEligibilityBroadened": false,
+        "nameOnlyAdverseJoins": 0,
+        "countyOrLocalRoutes": 0,
+        "generatedAt": "2026-10-05T13:22:34.940Z",
+        "fingerprint": "d25038c1ea25643b2c1690e4212e61a551c7aa8a339db6994e4643d9c7c496e2"
+      }
+    },
+    "lib/alabama-intelligence/accepted-snapshot.json": {
+      "path": "lib/alabama-intelligence/accepted-snapshot.json",
+      "snapshot": {
+        "contract_name": "contractor-al-state-intel-v1",
+        "path": "/alabama",
+        "regulator": "Alabama Licensing Board for General Contractors",
+        "source": {
+          "name": "FullRosterReport",
+          "url": "https://licensesearch.alabama.gov/genconbd/FullRosterReport",
+          "portal": "https://licensesearch.alabama.gov/genconbd",
+          "retrievedAt": "2026-10-05",
+          "sourceAsOf": null,
+          "bytes": 1585911,
+          "sha256": "9c927ca399bde657d3b02b1adeb0afed48f55fe9d8de7519de748bcc5448981d",
+          "lineScanDataRows": 8848,
+          "parsedRows": 8848
+        },
+        "rows": 8848,
+        "distinctLicenses": 8848,
+        "duplicateLicenses": 0,
+        "emptyLicenses": 0,
+        "explicitSubcontractorSpecialtyRows": 3312,
+        "inactiveSpecialtyRows": 76,
+        "otherSpecialtyRows": 5460,
+        "unclassifiedRows": 5536,
+        "primeContractorLabel": "NOT_IN_SOURCE",
+        "businessPersonGrain": "NOT_LABELED",
+        "statusColumn": "NOT_IN_SOURCE",
+        "bidLimitIsLicenseClass": false,
+        "expirationIsNotStatus": true,
+        "expirationDatePresent": 8848,
+        "extensionDatePresent": 99,
+        "mailingAddressStateIsNotLicensingState": true,
+        "addressIsNotServiceArea": true,
+        "specialtyDistinctStrings": 3360,
+        "nameOnlySubcontractorText": [
+          {
+            "license": "11104",
+            "name": "ALL-SOUTH SUBCONTRACTORS INC",
+            "specialty": "BC: BUILDING CONSTRUCTION"
+          },
+          {
+            "license": "27994",
+            "name": "THOMAS & ASSOCIATES SUBCONTRACTORS, INC",
+            "specialty": "BC-S: ACOUSTICAL TREATMENTS AND INSULATION, BC-S: DRYWALL AND METAL STUDS, BC-S: METAL STUDS, BC: BUILDING CONSTRUCTION"
+          },
+          {
+            "license": "45133",
+            "name": "MID-SOUTH SUBCONTRACTORS INC",
+            "specialty": "BC-S: ROOFING AND SHEET METAL, BC-S: SIDING INSTALLATION, BC: BUILDING CONSTRUCTION, REP: RECIPROCITY STATE OF MISSISSIPPI"
+          }
+        ],
+        "prefixCounts": {
+          "S-": 3312,
+          "IA-": 76,
+          "numeric": 5460
+        },
+        "bidLimits": [
+          {
+            "value": "U UNLIMITED",
+            "count": 4534,
+            "label": "U UNLIMITED"
+          },
+          {
+            "value": "",
+            "count": 3378,
+            "label": "blank in source"
+          },
+          {
+            "value": "D 1000000",
+            "count": 376,
+            "label": "D 1000000"
+          },
+          {
+            "value": "E 3000000",
+            "count": 275,
+            "label": "E 3000000"
+          },
+          {
+            "value": "C 500000",
+            "count": 130,
+            "label": "C 500000"
+          },
+          {
+            "value": "B 250000",
+            "count": 101,
+            "label": "B 250000"
+          },
+          {
+            "value": "A 100000",
+            "count": 54,
+            "label": "A 100000"
+          }
+        ],
+        "topSpecialtyStrings": [
+          {
+            "specialty": "BC: BUILDING CONSTRUCTION",
+            "count": 660
+          },
+          {
+            "specialty": "SUBCONTRACTOR:  ELECTRICAL",
+            "count": 322
+          },
+          {
+            "specialty": "BCU4: BUILDING CONSTRUCTION UNDER FOUR STORIES",
+            "count": 230
+          },
+          {
+            "specialty": "SUBCONTRACTOR:  HEATING, VENTILATION, AND AIR CONDITIONING",
+            "count": 186
+          },
+          {
+            "specialty": "BC: BUILDING CONSTRUCTION, REP: RECIPROCITY STATE OF TENNESSEE",
+            "count": 178
+          },
+          {
+            "specialty": "E: ELECTRICAL",
+            "count": 145
+          },
+          {
+            "specialty": "BC-S: REMODELING AND ALTERATION",
+            "count": 132
+          },
+          {
+            "specialty": "SP: SWIMMING POOLS",
+            "count": 118
+          },
+          {
+            "specialty": "BC: BUILDING CONSTRUCTION, REP: RECIPROCITY STATE OF LOUISIANA",
+            "count": 114
+          },
+          {
+            "specialty": "SUBCONTRACTOR:  CONCRETE",
+            "count": 114
+          },
+          {
+            "specialty": "SUBCONTRACTOR:  PLUMBING",
+            "count": 113
+          }
+        ],
+        "mailingAddressStates": [
+          {
+            "value": "AL",
+            "count": 4155
+          },
+          {
+            "value": "GA",
+            "count": 1044
+          },
+          {
+            "value": "TN",
+            "count": 500
+          },
+          {
+            "value": "FL",
+            "count": 433
+          },
+          {
+            "value": "MS",
+            "count": 359
+          },
+          {
+            "value": "TX",
+            "count": 326
+          },
+          {
+            "value": "LA",
+            "count": 300
+          },
+          {
+            "value": "NC",
+            "count": 165
+          },
+          {
+            "value": "OH",
+            "count": 128
+          },
+          {
+            "value": "MO",
+            "count": 97
+          },
+          {
+            "value": "SC",
+            "count": 96
+          },
+          {
+            "value": "IN",
+            "count": 92
+          },
+          {
+            "value": "KY",
+            "count": 90
+          },
+          {
+            "value": "MI",
+            "count": 89
+          },
+          {
+            "value": "IL",
+            "count": 86
+          },
+          {
+            "value": "PA",
+            "count": 86
+          },
+          {
+            "value": "AR",
+            "count": 76
+          },
+          {
+            "value": "WI",
+            "count": 66
+          },
+          {
+            "value": "MN",
+            "count": 55
+          },
+          {
+            "value": "CA",
+            "count": 46
+          },
+          {
+            "value": "",
+            "count": 44
+          },
+          {
+            "value": "KS",
+            "count": 44
+          },
+          {
+            "value": "VA",
+            "count": 43
+          },
+          {
+            "value": "MD",
+            "count": 37
+          },
+          {
+            "value": "NJ",
+            "count": 32
+          },
+          {
+            "value": "OK",
+            "count": 32
+          },
+          {
+            "value": "AZ",
+            "count": 30
+          },
+          {
+            "value": "NY",
+            "count": 30
+          },
+          {
+            "value": "CO",
+            "count": 25
+          },
+          {
+            "value": "MA",
+            "count": 25
+          },
+          {
+            "value": "A",
+            "count": 22
+          },
+          {
+            "value": "UT",
+            "count": 21
+          },
+          {
+            "value": "IA",
+            "count": 20
+          },
+          {
+            "value": "NE",
+            "count": 17
+          },
+          {
+            "value": "WA",
+            "count": 16
+          },
+          {
+            "value": "L",
+            "count": 13
+          },
+          {
+            "value": "CT",
+            "count": 8
+          },
+          {
+            "value": "OR",
+            "count": 7
+          },
+          {
+            "value": "ID",
+            "count": 6
+          },
+          {
+            "value": "ON",
+            "count": 6
+          },
+          {
+            "value": "WV",
+            "count": 6
+          },
+          {
+            "value": "DE",
+            "count": 5
+          },
+          {
+            "value": "M",
+            "count": 5
+          },
+          {
+            "value": "NV",
+            "count": 5
+          },
+          {
+            "value": "GE",
+            "count": 4
+          },
+          {
+            "value": "MT",
+            "count": 4
+          },
+          {
+            "value": "N",
+            "count": 4
+          },
+          {
+            "value": "NH",
+            "count": 4
+          },
+          {
+            "value": "X",
+            "count": 4
+          },
+          {
+            "value": "ME",
+            "count": 3
+          },
+          {
+            "value": "ND",
+            "count": 3
+          },
+          {
+            "value": "TE",
+            "count": 3
+          },
+          {
+            "value": "35",
+            "count": 2
+          },
+          {
+            "value": "AK",
+            "count": 2
+          },
+          {
+            "value": "AU",
+            "count": 2
+          },
+          {
+            "value": "G",
+            "count": 2
+          },
+          {
+            "value": "IO",
+            "count": 2
+          },
+          {
+            "value": "NM",
+            "count": 2
+          },
+          {
+            "value": "QU",
+            "count": 2
+          },
+          {
+            "value": "SD",
+            "count": 2
+          },
+          {
+            "value": "UP",
+            "count": 2
+          },
+          {
+            "value": "3",
+            "count": 1
+          },
+          {
+            "value": "A,",
+            "count": 1
+          },
+          {
+            "value": "CZ",
+            "count": 1
+          },
+          {
+            "value": "DC",
+            "count": 1
+          },
+          {
+            "value": "KA",
+            "count": 1
+          },
+          {
+            "value": "P3",
+            "count": 1
+          },
+          {
+            "value": "PO",
+            "count": 1
+          },
+          {
+            "value": "RO",
+            "count": 1
+          },
+          {
+            "value": "S",
+            "count": 1
+          },
+          {
+            "value": "SO",
+            "count": 1
+          },
+          {
+            "value": "T",
+            "count": 1
+          },
+          {
+            "value": "WE",
+            "count": 1
+          },
+          {
+            "value": "WY",
+            "count": 1
+          }
+        ],
+        "columnsRepublished": [
+          "Name",
+          "License_Number",
+          "City",
+          "State",
+          "Zip",
+          "Bid_Limit",
+          "Specialty",
+          "Expiration_Date",
+          "Extension_Date"
+        ],
+        "columnsNotRepublished": [
+          "Address",
+          "Phone_Number",
+          "fax"
+        ],
+        "otherBoards": [
+          {
+            "id": "hblb",
+            "name": "Home Builders Licensure Board",
+            "site": "https://hblb.alabama.gov/",
+            "search": "https://alhobv7prod.glsuite.us/GLSuiteWeb/Clients/ALHOB/Public/LicenseeSearch.aspx",
+            "retrievedAt": "2026-10-05",
+            "bulkRoster": "NOT_ACQUIRED",
+            "rows": null,
+            "grain": "The board site prints separate individual and corporate license instructions. Public verification is a search form.",
+            "note": "Separate from the ALBGC FullRosterReport. No bulk roster was downloaded."
+          },
+          {
+            "id": "aecb",
+            "name": "Alabama Board of Electrical Contractors",
+            "site": "https://aecb.alabama.gov/",
+            "search": "https://alecb-search.kalmservices.net/",
+            "retrievedAt": "2026-10-05",
+            "bulkRoster": "NOT_ACQUIRED",
+            "rows": null,
+            "grain": "NOT_ACQUIRED",
+            "note": "The consumer page links a licensee search. No bulk roster was found. ALBGC specialty text that says ELECTRICAL is an ALBGC classification, not this board."
+          },
+          {
+            "id": "hacr",
+            "name": "Alabama Board of Heating, Air Conditioning and Refrigeration Contractors",
+            "site": "https://hacr.alabama.gov/",
+            "search": "https://hacr.igovsolution.net/online/Lookups/Individual_Lookup.aspx",
+            "retrievedAt": "2026-10-05",
+            "bulkRoster": "NOT_ACQUIRED",
+            "rows": null,
+            "grain": "Public verification is an individual lookup form.",
+            "note": "ALBGC specialty text that says HVAC is an ALBGC classification, not this board."
+          },
+          {
+            "id": "pgfb",
+            "name": "Alabama Plumbers and Gas Fitters Examining Board",
+            "site": "https://pgfb.alabama.gov/",
+            "search": "https://alpgfb.igovsolution.net/online/Lookups/Individual.aspx",
+            "businessSearch": "https://alpgfb.igovsolution.net/online/Lookups/Business.aspx",
+            "retrievedAt": "2026-10-05",
+            "bulkRoster": "NOT_ACQUIRED",
+            "rows": null,
+            "grain": "Individual lookup and business lookup are separate search forms. Neither roster was downloaded.",
+            "note": "ALBGC specialty text that says PLUMBING is an ALBGC classification, not this board."
+          }
+        ],
+        "existingMatches": 0,
+        "netNewCanonicalEntities": 0,
+        "unresolvedIdentities": 8848,
+        "newProfiles": 0,
+        "profileAttachments": 0,
+        "graphWrites": 0,
+        "claimEligibilityBroadened": false,
+        "nameOnlyAdverseJoins": 0,
+        "countyOrLocalRoutes": 0,
+        "generatedAt": "2026-10-05T13:22:34.940Z",
+        "fingerprint": "d25038c1ea25643b2c1690e4212e61a551c7aa8a339db6994e4643d9c7c496e2"
+      }
+    },
     "lib/arizona-intelligence/accepted-snapshot.json": {
       "path": "lib/arizona-intelligence/accepted-snapshot.json",
       "snapshot": {
@@ -39907,6 +40935,21 @@
       ]
     },
     {
+      "state": "AL",
+      "route": "/alabama",
+      "status": "STATE_SOURCE_LIVE",
+      "specialistComplete": false,
+      "completion": "NOT_ASSERTED",
+      "capabilities": [
+        {
+          "id": "accepted-specialist-evidence",
+          "status": "STATE_SOURCE_LIVE",
+          "metricKeys": [],
+          "bulkCount": null
+        }
+      ]
+    },
+    {
       "state": "LA",
       "route": null,
       "status": "STATE_SOURCE_LIVE",
@@ -39953,21 +40996,6 @@
           "metricKeys": [
             "live_credential_records"
           ],
-          "bulkCount": null
-        }
-      ]
-    },
-    {
-      "state": "AL",
-      "route": null,
-      "status": "UNKNOWN",
-      "specialistComplete": false,
-      "completion": "NOT_ASSERTED",
-      "capabilities": [
-        {
-          "id": "state-source",
-          "status": "UNKNOWN",
-          "metricKeys": [],
           "bulkCount": null
         }
       ]
@@ -40420,7 +41448,7 @@
       "sourceAsOf": null,
       "counts": "License and registration rows in live public source systems.",
       "doesNotCount": "Unique companies, recommendations, or every U.S. contractor.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -40435,7 +41463,7 @@
       "sourceAsOf": null,
       "counts": "License rows across populated source systems.",
       "doesNotCount": "The live public cohort or unique businesses.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -40451,7 +41479,7 @@
       "counts": "License rows on ROC’s All Current Contractors posting.",
       "doesNotCount": "Unique companies; Commercial, Residential, and Dual files are not additive.",
       "href": "/arizona",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-04",
       "retrievedAt": null
     },
@@ -40467,7 +41495,7 @@
       "counts": "Distinct Class A, B, and C contractor-business licenses on official regulant lists.",
       "doesNotCount": "Tradesmen, unique companies, or a quality ranking.",
       "href": "/virginia",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-08",
       "retrievedAt": "2026-09-10T12:59:41.003456+00:00"
     },
@@ -40483,7 +41511,7 @@
       "counts": "Official Contractor Registry Certificate rows.",
       "doesNotCount": "All New York contractors, a statewide GC/HIC license, or unique companies.",
       "href": "/new-york",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11"
     },
@@ -40499,7 +41527,7 @@
       "counts": "Active license_status rows in the official Home Improvement Contractor slice.",
       "doesNotCount": "Unique companies, DOB contractors, NYSDOL public-work certificates, or all NYC construction work.",
       "href": "/new-york/new-york-city",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40515,7 +41543,7 @@
       "counts": "Distinct active licensed roofing business IDs after collapsing disciplinary-action repeats.",
       "doesNotCount": "Qualifying parties, unique companies, source rows, or all Illinois contractors.",
       "href": "/illinois",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z"
     },
@@ -40531,7 +41559,7 @@
       "counts": "Distinct certified asbestos abatement contracting firms.",
       "doesNotCount": "HICPA registrations, individual asbestos persons, lead firms, or all Pennsylvania contractors.",
       "href": "/pennsylvania",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-17",
       "retrievedAt": "2026-09-17T13:04:02Z"
     },
@@ -40547,7 +41575,7 @@
       "counts": "Distinct certified lead abatement contracting firms.",
       "doesNotCount": "HICPA registrations, individual lead persons, asbestos firms, or a statewide GC license.",
       "href": "/pennsylvania",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-17",
       "retrievedAt": "2026-09-17T13:04:02Z"
     },
@@ -40563,7 +41591,7 @@
       "counts": "Distinct numeric license identities after collapsing five trade prefixes.",
       "doesNotCount": "Trade-credential row sum, statewide general contractors, unique companies, or SFM fire certificates.",
       "href": "/ohio",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-18",
       "retrievedAt": "2026-09-18T13:30:18.794218+00:00"
     },
@@ -40579,7 +41607,7 @@
       "counts": "Source-native contractor registration/license numbers.",
       "doesNotCount": "Quality, person trade certificates, or unique UBI entities.",
       "href": "/washington",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-04",
       "retrievedAt": null
     },
@@ -40595,7 +41623,7 @@
       "counts": "Rows acquired from the CSLB License Master stream.",
       "doesNotCount": "The complete renewable CSLB universe; the stream is truncated.",
       "href": "/california",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-02",
       "retrievedAt": null
     },
@@ -40611,7 +41639,7 @@
       "counts": "TDLR specialty/company contractor credentials.",
       "doesNotCount": "All Texas contractors or a statewide general-contractor class.",
       "href": "/texas",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-03",
       "retrievedAt": null
     },
@@ -40626,7 +41654,7 @@
       "sourceAsOf": null,
       "counts": "Family-separated discipline and enforcement source rows.",
       "doesNotCount": "Bad contractors, convictions, or a clean-record denominator.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -40642,7 +41670,7 @@
       "counts": "An accepted official-source evidence-family row.",
       "doesNotCount": "Unique contractors, current status, or criminal convictions.",
       "href": "/florida",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -40658,7 +41686,7 @@
       "counts": "An accepted official-source evidence-family row.",
       "doesNotCount": "Unique contractors, current status, or criminal convictions.",
       "href": "/florida",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -40674,7 +41702,7 @@
       "counts": "An accepted official-source evidence-family row.",
       "doesNotCount": "Unique contractors, current status, or criminal convictions.",
       "href": "/florida",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -40690,7 +41718,7 @@
       "counts": "An accepted official-source evidence-family row.",
       "doesNotCount": "Unique contractors, current status, or criminal convictions.",
       "href": "/florida",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -40706,7 +41734,7 @@
       "counts": "WALL, Wage Watchlist, and Treasury construction/vendor rows retained by family.",
       "doesNotCount": "Unique contractors, proven exact matches, or one combined severity scale.",
       "href": "/new-jersey",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-08-13",
       "retrievedAt": null
     },
@@ -40722,7 +41750,7 @@
       "counts": "Disciplinary rows already in the research graph.",
       "doesNotCount": "Complaints, quality, or proof that no row means a clean history.",
       "href": "/arizona",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-04",
       "retrievedAt": null
     },
@@ -40738,7 +41766,7 @@
       "counts": "Official DPOR contractor revocation-release observations.",
       "doesNotCount": "All Board discipline, unique contractors, or a clean-history denominator.",
       "href": "/virginia",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-08",
       "retrievedAt": "2026-09-10T12:59:41.003456+00:00"
     },
@@ -40754,7 +41782,7 @@
       "counts": "Current Prevailing Wage Act debarment table rows.",
       "doesNotCount": "HICPA registrations, complaints, convictions, or unique companies. Name-only attachment is unsafe.",
       "href": "/pennsylvania",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-17",
       "retrievedAt": "2026-09-17T13:04:02Z"
     },
@@ -40770,7 +41798,7 @@
       "counts": "Official debarred-vendor file rows last revised 2021-06-01.",
       "doesNotCount": "NCLBGC licenses, complaints, or currently verified clean vendors. Name-only attachment is unsafe.",
       "href": "/north-carolina",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-17",
       "retrievedAt": "2026-09-17T17:30:00Z"
     },
@@ -40785,7 +41813,7 @@
       "sourceAsOf": null,
       "counts": "Rows in production permit_source_records.",
       "doesNotCount": "NJ construction rows, unique projects, or completed jobs.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -40801,7 +41829,7 @@
       "counts": "DCA permit-issued and certificate-issued source records.",
       "doesNotCount": "2.68 million unique permits, projects, contractors, or credentials.",
       "href": "/new-jersey",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-08-13",
       "retrievedAt": null
     },
@@ -40817,7 +41845,7 @@
       "counts": "City-issued construction permit rows.",
       "doesNotCount": "State licenses, unique contractors, quality, or statewide Texas activity.",
       "href": "/texas/austin",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40833,7 +41861,7 @@
       "counts": "Permit records at address grain.",
       "doesNotCount": "Contractor quality, statewide permits, or exact CSLB attribution.",
       "href": "/california/san-francisco",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40849,7 +41877,7 @@
       "counts": "Issued building permit rows in the current local source.",
       "doesNotCount": "A statewide permit census or exact contractor-license matches.",
       "href": "/california/los-angeles",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40864,7 +41892,7 @@
       "sourceAsOf": "weekly / 2026-08-31",
       "counts": "Certificate-of-occupancy source rows.",
       "doesNotCount": "Permits, projects, quality, or unique contractors.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40879,7 +41907,7 @@
       "sourceAsOf": "2026-09-04",
       "counts": "Bond filing rows associated with L&I contractor numbers.",
       "doesNotCount": "Unique contractors, endorsements, or guaranteed current bonds.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40894,7 +41922,7 @@
       "sourceAsOf": "2026-09-04",
       "counts": "Exact contractor IDs appearing in the bond file.",
       "doesNotCount": "Bond rows or proof missing IDs are unbonded.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40909,7 +41937,7 @@
       "sourceAsOf": "2026-09-04",
       "counts": "Liability-insurance filing rows associated with L&I contractor numbers.",
       "doesNotCount": "Unique contractors, safety, or guaranteed current coverage.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40924,7 +41952,7 @@
       "sourceAsOf": "2026-09-04",
       "counts": "Exact contractor IDs appearing in the insurance file.",
       "doesNotCount": "Insurance rows or proof missing IDs are uninsured.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40939,7 +41967,7 @@
       "sourceAsOf": "2026-09-04",
       "counts": "Exact IDs present in General, Bond, and Insurance files.",
       "doesNotCount": "A score, endorsement, or proof of quality.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40954,7 +41982,7 @@
       "sourceAsOf": null,
       "counts": "Published contact observation rows.",
       "doesNotCount": "Contractor identities, licenses, or service areas.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -40969,7 +41997,7 @@
       "sourceAsOf": "2026-09-04",
       "counts": "Public-eligible phone fields on L&I registration rows.",
       "doesNotCount": "Personal contacts, verified service areas, or unique businesses.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40984,7 +42012,7 @@
       "sourceAsOf": "2026-09-04",
       "counts": "Owner/member/partner/officer relationships published by L&I.",
       "doesNotCount": "Unique people, qualifying licenses, or endorsements.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -40999,7 +42027,7 @@
       "sourceAsOf": "2026-09-04",
       "counts": "Public-eligible business addresses published by ROC.",
       "doesNotCount": "Mailing addresses, service areas, or unique companies.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -41014,7 +42042,7 @@
       "sourceAsOf": "2026-09-04",
       "counts": "Named qualifying-party strings on license rows.",
       "doesNotCount": "Unique people, owners, or person profiles.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -41029,7 +42057,7 @@
       "sourceAsOf": "2026-09-03",
       "counts": "CMBL vendors selected by accepted construction codes/categories.",
       "doesNotCount": "Contractor licenses or proof unmatched vendors are unlicensed.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -41044,7 +42072,7 @@
       "sourceAsOf": "2026-09-04",
       "counts": "Project-detail rows carrying Prime Contractor UBI.",
       "doesNotCount": "Registrations, unique contractors, awards as quality, or a published directory.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -41052,14 +42080,14 @@
       "id": "state-pages",
       "family": "Public research surfaces",
       "label": "Published state intelligence pages",
-      "count": 18,
+      "count": 19,
       "grain": "published state intelligence route",
-      "geography": "FL · NJ · CA · TX · WA · AZ · CO · VA · NY · IL · OR · PA · NC · OH · MA · TN · NV · MN",
+      "geography": "FL · NJ · CA · TX · WA · AZ · CO · VA · NY · IL · OR · PA · NC · OH · MA · TN · NV · MN · AL",
       "artifact": "Accepted state publication snapshots",
       "sourceAsOf": null,
       "counts": "Published statewide intelligence destinations.",
       "doesNotCount": "All live Verify states or a research-depth rating.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -41074,7 +42102,7 @@
       "sourceAsOf": "2026-08-13",
       "counts": "Published county intelligence routes.",
       "doesNotCount": "Municipalities, state pages, or California city pages.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -41089,7 +42117,7 @@
       "sourceAsOf": "2026-09-02",
       "counts": "Published local city intelligence routes.",
       "doesNotCount": "County pages or statewide permit coverage.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -41105,7 +42133,7 @@
       "counts": "Published NYC local intelligence route.",
       "doesNotCount": "A statewide New York page, borough pages, or unique companies.",
       "href": "/new-york/new-york-city",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": "2026-09-12T21:07:57.126Z",
       "retrievedAt": "2026-09-12T21:08:12.298Z"
     },
@@ -41120,7 +42148,7 @@
       "sourceAsOf": "2026-09-04",
       "counts": "Dedicated published Texas local intelligence routes.",
       "doesNotCount": "Parked local harvests or statewide coverage.",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "snapshotAsOf": null,
       "retrievedAt": null
     },
@@ -41135,7 +42163,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted business_credential; business_credentials.EC.active_exact.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/colorado"
@@ -41151,7 +42179,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted business_credential; business_credentials.PC.active_exact.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/colorado"
@@ -41167,7 +42195,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted business_credential; business_credentials.combined_active_exact_if_shown.value.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/colorado"
@@ -41183,7 +42211,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted disciplinary_observation; discipline.contractor_relevant_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/colorado"
@@ -41199,7 +42227,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted person_credential; individual_trades.prefixes.ME.active_exact.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/colorado"
@@ -41215,7 +42243,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted person_credential; individual_trades.prefixes.JW.active_exact.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/colorado"
@@ -41231,7 +42259,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted person_credential; individual_trades.prefixes.RW.active_exact.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/colorado"
@@ -41247,7 +42275,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted person_credential; individual_trades.prefixes.MP.active_exact.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/colorado"
@@ -41263,7 +42291,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted person_credential; individual_trades.prefixes.JP.active_exact.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/colorado"
@@ -41279,7 +42307,7 @@
       "sourceAsOf": null,
       "retrievedAt": "2026-09-09T14:51:20+00:00",
       "snapshotAsOf": "2026-09-09",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted person_credential; individual_trades.prefixes.RP.active_exact.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/colorado"
@@ -41295,7 +42323,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted historical_debarment_period; debarment.registry_field_has_been_debarred_yes.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york"
@@ -41311,7 +42339,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted roofing_source_row; roofing.source_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/illinois"
@@ -41327,7 +42355,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted business_or_person_credential_id; roofing.distinct_license_ids.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/illinois"
@@ -41343,7 +42371,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted business_credential_source_row; business_licenses.active_business_y_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/illinois"
@@ -41359,7 +42387,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted person_credential_id; qualifying_parties.active_distinct_license_ids.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/illinois"
@@ -41375,7 +42403,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted disciplinary_observation; discipline.flag_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/illinois"
@@ -41391,7 +42419,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-11T20:16:10Z",
       "snapshotAsOf": "2026-09-11",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted credential_id_with_evidence; discipline.flag_distinct_license_ids.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/illinois"
@@ -41407,7 +42435,7 @@
       "sourceAsOf": "2026-08-20",
       "retrievedAt": "2026-09-12T13:47:42Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted license_id; licenses.distinct_license_ids.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41423,7 +42451,7 @@
       "sourceAsOf": "2026-08-20",
       "retrievedAt": "2026-09-12T13:47:42Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted dcwp_buid; licenses.distinct_business_unique_ids.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41439,7 +42467,7 @@
       "sourceAsOf": "2026-09-02",
       "retrievedAt": "2026-09-12T13:47:46Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted complaint_observation; complaints.parsed_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41455,7 +42483,7 @@
       "sourceAsOf": "2026-09-04",
       "retrievedAt": "2026-09-12T13:47:49Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted inspection_observation; inspections.parsed_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41471,7 +42499,7 @@
       "sourceAsOf": "2026-09-02",
       "retrievedAt": "2026-09-12T13:47:47Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted charge_observation; charges.parsed_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41487,7 +42515,7 @@
       "sourceAsOf": "2026-09-01",
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted published_name; wall_of_shame.name_count.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41503,7 +42531,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted permit_observation; dob_now.parsed_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41519,7 +42547,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted dobnow_permit_id; dob_now.distinct_permit_ids.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41535,7 +42563,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted job_filing_id; dob_now.distinct_job_filing_numbers.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41551,7 +42579,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted bbl; dob_now.distinct_bbls.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41567,7 +42595,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted bin; dob_now.distinct_bins.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41583,7 +42611,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted bis_permit_id; legacy.distinct_permit_ids.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41599,7 +42627,7 @@
       "sourceAsOf": "2026-09-11",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted bis_job_id; legacy.distinct_job_ids.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41615,7 +42643,7 @@
       "sourceAsOf": "2026-08-24",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted tax_lot; pluto.universe_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41631,7 +42659,7 @@
       "sourceAsOf": "2026-08-24",
       "retrievedAt": "2026-09-12T15:43:33Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted matched_bbl; pluto.matched_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41647,7 +42675,7 @@
       "sourceAsOf": "2026-09-08",
       "retrievedAt": "2026-09-12T17:05:27Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted document_observation; master.parsed_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41663,7 +42691,7 @@
       "sourceAsOf": "2026-09-08",
       "retrievedAt": "2026-09-12T17:05:27Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted document_id; master.distinct_document_ids.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41679,7 +42707,7 @@
       "sourceAsOf": "2026-09-08",
       "retrievedAt": "2026-09-12T17:05:27Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted legal_row; legals.parsed_rows.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41695,7 +42723,7 @@
       "sourceAsOf": null,
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted bbl; linking.distinct_bbls.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41711,7 +42739,7 @@
       "sourceAsOf": null,
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted document_id; linking.documents_with_bbl.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41727,7 +42755,7 @@
       "sourceAsOf": "2026-09-08",
       "retrievedAt": "2026-09-12T17:05:27Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted deed_type_observation; master.display_group_counts.deed.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41743,7 +42771,7 @@
       "sourceAsOf": "2026-09-08",
       "retrievedAt": "2026-09-12T17:05:27Z",
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted mortgage_type_observation; master.display_group_counts.mortgage.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41759,7 +42787,7 @@
       "sourceAsOf": null,
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-12",
-      "generatedAt": "2026-09-26T14:36:56.830Z",
+      "generatedAt": "2026-10-05T13:25:24.398Z",
       "counts": "Accepted document_id; linking.documents_with_gt1_bbl.",
       "doesNotCount": "Other grains, unique contractor companies, current ownership, current lender identity, or quality.",
       "href": "/new-york/new-york-city"
@@ -41780,6 +42808,13 @@
       "sourceAsOf": null,
       "retrievedAt": null,
       "snapshotAsOf": "2026-09-02"
+    },
+    {
+      "path": "lib/alabama-intelligence/accepted-snapshot.json",
+      "sha256": "178be4b271c2c0bf4c3420177b6546f490ee99227596a0d4061ecd85748c99fd",
+      "sourceAsOf": null,
+      "retrievedAt": null,
+      "snapshotAsOf": null
     },
     {
       "path": "lib/arizona-intelligence/accepted-snapshot.json",
