@@ -1,0 +1,511 @@
+{
+  "contract_name": "contractor-al-state-intel-v1",
+  "path": "/alabama",
+  "regulator": "Alabama Licensing Board for General Contractors",
+  "source": {
+    "name": "FullRosterReport",
+    "url": "https://licensesearch.alabama.gov/genconbd/FullRosterReport",
+    "portal": "https://licensesearch.alabama.gov/genconbd",
+    "retrievedAt": "2026-10-05",
+    "sourceAsOf": null,
+    "bytes": 1585911,
+    "sha256": "9c927ca399bde657d3b02b1adeb0afed48f55fe9d8de7519de748bcc5448981d",
+    "lineScanDataRows": 8848,
+    "parsedRows": 8848
+  },
+  "rows": 8848,
+  "distinctLicenses": 8848,
+  "duplicateLicenses": 0,
+  "emptyLicenses": 0,
+  "explicitSubcontractorSpecialtyRows": 3312,
+  "inactiveSpecialtyRows": 76,
+  "otherSpecialtyRows": 5460,
+  "unclassifiedRows": 5536,
+  "primeContractorLabel": "NOT_IN_SOURCE",
+  "businessPersonGrain": "NOT_LABELED",
+  "statusColumn": "NOT_IN_SOURCE",
+  "bidLimitIsLicenseClass": false,
+  "expirationIsNotStatus": true,
+  "expirationDatePresent": 8848,
+  "extensionDatePresent": 99,
+  "mailingAddressStateIsNotLicensingState": true,
+  "addressIsNotServiceArea": true,
+  "specialtyDistinctStrings": 3360,
+  "nameOnlySubcontractorText": [
+    {
+      "license": "11104",
+      "name": "ALL-SOUTH SUBCONTRACTORS INC",
+      "specialty": "BC: BUILDING CONSTRUCTION"
+    },
+    {
+      "license": "27994",
+      "name": "THOMAS & ASSOCIATES SUBCONTRACTORS, INC",
+      "specialty": "BC-S: ACOUSTICAL TREATMENTS AND INSULATION, BC-S: DRYWALL AND METAL STUDS, BC-S: METAL STUDS, BC: BUILDING CONSTRUCTION"
+    },
+    {
+      "license": "45133",
+      "name": "MID-SOUTH SUBCONTRACTORS INC",
+      "specialty": "BC-S: ROOFING AND SHEET METAL, BC-S: SIDING INSTALLATION, BC: BUILDING CONSTRUCTION, REP: RECIPROCITY STATE OF MISSISSIPPI"
+    }
+  ],
+  "prefixCounts": {
+    "S-": 3312,
+    "IA-": 76,
+    "numeric": 5460
+  },
+  "bidLimits": [
+    {
+      "value": "U UNLIMITED",
+      "count": 4534,
+      "label": "U UNLIMITED"
+    },
+    {
+      "value": "",
+      "count": 3378,
+      "label": "blank in source"
+    },
+    {
+      "value": "D 1000000",
+      "count": 376,
+      "label": "D 1000000"
+    },
+    {
+      "value": "E 3000000",
+      "count": 275,
+      "label": "E 3000000"
+    },
+    {
+      "value": "C 500000",
+      "count": 130,
+      "label": "C 500000"
+    },
+    {
+      "value": "B 250000",
+      "count": 101,
+      "label": "B 250000"
+    },
+    {
+      "value": "A 100000",
+      "count": 54,
+      "label": "A 100000"
+    }
+  ],
+  "topSpecialtyStrings": [
+    {
+      "specialty": "BC: BUILDING CONSTRUCTION",
+      "count": 660
+    },
+    {
+      "specialty": "SUBCONTRACTOR:  ELECTRICAL",
+      "count": 322
+    },
+    {
+      "specialty": "BCU4: BUILDING CONSTRUCTION UNDER FOUR STORIES",
+      "count": 230
+    },
+    {
+      "specialty": "SUBCONTRACTOR:  HEATING, VENTILATION, AND AIR CONDITIONING",
+      "count": 186
+    },
+    {
+      "specialty": "BC: BUILDING CONSTRUCTION, REP: RECIPROCITY STATE OF TENNESSEE",
+      "count": 178
+    },
+    {
+      "specialty": "E: ELECTRICAL",
+      "count": 145
+    },
+    {
+      "specialty": "BC-S: REMODELING AND ALTERATION",
+      "count": 132
+    },
+    {
+      "specialty": "SP: SWIMMING POOLS",
+      "count": 118
+    },
+    {
+      "specialty": "BC: BUILDING CONSTRUCTION, REP: RECIPROCITY STATE OF LOUISIANA",
+      "count": 114
+    },
+    {
+      "specialty": "SUBCONTRACTOR:  CONCRETE",
+      "count": 114
+    },
+    {
+      "specialty": "SUBCONTRACTOR:  PLUMBING",
+      "count": 113
+    }
+  ],
+  "mailingAddressStates": [
+    {
+      "value": "AL",
+      "count": 4155
+    },
+    {
+      "value": "GA",
+      "count": 1044
+    },
+    {
+      "value": "TN",
+      "count": 500
+    },
+    {
+      "value": "FL",
+      "count": 433
+    },
+    {
+      "value": "MS",
+      "count": 359
+    },
+    {
+      "value": "TX",
+      "count": 326
+    },
+    {
+      "value": "LA",
+      "count": 300
+    },
+    {
+      "value": "NC",
+      "count": 165
+    },
+    {
+      "value": "OH",
+      "count": 128
+    },
+    {
+      "value": "MO",
+      "count": 97
+    },
+    {
+      "value": "SC",
+      "count": 96
+    },
+    {
+      "value": "IN",
+      "count": 92
+    },
+    {
+      "value": "KY",
+      "count": 90
+    },
+    {
+      "value": "MI",
+      "count": 89
+    },
+    {
+      "value": "IL",
+      "count": 86
+    },
+    {
+      "value": "PA",
+      "count": 86
+    },
+    {
+      "value": "AR",
+      "count": 76
+    },
+    {
+      "value": "WI",
+      "count": 66
+    },
+    {
+      "value": "MN",
+      "count": 55
+    },
+    {
+      "value": "CA",
+      "count": 46
+    },
+    {
+      "value": "",
+      "count": 44
+    },
+    {
+      "value": "KS",
+      "count": 44
+    },
+    {
+      "value": "VA",
+      "count": 43
+    },
+    {
+      "value": "MD",
+      "count": 37
+    },
+    {
+      "value": "NJ",
+      "count": 32
+    },
+    {
+      "value": "OK",
+      "count": 32
+    },
+    {
+      "value": "AZ",
+      "count": 30
+    },
+    {
+      "value": "NY",
+      "count": 30
+    },
+    {
+      "value": "CO",
+      "count": 25
+    },
+    {
+      "value": "MA",
+      "count": 25
+    },
+    {
+      "value": "A",
+      "count": 22
+    },
+    {
+      "value": "UT",
+      "count": 21
+    },
+    {
+      "value": "IA",
+      "count": 20
+    },
+    {
+      "value": "NE",
+      "count": 17
+    },
+    {
+      "value": "WA",
+      "count": 16
+    },
+    {
+      "value": "L",
+      "count": 13
+    },
+    {
+      "value": "CT",
+      "count": 8
+    },
+    {
+      "value": "OR",
+      "count": 7
+    },
+    {
+      "value": "ID",
+      "count": 6
+    },
+    {
+      "value": "ON",
+      "count": 6
+    },
+    {
+      "value": "WV",
+      "count": 6
+    },
+    {
+      "value": "DE",
+      "count": 5
+    },
+    {
+      "value": "M",
+      "count": 5
+    },
+    {
+      "value": "NV",
+      "count": 5
+    },
+    {
+      "value": "GE",
+      "count": 4
+    },
+    {
+      "value": "MT",
+      "count": 4
+    },
+    {
+      "value": "N",
+      "count": 4
+    },
+    {
+      "value": "NH",
+      "count": 4
+    },
+    {
+      "value": "X",
+      "count": 4
+    },
+    {
+      "value": "ME",
+      "count": 3
+    },
+    {
+      "value": "ND",
+      "count": 3
+    },
+    {
+      "value": "TE",
+      "count": 3
+    },
+    {
+      "value": "35",
+      "count": 2
+    },
+    {
+      "value": "AK",
+      "count": 2
+    },
+    {
+      "value": "AU",
+      "count": 2
+    },
+    {
+      "value": "G",
+      "count": 2
+    },
+    {
+      "value": "IO",
+      "count": 2
+    },
+    {
+      "value": "NM",
+      "count": 2
+    },
+    {
+      "value": "QU",
+      "count": 2
+    },
+    {
+      "value": "SD",
+      "count": 2
+    },
+    {
+      "value": "UP",
+      "count": 2
+    },
+    {
+      "value": "3",
+      "count": 1
+    },
+    {
+      "value": "A,",
+      "count": 1
+    },
+    {
+      "value": "CZ",
+      "count": 1
+    },
+    {
+      "value": "DC",
+      "count": 1
+    },
+    {
+      "value": "KA",
+      "count": 1
+    },
+    {
+      "value": "P3",
+      "count": 1
+    },
+    {
+      "value": "PO",
+      "count": 1
+    },
+    {
+      "value": "RO",
+      "count": 1
+    },
+    {
+      "value": "S",
+      "count": 1
+    },
+    {
+      "value": "SO",
+      "count": 1
+    },
+    {
+      "value": "T",
+      "count": 1
+    },
+    {
+      "value": "WE",
+      "count": 1
+    },
+    {
+      "value": "WY",
+      "count": 1
+    }
+  ],
+  "columnsRepublished": [
+    "Name",
+    "License_Number",
+    "City",
+    "State",
+    "Zip",
+    "Bid_Limit",
+    "Specialty",
+    "Expiration_Date",
+    "Extension_Date"
+  ],
+  "columnsNotRepublished": [
+    "Address",
+    "Phone_Number",
+    "fax"
+  ],
+  "otherBoards": [
+    {
+      "id": "hblb",
+      "name": "Home Builders Licensure Board",
+      "site": "https://hblb.alabama.gov/",
+      "search": "https://alhobv7prod.glsuite.us/GLSuiteWeb/Clients/ALHOB/Public/LicenseeSearch.aspx",
+      "retrievedAt": "2026-10-05",
+      "bulkRoster": "NOT_ACQUIRED",
+      "rows": null,
+      "grain": "The board site prints separate individual and corporate license instructions. Public verification is a search form.",
+      "note": "Separate from the ALBGC FullRosterReport. No bulk roster was downloaded."
+    },
+    {
+      "id": "aecb",
+      "name": "Alabama Board of Electrical Contractors",
+      "site": "https://aecb.alabama.gov/",
+      "search": "https://alecb-search.kalmservices.net/",
+      "retrievedAt": "2026-10-05",
+      "bulkRoster": "NOT_ACQUIRED",
+      "rows": null,
+      "grain": "NOT_ACQUIRED",
+      "note": "The consumer page links a licensee search. No bulk roster was found. ALBGC specialty text that says ELECTRICAL is an ALBGC classification, not this board."
+    },
+    {
+      "id": "hacr",
+      "name": "Alabama Board of Heating, Air Conditioning and Refrigeration Contractors",
+      "site": "https://hacr.alabama.gov/",
+      "search": "https://hacr.igovsolution.net/online/Lookups/Individual_Lookup.aspx",
+      "retrievedAt": "2026-10-05",
+      "bulkRoster": "NOT_ACQUIRED",
+      "rows": null,
+      "grain": "Public verification is an individual lookup form.",
+      "note": "ALBGC specialty text that says HVAC is an ALBGC classification, not this board."
+    },
+    {
+      "id": "pgfb",
+      "name": "Alabama Plumbers and Gas Fitters Examining Board",
+      "site": "https://pgfb.alabama.gov/",
+      "search": "https://alpgfb.igovsolution.net/online/Lookups/Individual.aspx",
+      "businessSearch": "https://alpgfb.igovsolution.net/online/Lookups/Business.aspx",
+      "retrievedAt": "2026-10-05",
+      "bulkRoster": "NOT_ACQUIRED",
+      "rows": null,
+      "grain": "Individual lookup and business lookup are separate search forms. Neither roster was downloaded.",
+      "note": "ALBGC specialty text that says PLUMBING is an ALBGC classification, not this board."
+    }
+  ],
+  "existingMatches": 0,
+  "netNewCanonicalEntities": 0,
+  "unresolvedIdentities": 8848,
+  "newProfiles": 0,
+  "profileAttachments": 0,
+  "graphWrites": 0,
+  "claimEligibilityBroadened": false,
+  "nameOnlyAdverseJoins": 0,
+  "countyOrLocalRoutes": 0,
+  "generatedAt": "2026-10-05T13:22:34.940Z",
+  "fingerprint": "d25038c1ea25643b2c1690e4212e61a551c7aa8a339db6994e4643d9c7c496e2"
+}

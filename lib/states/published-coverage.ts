@@ -6,6 +6,7 @@ import { PUBLISHED_STATEWIDE_SLUGS } from "@/lib/seo/published-state-path";
  * newly published state appears on the homepage without a hand-entered count.
  */
 const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
+  alabama: "AL",
   arizona: "AZ",
   california: "CA",
   colorado: "CO",
@@ -34,6 +35,7 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  alabama: "Licensing Board for General Contractors roster, with specialty text kept source-native",
   indiana: "Plumbing Commission credential classes, discipline documents, and the local licensing boundary",
   wisconsin: "DSPS dwelling, electrical, and HVAC contractor credential classes with live verification",
   connecticut: "DCP home-improvement, new-home, and trade credential classes plus administrative decisions",
