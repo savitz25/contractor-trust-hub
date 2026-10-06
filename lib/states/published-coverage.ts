@@ -35,10 +35,12 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   kentucky: "KY",
   "south-carolina": "SC",
   mississippi: "MS",
+  oklahoma: "OK",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  oklahoma: "CIB trade credentials kept separate. No statewide general-contractor license. Bulk rosters NOT_ACQUIRED",
   mississippi: "MSBOC Licensed status kept separate from expired, unlicensed, revoked, and suspended keys",
   "south-carolina": "LLR commercial and residential board category counts, kept separate",
   kentucky: "DHBC electrical, HVAC, and plumbing business licenses, kept separate",

@@ -41,6 +41,7 @@ import { interpretLouisiana } from "./louisiana";
 import { interpretKentucky } from "./kentucky";
 import { interpretSouthCarolina } from "./south-carolina";
 import { interpretMississippi } from "./mississippi";
+import { interpretOklahoma } from "./oklahoma";
 import { CONTRACTOR_STATE_NAMES } from "@/lib/search/state-names";
 
 const EMPTY_INTERPRET: AskInterpretation = {
@@ -222,6 +223,8 @@ export function interpretAskQuery(raw: string, intel: ContractorHubIntelV2): Ask
   if (scEarly) return scEarly;
   const msEarly = interpretMississippi(query);
   if (msEarly) return msEarly;
+  const okEarly = interpretOklahoma(query);
+  if (okEarly) return okEarly;
 
   // MN-CON-001: Minnesota DLI numbers (RR, RC, RF ...) share prefixes with Florida credentials; Minnesota intent wins first.
   const mnEarly = interpretMinnesota(query, text);
