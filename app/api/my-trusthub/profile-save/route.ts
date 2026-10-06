@@ -8,15 +8,10 @@ import { getSiteUrl } from "@/lib/site";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/** Contractor Save hand-off endpoint.
- *
- * This activation opens the server gate for ccc057187-a-r-roofing-inc only.
- * CONTRACTOR_PARENT_SYNC_BROAD stays false. Do not merge until
- * docs/my-trusthub/ONE-PROFILE-CANARY.md is satisfied. This route does not
- * read NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC. An unset browser flag does
- * not close this gate. The signer and the transport to My TrustHub are
- * constructed only when the gate mode is gated. A closed gate (both constants
- * false) answers 503 and reads, builds, signs and sends nothing. */
+/** Contractor Save hand-off endpoint. The production gate is closed
+ * (CONTRACTOR_PARENT_SYNC_BROAD and CONTRACTOR_CANARY_ACTIVE are false), so
+ * this answers 503 and reads, builds, signs and sends nothing. The signer and
+ * the transport to My TrustHub are only constructed when the gate is open. */
 export function POST(request: Request) {
   const gate = productionParentGate(), mode = parentSyncMode(process.env, gate);
   const signer = mode === "gated" ? productionHandoffDeps() : { key: null, parent: null };

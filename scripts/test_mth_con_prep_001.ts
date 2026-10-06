@@ -25,7 +25,6 @@ import { CONTRACTOR_ORIGIN, PARENT_API_PATH, PARENT_FORM_PATH, PARENT_ORIGIN, RU
   isContractorManifest, manifestDigest, parseContractorNativeId, type ContractorManifest } from "../lib/my-trusthub/manifest";
 import { ASSERTION_HEADER, ASSERTION_TTL_SECONDS, CONTRACTOR_PRODUCTION_PINS, signContractorAssertion, verifyContractorAssertion, type AssertionKey, type NonceStore } from "../lib/my-trusthub/contractor-assertion";
 import { memoryAckStore } from "../lib/my-trusthub/ack-store";
-import { contractorClientMayHandoff, contractorClientSyncEnabled } from "../lib/my-trusthub/client-sync";
 import { CONTRACTOR_CANARIES, CONTRACTOR_CANARY_ACTIVE, CONTRACTOR_PARENT_SYNC_BROAD, gateAllows, parentStatus, parentSyncMode, prepareParentSave, productionHandoffDeps,
   productionParentGate, type AdapterDeps, type ParentTransport } from "../lib/my-trusthub/parent-adapter";
 import { COOKIE_NAME, ENDPOINT_PATH, handleContractorProfileSave } from "../lib/my-trusthub/profile-save-http";
@@ -60,7 +59,6 @@ const PROFILES: ContractorDetail[] = [
   contractor({ id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", slug: "fixture-shared-key-b", licenses: [license("fl_dbpr", "CBC1250003")] }),
   contractor({ id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb", slug: "fixture-bad-key", licenses: [license("fl_dbpr", "CCC 13 ; drop")] }),
   contractor({ id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc", slug: "fixture-eligible-not-canary", licenses: [license("fl_dbpr", "CMC1249999")] }),
-  contractor({ id: "dddddddd-dddd-4ddd-8ddd-dddddddddddd", slug: "cbc1268883-1776-construction-group-llc", displayName: "1776 CONSTRUCTION GROUP LLC", legalName: "1776 CONSTRUCTION GROUP LLC", licenses: [license("fl_dbpr", "CBC1268883")] }),
 ];
 function source(rows = PROFILES) {
   const reads: string[] = [];
@@ -211,9 +209,8 @@ test("L/M. one toggle on the Trust Report; Compare, Watch and My Contractor are 
   assert.equal(toggle.split("<button").length - 1, 1);
   assert.match(toggle, /aria-pressed=\{mounted \? saved : undefined\}/); assert.match(toggle, /\{saved \? "Saved" : "Save"\}/);
   assert.doesNotMatch(toggle, />\s*Unsave\s*<|Keep this in My TrustHub|Confirm Save/);
-  assert.match(toggle, /PARENT_SYNC_UI = contractorClientSyncEnabled\(process\.env\.NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC\)/);
-  assert.match(toggle, /const direct = contractorClientMayHandoff\(PARENT_SYNC_UI \? "1" : undefined, syncEligible, pathname, slug\)/);
-  assert.match(fs.readFileSync("lib/my-trusthub/client-sync.ts", "utf8"), /return value === "1"/);
+  assert.match(toggle, /PARENT_SYNC_UI = process\.env\.NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC === "1"/);
+  assert.match(toggle, /const direct = PARENT_SYNC_UI && syncEligible && pathname === "\/contractors\/" \+ slug/);
   assert.ok(toggle.indexOf("saveContractor({ slug, name, profileId })") < toggle.indexOf('await handOff("save")'));
   assert.ok(toggle.indexOf("unsaveContractor(slug);") < toggle.indexOf('await handOff("unsave")'));
   assert.match(toggle, /Keep this page open/); assert.match(toggle, /handOff\("save_signin"\)/); assert.match(toggle, /May still be saved in My TrustHub/);
@@ -347,11 +344,9 @@ test("P. assertion: the shared v23 service assertion with a contractor_origin cl
   assert.throws(() => signContractorAssertion(k.priv, "contractor", url, "transfer:stage", body, "short"));
 });
 
-test("A. signed hand-off: the one active Florida canary stages its exact signed identity and completes Save -> Unsave", async () => {
+test("A. signed hand-off: all three Florida canaries stage their exact signed identity and complete Save -> Unsave", async () => {
   device.clear(); const p = pair(); p.ask.session = "owner-a";
-  assert.deepEqual(p.deps.gate, productionParentGate());
-  const watchesBefore = device.get(PROJECTS_KEY) ?? null;
-  for (const c of [CANARY[0]]) {
+  for (const c of CANARY) {
     saveContractor({ slug: c.slug, name: c.slug, profileId: UUID });
     assert.equal(await p.click(c.slug, "save"), "navigating", c.slug);
     const staged = p.ask.apiCalls.at(-2)!, continued = p.ask.apiCalls.at(-1)!;
@@ -365,18 +360,16 @@ test("A. signed hand-off: the one active Florida canary stages its exact signed 
     assert.deepEqual(await resumeDirect(p.ports, c.slug), { intent: "save", outcome: "confirmed" });
     assert.equal(parentSync(storage, c.slug), "synced");
   }
-  assert.deepEqual([...p.ask.saved], ["owner-a:fl.dbpr.license:" + CANARY[0].key]);
-  // Repeated Save: acknowledged as already saved, still one parent row.
-  assert.equal(await p.click(SLUG, "save"), "navigating"); assert.equal((await resumeDirect(p.ports, SLUG))!.outcome, "confirmed"); assert.equal(p.ask.saved.size, 1);
+  assert.deepEqual([...p.ask.saved].sort(), CANARY.map((c) => "owner-a:fl.dbpr.license:" + c.key).sort());
+  // Repeated Save: acknowledged as already saved, still one parent row per profile.
+  assert.equal(await p.click(SLUG, "save"), "navigating"); assert.equal((await resumeDirect(p.ports, SLUG))!.outcome, "confirmed"); assert.equal(p.ask.saved.size, 3);
   // Unsave: device row removed first, parent row removed, acknowledged, control back to Save.
-  for (const c of [CANARY[0]]) {
+  for (const c of CANARY) {
     unsaveContractor(c.slug); assert.equal(isContractorSaved(c.slug), false);
     assert.equal(await p.click(c.slug, "unsave"), "navigating"); assert.equal(p.ask.forms.at(-1)!.fields.intent, "unsave");
     assert.deepEqual(await resumeDirect(p.ports, c.slug), { intent: "unsave", outcome: "confirmed" }); assert.equal(parentSync(storage, c.slug), null);
   }
   assert.equal(p.ask.saved.size, 0);
-  assert.equal(device.get(PROJECTS_KEY) ?? null, watchesBefore, "Save and Unsave do not create a Watch");
-  assert.equal(isWatching(SLUG), false); assert.equal(listWatches().length, 0);
   assert.ok(p.ask.sourceStatuses.every((status) => status === 200));
   assert.equal(networkCalls, 0);
 });
@@ -437,8 +430,7 @@ test("E/F/G. ineligible profiles and profiles outside the canary stage nothing w
   device.clear(); const p = pair(); p.ask.session = "owner-a";
   for (const [slug, reason] of [["fixture-thin", "thin_profile"], ["fixture-two-fl-licenses", "multiple_fl_credentials"], ["fixture-nj", "not_florida"], ["fixture-ca", "not_florida"],
     ["fixture-fl-and-nj", "multi_jurisdiction"], ["fixture-no-credential", "no_fl_dbpr_credential"], ["fixture-shared-key-a", "credential_not_unique"], ["no-such-contractor", "not_public"],
-    ["cfc1427249-a-sunny-plumbing-company", "sync_off"], ["cgc1506243-abs-contracting-inc", "sync_off"],
-    ["cbc1268883-1776-construction-group-llc", "sync_off"], ["fixture-eligible-not-canary", "sync_off"]] as const) {
+    ["fixture-eligible-not-canary", "sync_off"]] as const) {
     assert.deepEqual(await prepareParentSave(p.deps, slug, "save", "b".repeat(43)), { state: "local_only", reason, localCopy: "keep" }, slug);
     saveContractor({ slug, name: slug }); assert.equal(await p.click(slug, "save"), "not_eligible", slug); assert.equal(isContractorSaved(slug), true, "the device Save stands");
   }
@@ -505,91 +497,19 @@ test("O. abandoned hand-off recovery: nothing is claimed, the device keeps the b
     "https://www.asktrusthub.com.evil.example/my/profile-save", "https://evil.vercel.app/my/profile-save", "javascript:alert(1)", "", null]) assert.equal(handoffTargetAllowed(bad), false, String(bad));
 });
 
-test("one-profile canary: CCC057187 is admitted and every other profile stays on the device", async () => {
-  const closed = { broad: false, canary: false } as const;
-  assert.equal(CONTRACTOR_PARENT_SYNC_BROAD, false);
-  assert.equal(CONTRACTOR_CANARY_ACTIVE, true);
-  assert.deepEqual(productionParentGate(), { broad: false, canary: true });
-  assert.deepEqual(CONTRACTOR_CANARIES.map((item) => [item.slug, item.externalKey]), [[CANARY[0].slug, CANARY[0].key]]);
-  assert.equal(gateAllows(CANARY[0].slug, productionParentGate()), true);
-  assert.equal(gateAllows(CANARY[1].slug, productionParentGate()), false);
-  assert.equal(gateAllows(CANARY[2].slug, productionParentGate()), false);
-  assert.equal(gateAllows("cbc1268883-1776-construction-group-llc", productionParentGate()), false);
-  assert.equal(gateAllows("CBC1268883", productionParentGate()), false);
-  for (const slug of ["CCC057187", "CCC057187-a-r-roofing-inc", " ccc057187-a-r-roofing-inc", "ccc057187-a-r-roofing-inc ", "../" + SLUG, SLUG + "?x=1", SLUG + "/extra", "ccc057187-A-R-roofing-inc", "ccc057187", ""]) {
-    assert.equal(gateAllows(slug, productionParentGate()), false, slug);
-  }
-  for (const profile of [CANARY[1].slug, CANARY[2].slug, "cbc1268883-1776-construction-group-llc"]) {
-    const row = PROFILES.find((item) => item.slug === profile);
-    assert.equal(parentSaveReadiness(row!).ready, true, profile);
-  }
-  const samples: Array<Record<string, string | undefined>> = [{}, { VERCEL_ENV: "production" }, { NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC: "1" }, { VERCEL_ENV: "preview", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }];
-  for (const env of samples) {
-    assert.equal(parentSyncMode(env), "gated", JSON.stringify(env));
-    const closedMode = env.VERCEL_ENV === "preview" && env.MY_TRUSTHUB_CONTRACTOR_SYNC_MODE === "dry_run" ? "dry_run" : "off";
-    assert.equal(parentSyncMode(env, closed), closedMode, JSON.stringify(env));
-  }
-  assert.equal(contractorClientSyncEnabled(undefined), false);
-  assert.equal(contractorClientSyncEnabled(""), false);
-  assert.equal(contractorClientSyncEnabled("true"), false);
-  assert.equal(contractorClientSyncEnabled("1"), true);
-  assert.equal(contractorClientMayHandoff(undefined, true, "/contractors/" + SLUG, SLUG), false);
-  assert.equal(contractorClientMayHandoff("1", true, "/contractors/" + SLUG, SLUG), true);
-  assert.equal(contractorClientMayHandoff("1", true, "/ask", SLUG), false);
-  const note = fs.readFileSync("docs/my-trusthub/ONE-PROFILE-CANARY.md", "utf8");
-  for (const line of ["Ask SQL is complete", "Packet 19 is final", "Contractor binding is installed", "migration 016 is applied", "Keys are provisioned", "Ask verify key is deployed", "Contractor signer is deployed", "closed-gate kill switch deployment is recorded", "operator explicitly authorizes the canary", "not the security kill switch", "git revert", "CONTRACTOR_CANARY_ACTIVE = false", "CONTRACTOR_PARENT_SYNC_BROAD = false", "cfc1427249-a-sunny-plumbing-company", "cgc1506243-abs-contracting-inc"]) {
-    assert.equal(note.includes(line), true, line);
-  }
-  assert.doesNotMatch(note, /BEGIN (?:PRIVATE|OPENSSH) KEY|postgres:\/\/|postgresql:\/\/|supabase\.co|service_role/);
-  device.clear();
-  const denied = pair();
-  const watchesBefore = device.get(PROJECTS_KEY) ?? null;
-  const attempt = async (flag: string | undefined, slug: string) => {
-    saveContractor({ slug, name: slug, profileId: UUID });
-    if (!contractorClientMayHandoff(flag, true, "/contractors/" + slug, slug)) return "device_only" as const;
-    return denied.click(slug, "save");
-  };
-  assert.equal(await attempt(undefined, SLUG), "device_only");
-  assert.equal(isContractorSaved(SLUG), true);
-  assert.deepEqual(denied.ask.apiCalls, []);
-  assert.equal(await attempt("1", CANARY[1].slug), "not_eligible");
-  assert.equal(await attempt("1", CANARY[2].slug), "not_eligible");
-  assert.equal(await attempt("1", "cbc1268883-1776-construction-group-llc"), "not_eligible");
-  for (const slug of ["CCC057187", "CCC057187-a-r-roofing-inc", "ccc057187-a-r-roofing-inc ", "../" + SLUG, "ccc057187"]) {
-    assert.equal(await attempt("1", slug), "not_eligible", slug);
-  }
-  assert.deepEqual(denied.ask.apiCalls, []);
-  assert.deepEqual(denied.ask.forms, []);
-  assert.equal(isContractorSaved(CANARY[1].slug), true);
-  assert.equal(isContractorSaved(CANARY[2].slug), true);
-  assert.equal(isContractorSaved("cbc1268883-1776-construction-group-llc"), true);
-  assert.equal(device.get(PROJECTS_KEY) ?? null, watchesBefore);
-  assert.equal(isWatching(SLUG), false);
-  assert.equal(listWatches().length, 0);
-  const admitted = pair();
-  admitted.ask.session = "owner-a";
-  saveContractor({ slug: SLUG, name: "A & R ROOFING INC", profileId: UUID });
-  assert.equal(contractorClientMayHandoff("1", true, "/contractors/" + SLUG, SLUG), true);
-  assert.equal(await admitted.click(SLUG, "save"), "navigating");
-  assert.equal(admitted.ask.apiCalls[0]!.operation, "prepareGuestProfileTransfer");
-  assert.equal((admitted.ask.apiCalls[0]!.envelope.input as ContractorManifest).returnTask.profile.nativeId, "fl.dbpr.license:CCC057187");
-  assert.equal(isWatching(SLUG), false);
-  assert.equal(networkCalls, 0);
-});
-
-test("closed gate sends nothing: environment values cannot open it, and off mode reads, signs and sends nothing", async () => {
-  const shutoff = { broad: false, canary: false } as const;
-  assert.equal(CONTRACTOR_PARENT_SYNC_BROAD, false);
+test("production parent sync is OFF and the canary is OFF: nothing is read, signed or sent", async () => {
+  assert.equal(CONTRACTOR_PARENT_SYNC_BROAD, false); assert.equal(CONTRACTOR_CANARY_ACTIVE, false);
+  assert.deepEqual(productionParentGate(), { broad: false, canary: false });
+  assert.deepEqual(CONTRACTOR_CANARIES.map((c) => [c.slug, c.externalKey]), CANARY.map((c) => [c.slug, c.key]));
   for (const env of [{}, { VERCEL_ENV: "production" }, { VERCEL_ENV: "production", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }, { VERCEL_ENV: "production", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "gated" },
     { MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "gated" }, { MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "live" }, { MY_TRUSTHUB_CONTRACTOR_SAVE_ENABLED: "true" }, { NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC: "1" },
-    { VERCEL_ENV: "production", MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID: "k", MY_TRUSTHUB_V23_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM: "-----BEGIN PRIVATE KEY-----" }]) assert.equal(parentSyncMode(env, shutoff), "off", JSON.stringify(env));
-  assert.equal(parentSyncMode({ VERCEL_ENV: "preview", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }, shutoff), "dry_run");
-  assert.equal(parentSyncMode({ VERCEL_ENV: "production" }), "gated", "the reviewed canary constant opens the server gate");
-  assert.equal(gateAllows(CANARY[0].slug, productionParentGate()), true);
-  assert.equal(gateAllows(CANARY[1].slug, productionParentGate()), false);
-  assert.equal(gateAllows("fixture-eligible-not-canary", productionParentGate()), false);
+    { VERCEL_ENV: "production", MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID: "k", MY_TRUSTHUB_V23_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM: "-----BEGIN PRIVATE KEY-----" }]) assert.equal(parentSyncMode(env), "off", JSON.stringify(env));
+  assert.equal(parentSyncMode({ VERCEL_ENV: "preview", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }), "dry_run");
+  assert.equal(parentSyncMode({ VERCEL_ENV: "production" }, { broad: false, canary: true }), "gated", "only the reviewed gate constant opens it");
+  for (const c of CANARY) { assert.equal(gateAllows(c.slug, productionParentGate()), false); assert.equal(gateAllows(c.slug, { broad: false, canary: true }), true); }
+  assert.equal(gateAllows("fixture-eligible-not-canary", { broad: false, canary: true }), false);
   const { reader, reads } = source(); let sent = 0;
-  const off: AdapterDeps = { mode: "off", gate: shutoff, reader, key: keypair("k").priv, parent: async () => { sent++; return { ok: false }; }, acks: memoryAckStore(), now: Date.now };
+  const off: AdapterDeps = { mode: "off", gate: productionParentGate(), reader, key: keypair("k").priv, parent: async () => { sent++; return { ok: false }; }, acks: memoryAckStore(), now: Date.now };
   assert.deepEqual(await prepareParentSave(off, SLUG, "save", "b".repeat(43)), { state: "unavailable", localCopy: "keep" });
   assert.equal(await parentStatus(off, "t".repeat(43), "b".repeat(43)), "unavailable");
   const origin = CONTRACTOR_ORIGIN;
