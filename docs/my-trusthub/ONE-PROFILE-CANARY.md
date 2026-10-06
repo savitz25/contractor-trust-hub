@@ -24,7 +24,7 @@ on the next deploy.
    database only when `v23_private.authority()` fingerprint equals exactly
    `17f464ad69f3d8c7a89dd2cf9229f112` and the final hubs are move, insurance, lender, investor, contractor, and senior.
 
-4. The exact Contractor binding is installed. Production `prod_contractor_dbpr_binding_for(...)` is installed, and the first canary `CCC057187` resolves to exactly one current accepted binding: hub = contractor, profile class = contractor_profile, namespace = fl.dbpr.license, jurisdiction = FL, canonical profile `/contractors/ccc057187-a-r-roofing-inc`. No ambiguity. The Packet 16 receipt file is saved.
+4. The exact Contractor binding is installed. Production `prod_contractor_dbpr_binding_for(...)` is installed. CCC057187 must resolve to exactly one current accepted binding on an active network entity. The operator must verify the network entity is active in production; accepted binding status alone is insufficient. An inactive or retired entity blocks activation. That binding is hub = contractor, profile class = contractor_profile, namespace = fl.dbpr.license, jurisdiction = FL, canonical profile `/contractors/ccc057187-a-r-roofing-inc`. No ambiguity. The Packet 16 receipt file is saved.
 
 5. The Ask verify key is deployed. Ask production has
    `MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID` and
