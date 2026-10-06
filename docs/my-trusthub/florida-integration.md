@@ -2,10 +2,13 @@
 
 Contractor's half of the shared My TrustHub hand-off, for Florida DBPR
 contractor profiles only. Contractor speaks the same protocol Move and Lender
-use in production; only the specialist identity differs. **Production parent
-sync is OFF and the canary is OFF:** `CONTRACTOR_PARENT_SYNC_BROAD` and
-`CONTRACTOR_CANARY_ACTIVE` in `lib/my-trusthub/parent-adapter.ts` are `false`,
-so the endpoint answers 503 and nothing is read, built, signed or sent to Ask.
+use in production; only the specialist identity differs. **This branch is the
+one-profile activation artifact.** `CONTRACTOR_CANARY_ACTIVE` is `true` and
+`CONTRACTOR_CANARIES` contains only `ccc057187-a-r-roofing-inc`.
+`CONTRACTOR_PARENT_SYNC_BROAD` stays `false`. Production is unchanged until
+this commit is merged and deployed. Prerequisites, the kill switch, and the
+later three-profile follow-up are in `ONE-PROFILE-CANARY.md`. An unset
+browser flag does not close the server gate.
 
 ## Identity (founder decision)
 
@@ -119,7 +122,7 @@ Contractor deployment:
 | `MY_TRUSTHUB_V23_ASK_KEY_ID` | key id of Ask's callback signing key |
 | `MY_TRUSTHUB_V23_ASK_VERIFY_PUBLIC_KEY_PEM` | Ask's Ed25519 public key (SPKI PEM) for the source callback |
 | `MY_TRUSTHUB_V23_PARENT_ORIGIN` | optional; if set it must equal `https://www.asktrusthub.com` |
-| `NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC` | `1` shows the client half; build-time; off today |
+| `NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC` | `1` shows the client half during the authorized deployment window; build-time; this commit does not set it; an unset value is not the server kill switch |
 
 Ask deployment (matching half): `MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID`,
 `MY_TRUSTHUB_V23_CONTRACTOR_VERIFY_PUBLIC_KEY_PEM`.
@@ -131,23 +134,20 @@ signing key nothing is staged.
 
 | Piece | File | State |
 | --- | --- | --- |
-| Same-origin endpoint | `app/api/my-trusthub/profile-save/route.ts`, `lib/my-trusthub/profile-save-http.ts` | 503 in production (gate closed) |
-| Adapter and gate | `lib/my-trusthub/parent-adapter.ts` | `off` in production; `gated` only when a gate constant is true; `dry_run` (non-production, `MY_TRUSTHUB_CONTRACTOR_SYNC_MODE=dry_run`) resolves and builds and contacts nobody |
+| Same-origin endpoint | `app/api/my-trusthub/profile-save/route.ts`, `lib/my-trusthub/profile-save-http.ts` | gated for `ccc057187-a-r-roofing-inc` when this commit is deployed; 503 while both gate constants are false |
+| Adapter and gate | `lib/my-trusthub/parent-adapter.ts` | canary constant true, one slug, broad false; `dry_run` only while both constants are false |
 | Source callback | `app/api/my-trusthub/profile-save/source/route.ts`, `lib/my-trusthub/source-callback.ts` | 503 until Ask's verification key is configured |
 | Acknowledgements | `lib/my-trusthub/ack-store.ts`, `schema/migrations/016_my_trusthub_handoff_acks.sql` | migration **not applied**; operator applies it before the canary |
-| Browser hand-off | `lib/my-trusthub/direct-save-client.ts`, `SaveContractorToggle` | behind `NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC=1` (off) |
+| Browser hand-off | `lib/my-trusthub/direct-save-client.ts`, `SaveContractorToggle`, `lib/my-trusthub/client-sync.ts` | starts only when the build value is `1`; this commit does not set that value |
 
-## Activation checklist (not part of this ship)
+## Activation checklist
 
-1. Ask: add the Contractor assertion verifier (`contractor_origin`), admit
-   `contractor` at the stage operations, resolve `fl.dbpr.license:<KEY>` to
-   exactly one accepted binding (`contractor / contractor_profile /
-   fl.dbpr.license / FL`), and call the source callback.
-2. Operator: generate the key pairs, set the variables above on both
-   deployments, apply migration 016 to the Contractor database.
-3. Contractor: a reviewed change setting `CONTRACTOR_CANARY_ACTIVE = true`
-   (three canary slugs only) and a build with
-   `NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC=1`.
+This commit is the Contractor code step, reduced to one profile. It is not
+merged. Do not merge until `ONE-PROFILE-CANARY.md` is satisfied.
+
+1. Ask SQL is complete, Packet 19 is final, and the Contractor binding is installed.
+2. Operator: keys provisioned, Ask verify key deployed, Contractor signer deployed, migration 016 applied, closed-gate kill switch recorded, operator authorization recorded.
+3. This commit: `CONTRACTOR_CANARY_ACTIVE = true`, active slug `ccc057187-a-r-roofing-inc` only, `CONTRACTOR_PARENT_SYNC_BROAD` left `false`. The browser value `1` belongs to the authorized deployment build. This commit does not set it.
 
 ## Legacy hand-off
 
@@ -169,12 +169,14 @@ active status, three different trades (checked on production 2026-10-03):
 
 "Exactly one attached credential" and "key attached to one profile" were read
 from the public pages, not from the database; the adapter re-proves both on the
-server at stage time. Run a dry-run `prepare` for each before the first live proof.
-These three slugs are `CONTRACTOR_CANARIES` in the adapter.
+server at stage time. The active array in this commit is only row 1. Rows 2 and
+3 stay certified and are denied. Restoring all three is a later reviewed change
+after row 1's Save chain passes. Broad mode stays false. See
+`ONE-PROFILE-CANARY.md`.
 
 ## Tests
 
-`npm run check:mth-con-prep-001` (14 tests): identity and fail-closed reasons;
+`npm run check:mth-con-prep-001` (15 tests): one-profile admission, identity and fail-closed reasons;
 publication by slug and by shared profile identity; manifest shape with digests
 pinned to Ask's contract code; assertion claim set, replay, expiry, audience,
 scope and wrong-hub rejection; the full signed chain for all three canaries
