@@ -42,10 +42,13 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   "new-mexico": "NM",
   kansas: "KS",
   idaho: "ID",
+  nebraska: "NE",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  nebraska:
+    "Department of Labor contractor registration is required and is not a quality endorsement. A bulk roster was not acquired",
   idaho:
     "Contractors Board FY 2025 registration program. The report line says Total Number of Licenses. Electrical, HVAC, plumbing, and public works stay separate",
   "new-mexico":
