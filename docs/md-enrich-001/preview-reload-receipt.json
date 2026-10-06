@@ -1,0 +1,201 @@
+{
+  "ticket": "MD-ENRICH-001",
+  "mode": "apply",
+  "target_host": "local",
+  "source_system": "scout_web_enrich_md_2026_10",
+  "batch_id": "md-enrich-001-2026-10-06",
+  "inputs": {
+    "sha256": {
+      "miami-dade-publish-ready-2026-10-06.csv": "b1a2ee4497542c5be04fba98485f469e61cc244417f39afda1afcc02608a38c4",
+      "miami-dade-publish-ready-2026-10-06.json": "16e09a48250005ce18233d871fba3c09c42abd213e07cc2edd8685b0ce0267c7",
+      "miami-dade-publish-ready-flagged-2026-10-06.csv": "8965b32a799df36b354c33f718bf5ab07ad8933190a27edd0edff294b73f89ae"
+    },
+    "rows": 1437,
+    "flagged_rows": 528,
+    "field_fill": {
+      "website_url": 1437,
+      "phone": 1381,
+      "email": 1086,
+      "primary_address": 1436,
+      "additional_locations": 534,
+      "specialties": 1430
+    },
+    "labels": {
+      "partial": 1164,
+      "publishable": 273
+    }
+  },
+  "identity": {
+    "source_rows": 1437,
+    "matched": 1437,
+    "excluded": 0,
+    "excluded_rows": [],
+    "new_contractor_entities": 0,
+    "identity_merges": 0
+  },
+  "existing_value_conflicts": {
+    "count": 0,
+    "rows": []
+  },
+  "suppressed_profiles": [
+    {
+      "license_key": "CFC1425917",
+      "display_name": "Florida Delta Mechanical",
+      "fields": [
+        "address_location",
+        "email",
+        "phone",
+        "website"
+      ]
+    },
+    {
+      "license_key": "CGC037426",
+      "display_name": "Experts Remodeling",
+      "fields": [
+        "address_location",
+        "email",
+        "phone",
+        "website"
+      ]
+    },
+    {
+      "license_key": "CGC1536732",
+      "display_name": "Nova Construction Mgmt",
+      "fields": [
+        "address_location",
+        "email",
+        "phone",
+        "website"
+      ]
+    },
+    {
+      "license_key": "CAC058159",
+      "display_name": "All Year Cooling & Heating",
+      "fields": [
+        "address_location",
+        "email",
+        "phone",
+        "website"
+      ]
+    },
+    {
+      "license_key": "CCC1332557",
+      "display_name": "Crown Roofing & Waterproofing",
+      "fields": [
+        "address_location",
+        "email",
+        "phone",
+        "website"
+      ]
+    },
+    {
+      "license_key": "CGC1534433",
+      "display_name": "Conconcreto",
+      "fields": [
+        "address_location",
+        "email",
+        "phone",
+        "website"
+      ]
+    },
+    {
+      "license_key": "CAC021340",
+      "display_name": "PKI Specialty Refrigeration",
+      "fields": [
+        "address_location",
+        "email",
+        "phone",
+        "website"
+      ]
+    },
+    {
+      "license_key": "CGC1529350",
+      "display_name": "All Florida Construction",
+      "fields": [
+        "address_location",
+        "email",
+        "phone",
+        "website"
+      ]
+    }
+  ],
+  "planned": {
+    "website": {
+      "total": 1437,
+      "public": 1429,
+      "suppressed": 8,
+      "profiles": 1437
+    },
+    "phone": {
+      "total": 1390,
+      "public": 1384,
+      "suppressed": 6,
+      "profiles": 1381
+    },
+    "email": {
+      "total": 1086,
+      "public": 1079,
+      "suppressed": 7,
+      "profiles": 1086
+    },
+    "address_location": {
+      "total": 534,
+      "public": 527,
+      "suppressed": 7,
+      "profiles": 534
+    },
+    "specialty": {
+      "total": 7244,
+      "public": 7244,
+      "suppressed": 0,
+      "profiles": 1430
+    }
+  },
+  "planned_total": 11691,
+  "skipped_empty_cells": {
+    "address_location": 903,
+    "email": 351,
+    "phone": 56,
+    "specialty": 7
+  },
+  "duplicates_collapsed_within_profile": {},
+  "primary_address": "not loaded — DBPR primary address stays authoritative",
+  "hold_rows": "loader accepts only contractor_ids in the SHA-pinned 1,437-row publish file",
+  "applied": {
+    "rows_before": 0,
+    "rows_after": 11691,
+    "inserted": 11691,
+    "db_counts": {
+      "website": {
+        "total": 1437,
+        "public": 1429,
+        "suppressed": 8,
+        "profiles": 1437
+      },
+      "phone": {
+        "total": 1390,
+        "public": 1384,
+        "suppressed": 6,
+        "profiles": 1381
+      },
+      "email": {
+        "total": 1086,
+        "public": 1079,
+        "suppressed": 7,
+        "profiles": 1086
+      },
+      "address_location": {
+        "total": 534,
+        "public": 527,
+        "suppressed": 7,
+        "profiles": 534
+      },
+      "specialty": {
+        "total": 7244,
+        "public": 7244,
+        "suppressed": 0,
+        "profiles": 1430
+      }
+    }
+  }
+}

@@ -19,6 +19,10 @@ jobs:
         run: npm run test:al-con-001
       - name: Mississippi MSBOC publication (MS-CON-001)
         run: npm run test:ms-con-001
+      - name: Miami-Dade business-website enrichment (MD-ENRICH-001)
+        run: npm run test:md-enrich-001
+      - name: MD-ENRICH-001 loader unit tests (stdlib)
+        run: python3 scripts/md_enrich_001/test_load.py
       - name: Fail if publication catalogs and live config diverge from the checked-in manifest
         run: node scripts/assert_network_metrics_v1.mjs
       - name: Homepage intel projection matches v1

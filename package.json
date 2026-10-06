@@ -40,6 +40,7 @@
     "test:sc-con-001": "npx --yes tsx --test scripts/test_sc_con_001.ts",
     "test:ms-con-001": "npx --yes tsx --test scripts/test_ms_con_001.ts",
     "test:ok-con-001": "npx --yes tsx --test scripts/test_ok_con_001.ts",
+    "test:md-enrich-001": "npx --yes tsx --test scripts/test_md_enrich_001.tsx",
     "test:ar-con-001": "npx --yes tsx --test scripts/test_ar_con_001.ts",
     "typecheck": "tsc --noEmit",
     "test:matcher": "node scripts/test_permit_matcher.mjs",
