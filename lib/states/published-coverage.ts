@@ -41,10 +41,13 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   arkansas: "AR",
   "new-mexico": "NM",
   kansas: "KS",
+  idaho: "ID",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  idaho:
+    "Contractors Board FY 2025 registration program. The report line says Total Number of Licenses. Electrical, HVAC, plumbing, and public works stay separate",
   "new-mexico":
     "CID licensee lines on the current printed table, kept off the earlier budget-form clock. Manufactured housing is separate",
   kansas:
