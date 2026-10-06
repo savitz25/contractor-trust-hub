@@ -155,6 +155,7 @@ function staticProductEntries(): SitemapUrlEntry[] {
       { path: "/utah", priority: 0.9, changefreq: "weekly" },
       { path: "/missouri", priority: 0.9, changefreq: "weekly" },
       { path: "/arkansas", priority: 0.9, changefreq: "weekly" },
+      { path: "/new-mexico", priority: 0.9, changefreq: "weekly" },
     { path: "/indiana", priority: 0.9, changefreq: "weekly" },
     { path: "/alabama", priority: 0.9, changefreq: "weekly" },
     { path: "/connecticut", priority: 0.9, changefreq: "weekly" },

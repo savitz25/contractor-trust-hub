@@ -39,10 +39,13 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   utah: "UT",
   missouri: "MO",
   arkansas: "AR",
+  "new-mexico": "NM",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  "new-mexico":
+    "CID licensee lines on the current printed table, kept off the earlier budget-form clock. Manufactured housing is separate",
   arkansas:
     "Contractors Licensing Board issuance figures for commercial, residential, specialty, remodeler, and roofer classes, kept on their own clocks",
   missouri: "No statewide general-contractor license; optional statewide electrical and separate trade credentials",
