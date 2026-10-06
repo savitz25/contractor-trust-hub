@@ -40,12 +40,15 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   missouri: "MO",
   arkansas: "AR",
   "new-mexico": "NM",
+  kansas: "KS",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
   "new-mexico":
     "CID licensee lines on the current printed table, kept off the earlier budget-form clock. Manufactured housing is separate",
+  kansas:
+    "State elevator contractor, inspector, and mechanic directory rows kept by company and person; no universal general-contractor census",
   arkansas:
     "Contractors Licensing Board issuance figures for commercial, residential, specialty, remodeler, and roofer classes, kept on their own clocks",
   missouri: "No statewide general-contractor license; optional statewide electrical and separate trade credentials",
