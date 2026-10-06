@@ -8,19 +8,48 @@ This commit contains no production secrets and no environment assignments.
 It does not create keys. It does not apply migration 016. It does not set
 `NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC`.
 
-## Do not merge until every line below is true
+## PR #121 MUST NOT MERGE until ALL of these are proven
 
-1. Ask SQL is complete.
-2. Packet 19 is final.
-3. The Contractor binding is installed.
-4. Contractor migration 016 is applied.
-5. Keys are provisioned.
-6. The Ask verify key is deployed.
-7. The Contractor signer is deployed.
-8. The closed-gate kill switch deployment is recorded.
-9. The operator explicitly authorizes the canary.
+This is a live production gate. A short label is not proof. No secret values
+belong in this document. Merging earlier opens the server gate for one profile
+on the next deploy.
 
-Merging earlier opens the server gate for one profile on the next deploy.
+1. Ask production code. Ask production contains the final Investor, Contractor,
+   Senior, and Packet 19 code, and the serving Ask deployment SHA is recorded.
+
+2. Ask SQL is complete. The certified Ask production SQL sequence has completed
+   successfully. Post-SQL validation is PASS.
+
+3. Packet 19 authority is live. Packet 19 is final on the real production
+   database only when `v23_private.authority()` fingerprint equals exactly
+   `17f464ad69f3d8c7a89dd2cf9229f112` and the final hubs are move, insurance, lender, investor, contractor, and senior.
+
+4. The exact Contractor binding is installed. Production `prod_contractor_dbpr_binding_for(...)` is installed, and the first canary `CCC057187` resolves to exactly one current accepted binding: hub = contractor, profile class = contractor_profile, namespace = fl.dbpr.license, jurisdiction = FL, canonical profile `/contractors/ccc057187-a-r-roofing-inc`. No ambiguity. The Packet 16 receipt file is saved.
+
+5. The Ask verify key is deployed. Ask production has
+   `MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID` and
+   `MY_TRUSTHUB_V23_CONTRACTOR_VERIFY_PUBLIC_KEY_PEM` installed, and the
+   resulting Ask deployment is recorded.
+
+6. The Contractor signer is deployed. Keys are provisioned under these exact
+   Contractor production names:
+   `MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID`,
+   `MY_TRUSTHUB_V23_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM`,
+   `MY_TRUSTHUB_V23_ASK_KEY_ID`,
+   `MY_TRUSTHUB_V23_ASK_VERIFY_PUBLIC_KEY_PEM`, and
+   `MY_TRUSTHUB_V23_PARENT_ORIGIN` either unset or the exact Ask origin
+   `https://www.asktrusthub.com`.
+
+7. Contractor migration 016 is applied. `016_my_trusthub_handoff_acks.sql` is
+   applied to the Contractor production database, and the ACK table is verified.
+
+8. The closed-gate kill switch deployment is recorded. Before this pull request merges, the current production Contractor deployment must have the canary constant false, the broad constant false, the UI sync flag unset, a device Save proof, no Ask navigation, and the deployment ID recorded.
+
+9. The prepared shutoff still returns both constants to false. Branch
+   `mth-con-one-profile-canary-shutoff` at
+   `1290c2b32a91d0393d4525d365ed7c785b9bb516` is that shutoff.
+
+10. The operator explicitly authorizes the canary. Explicit operator and founder authorization is required immediately before merge. There is no automatic merge.
 
 ## What this commit changes
 
@@ -50,10 +79,12 @@ profile keeps its device Save. Save does not create a Watch.
 A production build with `NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC` unset does
 not start the parent hand-off. The Save stays on the device.
 
-After this commit is merged, the server gate is open for
-`ccc057187-a-r-roofing-inc`. A caller that reaches the endpoint is not stopped
-by the missing browser flag. The absence of that flag is not the security kill switch.
-This pull request stays unmerged until the production canary window.
+After PR #121 merges, the SERVER gate is open for `CCC057187`
+(`ccc057187-a-r-roofing-inc`). The absence of
+`NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC=1` does NOT close the server gate.
+A caller that reaches the endpoint is not stopped by the missing browser flag.
+The absence of that flag is not the security kill switch.
+Therefore PR #121 must merge only during the controlled canary window.
 
 ## Kill switch
 
@@ -71,8 +102,10 @@ stay inactive because the canary constant is false.
 At that deployment, remove or leave unset
 `NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC`.
 
-Prepared branch: `mth-con-one-profile-canary-shutoff`. It is the revert. It is
-not a deployment and it is not this pull request.
+Prepared branch: `mth-con-one-profile-canary-shutoff`, head
+`1290c2b32a91d0393d4525d365ed7c785b9bb516`. It is the revert. It must still
+cleanly return both constants to false. It is not a deployment and it is not
+this pull request.
 
 ## Later three-profile follow-up
 
