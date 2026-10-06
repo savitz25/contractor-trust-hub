@@ -1,5 +1,15 @@
 /**
- * My TrustHub — Contractor parent adapter (server side). PRODUCTION SYNC IS OFF.
+ * My TrustHub — Contractor parent adapter (server side).
+ *
+ * ONE-PROFILE ACTIVATION ARTIFACT. Do not merge until every prerequisite in
+ * docs/my-trusthub/ONE-PROFILE-CANARY.md is done and an operator authorizes
+ * the canary window. This commit is not a production deployment.
+ *
+ * CONTRACTOR_CANARY_ACTIVE is true. CONTRACTOR_CANARIES contains only
+ * ccc057187-a-r-roofing-inc. CONTRACTOR_PARENT_SYNC_BROAD stays false.
+ * The server gate is open for that one profile. Leaving
+ * NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC unset stops the browser from
+ * starting the hand-off and is not the security kill switch.
  *
  * Contractor speaks the shared production hand-off protocol used by Move and
  * Lender. Only the specialist identity differs.
@@ -22,12 +32,13 @@
  *   6. An account Save or Unsave is reported only when the acknowledgement for
  *      that hand-off and this browser is held (ack-store.ts).
  *
- * GATE. Like Lender, activation is a reviewed code change, not an environment
- * flag: CONTRACTOR_PARENT_SYNC_BROAD and CONTRACTOR_CANARY_ACTIVE are constants
- * and both are false. With the gate closed nothing is read, built, signed or
- * sent, and no request ever goes to Ask.
- *   dry_run (never in production) runs steps 2-3 without the parent calls and
- *   reports the staged identity; it contacts nobody.
+ * GATE. Activation is a reviewed code change, not an environment flag.
+ * CONTRACTOR_PARENT_SYNC_BROAD and CONTRACTOR_CANARY_ACTIVE are constants.
+ * This activation sets the canary constant true for one slug and leaves broad
+ * false. With both constants false, nothing is read, built, signed or sent.
+ *   dry_run (never in production, and only while the gate constants are both
+ *   false) runs steps 2-3 without the parent calls and reports the staged
+ *   identity; it contacts nobody.
  */
 import { ASSERTION_HEADER, signContractorAssertion, type AssertionKey } from "./contractor-assertion";
 import type { AckStore } from "./ack-store";
@@ -36,13 +47,13 @@ import type { ContractorSaveIdentity } from "./profile-identity";
 import { resolveBySlug, type ProfileReader, type Resolution } from "./publication";
 
 export const CONTRACTOR_PARENT_SYNC_BROAD = false;
-export const CONTRACTOR_CANARY_ACTIVE = false;
-/** Florida canary profiles for the first live proof. Slug is the page; the
- * identity is always derived on the server. */
+/** One-profile activation. Revert this commit to close the gate. */
+export const CONTRACTOR_CANARY_ACTIVE = true;
+/** The only profile this activation admits. Slug is the page; the identity is
+ * always derived on the server. CFC1427249 and CGC1506243 stay off this list
+ * until a later reviewed change after this profile's Save chain passes. */
 export const CONTRACTOR_CANARIES = [
   { slug: "ccc057187-a-r-roofing-inc", externalKey: "CCC057187" },
-  { slug: "cfc1427249-a-sunny-plumbing-company", externalKey: "CFC1427249" },
-  { slug: "cgc1506243-abs-contracting-inc", externalKey: "CGC1506243" },
 ] as const;
 
 export type ParentGate = { broad: boolean; canary: boolean };
@@ -56,9 +67,9 @@ export function gateAllows(slug: string, gate: ParentGate): boolean {
 }
 
 export type ParentSyncMode = "off" | "dry_run" | "gated";
-/** off: gate closed (every production deployment today). gated: the reviewed
- * gate is open and hand-offs run for admitted profiles. dry_run: non-production
- * only, no parent calls. */
+/** off: both gate constants are false. gated: this activation (canary true,
+ * one slug, broad false) or a later reviewed gate. dry_run: non-production
+ * only, and only while both constants are false. No parent calls. */
 export function parentSyncMode(env: Record<string, string | undefined> = process.env, gate: ParentGate = productionParentGate()): ParentSyncMode {
   if (gate.broad || gate.canary) return "gated";
   if (env.VERCEL_ENV === "production") return "off";
