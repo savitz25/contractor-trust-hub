@@ -69,6 +69,8 @@ import { claimCtaEnabledFor } from "@/lib/claim/server";
 import { getPublicContractorState } from "@/lib/business-profile/server";
 import { BusinessResponses } from "@/components/contractor/BusinessResponses";
 import { BusinessSuppliedProfile } from "@/components/contractor/BusinessSuppliedProfile";
+import { BusinessWebsiteEnrichment } from "@/components/contractor/BusinessWebsiteEnrichment";
+import { loadBusinessWebsiteEnrichment } from "@/lib/contractors/enrichment";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -205,6 +207,9 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const publicState = claimProfile ? await getPublicContractorState(claimProfile.id) : null;
   const businessProfile = publicState?.profile ?? null;
   const businessReplies = publicState?.replies ?? null;
+  // MD-ENRICH-001: business-website evidence; a business-managed profile supersedes it.
+  const websiteEnrichment = businessProfile ? null : await loadBusinessWebsiteEnrichment(contractor.id);
+  const claimCtaRendered = Boolean(claimProfile && (businessProfile || showClaimCta));
 
   // FL only: officer-name lineage from stored Sunbiz officers (no invented links)
   const entityLineage =
@@ -573,6 +578,14 @@ export default async function ContractorPage({ params, searchParams }: Props) {
 
         <LicensesSection licenses={contractor.licenses} />
 
+        {websiteEnrichment ? (
+          <BusinessWebsiteEnrichment
+            data={websiteEnrichment}
+            correctionHref={correctionHref}
+            claimAvailable={claimCtaRendered && !businessProfile}
+          />
+        ) : null}
+
         {!isThin || isAz || isNj || isFlFull ? (
           <DisciplineSection
             discipline={contractor.discipline}
@@ -618,7 +631,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         ) : null}
 
         {businessProfile ? <BusinessSuppliedProfile profile={businessProfile} officialFormationDate={contractor.entities[0]?.formationDate} /> : null}
-        {claimProfile && (businessProfile || showClaimCta) ? <ManageProfileCta profileId={claimProfile.id} state={claimProfile.homeState} sourceSystem={claimProfile.sourceSystem} managed={Boolean(businessProfile)} /> : null}
+        {claimCtaRendered && claimProfile ? <ManageProfileCta profileId={claimProfile.id} state={claimProfile.homeState} sourceSystem={claimProfile.sourceSystem} managed={Boolean(businessProfile)} /> : null}
 
         <SourcesFooter contractor={contractor} state={state} />
 

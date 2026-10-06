@@ -1,0 +1,146 @@
+{
+  "contract": "iowa-contractor-registrations-v1",
+  "source": "https://idh-be.iowa.gov/api/v1/datasets/1052/rows.csv",
+  "catalog": "https://data.iowa.gov/catalog/dataset/1052",
+  "regulator": "Iowa Department of Inspections, Appeals, and Licensing",
+  "grain": "Active construction contractor registration number; includes individuals and businesses, not a trade license",
+  "retrievedAt": "2026-10-06T15:52:25.206589+00:00",
+  "sourceAsOf": null,
+  "downloadSha256": "cd8e3faeab97df3a8ade05e7c3938c9aeaf268796eff0048e49cf2077eff7b6f",
+  "csvSha256": "ed2e8e027e44f96ea6332d3d79c5c74b55a538ba41e12db52a812c6f665c69fc",
+  "rawRows": 18000,
+  "distinctRegistrationNumbers": 18000,
+  "rowsWithBusinessName": 18000,
+  "rowsWithPersonName": 17730,
+  "primaryActivities": [
+    {
+      "activity": "Residential Remodelers",
+      "registrations": 3397
+    },
+    {
+      "activity": "All Other Specialty Trade Contractors",
+      "registrations": 1796
+    },
+    {
+      "activity": "Electrical and Wiring Installation",
+      "registrations": 1727
+    },
+    {
+      "activity": "Plumbing/Heating & A/C Contractors",
+      "registrations": 1436
+    },
+    {
+      "activity": "Other/Undefined",
+      "registrations": 1369
+    },
+    {
+      "activity": "Commercial & Institutional Bldg Construction",
+      "registrations": 1177
+    },
+    {
+      "activity": "Roofing Contractors",
+      "registrations": 880
+    },
+    {
+      "activity": "Finish Carpentry Contractors",
+      "registrations": 808
+    },
+    {
+      "activity": "New Single-Family Housing Construction",
+      "registrations": 737
+    },
+    {
+      "activity": "Site Preparation Contractors",
+      "registrations": 624
+    },
+    {
+      "activity": "Painting & Wall Covering Contractors",
+      "registrations": 475
+    },
+    {
+      "activity": "Poured Concrete Foundation Contractors",
+      "registrations": 348
+    },
+    {
+      "activity": "Flooring Contractors",
+      "registrations": 303
+    },
+    {
+      "activity": "Other Foundation/Structure &Bldg Exterior",
+      "registrations": 285
+    },
+    {
+      "activity": "Drywall & Insulation Contractors",
+      "registrations": 285
+    },
+    {
+      "activity": "Masonry Contractors",
+      "registrations": 277
+    },
+    {
+      "activity": "Framing Contractors",
+      "registrations": 244
+    },
+    {
+      "activity": "Highway/Street and Bridge Construction",
+      "registrations": 240
+    },
+    {
+      "activity": "Water/Sewer Line Construction",
+      "registrations": 232
+    },
+    {
+      "activity": "Power/Communication Line Construction",
+      "registrations": 223
+    },
+    {
+      "activity": "Siding Contractors",
+      "registrations": 194
+    },
+    {
+      "activity": "Other Building Finishing Contractors",
+      "registrations": 146
+    },
+    {
+      "activity": "Other Building Equipment Contractors",
+      "registrations": 121
+    },
+    {
+      "activity": "Industrial Building Construction",
+      "registrations": 111
+    },
+    {
+      "activity": "New Housing For-Sale Builders",
+      "registrations": 104
+    },
+    {
+      "activity": "Other Heavy/Civil Engineering",
+      "registrations": 101
+    },
+    {
+      "activity": "Structural Steel/Precast Concrete Contractors",
+      "registrations": 99
+    },
+    {
+      "activity": "Glass and Glazing Contractors",
+      "registrations": 75
+    },
+    {
+      "activity": "New Multifamily Housing Construction",
+      "registrations": 63
+    },
+    {
+      "activity": "Oil/Gas Pipeline Construction",
+      "registrations": 50
+    },
+    {
+      "activity": "Tile/Terrazzo Contractors",
+      "registrations": 49
+    },
+    {
+      "activity": "Land Subdivision",
+      "registrations": 24
+    }
+  ],
+  "graphWrites": 0
+}
