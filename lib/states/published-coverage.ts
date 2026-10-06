@@ -43,10 +43,13 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   kansas: "KS",
   idaho: "ID",
   nebraska: "NE",
+  "west-virginia": "WV",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  "west-virginia":
+    "Division of Labor elevator-inspector list kept separate from contractor licenses. HVAC, plumbing, and manufactured housing were not acquired as rosters",
   nebraska:
     "Department of Labor contractor registration is required and is not a quality endorsement. A bulk roster was not acquired",
   idaho:

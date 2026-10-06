@@ -159,6 +159,7 @@ function staticProductEntries(): SitemapUrlEntry[] {
       { path: "/kansas", priority: 0.9, changefreq: "weekly" },
       { path: "/idaho", priority: 0.9, changefreq: "weekly" },
       { path: "/nebraska", priority: 0.9, changefreq: "weekly" },
+      { path: "/west-virginia", priority: 0.9, changefreq: "weekly" },
     { path: "/indiana", priority: 0.9, changefreq: "weekly" },
     { path: "/alabama", priority: 0.9, changefreq: "weekly" },
     { path: "/connecticut", priority: 0.9, changefreq: "weekly" },
