@@ -105,6 +105,33 @@ export type DisciplineDetail = {
   lastVerifiedAt: string | null;
 };
 
+/**
+ * EA-CT-001: a single CONFIRMED public business-contact observation, deterministically attributed
+ * to exactly one of this contractor's own license rows (public_contact_observations.attributed_license_id
+ * -> licenses.id -> licenses.contractor_id). contact_name/contact_title kinds are intentionally never
+ * surfaced by this type -- see docs/EA-CT-001-PUBLIC-CONTACTS.md for the scope decision.
+ */
+export type PublicContactKind =
+  | "email"
+  | "phone"
+  | "phone_extension"
+  | "website"
+  | "mailing_address"
+  | "physical_address"
+  | "additional_location";
+
+export type PublicContactDetail = {
+  id: string;
+  licenseId: string;
+  kind: PublicContactKind;
+  value: string;
+  valueNormalized: string;
+  sourceSystem: string;
+  sourceUrl: string | null;
+  retrievedAt: string | null;
+  currentness: string | null;
+};
+
 export type ContractorDetail = {
   id: string;
   slug: string;
@@ -118,4 +145,5 @@ export type ContractorDetail = {
   licenses: LicenseDetail[];
   entities: EntityDetail[];
   discipline: DisciplineDetail[];
+  publicContacts: PublicContactDetail[];
 };
