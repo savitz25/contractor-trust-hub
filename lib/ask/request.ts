@@ -72,6 +72,7 @@ export function researchRoute(
     /\b(?:arkansas|contractors licensing board)\b|\bin ar\b/i.test(query) ||
     /\bnew mexico\b|\bin nm\b/i.test(query) ||
     /\bidaho\b|\bin id\b/i.test(query) ||
+    /\bnebraska\b|\bin ne\b/i.test(query) ||
     /\b(?:HIC|NHC|ELC|PLM|HTG|SMT|FSP|ELV)\.\d{5,8}(?:[.-][A-Z0-9]+)?\b/i.test(query) ||
     /\b(?:EL|HV|HY|PL|RE)\.\d{3,6}\b/i.test(query) ||
     /\bcompar(?:e|ison)\b/i.test(query)
