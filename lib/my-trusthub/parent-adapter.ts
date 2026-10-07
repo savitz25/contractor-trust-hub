@@ -5,9 +5,9 @@
  * docs/my-trusthub/ONE-PROFILE-CANARY.md is done and an operator authorizes
  * the canary window. This commit is not a production deployment.
  *
- * CONTRACTOR_CANARY_ACTIVE is true. CONTRACTOR_CANARIES contains only
+ * SHUTOFF: CONTRACTOR_CANARY_ACTIVE is false. CONTRACTOR_CANARIES contains only
  * ccc057187-a-r-roofing-inc. CONTRACTOR_PARENT_SYNC_BROAD stays false.
- * The server gate is open for that one profile. Leaving
+ * The server gate is closed for every profile. Leaving
  * NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC unset stops the browser from
  * starting the hand-off and is not the security kill switch.
  *
@@ -34,8 +34,7 @@
  *
  * GATE. Activation is a reviewed code change, not an environment flag.
  * CONTRACTOR_PARENT_SYNC_BROAD and CONTRACTOR_CANARY_ACTIVE are constants.
- * This activation sets the canary constant true for one slug and leaves broad
- * false. With both constants false, nothing is read, built, signed or sent.
+ * This shutoff sets the canary constant false and leaves broad false. With both constants false, nothing is read, built, signed or sent.
  *   dry_run (never in production, and only while the gate constants are both
  *   false) runs steps 2-3 without the parent calls and reports the staged
  *   identity; it contacts nobody.
@@ -47,8 +46,8 @@ import type { ContractorSaveIdentity } from "./profile-identity";
 import { resolveBySlug, type ProfileReader, type Resolution } from "./publication";
 
 export const CONTRACTOR_PARENT_SYNC_BROAD = false;
-/** One-profile activation. Use the forward-fix shutoff branch to close the gate. */
-export const CONTRACTOR_CANARY_ACTIVE = true;
+/** Forward-fix shutoff: preserve the one-profile list and close the gate. */
+export const CONTRACTOR_CANARY_ACTIVE = false;
 /** The only profile this activation admits. Slug is the page; the identity is
  * always derived on the server. CFC1427249 and CGC1517216 stay off this list
  * until a later reviewed change after this profile's Save chain passes. */

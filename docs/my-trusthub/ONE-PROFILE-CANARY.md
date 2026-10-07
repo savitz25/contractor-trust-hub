@@ -1,3 +1,7 @@
+> SHUTOFF BRANCH: both server constants are false; the CCC057187-only list is unchanged.
+> This forward-fix is based on frozen activation head `b43b561fcfc9488d916dcc834b969d657ad7e51f`.
+> The activation specification below describes that parent. Do not merge or deploy this shutoff without separate authorization.
+
 # Contractor one-profile canary — activation artifact
 
 Status of this commit: **unmerged and undeployed**. Production stays on the
