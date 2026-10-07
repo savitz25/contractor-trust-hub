@@ -60,7 +60,7 @@ export type ParentSaveReadiness = { ready: true; identity: ContractorSaveIdentit
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export const CONTRACTOR_SLUG = /^[a-z0-9][a-z0-9-]{0,199}$/;
-/** DBPR license keys: a 1–4 letter occupation prefix and 3–9 digits (CCC057187, CGC1506243). */
+/** DBPR license keys: a 1–4 letter occupation prefix and 3–9 digits (CCC057187, CGC1517216). */
 export const FL_DBPR_KEY = /^[A-Z]{1,4}[0-9]{3,9}$/;
 
 /** A profile may carry a device Save when it is a real, non-thin Trust Report

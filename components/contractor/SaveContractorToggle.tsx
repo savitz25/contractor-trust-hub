@@ -4,12 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { SAVED_CHANGE_EVENT, isContractorSaved, saveContractor, unsaveContractor } from "@/lib/saved/store";
+import { contractorClientMayHandoff, contractorClientSyncEnabled } from "@/lib/my-trusthub/client-sync";
 import { browserDirectPorts, parentSync, resumeDirect, startDirect, type DirectIntent } from "@/lib/my-trusthub/direct-save-client";
 
-/** Client half of My TrustHub sync. Bundled at build; OFF unless set to "1".
- * Even when on, the server decides: with production sync off the endpoint
- * answers "unavailable" and the Save stays on this device. */
-export const PARENT_SYNC_UI = process.env.NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC === "1";
+/** Client half of My TrustHub sync. Bundled at build; OFF unless the value is "1".
+ * Even when on, the server admits only the active canary. An unset flag does
+ * not close the server gate. See docs/my-trusthub/ONE-PROFILE-CANARY.md. */
+export const PARENT_SYNC_UI = contractorClientSyncEnabled(process.env.NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC);
 
 /**
  * One Save toggle for a Trust Report: Save -> Saved -> Save.
@@ -35,7 +36,7 @@ export function SaveContractorToggle({ slug, name, profileId, syncEligible = fal
   const [parentHeld, setParentHeld] = useState(false);
   const [signInOffer, setSignInOffer] = useState(false);
   const pathname = usePathname();
-  const direct = PARENT_SYNC_UI && syncEligible && pathname === "/contractors/" + slug;
+  const direct = contractorClientMayHandoff(PARENT_SYNC_UI ? "1" : undefined, syncEligible, pathname, slug);
   const here = useRef(true);
 
   useEffect(() => {
