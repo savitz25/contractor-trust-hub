@@ -47,10 +47,10 @@ import type { ContractorSaveIdentity } from "./profile-identity";
 import { resolveBySlug, type ProfileReader, type Resolution } from "./publication";
 
 export const CONTRACTOR_PARENT_SYNC_BROAD = false;
-/** One-profile activation. Revert this commit to close the gate. */
+/** One-profile activation. Use the forward-fix shutoff branch to close the gate. */
 export const CONTRACTOR_CANARY_ACTIVE = true;
 /** The only profile this activation admits. Slug is the page; the identity is
- * always derived on the server. CFC1427249 and CGC1506243 stay off this list
+ * always derived on the server. CFC1427249 and CGC1517216 stay off this list
  * until a later reviewed change after this profile's Save chain passes. */
 export const CONTRACTOR_CANARIES = [
   { slug: "ccc057187-a-r-roofing-inc", externalKey: "CCC057187" },

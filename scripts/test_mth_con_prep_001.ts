@@ -49,7 +49,7 @@ const contractor = (patch: Partial<ContractorDetail> = {}): ContractorDetail => 
 const PROFILES: ContractorDetail[] = [
   contractor(),
   contractor({ id: "11111111-1111-4111-8111-111111111111", slug: "cfc1427249-a-sunny-plumbing-company", displayName: "A SUNNY PLUMBING COMPANY", licenses: [license("fl_dbpr", "CFC1427249")] }),
-  contractor({ id: "22222222-2222-4222-8222-222222222222", slug: "cgc1506243-abs-contracting-inc", displayName: "ABS CONTRACTING INC", licenses: [license("fl_dbpr", "CGC1506243")] }),
+  contractor({ id: "22222222-2222-4222-8222-222222222222", slug: "cgc1517216-abaco-construction-inc", displayName: "ABACO CONSTRUCTION INC", licenses: [license("fl_dbpr", "CGC1517216")] }),
   contractor({ id: "33333333-3333-4333-8333-333333333333", slug: "fixture-no-credential", licenses: [] }),
   contractor({ id: "44444444-4444-4444-8444-444444444444", slug: "fixture-thin", isThinProfile: true, licenses: [license("fl_dbpr", "CRC1330009")] }),
   contractor({ id: "55555555-5555-4555-8555-555555555555", slug: "fixture-nj", homeState: "NJ", licenses: [license("nj_dca", "13VH01234500", "NJ")] }),
@@ -79,7 +79,7 @@ const IDENTITY = { hub: "contractor", profileClass: "contractor_profile", identi
 const CANARY = [
   { slug: "ccc057187-a-r-roofing-inc", key: "CCC057187", digest: "9c9f6fc29435beac2f7f90dda198d99d7468dac061cbe78725cc1d798df48f4f" },
   { slug: "cfc1427249-a-sunny-plumbing-company", key: "CFC1427249", digest: "2d42c7d91683606664082cbb2adc6fe8b5ae7d7cfeb1d56686773c27193fe565" },
-  { slug: "cgc1506243-abs-contracting-inc", key: "CGC1506243", digest: "f104be2ddf33359ef8bb7ec31e740491323255710b703b6d3035c70be9aee93f" },
+  { slug: "cgc1517216-abaco-construction-inc", key: "CGC1517216", digest: "d0a5268f09b6e7fbdb334e4365f070c6bae28b0443460cc67c96bc49857f0872" },
 ] as const;
 const SLUG = CANARY[0].slug;
 
@@ -281,7 +281,8 @@ test("P. manifest: the shared v3 selected-profiles wire with the exact Florida i
     assert.deepEqual(m, { version: "v2-3/selected-profiles/3", sourceHub: "contractor", audience: "ask",
       selected: [{ localItemId: c.slug, revision: "1", digest: sha(JSON.stringify([profile.nativeId, "/contractors/" + c.slug])), profile }],
       returnTask: { kind: "profile", hub: "contractor", canonicalSlug: c.slug, profile, returnPath: "/contractors/" + c.slug } });
-    // Golden: computed by Ask's manifestDigest (Conumers-Trust-Hub main 39decff) for this exact manifest.
+    // Goldens follow the shared positional digest; ABACO is independently calculated
+    // from that same wire shape for the 2026-10-07 replacement identity.
     assert.equal(manifestDigest(m), c.digest, c.slug);
     assert.equal(isContractorManifest(m), true);
     assert.deepEqual(parseContractorNativeId(m.returnTask.profile.nativeId), { identifierNamespace: "fl.dbpr.license", sourceIdentifier: c.key, jurisdiction: "FL" });
@@ -298,7 +299,7 @@ test("P. manifest: the shared v3 selected-profiles wire with the exact Florida i
   // B/C: any change to the key, the namespace (jurisdiction), the class, the slug or the return path breaks the closed shape.
   const clone = () => JSON.parse(JSON.stringify(m)) as ContractorManifest;
   const tampered: Array<(x: ContractorManifest) => void> = [
-    (x) => { x.returnTask.profile.nativeId = "fl.dbpr.license:CGC1506243"; }, (x) => { x.selected[0]!.profile.nativeId = "fl.dbpr.license:CGC1506243"; },
+    (x) => { x.returnTask.profile.nativeId = "fl.dbpr.license:CGC1517216"; }, (x) => { x.selected[0]!.profile.nativeId = "fl.dbpr.license:CGC1517216"; },
     (x) => { x.returnTask.profile.nativeId = "nj.dca.license:CCC057187"; x.selected[0]!.profile.nativeId = "nj.dca.license:CCC057187"; },
     (x) => { x.returnTask.profile.nativeId = UUID; x.selected[0]!.profile.nativeId = UUID; }, (x) => { (x.returnTask.profile as { profileClass: string }).profileClass = "standalone_credential"; },
     (x) => { x.returnTask.returnPath = "/contractors/some-other-slug"; }, (x) => { x.returnTask.canonicalSlug = "some-other-slug"; }, (x) => { (x as { sourceHub: string }).sourceHub = "move"; },
@@ -391,8 +392,8 @@ test("B/C/D. tampered DBPR key, tampered jurisdiction and browser-supplied ident
   const sourceCall = (manifest: ContractorManifest, digest = manifestDigest(manifest)) => p.callSource({ action: "source", continuationRef: ref(), transferRef: ref(), manifest, manifestDigest: digest, expiresAt: Date.now() + 60_000 }, "source:read", browser);
   assert.equal((await sourceCall(good)).status, 200);
   // B. a different DBPR key under this profile's slug, or this key under another profile's slug.
-  assert.equal((await sourceCall(rebuild("fl.dbpr.license:CGC1506243"))).status, 403);
-  assert.equal((await sourceCall(rebuild("fl.dbpr.license:CCC057187", "cgc1506243-abs-contracting-inc"))).status, 403);
+  assert.equal((await sourceCall(rebuild("fl.dbpr.license:CGC1517216"))).status, 403);
+  assert.equal((await sourceCall(rebuild("fl.dbpr.license:CCC057187", "cgc1517216-abaco-construction-inc"))).status, 403);
   assert.equal((await sourceCall(good, "0".repeat(64))).status, 403);
   // C. a different namespace / jurisdiction for the same key.
   assert.equal((await sourceCall(rebuild("nj.dca.license:CCC057187"))).status, 403);
@@ -403,7 +404,7 @@ test("B/C/D. tampered DBPR key, tampered jurisdiction and browser-supplied ident
   // A body changed after signing, a caller without Ask's key, a wrong scope, a replay: unauthorized.
   const url = CONTRACTOR_ORIGIN + SOURCE_PATH, signedBody = Buffer.from(JSON.stringify({ action: "resolve", profile: good.returnTask.profile }));
   const token = signContractorAssertion(p.askKey.priv, "ask", url, "source:read", signedBody, browser);
-  const swapped = Buffer.from(JSON.stringify({ action: "resolve", profile: { ...good.returnTask.profile, nativeId: "fl.dbpr.license:CGC1506243" } }));
+  const swapped = Buffer.from(JSON.stringify({ action: "resolve", profile: { ...good.returnTask.profile, nativeId: "fl.dbpr.license:CGC1517216" } }));
   const raw = (body: Buffer, assertion: string) => handleContractorSource(new Request(url, { method: "POST", body, headers: { "content-type": "application/json", [ASSERTION_HEADER]: assertion } }), p.sourceOptions);
   assert.equal((await raw(swapped, token)).status, 403);
   assert.equal((await raw(signedBody, token)).status, 200); assert.equal((await raw(signedBody, token)).status, 403, "replay");
@@ -425,7 +426,7 @@ test("B/C/D. tampered DBPR key, tampered jurisdiction and browser-supplied ident
   const post = (body: unknown) => handleContractorProfileSave(new Request(CONTRACTOR_ORIGIN + ENDPOINT_PATH, { method: "POST", body: JSON.stringify(body),
     headers: { origin: CONTRACTOR_ORIGIN, "sec-fetch-site": "same-origin", "content-type": "application/json", cookie: `${COOKIE_NAME}=${csrf}`, "x-cth-csrf": csrf } }), p.deps, CONTRACTOR_ORIGIN);
   const calls = p.ask.apiCalls.length;
-  for (const extra of [{ contractorId: UUID }, { profileId: UUID }, { networkEntityId: UUID }, { externalKey: "CCC057187" }, { sourceIdentifier: "CGC1506243" }, { nativeId: "fl.dbpr.license:CGC1506243" },
+  for (const extra of [{ contractorId: UUID }, { profileId: UUID }, { networkEntityId: UUID }, { externalKey: "CCC057187" }, { sourceIdentifier: "CGC1517216" }, { nativeId: "fl.dbpr.license:CGC1517216" },
     { name: "A & R ROOFING INC" }, { jurisdiction: "FL" }, { identifierNamespace: "fl.dbpr.license" }, { returnPath: "/contractors/x" }])
     assert.equal((await post({ action: "prepare", slug: SLUG, intent: "save", ...extra })).status, 400, JSON.stringify(extra));
   for (const slug of [UUID, "CCC057187", "A & R ROOFING INC"]) assert.equal((await (await post({ action: "prepare", slug, intent: "save" })).json() as { state: string }).state, "local_only", slug);
@@ -437,7 +438,7 @@ test("E/F/G. ineligible profiles and profiles outside the canary stage nothing w
   device.clear(); const p = pair(); p.ask.session = "owner-a";
   for (const [slug, reason] of [["fixture-thin", "thin_profile"], ["fixture-two-fl-licenses", "multiple_fl_credentials"], ["fixture-nj", "not_florida"], ["fixture-ca", "not_florida"],
     ["fixture-fl-and-nj", "multi_jurisdiction"], ["fixture-no-credential", "no_fl_dbpr_credential"], ["fixture-shared-key-a", "credential_not_unique"], ["no-such-contractor", "not_public"],
-    ["cfc1427249-a-sunny-plumbing-company", "sync_off"], ["cgc1506243-abs-contracting-inc", "sync_off"],
+    ["cfc1427249-a-sunny-plumbing-company", "sync_off"], ["cgc1517216-abaco-construction-inc", "sync_off"],
     ["cbc1268883-1776-construction-group-llc", "sync_off"], ["fixture-eligible-not-canary", "sync_off"]] as const) {
     assert.deepEqual(await prepareParentSave(p.deps, slug, "save", "b".repeat(43)), { state: "local_only", reason, localCopy: "keep" }, slug);
     saveContractor({ slug, name: slug }); assert.equal(await p.click(slug, "save"), "not_eligible", slug); assert.equal(isContractorSaved(slug), true, "the device Save stands");
@@ -537,7 +538,7 @@ test("one-profile canary: CCC057187 is admitted and every other profile stays on
   assert.equal(contractorClientMayHandoff("1", true, "/contractors/" + SLUG, SLUG), true);
   assert.equal(contractorClientMayHandoff("1", true, "/ask", SLUG), false);
   const note = fs.readFileSync("docs/my-trusthub/ONE-PROFILE-CANARY.md", "utf8");
-  for (const line of ["Ask SQL is complete", "Packet 19 is final", "Contractor binding is installed", "migration 016 is applied", "Keys are provisioned", "Ask verify key is deployed", "Contractor signer is deployed", "closed-gate kill switch deployment is recorded", "operator explicitly authorizes the canary", "not the security kill switch", "git revert", "CONTRACTOR_CANARY_ACTIVE = false", "CONTRACTOR_PARENT_SYNC_BROAD = false", "cfc1427249-a-sunny-plumbing-company", "cgc1506243-abs-contracting-inc", "PR #121 MUST NOT MERGE until ALL of these are proven", "17f464ad69f3d8c7a89dd2cf9229f112", "v23_private.authority()", "move, insurance, lender, investor, contractor, and senior", "prod_contractor_dbpr_binding_for", "hub = contractor", "profile class = contractor_profile", "namespace = fl.dbpr.license", "jurisdiction = FL", "/contractors/ccc057187-a-r-roofing-inc", "Packet 16 receipt file is saved", "exactly one current accepted binding on an active network entity", "The operator must verify the network entity is active in production", "accepted binding status alone is insufficient", "An inactive or retired entity blocks activation", "MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID", "MY_TRUSTHUB_V23_CONTRACTOR_VERIFY_PUBLIC_KEY_PEM", "MY_TRUSTHUB_V23_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM", "MY_TRUSTHUB_V23_ASK_KEY_ID", "MY_TRUSTHUB_V23_ASK_VERIFY_PUBLIC_KEY_PEM", "MY_TRUSTHUB_V23_PARENT_ORIGIN", "016_my_trusthub_handoff_acks.sql", "ACK table is verified", "device Save proof", "no Ask navigation", "deployment ID recorded", "mth-con-one-profile-canary-shutoff", "1290c2b32a91d0393d4525d365ed7c785b9bb516", "Post-SQL validation is PASS", "serving Ask deployment SHA is recorded", "does NOT close the server gate", "SERVER gate is open for `CCC057187`", "controlled canary window", "no automatic merge"]) {
+  for (const line of ["Ask SQL is complete", "Packet 19 is final", "Contractor binding is installed", "migration 016 is applied", "Keys are provisioned", "Ask verify key is deployed", "Contractor signer is deployed", "closed-gate kill switch deployment is recorded", "operator explicitly authorizes the canary", "not the security kill switch", "git revert", "CONTRACTOR_CANARY_ACTIVE = false", "CONTRACTOR_PARENT_SYNC_BROAD = false", "cfc1427249-a-sunny-plumbing-company", "cgc1517216-abaco-construction-inc", "PR #121 MUST NOT MERGE until ALL of these are proven", "17f464ad69f3d8c7a89dd2cf9229f112", "v23_private.authority()", "move, insurance, lender, investor, contractor, and senior", "prod_contractor_dbpr_binding_for", "hub = contractor", "profile class = contractor_profile", "namespace = fl.dbpr.license", "jurisdiction = FL", "/contractors/ccc057187-a-r-roofing-inc", "Packet 16 receipt file is saved", "exactly one current accepted binding on an active network entity", "The operator must verify the network entity is active in production", "accepted binding status alone is insufficient", "An inactive or retired entity blocks activation", "MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID", "MY_TRUSTHUB_V23_CONTRACTOR_VERIFY_PUBLIC_KEY_PEM", "MY_TRUSTHUB_V23_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM", "MY_TRUSTHUB_V23_ASK_KEY_ID", "MY_TRUSTHUB_V23_ASK_VERIFY_PUBLIC_KEY_PEM", "MY_TRUSTHUB_V23_PARENT_ORIGIN", "016_my_trusthub_handoff_acks.sql", "ACK table is verified", "device Save proof", "no Ask navigation", "deployment ID recorded", "mth-con-one-profile-canary-shutoff", "forward-fix", "Account entry before broad rollout", "Post-SQL validation is PASS", "serving Ask deployment SHA is recorded", "does NOT close the server gate", "SERVER gate is open for `CCC057187`", "controlled canary window", "no automatic merge"]) {
     assert.equal(note.includes(line), true, line);
   }
   assert.doesNotMatch(note, /BEGIN (?:PRIVATE|OPENSSH) KEY|postgres:\/\/|postgresql:\/\/|supabase\.co|service_role/);
@@ -599,9 +600,9 @@ test("closed gate sends nothing: environment values cannot open it, and off mode
   }
   assert.deepEqual(reads, []); assert.equal(sent, 0);
   // Dry run (non-production): resolves and builds, contacts nobody.
-  const dry = await prepareParentSave({ ...off, mode: "dry_run" }, "cgc1506243-abs-contracting-inc", "save", "b".repeat(43));
-  assert.deepEqual(dry, { state: "staged_dry_run", nativeId: "fl.dbpr.license:CGC1506243", manifestDigest: CANARY[2].digest, localCopy: "keep",
-    identity: { profileClass: "contractor_profile", identifierNamespace: "fl.dbpr.license", sourceIdentifier: "CGC1506243", jurisdiction: "FL", returnPath: "/contractors/cgc1506243-abs-contracting-inc" } });
+  const dry = await prepareParentSave({ ...off, mode: "dry_run" }, "cgc1517216-abaco-construction-inc", "save", "b".repeat(43));
+  assert.deepEqual(dry, { state: "staged_dry_run", nativeId: "fl.dbpr.license:CGC1517216", manifestDigest: CANARY[2].digest, localCopy: "keep",
+    identity: { profileClass: "contractor_profile", identifierNamespace: "fl.dbpr.license", sourceIdentifier: "CGC1517216", jurisdiction: "FL", returnPath: "/contractors/cgc1517216-abaco-construction-inc" } });
   assert.equal(sent, 0);
   // The source callback is unavailable without Ask's verification key.
   const closed = await handleContractorSource(new Request(CONTRACTOR_ORIGIN + SOURCE_PATH, { method: "POST", body: "{}", headers: { "content-type": "application/json" } }), { reader, key: null, nonces: memoryNonces(), acks: null });
@@ -631,4 +632,15 @@ test("the provisional envelope and the legacy hand-off are gone from the new pat
   assert.equal(ONE_ACCOUNT_PRESENTATION, false); assert.equal(MY_TRUSTHUB_ACCOUNT_HREF, "https://www.asktrusthub.com/my"); assert.equal(workspaceSyncCopy(false).linkLabel, "Optional account");
   for (const route of ["app/account/page.tsx", "app/watch/page.tsx", "app/projects/page.tsx", "app/compare/page.tsx", "app/passport/page.tsx", "app/tools/page.tsx", "app/my-contractor/page.tsx",
     "schema/migrations/016_my_trusthub_handoff_acks.sql"]) assert.ok(fs.existsSync(route), route);
+});
+
+
+test("forbidden credential never appears in activation or future expansion lists", () => {
+  const forbidden = /cgc1506243/i;
+  for (const list of [CONTRACTOR_CANARIES, CANARY, PROFILES]) {
+    assert.doesNotMatch(JSON.stringify(list), forbidden);
+  }
+  for (const file of ["lib/my-trusthub/parent-adapter.ts", "lib/my-trusthub/profile-identity.ts", "docs/my-trusthub/ONE-PROFILE-CANARY.md", "docs/my-trusthub/florida-integration.md"]) {
+    assert.doesNotMatch(fs.readFileSync(file, "utf8"), forbidden, file);
+  }
 });

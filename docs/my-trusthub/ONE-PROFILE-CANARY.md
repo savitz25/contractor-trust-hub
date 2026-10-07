@@ -1,7 +1,7 @@
 # Contractor one-profile canary — activation artifact
 
 Status of this commit: **unmerged and undeployed**. Production stays on the
-previous specialist build. `CONTRACTOR_CANARY` in production stays **OFF**
+reviewed specialist lineage `71c3d9a68a31a7fc08fefbf827cf9f50c15369f4`. `CONTRACTOR_CANARY` in production stays **OFF**
 until an operator merges and deploys this commit inside an authorized window.
 
 This commit contains no production secrets and no environment assignments.
@@ -46,8 +46,8 @@ on the next deploy.
 8. The closed-gate kill switch deployment is recorded. Before this pull request merges, the current production Contractor deployment must have the canary constant false, the broad constant false, the UI sync flag unset, a device Save proof, no Ask navigation, and the deployment ID recorded.
 
 9. The prepared shutoff still returns both constants to false. Branch
-   `mth-con-one-profile-canary-shutoff` at
-   `1290c2b32a91d0393d4525d365ed7c785b9bb516` is that shutoff.
+   `mth-con-one-profile-canary-shutoff` is rebuilt as a forward-fix on this
+   frozen activation head. Its exact SHA is recorded in the PR review receipt.
 
 10. The operator explicitly authorizes the canary. Explicit operator and founder authorization is required immediately before merge. There is no automatic merge.
 
@@ -68,7 +68,7 @@ With this code, and a browser build produced later with
 | --- | --- | --- |
 | `ccc057187-a-r-roofing-inc` | `CCC057187` | admitted |
 | `cfc1427249-a-sunny-plumbing-company` | `CFC1427249` | local / device-only |
-| `cgc1506243-abs-contracting-inc` | `CGC1506243` | local / device-only |
+| `cgc1517216-abaco-construction-inc` | `CGC1517216` | local / device-only |
 | `cbc1268883-1776-construction-group-llc` | `CBC1268883` | local / device-only |
 
 Broad mode stays false. A malformed or non-canonical slug is denied. A denied
@@ -90,32 +90,64 @@ Therefore PR #121 must merge only during the controlled canary window.
 
 Do not deploy the shutoff unless the operator is closing the canary.
 
-The shutoff is one commit: `git revert` of the activation commit (the commit
-that introduces this document). That revert returns:
+The shutoff is a forward-fix commit on this frozen activation head:
 
 - `CONTRACTOR_CANARY_ACTIVE = false`
 - `CONTRACTOR_PARENT_SYNC_BROAD = false`
+- `CONTRACTOR_CANARIES` remains `ccc057187-a-r-roofing-inc` only.
 
-The canary array returns to the previous three certified slugs. Those slugs
-stay inactive because the canary constant is false.
+Do not use `git revert` of the original activation: it restores a stale list.
+No prior multi-profile list is restored. With both constants false, the server
+returns unavailable with localCopy keep before reading a profile, signing or calling Ask.
 
-At that deployment, remove or leave unset
-`NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC`.
-
-Prepared branch: `mth-con-one-profile-canary-shutoff`, head
-`1290c2b32a91d0393d4525d365ed7c785b9bb516`. It is the revert. It must still
-cleanly return both constants to false. It is not a deployment and it is not
-this pull request.
+At the separately authorized shutoff deployment, remove or leave unset
+`NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC`; the server constants close the gate.
+Prepared branch: `mth-con-one-profile-canary-shutoff`. Its exact head and parent
+are recorded in the PR review receipt. Keep it unmerged and undeployed until an
+operator authorizes shutoff.
 
 ## Later three-profile follow-up
 
 This commit does not restore the three-profile list.
 
 After the `CCC057187` Save chain passes in the authorized window, a separate
-reviewed change may restore:
+reviewed change may expand the list to:
 
 - `ccc057187-a-r-roofing-inc`
 - `cfc1427249-a-sunny-plumbing-company`
-- `cgc1506243-abs-contracting-inc`
+- `cgc1517216-abaco-construction-inc`
 
 `CONTRACTOR_PARENT_SYNC_BROAD` stays false in that follow-up.
+
+## Account entry before broad rollout
+
+The account-entry gap is documented, not activated by this repair.
+`lib/my-trusthub/one-account.ts` exposes the My TrustHub account entry only when
+`NEXT_PUBLIC_MY_TRUSTHUB_ONE_ACCOUNT` is `1` in the browser build. The CoS
+2026-10-07 production pre-check reports this variable absent. With the default
+false, the header, `/account` and `/my-contractor` hide the My TrustHub entry.
+Existing Contractor workspace sign-in remains a separate optional workspace
+sync facility; it is not the shared My TrustHub account.
+
+Before broad rollout, obtain separate approval for the account-entry build,
+then verify the My TrustHub entry in the header, account page and workspace,
+its exact `https://www.asktrusthub.com/my` destination, signed-in and signed-out
+return flows, and the existing local Save, Watch and workspace behavior. The
+presentation flag neither opens nor closes the server Save gate. No flag is
+set by this task.
+
+The deprecated `MyTrustHubSave` is still mounted on the Trust Report and is
+inert by default; its legacy `/api/my-trusthub/issue` is not the V2 account entry.
+Remove that legacy mount/component/route in a separately reviewed activation
+cleanup before broad rollout, preserving device Save and Watch. Do not enable
+the legacy flag as a substitute for the account-entry work.
+
+## Locked rollout and completed Ask work
+
+The Founder/CoS handoff records Ask SQL/authority complete, Ask PR #262 merge
+`64ca401d`, and authority fingerprint `17f464ad69f3d8c7a89dd2cf9229f112`.
+Do not rerun packets or reopen that PR. This repair checks only Contractor
+readiness and the exact binding's active entity using read-only evidence.
+Rollout order remains Move (done), Lender, Investor, Insurance, Senior,
+Contractor. Contractor remains last; ABACO `CGC1517216` is a later reviewed
+expansion candidate, not part of this one-profile activation.

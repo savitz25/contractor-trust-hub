@@ -158,25 +158,26 @@ activated.
 
 ## Florida canary profiles
 
-Ordinary live Trust Reports, non-thin, one DBPR license key on the public page,
-active status, three different trades (checked on production 2026-10-03):
+The first profile is the only activation candidate. The later expansion list
+uses ABACO per the Founder decision of 2026-10-07. Reverify each expansion
+candidate before admission; the prior 2026-10-03 proof does not certify ABACO.
 
 | # | Slug | Name | DBPR external_key | Credential |
 | --- | --- | --- | --- | --- |
 | 1 | `ccc057187-a-r-roofing-inc` | A & R ROOFING INC | `CCC057187` | Certified Roofing Contractor |
 | 2 | `cfc1427249-a-sunny-plumbing-company` | A SUNNY PLUMBING COMPANY | `CFC1427249` | Certified Plumbing Contractor |
-| 3 | `cgc1506243-abs-contracting-inc` | ABS CONTRACTING INC | `CGC1506243` | Certified General Contractor |
+| 3 | `cgc1517216-abaco-construction-inc` | ABACO CONSTRUCTION INC | `CGC1517216` | Certified General Contractor |
 
-"Exactly one attached credential" and "key attached to one profile" were read
-from the public pages, not from the database; the adapter re-proves both on the
-server at stage time. The active array in this commit is only row 1. Rows 2 and
-3 stay certified and are denied. Restoring all three is a later reviewed change
+CCC057187 readiness and credential uniqueness were checked through the approved
+production connector on 2026-10-07; see `lane-b-readiness-20261007.json`. The
+adapter re-proves both on the server at stage time. The active array in this commit is only row 1. Rows 2 and
+3 remain denied. Expanding to all three is a later reviewed change
 after row 1's Save chain passes. Broad mode stays false. See
 `ONE-PROFILE-CANARY.md`.
 
 ## Tests
 
-`npm run check:mth-con-prep-001` (15 tests): one-profile admission, identity and fail-closed reasons;
+`npm run check:mth-con-prep-001` (16 tests): one-profile admission, identity and fail-closed reasons;
 publication by slug and by shared profile identity; manifest shape with digests
 pinned to Ask's contract code; assertion claim set, replay, expiry, audience,
 scope and wrong-hub rejection; the full signed chain for all three canaries
