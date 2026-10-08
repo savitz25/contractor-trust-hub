@@ -30,3 +30,15 @@ CREATE INDEX IF NOT EXISTS my_trusthub_handoff_acks_expiry_idx ON my_trusthub_ha
 -- Housekeeping (operator, optional, bounded):
 -- DELETE FROM my_trusthub_handoff_acks WHERE continuation_hash IN
 --   (SELECT continuation_hash FROM my_trusthub_handoff_acks WHERE expires_at < now() ORDER BY expires_at LIMIT 500);
+
+-- No browser role may read or write this table (service connection only).
+ALTER TABLE my_trusthub_handoff_acks ENABLE ROW LEVEL SECURITY;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN
+    REVOKE ALL ON my_trusthub_handoff_acks FROM anon;
+  END IF;
+  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN
+    REVOKE ALL ON my_trusthub_handoff_acks FROM authenticated;
+  END IF;
+END $$;
