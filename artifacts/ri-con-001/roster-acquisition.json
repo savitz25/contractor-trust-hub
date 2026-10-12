@@ -1,0 +1,29 @@
+{
+  "state": "Rhode Island",
+  "source_system": "Rhode Island Department of Business Regulation public eLicensing",
+  "source_url": "https://ridbrprod.state-reg-eastern.tylerapp.com/portal/public/online-reports",
+  "source_clock": "2026-10-12",
+  "retrieval_method": "Normal public browser flow; opened Online Rosters from the DBR public landing page.",
+  "result": "NOT_ACQUIRED",
+  "observation": "The current Online Rosters page listed roster downloads for other boards, but CRLB was not listed and no CRLB board selection or roster download was available.",
+  "registrations": {
+    "population": "CRLB General Contractor Registration",
+    "raw_rows": null,
+    "distinct_registrations": null,
+    "person_business_grain": "NOT_ACQUIRED",
+    "status_distribution": "NOT_ACQUIRED"
+  },
+  "specialty_licenses": [
+    "Commercial Roofer",
+    "Home Inspector",
+    "Associate Home Inspector",
+    "Underground Utility",
+    "Water Filtration Contractor",
+    "Water Filtration Installer",
+    "Well Drilling",
+    "Pump Installer"
+  ],
+  "specialty_license_counts": "NOT_ACQUIRED",
+  "enforcement_records_used_as_roster": false,
+  "verification_controls_bypassed": false
+}

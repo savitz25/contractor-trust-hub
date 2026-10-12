@@ -26,6 +26,7 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   ohio: "OH",
   oregon: "OR",
   pennsylvania: "PA",
+  "rhode-island": "RI",
   tennessee: "TN",
   texas: "TX",
   virginia: "VA",
@@ -77,6 +78,7 @@ const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>
   nevada: "State Contractors Board license classifications and public board actions",
   tennessee: "Board for Licensing Contractors license classes and public regulatory events",
   massachusetts: "Construction Supervisor and Home Improvement Contractor credential evidence",
+  "rhode-island": "CRLB general contractor registration kept separate from specialty-license classes; official statewide rosters NOT_ACQUIRED",
   georgia: "Statewide contractor credential classes and cease-and-desist orders",
 };
 
