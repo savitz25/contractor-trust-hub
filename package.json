@@ -20,6 +20,7 @@
     "check:ath-cap-pilot-001": "npx --yes tsx --test scripts/test_ath_cap_pilot_001.ts",
     "check:con-cap-002": "npx --yes tsx --test scripts/test_con_cap_002.ts",
     "check:mth-con-prep-001": "npx --yes tsx --test scripts/test_mth_con_prep_001.ts",
+    "check:gb1-neutral-account-link": "npx --yes tsx --test scripts/test_gb1_neutral_account_link.tsx",
     "check:con-search-001": "npx --yes tsx --test scripts/test_con_search_001.ts",
     "home:intel": "node --import tsx scripts/build_homepage_intel.mjs",
     "home:metrics": "node --import tsx scripts/build_network_metrics_v1.mjs",

@@ -84,6 +84,13 @@ export function SiteHeader() {
             >
               Verify
             </Link>
+            <a
+              href={MY_TRUSTHUB_ACCOUNT_HREF}
+              data-mth-neutral-account="true"
+              className="inline-flex min-h-11 items-center rounded-xl border border-[var(--border)] bg-white px-3 text-sm font-semibold text-[var(--navy)] no-underline"
+            >
+              My TrustHub
+            </a>
             {/* One account across TrustHub: the account entry is My TrustHub. Off by default. */}
             {ONE_ACCOUNT_PRESENTATION ? (
               <a
@@ -105,6 +112,17 @@ export function SiteHeader() {
             >
               Verify
             </Link>
+            <a
+              href={MY_TRUSTHUB_ACCOUNT_HREF}
+              data-mth-neutral-account="true"
+              className="th-btn-icon"
+              aria-label="My TrustHub"
+              title="My TrustHub"
+            >
+              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+                <path d="M10 2.5l5.5 2.2v4.4c0 3.4-2.2 6.4-5.5 7.4-3.3-1-5.5-4-5.5-7.4V4.7L10 2.5z" />
+              </svg>
+            </a>
             <button
               ref={menuRef}
               type="button"
@@ -144,6 +162,14 @@ export function SiteHeader() {
               >
                 Verify a contractor
               </Link>
+              <a
+                href={MY_TRUSTHUB_ACCOUNT_HREF}
+                data-mth-neutral-account="true"
+                className="th-drawer-link"
+                onClick={() => setOpen(false)}
+              >
+                My TrustHub
+              </a>
               {MOBILE_GROUPS.map((group) => (
                 <div key={group.id} className="py-1.5">
                   <p className="px-2 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
