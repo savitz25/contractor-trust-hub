@@ -1,0 +1,11 @@
+{
+  "dataset": "nj_dfs_fire_business",
+  "official_url": "https://www.nj.gov/dca/dfs/pdf/Fire%20Protection%20Equipment%20Contractor%20-%20Permitted%20Business.pdf",
+  "retrieved_file": "data/raw/th_enrich_b1/nj_fire_permitted_business_2026.pdf",
+  "sha256": "0ed7e0d89a08f46ce5af3950551b518d8074dfba305ca0d88bce097393e684c7",
+  "bytes": 223708,
+  "source_as_of": "2026-03-19",
+  "excluded_historical_file": "data/raw/th_enrich_b1/fire_protection_equipment_contractor_permitted_businesses.pdf",
+  "excluded_historical_sha256": "4c3dba67ca015452165ce6c0020e3c684e368828023cca2002e328432a9625c4",
+  "reason": "The initial official URL served a 2022 roster. The current official PDF is a separate immutable snapshot."
+}
