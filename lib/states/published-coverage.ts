@@ -45,10 +45,13 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   idaho: "ID",
   nebraska: "NE",
   "west-virginia": "WV",
+  montana: "MT",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  montana:
+    "Statewide Construction Contractor License took effect January 1, 2026; current roster NOT_ACQUIRED. Electrical, plumbing, and ICEC populations remain separate",
   "west-virginia":
     "Division of Labor elevator-inspector list kept separate from contractor licenses. HVAC, plumbing, and manufactured housing were not acquired as rosters",
   nebraska:
