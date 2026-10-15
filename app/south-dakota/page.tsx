@@ -83,19 +83,21 @@ export default function SouthDakotaContractorPage() {
     <main className="state-page">
       <h1>South Dakota contractor and trade credentials</h1>
       <p>
-        South Dakota does not present a single universal general-contractor
-        competency license in the reviewed statewide sources. Contractor excise
-        tax licensing, professional trade credentials, and specialist
-        registrations are separate regulatory populations.
+        The reviewed statewide sources publish separate requirements: Plumbing
+        Commission license types, Electrical Commission electrician licensure,
+        and a Department of Revenue contractor&apos;s tax license for described
+        construction services.
       </p>
 
       <section aria-labelledby="contractor-tax-license">
         <h2 id="contractor-tax-license">Contractor excise-tax license</h2>
         <p>
-          The Department of Revenue requires a contractor excise-tax license for
-          covered construction services. This is a tax license and is not a
-          competency license or a count of all construction businesses.
-          Current statewide row-level license records are <strong>NOT_ACQUIRED</strong>.
+          The Department of Revenue states that a person who enters a contract
+          for construction services, or who constructs, builds, installs, or
+          repairs a fixture to real property, must have a South Dakota
+          contractor&apos;s tax license. Current statewide row-level license
+          records are <strong>NOT_ACQUIRED</strong>. This page does not publish
+          a count of all construction businesses.
         </p>
       </section>
 
@@ -128,8 +130,8 @@ export default function SouthDakotaContractorPage() {
       <section aria-labelledby="other-trades">
         <h2 id="other-trades">Other statewide credentials</h2>
         <p>
-          The Electrical Commission administers statewide electrical
-          credentials. A current bulk electrical roster was not acquired.
+          The Electrical Commission licenses all electricians within the state.
+          A current bulk electrical roster was not acquired.
           Electrical credentials are not included in the plumbing lists.
           Specialist construction and trade populations remain separate from
           contractor excise-tax licensing.
