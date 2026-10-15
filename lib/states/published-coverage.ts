@@ -49,6 +49,31 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   vermont: "VT",
   wyoming: "WY",
   "south-dakota": "SD",
+  alaska: "AK",
+  delaware: "DE",
+  hawaii: "HI",
+  iowa: "IA",
+  maine: "ME",
+  "new-hampshire": "NH",
+  "north-dakota": "ND",
+};
+
+/** Scope notes for published pages outside the recent strip. Not a recency claim. */
+const SCOPE_NOTES: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  alaska:
+    "Current row-level contractor business records are NOT_ACQUIRED. No count is inferred from the blocked public database endpoint",
+  delaware:
+    "Contractor registration and board trade classes stay separate. Current class-level rows are NOT_ACQUIRED",
+  hawaii:
+    "The DCCA contractor license-class workbook is a dated snapshot. Class observations are not unique businesses and stay separate from other boards",
+  iowa:
+    "Registration rows and trade-license rows are NOT_ACQUIRED and are not added into one contractor total",
+  maine:
+    "Electrician, plumber, and other construction-profession classes stay separate. Bulk rows are NOT_ACQUIRED",
+  "new-hampshire":
+    "Electrician and plumbing or gas-fitting classes stay separate. Dated bulk rows are NOT_ACQUIRED",
+  "north-dakota":
+    "FirstStop is the public contractor search. Current license rows and distinct licensees are NOT_ACQUIRED",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
@@ -101,6 +126,8 @@ export type PublishedState = {
   href: string;
   /** Present only for recently published states. */
   recentSummary?: string;
+  /** Page-faithful scope for a published destination that is not in the recent strip. */
+  scopeNote?: string;
 };
 
 function nameFor(slug: string): string {
@@ -116,6 +143,7 @@ export const PUBLISHED_STATES: PublishedState[] = PUBLISHED_STATEWIDE_SLUGS.map(
   name: nameFor(slug),
   href: `/${slug}`,
   recentSummary: RECENT[slug],
+  scopeNote: SCOPE_NOTES[slug],
 }));
 
 export const PUBLISHED_STATE_COUNT = PUBLISHED_STATES.length;

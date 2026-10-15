@@ -130,7 +130,7 @@ assert(depth.includes("Review the published evidence"), "featured roster action"
 assert(!depth.includes("Recently added states") && !/160[,]?923/.test(depth), "upper band does not lead with recency or a handwritten total");
 const publishedSlugs = read("lib/seo/published-state-path.ts");
 const sitemap = read("lib/seo/sitemap-data.ts");
-for (const slug of ["vermont", "wyoming", "south-dakota"]) {
+for (const slug of ["vermont", "wyoming", "south-dakota", "alaska", "delaware", "hawaii", "iowa", "maine", "new-hampshire", "north-dakota"]) {
   assert(publishedSlugs.includes(`"${slug}"`), `published footprint includes ${slug}`);
   assert(sitemap.includes(`"/${slug}"`), `sitemap includes ${slug}`);
 }

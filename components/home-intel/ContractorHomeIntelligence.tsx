@@ -292,7 +292,7 @@ export function ContractorHomeIntelligence({
               <Link href={row.href}>{row.hrefLabel}</Link>
             </li>
           ))}
-          {PUBLISHED_STATES.filter((s) => !intel.geography.some((g) => g.code === s.code)).map((s) => <li key={s.code}><p><strong>{s.code} &middot; {s.name}</strong>{s.recentSummary ? <> <span>Recently added</span></> : null}</p><p>{s.recentSummary ?? "Accepted state licensing or registration evidence, with source-specific scope."}</p><p>Credential numbers are not unique companies. Evidence coverage does not assert specialist completion.</p><Link href={s.href}>Explore {s.name} intelligence</Link></li>)}
+          {PUBLISHED_STATES.filter((s) => !intel.geography.some((g) => g.code === s.code)).map((s) => <li key={s.code}><p><strong>{s.code} &middot; {s.name}</strong>{s.recentSummary ? <> <span>Recently added</span></> : null}</p><p>{s.recentSummary ?? s.scopeNote ?? "Accepted state licensing or registration evidence, with source-specific scope."}</p><p>Credential numbers are not unique companies. Evidence coverage does not assert specialist completion.</p><Link href={s.href}>Explore {s.name} intelligence</Link></li>)}
         </ul>
         <details className="mt-4">
           <summary className="cursor-pointer font-semibold text-[var(--navy)]">
