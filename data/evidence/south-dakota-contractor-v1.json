@@ -1,0 +1,74 @@
+{
+  "state": "South Dakota",
+  "retrievedAt": "2026-10-14",
+  "populations": [
+    {
+      "key": "licensed-plumbers",
+      "sourceUrl": "https://dlr.sd.gov/plumbing/documents/List_of_licensed_plumbers.pdf",
+      "sourceClock": "2026-07-31",
+      "sha256": "fcbfce0421fab770f5385904c5d780f7efbf72e542aeda6b3df4a7416447ecd1",
+      "grain": "named licensee and source license type; no license identifier or current status field",
+      "rowsByClass": [
+        { "class": "Plumber", "rows": 873 },
+        { "class": "Plumbing contractor", "rows": 665 },
+        { "class": "Apprentice plumber", "rows": 284 },
+        { "class": "Apprentice plumber 2nd", "rows": 231 },
+        { "class": "Apprentice plumber 3rd", "rows": 230 },
+        { "class": "Apprentice plumber 4th+", "rows": 343 },
+        { "class": "Apprentice plumber (3rd)", "rows": 15 },
+        { "class": "Journeyman plumber", "rows": 22 },
+        { "class": "Restricted plumber", "rows": 20 },
+        { "class": "Restricted journeyman plumber", "rows": 2 },
+        { "class": "Restricted plumbing contractor", "rows": 113 }
+      ]
+    },
+    {
+      "key": "specialty-licensees",
+      "sourceUrl": "https://dlr.sd.gov/plumbing/documents/list_of_specialty_licensees.pdf",
+      "sourceClock": "2026-02-04",
+      "sha256": "ed5d1ffa9bf6f0c1c3f584c0e3d5e2a13cc1b25eeb74ed2f76925a55f7389d10",
+      "grain": "named person and specialty license class with expiration date; current status not asserted",
+      "rowsByClass": [
+        { "class": "Sewer and water contractor", "rows": 373 },
+        { "class": "Sewer and water installer", "rows": 253 },
+        { "class": "Sewer and water apprentice", "rows": 103 },
+        { "class": "Underground irrigation", "rows": 59 },
+        { "class": "Water conditioning contractor", "rows": 34 },
+        { "class": "Appliance contractor", "rows": 20 },
+        { "class": "Restricted sewer and water", "rows": 17 },
+        { "class": "Mobile home contractor", "rows": 14 },
+        { "class": "Water conditioning installer", "rows": 11 },
+        { "class": "Appliance installer", "rows": 8 },
+        { "class": "Mobile home installer", "rows": 5 },
+        { "class": "Mobile home apprentice", "rows": 5 },
+        { "class": "Water conditioning apprentice", "rows": 5 },
+        { "class": "2nd year sewer and water", "rows": 1 },
+        { "class": "3rd year sewer and water", "rows": 1 }
+      ],
+      "expirationDateObservations": {
+        "2026-03-30": 1,
+        "2026-06-30": 903,
+        "2026-07-01": 1,
+        "2026-12-31": 3,
+        "2065-06-30": 1
+      }
+    },
+    {
+      "key": "small-onsite-wastewater-installers",
+      "sourceUrl": "https://dlr.sd.gov/plumbing/documents/list_of_small_wastewater.pdf",
+      "sourceClock": "2026-07-31",
+      "sha256": "282d07ec24ea0fb0a05199059e61a0292f362855a66436e831a20afdaf46dae6",
+      "grain": "named installer row with employer name where supplied; no license identifier or current status field",
+      "sourceClass": "Septic installer",
+      "rows": 562
+    }
+  ],
+  "notAcquired": [
+    "current row-level status for plumber and small onsite wastewater source rows",
+    "current electrical credential roster",
+    "statewide contractor excise-tax license roster",
+    "general-contractor business census",
+    "disciplinary action corpus"
+  ],
+  "method": "Counts are source-listed name/class row observations extracted from the official public PDFs. Names were not deduplicated across classes and do not establish distinct people, companies, license identifiers, or current active status. No total is computed across unlike lists or classes."
+}
