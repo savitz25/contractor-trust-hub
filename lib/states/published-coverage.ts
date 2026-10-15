@@ -46,10 +46,19 @@ const CODES: Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string> = {
   nebraska: "NE",
   "west-virginia": "WV",
   montana: "MT",
+  vermont: "VT",
+  wyoming: "WY",
+  "south-dakota": "SD",
 };
 
 /** Newest published states first. Summaries restate each state page's own published scope. */
 const RECENT: Partial<Record<(typeof PUBLISHED_STATEWIDE_SLUGS)[number], string>> = {
+  "south-dakota":
+    "Plumbing Commission source lists stay on their own clocks. Contractor excise-tax license rows and the electrical roster are NOT_ACQUIRED. No combined contractor total",
+  wyoming:
+    "No universal statewide general-contractor license. Electrical roster counts are NOT_ACQUIRED. The resident-contractor certificate is a public-works preference, not a license census",
+  vermont:
+    "No universal general-contractor license. Residential contractor registration rows are NOT_ACQUIRED. Fire Safety trade classes stay separate and are not added together",
   montana:
     "Statewide Construction Contractor License took effect January 1, 2026; current roster NOT_ACQUIRED. Electrical, plumbing, and ICEC populations remain separate",
   "west-virginia":
