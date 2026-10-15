@@ -117,6 +117,30 @@ assert(
 );
 assert(snap.tradeFamilies.canonicalNormalizationExisted === false, "trade blocker documented");
 
+const depth = read("components/home/HomeNetworkDepth.tsx");
+const featuredRosters = [
+  ["evidence_wa_registrations", "/washington"],
+  ["evidence_az_current", "/arizona"],
+  ["evidence_va_class_abc", "/virginia"],
+  ["evidence_tx_business_credentials", "/texas"],
+];
+assert(depth.includes("loadContractorNetworkMetrics"), "featured roster counts come from accepted metrics");
+assert(depth.includes('publicationStatus !== "PUBLIC"'), "featured rosters stay on the public metric gate");
+assert(depth.includes("Review the published evidence"), "featured roster action");
+assert(!depth.includes("Recently added states") && !/160[,]?923/.test(depth), "upper band does not lead with recency or a handwritten total");
+const publishedSlugs = read("lib/seo/published-state-path.ts");
+const sitemap = read("lib/seo/sitemap-data.ts");
+for (const slug of ["vermont", "wyoming", "south-dakota"]) {
+  assert(publishedSlugs.includes(`"${slug}"`), `published footprint includes ${slug}`);
+  assert(sitemap.includes(`"/${slug}"`), `sitemap includes ${slug}`);
+}
+for (const [key, href] of featuredRosters) {
+  const metric = byKey[key];
+  assert(depth.includes(key) && depth.includes(href), `featured roster ${key}`);
+  assert(metric && metric.publicationStatus === "PUBLIC" && typeof metric.value === "number" && metric.value > 0, `public roster metric ${key}`);
+  assert(metric.sourceAsOf || metric.snapshotAsOf, `roster clock ${key}`);
+}
+
 if (failures.length) {
   console.error("CON-HOME-INTEL-004 FAIL");
   for (const f of failures) console.error(" -", f);
