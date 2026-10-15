@@ -33,4 +33,33 @@ describe("South Dakota Contractor publication", () => {
     assert.ok(!page.includes("Trust Score"));
     assert.ok(page.includes("count of all construction businesses"));
   });
+
+  it("represents every externally linked regulatory source in the evidence manifest", () => {
+    const urls = [...page.matchAll(/https:\/\/[^"'\s<>]+/g)].map((match) => match[0]);
+    const represented = new Set<string>([
+      ...evidence.populations.map((population: { sourceUrl: string }) => population.sourceUrl),
+      ...evidence.regulatorySources.map((source: { sourceUrl: string }) => source.sourceUrl),
+    ]);
+    assert.deepEqual(
+      urls.filter((url) => !represented.has(url)),
+      [],
+    );
+    assert.ok(urls.includes("https://dlr.sd.gov/plumbing/licensing.aspx"));
+    assert.ok(urls.includes("https://dlr.sd.gov/electrical/default.aspx"));
+    assert.ok(urls.includes("https://dor.sd.gov/businesses/taxes/contractors-excise-tax/"));
+    for (const source of evidence.regulatorySources) {
+      assert.equal(source.retrievedAt, "2026-10-14");
+      assert.equal(typeof source.fact, "string");
+      assert.ok(source.fact.length > 0);
+      assert.ok(page.includes(source.sourceUrl));
+    }
+    assert.equal(page.includes("universal general-contractor competency license"), false);
+    assert.equal(page.includes("not a competency license"), false);
+    assert.equal(page.includes("administers statewide electrical credentials"), false);
+    assert.ok(page.includes("licenses all electricians within the state"));
+    assert.equal(evidence.notAcquired.includes("current electrical credential roster"), true);
+    assert.equal(evidence.notAcquired.includes("statewide contractor excise-tax license roster"), true);
+    assert.equal(evidence.notAcquired.includes("general-contractor business census"), true);
+    assert.equal(evidence.notAcquired.includes("disciplinary action corpus"), true);
+  });
 });

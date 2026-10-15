@@ -70,5 +70,25 @@
     "general-contractor business census",
     "disciplinary action corpus"
   ],
+  "regulatorySources": [
+    {
+      "key": "plumbing-licensing-information",
+      "sourceUrl": "https://dlr.sd.gov/plumbing/licensing.aspx",
+      "retrievedAt": "2026-10-14",
+      "fact": "The South Dakota Plumbing Commission publishes licensing requirements for a plumbing contractor license, a plumber license, apprentice plumber licenses, and specialty licenses for sewer and water, appliance installation, individual and small on-site wastewater systems, manufactured and mobile homes, underground irrigation, and water conditioning."
+    },
+    {
+      "key": "electrical-commission",
+      "sourceUrl": "https://dlr.sd.gov/electrical/default.aspx",
+      "retrievedAt": "2026-10-14",
+      "fact": "The South Dakota Electrical Commission licenses all electricians within the state."
+    },
+    {
+      "key": "contractor-excise-tax-license",
+      "sourceUrl": "https://dor.sd.gov/businesses/taxes/contractors-excise-tax/",
+      "retrievedAt": "2026-10-14",
+      "fact": "The South Dakota Department of Revenue states that any person entering into a contract for construction services, or engaging in services that include the construction, building, installation, or repair of a fixture to real property, must have a South Dakota contractor's tax license."
+    }
+  ],
   "method": "Counts are source-listed name/class row observations extracted from the official public PDFs. Names were not deduplicated across classes and do not establish distinct people, companies, license identifiers, or current active status. No total is computed across unlike lists or classes."
 }
