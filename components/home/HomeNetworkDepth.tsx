@@ -35,8 +35,8 @@ export function HomeNetworkDepth() {
         <p className="cth-intel-eyebrow">Research footprint</p>
         <h2 id="network-depth-title" className="text-2xl font-bold sm:text-3xl">{PUBLISHED_STATE_COUNT} states with published contractor intelligence</h2>
         <p className="mt-2 max-w-3xl text-[var(--muted)]">
-          Each state page is built from that state&apos;s own licensing, registration, and enforcement sources.
-          Coverage keeps expanding state by state.
+          This count is every published state research page. It includes pages whose license rosters are not acquired.
+          Each page keeps its own licensing, registration, and enforcement sources.
         </p>
         <ul className="mt-5 grid list-none gap-3 p-0 sm:grid-cols-2 lg:grid-cols-4" aria-label="Evidence depth by separate grain">
           <li className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-4">
