@@ -43,7 +43,7 @@ only control reading "Save" was the compare shortlist.
   session; `/account` keeps working as today.
 - **Identity and adapter prep** (`lib/my-trusthub/profile-identity.ts`,
   `parent-adapter.ts`): profile classes, exact identity, readiness reasons, the
-  adapter contract. No transport; `parentSyncMode()` is always `off`.
+  adapter contract. The closed-gate prep left `parentSyncMode()` off. The one-profile activation in `ONE-PROFILE-CANARY.md` opens the canary constant for one slug and leaves broad false.
 
 ## Profile classes
 

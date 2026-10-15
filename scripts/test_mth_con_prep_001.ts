@@ -25,6 +25,7 @@ import { CONTRACTOR_ORIGIN, PARENT_API_PATH, PARENT_FORM_PATH, PARENT_ORIGIN, RU
   isContractorManifest, manifestDigest, parseContractorNativeId, type ContractorManifest } from "../lib/my-trusthub/manifest";
 import { ASSERTION_HEADER, ASSERTION_TTL_SECONDS, CONTRACTOR_PRODUCTION_PINS, signContractorAssertion, verifyContractorAssertion, type AssertionKey, type NonceStore } from "../lib/my-trusthub/contractor-assertion";
 import { memoryAckStore } from "../lib/my-trusthub/ack-store";
+import { contractorClientMayHandoff, contractorClientSyncEnabled } from "../lib/my-trusthub/client-sync";
 import { CONTRACTOR_CANARIES, CONTRACTOR_CANARY_ACTIVE, CONTRACTOR_PARENT_SYNC_BROAD, gateAllows, parentStatus, parentSyncMode, prepareParentSave, productionHandoffDeps,
   productionParentGate, type AdapterDeps, type ParentTransport } from "../lib/my-trusthub/parent-adapter";
 import { COOKIE_NAME, ENDPOINT_PATH, handleContractorProfileSave } from "../lib/my-trusthub/profile-save-http";
@@ -48,7 +49,7 @@ const contractor = (patch: Partial<ContractorDetail> = {}): ContractorDetail => 
 const PROFILES: ContractorDetail[] = [
   contractor(),
   contractor({ id: "11111111-1111-4111-8111-111111111111", slug: "cfc1427249-a-sunny-plumbing-company", displayName: "A SUNNY PLUMBING COMPANY", licenses: [license("fl_dbpr", "CFC1427249")] }),
-  contractor({ id: "22222222-2222-4222-8222-222222222222", slug: "cgc1506243-abs-contracting-inc", displayName: "ABS CONTRACTING INC", licenses: [license("fl_dbpr", "CGC1506243")] }),
+  contractor({ id: "22222222-2222-4222-8222-222222222222", slug: "cgc1517216-abaco-construction-inc", displayName: "ABACO CONSTRUCTION INC", licenses: [license("fl_dbpr", "CGC1517216")] }),
   contractor({ id: "33333333-3333-4333-8333-333333333333", slug: "fixture-no-credential", licenses: [] }),
   contractor({ id: "44444444-4444-4444-8444-444444444444", slug: "fixture-thin", isThinProfile: true, licenses: [license("fl_dbpr", "CRC1330009")] }),
   contractor({ id: "55555555-5555-4555-8555-555555555555", slug: "fixture-nj", homeState: "NJ", licenses: [license("nj_dca", "13VH01234500", "NJ")] }),
@@ -59,6 +60,7 @@ const PROFILES: ContractorDetail[] = [
   contractor({ id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", slug: "fixture-shared-key-b", licenses: [license("fl_dbpr", "CBC1250003")] }),
   contractor({ id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb", slug: "fixture-bad-key", licenses: [license("fl_dbpr", "CCC 13 ; drop")] }),
   contractor({ id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc", slug: "fixture-eligible-not-canary", licenses: [license("fl_dbpr", "CMC1249999")] }),
+  contractor({ id: "dddddddd-dddd-4ddd-8ddd-dddddddddddd", slug: "cbc1268883-1776-construction-group-llc", displayName: "1776 CONSTRUCTION GROUP LLC", legalName: "1776 CONSTRUCTION GROUP LLC", licenses: [license("fl_dbpr", "CBC1268883")] }),
 ];
 function source(rows = PROFILES) {
   const reads: string[] = [];
@@ -77,7 +79,7 @@ const IDENTITY = { hub: "contractor", profileClass: "contractor_profile", identi
 const CANARY = [
   { slug: "ccc057187-a-r-roofing-inc", key: "CCC057187", digest: "9c9f6fc29435beac2f7f90dda198d99d7468dac061cbe78725cc1d798df48f4f" },
   { slug: "cfc1427249-a-sunny-plumbing-company", key: "CFC1427249", digest: "2d42c7d91683606664082cbb2adc6fe8b5ae7d7cfeb1d56686773c27193fe565" },
-  { slug: "cgc1506243-abs-contracting-inc", key: "CGC1506243", digest: "f104be2ddf33359ef8bb7ec31e740491323255710b703b6d3035c70be9aee93f" },
+  { slug: "cgc1517216-abaco-construction-inc", key: "CGC1517216", digest: "d0a5268f09b6e7fbdb334e4365f070c6bae28b0443460cc67c96bc49857f0872" },
 ] as const;
 const SLUG = CANARY[0].slug;
 
@@ -209,8 +211,9 @@ test("L/M. one toggle on the Trust Report; Compare, Watch and My Contractor are 
   assert.equal(toggle.split("<button").length - 1, 1);
   assert.match(toggle, /aria-pressed=\{mounted \? saved : undefined\}/); assert.match(toggle, /\{saved \? "Saved" : "Save"\}/);
   assert.doesNotMatch(toggle, />\s*Unsave\s*<|Keep this in My TrustHub|Confirm Save/);
-  assert.match(toggle, /PARENT_SYNC_UI = process\.env\.NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC === "1"/);
-  assert.match(toggle, /const direct = PARENT_SYNC_UI && syncEligible && pathname === "\/contractors\/" \+ slug/);
+  assert.match(toggle, /PARENT_SYNC_UI = contractorClientSyncEnabled\(process\.env\.NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC\)/);
+  assert.match(toggle, /const direct = contractorClientMayHandoff\(PARENT_SYNC_UI \? "1" : undefined, syncEligible, pathname, slug\)/);
+  assert.match(fs.readFileSync("lib/my-trusthub/client-sync.ts", "utf8"), /return value === "1"/);
   assert.ok(toggle.indexOf("saveContractor({ slug, name, profileId })") < toggle.indexOf('await handOff("save")'));
   assert.ok(toggle.indexOf("unsaveContractor(slug);") < toggle.indexOf('await handOff("unsave")'));
   assert.match(toggle, /Keep this page open/); assert.match(toggle, /handOff\("save_signin"\)/); assert.match(toggle, /May still be saved in My TrustHub/);
@@ -278,7 +281,8 @@ test("P. manifest: the shared v3 selected-profiles wire with the exact Florida i
     assert.deepEqual(m, { version: "v2-3/selected-profiles/3", sourceHub: "contractor", audience: "ask",
       selected: [{ localItemId: c.slug, revision: "1", digest: sha(JSON.stringify([profile.nativeId, "/contractors/" + c.slug])), profile }],
       returnTask: { kind: "profile", hub: "contractor", canonicalSlug: c.slug, profile, returnPath: "/contractors/" + c.slug } });
-    // Golden: computed by Ask's manifestDigest (Conumers-Trust-Hub main 39decff) for this exact manifest.
+    // Goldens follow the shared positional digest; ABACO is independently calculated
+    // from that same wire shape for the 2026-10-07 replacement identity.
     assert.equal(manifestDigest(m), c.digest, c.slug);
     assert.equal(isContractorManifest(m), true);
     assert.deepEqual(parseContractorNativeId(m.returnTask.profile.nativeId), { identifierNamespace: "fl.dbpr.license", sourceIdentifier: c.key, jurisdiction: "FL" });
@@ -295,7 +299,7 @@ test("P. manifest: the shared v3 selected-profiles wire with the exact Florida i
   // B/C: any change to the key, the namespace (jurisdiction), the class, the slug or the return path breaks the closed shape.
   const clone = () => JSON.parse(JSON.stringify(m)) as ContractorManifest;
   const tampered: Array<(x: ContractorManifest) => void> = [
-    (x) => { x.returnTask.profile.nativeId = "fl.dbpr.license:CGC1506243"; }, (x) => { x.selected[0]!.profile.nativeId = "fl.dbpr.license:CGC1506243"; },
+    (x) => { x.returnTask.profile.nativeId = "fl.dbpr.license:CGC1517216"; }, (x) => { x.selected[0]!.profile.nativeId = "fl.dbpr.license:CGC1517216"; },
     (x) => { x.returnTask.profile.nativeId = "nj.dca.license:CCC057187"; x.selected[0]!.profile.nativeId = "nj.dca.license:CCC057187"; },
     (x) => { x.returnTask.profile.nativeId = UUID; x.selected[0]!.profile.nativeId = UUID; }, (x) => { (x.returnTask.profile as { profileClass: string }).profileClass = "standalone_credential"; },
     (x) => { x.returnTask.returnPath = "/contractors/some-other-slug"; }, (x) => { x.returnTask.canonicalSlug = "some-other-slug"; }, (x) => { (x as { sourceHub: string }).sourceHub = "move"; },
@@ -344,9 +348,11 @@ test("P. assertion: the shared v23 service assertion with a contractor_origin cl
   assert.throws(() => signContractorAssertion(k.priv, "contractor", url, "transfer:stage", body, "short"));
 });
 
-test("A. signed hand-off: all three Florida canaries stage their exact signed identity and complete Save -> Unsave", async () => {
+test("A. signed hand-off: the one active Florida canary stages its exact signed identity and completes Save -> Unsave", async () => {
   device.clear(); const p = pair(); p.ask.session = "owner-a";
-  for (const c of CANARY) {
+  assert.deepEqual(p.deps.gate, productionParentGate());
+  const watchesBefore = device.get(PROJECTS_KEY) ?? null;
+  for (const c of [CANARY[0]]) {
     saveContractor({ slug: c.slug, name: c.slug, profileId: UUID });
     assert.equal(await p.click(c.slug, "save"), "navigating", c.slug);
     const staged = p.ask.apiCalls.at(-2)!, continued = p.ask.apiCalls.at(-1)!;
@@ -360,16 +366,18 @@ test("A. signed hand-off: all three Florida canaries stage their exact signed id
     assert.deepEqual(await resumeDirect(p.ports, c.slug), { intent: "save", outcome: "confirmed" });
     assert.equal(parentSync(storage, c.slug), "synced");
   }
-  assert.deepEqual([...p.ask.saved].sort(), CANARY.map((c) => "owner-a:fl.dbpr.license:" + c.key).sort());
-  // Repeated Save: acknowledged as already saved, still one parent row per profile.
-  assert.equal(await p.click(SLUG, "save"), "navigating"); assert.equal((await resumeDirect(p.ports, SLUG))!.outcome, "confirmed"); assert.equal(p.ask.saved.size, 3);
+  assert.deepEqual([...p.ask.saved], ["owner-a:fl.dbpr.license:" + CANARY[0].key]);
+  // Repeated Save: acknowledged as already saved, still one parent row.
+  assert.equal(await p.click(SLUG, "save"), "navigating"); assert.equal((await resumeDirect(p.ports, SLUG))!.outcome, "confirmed"); assert.equal(p.ask.saved.size, 1);
   // Unsave: device row removed first, parent row removed, acknowledged, control back to Save.
-  for (const c of CANARY) {
+  for (const c of [CANARY[0]]) {
     unsaveContractor(c.slug); assert.equal(isContractorSaved(c.slug), false);
     assert.equal(await p.click(c.slug, "unsave"), "navigating"); assert.equal(p.ask.forms.at(-1)!.fields.intent, "unsave");
     assert.deepEqual(await resumeDirect(p.ports, c.slug), { intent: "unsave", outcome: "confirmed" }); assert.equal(parentSync(storage, c.slug), null);
   }
   assert.equal(p.ask.saved.size, 0);
+  assert.equal(device.get(PROJECTS_KEY) ?? null, watchesBefore, "Save and Unsave do not create a Watch");
+  assert.equal(isWatching(SLUG), false); assert.equal(listWatches().length, 0);
   assert.ok(p.ask.sourceStatuses.every((status) => status === 200));
   assert.equal(networkCalls, 0);
 });
@@ -384,8 +392,8 @@ test("B/C/D. tampered DBPR key, tampered jurisdiction and browser-supplied ident
   const sourceCall = (manifest: ContractorManifest, digest = manifestDigest(manifest)) => p.callSource({ action: "source", continuationRef: ref(), transferRef: ref(), manifest, manifestDigest: digest, expiresAt: Date.now() + 60_000 }, "source:read", browser);
   assert.equal((await sourceCall(good)).status, 200);
   // B. a different DBPR key under this profile's slug, or this key under another profile's slug.
-  assert.equal((await sourceCall(rebuild("fl.dbpr.license:CGC1506243"))).status, 403);
-  assert.equal((await sourceCall(rebuild("fl.dbpr.license:CCC057187", "cgc1506243-abs-contracting-inc"))).status, 403);
+  assert.equal((await sourceCall(rebuild("fl.dbpr.license:CGC1517216"))).status, 403);
+  assert.equal((await sourceCall(rebuild("fl.dbpr.license:CCC057187", "cgc1517216-abaco-construction-inc"))).status, 403);
   assert.equal((await sourceCall(good, "0".repeat(64))).status, 403);
   // C. a different namespace / jurisdiction for the same key.
   assert.equal((await sourceCall(rebuild("nj.dca.license:CCC057187"))).status, 403);
@@ -396,7 +404,7 @@ test("B/C/D. tampered DBPR key, tampered jurisdiction and browser-supplied ident
   // A body changed after signing, a caller without Ask's key, a wrong scope, a replay: unauthorized.
   const url = CONTRACTOR_ORIGIN + SOURCE_PATH, signedBody = Buffer.from(JSON.stringify({ action: "resolve", profile: good.returnTask.profile }));
   const token = signContractorAssertion(p.askKey.priv, "ask", url, "source:read", signedBody, browser);
-  const swapped = Buffer.from(JSON.stringify({ action: "resolve", profile: { ...good.returnTask.profile, nativeId: "fl.dbpr.license:CGC1506243" } }));
+  const swapped = Buffer.from(JSON.stringify({ action: "resolve", profile: { ...good.returnTask.profile, nativeId: "fl.dbpr.license:CGC1517216" } }));
   const raw = (body: Buffer, assertion: string) => handleContractorSource(new Request(url, { method: "POST", body, headers: { "content-type": "application/json", [ASSERTION_HEADER]: assertion } }), p.sourceOptions);
   assert.equal((await raw(swapped, token)).status, 403);
   assert.equal((await raw(signedBody, token)).status, 200); assert.equal((await raw(signedBody, token)).status, 403, "replay");
@@ -418,7 +426,7 @@ test("B/C/D. tampered DBPR key, tampered jurisdiction and browser-supplied ident
   const post = (body: unknown) => handleContractorProfileSave(new Request(CONTRACTOR_ORIGIN + ENDPOINT_PATH, { method: "POST", body: JSON.stringify(body),
     headers: { origin: CONTRACTOR_ORIGIN, "sec-fetch-site": "same-origin", "content-type": "application/json", cookie: `${COOKIE_NAME}=${csrf}`, "x-cth-csrf": csrf } }), p.deps, CONTRACTOR_ORIGIN);
   const calls = p.ask.apiCalls.length;
-  for (const extra of [{ contractorId: UUID }, { profileId: UUID }, { networkEntityId: UUID }, { externalKey: "CCC057187" }, { sourceIdentifier: "CGC1506243" }, { nativeId: "fl.dbpr.license:CGC1506243" },
+  for (const extra of [{ contractorId: UUID }, { profileId: UUID }, { networkEntityId: UUID }, { externalKey: "CCC057187" }, { sourceIdentifier: "CGC1517216" }, { nativeId: "fl.dbpr.license:CGC1517216" },
     { name: "A & R ROOFING INC" }, { jurisdiction: "FL" }, { identifierNamespace: "fl.dbpr.license" }, { returnPath: "/contractors/x" }])
     assert.equal((await post({ action: "prepare", slug: SLUG, intent: "save", ...extra })).status, 400, JSON.stringify(extra));
   for (const slug of [UUID, "CCC057187", "A & R ROOFING INC"]) assert.equal((await (await post({ action: "prepare", slug, intent: "save" })).json() as { state: string }).state, "local_only", slug);
@@ -430,7 +438,8 @@ test("E/F/G. ineligible profiles and profiles outside the canary stage nothing w
   device.clear(); const p = pair(); p.ask.session = "owner-a";
   for (const [slug, reason] of [["fixture-thin", "thin_profile"], ["fixture-two-fl-licenses", "multiple_fl_credentials"], ["fixture-nj", "not_florida"], ["fixture-ca", "not_florida"],
     ["fixture-fl-and-nj", "multi_jurisdiction"], ["fixture-no-credential", "no_fl_dbpr_credential"], ["fixture-shared-key-a", "credential_not_unique"], ["no-such-contractor", "not_public"],
-    ["fixture-eligible-not-canary", "sync_off"]] as const) {
+    ["cfc1427249-a-sunny-plumbing-company", "sync_off"], ["cgc1517216-abaco-construction-inc", "sync_off"],
+    ["cbc1268883-1776-construction-group-llc", "sync_off"], ["fixture-eligible-not-canary", "sync_off"]] as const) {
     assert.deepEqual(await prepareParentSave(p.deps, slug, "save", "b".repeat(43)), { state: "local_only", reason, localCopy: "keep" }, slug);
     saveContractor({ slug, name: slug }); assert.equal(await p.click(slug, "save"), "not_eligible", slug); assert.equal(isContractorSaved(slug), true, "the device Save stands");
   }
@@ -497,19 +506,91 @@ test("O. abandoned hand-off recovery: nothing is claimed, the device keeps the b
     "https://www.asktrusthub.com.evil.example/my/profile-save", "https://evil.vercel.app/my/profile-save", "javascript:alert(1)", "", null]) assert.equal(handoffTargetAllowed(bad), false, String(bad));
 });
 
-test("production parent sync is OFF and the canary is OFF: nothing is read, signed or sent", async () => {
-  assert.equal(CONTRACTOR_PARENT_SYNC_BROAD, false); assert.equal(CONTRACTOR_CANARY_ACTIVE, false);
-  assert.deepEqual(productionParentGate(), { broad: false, canary: false });
-  assert.deepEqual(CONTRACTOR_CANARIES.map((c) => [c.slug, c.externalKey]), CANARY.map((c) => [c.slug, c.key]));
+test("one-profile canary: CCC057187 is admitted and every other profile stays on the device", async () => {
+  const closed = { broad: false, canary: false } as const;
+  assert.equal(CONTRACTOR_PARENT_SYNC_BROAD, false);
+  assert.equal(CONTRACTOR_CANARY_ACTIVE, true);
+  assert.deepEqual(productionParentGate(), { broad: false, canary: true });
+  assert.deepEqual(CONTRACTOR_CANARIES.map((item) => [item.slug, item.externalKey]), [[CANARY[0].slug, CANARY[0].key]]);
+  assert.equal(gateAllows(CANARY[0].slug, productionParentGate()), true);
+  assert.equal(gateAllows(CANARY[1].slug, productionParentGate()), false);
+  assert.equal(gateAllows(CANARY[2].slug, productionParentGate()), false);
+  assert.equal(gateAllows("cbc1268883-1776-construction-group-llc", productionParentGate()), false);
+  assert.equal(gateAllows("CBC1268883", productionParentGate()), false);
+  for (const slug of ["CCC057187", "CCC057187-a-r-roofing-inc", " ccc057187-a-r-roofing-inc", "ccc057187-a-r-roofing-inc ", "../" + SLUG, SLUG + "?x=1", SLUG + "/extra", "ccc057187-A-R-roofing-inc", "ccc057187", ""]) {
+    assert.equal(gateAllows(slug, productionParentGate()), false, slug);
+  }
+  for (const profile of [CANARY[1].slug, CANARY[2].slug, "cbc1268883-1776-construction-group-llc"]) {
+    const row = PROFILES.find((item) => item.slug === profile);
+    assert.equal(parentSaveReadiness(row!).ready, true, profile);
+  }
+  const samples: Array<Record<string, string | undefined>> = [{}, { VERCEL_ENV: "production" }, { NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC: "1" }, { VERCEL_ENV: "preview", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }];
+  for (const env of samples) {
+    assert.equal(parentSyncMode(env), "gated", JSON.stringify(env));
+    const closedMode = env.VERCEL_ENV === "preview" && env.MY_TRUSTHUB_CONTRACTOR_SYNC_MODE === "dry_run" ? "dry_run" : "off";
+    assert.equal(parentSyncMode(env, closed), closedMode, JSON.stringify(env));
+  }
+  assert.equal(contractorClientSyncEnabled(undefined), false);
+  assert.equal(contractorClientSyncEnabled(""), false);
+  assert.equal(contractorClientSyncEnabled("true"), false);
+  assert.equal(contractorClientSyncEnabled("1"), true);
+  assert.equal(contractorClientMayHandoff(undefined, true, "/contractors/" + SLUG, SLUG), false);
+  assert.equal(contractorClientMayHandoff("1", true, "/contractors/" + SLUG, SLUG), true);
+  assert.equal(contractorClientMayHandoff("1", true, "/ask", SLUG), false);
+  const note = fs.readFileSync("docs/my-trusthub/ONE-PROFILE-CANARY.md", "utf8");
+  for (const line of ["Ask SQL is complete", "Packet 19 is final", "Contractor binding is installed", "migration 016 is applied", "Keys are provisioned", "Ask verify key is deployed", "Contractor signer is deployed", "closed-gate kill switch deployment is recorded", "operator explicitly authorizes the canary", "not the security kill switch", "git revert", "CONTRACTOR_CANARY_ACTIVE = false", "CONTRACTOR_PARENT_SYNC_BROAD = false", "cfc1427249-a-sunny-plumbing-company", "cgc1517216-abaco-construction-inc", "PR #121 MUST NOT MERGE until ALL of these are proven", "17f464ad69f3d8c7a89dd2cf9229f112", "v23_private.authority()", "move, insurance, lender, investor, contractor, and senior", "prod_contractor_dbpr_binding_for", "hub = contractor", "profile class = contractor_profile", "namespace = fl.dbpr.license", "jurisdiction = FL", "/contractors/ccc057187-a-r-roofing-inc", "Packet 16 receipt file is saved", "exactly one current accepted binding on an active network entity", "The operator must verify the network entity is active in production", "accepted binding status alone is insufficient", "An inactive or retired entity blocks activation", "MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID", "MY_TRUSTHUB_V23_CONTRACTOR_VERIFY_PUBLIC_KEY_PEM", "MY_TRUSTHUB_V23_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM", "MY_TRUSTHUB_V23_ASK_KEY_ID", "MY_TRUSTHUB_V23_ASK_VERIFY_PUBLIC_KEY_PEM", "MY_TRUSTHUB_V23_PARENT_ORIGIN", "016_my_trusthub_handoff_acks.sql", "ACK table is verified", "device Save proof", "no Ask navigation", "deployment ID recorded", "mth-con-one-profile-canary-shutoff", "forward-fix", "Account entry before broad rollout", "Post-SQL validation is PASS", "serving Ask deployment SHA is recorded", "does NOT close the server gate", "SERVER gate is open for `CCC057187`", "controlled canary window", "no automatic merge"]) {
+    assert.equal(note.includes(line), true, line);
+  }
+  assert.doesNotMatch(note, /BEGIN (?:PRIVATE|OPENSSH) KEY|postgres:\/\/|postgresql:\/\/|supabase\.co|service_role/);
+  device.clear();
+  const denied = pair();
+  const watchesBefore = device.get(PROJECTS_KEY) ?? null;
+  const attempt = async (flag: string | undefined, slug: string) => {
+    saveContractor({ slug, name: slug, profileId: UUID });
+    if (!contractorClientMayHandoff(flag, true, "/contractors/" + slug, slug)) return "device_only" as const;
+    return denied.click(slug, "save");
+  };
+  assert.equal(await attempt(undefined, SLUG), "device_only");
+  assert.equal(isContractorSaved(SLUG), true);
+  assert.deepEqual(denied.ask.apiCalls, []);
+  assert.equal(await attempt("1", CANARY[1].slug), "not_eligible");
+  assert.equal(await attempt("1", CANARY[2].slug), "not_eligible");
+  assert.equal(await attempt("1", "cbc1268883-1776-construction-group-llc"), "not_eligible");
+  for (const slug of ["CCC057187", "CCC057187-a-r-roofing-inc", "ccc057187-a-r-roofing-inc ", "../" + SLUG, "ccc057187"]) {
+    assert.equal(await attempt("1", slug), "not_eligible", slug);
+  }
+  assert.deepEqual(denied.ask.apiCalls, []);
+  assert.deepEqual(denied.ask.forms, []);
+  assert.equal(isContractorSaved(CANARY[1].slug), true);
+  assert.equal(isContractorSaved(CANARY[2].slug), true);
+  assert.equal(isContractorSaved("cbc1268883-1776-construction-group-llc"), true);
+  assert.equal(device.get(PROJECTS_KEY) ?? null, watchesBefore);
+  assert.equal(isWatching(SLUG), false);
+  assert.equal(listWatches().length, 0);
+  const admitted = pair();
+  admitted.ask.session = "owner-a";
+  saveContractor({ slug: SLUG, name: "A & R ROOFING INC", profileId: UUID });
+  assert.equal(contractorClientMayHandoff("1", true, "/contractors/" + SLUG, SLUG), true);
+  assert.equal(await admitted.click(SLUG, "save"), "navigating");
+  assert.equal(admitted.ask.apiCalls[0]!.operation, "prepareGuestProfileTransfer");
+  assert.equal((admitted.ask.apiCalls[0]!.envelope.input as ContractorManifest).returnTask.profile.nativeId, "fl.dbpr.license:CCC057187");
+  assert.equal(isWatching(SLUG), false);
+  assert.equal(networkCalls, 0);
+});
+
+test("closed gate sends nothing: environment values cannot open it, and off mode reads, signs and sends nothing", async () => {
+  const shutoff = { broad: false, canary: false } as const;
+  assert.equal(CONTRACTOR_PARENT_SYNC_BROAD, false);
   for (const env of [{}, { VERCEL_ENV: "production" }, { VERCEL_ENV: "production", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }, { VERCEL_ENV: "production", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "gated" },
     { MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "gated" }, { MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "live" }, { MY_TRUSTHUB_CONTRACTOR_SAVE_ENABLED: "true" }, { NEXT_PUBLIC_MY_TRUSTHUB_CONTRACTOR_SYNC: "1" },
-    { VERCEL_ENV: "production", MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID: "k", MY_TRUSTHUB_V23_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM: "-----BEGIN PRIVATE KEY-----" }]) assert.equal(parentSyncMode(env), "off", JSON.stringify(env));
-  assert.equal(parentSyncMode({ VERCEL_ENV: "preview", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }), "dry_run");
-  assert.equal(parentSyncMode({ VERCEL_ENV: "production" }, { broad: false, canary: true }), "gated", "only the reviewed gate constant opens it");
-  for (const c of CANARY) { assert.equal(gateAllows(c.slug, productionParentGate()), false); assert.equal(gateAllows(c.slug, { broad: false, canary: true }), true); }
-  assert.equal(gateAllows("fixture-eligible-not-canary", { broad: false, canary: true }), false);
+    { VERCEL_ENV: "production", MY_TRUSTHUB_V23_CONTRACTOR_KEY_ID: "k", MY_TRUSTHUB_V23_CONTRACTOR_SIGNING_PRIVATE_KEY_PEM: "-----BEGIN PRIVATE KEY-----" }]) assert.equal(parentSyncMode(env, shutoff), "off", JSON.stringify(env));
+  assert.equal(parentSyncMode({ VERCEL_ENV: "preview", MY_TRUSTHUB_CONTRACTOR_SYNC_MODE: "dry_run" }, shutoff), "dry_run");
+  assert.equal(parentSyncMode({ VERCEL_ENV: "production" }), "gated", "the reviewed canary constant opens the server gate");
+  assert.equal(gateAllows(CANARY[0].slug, productionParentGate()), true);
+  assert.equal(gateAllows(CANARY[1].slug, productionParentGate()), false);
+  assert.equal(gateAllows("fixture-eligible-not-canary", productionParentGate()), false);
   const { reader, reads } = source(); let sent = 0;
-  const off: AdapterDeps = { mode: "off", gate: productionParentGate(), reader, key: keypair("k").priv, parent: async () => { sent++; return { ok: false }; }, acks: memoryAckStore(), now: Date.now };
+  const off: AdapterDeps = { mode: "off", gate: shutoff, reader, key: keypair("k").priv, parent: async () => { sent++; return { ok: false }; }, acks: memoryAckStore(), now: Date.now };
   assert.deepEqual(await prepareParentSave(off, SLUG, "save", "b".repeat(43)), { state: "unavailable", localCopy: "keep" });
   assert.equal(await parentStatus(off, "t".repeat(43), "b".repeat(43)), "unavailable");
   const origin = CONTRACTOR_ORIGIN;
@@ -519,9 +600,9 @@ test("production parent sync is OFF and the canary is OFF: nothing is read, sign
   }
   assert.deepEqual(reads, []); assert.equal(sent, 0);
   // Dry run (non-production): resolves and builds, contacts nobody.
-  const dry = await prepareParentSave({ ...off, mode: "dry_run" }, "cgc1506243-abs-contracting-inc", "save", "b".repeat(43));
-  assert.deepEqual(dry, { state: "staged_dry_run", nativeId: "fl.dbpr.license:CGC1506243", manifestDigest: CANARY[2].digest, localCopy: "keep",
-    identity: { profileClass: "contractor_profile", identifierNamespace: "fl.dbpr.license", sourceIdentifier: "CGC1506243", jurisdiction: "FL", returnPath: "/contractors/cgc1506243-abs-contracting-inc" } });
+  const dry = await prepareParentSave({ ...off, mode: "dry_run" }, "cgc1517216-abaco-construction-inc", "save", "b".repeat(43));
+  assert.deepEqual(dry, { state: "staged_dry_run", nativeId: "fl.dbpr.license:CGC1517216", manifestDigest: CANARY[2].digest, localCopy: "keep",
+    identity: { profileClass: "contractor_profile", identifierNamespace: "fl.dbpr.license", sourceIdentifier: "CGC1517216", jurisdiction: "FL", returnPath: "/contractors/cgc1517216-abaco-construction-inc" } });
   assert.equal(sent, 0);
   // The source callback is unavailable without Ask's verification key.
   const closed = await handleContractorSource(new Request(CONTRACTOR_ORIGIN + SOURCE_PATH, { method: "POST", body: "{}", headers: { "content-type": "application/json" } }), { reader, key: null, nonces: memoryNonces(), acks: null });
@@ -551,4 +632,15 @@ test("the provisional envelope and the legacy hand-off are gone from the new pat
   assert.equal(ONE_ACCOUNT_PRESENTATION, false); assert.equal(MY_TRUSTHUB_ACCOUNT_HREF, "https://www.asktrusthub.com/my"); assert.equal(workspaceSyncCopy(false).linkLabel, "Optional account");
   for (const route of ["app/account/page.tsx", "app/watch/page.tsx", "app/projects/page.tsx", "app/compare/page.tsx", "app/passport/page.tsx", "app/tools/page.tsx", "app/my-contractor/page.tsx",
     "schema/migrations/016_my_trusthub_handoff_acks.sql"]) assert.ok(fs.existsSync(route), route);
+});
+
+
+test("forbidden credential never appears in activation or future expansion lists", () => {
+  const forbidden = /cgc1506243/i;
+  for (const list of [CONTRACTOR_CANARIES, CANARY, PROFILES]) {
+    assert.doesNotMatch(JSON.stringify(list), forbidden);
+  }
+  for (const file of ["lib/my-trusthub/parent-adapter.ts", "lib/my-trusthub/profile-identity.ts", "docs/my-trusthub/ONE-PROFILE-CANARY.md", "docs/my-trusthub/florida-integration.md"]) {
+    assert.doesNotMatch(fs.readFileSync(file, "utf8"), forbidden, file);
+  }
 });
