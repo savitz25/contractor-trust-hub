@@ -187,6 +187,10 @@ class RollbackAndGuardTest(unittest.TestCase):
                 mo.rollback_guard(batch_id)
         self.assertIn("source_system = %s AND batch_id = %s", mo.rollback_sql())
 
+    def test_transaction_name(self):
+        self.assertEqual(mo.transaction_name(False), "ROLLBACK")
+        self.assertEqual(mo.transaction_name(True), "COMMIT")
+
     def test_apply_requires_exact_phrase(self):
         mo.require_go(False, "")
         mo.require_go(True, mo.GO_PHRASE)

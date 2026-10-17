@@ -171,6 +171,10 @@ def require_go(apply: bool, phrase: str) -> None:
         raise SystemExit("HARD STOP: apply refused without the exact Founder GO phrase")
 
 
+def transaction_name(apply: bool) -> str:
+    return "COMMIT" if apply else "ROLLBACK"
+
+
 def rollback_guard(batch_id: str) -> None:
     if (
         ROLLBACK_BATCH_RE.fullmatch(batch_id or "") is None
@@ -318,9 +322,17 @@ def main() -> int:
                 if actual != planned or stray:
                     raise SystemExit(f"HARD STOP: post-insert counts differ from plan (stray={stray}); rolled back")
                 receipt["applied"] = {"inserted": sum(v["total"] for v in actual.values()), "db_counts": actual}
+                batches_after = conn.execute(
+                    """SELECT source_system, batch_id, count(*)
+                       FROM contractor_enrichment_observations GROUP BY 1, 2 ORDER BY 2"""
+                ).fetchall()
+                post_map = {(s, b): n for s, b, n in batches_after}
+                for key, count in before_map.items():
+                    if post_map.get(key, 0) != count:
+                        raise SystemExit("HARD STOP: existing batch counts changed during apply; rolled back")
             receipt.update({
                 "transaction_read_only": read_only,
-                "transaction": "ROLLBACK",
+                "transaction": transaction_name(args.apply),
                 "input_ready_rows": len(rows),
                 "exact_identity_matches": len(ok),
                 "identity_failures": {
@@ -357,7 +369,7 @@ def main() -> int:
         args.receipt.parent.mkdir(parents=True, exist_ok=True)
         args.receipt.write_text(text + "\n", encoding="utf-8")
     print(text)
-    print("DRY_RUN_TRANSACTION=ROLLBACK")
+    print(f"{'APPLY' if args.apply else 'DRY_RUN'}_TRANSACTION={transaction_name(args.apply)}")
     return 0
 
 
