@@ -16,6 +16,8 @@ business-site value with provenance).
   --apply                  write (one transaction, ON CONFLICT DO NOTHING)
   --production             required in addition to --apply for a non-local host
   --rollback               delete this batch (source_system + batch_id) and exit
+  --county hb              dispatch to scripts/hb_enrich_001 (Hillsborough only).
+                           Omitting --county keeps this Miami-Dade loader unchanged.
 
 The receipt (--receipt) holds counts, license keys and business names only —
 no phone numbers, emails or addresses — so it is safe to commit.
@@ -297,7 +299,20 @@ def db_counts(conn, batch_id: str) -> dict:
     return out
 
 
+def _county_arg(argv: list[str]) -> str | None:
+    """Return an explicit --county value. The Miami-Dade path never sets one."""
+    for i, arg in enumerate(argv):
+        if arg == "--county" and i + 1 < len(argv):
+            return argv[i + 1]
+        if arg.startswith("--county="):
+            return arg.split("=", 1)[1]
+    return None
+
+
 def main() -> int:
+    if _county_arg(sys.argv[1:]) == "hb":
+        from scripts.hb_enrich_001.load import main as hb_main
+        return hb_main()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--input-dir", required=True, type=Path)
     ap.add_argument("--batch-id", default=DEFAULT_BATCH_ID)
