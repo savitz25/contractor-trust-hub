@@ -82,3 +82,7 @@ service-account*.json
 
 # NJ-ENRICH-001 private package (business contact data) — never commit
 *nj-4-county-enrich*
+
+# DOT handoff folders (business contact data) — never commit
+*dot-enrich-handoff*
+*handoff-1017*
