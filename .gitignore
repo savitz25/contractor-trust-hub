@@ -86,3 +86,7 @@ service-account*.json
 # DOT handoff folders (business contact data) — never commit
 *dot-enrich-handoff*
 *handoff-1017*
+
+# DOT enrichment handoffs (business contact data) — never commit
+*handoff-1017*
+*dot-enrich-handoff*
