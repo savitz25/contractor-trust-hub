@@ -234,6 +234,95 @@ class PreservedLoadersTest(unittest.TestCase):
             self.assertIsNone(nj.ROLLBACK_BATCH_RE.match(batch))
 
 
+PROTECTED_FIXTURE = (
+    ("dot_web_enrich_bg_2026_10", "bg-enrich-001-2026-10-12", 8540),
+    ("dot_web_enrich_bw_2026_10", "bw-enrich-001-2026-10-08", 15512),
+    ("scout_web_enrich_md_2026_10", "md-enrich-001-2026-10-06", 11691),
+    ("dot_web_enrich_md_2026_10", "md-enrich-002-2026-10-07", 16623),
+    ("dot_web_enrich_mn_2026_10", "mn-enrich-001-2026-10-12", 7853),
+    ("dot_web_enrich_mx_2026_10", "mx-enrich-001-2026-10-12", 4901),
+    ("dot_web_enrich_pb_2026_10", "pb-enrich-001-2026-10-08", 15093),
+    ("dot_web_enrich_pn_2026_10", "pn-enrich-001-2026-10-08", 11088),
+    ("dot_web_enrich_un_2026_10", "un-enrich-001-2026-10-12", 3574),
+)
+
+
+def protected_snapshot(overrides=None):
+    overrides = overrides or {}
+    rows = [
+        {"source_system": source, "batch_id": batch, "rows": overrides.get(batch, count)}
+        for source, batch, count in PROTECTED_FIXTURE
+    ]
+    rows.sort(key=lambda item: (item["batch_id"], item["source_system"]))
+    return rows
+
+
+def hb_group(rows):
+    return {"source_system": load.SOURCE_SYSTEM, "batch_id": load.BATCH_ID, "rows": rows}
+
+
+def with_hillsborough(rows):
+    combined = protected_snapshot() + [hb_group(rows)]
+    combined.sort(key=lambda item: (item["batch_id"], item["source_system"]))
+    return combined
+
+
+class PostCommitVerificationTest(unittest.TestCase):
+    def test_dry_run_passes_when_hillsborough_stays_zero(self):
+        before = protected_snapshot()
+        self.assertEqual({row["batch_id"] for row in before}, set(load.PROTECTED_BATCHES))
+        load.assert_post_commit_counts(apply=False, before=before, after=protected_snapshot(), hb_before=0, hb_after=0)
+        mutated = protected_snapshot({"bg-enrich-001-2026-10-12": 8541})
+        with self.assertRaises(SystemExit) as changed:
+            load.assert_post_commit_counts(apply=False, before=before, after=mutated, hb_before=0, hb_after=0)
+        self.assertEqual(changed.exception.code, "HARD STOP: enrichment batch counts changed during the read-only dry run")
+        with self.assertRaises(SystemExit) as hillsborough:
+            load.assert_post_commit_counts(apply=False, before=before, after=protected_snapshot(), hb_before=0, hb_after=1)
+        self.assertEqual(hillsborough.exception.code, "HARD STOP: Hillsborough batch count changed during the read-only dry run")
+        with self.assertRaises(SystemExit):
+            load.assert_post_commit_counts(
+                apply=False, before=before, after=with_hillsborough(load.EXPECTED_OBS_TOTAL), hb_before=0, hb_after=load.EXPECTED_OBS_TOTAL)
+
+    def test_apply_passes_when_hillsborough_reaches_6086_and_protected_batches_stay(self):
+        before = protected_snapshot()
+        after = with_hillsborough(load.EXPECTED_OBS_TOTAL)
+        load.assert_post_commit_counts(
+            apply=True, before=before, after=after, hb_before=0, hb_after=load.EXPECTED_OBS_TOTAL)
+        stray = after + [{"source_system": "other_source", "batch_id": load.BATCH_ID, "rows": 1}]
+        with self.assertRaises(SystemExit) as foreign:
+            load.assert_post_commit_counts(
+                apply=True, before=before, after=stray, hb_before=0, hb_after=load.EXPECTED_OBS_TOTAL)
+        self.assertEqual(foreign.exception.code, "HARD STOP: Hillsborough batch is not limited to its source_system and batch_id")
+
+    def test_apply_fails_when_hillsborough_post_count_is_not_6086(self):
+        before = protected_snapshot()
+        for wrong in (0, 6085, 6087):
+            with self.assertRaises(SystemExit) as caught:
+                load.assert_post_commit_counts(
+                    apply=True, before=before, after=with_hillsborough(wrong), hb_before=0, hb_after=wrong)
+            self.assertEqual(caught.exception.code, "HARD STOP: Hillsborough post-commit count differs from EXPECTED_OBS_TOTAL")
+
+    def test_apply_fails_when_any_protected_batch_changes(self):
+        before = protected_snapshot()
+        counts = {batch: count for _source, batch, count in PROTECTED_FIXTURE}
+        for batch in load.PROTECTED_BATCHES:
+            changed = with_hillsborough(load.EXPECTED_OBS_TOTAL)
+            for row in changed:
+                if row["batch_id"] == batch:
+                    row["rows"] = counts[batch] + 1
+            with self.assertRaises(SystemExit) as caught:
+                load.assert_post_commit_counts(
+                    apply=True, before=before, after=changed, hb_before=0, hb_after=load.EXPECTED_OBS_TOTAL)
+            self.assertEqual(caught.exception.code, "HARD STOP: a protected enrichment batch count changed")
+
+    def test_second_planner_run_proposes_zero_inserts(self):
+        first = plan([row()])
+        present = {(obs.contractor_id, obs.field, obs.value_normalized, load.BATCH_ID) for obs in first.obs}
+        self.assertGreater(len(present), 0)
+        second = plan([row()])
+        self.assertEqual(load.proposed_inserts(second.obs, present), [])
+
+
 class NoContactInGitTest(unittest.TestCase):
     def test_loader_source_has_no_email_and_csv_is_absent(self):
         source = Path(load.__file__).read_text(encoding="utf-8")

@@ -350,6 +350,18 @@ def counts(obs: list[Obs]) -> dict:
     return out
 
 
+def proposed_inserts(obs: list[Obs], already_present: set[tuple]) -> list[Obs]:
+    """Observations whose idempotency key is not already stored.
+
+    A second planner run against a complete batch proposes nothing. The key is
+    (contractor_id, field, value_normalized, batch_id).
+    """
+    return [
+        item for item in obs
+        if (item.contractor_id, item.field, item.value_normalized, BATCH_ID) not in already_present
+    ]
+
+
 def connect(url: str, read_only: bool):
     import psycopg
     from ingest.env import normalize_database_url
@@ -445,6 +457,45 @@ def batch_exists(conn) -> int:
         """SELECT count(*) FROM contractor_enrichment_observations
            WHERE source_system = %s AND batch_id = %s""",
         (SOURCE_SYSTEM, BATCH_ID)).fetchone()[0]
+
+
+def _hillsborough_groups(batches: list[dict]) -> list[dict]:
+    return [row for row in batches if row["batch_id"] == BATCH_ID]
+
+
+def _protected_counts(batches: list[dict]) -> dict[tuple, int]:
+    protected = set(PROTECTED_BATCHES)
+    return {
+        (row["source_system"], row["batch_id"]): row["rows"]
+        for row in batches
+        if row["batch_id"] in protected
+    }
+
+
+def assert_post_commit_counts(*, apply: bool, before: list[dict], after: list[dict], hb_before: int, hb_after: int) -> None:
+    """Check the read-only recount after the first session closes.
+
+    Dry-run requires every batch count, including Hillsborough, to match the
+    pre-run snapshot. Any difference stops the run.
+
+    Apply requires the committed Hillsborough count to equal EXPECTED_OBS_TOTAL
+    and that batch to contain only SOURCE_SYSTEM and BATCH_ID. Every protected
+    batch must still equal its before count. The new Hillsborough count is not
+    compared with its pre-insert value.
+    """
+    if not apply:
+        if after != before:
+            raise SystemExit("HARD STOP: enrichment batch counts changed during the read-only dry run")
+        if hb_after != hb_before:
+            raise SystemExit("HARD STOP: Hillsborough batch count changed during the read-only dry run")
+        return
+    if hb_after != EXPECTED_OBS_TOTAL:
+        raise SystemExit("HARD STOP: Hillsborough post-commit count differs from EXPECTED_OBS_TOTAL")
+    expected_group = {"source_system": SOURCE_SYSTEM, "batch_id": BATCH_ID, "rows": EXPECTED_OBS_TOTAL}
+    if _hillsborough_groups(after) != [expected_group]:
+        raise SystemExit("HARD STOP: Hillsborough batch is not limited to its source_system and batch_id")
+    if _protected_counts(before) != _protected_counts(after):
+        raise SystemExit("HARD STOP: a protected enrichment batch count changed")
 
 
 def nonempty_canonical(conn, ids: list[str]) -> dict:
@@ -698,10 +749,13 @@ def main() -> int:
             print("transaction_read_only=on")
             after = batch_counts(conn)
             summary["batches_after"] = after
-            if after != summary["batches_before"]:
-                raise SystemExit("HARD STOP: enrichment batch counts changed during the read-only dry run")
-            if batch_exists(conn) != summary["existing_batch_rows"]:
-                raise SystemExit("HARD STOP: Hillsborough batch count changed during the read-only dry run")
+            assert_post_commit_counts(
+                apply=args.apply,
+                before=summary["batches_before"],
+                after=after,
+                hb_before=summary["existing_batch_rows"],
+                hb_after=batch_exists(conn),
+            )
 
     if args.evidence_dir:
         prestate = {
