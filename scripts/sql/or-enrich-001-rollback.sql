@@ -1,0 +1,11 @@
+-- OR-ENRICH-001 rollback: Orange only.
+-- Deletes exactly one batch. Refuses Hillsborough, Lee, Miami-Dade, Broward,
+-- Palm Beach, Pinellas, and every NJ batch.
+-- Predicate is source_system = 'dot_web_enrich_or_2026_10' AND batch_id = 'or-enrich-001-2026-10-17'.
+-- The loader accepts only batch_id ~ '^or-enrich-001-2026-10-17$'.
+-- Preferred path, after the exact Founder phrase GO CONTRACTOR ORANGE ENRICH LOAD:
+--   python scripts/md_enrich_001/load.py --rollback --production --county or --package-dir <outside-git> --env-file <gitignored-.env.local>
+-- The phrase is read from CONTRACTOR_ORANGE_GO. Do not uncomment the statement below.
+-- The executable copy lives outside the repo.
+
+-- DELETE FROM contractor_enrichment_observations WHERE source_system = 'dot_web_enrich_or_2026_10' AND batch_id = 'or-enrich-001-2026-10-17';
