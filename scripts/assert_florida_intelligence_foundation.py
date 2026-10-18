@@ -31,7 +31,7 @@ def main() -> int:
     ui_occ = read("lib/contractors/occupations.ts")
     queries = read("lib/contractors/queries.ts")
     landing = read("lib/discovery/landing-cache.ts")
-    counties = read("lib/intelligence/florida-county-codes.ts")
+    counties = read("lib/intelligence/florida-dbpr-county-codes.json")
     contacts = read("lib/intelligence/contacts.ts")
     agg = read("lib/intelligence/aggregation.ts")
     fl_list = read("lib/discovery/florida-list.ts")

@@ -1,6 +1,7 @@
 /**
  * Deterministic Ask execution. Parameterized SQL only. No LLM facts.
  */
+import { displayCounty } from "@/lib/contractors/county-display";
 import { asLicenseStatus } from "@/lib/contractors/format";
 import type { LicenseStatus } from "@/lib/contractors/types";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
@@ -198,13 +199,22 @@ export function askWhere(plan: ContractorResearchQuery, countySlug?: string | nu
     where += ` AND LOWER(TRIM(l.city)) = $${params.length} AND l.state = 'FL'`;
   }
   if (county) {
-    if (county.matchCodes?.[0]) {
-      params.push(county.matchCodes[0]);
-      where += ` AND l.county_code = $${params.length}`;
-    } else {
-      params.push(county.matchNames[0] || county.name);
-      where += ` AND l.county_name ILIKE $${params.length}`;
+    const parts: string[] = [];
+    for (const name of county.matchNames) {
+      params.push(name.toLowerCase());
+      const i = params.length;
+      parts.push(`LOWER(TRIM(COALESCE(l.county_name, ''))) = $${i}`);
+      parts.push(`LOWER(TRIM(COALESCE(c.primary_county, ''))) = $${i}`);
     }
+    for (const code of county.matchCodes || []) {
+      params.push(code);
+      const i = params.length;
+      parts.push(`TRIM(COALESCE(l.county_code, '')) = $${i}`);
+      parts.push(`TRIM(COALESCE(c.primary_county, '')) = $${i}`);
+      parts.push(`LTRIM(TRIM(COALESCE(c.primary_county, '')), '0') = $${i}`);
+      parts.push(`LTRIM(TRIM(COALESCE(l.county_code, '')), '0') = $${i}`);
+    }
+    if (parts.length) where += ` AND (${parts.join(" OR ")})`;
   }
   return { where, params };
 }
@@ -247,7 +257,9 @@ export function buildCohortRowsSql(limitIdx: number, offsetIdx: number, where: s
   return `
     WITH matched AS MATERIALIZED (
       SELECT
-        c.id, c.slug, c.display_name, l.city AS primary_city, l.county_name AS primary_county, l.state AS home_state,
+        c.id, c.slug, c.display_name, l.city AS primary_city,
+        COALESCE(NULLIF(TRIM(l.county_name), ''), NULLIF(TRIM(c.primary_county), '')) AS primary_county,
+        l.state AS home_state,
         l.external_key, l.occupation_code, l.status_normalized, l.source_system,
         ROW_NUMBER() OVER (
           PARTITION BY c.id
@@ -381,7 +393,7 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
             occupationCode: r.occupation_code, occupationLabel: classLabel(r.occupation_code),
             statusNormalized: asLicenseStatus(r.status_normalized),
             statusLabel: r.status_normalized === "active" || r.status_normalized === "current" ? "Active/current in indexed DBPR record" : r.status_normalized ? `${r.status_normalized} in indexed DBPR record` : "Status as published",
-            city: r.primary_city, county: r.primary_county, state: r.home_state,
+            city: r.primary_city, county: displayCounty(r.primary_county, r.home_state), state: r.home_state,
             sourceLabel: SOURCE_LABEL[r.source_system || "fl_dbpr"] || r.source_system || "Florida DBPR",
             sourceSystem: r.source_system || "fl_dbpr",
             geographyNote: `${broaderGeographyLabel} recorded address in the indexed licensing record — not service territory.`,
@@ -513,7 +525,7 @@ async function executeUncached(plan: ContractorResearchQuery): Promise<AskExecut
               ? `${r.status_normalized} in indexed DBPR record`
               : "Status as published",
         city: r.primary_city,
-        county: r.primary_county,
+        county: displayCounty(r.primary_county, r.home_state),
         state: r.home_state,
         sourceLabel: SOURCE_LABEL[r.source_system || "fl_dbpr"] || r.source_system || "Florida DBPR",
         sourceSystem: r.source_system || "fl_dbpr",
@@ -592,7 +604,7 @@ async function cohortUnavailableBroaderResults(
     occupationCode: r.occupation_code, occupationLabel: classLabel(r.occupation_code),
     statusNormalized: asLicenseStatus(r.status_normalized),
     statusLabel: r.status_normalized === "active" || r.status_normalized === "current" ? "Active/current in indexed DBPR record" : r.status_normalized ? `${r.status_normalized} in indexed DBPR record` : "Status as published",
-    city: r.primary_city, county: r.primary_county, state: r.home_state,
+    city: r.primary_city, county: displayCounty(r.primary_county, r.home_state), state: r.home_state,
     sourceLabel: SOURCE_LABEL[r.source_system || "fl_dbpr"] || r.source_system || "Florida DBPR",
     sourceSystem: r.source_system || "fl_dbpr",
     geographyNote: "Florida recorded address in the indexed licensing record — not service territory, and NOT " + stateLabel + ".",

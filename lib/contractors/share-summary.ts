@@ -15,6 +15,7 @@ import {
 import { njCredentialPlainLabel } from "@/lib/states/nj-credentials";
 import { orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { txTradePlainLabel } from "@/lib/states/tx-trades";
+import { profileLocationLine } from "./county-display";
 import { displayStatusLabel, statusLabel } from "./format";
 import { getOccupationInfo } from "./occupations";
 import {
@@ -324,9 +325,11 @@ export function buildShareSummary(contractor: ContractorDetail): ShareSummaryMod
   const board = resolveShareBoard(contractor);
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
-  const location = [contractor.primaryCity, contractor.primaryCounty, contractor.homeState]
-    .filter(Boolean)
-    .join(" · ");
+  const location = profileLocationLine(
+    contractor.primaryCity,
+    contractor.primaryCounty,
+    contractor.homeState,
+  );
 
   const showEntity =
     (board.slug != null && stateHasEntityLinking(board.slug)) || Boolean(ent);

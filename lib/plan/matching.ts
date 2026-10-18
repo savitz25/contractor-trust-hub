@@ -580,6 +580,9 @@ async function queryContractors(opts: {
     params.push(code);
     const i = params.length;
     countyPreds.push(`TRIM(COALESCE(l.county_code, '')) = $${i}`);
+    countyPreds.push(`TRIM(COALESCE(c.primary_county, '')) = $${i}`);
+    countyPreds.push(`LTRIM(TRIM(COALESCE(l.county_code, '')), '0') = $${i}`);
+    countyPreds.push(`LTRIM(TRIM(COALESCE(c.primary_county, '')), '0') = $${i}`);
   }
 
   const mode = opts.locationMatch;

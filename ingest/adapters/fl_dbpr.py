@@ -52,22 +52,13 @@ LICENSEE_COLUMNS = [
     "alternate_license_number",
 ]
 
-# Common FL county FIPS-style DBPR codes seen in extract (partial; unknown stay as code)
-# DBPR uses its own county codes; we keep code and optional name when known.
+# Official DBPR county codes. Same file the TypeScript display layer imports.
+_COUNTY_TABLE_PATH = (
+    Path(__file__).resolve().parents[2] / "lib" / "intelligence" / "florida-dbpr-county-codes.json"
+)
 FL_COUNTY_CODES: dict[str, str] = {
-    "16": "Broward",
-    "21": "Collier",
-    "23": "Miami-Dade",
-    "26": "Duval",
-    "39": "Hillsborough",
-    "46": "Lee",
-    "51": "Manatee",
-    "52": "Marion",
-    "58": "Orange",
-    "60": "Palm Beach",
-    "61": "Pasco",
-    "62": "Pinellas",
-    "68": "Sarasota",
+    str(code): str(name)
+    for code, name in json.loads(_COUNTY_TABLE_PATH.read_text(encoding="utf-8"))["counties"].items()
 }
 
 DATE_FMT = "%m/%d/%Y"
@@ -77,6 +68,19 @@ def _clean(value: str | None) -> str:
     if value is None:
         return ""
     return str(value).strip()
+
+
+def normalize_county_code(value: str | None) -> str:
+    """Trim and drop a leading-zero pad. The stored county_code stays as published."""
+    code = _clean(value)
+    if code.isdigit():
+        return code.lstrip("0") or "0"
+    return code
+
+
+def county_name_for_code(value: str | None) -> str:
+    """Name for a standard Florida county. Special and unknown codes stay blank."""
+    return FL_COUNTY_CODES.get(normalize_county_code(value), "")
 
 
 def _parse_date(value: str | None) -> str:
@@ -239,7 +243,7 @@ def transform_licensee(raw: dict[str, str]) -> dict[str, Any] | None:
         "state": state,
         "postal_code": _clean(raw.get("zip")),
         "county_code": county_code,
-        "county_name": FL_COUNTY_CODES.get(county_code, ""),
+        "county_name": county_name_for_code(county_code),
         "board_number": _clean(raw.get("board_number")),
         "raw_payload_json": json.dumps(raw, ensure_ascii=False),
     }
@@ -373,7 +377,7 @@ def run_licensees(
                         "state": _clean(raw.get("state")).upper()[:2],
                         "postal_code": _clean(raw.get("zip")),
                         "county_code": county_code,
-                        "county_name": FL_COUNTY_CODES.get(county_code, ""),
+                        "county_name": county_name_for_code(county_code),
                         "board_number": _clean(raw.get("board_number")),
                         "raw_payload_json": json.dumps(raw, ensure_ascii=False),
                     }
@@ -399,7 +403,7 @@ def run_licensees(
                     "dba_name": row["dba_name_raw"],
                     "home_state": row["state"] or "FL",
                     "primary_city": row["city"],
-                    "primary_county": row["county_name"] or row["county_code"],
+                    "primary_county": row["county_name"],
                     "license_external_key": key,
                 }
             )

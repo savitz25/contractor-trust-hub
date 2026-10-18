@@ -1,4 +1,13 @@
+import { FLORIDA_DBPR_COUNTY_CODES } from "@/lib/intelligence/florida-county-codes";
 import type { CountyDef } from "./types";
+
+function withDbprMatchCode(county: CountyDef): CountyDef {
+  const fromTable = Object.entries(FLORIDA_DBPR_COUNTY_CODES)
+    .filter(([, name]) => name === county.name)
+    .map(([code]) => code);
+  const matchCodes = Array.from(new Set([...(county.matchCodes ?? []), ...fromTable]));
+  return { ...county, matchCodes };
+}
 
 /**
  * Curated Florida counties for discovery (quality over covering every FIPS code).
@@ -6,7 +15,7 @@ import type { CountyDef } from "./types";
  * matchCodes — licenses.county_code values observed when county_name is present
  *              (DBPR extract codes, not US FIPS).
  */
-export const FLORIDA_COUNTIES: CountyDef[] = [
+const CURATED_FLORIDA_COUNTIES: CountyDef[] = [
   {
     slug: "miami-dade",
     name: "Miami-Dade",
@@ -61,3 +70,5 @@ export const FLORIDA_COUNTIES: CountyDef[] = [
   },
   { slug: "clay", name: "Clay", matchNames: ["Clay"] },
 ];
+
+export const FLORIDA_COUNTIES: CountyDef[] = CURATED_FLORIDA_COUNTIES.map(withDbprMatchCode);

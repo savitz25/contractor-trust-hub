@@ -34,7 +34,7 @@ def main() -> int:
     queries = read("lib/contractors/queries.ts")
     schema = read("schema/migrations/010_qualifier_graph.sql")
     regpub = read("lib/regulatory/publication.ts")
-    counties = read("lib/intelligence/florida-county-codes.ts")
+    counties = read("lib/intelligence/florida-dbpr-county-codes.json")
 
     assert_("PUBLIC_FL_DISCIPLINE_PREDICATE" in attr, "discipline PUBLIC gate intact")
     assert_("COALESCE(d.publication_state, 'INTERNAL') = 'PUBLIC'" in attr, "NULL publication is INTERNAL")

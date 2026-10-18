@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { displayCounty } from "@/lib/contractors/county-display";
 import { statusLabel } from "@/lib/contractors/format";
 import type { ContractorDetail } from "@/lib/contractors/types";
 import { occupationLabel } from "@/lib/states/config";
@@ -54,6 +55,10 @@ export function trustReportJsonLd(c: ContractorDetail, path: string): Record<str
   const lic = c.licenses[0];
   const cred = lic?.licenseNumber || lic?.externalKey || null;
   const region = (c.homeState || "").toUpperCase() || undefined;
+  const countyLabel = displayCounty(c.primaryCounty, c.homeState);
+  const countyPlace = countyLabel
+    ? (/county$/i.test(countyLabel) ? countyLabel : `${countyLabel} County`)
+    : undefined;
 
   return {
     "@context": "https://schema.org",
@@ -66,7 +71,7 @@ export function trustReportJsonLd(c: ContractorDetail, path: string): Record<str
       name: c.displayName,
       legalName: c.legalName || undefined,
       address:
-        c.primaryCity || c.primaryCounty || region
+        c.primaryCity || countyLabel || region
           ? {
               "@type": "PostalAddress",
               addressLocality: c.primaryCity || undefined,
@@ -74,6 +79,9 @@ export function trustReportJsonLd(c: ContractorDetail, path: string): Record<str
               addressCountry: "US",
             }
           : undefined,
+      containedInPlace: countyPlace
+        ? { "@type": "AdministrativeArea", name: countyPlace }
+        : undefined,
       identifier: cred
         ? {
             "@type": "PropertyValue",

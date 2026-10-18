@@ -1,3 +1,4 @@
+import { displayCounty } from "@/lib/contractors/county-display";
 import { getContractorBySlug } from "@/lib/contractors/queries";
 import {
   contractorFallbackPng,
@@ -24,7 +25,7 @@ export async function GET(
       contractorEntityShareModel({
         name: contractor.displayName,
         city: contractor.primaryCity,
-        county: contractor.primaryCounty,
+        county: displayCounty(contractor.primaryCounty, contractor.homeState),
         state: contractor.homeState,
         tradeLabel: lic ? occupationLabel(lic.occupationCode) : null,
       }),

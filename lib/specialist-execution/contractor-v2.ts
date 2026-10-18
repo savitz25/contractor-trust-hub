@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { query, queryOne } from "@/lib/db";
 import { FLORIDA_COUNTIES } from "@/lib/discovery/counties";
+import { classifyFloridaCountyCode } from "@/lib/intelligence/florida-county-codes";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { absoluteUrl } from "@/lib/site";
 import {
@@ -176,8 +177,13 @@ function normalizeState(value: unknown): string {
 
 function normalizeFloridaGeography(city: string | null, countyRaw: string | null, intent: GeographyIntent): NormalizedGeography {
   const cityCounty = city?.toLowerCase() === "boca raton" ? { slug: "palm-beach", label: "Palm Beach" } : null;
-  const county = countyRaw
-    ? FLORIDA_COUNTIES.find((row) => row.slug === countyRaw.toLowerCase() || row.name.toLowerCase() === countyRaw.toLowerCase().replace(/ county$/, ""))
+  let countyQuery = countyRaw?.trim() || null;
+  if (countyQuery && /^\d+$/.test(countyQuery)) {
+    const classified = classifyFloridaCountyCode(countyQuery);
+    if (classified?.kind === "florida_county") countyQuery = classified.name;
+  }
+  const county = countyQuery
+    ? FLORIDA_COUNTIES.find((row) => row.slug === countyQuery.toLowerCase() || row.name.toLowerCase() === countyQuery.toLowerCase().replace(/ county$/, ""))
     : cityCounty ? FLORIDA_COUNTIES.find((row) => row.slug === cityCounty.slug) : null;
   if (countyRaw && !county) throw new Error("invalid_geography:unsupported_florida_county");
   // Explicit FL city uses the existing recorded licenses.city equality predicate; no service-area inference.
@@ -335,7 +341,21 @@ export function buildWhere(input: NormalizedContractorExecutionRequest) {
   if (input.credentialStatus === "expired") terms.push("l.status_normalized IN ('expired', 'inactive')");
   if (input.geography.county) {
     if (input.state === "NJ") { params.push(input.geography.county.label.toLowerCase()); terms.push(`LOWER(REGEXP_REPLACE(TRIM(COALESCE(l.county_name, '')), '\\s+county$', '', 'i')) = $${params.length}`); terms.push("l.state = 'NJ'"); }
-    else { params.push(input.geography.county.code ?? input.geography.county.label); terms.push(input.geography.county.code ? `l.county_code = $${params.length}` : `l.county_name = $${params.length}`); }
+    else {
+      const parts: string[] = [];
+      if (input.geography.county.code) {
+        params.push(input.geography.county.code);
+        const i = params.length;
+        parts.push(`l.county_code = $${i}`);
+        parts.push(`TRIM(COALESCE(c.primary_county, '')) = $${i}`);
+        parts.push(`LTRIM(TRIM(COALESCE(c.primary_county, '')), '0') = $${i}`);
+      }
+      params.push(input.geography.county.label);
+      const nameIdx = params.length;
+      parts.push(`l.county_name = $${nameIdx}`);
+      parts.push(`c.primary_county = $${nameIdx}`);
+      terms.push(`(${parts.join(" OR ")})`);
+    }
   }
   if (input.geography.city) {
     params.push(input.state);

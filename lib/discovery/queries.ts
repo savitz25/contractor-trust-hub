@@ -1,4 +1,5 @@
 import { query, queryOne } from "@/lib/db";
+import { displayCounty } from "@/lib/contractors/county-display";
 import { asLicenseStatus } from "@/lib/contractors/format";
 import type { SearchResult } from "@/lib/contractors/types";
 import { getStateBySlug } from "@/lib/states/config";
@@ -9,6 +10,27 @@ import {
   getTrade,
 } from "./config";
 import type { CountyDef, DiscoveryFacet, TradeDef } from "./types";
+import {
+  DISCOVERY_COUNTY_EXPR,
+  floridaCountyCodePredicates,
+  resolvedFloridaCountySql,
+} from "./florida-county-sql";
+
+const FACET_COUNTY_SQL = resolvedFloridaCountySql(DISCOVERY_COUNTY_EXPR);
+
+function countyFacetCount(county: CountyDef, byKey: Map<string, number>): number {
+  let count = 0;
+  for (const name of [...county.matchNames, ...(county.matchCodes ?? [])]) {
+    const key = name.toLowerCase().replace(/\s+/g, " ").trim();
+    count = Math.max(
+      count,
+      byKey.get(key) || 0,
+      byKey.get(key.replace(/\s+/g, "-")) || 0,
+      byKey.get(key.replace(/-/g, " ")) || 0,
+    );
+  }
+  return count;
+}
 
 const MIN_SUNBIZ_CONFIDENCE = 0.9;
 export const DISCOVERY_PAGE_SIZE = 24;
@@ -43,7 +65,7 @@ function mapRow(r: {
     legalName: r.legal_name,
     dbaName: r.dba_name,
     city: r.primary_city,
-    county: r.primary_county,
+    county: displayCounty(r.primary_county, r.home_state),
     state: r.home_state,
     primaryLicenseKey: r.external_key,
     occupationCode: r.occupation_code,
@@ -151,12 +173,8 @@ export function buildFilterClause(opts: {
         `LOWER(REPLACE(TRIM(COALESCE(c.primary_county, '')), ' ', '-')) = REPLACE($${i}, ' ', '-')`
       );
     }
-    // When extract stores only county_code (null name), match known DBPR codes
-    for (const code of opts.county.matchCodes || []) {
-      params.push(code);
-      const i = params.length;
-      clauses.push(`TRIM(COALESCE(l.county_code, '')) = $${i}`);
-    }
+    // Match a bare DBPR code on the license or on contractors.primary_county.
+    clauses.push(...floridaCountyCodePredicates(params, opts.county.matchCodes || []));
     if (clauses.length) {
       where += ` AND (${clauses.join(" OR ")})`;
     }
@@ -470,7 +488,7 @@ export async function countCountiesForTrade(
   try {
     const rows = await query<{ county: string; n: string }>(
       `
-      SELECT LOWER(TRIM(COALESCE(NULLIF(TRIM(l.county_name), ''), c.primary_county))) AS county,
+      SELECT ${FACET_COUNTY_SQL} AS county,
              COUNT(DISTINCT c.id)::text AS n
       FROM contractors c
       JOIN licenses l ON l.contractor_id = c.id
@@ -478,8 +496,7 @@ export async function countCountiesForTrade(
         AND c.is_thin_profile = FALSE
         ${inStateSql(disc.requireInStateAddress)}
         AND l.occupation_code = ANY($3::text[])
-        AND COALESCE(NULLIF(TRIM(l.county_name), ''), c.primary_county) IS NOT NULL
-        AND COALESCE(NULLIF(TRIM(l.county_name), ''), c.primary_county) ~ '[A-Za-z]'
+        AND ${FACET_COUNTY_SQL} IS NOT NULL
       GROUP BY 1
       `,
       [state.licenseSource, state.code, trade.occupationCodes]
@@ -496,19 +513,7 @@ export async function countCountiesForTrade(
     }
 
     return disc.counties
-      .map((county) => {
-        let count = 0;
-        for (const name of county.matchNames) {
-          const k = name.toLowerCase().replace(/\s+/g, " ").trim();
-          count = Math.max(
-            count,
-            byKey.get(k) || 0,
-            byKey.get(k.replace(/\s+/g, "-")) || 0,
-            byKey.get(k.replace(/-/g, " ")) || 0
-          );
-        }
-        return { slug: county.slug, label: county.name, count };
-      })
+      .map((county) => ({ slug: county.slug, label: county.name, count: countyFacetCount(county, byKey) }))
       .filter((f) => f.count > 0)
       .sort((a, b) => b.count - a.count);
   } catch {
@@ -757,15 +762,14 @@ export async function countCountiesBatch(publicStateSlug: string): Promise<Disco
   try {
     const rows = await query<{ county: string; n: string }>(
       `
-      SELECT LOWER(TRIM(COALESCE(NULLIF(TRIM(l.county_name), ''), c.primary_county))) AS county,
+      SELECT ${FACET_COUNTY_SQL} AS county,
              COUNT(DISTINCT c.id)::text AS n
       FROM contractors c
       JOIN licenses l ON l.contractor_id = c.id
       WHERE l.source_system = $1
         AND c.is_thin_profile = FALSE
         ${inStateSql(disc.requireInStateAddress)}
-        AND COALESCE(NULLIF(TRIM(l.county_name), ''), c.primary_county) IS NOT NULL
-        AND COALESCE(NULLIF(TRIM(l.county_name), ''), c.primary_county) ~ '[A-Za-z]'
+        AND ${FACET_COUNTY_SQL} IS NOT NULL
       GROUP BY 1
       `,
       [state.licenseSource, state.code]
@@ -782,19 +786,7 @@ export async function countCountiesBatch(publicStateSlug: string): Promise<Disco
     }
 
     return disc.counties
-      .map((county) => {
-        let count = 0;
-        for (const name of county.matchNames) {
-          const k = name.toLowerCase().replace(/\s+/g, " ").trim();
-          count = Math.max(
-            count,
-            byKey.get(k) || 0,
-            byKey.get(k.replace(/\s+/g, "-")) || 0,
-            byKey.get(k.replace(/-/g, " ")) || 0
-          );
-        }
-        return { slug: county.slug, label: county.name, count };
-      })
+      .map((county) => ({ slug: county.slug, label: county.name, count: countyFacetCount(county, byKey) }))
       .filter((f) => f.count > 0)
       .sort((a, b) => b.count - a.count);
   } catch (err) {
