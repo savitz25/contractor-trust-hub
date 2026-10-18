@@ -86,3 +86,6 @@ service-account*.json
 # DOT handoff folders (business contact data) — never commit
 *dot-enrich-handoff*
 *handoff-1017*
+
+# Package root outside the repo (business contact data) — never commit
+*trusthub-pkg*

@@ -297,7 +297,20 @@ def db_counts(conn, batch_id: str) -> dict:
     return out
 
 
+def _county_arg(argv: list[str]) -> str | None:
+    """Return an explicit --county value. The Miami-Dade path never sets one."""
+    for i, arg in enumerate(argv):
+        if arg == "--county" and i + 1 < len(argv):
+            return argv[i + 1]
+        if arg.startswith("--county="):
+            return arg.split("=", 1)[1]
+    return None
+
+
 def main() -> int:
+    if _county_arg(sys.argv[1:]) == "le":
+        from scripts.le_enrich_001.load import main as le_main
+        return le_main()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--input-dir", required=True, type=Path)
     ap.add_argument("--batch-id", default=DEFAULT_BATCH_ID)
