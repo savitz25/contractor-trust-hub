@@ -1,3 +1,4 @@
+import { profileLocationLine } from "./county-display";
 import { formatDate, statusLabel } from "./format";
 import { getOccupationInfo } from "./occupations";
 import { hasRelatedEntitySignal } from "./entity-signals";
@@ -138,8 +139,8 @@ export function buildCompareFields(contractors: ContractorDetail[]): CompareFiel
       id: "location",
       label: "Location on file",
       values: contractors.map((c) => {
-        const parts = [c.primaryCity, c.primaryCounty, c.homeState].filter(Boolean);
-        return parts.length ? parts.join(" · ") : "—";
+        const line = profileLocationLine(c.primaryCity, c.primaryCounty, c.homeState);
+        return line || "—";
       }),
     },
     {

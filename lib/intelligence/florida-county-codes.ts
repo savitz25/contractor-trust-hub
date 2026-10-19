@@ -2,9 +2,14 @@
  * Official Florida DBPR county codes.
  * Source: https://www2.myfloridalicense.com/about-us/understanding-dbpr-codes/
  *
+ * The 67-county table and the documented special codes live in
+ * florida-dbpr-county-codes.json. Python ingest loads that same file.
+ *
  * License mailing county = headquarters/base county.
  * This is NOT evidence of operating in the county.
  */
+
+import table from "./florida-dbpr-county-codes.json";
 
 export type FloridaCountyCodeKind = "florida_county" | "unknown" | "out_of_state" | "foreign";
 
@@ -24,86 +29,37 @@ function slugify(name: string): string {
     .replace(/^-|-$/g, "");
 }
 
-/** Codes 11–77 are the 67 Florida counties (Dade = Miami-Dade). */
-export const FLORIDA_DBPR_COUNTY_CODES: Record<string, string> = {
-  "11": "Alachua",
-  "12": "Baker",
-  "13": "Bay",
-  "14": "Bradford",
-  "15": "Brevard",
-  "16": "Broward",
-  "17": "Calhoun",
-  "18": "Charlotte",
-  "19": "Citrus",
-  "20": "Clay",
-  "21": "Collier",
-  "22": "Columbia",
-  "23": "Miami-Dade",
-  "24": "DeSoto",
-  "25": "Dixie",
-  "26": "Duval",
-  "27": "Escambia",
-  "28": "Flagler",
-  "29": "Franklin",
-  "30": "Gadsden",
-  "31": "Gilchrist",
-  "32": "Glades",
-  "33": "Gulf",
-  "34": "Hamilton",
-  "35": "Hardee",
-  "36": "Hendry",
-  "37": "Hernando",
-  "38": "Highlands",
-  "39": "Hillsborough",
-  "40": "Holmes",
-  "41": "Indian River",
-  "42": "Jackson",
-  "43": "Jefferson",
-  "44": "Lafayette",
-  "45": "Lake",
-  "46": "Lee",
-  "47": "Leon",
-  "48": "Levy",
-  "49": "Liberty",
-  "50": "Madison",
-  "51": "Manatee",
-  "52": "Marion",
-  "53": "Martin",
-  "54": "Monroe",
-  "55": "Nassau",
-  "56": "Okaloosa",
-  "57": "Okeechobee",
-  "58": "Orange",
-  "59": "Osceola",
-  "60": "Palm Beach",
-  "61": "Pasco",
-  "62": "Pinellas",
-  "63": "Polk",
-  "64": "Putnam",
-  "65": "St. Johns",
-  "66": "St. Lucie",
-  "67": "Santa Rosa",
-  "68": "Sarasota",
-  "69": "Seminole",
-  "70": "Sumter",
-  "71": "Suwannee",
-  "72": "Taylor",
-  "73": "Union",
-  "74": "Volusia",
-  "75": "Wakulla",
-  "76": "Walton",
-  "77": "Washington",
-};
+const COUNTY_CODE_KINDS = new Set<FloridaCountyCodeKind>([
+  "florida_county",
+  "unknown",
+  "out_of_state",
+  "foreign",
+]);
 
-export const FLORIDA_COUNTY_SPECIAL_CODES: Record<string, { name: string; kind: FloridaCountyCodeKind }> = {
-  "78": { name: "Unknown", kind: "unknown" },
-  "79": { name: "Out of State", kind: "out_of_state" },
-  "80": { name: "Foreign", kind: "foreign" },
-  "99": { name: "Unknown", kind: "unknown" },
-};
+function countyKind(kind: string): FloridaCountyCodeKind {
+  if (COUNTY_CODE_KINDS.has(kind as FloridaCountyCodeKind)) return kind as FloridaCountyCodeKind;
+  return "unknown";
+}
+
+/** Codes 11–77 are the 67 Florida counties (Dade = Miami-Dade). */
+export const FLORIDA_DBPR_COUNTY_CODES: Record<string, string> = table.counties;
+
+export const FLORIDA_COUNTY_SPECIAL_CODES: Record<string, { name: string; kind: FloridaCountyCodeKind }> =
+  Object.fromEntries(
+    Object.entries(table.special).map(([code, spec]) => [code, { name: spec.name, kind: countyKind(spec.kind) }]),
+  );
+
+const COUNTY_CODE_RANGES = table.ranges.map((range) => ({ ...range, kind: countyKind(range.kind) }));
+
+/** Trim, then drop a leading-zero pad so "074" uses the same entry as "74". */
+export function normalizeFloridaCountyCode(raw: string | null | undefined): string {
+  const code = String(raw ?? "").trim();
+  if (!/^\d+$/.test(code)) return code;
+  return code.replace(/^0+/, "") || "0";
+}
 
 export function classifyFloridaCountyCode(raw: string | null | undefined): FloridaCountyCodeDef | null {
-  const code = String(raw || "").trim();
+  const code = normalizeFloridaCountyCode(raw);
   if (!code) return null;
   const n = Number(code);
   if (FLORIDA_DBPR_COUNTY_CODES[code]) {
@@ -114,11 +70,10 @@ export function classifyFloridaCountyCode(raw: string | null | undefined): Flori
     const spec = FLORIDA_COUNTY_SPECIAL_CODES[code];
     return { code, name: spec.name, slug: slugify(spec.name), kind: spec.kind };
   }
-  if (n >= 701 && n <= 799) {
-    return { code, name: "Out of State", slug: "out-of-state", kind: "out_of_state" };
-  }
-  if (n >= 801 && n <= 899) {
-    return { code, name: "Foreign", slug: "foreign", kind: "foreign" };
+  for (const range of COUNTY_CODE_RANGES) {
+    if (Number.isFinite(n) && n >= range.min && n <= range.max) {
+      return { code, name: range.name, slug: slugify(range.name), kind: countyKind(range.kind) };
+    }
   }
   return { code, name: "Unknown", slug: "unknown", kind: "unknown" };
 }

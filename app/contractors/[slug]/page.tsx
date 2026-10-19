@@ -24,6 +24,7 @@ import { TrustReportActions } from "@/components/contractor/TrustReportActions";
 import { TrustReportNav } from "@/components/contractor/TrustReportNav";
 import { WhatWeChecked } from "@/components/contractor/WhatWeChecked";
 import { NjNextActions } from "@/components/contractor/NjNextActions";
+import { profileLocationLine } from "@/lib/contractors/county-display";
 import { loadFloridaEntityLineage } from "@/lib/contractors/entity-lineage";
 import { ArizonaCoverageBanner } from "@/components/search/ArizonaCoverageBanner";
 import { CaliforniaCoverageBanner } from "@/components/search/CaliforniaCoverageBanner";
@@ -174,9 +175,11 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const primary = contractor.licenses[0];
   const entity = contractor.entities[0];
   const path = `/contractors/${encodeURIComponent(contractor.slug)}`;
-  const location = [contractor.primaryCity, contractor.primaryCounty, contractor.homeState]
-    .filter(Boolean)
-    .join(" · ");
+  const location = profileLocationLine(
+    contractor.primaryCity,
+    contractor.primaryCounty,
+    contractor.homeState,
+  );
   const conf = matchConfidenceLine(entity);
   const projectType = studioHandoff?.projectType || null;
   const freshest =

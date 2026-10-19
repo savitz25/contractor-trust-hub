@@ -4,6 +4,8 @@
  * Never convert missing discipline / missing license into an endorsement.
  */
 
+import { displayCounty } from "@/lib/contractors/county-display";
+
 export type ContractorShareCardKind = "fallback" | "entity" | "content";
 
 export type ContractorShareCardModel = {
@@ -97,7 +99,7 @@ function locationLine(input: {
 }): string {
   const state = displayStateName(input.state);
   const city = (input.city || "").trim();
-  const county = (input.county || "").trim();
+  const county = (displayCounty(input.county, input.state) || "").trim();
   if (city && state) return `${city}, ${state}`;
   if (county && state) {
     const countyLabel = /county$/i.test(county) ? county : `${county} County`;

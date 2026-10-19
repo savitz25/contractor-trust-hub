@@ -4,6 +4,7 @@
  */
 
 import { query, queryOne } from "@/lib/db";
+import { displayCounty } from "@/lib/contractors/county-display";
 import { asLicenseStatus } from "@/lib/contractors/format";
 import type { SearchResult } from "@/lib/contractors/types";
 import { getStateBySlug } from "@/lib/states/config";
@@ -334,7 +335,7 @@ export async function listFloridaBrowse(opts: {
         legalName: r.legal_name,
         dbaName: r.dba_name,
         city: r.primary_city,
-        county: r.primary_county,
+        county: displayCounty(r.primary_county, r.home_state),
         state: r.home_state,
         primaryLicenseKey: r.external_key,
         occupationCode: r.occupation_code,

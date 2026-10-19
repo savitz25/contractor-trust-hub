@@ -1,5 +1,6 @@
 ﻿import { query } from "@/lib/db";
 import { asLicenseStatus } from "@/lib/contractors/format";
+import { displayCounty } from "@/lib/contractors/county-display";
 import type { SearchResult } from "@/lib/contractors/types";
 import { getStateBySlug, occupationLabel } from "@/lib/states/config";
 import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
@@ -33,7 +34,7 @@ type ResolvedLoc = {
   countyCodes: string[];
 };
 
-function mapRow(
+export function mapRow(
   r: {
     id: string;
     slug: string;
@@ -61,7 +62,7 @@ function mapRow(
     legalName: r.legal_name,
     dbaName: r.dba_name,
     city: r.primary_city,
-    county: r.primary_county,
+    county: displayCounty(r.primary_county, r.home_state),
     state: r.home_state,
     primaryLicenseKey: r.external_key,
     occupationCode: r.occupation_code,
@@ -580,6 +581,9 @@ async function queryContractors(opts: {
     params.push(code);
     const i = params.length;
     countyPreds.push(`TRIM(COALESCE(l.county_code, '')) = $${i}`);
+    countyPreds.push(`TRIM(COALESCE(c.primary_county, '')) = $${i}`);
+    countyPreds.push(`LTRIM(TRIM(COALESCE(l.county_code, '')), '0') = $${i}`);
+    countyPreds.push(`LTRIM(TRIM(COALESCE(c.primary_county, '')), '0') = $${i}`);
   }
 
   const mode = opts.locationMatch;

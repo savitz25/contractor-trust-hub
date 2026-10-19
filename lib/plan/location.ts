@@ -4,6 +4,7 @@
  */
 
 import { FLORIDA_COUNTIES } from "@/lib/discovery/counties";
+import { classifyFloridaCountyCode } from "@/lib/intelligence/florida-county-codes";
 
 /** FL ZIP3 → primary county name (approximate — multi-county prefixes exist). */
 const FL_ZIP3_COUNTY: Record<string, string> = {
@@ -268,6 +269,10 @@ export function resolvePlanLocation(opts: {
   const zip = normalizeZip(opts.zip);
   const city = opts.city?.trim() || null;
   let county = opts.county?.trim() || null;
+  if (county && /^\d+$/.test(county)) {
+    const classified = classifyFloridaCountyCode(county);
+    if (classified?.kind === "florida_county") county = classified.name;
+  }
   let countySource: ResolvedLocation["countySource"] = county ? "input" : "none";
 
   if (!county && zip) {
