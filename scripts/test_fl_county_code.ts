@@ -10,7 +10,11 @@ import {
 } from "../lib/intelligence/florida-county-codes";
 import table from "../lib/intelligence/florida-dbpr-county-codes.json";
 import { askWhere } from "../lib/ask/execute";
+import { ResultCard } from "../components/search/ResultCard";
+import { StudioMatchCard } from "../components/studios/StudioMatchCard";
+import { mapRow } from "../lib/plan/matching";
 import { resolvePlanLocation } from "../lib/plan/location";
+import type { StudioHandoff } from "../lib/studios/handoff";
 import { contractorEntityShareModel } from "../lib/seo/share-card-model";
 import { trustReportJsonLd } from "../lib/seo/trust-report-seo";
 import type { ContractorDetail } from "../lib/contractors/types";
@@ -118,4 +122,92 @@ test("discovery and plan match a stored numeric code to the county name", () => 
   assert.match(ask.where, /c\.primary_county/);
   assert.match(ask.where, /l\.county_name/);
   assert.equal(ask.params.includes("63"), false);
+});
+
+function elementText(node: unknown): string {
+  if (node == null || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(elementText).join(" ");
+  if (typeof node === "object" && "props" in node) {
+    const children = (node as { props?: { children?: unknown } }).props?.children;
+    return elementText(children);
+  }
+  return "";
+}
+
+const studioHandoff: StudioHandoff = {
+  studioSlug: "kitchen",
+  studioName: "Kitchen",
+  answerSummary: ["Example scope"],
+  resultsPath: "/studios/kitchen/results",
+};
+
+function planResult(primaryCounty: string | null, homeState: string) {
+  const contractor = mapRow(
+    {
+      id: "example-id",
+      slug: "example-county-contractor",
+      display_name: "Example County Contractor LLC",
+      legal_name: null,
+      dba_name: null,
+      primary_city: "Example City",
+      primary_county: primaryCounty,
+      home_state: homeState,
+      external_key: "CBC0000000",
+      occupation_code: "CBC",
+      status_normalized: "active",
+      last_verified_at: null,
+      entity_status: null,
+      entity_name: null,
+      has_discipline: false,
+      loc_tier: 2,
+    },
+    ["CBC"],
+  );
+  const plan = elementText(ResultCard({ result: contractor }));
+  const studio = elementText(
+    StudioMatchCard({
+      contractor,
+      primaryCodes: ["CBC"],
+      handoff: studioHandoff,
+    }),
+  );
+  return { contractor, plan, studio };
+}
+
+test("plan and studio cards render a Florida county name instead of the stored code", () => {
+  const volusia = planResult("74", "FL");
+  assert.equal(volusia.contractor.county, "Volusia");
+  assert.match(volusia.plan, /Example City · Volusia · FL/);
+  assert.match(volusia.studio, /Example City · Volusia · FL/);
+  assert.equal(volusia.plan.includes("74"), false);
+  assert.equal(volusia.studio.includes("74"), false);
+
+  assert.equal(planResult("15", "FL").contractor.county, "Brevard");
+  assert.equal(planResult("63", "FL").contractor.county, "Polk");
+  assert.equal(planResult("69", "FL").contractor.county, "Seminole");
+
+  const named = planResult("Broward", "FL");
+  assert.equal(named.contractor.county, "Broward");
+  assert.match(named.plan, /Example City · Broward · FL/);
+  assert.match(named.studio, /Example City · Broward · FL/);
+
+  const otherState = planResult("Morris", "NJ");
+  assert.equal(otherState.contractor.county, "Morris");
+  assert.match(otherState.plan, /Example City · Morris · NJ/);
+  assert.match(otherState.studio, /Example City · Morris · NJ/);
+
+  const unknown = planResult("99", "FL");
+  assert.equal(unknown.contractor.county, null);
+  assert.match(unknown.plan, /Example City · FL/);
+  assert.match(unknown.studio, /Example City · FL/);
+  assert.equal(unknown.plan.includes("99"), false);
+  assert.equal(unknown.studio.includes("99"), false);
+
+  const outOfState = planResult("701", "FL");
+  assert.equal(outOfState.contractor.county, null);
+  assert.match(outOfState.plan, /Example City · FL/);
+  assert.match(outOfState.studio, /Example City · FL/);
+  assert.equal(outOfState.plan.includes("701"), false);
+  assert.equal(outOfState.studio.includes("701"), false);
 });
