@@ -16,6 +16,8 @@ business-site value with provenance).
   --apply                  write (one transaction, ON CONFLICT DO NOTHING)
   --production             required in addition to --apply for a non-local host
   --rollback               delete this batch (source_system + batch_id) and exit
+  --county hb|le|or        dispatch to that county loader.
+                           Omitting --county keeps this Miami-Dade loader unchanged.
 
 The receipt (--receipt) holds counts, license keys and business names only —
 no phone numbers, emails or addresses — so it is safe to commit.
@@ -297,7 +299,27 @@ def db_counts(conn, batch_id: str) -> dict:
     return out
 
 
+def _county_arg(argv: list[str]) -> str | None:
+    """Return an explicit --county value. The Miami-Dade path never sets one."""
+    for index, arg in enumerate(argv):
+        if arg == "--county" and index + 1 < len(argv):
+            return argv[index + 1]
+        if arg.startswith("--county="):
+            return arg.split("=", 1)[1]
+    return None
+
+
 def main() -> int:
+    county = _county_arg(sys.argv[1:])
+    if county == "hb":
+        from scripts.hb_enrich_001.load import main as hb_main
+        return hb_main()
+    if county == "le":
+        from scripts.le_enrich_001.load import main as le_main
+        return le_main()
+    if county == "or":
+        from scripts.or_enrich_001.load import main as orange_main
+        return orange_main()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--input-dir", required=True, type=Path)
     ap.add_argument("--batch-id", default=DEFAULT_BATCH_ID)
