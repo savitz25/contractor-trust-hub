@@ -760,6 +760,8 @@ export async function listSearchableContractorSlugs(options: {
   stateSlug?: string;
   limit: number;
   offset: number;
+  /** Sitemap probes use a short timeout so a slow page is treated as absent. */
+  statementTimeoutMs?: number;
 }): Promise<{ slug: string; updatedAt: string | null }[]> {
   const state = getStateBySlug(options.stateSlug || "fl");
   if (!state?.live) return [];
@@ -781,7 +783,10 @@ export async function listSearchableContractorSlugs(options: {
       ORDER BY c.slug
       LIMIT $3 OFFSET $4
       `,
-      [state.code, licenseSourcesFor(state), options.limit, options.offset]
+      [state.code, licenseSourcesFor(state), options.limit, options.offset],
+      options.statementTimeoutMs
+        ? { statementTimeoutMs: options.statementTimeoutMs }
+        : undefined
     );
     return rows.map((r) => ({
       slug: r.slug,
