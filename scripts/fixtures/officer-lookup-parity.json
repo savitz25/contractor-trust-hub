@@ -1,0 +1,231 @@
+{
+  "proven": "lookup rows equal the legacy normalization of eligible fl_sunbiz officer elements; missing_rows=0 extra_rows=0",
+  "limit": 40,
+  "cases": [
+    {
+      "kind": "common",
+      "normalizedKey": "COASTAL CONSTRUCTION SPECIAL PROJECTS HOLD",
+      "entityIds": [
+        "cf186b9c-e687-4a05-bff3-8a6b333bd068"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "common",
+      "normalizedKey": "DARRYL JOSEPH SMITH AND HEATHER LYNN SMITH",
+      "entityIds": [
+        "ff500fcf-3bad-49b0-b0a3-0262edd0900c"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "common",
+      "normalizedKey": "BECK COMMERCIAL CONSTRUCTION MANAGEMNT LLC",
+      "entityIds": [
+        "157a480e-5fcf-4c64-90c2-092ce70108e5"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "common",
+      "normalizedKey": "ADEL KAJTAZOVIC REVOCABLE TRUST 10 06 2025",
+      "entityIds": [
+        "d98e7985-b79e-4b88-9233-efa8c493d014"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "common",
+      "normalizedKey": "CONTRATISTAS ASESORES CONSTRUCTORES CONACO",
+      "entityIds": [
+        "9b0ed835-3444-4892-9ed6-9523c5de24e4"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "common",
+      "normalizedKey": "CURRENT BUILDERS CONSTRUCTION SERVICES INC",
+      "entityIds": [
+        "6b5932fb-9304-445b-b18e-79309fb3b383"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "common",
+      "normalizedKey": "AMERICAN STRUCTURAL CONCRETE HOLDING COMPA",
+      "entityIds": [
+        "93272424-e3da-4581-a2b9-bd3268f275a1"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "common",
+      "normalizedKey": "FORTIFIED EXTERIORS OF AMERICA FLORIDA LLC",
+      "entityIds": [
+        "306e1757-d85c-412c-916a-0e19cb953946"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "multi_entity",
+      "normalizedKey": "ARMSTRONG SCOTT W",
+      "entityIds": [
+        "437e3d4e-62a7-4dde-ab20-4e807eb73066",
+        "7996031a-b939-486a-9730-9787a5d7f562",
+        "9e9e05a9-55d8-4ce7-b828-d7a06240d108",
+        "c3a4629c-7f4b-46ad-8d63-91454e64d7c1",
+        "c3f79cfb-4528-4306-8220-75838666469f",
+        "cf76b76e-2171-4ce9-8a4e-f118932807dd"
+      ],
+      "count": 6
+    },
+    {
+      "kind": "multi_entity",
+      "normalizedKey": "COLANDREO FREDERICK A",
+      "entityIds": [
+        "5738e2a5-c8e7-4715-977a-3644b3bc76e0",
+        "691d38bf-bba4-4a4c-b16b-166840316f26",
+        "6feb6c00-0f3d-4f51-b72c-07f191d2e38e",
+        "964399fb-5e89-4bf5-9ad6-e7bf8f37386e",
+        "97a802a5-d095-42ab-9e6d-4ab0a7dd840f",
+        "b7b41d37-a857-4813-8877-a1bfaee5b0d0"
+      ],
+      "count": 6
+    },
+    {
+      "kind": "multi_entity",
+      "normalizedKey": "CONDELLO JEFFREY S",
+      "entityIds": [
+        "03e2d09e-cb37-4bee-a50c-392810a81b6a",
+        "28b2d6ea-cc0b-431f-91e8-a540b636e700",
+        "50670427-55fd-4c2e-bac8-d3e95d498fc5",
+        "5240d5ae-58ea-4d0f-a64f-569767af58d2",
+        "e816b063-5d95-4fde-8396-4953959005d8",
+        "fba46a78-d507-4d02-b40c-f75aefe06824"
+      ],
+      "count": 6
+    },
+    {
+      "kind": "multi_entity",
+      "normalizedKey": "DE CARDENAS ALBERTO I",
+      "entityIds": [
+        "0f8b4746-6c4a-45a8-8bce-1b9d853bac5d",
+        "63e317dc-2313-4b68-b728-17332be343d5",
+        "a20f742d-b688-4862-bbac-de67ad25eac1",
+        "ab87a866-73bc-475a-8771-51f33a6a4796",
+        "be25536a-7b32-4eb3-928b-17201067de99",
+        "d8f74210-0fff-4bca-9a18-fa01aa01357a"
+      ],
+      "count": 6
+    },
+    {
+      "kind": "multi_entity",
+      "normalizedKey": "DEMULLING TRENT M",
+      "entityIds": [
+        "3c4506c6-0b79-4d40-8c8f-fe578c205c63",
+        "4a39b0d1-0a64-4085-80c0-627801e724d4",
+        "7a066559-388b-4bdb-9c3e-fb2d406e3159",
+        "9d21671a-6ca6-41a1-9d2b-0f4c6dd96f87",
+        "9ecf5836-bde8-495e-8900-a82c9b97a6e5",
+        "dc7a6b85-f8bf-4030-a29a-60b8a3c6a864"
+      ],
+      "count": 6
+    },
+    {
+      "kind": "apostrophe",
+      "normalizedKey": "4 O S HOLDINGS LLC",
+      "entityIds": [
+        "e5c538a6-0d67-4994-a40c-2615802b8bbb"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "apostrophe",
+      "normalizedKey": "AHTNA NETIYE LLC",
+      "entityIds": [
+        "34bc7394-4616-4770-b564-98715476e61b"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "apostrophe",
+      "normalizedKey": "ALKEBULAN D HASHEEM G",
+      "entityIds": [
+        "e0cab31d-19e8-4f2f-b222-95cc6949723d"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "hyphen",
+      "normalizedKey": "A 1 PARADISE PLUMBING PARENT LLC",
+      "entityIds": [
+        "64c20d08-d3ea-4d57-b89d-fac56019d036"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "hyphen",
+      "normalizedKey": "A SCREEN REPAIR INC",
+      "entityIds": [
+        "0d020fa5-9cca-4d5a-9141-2d4580fbb30f"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "hyphen",
+      "normalizedKey": "ABDOOL GHANY AQEEL",
+      "entityIds": [
+        "f3fffbbb-d9c3-49f7-9a31-4763f2d98a6d"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "period",
+      "normalizedKey": "621 HOLDINGS INC",
+      "entityIds": [
+        "6574ce6a-84a8-4d25-9c28-85c59e24a727"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "period",
+      "normalizedKey": "A D DAVIS CONSTRUCTION CORP",
+      "entityIds": [
+        "12b02f56-b2c6-4907-952f-eb32417898af"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "comma",
+      "normalizedKey": "10858 MANAGER LLC",
+      "entityIds": [
+        "bcb6492b-6b77-45cf-b1a1-e4bcec4fcfa4"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "slash",
+      "normalizedKey": "A FLORIDA JOINT VENTURE KM PLAZA",
+      "entityIds": [
+        "54716dda-fa70-452f-9c1d-3880a28f7a73"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "suffix",
+      "normalizedKey": "3CM MANAGER II LLC",
+      "entityIds": [
+        "b7ff188f-9b80-4895-8ad4-91eb6c4fb7bd"
+      ],
+      "count": 1
+    },
+    {
+      "kind": "initial",
+      "normalizedKey": "P D",
+      "entityIds": [
+        "22d45916-148d-465a-9ceb-a2530f028193"
+      ],
+      "count": 1
+    }
+  ]
+}
