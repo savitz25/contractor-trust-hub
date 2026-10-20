@@ -122,6 +122,31 @@ export function entityStatusLabel(status: string | null | undefined): string {
   return statusLabel(status);
 }
 
+/** Indexed related-entity lookup. Parameters: $1 excluded entity ids, $2 officer keys. */
+export const FLORIDA_RELATED_ENTITY_SQL = `
+SELECT DISTINCT ON (e.id, lookup.officer_name_normalized)
+  e.id,
+  e.external_key,
+  e.legal_name,
+  e.status,
+  e.entity_type,
+  e.formation_date,
+  e.officers,
+  e.last_verified_at,
+  lookup.officer_name_normalized AS matched_key
+FROM entity_officer_lookup lookup
+JOIN entities e ON e.id = lookup.entity_id
+JOIN contractor_entities ce ON ce.entity_id = e.id
+WHERE e.source_system = 'fl_sunbiz'
+  AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
+  AND ce.confidence IS NOT NULL
+  AND ce.confidence >= 0.90
+  AND NOT (e.id = ANY($1::uuid[]))
+  AND lookup.officer_name_normalized = ANY($2::text[])
+ORDER BY e.id, lookup.officer_name_normalized
+LIMIT 40
+`;
+
 type RelatedRow = {
   id: string;
   external_key: string;
@@ -189,40 +214,14 @@ export async function loadFloridaEntityLineage(
 
   let rows: RelatedRow[] = [];
   try {
-    // Exact officer name key match on fl_sunbiz entities that already have a
-    // high-confidence contractor link (indexed via contractor_entities).
-    // Avoids full-table JSONB scan of all Sunbiz rows on Trust Report SSR.
-    // Normalization mirrors normalizeOfficerKey (upper, strip punct, collapse space).
+    // Exact officer-name match against entity_officer_lookup, which stores
+    // normalize_entity_officer_name() for fl_sunbiz entities that already have
+    // a high-confidence contractor link. Triggers keep that lookup aligned
+    // with entities.officers and contractor_entities. Search keys remain the
+    // application normalizeOfficerKey values; this does not strip suffixes
+    // a second time and does not expand officers JSON across the corpus.
     rows = await query<RelatedRow>(
-      `
-      SELECT DISTINCT ON (e.id, matched_key)
-        e.id,
-        e.external_key,
-        e.legal_name,
-        e.status,
-        e.entity_type,
-        e.formation_date,
-        e.officers,
-        e.last_verified_at,
-        matched_key
-      FROM contractor_entities ce
-      JOIN entities e ON e.id = ce.entity_id
-      CROSS JOIN LATERAL (
-        SELECT upper(trim(regexp_replace(
-          regexp_replace(COALESCE(o->>'name', ''), '[.,''"/\\\\-]+', ' ', 'g'),
-          '\\s+', ' ', 'g'
-        ))) AS matched_key
-        FROM jsonb_array_elements(COALESCE(e.officers, '[]'::jsonb)) AS o
-      ) keys
-      WHERE e.source_system = 'fl_sunbiz'
-        AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
-        AND ce.confidence IS NOT NULL
-        AND ce.confidence >= 0.90
-        AND NOT (e.id = ANY($1::uuid[]))
-        AND keys.matched_key = ANY($2::text[])
-      ORDER BY e.id, matched_key
-      LIMIT 40
-      `,
+      FLORIDA_RELATED_ENTITY_SQL,
       [excludeIds, keys]
     );
   } catch (err) {
