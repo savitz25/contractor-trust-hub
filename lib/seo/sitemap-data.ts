@@ -4,7 +4,6 @@
  */
 
 import {
-  countSearchableContractorSlugs,
   listSearchableContractorSlugs,
   SITEMAP_PAGE_SIZE,
 } from "@/lib/contractors/queries";
@@ -14,6 +13,30 @@ import { absoluteUrl, getSiteUrl } from "@/lib/site";
 /** Cap shards so index generation stays reliable. */
 export const MAX_SITEMAP_SHARDS = 50;
 
+/**
+ * Product routes that set noIndex. They must not appear in the sitemap.
+ * Profile pages are a separate decision and are unchanged here.
+ */
+const SITEMAP_NOINDEX_PATHS = new Set(["/account", "/watch", "/compare"]);
+
+/** Fail a later-page probe quickly. A slow page is not advertised. */
+const SITEMAP_SHARD_PROBE_TIMEOUT_MS = 1_500;
+
+/**
+ * Publish a leading run of shards that each contain at least one URL.
+ * Shard 0 is the static/discovery page and is always first.
+ * Stop at the first empty contractor page so the index never lists a gap.
+ */
+export function leadingNonEmptyShardCount(pageHasRows: readonly boolean[]): number {
+  let count = 0;
+  const cap = Math.min(pageHasRows.length, MAX_SITEMAP_SHARDS);
+  for (let id = 0; id < cap; id += 1) {
+    if (!pageHasRows[id]) break;
+    count += 1;
+  }
+  return Math.max(1, count);
+}
+
 export type SitemapUrlEntry = {
   loc: string;
   lastmod?: string;
@@ -22,14 +45,24 @@ export type SitemapUrlEntry = {
 };
 
 export async function getSitemapShardCount(): Promise<number> {
-  let count = 0;
-  try {
-    count = await countSearchableContractorSlugs("fl");
-  } catch {
-    count = 0;
+  // Shard 0 always has static and discovery URLs, even when the contractor
+  // read times out. A COUNT of searchable profiles can imply later pages
+  // that the ordered page read does not finish inside the statement timeout.
+  // Those pages were coming back as empty urlsets, or as 404 when the count
+  // itself timed out. Advertise a later shard only when one row from that
+  // page returns quickly.
+  const flags: boolean[] = [true];
+  for (let id = 1; id < MAX_SITEMAP_SHARDS; id += 1) {
+    const rows = await listSearchableContractorSlugs({
+      stateSlug: "fl",
+      limit: 1,
+      offset: id * SITEMAP_PAGE_SIZE,
+      statementTimeoutMs: SITEMAP_SHARD_PROBE_TIMEOUT_MS,
+    });
+    if (rows.length === 0) break;
+    flags.push(true);
   }
-  const needed = Math.max(1, Math.ceil(count / SITEMAP_PAGE_SIZE) || 1);
-  return Math.min(needed, MAX_SITEMAP_SHARDS);
+  return leadingNonEmptyShardCount(flags);
 }
 
 function discoveryEntries(): SitemapUrlEntry[] {
@@ -182,12 +215,19 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/disclaimer", priority: 0.6, changefreq: "monthly" },
     { path: "/compare", priority: 0.5, changefreq: "weekly" },
   ];
-  return items.map((item) => ({
-    loc: absoluteUrl(item.path),
-    lastmod: now,
-    changefreq: item.changefreq,
-    priority: item.priority,
-  }));
+  return items
+    .filter((item) => !SITEMAP_NOINDEX_PATHS.has(item.path.split("?")[0] || item.path))
+    .map((item) => ({
+      loc: absoluteUrl(item.path),
+      lastmod: now,
+      changefreq: item.changefreq,
+      priority: item.priority,
+    }));
+}
+
+/** Static product URLs plus discovery URLs. No contractor profiles. */
+export function nonContractorSitemapEntries(): SitemapUrlEntry[] {
+  return [...staticProductEntries(), ...discoveryEntries()];
 }
 
 /** URLs for one shard. Shard 0 includes static + discovery + first contractor page. */
@@ -198,8 +238,7 @@ export async function getSitemapShardEntries(id: number): Promise<SitemapUrlEntr
   const now = new Date().toISOString();
 
   if (id === 0) {
-    entries.push(...staticProductEntries());
-    entries.push(...discoveryEntries());
+    entries.push(...nonContractorSitemapEntries());
   }
 
   try {

@@ -33,6 +33,12 @@ export async function GET(_req: Request, { params }: Props) {
 
   try {
     const entries = await getSitemapShardEntries(id);
+    if (entries.length === 0) {
+      return new Response("Sitemap shard not found", {
+        status: 404,
+        headers: { "Content-Type": "text/plain" },
+      });
+    }
     const xml = renderUrlSetXml(entries);
     return new Response(xml, { status: 200, headers: SITEMAP_XML_HEADERS });
   } catch (e) {
