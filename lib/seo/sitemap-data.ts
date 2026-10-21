@@ -4,7 +4,6 @@
  */
 
 import {
-  countSearchableContractorSlugs,
   listSearchableContractorSlugs,
   SITEMAP_PAGE_SIZE,
 } from "@/lib/contractors/queries";
@@ -13,23 +12,161 @@ import { absoluteUrl, getSiteUrl } from "@/lib/site";
 
 /** Cap shards so index generation stays reliable. */
 export const MAX_SITEMAP_SHARDS = 50;
+export const SITEMAP_MAX_URLS_PER_CHILD = 50_000;
+
+/**
+ * Product routes that set noIndex. They must not appear in the sitemap.
+ * Profile pages are a separate decision and are unchanged here.
+ */
+const SITEMAP_NOINDEX_PATHS = new Set(["/account", "/watch", "/compare"]);
+
+/** Fail a later-page probe quickly. A slow page is not advertised. */
+const SITEMAP_SHARD_PROBE_TIMEOUT_MS = 1_500;
+
+/**
+ * Publish a leading run of shards that each contain at least one URL.
+ * Shard 0 is the static/discovery page and is always first.
+ * Stop at the first empty contractor page so the index never lists a gap.
+ */
+export function leadingNonEmptyShardCount(pageHasRows: readonly boolean[]): number {
+  let count = 0;
+  const cap = Math.min(pageHasRows.length, MAX_SITEMAP_SHARDS);
+  for (let id = 0; id < cap; id += 1) {
+    if (!pageHasRows[id]) break;
+    count += 1;
+  }
+  return count;
+}
 
 export type SitemapUrlEntry = {
   loc: string;
   lastmod?: string;
   changefreq?: string;
   priority?: number;
+  /** Stable source-row key used only to break ties; never emitted into XML. */
+  stableId?: string;
 };
 
-export async function getSitemapShardCount(): Promise<number> {
-  let count = 0;
-  try {
-    count = await countSearchableContractorSlugs("fl");
-  } catch {
-    count = 0;
+function compareStable(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+/** Sort deterministically and remove duplicate locations before chunking/rendering. */
+export function stableUniqueSitemapEntries(
+  entries: readonly SitemapUrlEntry[],
+): SitemapUrlEntry[] {
+  const sorted = [...entries].sort(
+    (a, b) => compareStable(a.loc, b.loc) || compareStable(a.stableId ?? a.loc, b.stableId ?? b.loc),
+  );
+  const seen = new Set<string>();
+  return sorted.filter((entry) => {
+    if (!entry.loc || seen.has(entry.loc)) return false;
+    seen.add(entry.loc);
+    return true;
+  });
+}
+
+/** Pure stable chunker used for the production manifest and boundary tests. */
+export function chunkSitemapEntries(
+  entries: readonly SitemapUrlEntry[],
+  chunkSize = SITEMAP_PAGE_SIZE,
+): SitemapUrlEntry[][] {
+  if (!Number.isInteger(chunkSize) || chunkSize < 1 || chunkSize > SITEMAP_MAX_URLS_PER_CHILD) {
+    throw new RangeError(`chunkSize must be an integer between 1 and ${SITEMAP_MAX_URLS_PER_CHILD}`);
   }
-  const needed = Math.max(1, Math.ceil(count / SITEMAP_PAGE_SIZE) || 1);
-  return Math.min(needed, MAX_SITEMAP_SHARDS);
+  const unique = stableUniqueSitemapEntries(entries);
+  const chunks: SitemapUrlEntry[][] = [];
+  for (let offset = 0; offset < unique.length; offset += chunkSize) {
+    chunks.push(unique.slice(offset, offset + chunkSize));
+  }
+  return chunks;
+}
+
+export type SitemapShardPlan = {
+  childIds: readonly number[];
+  entriesForChild(id: number): Promise<SitemapUrlEntry[]>;
+};
+
+export type SitemapShardPlanSource = {
+  staticEntries: readonly SitemapUrlEntry[];
+  profilePageHasRows(id: number): Promise<boolean>;
+  profileEntries(id: number): Promise<readonly SitemapUrlEntry[]>;
+  chunkSize?: number;
+  maxChildren?: number;
+};
+
+/**
+ * One manifest contract for both routes: contiguous child IDs are probed from
+ * the same eligible profile source and page size that child lookup uses.
+ */
+export async function createSitemapShardPlan(
+  source: SitemapShardPlanSource,
+): Promise<SitemapShardPlan> {
+  const chunkSize = source.chunkSize ?? SITEMAP_PAGE_SIZE;
+  const maxChildren = Math.min(source.maxChildren ?? MAX_SITEMAP_SHARDS, MAX_SITEMAP_SHARDS);
+  if (!Number.isInteger(chunkSize) || chunkSize < 1 || chunkSize > SITEMAP_MAX_URLS_PER_CHILD) {
+    throw new RangeError("Invalid sitemap profile page size");
+  }
+
+  const childIds = source.staticEntries.length > 0 ? [0] : [];
+  if (childIds.length > 0) {
+    for (let id = 1; id < maxChildren; id += 1) {
+      if (!(await source.profilePageHasRows(id))) break;
+      childIds.push(id);
+    }
+  } else if (maxChildren > 0 && (await source.profilePageHasRows(0))) {
+    childIds.push(0);
+    for (let id = 1; id < maxChildren; id += 1) {
+      if (!(await source.profilePageHasRows(id))) break;
+      childIds.push(id);
+    }
+  }
+
+  const allowedIds = new Set(childIds);
+  return {
+    childIds,
+    async entriesForChild(id) {
+      if (!allowedIds.has(id)) return [];
+      const entries: SitemapUrlEntry[] = id === 0 ? [...source.staticEntries] : [];
+      entries.push(...(await source.profileEntries(id)));
+      return stableUniqueSitemapEntries(entries);
+    },
+  };
+}
+
+/** The sole production manifest factory shared by /sitemap.xml and its children. */
+export async function getSitemapShardPlan(): Promise<SitemapShardPlan> {
+  const staticEntries = stableUniqueSitemapEntries(nonContractorSitemapEntries());
+  const pageSize = SITEMAP_PAGE_SIZE;
+  const profilePage = async (id: number) => {
+    const rows = await listSearchableContractorSlugs({
+      stateSlug: "fl",
+      limit: pageSize,
+      offset: id * pageSize,
+    });
+    return rows.map((row) => ({
+      loc: absoluteUrl(`/contractors/${encodeURIComponent(row.slug)}`),
+      lastmod: row.updatedAt ? new Date(row.updatedAt).toISOString() : undefined,
+      changefreq: "weekly",
+      priority: 0.55,
+      stableId: row.id,
+    }));
+  };
+
+  return createSitemapShardPlan({
+    staticEntries,
+    chunkSize: pageSize,
+    profilePageHasRows: async (id) => {
+      const rows = await listSearchableContractorSlugs({
+        stateSlug: "fl",
+        limit: 1,
+        offset: id * pageSize,
+        statementTimeoutMs: SITEMAP_SHARD_PROBE_TIMEOUT_MS,
+      });
+      return rows.length > 0;
+    },
+    profileEntries: profilePage,
+  });
 }
 
 function discoveryEntries(): SitemapUrlEntry[] {
@@ -71,7 +208,6 @@ function discoveryEntries(): SitemapUrlEntry[] {
 }
 
 function staticProductEntries(): SitemapUrlEntry[] {
-  const now = new Date().toISOString();
   const items: { path: string; priority: number; changefreq: string }[] = [
     { path: "/", priority: 1, changefreq: "weekly" },
     { path: "/verify", priority: 0.95, changefreq: "daily" },
@@ -182,45 +318,18 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/disclaimer", priority: 0.6, changefreq: "monthly" },
     { path: "/compare", priority: 0.5, changefreq: "weekly" },
   ];
-  return items.map((item) => ({
-    loc: absoluteUrl(item.path),
-    lastmod: now,
-    changefreq: item.changefreq,
-    priority: item.priority,
-  }));
+  return items
+    .filter((item) => !SITEMAP_NOINDEX_PATHS.has(item.path.split("?")[0] || item.path))
+    .map((item) => ({
+      loc: absoluteUrl(item.path),
+      changefreq: item.changefreq,
+      priority: item.priority,
+    }));
 }
 
-/** URLs for one shard. Shard 0 includes static + discovery + first contractor page. */
-export async function getSitemapShardEntries(id: number): Promise<SitemapUrlEntry[]> {
-  if (!Number.isFinite(id) || id < 0) return [];
-
-  const entries: SitemapUrlEntry[] = [];
-  const now = new Date().toISOString();
-
-  if (id === 0) {
-    entries.push(...staticProductEntries());
-    entries.push(...discoveryEntries());
-  }
-
-  try {
-    const rows = await listSearchableContractorSlugs({
-      stateSlug: "fl",
-      limit: SITEMAP_PAGE_SIZE,
-      offset: id * SITEMAP_PAGE_SIZE,
-    });
-    for (const row of rows) {
-      entries.push({
-        loc: absoluteUrl(`/contractors/${encodeURIComponent(row.slug)}`),
-        lastmod: row.updatedAt ? new Date(row.updatedAt).toISOString() : now,
-        changefreq: "weekly",
-        priority: 0.55,
-      });
-    }
-  } catch {
-    // Still return static/discovery on shard 0 if contractor query fails
-  }
-
-  return entries;
+/** Static product URLs plus discovery URLs. No contractor profiles. */
+export function nonContractorSitemapEntries(): SitemapUrlEntry[] {
+  return [...staticProductEntries(), ...discoveryEntries()];
 }
 
 function escapeXml(s: string): string {
@@ -252,14 +361,12 @@ ${urls}
 `;
 }
 
-export function renderSitemapIndexXml(shardCount: number): string {
+export function renderSitemapIndexXml(childIds: readonly number[]): string {
   const base = getSiteUrl();
-  const lastmod = new Date().toISOString();
-  const items = Array.from({ length: shardCount }, (_, id) => {
+  const items = childIds.map((id) => {
     const loc = `${base}/sitemap/${id}.xml`;
     return `  <sitemap>
     <loc>${escapeXml(loc)}</loc>
-    <lastmod>${escapeXml(lastmod)}</lastmod>
   </sitemap>`;
   }).join("\n");
 

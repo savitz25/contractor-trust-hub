@@ -760,34 +760,36 @@ export async function listSearchableContractorSlugs(options: {
   stateSlug?: string;
   limit: number;
   offset: number;
-}): Promise<{ slug: string; updatedAt: string | null }[]> {
+  /** Sitemap probes use a short timeout so a slow page is treated as absent. */
+  statementTimeoutMs?: number;
+}): Promise<{ id: string; slug: string; updatedAt: string | null }[]> {
   const state = getStateBySlug(options.stateSlug || "fl");
   if (!state?.live) return [];
-  try {
-    const rows = await query<{ slug: string; updated_at: Date | null }>(
-      `
-      SELECT c.slug, c.updated_at
-      FROM contractors c
-      WHERE c.is_thin_profile = FALSE
-        AND c.slug IS NOT NULL
-        AND c.slug <> ''
-        AND (
-          c.home_state = $1
-          OR EXISTS (
-            SELECT 1 FROM licenses l
-            WHERE l.contractor_id = c.id AND l.source_system = ANY($2::text[])
-          )
+  const rows = await query<{ id: string | number; slug: string; updated_at: Date | null }>(
+    `
+    SELECT c.id, c.slug, c.updated_at
+    FROM contractors c
+    WHERE c.is_thin_profile = FALSE
+      AND c.slug IS NOT NULL
+      AND c.slug <> ''
+      AND (
+        c.home_state = $1
+        OR EXISTS (
+          SELECT 1 FROM licenses l
+          WHERE l.contractor_id = c.id AND l.source_system = ANY($2::text[])
         )
-      ORDER BY c.slug
-      LIMIT $3 OFFSET $4
-      `,
-      [state.code, licenseSourcesFor(state), options.limit, options.offset]
-    );
-    return rows.map((r) => ({
-      slug: r.slug,
-      updatedAt: r.updated_at ? r.updated_at.toISOString() : null,
-    }));
-  } catch {
-    return [];
-  }
+      )
+    ORDER BY c.slug, c.id
+    LIMIT $3 OFFSET $4
+    `,
+    [state.code, licenseSourcesFor(state), options.limit, options.offset],
+    options.statementTimeoutMs
+      ? { statementTimeoutMs: options.statementTimeoutMs }
+      : undefined
+  );
+  return rows.map((r) => ({
+    id: String(r.id),
+    slug: r.slug,
+    updatedAt: r.updated_at ? r.updated_at.toISOString() : null,
+  }));
 }
