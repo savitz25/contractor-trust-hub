@@ -10,9 +10,9 @@ test("the sitemap index lists only a leading run of non-empty shards", () => {
   assert.equal(leadingNonEmptyShardCount([true]), 1);
   assert.equal(leadingNonEmptyShardCount([true, true, false]), 2);
   assert.equal(leadingNonEmptyShardCount([true, false, true]), 1);
-  assert.equal(leadingNonEmptyShardCount([]), 1);
+  assert.equal(leadingNonEmptyShardCount([]), 0);
 
-  const index = renderSitemapIndexXml(1);
+  const index = renderSitemapIndexXml([0]);
   assert.equal(index.match(/<loc>/g)?.length, 1);
   assert.match(index, /\/sitemap\/0\.xml/);
   assert.doesNotMatch(index, /\/sitemap\/1\.xml/);

@@ -1,8 +1,7 @@
 import {
-  getSitemapShardCount,
-  renderSitemapIndexXml,
-  SITEMAP_XML_HEADERS,
+  getSitemapShardPlan,
 } from "@/lib/seo/sitemap-data";
+import { createSitemapRouteHandlers } from "@/lib/seo/sitemap-handlers";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -16,14 +15,5 @@ export const runtime = "nodejs";
  * This route handler owns /sitemap.xml with correct Content-Type.
  */
 export async function GET() {
-  try {
-    const shards = await getSitemapShardCount();
-    const xml = renderSitemapIndexXml(shards);
-    return new Response(xml, { status: 200, headers: SITEMAP_XML_HEADERS });
-  } catch (e) {
-    console.error("[sitemap.xml index]", e);
-    // Minimal valid index so crawlers never get HTML 404 for this path
-    const xml = renderSitemapIndexXml(1);
-    return new Response(xml, { status: 200, headers: SITEMAP_XML_HEADERS });
-  }
+  return createSitemapRouteHandlers(getSitemapShardPlan).index();
 }
