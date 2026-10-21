@@ -23,6 +23,7 @@ import {
   formatOshaInspectionStatus,
 } from "../lib/osha/inspection-details";
 import { OSHA_LEGAL_DISCLAIMER, OSHA_MATCH_METHOD } from "../lib/osha/public-record";
+import { toPublicOshaRecord } from "../lib/osha/public-record";
 import { isOshaDetailEnabled } from "../lib/osha/flag";
 
 const citedFixture = getOshaDetailPreviewFixture("public-citations");
@@ -241,6 +242,7 @@ test("detail feature flag defaults off and only enables on an explicit on value"
   assert.match(loader, /if \(!isOshaDetailEnabled\(\)\)/);
   assert.match(route, /if \(!isOshaDetailEnabled\(\)\).*404/s);
   assert.match(loader, /match_tier IN \('exact', 'strong'\)/);
+  assert.match(loader, /OSHA_DETAIL_HELD_LICENSE_KEYS\.has\(`\$\{input\.state\}:\$\{input\.licenseKey\}`\)/);
   assert.match(loader, /id = \$1::uuid AND contractor_id = \$2::uuid AND state = \$3 AND license_key = \$4/);
   assert.match(loader, /public_match_id = \$1::uuid AND contractor_id = \$2::uuid/);
   assert.match(loader, /activity_nr = ANY\(string_to_array/);
@@ -252,6 +254,34 @@ test("detail feature flag defaults off and only enables on an explicit on value"
   assert.match(loader, /to_char\(c\.final_order_date, 'YYYY-MM-DD'\) AS final_order_date/);
   assert.doesNotMatch(loader, /initial_penalty|delete_flag|weak_match|contractor_osha_identity_review/);
   assert.doesNotMatch(loader, /informal settlement/i);
+  assert.match(loader, /U: "Unclassified"/);
+});
+
+test("B2 held source mismatches keep aggregate cards but have no detail disclosure", () => {
+  const recordSource = readFileSync("lib/osha/public-record.ts", "utf8") as string;
+  const cardSource = readFileSync("components/contractor/OshaSafetyRecord.tsx", "utf8") as string;
+  assert.match(recordSource, /OSHA_DETAIL_HELD_LICENSE_KEYS = new Set\(\["FL:CCC1329816", "FL:CGC1519699"\]\)/);
+  assert.match(recordSource, /detailEligible: !OSHA_DETAIL_HELD_LICENSE_KEYS\.has\(`\$\{state\}:\$\{licenseKey\}`\)/);
+  assert.match(cardSource, /detailEnabled && record\.detailEligible && contractorId/);
+  const heldRecord = toPublicOshaRecord({
+    id: "held-match", licenseKey: "CCC1329816", state: "FL", matchTier: "exact",
+    nInspections: 36, firstOpen: "1984-01-01", lastOpen: "2026-01-01", nCitationItems: 0,
+    nSerious: 0, currentPenalty: 0, nWithFinalOrder: 0, nContested: 0,
+  });
+  assert.ok(heldRecord);
+  const html = renderToStaticMarkup(React.createElement(OshaSafetyRecord, {
+    records: [heldRecord], contractorId: "contractor", detailEnabled: true, correctionHref: "/corrections",
+  }));
+  assert.match(html, /OSHA Safety Record/);
+  assert.doesNotMatch(html, /aria-expanded|View inspection details/);
+});
+
+test("migration 019 accepts U and records held-source provenance without cascading", () => {
+  const migration = readFileSync("schema/migrations/019_con_osha_001b_inspection_details.sql", "utf8") as string;
+  assert.match(migration, /viol_type IN \('S', 'W', 'R', 'O', 'U'\)/);
+  assert.match(migration, /held_license_keys TEXT\[\]/);
+  assert.match(migration, /hold_reason TEXT/);
+  assert.doesNotMatch(migration, /ON DELETE CASCADE/i);
 });
 
 test("status wording uses only source dates and does not infer settlement or finality", () => {

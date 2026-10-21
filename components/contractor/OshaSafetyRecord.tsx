@@ -111,7 +111,7 @@ export function OshaSafetyRecord({ records, correctionHref, contractorId, detail
           }}
           correctionHref={correctionHref}
           detailUrl={
-            detailEnabled && contractorId && record.publicMatchId
+            detailEnabled && record.detailEligible && contractorId && record.publicMatchId
               ? `/api/contractors/${encodeURIComponent(contractorId)}/osha-details?match=${encodeURIComponent(record.publicMatchId)}&state=${encodeURIComponent(record.state)}&license=${encodeURIComponent(record.licenseKey ?? "")}`
               : undefined
           }

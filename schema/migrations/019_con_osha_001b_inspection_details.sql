@@ -1,7 +1,6 @@
 -- CON-OSHA-001B draft schema only. DO NOT EXECUTE in this PR.
 -- Detail feature is separately gated by CON_OSHA_001B_DETAIL (default OFF).
--- Rows must be loaded only after B2's source receipt verifies source headers,
--- deleted-marker semantics, scoped counts, and aggregate reconciliation.
+-- Executable loader pins and verifies B2's source hashes before parsing.
 
 CREATE TABLE IF NOT EXISTS osha_detail_load_receipts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -10,6 +9,8 @@ CREATE TABLE IF NOT EXISTS osha_detail_load_receipts (
   source_hash CHAR(64) NOT NULL CHECK (source_hash ~ '^[0-9a-f]{64}$'),
   inspection_rows INTEGER NOT NULL CHECK (inspection_rows >= 0),
   citation_rows INTEGER NOT NULL CHECK (citation_rows >= 0),
+  held_license_keys TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
+  hold_reason TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (source_batch_id, source_dataset, source_hash),
   UNIQUE (id, source_batch_id)
@@ -53,7 +54,7 @@ CREATE TABLE IF NOT EXISTS contractor_osha_citations (
   activity_nr TEXT NOT NULL CHECK (length(btrim(activity_nr)) > 0),
   citation_id TEXT NOT NULL CHECK (length(btrim(citation_id)) > 0),
   standard TEXT NOT NULL,
-  viol_type CHAR(1) NOT NULL CHECK (viol_type IN ('S', 'W', 'R', 'O')),
+  viol_type CHAR(1) NOT NULL CHECK (viol_type IN ('S', 'W', 'R', 'O', 'U')),
   current_penalty NUMERIC(14,2) NOT NULL CHECK (current_penalty >= 0),
   initial_penalty NUMERIC(14,2),
   contest_date DATE,

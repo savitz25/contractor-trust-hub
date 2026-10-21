@@ -14,6 +14,7 @@ export const OSHA_REPORT_ERROR_LABEL = "Report an error";
 export const OSHA_PENALTY_LABEL = "Cited penalty (current)";
 
 export const OSHA_INSPECTION_LIST_STATUS = "blocked" as const;
+export const OSHA_DETAIL_HELD_LICENSE_KEYS = new Set(["FL:CCC1329816", "FL:CGC1519699"]);
 
 export const PUBLIC_OSHA_MATCH_SQL = `
 SELECT id, license_key, state, match_tier, n_inspections,
@@ -48,6 +49,7 @@ export type OshaPublicRecord = {
   summary: string;
   penaltyLabel: typeof OSHA_PENALTY_LABEL;
   inspectionList: typeof OSHA_INSPECTION_LIST_STATUS;
+  detailEligible: boolean;
 };
 
 export type OshaSourceMatch = {
@@ -174,6 +176,7 @@ export function toPublicOshaRecord(input: OshaSourceMatch): OshaPublicRecord | n
     summary: formatOshaSummary(nInspections, firstOpen, lastOpen, nCitationItems, nSerious),
     penaltyLabel: OSHA_PENALTY_LABEL,
     inspectionList: OSHA_INSPECTION_LIST_STATUS,
+    detailEligible: !OSHA_DETAIL_HELD_LICENSE_KEYS.has(`${state}:${licenseKey}`),
   };
 }
 

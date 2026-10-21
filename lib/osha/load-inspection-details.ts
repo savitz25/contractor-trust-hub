@@ -10,6 +10,7 @@ import {
 } from "./inspection-detail-adapter";
 import type { OshaCitationDetail, OshaInspectionDetail, OshaInspectionDetailsPage } from "./inspection-details";
 import { OSHA_INSPECTION_DETAILS_PAGE_SIZE } from "./inspection-details";
+import { OSHA_DETAIL_HELD_LICENSE_KEYS } from "./public-record";
 
 type MatchRow = QueryResultRow & {
   id: string; contractor_id: string; state: string; license_key: string; match_tier: string;
@@ -21,11 +22,11 @@ type InspectionRow = QueryResultRow & {
   closing_conference_date: string | null; citations_verified: boolean;
 };
 type CitationRow = QueryResultRow & {
-  inspection_id: string; citation_id: string; standard: string; viol_type: "S" | "W" | "R" | "O";
+  inspection_id: string; citation_id: string; standard: string; viol_type: "S" | "W" | "R" | "O" | "U";
   current_penalty: string | number; contest_date: string | null; final_order_date: string | null;
 };
 
-const CITATION_TYPE = { S: "Serious", W: "Willful", R: "Repeat", O: "Other" } as const;
+const CITATION_TYPE = { S: "Serious", W: "Willful", R: "Repeat", O: "Other", U: "Unclassified" } as const;
 
 /** Detail reads are entirely separate from the live aggregate gate and query path. */
 export async function loadPublicOshaInspectionDetails(input: {
@@ -33,6 +34,9 @@ export async function loadPublicOshaInspectionDetails(input: {
 }): Promise<OshaInspectionDetailsPage> {
   if (!isOshaDetailEnabled()) throw new OshaDetailUnavailableError("weak_or_unmatched");
   if (!input.contractorId || !["FL", "NJ"].includes(input.state) || !input.licenseKey.trim()) {
+    throw new OshaDetailUnavailableError("weak_or_unmatched");
+  }
+  if (OSHA_DETAIL_HELD_LICENSE_KEYS.has(`${input.state}:${input.licenseKey}`)) {
     throw new OshaDetailUnavailableError("weak_or_unmatched");
   }
   const cursor = decodeOshaInspectionCursor(input.cursor);
