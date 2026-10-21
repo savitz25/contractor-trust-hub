@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import tempfile
 import unittest
+import os
 from pathlib import Path
 
 from scripts.con_osha_001b import load_detail
@@ -55,6 +56,44 @@ class DetailLoaderContractTests(unittest.TestCase):
             load_detail.verify_held_match(
                 load_detail.Match(**{**match.__dict__, "current_penalty_amount": 1}), source
             )
+
+    def test_decimal_rounding_matches_the_aggregate_tie_to_even_contract(self):
+        source = load_detail.SourceSet(
+            inspections=({"activity_nr": "ACT-1", "open_date": "2020-01-01"},),
+            citations=({
+                "activity_nr": "ACT-1", "citation_id": "CIT-1", "viol_type": "S",
+                "current_penalty": "562.50", "final_order_date": "", "contest_date": "",
+            },),
+            deleted_count=0,
+            unique_activities=frozenset({"ACT-1"}),
+        )
+        match = load_detail.Match(
+            match_id="match", contractor_id="contractor", state="FL", license_key="FRO1",
+            tier="exact", activities=frozenset({"ACT-1"}), n_inspections=1, n_citation_items=1,
+            n_serious=1, n_willful_repeat=0, current_penalty_amount=562, n_with_final_order=0,
+            n_contested=0, first_open=None, last_open=None,
+        )
+        self.assertEqual(load_detail._expected_metrics(match, source)["current_penalty_amount"], 562)
+        self.assertEqual(int(load_detail.Decimal("563.50").quantize(load_detail.Decimal("1"), rounding=load_detail.ROUND_HALF_EVEN)), 564)
+
+    def test_simulated_second_run_adds_zero_natural_keys(self):
+        planned = {("m1", "a1"), ("m1", "a2"), ("m2", "a1")}
+        self.assertEqual(load_detail.simulate_idempotent_runs(planned), (3, 0))
+
+    @unittest.skipUnless(
+        Path(os.environ.get("CON_OSHA_001B_HANDOFF_DIR", r"C:\TrustHub-Work\osha-con-osha-001b-detail-handoff")).is_dir(),
+        "B2 external scoped handoff is unavailable",
+    )
+    def test_delivered_package_full_dry_run_contract(self):
+        handoff = Path(os.environ.get("CON_OSHA_001B_HANDOFF_DIR", r"C:\TrustHub-Work\osha-con-osha-001b-detail-handoff"))
+        _, _, allowlist, matches = load_detail.verify_handoff(handoff)
+        source = load_detail.read_sources(handoff / "scoped/inspections.csv", handoff / "scoped/citations.csv")
+        eligible, counts = load_detail.validate_matches(matches, source, allowlist)
+        self.assertEqual(len(source.inspections), 17_534)
+        self.assertEqual(len(source.citations), 29_559)
+        self.assertEqual(len(eligible), 10_576)
+        self.assertEqual(counts["public_match_inspection_attachments"], 25_930)
+        self.assertEqual(counts["public_match_citation_attachments"], 41_685)
 
     def test_six_receipt_acceptance_profile_totals_are_preserved(self):
         self.assertEqual(load_detail.ACCEPTANCE_PROFILE_EXPECTATIONS, {
