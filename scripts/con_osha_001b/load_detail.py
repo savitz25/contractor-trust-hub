@@ -22,12 +22,27 @@ from urllib.parse import urlparse
 
 INSPECTION_SHA256 = "5867164b0c00c651eb6379cc9a9aa8242917d410d54b9ac48ab98632ec010552"
 VIOLATION_SHA256 = "7ab8b7edb91075ae356baf2093d884f037a73feb1e235123485acf1864dd40ff"
-SCOPED_INSPECTIONS_SHA256 = "a9ca343d1796cc649474354a740dc3b1bde011d04e9d4416f13d6072c191a56e"
-SCOPED_CITATIONS_SHA256 = "a0e8cee1093534313cef49474837c0a8e7775f45a73f5b90cebe0ae512a85e72"
-COMBINED_SOURCE_SHA256 = "3e67b48e201a8c8a43f1661b167409517f8e4af5a21316fe5f7b1d3d4f5fc63d"
+SCOPED_INSPECTIONS_SHA256 = "c32f00ddc6d528bffac8529f65b6a275a98f9d12c9eb87e774709a742664419f"
+SCOPED_CITATIONS_SHA256 = "7bdb3dc11e4939a0c5f61777a96a0d7f42b2d46bd0ada3fa0e9c9d15bfb05f13"
 EXPECTED_ACTIVITIES = 17_534
 EXPECTED_INSPECTIONS = 17_534
-EXPECTED_PUBLIC_CITATIONS = 29_559
+EXPECTED_MATCH_INSPECTION_BRIDGES = 25_930
+EXPECTED_SOURCE_NON_X_CITATIONS = 29_559
+EXPECTED_LOADABLE_CITATIONS = 29_556
+EXPECTED_FL_SOURCE_NON_X_CITATIONS = 20_211
+EXPECTED_FL_LOADABLE_CITATIONS = 20_208
+EXPECTED_NJ_LOADABLE_CITATIONS = 9_348
+EXPECTED_HELD_ONLY_CITATIONS = 3
+HELD_ONLY_ACTIVITY = "348805508"
+HELD_ONLY_CITATION_IDS = {"01001", "01002", "01003"}
+EXPECTED_NULL_CURRENT_PENALTIES = 5_123
+EXPECTED_EXPLICIT_ZERO_CURRENT_PENALTIES = 2_321
+EXPECTED_POSITIVE_CURRENT_PENALTIES = 22_112
+EXPECTED_INSPECTIONS_WITH_CITATIONS = 11_454
+EXPECTED_INSPECTIONS_WITHOUT_CITATIONS = 6_080
+COMBINED_SOURCE_SHA256 = hashlib.sha256((
+    INSPECTION_SHA256 + VIOLATION_SHA256 + SCOPED_INSPECTIONS_SHA256 + SCOPED_CITATIONS_SHA256
+).encode("ascii")).hexdigest()
 HELD_LICENSES = {"CCC1329816", "CGC1519699"}
 HOLD_REASON = "SOURCE_CITATIONS_ABSENT_FROM_AGGREGATE_EXTRACT"
 ACCEPTANCE_PROFILE_EXPECTATIONS = {
@@ -42,14 +57,15 @@ DELETE_MARKER = "X"
 GO_PHRASE = "CON-OSHA-001B-DETAIL-LOAD-GO"
 PUBLIC_TYPE_LABELS = {"S": "Serious", "W": "Willful", "R": "Repeat", "O": "Other", "U": "Unclassified"}
 HANDOFF_FILE_SHA256 = {
-    "scoped/inspections.csv": SCOPED_INSPECTIONS_SHA256,
-    "scoped/citations.csv": SCOPED_CITATIONS_SHA256,
-    "allowlist/activity_allowlist.txt": "6ffdaa081cacec773e7fc1f50e560d9df518336d0b7a4ff8150f8342f00ddc4e",
-    "allowlist/published_matches.csv": "b94873dfe673df188c4846e07e6dd781d86bacedfa7d2b847c018c03f1d98ca1",
-    "receipts/dry-run-receipt.json": "d7a9a2267c468ebe3342c7e271b96bd2a894b26184f0f150ef816f70ed4baca4",
-    "receipts/dry-run-manifest.json": "4cf6732f3720c34fb0bd434ca9d490d094ee3c661035f994c3ce514c574224af",
-    "receipts/detail-held-license-keys.txt": "15e395f26329853194ff8f4dfce951fec87626d6cdcacc889f3ca76e9b7e5ef4",
-    "receipts/SHA256SUMS.txt": "d33f31ec6d57091e0e86474a6debf6d5d75f7c391f3b958e67987f31ec86b2a3",
+    "scoped/inspections-v2.csv": SCOPED_INSPECTIONS_SHA256,
+    "scoped/citations-source-nonx-v2.csv": SCOPED_CITATIONS_SHA256,
+    "allowlist/activity_allowlist-v2.txt": "214c8c9faaf66261e842e88fe2e3ee21ce22a1cc2dafa8ab1abbdf30a1eabf84",
+    "allowlist/published_matches-v2.csv": "09905cf90a11e9048c58e0d0daf5ba491c52ac9816cb8537334d9f86310a499d",
+    "receipts/v2-reconciliation.json": "ca3cbb2dd9ee2204118e1cf988f660faa435fd30650fcac68bf9106df5a084fd",
+    "receipts/v2-manifest.json": "a3509213922ac83cd652dd751459f462657025577281e07460cb554963b6192e",
+    "receipts/held-only-citations.json": "900f8c435edd291e09452d0ee993d9509b1d917e65d64496d0af868d9de11cdd",
+    "receipts/SHA256SUMS.txt": "35bf5d5041e185f80be1e0814469406fc316f29f12409c59d1f206c9157df7cd",
+    "README.txt": "48395d3de92407ddf744106a0f795a2d526ffbd4d25ce7a74e24a59b36465b77",
 }
 
 
@@ -88,21 +104,24 @@ def verify_source(path: Path, expected: str) -> None:
 def verify_handoff(root: Path) -> tuple[dict[str, object], dict[str, object], frozenset[str], list[Match]]:
     expected_paths = {Path(name).as_posix() for name in HANDOFF_FILE_SHA256}
     actual_paths = {path.relative_to(root).as_posix() for path in root.rglob("*") if path.is_file()}
-    allowed_unhashed = {"README.txt"}
-    if (actual_paths - expected_paths) - allowed_unhashed or expected_paths - actual_paths:
+    if actual_paths != expected_paths:
         missing = sorted(expected_paths - actual_paths)
-        extra = sorted((actual_paths - expected_paths) - allowed_unhashed)
+        extra = sorted(actual_paths - expected_paths)
         raise LoadError(f"handoff file set mismatch; missing={missing}, extra={extra}")
     for relative, expected_hash in HANDOFF_FILE_SHA256.items():
         verify_source(root / Path(relative), expected_hash)
 
-    manifest = json.loads((root / "receipts/dry-run-manifest.json").read_text(encoding="utf-8"))
-    receipt = json.loads((root / "receipts/dry-run-receipt.json").read_text(encoding="utf-8"))
-    source_hashes = {item["role"]: item["sha256"] for item in manifest["sources"]}
+    manifest = json.loads((root / "receipts/v2-manifest.json").read_text(encoding="utf-8"))
+    receipt = json.loads((root / "receipts/v2-reconciliation.json").read_text(encoding="utf-8"))
+    held_receipt = json.loads((root / "receipts/held-only-citations.json").read_text(encoding="utf-8"))
+    source_hashes = {
+        "inspection": manifest.get("raw_inspection_sha256"),
+        "violation": manifest.get("raw_violation_sha256"),
+    }
     if source_hashes != {"inspection": INSPECTION_SHA256, "violation": VIOLATION_SHA256}:
-        raise LoadError("handoff manifest source archive SHA values differ from B2 receipt")
+        raise LoadError("V2 manifest source archive SHA values differ from B2 receipt")
     if manifest.get("load_authorization_granted") is not False or manifest.get("database_mutations") != 0:
-        raise LoadError("handoff manifest does not identify a non-loading dry run")
+        raise LoadError("V2 manifest does not identify a non-loading dry run")
 
     sum_lines = (root / "receipts/SHA256SUMS.txt").read_text(encoding="utf-8").splitlines()
     sum_entries: dict[str, str] = {}
@@ -111,52 +130,71 @@ def verify_handoff(root: Path) -> tuple[dict[str, object], dict[str, object], fr
         if len(parts) not in {2, 3}:
             raise LoadError("malformed SHA256SUMS.txt line")
         sum_entries[parts[1]] = parts[0].lower()
-    expected_sum_entries = {
-        "OSHA_inspection.zip": INSPECTION_SHA256,
-        "OSHA_violation.zip": VIOLATION_SHA256,
-        **{Path(name).name: digest for name, digest in HANDOFF_FILE_SHA256.items() if not name.endswith("SHA256SUMS.txt")},
-    }
+    expected_sum_entries = {name: digest for name, digest in HANDOFF_FILE_SHA256.items()
+                            if not name.endswith("SHA256SUMS.txt")}
     if sum_entries != expected_sum_entries:
         raise LoadError("SHA256SUMS.txt entries do not match handoff files and source receipt")
 
+    if manifest.get("package") != "con-osha-001b-detail-handoff-v2":
+        raise LoadError("unexpected V2 handoff package identity")
+    if manifest.get("counts") != receipt:
+        raise LoadError("V2 manifest counts differ from the reconciliation receipt")
+    if manifest.get("held_activity_not_loadable") != HELD_ONLY_ACTIVITY:
+        raise LoadError("V2 manifest held activity differs from the loader contract")
     expected_receipt = {
-        "allowlist_activity_numbers": EXPECTED_ACTIVITIES,
-        "matched_inspection_activity_numbers": EXPECTED_ACTIVITIES,
-        "missing_inspection_activity_numbers": 0,
-        "extra_inspection_activity_numbers": 0,
-        "total_inspection_rows": EXPECTED_INSPECTIONS,
-        "duplicate_inspection_activity_rows": 0,
-        "total_citation_rows_public": EXPECTED_PUBLIC_CITATIONS,
-        "deleted_rows_excluded": 1_552,
-        "duplicate_citation_keys": 0,
-        "invalid_citation_keys": 0,
-        "public_matches_tested": 10_578,
-        "detail_eligible_public_matches": 10_576,
-        "detail_held_mismatches": 2,
-        "official_activity_url_verified": False,
+        "fl_profiles": 7_846, "nj_profiles": 2_732, "total_profiles": 10_578,
+        "fl_inspections": 12_339, "nj_inspections": 5_195, "total_inspections": 17_534,
+        "fl_source_non_x_citations": 20_211, "nj_source_non_x_citations": 9_348,
+        "fl_delete_x": 1_026, "nj_delete_x": 526, "total_delete_x": 1_552,
+        "source_non_x_citations": EXPECTED_SOURCE_NON_X_CITATIONS,
+        "held_only_citations": EXPECTED_HELD_ONLY_CITATIONS,
+        "fl_loadable_citations": EXPECTED_FL_LOADABLE_CITATIONS,
+        "nj_loadable_citations": EXPECTED_NJ_LOADABLE_CITATIONS,
+        "loadable_citations": EXPECTED_LOADABLE_CITATIONS,
+        "eligible_nonheld_links_for_348805508": 0,
+        "total_current_penalty_null": EXPECTED_NULL_CURRENT_PENALTIES,
+        "total_current_penalty_explicit_zero": EXPECTED_EXPLICIT_ZERO_CURRENT_PENALTIES,
+        "total_current_penalty_positive": EXPECTED_POSITIVE_CURRENT_PENALTIES,
+        "total_inspections_with_citations": EXPECTED_INSPECTIONS_WITH_CITATIONS,
+        "total_inspections_without_citations": EXPECTED_INSPECTIONS_WITHOUT_CITATIONS,
+        "live_allowlist_only": True, "local_candidate_csv_used": False,
+        "blank_current_penalty_preserved": True, "explicit_zero_collapsed_into_blank": False,
+        "fillna_zero_used": False, "database_mutations": 0,
     }
     for field, expected in expected_receipt.items():
         if receipt.get(field) != expected:
-            raise LoadError(f"dry-run receipt mismatch for {field}: {receipt.get(field)!r}")
-    if manifest.get("reconciliation", {}).get("held_license_keys") != sorted(HELD_LICENSES):
-        raise LoadError("dry-run receipt held keys differ from expected pair")
-    readme_path = root / "README.txt"
-    if readme_path.exists():
-        readme = readme_path.read_text(encoding="utf-8")
-        if not all(value in readme for value in ("OFFICIAL_SOURCE_ACQUIRED = YES", "CCC1329816", "CGC1519699", "PRODUCTION LOAD NOT AUTHORIZED")):
-            raise LoadError("handoff README conflicts with the B2 receipt")
-        receipt["readme_sha256"] = sha256_file(readme_path)
+            raise LoadError(f"V2 reconciliation mismatch for {field}: {receipt.get(field)!r}")
+    expected_holds = {
+        "activity_nr": HELD_ONLY_ACTIVITY,
+        "eligible_nonheld_links": 0,
+        "live_license_keys": sorted(HELD_LICENSES),
+        "loadable_public_detail": False,
+        "reason": HOLD_REASON,
+        "current_penalty_sum": "12058.00",
+    }
+    for key, expected in expected_holds.items():
+        if held_receipt.get(key) != expected:
+            raise LoadError(f"held-only citation receipt mismatch for {key}")
+    held_rows = held_receipt.get("citations", [])
+    if [(row.get("citation_id"), row.get("viol_type"), row.get("current_penalty")) for row in held_rows] != [
+        ("01001", "S", "2837.00"), ("01002", "S", "4256.00"), ("01003", "S", "4965.00")
+    ]:
+        raise LoadError("held-only citation evidence differs from the exact three-row source receipt")
+    readme = (root / "README.txt").read_text(encoding="utf-8")
+    readme_compact = " ".join(readme.split())
+    if not all(value in readme_compact for value in ("SOURCE_NON_X_CITATIONS = 29559", "LOADABLE_CITATIONS = 29556", "stays blank", "zero stays zero")):
+        raise LoadError("V2 README conflicts with source/loadable penalty contract")
 
-    hold_lines = [line.strip() for line in (root / "receipts/detail-held-license-keys.txt").read_text(encoding="utf-8").splitlines() if line.strip()]
-    if hold_lines != ["CCC1329816", "CGC1519699"]:
-        raise LoadError(f"held license file mismatch: {hold_lines}")
-    allowlist_lines = [line.strip() for line in (root / "allowlist/activity_allowlist.txt").read_text(encoding="utf-8").splitlines() if line.strip()]
+    allowlist_lines = [line.strip() for line in (root / "allowlist/activity_allowlist-v2.txt").read_text(encoding="utf-8").splitlines() if line.strip()]
     allowlist = frozenset(allowlist_lines)
     if len(allowlist) != EXPECTED_ACTIVITIES or len(allowlist_lines) != EXPECTED_ACTIVITIES:
         raise LoadError("activity allowlist does not contain 17,534 unique activity numbers")
 
     # The local match CSV is retained and hash-verified as receipt evidence only.
     # Load scope MUST come from live contractor_osha_license_matches rows.
+    if HELD_ONLY_ACTIVITY not in allowlist:
+        raise LoadError("held-only source activity is absent from the live activity allowlist")
+    receipt["readme_sha256"] = sha256_file(root / "README.txt")
     return manifest, receipt, allowlist, []
 
 
@@ -176,7 +214,7 @@ def _rows(path: Path, required: set[str]) -> list[dict[str, str]]:
 
 
 def _parse_date(value: str, field: str) -> date | None:
-    if not value:
+    if not value or value.strip().upper() in {"NAT", "NAN", "NONE", "NULL", "NA"}:
         return None
     try:
         return date.fromisoformat(value[:10])
@@ -220,18 +258,24 @@ class Match:
 @dataclass(frozen=True)
 class SourceSet:
     inspections: tuple[dict[str, str], ...]
+    source_citations: tuple[dict[str, str], ...]
     citations: tuple[dict[str, str], ...]
     deleted_count: int
     unique_activities: frozenset[str]
     inspections_by_activity: dict[str, dict[str, str]] = field(init=False, repr=False, compare=False)
+    source_citations_by_activity: dict[str, tuple[dict[str, str], ...]] = field(init=False, repr=False, compare=False)
     citations_by_activity: dict[str, tuple[dict[str, str], ...]] = field(init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         inspection_index = {row["activity_nr"]: row for row in self.inspections}
+        source_citation_index: dict[str, list[dict[str, str]]] = defaultdict(list)
+        for citation in self.source_citations:
+            source_citation_index[citation["activity_nr"]].append(citation)
         citation_index: dict[str, list[dict[str, str]]] = defaultdict(list)
         for citation in self.citations:
             citation_index[citation["activity_nr"]].append(citation)
         object.__setattr__(self, "inspections_by_activity", inspection_index)
+        object.__setattr__(self, "source_citations_by_activity", {key: tuple(value) for key, value in source_citation_index.items()})
         object.__setattr__(self, "citations_by_activity", {key: tuple(value) for key, value in citation_index.items()})
 
 
@@ -240,7 +284,7 @@ def read_sources(inspection_path: Path, violation_path: Path) -> SourceSet:
     verify_source(inspection_path, SCOPED_INSPECTIONS_SHA256)
     verify_source(violation_path, SCOPED_CITATIONS_SHA256)
     inspection_rows = _rows(inspection_path, {
-        "activity_nr", "open_date", "site_city", "site_state", "inspection_type",
+        "activity_nr", "state", "open_date", "site_city", "site_state", "inspection_type",
         "close_date", "closing_conference_date",
     })
     violation_rows = _rows(violation_path, {
@@ -259,14 +303,15 @@ def read_sources(inspection_path: Path, violation_path: Path) -> SourceSet:
     if len(inspection_by_activity) != EXPECTED_INSPECTIONS:
         raise LoadError(f"inspection row count mismatch: {len(inspection_by_activity)}")
 
-    citations: list[dict[str, str]] = []
+    source_citations: list[dict[str, str]] = []
     citation_keys: set[tuple[str, str]] = set()
     deleted_count = 0
+    held_rows: list[dict[str, str]] = []
     for row in violation_rows:
         activity = row["activity_nr"]
-        if not citation_is_public(row["delete_flag"]):
-            deleted_count += 1
-            continue
+        if row["delete_flag"].strip().upper() == DELETE_MARKER:
+            raise LoadError("V2 non-X citation file unexpectedly contains a deleted row")
+        citation_is_public(row["delete_flag"])
         key = (activity, row["citation_id"])
         if not activity or not row["citation_id"] or key in citation_keys:
             raise LoadError("blank or duplicate public citation key")
@@ -276,16 +321,75 @@ def read_sources(inspection_path: Path, violation_path: Path) -> SourceSet:
         public_citation_type(row["viol_type"])
         penalty = _optional_money(row["current_penalty"], "current_penalty")
         row["current_penalty"] = str(penalty) if penalty is not None else ""
-        row["initial_penalty"] = str(_money(row["initial_penalty"], "initial_penalty"))
+        initial_penalty = _optional_money(row["initial_penalty"], "initial_penalty")
+        row["initial_penalty"] = str(initial_penalty) if initial_penalty is not None else ""
         _parse_date(row["contest_date"], "contest_date")
         _parse_date(row["final_order_date"], "final_order_date")
-        citations.append(row)
-    if len(citations) != EXPECTED_PUBLIC_CITATIONS or deleted_count != 1_552:
-        raise LoadError(f"citation/deletion count mismatch: public={len(citations)}, deleted={deleted_count}")
+        source_citations.append(row)
+        if activity == HELD_ONLY_ACTIVITY:
+            held_rows.append(row)
+    if len(source_citations) != EXPECTED_SOURCE_NON_X_CITATIONS or deleted_count != 0:
+        raise LoadError(f"source non-X citation count mismatch: source={len(source_citations)}, deleted={deleted_count}")
+    if {row["citation_id"] for row in held_rows} != HELD_ONLY_CITATION_IDS or len(held_rows) != EXPECTED_HELD_ONLY_CITATIONS:
+        raise LoadError("held-only activity does not contain the exact three source citation IDs")
+    expected_held = {"01001": Decimal("2837.00"), "01002": Decimal("4256.00"), "01003": Decimal("4965.00")}
+    if any(row["viol_type"] != "S" or _optional_money(row["current_penalty"], "current_penalty") != expected_held[row["citation_id"]] for row in held_rows):
+        raise LoadError("held-only citation detail differs from the exact B2 source receipt")
+    citations = [row for row in source_citations if row["activity_nr"] != HELD_ONLY_ACTIVITY]
+    if len(citations) != EXPECTED_LOADABLE_CITATIONS:
+        raise LoadError(f"loadable citation count mismatch: {len(citations)}")
+    _validate_source_contract(inspection_by_activity, source_citations, citations)
     activities = frozenset(inspection_by_activity)
     if len(activities) != EXPECTED_ACTIVITIES:
         raise LoadError(f"allowlist activity count mismatch: {len(activities)}")
-    return SourceSet(tuple(inspection_by_activity.values()), tuple(citations), deleted_count, activities)
+    return SourceSet(tuple(inspection_by_activity.values()), tuple(source_citations), tuple(citations), deleted_count, activities)
+
+
+def _validate_source_contract(
+    inspections_by_activity: dict[str, dict[str, str]],
+    source_citations: list[dict[str, str]],
+    loadable_citations: list[dict[str, str]],
+) -> None:
+    inspection_counts = Counter(row["state"] for row in inspections_by_activity.values())
+    if inspection_counts != {"FL": 12_339, "NJ": 5_195}:
+        raise LoadError(f"inspection counts differ by state: {dict(inspection_counts)}")
+    source_by_state = Counter(inspections_by_activity[row["activity_nr"]]["state"] for row in source_citations)
+    loadable_by_state = Counter(inspections_by_activity[row["activity_nr"]]["state"] for row in loadable_citations)
+    if source_by_state != {"FL": EXPECTED_FL_SOURCE_NON_X_CITATIONS, "NJ": 9_348}:
+        raise LoadError(f"source non-X citations differ by state: {dict(source_by_state)}")
+    if loadable_by_state != {"FL": EXPECTED_FL_LOADABLE_CITATIONS, "NJ": EXPECTED_NJ_LOADABLE_CITATIONS}:
+        raise LoadError(f"loadable citation counts differ by state: {dict(loadable_by_state)}")
+
+    penalties = Counter()
+    state_penalties = Counter()
+    citations_by_activity: Counter[str] = Counter(row["activity_nr"] for row in loadable_citations)
+    for row in loadable_citations:
+        state = inspections_by_activity[row["activity_nr"]]["state"]
+        value = _optional_money(row["current_penalty"], "current_penalty")
+        category = "null" if value is None else "zero" if value == 0 else "positive"
+        penalties[category] += 1
+        state_penalties[(state, category)] += 1
+    if penalties != {"null": 5_123, "zero": 2_321, "positive": 22_112}:
+        raise LoadError(f"loadable current penalty categories mismatch: {dict(penalties)}")
+    for (state, category), expected in {
+        ("FL", "null"): 3_790, ("NJ", "null"): 1_333,
+        ("FL", "zero"): 1_686, ("NJ", "zero"): 635,
+        ("FL", "positive"): 14_732, ("NJ", "positive"): 7_380,
+    }.items():
+        if state_penalties[(state, category)] != expected:
+            raise LoadError(f"{state} {category} current penalty count mismatch")
+    with_citations_by_state = Counter()
+    without_citations_by_state = Counter()
+    for activity, inspection in inspections_by_activity.items():
+        (with_citations_by_state if citations_by_activity.get(activity, 0) > 0 else without_citations_by_state)[inspection["state"]] += 1
+    expected_with = {"FL": 7_888, "NJ": 3_566}
+    expected_without = {"FL": 4_451, "NJ": 1_629}
+    if dict(with_citations_by_state) != expected_with or dict(without_citations_by_state) != expected_without:
+        raise LoadError("verified citation completeness counts differ by state")
+    with_citations = sum(with_citations_by_state.values())
+    without_citations = sum(without_citations_by_state.values())
+    if (with_citations, without_citations) != (EXPECTED_INSPECTIONS_WITH_CITATIONS, EXPECTED_INSPECTIONS_WITHOUT_CITATIONS):
+        raise LoadError(f"verified citation completeness counts mismatch: {with_citations}/{without_citations}")
 
 
 def _activity_list(value: str | None) -> frozenset[str]:
@@ -319,8 +423,9 @@ def verify_held_match(match: Match, source: SourceSet) -> None:
         raise LoadError(f"held match does not match B2 hold contract: {match.license_key}")
     if (match.n_citation_items, match.n_serious, match.current_penalty_amount) != (0, 0, 0):
         raise LoadError(f"held aggregate values changed: {match.license_key}")
-    detail = _expected_metrics(match, source)
-    if (detail["n_citation_items"], detail["n_serious"], detail["current_penalty_amount"]) != (3, 3, 12_058):
+    held_citations = source.source_citations_by_activity.get(HELD_ONLY_ACTIVITY, ())
+    amount = sum((_optional_money(row["current_penalty"], "current_penalty") or Decimal("0.00") for row in held_citations), Decimal("0.00"))
+    if (len(held_citations), sum(row["viol_type"] == "S" for row in held_citations), amount) != (3, 3, Decimal("12058.00")):
         raise LoadError(f"held source mismatch no longer matches the receipt: {match.license_key}")
 
 
@@ -347,6 +452,9 @@ def validate_matches(
     for key in HELD_LICENSES:
         held = by_key[("FL", key)]
         verify_held_match(held, source)
+    held_activity_matches = {match.license_key for match in matches if HELD_ONLY_ACTIVITY in match.activities}
+    if held_activity_matches != HELD_LICENSES:
+        raise LoadError(f"held-only activity has unexpected live match associations: {sorted(held_activity_matches)}")
     if expected_allowlist is not None and expected_allowlist != source.unique_activities:
         raise LoadError("inspection activity set differs from explicit B2 allowlist")
     eligible: list[Match] = []
@@ -369,15 +477,18 @@ def validate_matches(
     if all_public_activities != set(source.unique_activities):
         raise LoadError("source activity set does not exactly match the published match allowlist")
     inspection_links = sum(len(match.activities) for match in eligible)
-    citation_visibility = sum(
-        len(source.citations_by_activity.get(activity, ()))
-        for match in eligible for activity in match.activities
-    )
+    if inspection_links != EXPECTED_MATCH_INSPECTION_BRIDGES:
+        raise LoadError(f"public match inspection bridge count mismatch: {inspection_links}")
+    citation_visibility = sum(len(source.citations_by_activity.get(activity, ()))
+                              for match in eligible for activity in match.activities)
     return eligible, {
         "unique_source_inspections": len(source.inspections),
         "public_match_inspection_links": inspection_links,
-        "unique_source_citations": len(source.citations),
+        "source_non_x_citations": len(source.source_citations),
+        "loadable_citations": len(source.citations),
         "public_match_citation_visibility_count": citation_visibility,
+        "inspections_with_citations": EXPECTED_INSPECTIONS_WITH_CITATIONS,
+        "inspections_with_no_citations": EXPECTED_INSPECTIONS_WITHOUT_CITATIONS,
     }
 
 
@@ -469,7 +580,7 @@ def _verify_loaded_reconciliation(cur, eligible: list[Match], expected_shape: di
 
 def run_loader(args: argparse.Namespace) -> dict[str, object]:
     _manifest, receipt, _receipt_allowlist, _unused_package_matches = verify_handoff(args.handoff_dir)
-    source = read_sources(args.handoff_dir / "scoped/inspections.csv", args.handoff_dir / "scoped/citations.csv")
+    source = read_sources(args.handoff_dir / "scoped/inspections-v2.csv", args.handoff_dir / "scoped/citations-source-nonx-v2.csv")
     if not args.execute:
         if not args.database_url:
             raise LoadError("live published-match scope is required; provide DATABASE_URL for a read-only dry run")
@@ -483,7 +594,7 @@ def run_loader(args: argparse.Namespace) -> dict[str, object]:
             matches = _db_matches(conn)
         finally:
             conn.close()
-        eligible, _ = validate_matches(matches, source)
+        eligible, _ = validate_matches(matches, source, _receipt_allowlist)
         by_state = {
             state: [match for match in matches if match.state == state]
             for state in ("FL", "NJ")
@@ -528,7 +639,17 @@ def run_loader(args: argparse.Namespace) -> dict[str, object]:
             "fl_unique_inspections": state_activity_counts["FL"],
             "nj_unique_inspections": state_activity_counts["NJ"],
             "public_match_inspection_links": len(bridge_keys),
-            "unique_source_citations": len(source.citations),
+            "source_non_x_citations": len(source.source_citations),
+            "held_only_source_citations": len(source.source_citations) - len(source.citations),
+            "loadable_citations": len(source.citations),
+            "fl_source_non_x_citations": EXPECTED_FL_SOURCE_NON_X_CITATIONS,
+            "fl_loadable_citations": EXPECTED_FL_LOADABLE_CITATIONS,
+            "nj_loadable_citations": EXPECTED_NJ_LOADABLE_CITATIONS,
+            "null_current_penalties": EXPECTED_NULL_CURRENT_PENALTIES,
+            "explicit_zero_current_penalties": EXPECTED_EXPLICIT_ZERO_CURRENT_PENALTIES,
+            "positive_current_penalties": EXPECTED_POSITIVE_CURRENT_PENALTIES,
+            "inspections_with_citations": EXPECTED_INSPECTIONS_WITH_CITATIONS,
+            "inspections_with_no_citations": EXPECTED_INSPECTIONS_WITHOUT_CITATIONS,
             "public_match_citation_visibility_count": len(citation_visibility_keys),
             "published_matches": len(matches),
             "detail_eligible_matches": len(eligible),
@@ -537,8 +658,8 @@ def run_loader(args: argparse.Namespace) -> dict[str, object]:
             "held_matches": len(held_keys),
             "held_keys": held_keys,
             "held_match_links": 0,
-            "delete_x_excluded": source.deleted_count == 1_552,
-            "blank_delete_flag_kept": len(source.citations) == EXPECTED_PUBLIC_CITATIONS,
+            "delete_x_excluded": receipt.get("total_delete_x") == 1_552 and source.deleted_count == 0,
+            "blank_delete_flag_kept": len(source.source_citations) == EXPECTED_SOURCE_NON_X_CITATIONS,
             "public_violation_type_counts": dict(sorted(violation_type_counts.items())),
             "u_type_supported": "U" in violation_type_counts and public_citation_type("U") == "Unclassified",
             "official_activity_url_render": "NO",
@@ -597,7 +718,7 @@ def run_loader(args: argparse.Namespace) -> dict[str, object]:
                 combined_hash = COMBINED_SOURCE_SHA256
                 cur.execute("SELECT pg_advisory_xact_lock(hashtext(%s))", ("con-osha-001b:" + combined_hash,))
                 matches = _db_matches(conn)
-                eligible, shape = validate_matches(matches, source)
+                eligible, shape = validate_matches(matches, source, _receipt_allowlist)
                 state_by_activity: dict[str, str] = {}
                 for match in matches:
                     for activity in match.activities:
@@ -615,16 +736,16 @@ def run_loader(args: argparse.Namespace) -> dict[str, object]:
                         INSERT INTO ingest_batches
                           (source_system, source_dataset, source_file, row_count, checksum_sha256, notes)
                         VALUES ('us_dol_osha_detail', 'osha_inspections+osha_violations',
-                                'B2 external scoped package', %s, %s, %s)
+                                'B2 V2 external scoped package', %s, %s, %s)
                         RETURNING id
-                    """, (EXPECTED_INSPECTIONS + EXPECTED_PUBLIC_CITATIONS, combined_hash,
-                          "Pinned B2 source SHAs; held aggregate mismatches excluded from detail."))
+                    """, (EXPECTED_INSPECTIONS + EXPECTED_LOADABLE_CITATIONS, combined_hash,
+                          "Pinned V2 source SHAs; three held-only source citations retained in receipt and excluded from public detail."))
                     batch_id = cur.fetchone()[0]
 
                 receipt_ids: dict[str, object] = {}
                 for dataset, source_hash, row_count in (
                     ("osha_inspections", INSPECTION_SHA256, EXPECTED_INSPECTIONS),
-                    ("osha_violations", VIOLATION_SHA256, EXPECTED_PUBLIC_CITATIONS),
+                    ("osha_violations", VIOLATION_SHA256, EXPECTED_SOURCE_NON_X_CITATIONS),
                 ):
                     cur.execute("""
                         SELECT id FROM osha_detail_load_receipts
@@ -634,15 +755,35 @@ def run_loader(args: argparse.Namespace) -> dict[str, object]:
                     if receipt:
                         receipt_ids[dataset] = receipt[0]
                     else:
+                        held_source_evidence = {
+                            "activity_nr": HELD_ONLY_ACTIVITY,
+                            "citation_ids": sorted(HELD_ONLY_CITATION_IDS),
+                            "source_only_citations": EXPECTED_HELD_ONLY_CITATIONS,
+                            "current_penalties": {
+                                row["citation_id"]: row["current_penalty"]
+                                for row in source.source_citations_by_activity[HELD_ONLY_ACTIVITY]
+                            },
+                            "viol_types": {
+                                row["citation_id"]: row["viol_type"]
+                                for row in source.source_citations_by_activity[HELD_ONLY_ACTIVITY]
+                            },
+                            "current_penalty_sum": "12058.00",
+                            "eligible_nonheld_links": 0,
+                            "reason": HOLD_REASON,
+                            "scoped_source_sha256": SCOPED_CITATIONS_SHA256,
+                        }
                         cur.execute("""
                             INSERT INTO osha_detail_load_receipts
-                              (source_batch_id, source_dataset, source_hash, inspection_rows, citation_rows,
-                               held_license_keys, hold_reason)
-                            VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id
+                              (source_batch_id, source_dataset, source_hash, inspection_rows,
+                               loadable_citation_rows, citation_rows, held_license_keys, hold_reason,
+                               held_source_evidence)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s::jsonb) RETURNING id
                         """, (batch_id, dataset, source_hash,
                               EXPECTED_INSPECTIONS if dataset == "osha_inspections" else 0,
-                              EXPECTED_PUBLIC_CITATIONS if dataset == "osha_violations" else 0,
-                              sorted(HELD_LICENSES), HOLD_REASON))
+                              EXPECTED_LOADABLE_CITATIONS if dataset == "osha_violations" else 0,
+                              EXPECTED_SOURCE_NON_X_CITATIONS if dataset == "osha_violations" else 0,
+                              sorted(HELD_LICENSES), HOLD_REASON,
+                              json.dumps(held_source_evidence if dataset == "osha_violations" else {})))
                         receipt_ids[dataset] = cur.fetchone()[0]
 
                 inspections_by_activity = source.inspections_by_activity

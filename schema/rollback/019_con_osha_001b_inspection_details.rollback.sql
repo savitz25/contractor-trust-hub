@@ -11,7 +11,7 @@
 --     SELECT 1 FROM ingest_batches
 --      WHERE id = '00000000-0000-0000-0000-000000000000'::uuid
 --        AND source_system = 'us_dol_osha_detail'
---        AND checksum_sha256 = '3e67b48e201a8c8a43f1661b167409517f8e4af5a21316fe5f7b1d3d4f5fc63d'
+--        AND checksum_sha256 = '7a8a5af3e2abbbda1c7636027de01e44c92c77dc1e8af53eac9d3b8fde8a30e9'
 --   ) THEN RAISE EXCEPTION 'detail batch guard failed'; END IF;
 -- END $$;
 -- DELETE FROM contractor_osha_citations
@@ -25,7 +25,7 @@
 -- DELETE FROM ingest_batches
 --  WHERE id = '00000000-0000-0000-0000-000000000000'::uuid
 --    AND source_system = 'us_dol_osha_detail'
---    AND checksum_sha256 = '3e67b48e201a8c8a43f1661b167409517f8e4af5a21316fe5f7b1d3d4f5fc63d';
+--    AND checksum_sha256 = '7a8a5af3e2abbbda1c7636027de01e44c92c77dc1e8af53eac9d3b8fde8a30e9';
 -- COMMIT;
 
 -- Structure rollback is separate and must wait until detail data has been

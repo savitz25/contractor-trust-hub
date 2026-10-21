@@ -126,6 +126,10 @@ test("only an official verified zero-citation inspection renders the zero-citati
   assert.deepEqual(zeroFixture.inspections[0].citations, []);
   assert.equal(zeroFixture.inspections[0].closeDate, undefined);
   assert.equal(manyFixture?.inspections.some((inspection) => inspection.citations === null), true);
+  const component = readFileSync("components/contractor/OshaInspectionDetails.tsx", "utf8") as string;
+  assert.match(component, /inspection\.citations === null[\s\S]*Citation details are temporarily unavailable\./);
+  assert.match(component, /inspection\.citations\.length === 0[\s\S]*No citations issued\./);
+  assert.ok(component.indexOf("inspection.citations === null") < component.indexOf("inspection.citations.length === 0"));
 });
 
 test("detail pages are bounded to ten and Show more receives the next newest-first page", () => {
@@ -288,6 +292,8 @@ test("migration 019 accepts U and records held-source provenance without cascadi
   const migration = readFileSync("schema/migrations/019_con_osha_001b_inspection_details.sql", "utf8") as string;
   assert.match(migration, /viol_type IN \('S', 'W', 'R', 'O', 'U'\)/);
   assert.match(migration, /held_license_keys TEXT\[\]/);
+  assert.match(migration, /loadable_citation_rows INTEGER NOT NULL/);
+  assert.match(migration, /held_source_evidence JSONB NOT NULL/);
   assert.match(migration, /hold_reason TEXT/);
   assert.match(migration, /status TEXT NOT NULL DEFAULT 'received'/);
   assert.match(migration, /loaded_at TIMESTAMPTZ/);
