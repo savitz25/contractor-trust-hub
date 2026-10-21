@@ -1,7 +1,6 @@
 import React from "react";
 import {
   formatCitedPenalty,
-  OSHA_INSPECTION_LIST_STATUS,
   OSHA_LEGAL_DISCLAIMER,
   OSHA_MATCH_METHOD,
   OSHA_PENALTY_LABEL,
@@ -12,7 +11,6 @@ import {
 type Props = {
   records: OshaPublicRecord[];
   correctionHref: string;
-  detailsOpen?: boolean;
 };
 
 function HardHatIcon() {
@@ -33,11 +31,9 @@ function HardHatIcon() {
 function OshaSafetyRecordCard({
   record,
   correctionHref,
-  detailsOpen = false,
 }: {
   record: OshaPublicRecord;
   correctionHref: string;
-  detailsOpen?: boolean;
 }) {
   const stateName = record.state === "FL" ? "Florida" : "New Jersey";
   return (
@@ -45,7 +41,6 @@ function OshaSafetyRecordCard({
       data-testid="osha-safety-record"
       data-osha-state={record.state}
       data-osha-license={record.licenseKey}
-      data-osha-inspection-list={OSHA_INSPECTION_LIST_STATUS}
       className="max-w-full min-w-0 overflow-x-hidden rounded-xl border-2 border-amber-700 bg-amber-50 p-4 text-[#0A2540] sm:p-5"
     >
       <div className="flex min-w-0 items-start gap-3">
@@ -62,30 +57,6 @@ function OshaSafetyRecordCard({
         <span className="font-semibold">{OSHA_PENALTY_LABEL}</span>
         <span className="tabular-nums"> {formatCitedPenalty(record.currentPenalty)}</span>
       </p>
-      <details className="mt-4 max-w-full min-w-0" open={detailsOpen}>
-        <summary className="cursor-pointer break-words rounded-md font-semibold text-amber-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-800">
-          Inspection list blocked
-        </summary>
-        <div className="mt-3 max-w-full min-w-0 space-y-2 break-words text-sm leading-relaxed">
-          <p>
-            Per-inspection opening date, citation count, contest status, and final-order date are
-            not in the verified handoff. This pilot does not list OSHA activity numbers or
-            inspection links.
-          </p>
-          {record.nContested > 0 ? (
-            <p>
-              Source count of citation items that have a contest date: {record.nContested}. This is
-              not a per-inspection contested status.
-            </p>
-          ) : null}
-          {record.nWithFinalOrder > 0 ? (
-            <p>
-              Source count of citation items that have a final-order date: {record.nWithFinalOrder}.
-              The date is not in this extract.
-            </p>
-          ) : null}
-        </div>
-      </details>
       <p className="mt-4 break-words text-sm leading-relaxed">{OSHA_LEGAL_DISCLAIMER}</p>
       <p className="mt-3 break-words text-sm leading-relaxed">
         {OSHA_MATCH_METHOD}{" "}
@@ -100,7 +71,7 @@ function OshaSafetyRecordCard({
   );
 }
 
-export function OshaSafetyRecord({ records, correctionHref, detailsOpen = false }: Props) {
+export function OshaSafetyRecord({ records, correctionHref }: Props) {
   if (!records.length) return null;
   return (
     <div className="max-w-full min-w-0 space-y-4">
@@ -109,7 +80,6 @@ export function OshaSafetyRecord({ records, correctionHref, detailsOpen = false 
           key={`${record.state}-${record.licenseKey}`}
           record={record}
           correctionHref={correctionHref}
-          detailsOpen={detailsOpen}
         />
       ))}
     </div>

@@ -54,4 +54,6 @@ The activity numbers in this handoff are 6 to 9 digit integers. The public OSHA 
 
 `initial_penalty_amount` is stored and is not selected by the profile query.
 The profile shows `Cited penalty (current)` from `current_penalty_amount` only.
+The profile card shows the aggregate summary, that penalty label, the legal disclaimer, and the correction link.
+It does not render an inspection list, activity numbers, activity links, or contest and final-order counts.
 Absence of a row is not a clean record. The profile renders nothing.

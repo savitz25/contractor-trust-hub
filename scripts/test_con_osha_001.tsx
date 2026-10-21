@@ -29,7 +29,7 @@ const read = (path: string) => readFileSync(join(root, path), "utf8");
 function render(record: OshaPublicRecord | null, href = "/corrections?slug=cbc015082&license=CBC015082") {
   if (!record) return renderToStaticMarkup(React.createElement(OshaSafetyRecord, { records: [], correctionHref: href }));
   return renderToStaticMarkup(
-    React.createElement(OshaSafetyRecord, { records: [record], correctionHref: href, detailsOpen: true }),
+    React.createElement(OshaSafetyRecord, { records: [record], correctionHref: href }),
   );
 }
 
@@ -174,22 +174,31 @@ test("penalty, disclaimer, correction link, and prohibited language", () => {
   assert.doesNotMatch(html, /href="https?:/);
 });
 
-test("contested and final-order labels stay blocked without per-inspection facts", () => {
-  const withCounts = render(exact);
-  const withoutCounts = render(singleYear);
-  assert.match(withCounts, /Source count of citation items that have a contest date: 5/);
-  assert.match(withCounts, /Source count of citation items that have a final-order date: 5/);
-  assert.match(withCounts, /The date is not in this extract/);
-  assert.match(withCounts, /Inspection list blocked/);
-  assert.match(withCounts, /data-osha-inspection-list="blocked"/);
-  assert.doesNotMatch(withCounts, /Final order/i);
-  assert.doesNotMatch(withCounts, />\s*Contested\s*</);
-  assert.doesNotMatch(withoutCounts, /Source count of citation items that have a contest date/);
-  assert.doesNotMatch(withoutCounts, /Source count of citation items that have a final-order date/);
+test("aggregate card has no inspection expansion or source-gap copy", () => {
+  assert.ok(exact);
+  const html = render(exact);
   const card = read("components/contractor/OshaSafetyRecord.tsx");
-  assert.match(card, /<details/);
-  assert.match(card, /<summary/);
+  const preview = read("app/preview/osha-safety-record/page.tsx");
+  const aside = html.replace(OSHA_LEGAL_DISCLAIMER, "");
+  assert.match(html, /2 OSHA inspections \(1995\u20132002\)/);
+  assert.doesNotMatch(html, /<details|<summary/);
+  assert.doesNotMatch(html, /Inspection list blocked/);
+  assert.doesNotMatch(html, /handoff|activity number|inspection link/i);
+  assert.doesNotMatch(html, /1995-08-10|2002-03-22/);
+  assert.doesNotMatch(html, /osha\.gov|establishment\.inspection_detail/);
+  assert.doesNotMatch(aside, /contest/i);
+  assert.doesNotMatch(aside, /final[- ]order/i);
+  assert.doesNotMatch(card, /Inspection list blocked|<details|<summary|handoff|nContested|nWithFinalOrder/);
+  assert.match(preview, /Inspection-level details are not included in the current source handoff/);
+  assert.match(preview, /data-testid="osha-preview-source-limit"/);
+  assert.doesNotMatch(card, /data-testid="osha-preview-source-limit"/);
   assert.doesNotMatch(card, /matchMedia|useMediaQuery/);
+  assert.match(card, /overflow-x-hidden/);
+  for (const sample of OSHA_PREVIEW_SAMPLES) {
+    assert.match(sample.scenario, /aggregate totals/);
+    assert.match(sample.scenario, /Public-data fixture/);
+    assert.doesNotMatch(sample.scenario, /inspection row|inspection detail|verified inspection/i);
+  }
 });
 
 test("draft schema does not invent inspections or delete contractors", () => {

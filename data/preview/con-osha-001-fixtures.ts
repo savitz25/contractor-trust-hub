@@ -1,7 +1,9 @@
 import { toPublicOshaRecord, type OshaPublicRecord, type OshaSourceMatch } from "@/lib/osha/public-record";
 
 /**
- * Non-production look-and-feel fixtures. License-level totals only.
+ * Public-data-based, non-production fixtures. License-level totals only.
+ * License keys are the public license identifiers from the verified match file.
+ * They are not synthetic identities, and these rows are not inspection records.
  * No names, addresses, phones, emails, activity numbers, or initial penalties.
  */
 export type OshaPreviewSample = {
@@ -19,7 +21,8 @@ export const OSHA_PREVIEW_SAMPLES: OshaPreviewSample[] = [
     state: "FL",
     licenseKey: "CGC011008",
     matchTier: "exact",
-    scenario: "Florida exact match, two inspections, contest-date count, final-order-date count, current penalty",
+    scenario:
+      "Public-data fixture. Exact match with aggregate totals for two inspections. Source contains citation items with contest dates and final-order dates. Current penalty is present.",
     source: {
       licenseKey: "CGC011008",
       state: "FL",
@@ -39,7 +42,8 @@ export const OSHA_PREVIEW_SAMPLES: OshaPreviewSample[] = [
     state: "FL",
     licenseKey: "CUC056822",
     matchTier: "strong",
-    scenario: "Florida strong match, three inspections, contest-date count, final-order-date count, current penalty",
+    scenario:
+      "Public-data fixture. Strong match with aggregate totals for three inspections. Source contains citation items with contest dates and final-order dates. Current penalty is present.",
     source: {
       licenseKey: "CUC056822",
       state: "FL",
@@ -59,7 +63,8 @@ export const OSHA_PREVIEW_SAMPLES: OshaPreviewSample[] = [
     state: "FL",
     licenseKey: "CBC015628",
     matchTier: "exact",
-    scenario: "Florida exact match, one inspection in a single year, current penalty zero",
+    scenario:
+      "Public-data fixture. Exact match with aggregate totals for one inspection in a single year. Current penalty is zero.",
     source: {
       licenseKey: "CBC015628",
       state: "FL",
@@ -79,7 +84,8 @@ export const OSHA_PREVIEW_SAMPLES: OshaPreviewSample[] = [
     state: "NJ",
     licenseKey: "13VH05973500",
     matchTier: "exact",
-    scenario: "New Jersey exact match, two inspections, contest-date count, final-order-date count, current penalty",
+    scenario:
+      "Public-data fixture. Exact match with aggregate totals for two inspections. Source contains citation items with contest dates and final-order dates. Current penalty is present.",
     source: {
       licenseKey: "13VH05973500",
       state: "NJ",
@@ -99,7 +105,8 @@ export const OSHA_PREVIEW_SAMPLES: OshaPreviewSample[] = [
     state: "NJ",
     licenseKey: "13VH05660500",
     matchTier: "strong",
-    scenario: "New Jersey strong match, three inspections, final-order-date count, current penalty",
+    scenario:
+      "Public-data fixture. Strong match with aggregate totals for three inspections. Source contains citation items with final-order dates. Current penalty is present.",
     source: {
       licenseKey: "13VH05660500",
       state: "NJ",
@@ -119,7 +126,8 @@ export const OSHA_PREVIEW_SAMPLES: OshaPreviewSample[] = [
     state: "NJ",
     licenseKey: "13VH07505600",
     matchTier: "strong",
-    scenario: "New Jersey strong match, same-year inspections, contest-date count, no final-order-date count",
+    scenario:
+      "Public-data fixture. Strong match with aggregate totals for two inspections in one year. Source contains citation items with contest dates.",
     source: {
       licenseKey: "13VH07505600",
       state: "NJ",
