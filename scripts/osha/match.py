@@ -1,9 +1,11 @@
 """Parameterized exact / strong / weak OSHA identity match.
 
-Exact and strong require an identical normalized name. A 0.92 similar name
-stays weak. A comma-form person name without a company suffix is capped at weak.
-Strong also requires county_name to name a county in the Census crosswalk, and
-the OSHA site or mail ZIP to fall in that county. An OSHA row whose site state
+Exact and strong require an identical normalized name. A similar but unequal
+name is not a match. A comma-form person name without a company suffix is
+capped at weak. Strong compares the Census county of the OSHA ZIP with the
+stored license county_name. A blank or unrecognized county does not become
+strong, and the license ZIP is not used to invent one. Each license keeps
+only the activities at its single best tier. An OSHA row whose site state
 differs from the license state is ignored. No license is created for an
 unmatched inspection.
 """
@@ -11,35 +13,25 @@ unmatched inspection.
 from __future__ import annotations
 
 from collections import defaultdict
-from difflib import SequenceMatcher
 
 from scripts.osha.crosswalk import Crosswalk
 from scripts.osha.normalize import (
+    SUFFIX_RE,
     activity_number,
+    county_key,
     display_name,
     iso_date,
     is_person_name,
     normalize_name,
-    suffix_pattern,
     zip5,
-    county_key,
 )
 from scripts.osha.states import STATES
 
 RANK = {"exact": 3, "strong": 2, "weak": 1}
-SIMILARITY = 0.92
-
-
-def _similar(left: str, right: str) -> bool:
-    if left == right:
-        return True
-    shortest, longest = (left, right) if len(left) <= len(right) else (right, left)
-    if len(shortest) < 0.851 * len(longest):
-        return False
-    matcher = SequenceMatcher(None, left, right)
-    if matcher.real_quick_ratio() < SIMILARITY or matcher.quick_ratio() < SIMILARITY:
-        return False
-    return matcher.ratio() >= SIMILARITY
+PUBLIC_TIERS = frozenset({"exact", "strong"})
+FUZZY_MATCHING = False
+LICENSE_ZIP_CAN_INFER_COUNTY = False
+BEST_TIER_ONLY = True
 
 
 def _money(value: str) -> float:
@@ -64,11 +56,8 @@ def _license_counties(license_row: dict, crosswalk: Crosswalk, state: str) -> se
 def _classify(license_row: dict, inspection: dict, counties: set[str], crosswalk: Crosswalk, state: str) -> str | None:
     if inspection["site_state"] != state:
         return None
-    same_name = license_row["norm_name"] == inspection["norm_name"]
-    if not same_name:
-        if not _similar(license_row["norm_name"], inspection["norm_name"]):
-            return None
-        return "weak"
+    if license_row["norm_name"] != inspection["norm_name"]:
+        return None
     license_zip = license_row["zip"]
     if license_zip and license_zip in (inspection["site_zip"], inspection["mail_zip"]):
         return "exact"
@@ -82,13 +71,16 @@ def _classify(license_row: dict, inspection: dict, counties: set[str], crosswalk
 
 def _prepare_licenses(rows: list[dict], state: str) -> list[dict]:
     spec = STATES[state]
-    suffix_re = suffix_pattern(spec["name_tokens"])
     prepared = []
     for row in rows:
         if (row.get("source_system") or "") != spec["source_system"]:
             continue
-        shown = display_name(row.get("dba_name_raw") or "", row.get("licensee_name_raw") or "")
-        norm = normalize_name(shown, suffix_re)
+        shown = display_name(
+            row.get("dba_name_raw") or "",
+            row.get("licensee_name_raw") or "",
+            spec["source_system"],
+        )
+        norm = normalize_name(shown, SUFFIX_RE)
         if len(norm) < 4:
             continue
         prepared.append(
@@ -100,13 +92,13 @@ def _prepare_licenses(rows: list[dict], state: str) -> list[dict]:
                 "norm_name": norm,
                 "zip": zip5(row.get("postal_code") or ""),
                 "county_name": (row.get("county_name") or "").strip(),
-                "person": is_person_name(shown, suffix_re),
+                "person": is_person_name(shown, SUFFIX_RE),
             }
         )
     return prepared
 
 
-def _prepare_inspections(rows: list[dict], state: str, suffix_re) -> tuple[list[dict], int]:
+def _prepare_inspections(rows: list[dict], state: str) -> tuple[list[dict], int]:
     by_activity: dict[str, dict] = {}
     duplicates = 0
     for row in rows:
@@ -116,7 +108,7 @@ def _prepare_inspections(rows: list[dict], state: str, suffix_re) -> tuple[list[
         activity = activity_number(row.get("activity_nr") or row.get("ACTIVITY_NR") or "")
         if not activity:
             continue
-        name = normalize_name(row.get("estab_name") or row.get("ESTAB_NAME") or "", suffix_re)
+        name = normalize_name(row.get("estab_name") or row.get("ESTAB_NAME") or "", SUFFIX_RE)
         if len(name) < 4:
             continue
         prepared = {
@@ -147,6 +139,18 @@ def _violation_index(rows: list[dict]) -> dict[str, list[dict]]:
     return grouped
 
 
+def distinct_public_activities(matches: list[dict]) -> set[str]:
+    """Distinct ACTIVITY_NR values on exact and strong rows."""
+    found: set[str] = set()
+    for row in matches:
+        if row.get("match_tier") not in PUBLIC_TIERS:
+            continue
+        for activity in str(row.get("osha_activity_nrs") or "").split(";"):
+            if activity:
+                found.add(activity)
+    return found
+
+
 def match_state(
     state: str,
     licenses: list[dict],
@@ -157,21 +161,13 @@ def match_state(
     if state not in STATES:
         raise KeyError(state)
     spec = STATES[state]
-    suffix_re = suffix_pattern(spec["name_tokens"])
     prepared_licenses = _prepare_licenses(licenses, state)
-    prepared_inspections, duplicate_inspections = _prepare_inspections(inspections, state, suffix_re)
+    prepared_inspections, duplicate_inspections = _prepare_inspections(inspections, state)
     violations_by_activity = _violation_index(violations)
     by_name: dict[str, list[dict]] = defaultdict(list)
-    unique_names_by_prefix: dict[str, list[str]] = defaultdict(list)
-    seen_names: set[tuple[str, str]] = set()
     by_activity = {inspection["activity_nr"]: inspection for inspection in prepared_inspections}
     for inspection in prepared_inspections:
         by_name[inspection["norm_name"]].append(inspection)
-        prefix = inspection["norm_name"][:4]
-        marker = (prefix, inspection["norm_name"])
-        if marker not in seen_names:
-            seen_names.add(marker)
-            unique_names_by_prefix[prefix].append(inspection["norm_name"])
     licenses_by_name: dict[str, list[dict]] = defaultdict(list)
     for license_row in prepared_licenses:
         licenses_by_name[license_row["norm_name"]].append(license_row)
@@ -184,10 +180,6 @@ def match_state(
         checked_names += 1
         if checked_names % 5000 == 0:
             print("PROGRESS", state, checked_names, name_total, flush=True)
-        fuzzy_rows = []
-        for other_name in unique_names_by_prefix.get(norm_name[:4], ()):
-            if other_name != norm_name and _similar(norm_name, other_name):
-                fuzzy_rows.extend(by_name[other_name])
         same_rows = by_name.get(norm_name, ())
         for license_row in group:
             counties = _license_counties(license_row, crosswalk, state)
@@ -196,9 +188,6 @@ def match_state(
                 tier = _classify(license_row, inspection, counties, crosswalk, state)
                 if tier:
                     hits[inspection["activity_nr"]] = tier
-            for inspection in fuzzy_rows:
-                if inspection["activity_nr"] not in hits:
-                    hits[inspection["activity_nr"]] = "weak"
             if license_row["person"]:
                 hits = {activity: "weak" for activity in hits}
             if not hits:
@@ -246,6 +235,7 @@ def match_state(
         "state": state,
         "source_system": spec["source_system"],
         "licenses_considered": len(prepared_licenses),
+        "person_licenses_considered": sum(row["person"] for row in prepared_licenses),
         "inspections_in_state": len(prepared_inspections),
         "duplicate_inspection_rows": duplicate_inspections,
         "unparsed_open_dates": unparsed_dates,

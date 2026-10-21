@@ -5,46 +5,27 @@ from __future__ import annotations
 import re
 from datetime import datetime
 
-COMMON_SUFFIXES = (
-    "LLC",
-    "L L C",
-    "INC",
-    "INCORPORATED",
-    "CORP",
-    "CORPORATION",
-    "CO",
-    "COMPANY",
-    "LTD",
-    "LLP",
-    "PA",
-    "PLLC",
-    "THE",
-    "OF",
-    "AND",
-    "DBA",
+# Executable suffix contract from CON-OSHA-001 match_fl.py and match_nj.py.
+# FL and FLORIDA are the only state tokens. Other state names stay in the name.
+ORIGINAL_SUFFIX = (
+    r"\b(LLC|L L C|INC|INCORPORATED|CORP|CORPORATION|CO|COMPANY|LTD|LLP|PA|PLLC|THE|OF|AND|DBA|FL|FLORIDA)\b"
 )
+SUFFIX_RE = re.compile(ORIGINAL_SUFFIX)
+CA_SOURCE_SYSTEM = "ca_cslb"
+CA_NAME_SOURCE = "licensee_name_raw"
 
 _DROP_COUNTY_WORDS = {"COUNTY", "PARISH", "BOROUGH", "CENSUS", "AREA"}
 _EMPTY_DATES = {"", "NAT", "NONE", "NULL", "0", "00000000"}
 
 
-def suffix_pattern(extra_tokens: tuple[str, ...]) -> re.Pattern[str]:
-    tokens = list(COMMON_SUFFIXES)
-    for token in extra_tokens:
-        if token not in tokens:
-            tokens.append(token)
-    body = "|".join(re.escape(token) for token in tokens)
-    return re.compile(rf"\b(?:{body})\b")
-
-
-def normalize_name(value: str, suffix_re: re.Pattern[str]) -> str:
+def normalize_name(value: str, suffix_re: re.Pattern[str] = SUFFIX_RE) -> str:
     text = (value or "").upper().replace("&", " AND ")
     text = re.sub(r"[^A-Z0-9 ]", " ", text)
     text = suffix_re.sub(" ", text)
     return " ".join(text.split())
 
 
-def is_person_name(value: str, suffix_re: re.Pattern[str]) -> bool:
+def is_person_name(value: str, suffix_re: re.Pattern[str] = SUFFIX_RE) -> bool:
     """Cap comma-form personal names that do not carry a company suffix."""
     text = value or ""
     if "," not in text:
@@ -116,8 +97,10 @@ ENTITY_TYPE_LABELS = {
 }
 
 
-def display_name(dba_name: str, licensee_name: str) -> str:
-    """Prefer a real DBA. An entity-type label is not a business name."""
+def display_name(dba_name: str, licensee_name: str, source_system: str = "") -> str:
+    """Use the licensee name for ca_cslb. Otherwise prefer a real DBA."""
+    if source_system == CA_SOURCE_SYSTEM:
+        return (licensee_name or "").strip()
     dba = (dba_name or "").strip()
     label = " ".join(dba.upper().replace("-", " ").split())
     if dba and label not in ENTITY_TYPE_LABELS:

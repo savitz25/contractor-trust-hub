@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 STATES = {
-    "VA": {"source_system": "va_dpor", "name_tokens": ("VA", "VIRGINIA"), "fips": "51"},
-    "AZ": {"source_system": "az_roc", "name_tokens": ("AZ", "ARIZONA"), "fips": "04"},
-    "NV": {"source_system": "nv_nscb", "name_tokens": ("NV", "NEVADA"), "fips": "32"},
-    "LA": {"source_system": "la_lslbc", "name_tokens": ("LA", "LOUISIANA"), "fips": "22"},
-    "CA": {"source_system": "ca_cslb", "name_tokens": ("CA", "CALIFORNIA"), "fips": "06"},
+    "VA": {"source_system": "va_dpor", "fips": "51"},
+    "AZ": {"source_system": "az_roc", "fips": "04"},
+    "NV": {"source_system": "nv_nscb", "fips": "32"},
+    "LA": {"source_system": "la_lslbc", "fips": "22"},
+    "CA": {"source_system": "ca_cslb", "fips": "06"},
 }
 
 STATE_ORDER = ("VA", "AZ", "NV", "LA", "CA")

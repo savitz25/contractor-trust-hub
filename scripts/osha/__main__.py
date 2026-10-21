@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 from collections import Counter
 from pathlib import Path
 
 from scripts.osha.crosswalk import load_crosswalk
-from scripts.osha.match import match_state
+from scripts.osha.match import distinct_public_activities, match_state
 from scripts.osha.package import package_bytes, sha256_bytes, spot_bytes, spot_rows
 from scripts.osha.states import STATE_ORDER
 
@@ -21,7 +22,8 @@ def _read_csv(path: Path) -> list[dict]:
 
 def _summarize(result: dict) -> dict:
     counts = Counter(row["match_tier"] for row in result["matches"])
-    inspections = sum(row["n_inspections"] for row in result["matches"] if row["match_tier"] in {"exact", "strong"})
+    inspections = len(distinct_public_activities(result["matches"]))
+    person_rows = sum(row["person_name_licensee"] == "yes" for row in result["matches"])
     in_state = Counter()
     for row in result["matches"]:
         if row["mailing_state"] == row["state"]:
@@ -30,6 +32,8 @@ def _summarize(result: dict) -> dict:
         "state": result["state"],
         "source_system": result["source_system"],
         "licenses_considered": result["licenses_considered"],
+        "person_licenses_considered": result["person_licenses_considered"],
+        "person_capped_rows": person_rows,
         "inspections_in_state": result["inspections_in_state"],
         "duplicate_inspection_rows": result["duplicate_inspection_rows"],
         "exact": counts["exact"],
@@ -56,12 +60,17 @@ def main() -> None:
     licenses = _read_csv(args.licenses)
     inspections = _read_csv(args.inspections)
     violations = _read_csv(args.violations)
+    crosswalk_bytes = args.crosswalk.read_bytes()
+    crosswalk_sha = hashlib.sha256(crosswalk_bytes).hexdigest()
     crosswalk = load_crosswalk(args.crosswalk)
+    print("CROSSWALK_SHA", crosswalk_sha)
     print("CROSSWALK_ROWS", crosswalk.rows)
     summaries = []
+    public_activities: set[str] = set()
     for state in STATE_ORDER:
         print("MATCHING", state)
         result = match_state(state, licenses, inspections, violations, crosswalk)
+        public_activities.update(distinct_public_activities(result["matches"]))
         payload = package_bytes(result["matches"])
         package_path = args.out_dir / f"{state}-osha-match-package.csv"
         package_path.write_bytes(payload)
@@ -80,12 +89,18 @@ def main() -> None:
             summary["strong"],
             summary["weak"],
             summary["inspections_exact_strong"],
+            summary["person_capped_rows"],
             digest,
         )
     receipt = {
+        "fuzzy_matching": False,
+        "license_zip_can_infer_county": False,
+        "ca_name_source": "licensee_name_raw",
+        "best_tier_only": True,
+        "crosswalk_sha256": crosswalk_sha,
         "states": summaries,
         "total_exact_strong": sum(item["exact"] + item["strong"] for item in summaries),
-        "total_inspections": sum(item["inspections_exact_strong"] for item in summaries),
+        "total_distinct_inspections": len(public_activities),
     }
     receipt_path = args.out_dir / "match-receipt.json"
     receipt_path.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
