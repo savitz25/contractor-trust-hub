@@ -9,7 +9,7 @@ import {
   type OshaInspectionDetail,
   type OshaInspectionDetailsPage,
 } from "@/lib/osha/inspection-details";
-import { formatCitedPenalty } from "@/lib/osha/public-record";
+import { formatCurrentCitedPenalty } from "@/lib/osha/public-record";
 
 type Props = {
   fixtureId?: string;
@@ -156,7 +156,7 @@ function Inspection({
                     </div>
                     <div>
                       <dt className="inline font-medium">Cited penalty (current): </dt>
-                      <dd className="inline tabular-nums">{formatCitedPenalty(citation.currentPenalty)}</dd>
+                      <dd className="inline tabular-nums">{formatCurrentCitedPenalty(citation.currentPenalty)}</dd>
                     </div>
                     {status ? (
                       <div className="sm:col-span-2">

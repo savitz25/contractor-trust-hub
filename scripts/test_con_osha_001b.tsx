@@ -22,13 +22,19 @@ import {
   formatOshaCitationStatus,
   formatOshaInspectionStatus,
 } from "../lib/osha/inspection-details";
-import { OSHA_LEGAL_DISCLAIMER, OSHA_MATCH_METHOD } from "../lib/osha/public-record";
+import { formatCurrentCitedPenalty, OSHA_LEGAL_DISCLAIMER, OSHA_MATCH_METHOD } from "../lib/osha/public-record";
 import { toPublicOshaRecord } from "../lib/osha/public-record";
 import { isOshaDetailEnabled } from "../lib/osha/flag";
 
 const citedFixture = getOshaDetailPreviewFixture("public-citations");
 const zeroFixture = getOshaDetailPreviewFixture("public-zero");
 const manyFixture = getOshaDetailPreviewFixture("pagination-demo");
+
+test("missing current penalty renders a dash while explicit zero renders $0", () => {
+  assert.equal(formatCurrentCitedPenalty(null), "—");
+  assert.equal(formatCurrentCitedPenalty(undefined), "—");
+  assert.equal(formatCurrentCitedPenalty(0), "$0");
+});
 
 function renderPreview(fixtureId: string) {
   const fixture = getOshaDetailPreviewFixture(fixtureId);
@@ -244,13 +250,15 @@ test("detail feature flag defaults off and only enables on an explicit on value"
   assert.match(loader, /match_tier IN \('exact', 'strong'\)/);
   assert.match(loader, /OSHA_DETAIL_HELD_LICENSE_KEYS\.has\(`\$\{input\.state\}:\$\{input\.licenseKey\}`\)/);
   assert.match(loader, /id = \$1::uuid AND contractor_id = \$2::uuid AND state = \$3 AND license_key = \$4/);
-  assert.match(loader, /public_match_id = \$1::uuid AND contractor_id = \$2::uuid/);
+  assert.match(loader, /contractor_osha_match_inspections b ON b\.inspection_id = i\.id/);
+  assert.match(loader, /b\.public_match_id = \$1::uuid AND b\.contractor_id = \$2::uuid/);
   assert.match(loader, /activity_nr = ANY\(string_to_array/);
-  assert.match(loader, /ORDER BY open_date DESC NULLS LAST, activity_nr DESC/);
+  assert.match(loader, /ORDER BY i\.open_date DESC NULLS LAST, i\.activity_nr DESC/);
   assert.match(loader, /LIMIT \$9/);
   assert.doesNotMatch(loader, /OFFSET/);
-  assert.match(loader, /contest_date: string \| null; final_order_date: string \| null/);
-  assert.match(loader, /to_char\(open_date, 'YYYY-MM-DD'\) AS open_date/);
+  assert.match(loader, /current_penalty: string \| number \| null; contest_date: string \| null/);
+  assert.match(loader, /currentPenalty: citation\.current_penalty == null \? null : Number/);
+  assert.match(loader, /to_char\(i\.open_date, 'YYYY-MM-DD'\) AS open_date/);
   assert.match(loader, /to_char\(c\.final_order_date, 'YYYY-MM-DD'\) AS final_order_date/);
   assert.doesNotMatch(loader, /initial_penalty|delete_flag|weak_match|contractor_osha_identity_review/);
   assert.doesNotMatch(loader, /informal settlement/i);
@@ -319,7 +327,7 @@ test("inspection cursors encode the stable date and activity-number key", () => 
 test("draft detail schema is restricted, scoped, and uses no cascades", () => {
   const migration = readFileSync("schema/migrations/019_con_osha_001b_inspection_details.sql", "utf8") as string;
   const rollback = readFileSync("schema/rollback/019_con_osha_001b_inspection_details.rollback.sql", "utf8") as string;
-  for (const table of ["contractor_osha_inspections", "contractor_osha_citations", "osha_detail_load_receipts"]) {
+  for (const table of ["contractor_osha_inspections", "contractor_osha_citations", "contractor_osha_match_inspections", "osha_detail_load_receipts"]) {
     assert.match(migration, new RegExp(`CREATE TABLE IF NOT EXISTS ${table}`));
     assert.match(migration, new RegExp(`ALTER TABLE ${table} ENABLE ROW LEVEL SECURITY`));
     assert.match(migration, new RegExp(`REVOKE ALL ON ${table} FROM PUBLIC`));
@@ -329,6 +337,9 @@ test("draft detail schema is restricted, scoped, and uses no cascades", () => {
   assert.doesNotMatch(migration, /ON DELETE CASCADE/i);
   assert.match(migration, /UNIQUE \(public_match_id, activity_nr\)/);
   assert.match(migration, /UNIQUE \(inspection_id, citation_id\)/);
+  assert.match(migration, /activity_nr TEXT NOT NULL UNIQUE/);
+  assert.match(migration, /CREATE TABLE IF NOT EXISTS contractor_osha_match_inspections/);
+  assert.doesNotMatch(migration.match(/CREATE TABLE IF NOT EXISTS contractor_osha_inspections \(([\s\S]*?)\n\);/)?.[1] ?? "", /public_match_id/);
   assert.match(rollback, /DO NOT EXECUTE/);
   assert.doesNotMatch(rollback, /DROP TABLE[^\n]*CASCADE/i);
 });

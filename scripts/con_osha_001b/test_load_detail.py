@@ -84,16 +84,14 @@ class DetailLoaderContractTests(unittest.TestCase):
         Path(os.environ.get("CON_OSHA_001B_HANDOFF_DIR", r"C:\TrustHub-Work\osha-con-osha-001b-detail-handoff")).is_dir(),
         "B2 external scoped handoff is unavailable",
     )
-    def test_delivered_package_full_dry_run_contract(self):
+    def test_delivered_package_is_verified_but_local_match_csv_is_not_load_scope(self):
         handoff = Path(os.environ.get("CON_OSHA_001B_HANDOFF_DIR", r"C:\TrustHub-Work\osha-con-osha-001b-detail-handoff"))
-        _, _, allowlist, matches = load_detail.verify_handoff(handoff)
+        _, _, _receipt_allowlist, matches = load_detail.verify_handoff(handoff)
         source = load_detail.read_sources(handoff / "scoped/inspections.csv", handoff / "scoped/citations.csv")
-        eligible, counts = load_detail.validate_matches(matches, source, allowlist)
+        self.assertEqual(matches, [])
         self.assertEqual(len(source.inspections), 17_534)
         self.assertEqual(len(source.citations), 29_559)
-        self.assertEqual(len(eligible), 10_576)
-        self.assertEqual(counts["public_match_inspection_attachments"], 25_930)
-        self.assertEqual(counts["public_match_citation_attachments"], 41_685)
+        self.assertEqual(len(source.unique_activities), 17_534)
 
     def test_six_receipt_acceptance_profile_totals_are_preserved(self):
         self.assertEqual(load_detail.ACCEPTANCE_PROFILE_EXPECTATIONS, {
@@ -110,7 +108,8 @@ class DetailLoaderContractTests(unittest.TestCase):
         self.assertNotRegex(source, r"(?i)UPDATE\s+contractor_osha_license_matches")
         self.assertNotRegex(source, r"(?i)INSERT\s+INTO\s+contractors\b")
         self.assertNotRegex(source, r"(?i)INSERT\s+INTO\s+licenses\b")
-        self.assertIn("ON CONFLICT (public_match_id, activity_nr) DO NOTHING", source)
+        self.assertIn("ON CONFLICT (activity_nr) DO NOTHING", source)
+        self.assertIn("ON CONFLICT (public_match_id, inspection_id) DO NOTHING", source)
         self.assertIn("ON CONFLICT (inspection_id, citation_id) DO NOTHING", source)
         self.assertIn("_verify_loaded_reconciliation(cur, eligible, shape)", source)
         self.assertIn("SET status = 'loaded', loaded_at = now()", source)
@@ -121,6 +120,12 @@ class DetailLoaderContractTests(unittest.TestCase):
         self.assertIn(load_detail.COMBINED_SOURCE_SHA256, rollback)
         self.assertNotRegex(rollback, r"(?i)DELETE\s+FROM\s+(contractors|licenses|contractor_osha_license_matches|contractor_osha_identity_review|osha_load_receipts)")
         self.assertNotIn("ON DELETE CASCADE", rollback.upper())
+
+    def test_live_match_query_is_authoritative_and_local_match_csv_is_not_parsed(self):
+        source = Path(load_detail.__file__).read_text(encoding="utf-8")
+        self.assertIn("WHERE state IN ('FL', 'NJ') AND match_tier IN ('exact', 'strong')", source)
+        self.assertIn("live published-match scope is required", source)
+        self.assertNotIn('"published_matches.csv", {', source)
 
 
 if __name__ == "__main__":

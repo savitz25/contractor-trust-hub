@@ -23,7 +23,7 @@ type InspectionRow = QueryResultRow & {
 };
 type CitationRow = QueryResultRow & {
   inspection_id: string; citation_id: string; standard: string; viol_type: "S" | "W" | "R" | "O" | "U";
-  current_penalty: string | number; contest_date: string | null; final_order_date: string | null;
+  current_penalty: string | number | null; contest_date: string | null; final_order_date: string | null;
 };
 
 const CITATION_TYPE = { S: "Serious", W: "Willful", R: "Repeat", O: "Other", U: "Unclassified" } as const;
@@ -65,9 +65,10 @@ export async function loadPublicOshaInspectionDetails(input: {
     `SELECT count(*)::text AS count
        FROM contractor_osha_citations c
        JOIN contractor_osha_inspections i ON i.id = c.inspection_id
-       JOIN contractor_osha_license_matches m ON m.id = i.public_match_id
-      WHERE i.public_match_id = $1::uuid AND i.contractor_id = $2::uuid
-        AND i.state = $3 AND i.license_key = $4
+       JOIN contractor_osha_match_inspections b ON b.inspection_id = i.id
+       JOIN contractor_osha_license_matches m ON m.id = b.public_match_id
+      WHERE b.public_match_id = $1::uuid AND b.contractor_id = $2::uuid
+        AND b.state = $3 AND b.license_key = $4
         AND c.activity_nr = i.activity_nr
         AND i.activity_nr = ANY(string_to_array(replace(m.osha_activity_nrs, ' ', ''), ';'))`,
     [match.id, input.contractorId, input.state, input.licenseKey],
@@ -82,29 +83,31 @@ export async function loadPublicOshaInspectionDetails(input: {
   }
 
   const rows = await query<InspectionRow>(
-    `SELECT id, activity_nr, to_char(open_date, 'YYYY-MM-DD') AS open_date,
-            site_city, site_state, inspection_type,
-            to_char(close_date, 'YYYY-MM-DD') AS close_date,
-            to_char(closing_conference_date, 'YYYY-MM-DD') AS closing_conference_date,
-            citations_verified
-       FROM contractor_osha_inspections
-      WHERE public_match_id = $1::uuid AND contractor_id = $2::uuid
-        AND state = $3 AND license_key = $4
-        AND activity_nr = ANY(string_to_array(replace($5::text, ' ', ''), ';'))
+    `SELECT i.id, i.activity_nr, to_char(i.open_date, 'YYYY-MM-DD') AS open_date,
+            i.site_city, i.site_state, i.inspection_type,
+            to_char(i.close_date, 'YYYY-MM-DD') AS close_date,
+            to_char(i.closing_conference_date, 'YYYY-MM-DD') AS closing_conference_date,
+            i.citations_verified
+       FROM contractor_osha_inspections i
+       JOIN contractor_osha_match_inspections b ON b.inspection_id = i.id
+      WHERE b.public_match_id = $1::uuid AND b.contractor_id = $2::uuid
+        AND b.state = $3 AND b.license_key = $4
+        AND i.activity_nr = ANY(string_to_array(replace($5::text, ' ', ''), ';'))
         AND (
           NOT $6::boolean
-          OR ($7::date IS NOT NULL AND (open_date < $7::date OR (open_date = $7::date AND activity_nr < $8::text) OR open_date IS NULL))
-          OR ($7::date IS NULL AND open_date IS NULL AND activity_nr < $8::text)
+          OR ($7::date IS NOT NULL AND (i.open_date < $7::date OR (i.open_date = $7::date AND i.activity_nr < $8::text) OR i.open_date IS NULL))
+          OR ($7::date IS NULL AND i.open_date IS NULL AND i.activity_nr < $8::text)
         )
-      ORDER BY open_date DESC NULLS LAST, activity_nr DESC
+      ORDER BY i.open_date DESC NULLS LAST, i.activity_nr DESC
       LIMIT $9`,
     [match.id, input.contractorId, input.state, input.licenseKey, matches[0].osha_activity_nrs, cursor !== null, cursor?.openDate ?? null, cursor?.activityNumber ?? null, OSHA_INSPECTION_DETAILS_PAGE_SIZE + 1],
   );
   const inspectionCounts = await query<QueryResultRow & { count: string }>(
-    `SELECT count(*)::text AS count FROM contractor_osha_inspections
-      WHERE public_match_id = $1::uuid AND contractor_id = $2::uuid
-        AND state = $3 AND license_key = $4
-        AND activity_nr = ANY(string_to_array(replace($5::text, ' ', ''), ';'))`,
+    `SELECT count(*)::text AS count FROM contractor_osha_inspections i
+       JOIN contractor_osha_match_inspections b ON b.inspection_id = i.id
+      WHERE b.public_match_id = $1::uuid AND b.contractor_id = $2::uuid
+        AND b.state = $3 AND b.license_key = $4
+        AND i.activity_nr = ANY(string_to_array(replace($5::text, ' ', ''), ';'))`,
     [match.id, input.contractorId, input.state, input.licenseKey, matches[0].osha_activity_nrs],
   );
   const hasMore = rows.length > OSHA_INSPECTION_DETAILS_PAGE_SIZE;
@@ -116,9 +119,10 @@ export async function loadPublicOshaInspectionDetails(input: {
             to_char(c.final_order_date, 'YYYY-MM-DD') AS final_order_date
        FROM contractor_osha_citations c
        JOIN contractor_osha_inspections i ON i.id = c.inspection_id
-       JOIN contractor_osha_license_matches m ON m.id = i.public_match_id
-      WHERE c.inspection_id = ANY($1::uuid[]) AND i.public_match_id = $2::uuid
-        AND i.contractor_id = $3::uuid AND i.state = $4 AND i.license_key = $5
+       JOIN contractor_osha_match_inspections b ON b.inspection_id = i.id
+       JOIN contractor_osha_license_matches m ON m.id = b.public_match_id
+      WHERE c.inspection_id = ANY($1::uuid[]) AND b.public_match_id = $2::uuid
+        AND b.contractor_id = $3::uuid AND b.state = $4 AND b.license_key = $5
         AND c.activity_nr = i.activity_nr
         AND i.activity_nr = ANY(string_to_array(replace(m.osha_activity_nrs, ' ', ''), ';'))
       ORDER BY c.inspection_id, c.citation_id`,
@@ -131,7 +135,7 @@ export async function loadPublicOshaInspectionDetails(input: {
       citationId: citation.citation_id,
       standard: citation.standard,
       citationType: CITATION_TYPE[citation.viol_type],
-      currentPenalty: Number(citation.current_penalty),
+      currentPenalty: citation.current_penalty == null ? null : Number(citation.current_penalty),
       contestDate: citation.contest_date,
       finalOrderDate: citation.final_order_date,
     });

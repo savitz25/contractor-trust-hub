@@ -11,7 +11,7 @@ export type OshaCitationDetail = {
   citationId: string;
   standard: string;
   citationType: OshaCitationType;
-  currentPenalty: number;
+  currentPenalty: number | null;
   contestDate?: string | null;
   finalOrderDate?: string | null;
 };

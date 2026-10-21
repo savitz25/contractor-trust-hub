@@ -135,6 +135,10 @@ export function formatCitedPenalty(amount: number): string {
   }).format(amount);
 }
 
+export function formatCurrentCitedPenalty(amount: number | null | undefined): string {
+  return amount == null ? "—" : formatCitedPenalty(amount);
+}
+
 /** Exact and strong only. Drops placeholder tiers, other states, and unsupported inspection fields. */
 export function toPublicOshaRecord(input: OshaSourceMatch): OshaPublicRecord | null {
   const state = input.state.trim().toUpperCase();

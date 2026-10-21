@@ -155,23 +155,9 @@ def verify_handoff(root: Path) -> tuple[dict[str, object], dict[str, object], fr
     if len(allowlist) != EXPECTED_ACTIVITIES or len(allowlist_lines) != EXPECTED_ACTIVITIES:
         raise LoadError("activity allowlist does not contain 17,534 unique activity numbers")
 
-    match_rows = _rows(root / "allowlist/published_matches.csv", {
-        "match_id", "contractor_id", "license_key", "state", "match_tier", "n_inspections",
-        "first_open", "last_open", "n_citation_items", "n_serious", "n_willful_repeat",
-        "current_penalty_amount", "n_with_final_order", "n_contested", "osha_activity_nrs",
-    })
-    matches = [Match(
-        match_id=row["match_id"], contractor_id=row["contractor_id"], state=row["state"],
-        license_key=row["license_key"], tier=row["match_tier"], activities=_activity_list(row["osha_activity_nrs"]),
-        n_inspections=int(row["n_inspections"]), n_citation_items=int(row["n_citation_items"]),
-        n_serious=int(row["n_serious"]), n_willful_repeat=int(row["n_willful_repeat"]),
-        current_penalty_amount=int(row["current_penalty_amount"]), n_with_final_order=int(row["n_with_final_order"]),
-        n_contested=int(row["n_contested"]), first_open=_parse_date(row["first_open"], "first_open"),
-        last_open=_parse_date(row["last_open"], "last_open"),
-    ) for row in match_rows]
-    if len(matches) != 10_578:
-        raise LoadError(f"published match file row count mismatch: {len(matches)}")
-    return manifest, receipt, allowlist, matches
+    # The local match CSV is retained and hash-verified as receipt evidence only.
+    # Load scope MUST come from live contractor_osha_license_matches rows.
+    return manifest, receipt, allowlist, []
 
 
 def _rows(path: Path, required: set[str]) -> list[dict[str, str]]:
@@ -206,6 +192,10 @@ def _money(value: str, field: str) -> Decimal:
     if not result.is_finite() or result < 0 or result.as_tuple().exponent < -2:
         raise LoadError(f"invalid {field}: {value!r}")
     return result.quantize(Decimal("0.01"))
+
+
+def _optional_money(value: str, field: str) -> Decimal | None:
+    return _money(value, field) if value.strip() else None
 
 
 @dataclass(frozen=True)
@@ -284,7 +274,8 @@ def read_sources(inspection_path: Path, violation_path: Path) -> SourceSet:
         if activity not in inspection_by_activity:
             raise LoadError(f"public citation has no allow-listed inspection: {activity}")
         public_citation_type(row["viol_type"])
-        row["current_penalty"] = str(_money(row["current_penalty"], "current_penalty"))
+        penalty = _optional_money(row["current_penalty"], "current_penalty")
+        row["current_penalty"] = str(penalty) if penalty is not None else ""
         row["initial_penalty"] = str(_money(row["initial_penalty"], "initial_penalty"))
         _parse_date(row["contest_date"], "contest_date")
         _parse_date(row["final_order_date"], "final_order_date")
@@ -306,7 +297,10 @@ def _expected_metrics(match: Match, source: SourceSet) -> dict[str, object]:
     citations = [row for activity in match.activities for row in source.citations_by_activity.get(activity, ())]
     dates = [_parse_date(row["open_date"], "open_date") for row in inspections]
     dates = [item for item in dates if item is not None]
-    current_penalty = sum((_money(row["current_penalty"], "current_penalty") for row in citations), Decimal("0.00"))
+    current_penalty = sum((
+        _optional_money(row["current_penalty"], "current_penalty") or Decimal("0.00")
+        for row in citations
+    ), Decimal("0.00"))
     return {
         "n_inspections": len(inspections),
         "n_citation_items": len(citations),
@@ -336,6 +330,17 @@ def validate_matches(
     by_key = {(match.state, match.license_key): match for match in matches}
     if len(by_key) != len(matches) or len(matches) != 10_578:
         raise LoadError(f"published match count or license-key uniqueness mismatch: {len(matches)}")
+    profiles_by_state = {state: [row for row in matches if row.state == state] for state in ("FL", "NJ")}
+    if {state: len(rows) for state, rows in profiles_by_state.items()} != {"FL": 7_846, "NJ": 2_732}:
+        raise LoadError("live published profile counts differ from FL/NJ source receipt")
+    activities_by_state = {
+        state: set().union(*(row.activities for row in rows)) if rows else set()
+        for state, rows in profiles_by_state.items()
+    }
+    if {state: len(items) for state, items in activities_by_state.items()} != {"FL": 12_339, "NJ": 5_195}:
+        raise LoadError("live distinct inspection counts differ from FL/NJ source receipt")
+    if activities_by_state["FL"] & activities_by_state["NJ"]:
+        raise LoadError("an OSHA activity number is assigned to multiple state scopes")
     held_rows = {match.license_key for match in matches if match.state == "FL" and match.license_key in HELD_LICENSES}
     if held_rows != HELD_LICENSES:
         raise LoadError("required held license keys are missing")
@@ -363,16 +368,16 @@ def validate_matches(
         raise LoadError(f"detail eligible match count mismatch: {len(eligible)}")
     if all_public_activities != set(source.unique_activities):
         raise LoadError("source activity set does not exactly match the published match allowlist")
-    attachment_inspections = sum(len(match.activities) for match in eligible)
-    attachment_citations = sum(
+    inspection_links = sum(len(match.activities) for match in eligible)
+    citation_visibility = sum(
         len(source.citations_by_activity.get(activity, ()))
         for match in eligible for activity in match.activities
     )
     return eligible, {
         "unique_source_inspections": len(source.inspections),
-        "public_match_inspection_attachments": attachment_inspections,
+        "public_match_inspection_links": inspection_links,
         "unique_source_citations": len(source.citations),
-        "public_match_citation_attachments": attachment_citations,
+        "public_match_citation_visibility_count": citation_visibility,
     }
 
 
@@ -397,6 +402,7 @@ def _db_matches(conn) -> list[Match]:
                    n_willful_repeat, current_penalty_amount, n_with_final_order,
                    n_contested, first_open, last_open
             FROM contractor_osha_license_matches
+            WHERE state IN ('FL', 'NJ') AND match_tier IN ('exact', 'strong')
             ORDER BY state, license_key, id
         """)
         records = cur.fetchall()
@@ -421,9 +427,8 @@ def _verify_loaded_reconciliation(cur, eligible: list[Match], expected_shape: di
                count(c.id) FILTER (WHERE c.contest_date IS NOT NULL)::int,
                min(i.open_date), max(i.open_date)
           FROM contractor_osha_license_matches m
-          LEFT JOIN contractor_osha_inspections i
-            ON i.public_match_id = m.id AND i.contractor_id = m.contractor_id
-           AND i.state = m.state AND i.license_key = m.license_key
+          LEFT JOIN contractor_osha_match_inspections b ON b.public_match_id = m.id
+          LEFT JOIN contractor_osha_inspections i ON i.id = b.inspection_id
           LEFT JOIN contractor_osha_citations c
             ON c.inspection_id = i.id AND c.activity_nr = i.activity_nr
          WHERE m.id = ANY(%s::uuid[])
@@ -433,7 +438,7 @@ def _verify_loaded_reconciliation(cur, eligible: list[Match], expected_shape: di
     if len(rows) != len(eligible):
         raise LoadError("post-insert reconciliation is missing an eligible public match")
     expected_by_id = {match.match_id: match for match in eligible}
-    inserted_inspections = inserted_citations = 0
+    linked_inspections = linked_citations = 0
     for row in rows:
         match = expected_by_id[row[0]]
         rounded_penalty = Decimal(row[5]).quantize(Decimal("1"), rounding=ROUND_HALF_EVEN)
@@ -445,62 +450,104 @@ def _verify_loaded_reconciliation(cur, eligible: list[Match], expected_shape: di
         )
         if actual != expected:
             raise LoadError(f"post-insert detail reconciliation failed for {match.state}/{match.license_key}")
-        inserted_inspections += row[1]
-        inserted_citations += row[2]
-    if inserted_inspections != expected_shape["public_match_inspection_attachments"]:
-        raise LoadError("post-insert inspection attachment count differs from source plan")
-    if inserted_citations != expected_shape["public_match_citation_attachments"]:
-        raise LoadError("post-insert citation attachment count differs from source plan")
+        linked_inspections += row[1]
+        linked_citations += row[2]
+    if linked_inspections != expected_shape["public_match_inspection_links"]:
+        raise LoadError("post-insert bridge count differs from source plan")
+    if linked_citations != expected_shape["public_match_citation_visibility_count"]:
+        raise LoadError("post-insert citation visibility count differs from source plan")
     cur.execute("""
-        SELECT count(*) FROM contractor_osha_inspections
-        WHERE state = 'FL' AND license_key = ANY(%s::text[])
+        SELECT count(*) FROM contractor_osha_match_inspections b
+        JOIN contractor_osha_license_matches m ON m.id = b.public_match_id
+        WHERE b.state = 'FL' AND b.license_key = ANY(%s::text[])
     """, (sorted(HELD_LICENSES),))
     if cur.fetchone()[0] != 0:
-        raise LoadError("held matches unexpectedly have public inspection details")
+        raise LoadError("held matches unexpectedly have inspection bridge rows")
 
 
 def run_loader(args: argparse.Namespace) -> dict[str, object]:
-    _manifest, receipt, allowlist, package_matches = verify_handoff(args.handoff_dir)
+    _manifest, receipt, _receipt_allowlist, _unused_package_matches = verify_handoff(args.handoff_dir)
     source = read_sources(args.handoff_dir / "scoped/inspections.csv", args.handoff_dir / "scoped/citations.csv")
-    eligible, shape = validate_matches(package_matches, source, allowlist)
-    held_keys = sorted(match.license_key for match in package_matches if match.state == "FL" and match.license_key in HELD_LICENSES)
-    inspection_keys = {(match.match_id, activity) for match in eligible for activity in match.activities}
-    citation_keys = {
-        (match.match_id, activity, citation["citation_id"])
-        for match in eligible for activity in match.activities
-        for citation in source.citations_by_activity.get(activity, ())
-    }
     if not args.execute:
-        # The first plan contains the complete parent-scoped natural-key set.
-        # The simulated rerun sees that set already present and adds zero rows.
-        first_inspection_inserts, second_inspection_inserts = simulate_idempotent_runs(inspection_keys)
-        first_citation_inserts, second_citation_inserts = simulate_idempotent_runs(citation_keys)
+        if not args.database_url:
+            raise LoadError("live published-match scope is required; provide DATABASE_URL for a read-only dry run")
+        try:
+            import psycopg
+        except ImportError as exc:
+            raise LoadError("psycopg is required for live-scope dry-run validation") from exc
+        conn = psycopg.connect(args.database_url, connect_timeout=10)
+        try:
+            conn.set_session(readonly=True, autocommit=True)
+            matches = _db_matches(conn)
+        finally:
+            conn.close()
+        eligible, _ = validate_matches(matches, source)
+        by_state = {
+            state: [match for match in matches if match.state == state]
+            for state in ("FL", "NJ")
+        }
+        profile_counts = {state: len(rows) for state, rows in by_state.items()}
+        state_activities = {
+            state: set().union(*(row.activities for row in rows)) if rows else set()
+            for state, rows in by_state.items()
+        }
+        expected_profiles = {"FL": 7_846, "NJ": 2_732}
+        expected_inspections = {"FL": 12_339, "NJ": 5_195}
+        if profile_counts != expected_profiles:
+            raise LoadError(f"live published profile scope mismatch: {profile_counts}")
+        state_activity_counts = {state: len(items) for state, items in state_activities.items()}
+        if state_activity_counts != expected_inspections:
+            raise LoadError(f"live unique inspection scope mismatch: {state_activity_counts}")
+        if state_activities["FL"] & state_activities["NJ"]:
+            raise LoadError("an OSHA activity number is assigned to multiple state scopes")
+        held_keys = sorted(match.license_key for match in matches if match.state == "FL" and match.license_key in HELD_LICENSES)
+        bridge_keys = {
+            (match.match_id, activity)
+            for match in eligible for activity in match.activities
+        }
+        citation_visibility_keys = {
+            (match.match_id, activity, citation["citation_id"])
+            for match in eligible for activity in match.activities
+            for citation in source.citations_by_activity.get(activity, ())
+        }
+        first_inspections, second_inspections = simulate_idempotent_runs(set(source.unique_activities))
+        first_citations, second_citations = simulate_idempotent_runs({
+            (row["activity_nr"], row["citation_id"]) for row in source.citations
+        })
+        first_bridges, second_bridges = simulate_idempotent_runs(bridge_keys)
         violation_type_counts = Counter(row["viol_type"] for row in source.citations)
         return {
-            "mode": "source-validated-dry-run",
+            "mode": "live-scope-read-only-dry-run",
             "all_file_hashes_match": True,
             "additional_readme_sha256": receipt.get("readme_sha256"),
             "unique_source_inspections": len(source.inspections),
-            "public_match_inspection_attachments": shape["public_match_inspection_attachments"],
+            "fl_profiles": profile_counts["FL"],
+            "nj_profiles": profile_counts["NJ"],
+            "fl_unique_inspections": state_activity_counts["FL"],
+            "nj_unique_inspections": state_activity_counts["NJ"],
+            "public_match_inspection_links": len(bridge_keys),
             "unique_source_citations": len(source.citations),
-            "public_match_citation_attachments": shape["public_match_citation_attachments"],
-            "published_matches": len(package_matches),
+            "public_match_citation_visibility_count": len(citation_visibility_keys),
+            "published_matches": len(matches),
             "detail_eligible_matches": len(eligible),
             "reconciled_matches": len(eligible),
             "eligible_reconciliation_pass": len(eligible) == 10_576,
             "held_matches": len(held_keys),
             "held_keys": held_keys,
+            "held_match_links": 0,
             "delete_x_excluded": source.deleted_count == 1_552,
             "blank_delete_flag_kept": len(source.citations) == EXPECTED_PUBLIC_CITATIONS,
             "public_violation_type_counts": dict(sorted(violation_type_counts.items())),
             "u_type_supported": "U" in violation_type_counts and public_citation_type("U") == "Unclassified",
             "official_activity_url_render": "NO",
-            "dry_run_insert_inspections": first_inspection_inserts,
-            "dry_run_insert_citations": first_citation_inserts,
-            "second_dry_run_new_inspections": second_inspection_inserts,
-            "second_dry_run_new_citations": second_citation_inserts,
+            "dry_run_insert_inspections": first_inspections,
+            "dry_run_insert_citations": first_citations,
+            "dry_run_insert_bridges": first_bridges,
+            "second_dry_run_new_inspections": second_inspections,
+            "second_dry_run_new_citations": second_citations,
+            "second_dry_run_new_bridges": second_bridges,
             "aggregate_mutations": 0,
-            "overall_reconciliation_including_holds": _manifest["reconciliation"]["full_reconciliation_pass"],
+            "official_activity_url_render": "NO",
         }
     if args.confirm_production_load != GO_PHRASE:
         raise LoadError("database writes require the exact Founder GO phrase")
@@ -526,6 +573,7 @@ def run_loader(args: argparse.Namespace) -> dict[str, object]:
                 cur.execute("""
                     SELECT to_regclass('public.contractor_osha_inspections'),
                            to_regclass('public.contractor_osha_citations'),
+                           to_regclass('public.contractor_osha_match_inspections'),
                            to_regclass('public.osha_detail_load_receipts'),
                            to_regclass('public.contractor_osha_license_matches')
                 """)
@@ -547,9 +595,13 @@ def run_loader(args: argparse.Namespace) -> dict[str, object]:
                 combined_hash = COMBINED_SOURCE_SHA256
                 cur.execute("SELECT pg_advisory_xact_lock(hashtext(%s))", ("con-osha-001b:" + combined_hash,))
                 matches = _db_matches(conn)
-                if not _same_match_snapshot(matches, package_matches):
-                    raise LoadError("current database aggregate snapshot differs from the verified B2 match file")
-                eligible, shape = validate_matches(matches, source, allowlist)
+                eligible, shape = validate_matches(matches, source)
+                state_by_activity: dict[str, str] = {}
+                for match in matches:
+                    for activity in match.activities:
+                        prior_state = state_by_activity.setdefault(activity, match.state)
+                        if prior_state != match.state:
+                            raise LoadError(f"activity is assigned across state scopes: {activity}")
 
                 cur.execute("SELECT id FROM ingest_batches WHERE source_system = %s AND checksum_sha256 = %s",
                             ("us_dol_osha_detail", combined_hash))
@@ -593,63 +645,77 @@ def run_loader(args: argparse.Namespace) -> dict[str, object]:
 
                 inspections_by_activity = source.inspections_by_activity
                 citations_by_activity = source.citations_by_activity
-                inserted_inspections = inserted_citations = 0
+                inspection_ids: dict[str, object] = {}
+                inserted_inspections = inserted_citations = inserted_bridges = 0
+                for activity in sorted(source.unique_activities):
+                    inspection = inspections_by_activity[activity]
+                    cur.execute("""
+                        INSERT INTO contractor_osha_inspections
+                          (activity_nr, state, open_date, site_city, site_state, inspection_type,
+                           close_date, closing_conference_date, citations_verified,
+                           source_batch_id, receipt_id, source_hash)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, TRUE, %s, %s, %s)
+                        ON CONFLICT (activity_nr) DO NOTHING
+                        RETURNING id
+                    """, (activity, state_by_activity[activity],
+                          _parse_date(inspection["open_date"], "open_date"), inspection["site_city"] or None,
+                          inspection["site_state"] or None, inspection["inspection_type"] or None,
+                          _parse_date(inspection["close_date"], "close_date"),
+                          _parse_date(inspection["closing_conference_date"], "closing_conference_date"),
+                          batch_id, receipt_ids["osha_inspections"], INSPECTION_SHA256))
+                    inserted = cur.fetchone()
+                    inserted_inspections += inserted is not None
+                    if inserted:
+                        inspection_id = inserted[0]
+                    else:
+                        cur.execute("SELECT id, source_hash FROM contractor_osha_inspections WHERE activity_nr = %s", (activity,))
+                        existing = cur.fetchone()
+                        if not existing or existing[1].strip() != INSPECTION_SHA256:
+                            raise LoadError("existing normalized inspection has different provenance; stopping")
+                        inspection_id = existing[0]
+                    inspection_ids[activity] = inspection_id
+
+                for activity in sorted(source.unique_activities):
+                    inspection_id = inspection_ids[activity]
+                    for citation in citations_by_activity.get(activity, ()):
+                        cur.execute("""
+                            INSERT INTO contractor_osha_citations
+                              (inspection_id, activity_nr, citation_id, standard, viol_type, current_penalty,
+                               initial_penalty, contest_date, final_order_date, delete_flag,
+                               source_batch_id, receipt_id, source_hash)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            ON CONFLICT (inspection_id, citation_id) DO NOTHING
+                            RETURNING id
+                        """, (inspection_id, activity, citation["citation_id"], citation["standard"],
+                              citation["viol_type"], _optional_money(citation["current_penalty"], "current_penalty"),
+                              _optional_money(citation["initial_penalty"], "initial_penalty"),
+                              _parse_date(citation["contest_date"], "contest_date"),
+                              _parse_date(citation["final_order_date"], "final_order_date"),
+                              citation["delete_flag"] or None, batch_id, receipt_ids["osha_violations"], VIOLATION_SHA256))
+                        inserted_citation = cur.fetchone()
+                        inserted_citations += inserted_citation is not None
+                        if inserted_citation is None:
+                            cur.execute("""
+                                SELECT source_hash FROM contractor_osha_citations
+                                WHERE inspection_id = %s AND citation_id = %s
+                            """, (inspection_id, citation["citation_id"]))
+                            existing_citation = cur.fetchone()
+                            if not existing_citation or existing_citation[0].strip() != VIOLATION_SHA256:
+                                raise LoadError("existing source citation has different provenance; stopping")
+
                 for match in eligible:
                     for activity in sorted(match.activities):
-                        inspection = inspections_by_activity[activity]
                         cur.execute("""
-                            INSERT INTO contractor_osha_inspections
-                              (public_match_id, contractor_id, state, license_key, activity_nr,
-                               open_date, site_city, site_state, inspection_type, close_date,
-                               closing_conference_date, citations_verified, source_batch_id, receipt_id, source_hash)
-                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, TRUE, %s, %s, %s)
-                            ON CONFLICT (public_match_id, activity_nr) DO NOTHING
-                            RETURNING id
-                        """, (match.match_id, match.contractor_id, match.state, match.license_key, activity,
-                              _parse_date(inspection["open_date"], "open_date"), inspection["site_city"] or None,
-                              inspection["site_state"] or None, inspection["inspection_type"] or None,
-                              _parse_date(inspection["close_date"], "close_date"),
-                              _parse_date(inspection["closing_conference_date"], "closing_conference_date"),
-                              batch_id, receipt_ids["osha_inspections"], INSPECTION_SHA256))
-                        inserted = cur.fetchone()
-                        if inserted:
-                            inserted_inspections += 1
-                            inspection_id = inserted[0]
-                        else:
-                            cur.execute("""
-                                SELECT id, source_hash FROM contractor_osha_inspections
-                                WHERE public_match_id = %s AND activity_nr = %s
-                            """, (match.match_id, activity))
-                            existing = cur.fetchone()
-                            if not existing or existing[1].strip() != INSPECTION_SHA256:
-                                raise LoadError("existing inspection key has different provenance; stopping")
-                            inspection_id = existing[0]
-                        for citation in citations_by_activity.get(activity, []):
-                            cur.execute("""
-                                INSERT INTO contractor_osha_citations
-                                  (inspection_id, activity_nr, citation_id, standard, viol_type,
-                                   current_penalty, initial_penalty, contest_date, final_order_date,
-                                   delete_flag, source_batch_id, receipt_id, source_hash)
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                                ON CONFLICT (inspection_id, citation_id) DO NOTHING
-                                RETURNING id
-                            """, (inspection_id, activity, citation["citation_id"], citation["standard"],
-                                  citation["viol_type"], _money(citation["current_penalty"], "current_penalty"),
-                                  _money(citation["initial_penalty"], "initial_penalty"),
-                                  _parse_date(citation["contest_date"], "contest_date"),
-                                  _parse_date(citation["final_order_date"], "final_order_date"),
-                                  citation["delete_flag"] or None, batch_id, receipt_ids["osha_violations"],
-                                  VIOLATION_SHA256))
-                            inserted_citation = cur.fetchone()
-                            inserted_citations += inserted_citation is not None
-                            if inserted_citation is None:
-                                cur.execute("""
-                                    SELECT source_hash FROM contractor_osha_citations
-                                    WHERE inspection_id = %s AND citation_id = %s
-                                """, (inspection_id, citation["citation_id"]))
-                                existing_citation = cur.fetchone()
-                                if not existing_citation or existing_citation[0].strip() != VIOLATION_SHA256:
-                                    raise LoadError("existing citation key has different provenance; stopping")
+                            INSERT INTO contractor_osha_match_inspections
+                              (public_match_id, contractor_id, state, license_key, inspection_id, activity_nr,
+                               source_batch_id, receipt_id, source_hash)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            ON CONFLICT (public_match_id, inspection_id) DO NOTHING
+                            RETURNING public_match_id
+                        """, (match.match_id, match.contractor_id, match.state, match.license_key,
+                              inspection_ids[activity], activity, batch_id,
+                              receipt_ids["osha_inspections"], INSPECTION_SHA256))
+                        inserted_bridges += cur.fetchone() is not None
                 _verify_loaded_reconciliation(cur, eligible, shape)
                 cur.execute("""
                     UPDATE osha_detail_load_receipts
@@ -657,8 +723,9 @@ def run_loader(args: argparse.Namespace) -> dict[str, object]:
                      WHERE id = ANY(%s::uuid[]) AND status = 'received'
                 """, ([receipt_ids["osha_inspections"], receipt_ids["osha_violations"]],))
         return {"mode": "loaded", "database": database_name,
-                "inserted_inspection_attachments": inserted_inspections,
-                "inserted_citation_attachments": inserted_citations, **shape}
+                "inserted_inspections": inserted_inspections,
+                "inserted_citations": inserted_citations,
+                "inserted_public_match_links": inserted_bridges, **shape}
     finally:
         conn.close()
 

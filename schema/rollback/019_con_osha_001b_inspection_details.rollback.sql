@@ -16,6 +16,8 @@
 -- END $$;
 -- DELETE FROM contractor_osha_citations
 --  WHERE source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid;
+-- DELETE FROM contractor_osha_match_inspections
+--  WHERE source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid;
 -- DELETE FROM contractor_osha_inspections
 --  WHERE source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid;
 -- DELETE FROM osha_detail_load_receipts
