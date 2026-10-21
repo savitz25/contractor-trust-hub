@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from scripts.osha.crosswalk import parse_crosswalk
+from scripts.osha.crosswalk import MULTICOUNTY_SELECTION, TIE_BREAKER, parse_crosswalk
 from scripts.osha.match import (
     BEST_TIER_ONLY,
     FUZZY_MATCHING,
@@ -424,5 +424,108 @@ class NormalizationTests(unittest.TestCase):
             self.assertEqual(normalize_name(raw, SUFFIX_RE), norm, raw)
 
 
+def _relationship(zcta: str, geoid: str, name: str, area: int, oid: str = "1") -> str:
+    return "|".join(
+        [
+            oid,
+            zcta,
+            f"ZCTA5 {zcta}",
+            "1",
+            "0",
+            "G6350",
+            "B5",
+            "S",
+            oid,
+            geoid,
+            name,
+            "1",
+            "0",
+            "G4020",
+            "H1",
+            "A",
+            str(area),
+            "0",
+        ]
+    )
+
+
+def _selection_crosswalk() -> str:
+    header = CROSSWALK.splitlines()[0]
+    rows = [
+        _relationship("10001", "51001", "Alpha County", 100, "1"),
+        _relationship("20001", "51001", "Alpha County", 40, "2"),
+        _relationship("20001", "51001", "Alpha County", 40, "3"),
+        _relationship("20001", "51059", "Beta County", 70, "4"),
+        _relationship("30001", "51001", "Alpha County", 50, "5"),
+        _relationship("30001", "51099", "Beta County", 50, "6"),
+        _relationship("40001", "51059", "Beta County", 25, "7"),
+    ]
+    return "\n".join([header, *rows])
+
+
+class ZctaSingleCountyTests(unittest.TestCase):
+    def setUp(self):
+        self.text = _selection_crosswalk()
+        self.crosswalk = parse_crosswalk(self.text)
+
+    def test_single_county_zcta_keeps_that_county(self):
+        self.assertEqual(MULTICOUNTY_SELECTION, "MAX_AREALAND_PART")
+        self.assertEqual(TIE_BREAKER, "LEXICOGRAPHICALLY_GREATEST_COUNTY_GEOID")
+        self.assertEqual(self.crosswalk.counties_for("VA", "10001"), {"ALPHA"})
+
+    def test_spanning_zcta_keeps_the_largest_summed_area_only(self):
+        self.assertEqual(self.crosswalk.counties_for("VA", "20001"), {"ALPHA"})
+        self.assertNotIn("BETA", self.crosswalk.counties_for("VA", "20001"))
+
+    def test_equal_area_uses_the_greatest_county_geoid(self):
+        forward = self.crosswalk.counties_for("VA", "30001")
+        reversed_rows = "\n".join([self.text.splitlines()[0], *reversed(self.text.splitlines()[1:])])
+        backward = parse_crosswalk(reversed_rows).counties_for("VA", "30001")
+        self.assertEqual(forward, {"BETA"})
+        self.assertEqual(backward, forward)
+
+    def test_unselected_overlap_does_not_establish_strong(self):
+        result = match_state(
+            "VA",
+            [_license(postal_code="99999", county_name="Beta County")],
+            [_inspection(site_zip="20001", mail_zip="11111")],
+            [],
+            self.crosswalk,
+        )
+        self.assertEqual(result["matches"][0]["match_tier"], "weak")
+
+    def test_selected_county_establishes_strong(self):
+        result = match_state(
+            "VA",
+            [_license(postal_code="99999", county_name="Alpha County")],
+            [_inspection(site_zip="20001", mail_zip="11111")],
+            [],
+            self.crosswalk,
+        )
+        self.assertEqual(result["matches"][0]["match_tier"], "strong")
+
+    def test_blank_stored_county_cannot_establish_strong(self):
+        result = match_state(
+            "VA",
+            [_license(postal_code="99999", county_name="")],
+            [_inspection(site_zip="10001", mail_zip="11111")],
+            [],
+            self.crosswalk,
+        )
+        self.assertEqual(result["matches"][0]["match_tier"], "weak")
+
+    def test_license_zip_does_not_supply_the_missing_county(self):
+        result = match_state(
+            "VA",
+            [_license(postal_code="20001", county_name="")],
+            [_inspection(site_zip="10001", mail_zip="11111")],
+            [],
+            self.crosswalk,
+        )
+        self.assertEqual(result["matches"][0]["match_tier"], "weak")
+        self.assertIs(LICENSE_ZIP_CAN_INFER_COUNTY, False)
+
+
 if __name__ == "__main__":
     unittest.main()
+

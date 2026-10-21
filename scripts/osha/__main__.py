@@ -65,6 +65,7 @@ def main() -> None:
     crosswalk = load_crosswalk(args.crosswalk)
     print("CROSSWALK_SHA", crosswalk_sha)
     print("CROSSWALK_ROWS", crosswalk.rows)
+    print("ZCTA_ASSIGNMENTS", sum(len(states) for states in crosswalk.county_by_zip.values()))
     summaries = []
     public_activities: set[str] = set()
     for state in STATE_ORDER:
@@ -93,6 +94,9 @@ def main() -> None:
             digest,
         )
     receipt = {
+        "zcta_single_county_rule": True,
+        "multicounty_selection": "MAX_AREALAND_PART",
+        "tie_breaker": "LEXICOGRAPHICALLY_GREATEST_COUNTY_GEOID",
         "fuzzy_matching": False,
         "license_zip_can_infer_county": False,
         "ca_name_source": "licensee_name_raw",
