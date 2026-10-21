@@ -16,7 +16,9 @@ export const OSHA_PENALTY_LABEL = "Cited penalty (current)";
 export const OSHA_INSPECTION_LIST_STATUS = "blocked" as const;
 
 export const PUBLIC_OSHA_MATCH_SQL = `
-SELECT license_key, state, match_tier, n_inspections, first_open, last_open,
+SELECT license_key, state, match_tier, n_inspections,
+       to_char(first_open, 'YYYY-MM-DD') AS first_open,
+       to_char(last_open, 'YYYY-MM-DD') AS last_open,
        n_citation_items, n_serious, current_penalty_amount,
        n_with_final_order, n_contested
 FROM contractor_osha_license_matches
@@ -52,8 +54,8 @@ export type OshaSourceMatch = {
   state: string;
   matchTier: string;
   nInspections: number;
-  firstOpen?: string | null;
-  lastOpen?: string | null;
+  firstOpen?: string | Date | null;
+  lastOpen?: string | Date | null;
   nCitationItems: number;
   nSerious: number;
   currentPenalty: number;
@@ -72,11 +74,33 @@ function whole(value: number): number | null {
   return value;
 }
 
-function isoDate(value: string | null | undefined): string | null {
+function pad2(value: number): string {
+  return String(value).padStart(2, "0");
+}
+
+/**
+ * Civil YYYY-MM-DD. Date values use local calendar getters so a PostgreSQL
+ * DATE parsed at local midnight does not shift to the previous or next day.
+ */
+function isoDate(value: unknown): string | null {
   if (value == null) return null;
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) return null;
+    const year = value.getFullYear();
+    const month = value.getMonth() + 1;
+    const day = value.getDate();
+    if (year < 1000 || year > 9999 || month < 1 || month > 12 || day < 1 || day > 31) return null;
+    return `${year}-${pad2(month)}-${pad2(day)}`;
+  }
+  if (typeof value !== "string") return null;
   const text = value.trim();
-  if (!text) return null;
-  return /^\d{4}-\d{2}-\d{2}/.test(text) ? text.slice(0, 10) : null;
+  if (!/^\d{4}-\d{2}-\d{2}/.test(text)) return null;
+  return text.slice(0, 10);
+}
+
+function readOshaDate(value: unknown): string | Date | null {
+  if (typeof value === "string" || value instanceof Date) return value;
+  return null;
 }
 
 export function formatOshaSummary(
@@ -175,8 +199,8 @@ export async function loadPublicOshaMatches(
         state: String(row.state ?? ""),
         matchTier: String(row.match_tier ?? row.matchTier ?? ""),
         nInspections: Number(row.n_inspections ?? row.nInspections),
-        firstOpen: (row.first_open ?? row.firstOpen ?? null) as string | null,
-        lastOpen: (row.last_open ?? row.lastOpen ?? null) as string | null,
+        firstOpen: readOshaDate(row.first_open ?? row.firstOpen),
+        lastOpen: readOshaDate(row.last_open ?? row.lastOpen),
         nCitationItems: Number(row.n_citation_items ?? row.nCitationItems),
         nSerious: Number(row.n_serious ?? row.nSerious),
         currentPenalty: Number(row.current_penalty_amount ?? row.currentPenalty),

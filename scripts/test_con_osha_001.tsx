@@ -3,10 +3,12 @@
  * Inspection rows are blocked because the handoff has license totals only.
  */
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { OshaSafetyRecord } from "../components/contractor/OshaSafetyRecord";
@@ -236,4 +238,214 @@ test("preview showcase cannot resolve in production and is not a public route", 
   assert.equal(OSHA_PREVIEW_SAMPLES.filter((sample) => sample.state === "FL").length, 3);
   assert.equal(OSHA_PREVIEW_SAMPLES.filter((sample) => sample.state === "NJ").length, 3);
   assert.equal(OSHA_PREVIEW_SAMPLES.some((sample) => sample.matchTier === "weak"), false);
+});
+
+function localDate(year: number, month: number, day: number): Date {
+  return new Date(year, month - 1, day);
+}
+
+function dbRow(overrides: Record<string, unknown> = {}) {
+  return {
+    license_key: "CGC011008",
+    state: "FL",
+    match_tier: "exact",
+    n_inspections: 2,
+    first_open: "1995-08-10",
+    last_open: "2002-03-22",
+    n_citation_items: 5,
+    n_serious: 3,
+    current_penalty_amount: 11750,
+    n_with_final_order: 5,
+    n_contested: 5,
+    ...overrides,
+  };
+}
+
+async function loadRows(rows: Record<string, unknown>[]) {
+  let calls = 0;
+  const result = await loadPublicOshaMatches(
+    { contractorId: "c-1", homeState: "FL", licenseKeys: ["CGC011008"] },
+    {
+      enabled: true,
+      query: async () => {
+        calls += 1;
+        return rows;
+      },
+    },
+  );
+  assert.equal(calls, result.queryCount);
+  return result;
+}
+
+test("postgres DATE objects become calendar days and the card still renders", async () => {
+  const result = await loadRows([
+    dbRow({
+      first_open: localDate(1995, 8, 10),
+      last_open: localDate(2002, 3, 22),
+    }),
+  ]);
+  assert.equal(result.queryCount, 1);
+  assert.equal(result.records?.length, 1);
+  const record = result.records?.[0];
+  assert.ok(record);
+  assert.equal(record.matchTier, "exact");
+  assert.equal(record.firstOpen, "1995-08-10");
+  assert.equal(record.lastOpen, "2002-03-22");
+  assert.match(record.summary, /1995\u20132002/);
+  const html = render(record);
+  assert.match(html, /OSHA Safety Record/);
+  assert.match(html, /2 OSHA inspections \(1995\u20132002\)/);
+  assert.match(html, /data-osha-license="CGC011008"/);
+});
+
+test("ISO string dates stay YYYY-MM-DD", async () => {
+  const result = await loadRows([dbRow()]);
+  assert.equal(result.queryCount, 1);
+  assert.equal(result.records?.[0].firstOpen, "1995-08-10");
+  assert.equal(result.records?.[0].lastOpen, "2002-03-22");
+  assert.match(result.records?.[0].summary ?? "", /1995\u20132002/);
+});
+
+test("null postgres dates keep the aggregate and invent no year", async () => {
+  const result = await loadRows([dbRow({ first_open: null, last_open: null })]);
+  const record = result.records?.[0];
+  assert.ok(record);
+  assert.equal(record.firstOpen, null);
+  assert.equal(record.lastOpen, null);
+  assert.equal(record.summary, "2 OSHA inspections · 5 cited items · 3 serious");
+  assert.doesNotMatch(record.summary, /\(|\d{4}/);
+});
+
+test("an invalid Date object fails closed without dropping the record", async () => {
+  const result = await loadRows([
+    dbRow({ first_open: new Date(NaN), last_open: new Date(NaN) }),
+  ]);
+  const record = result.records?.[0];
+  assert.ok(record);
+  assert.equal(record.firstOpen, null);
+  assert.equal(record.lastOpen, null);
+  assert.equal(record.summary, "2 OSHA inspections · 5 cited items · 3 serious");
+  assert.equal(String(new Date(NaN)).includes("Invalid Date"), true);
+  assert.doesNotMatch(record.summary, /Invalid Date/);
+});
+
+test("a malformed date string fails closed without dropping the record", async () => {
+  const result = await loadRows([
+    dbRow({ first_open: "not-a-date", last_open: "08/10/1995" }),
+  ]);
+  const record = result.records?.[0];
+  assert.ok(record);
+  assert.equal(record.firstOpen, null);
+  assert.equal(record.lastOpen, null);
+  assert.doesNotMatch(record.summary, /\(|1995|08\/10/);
+});
+
+test("one invalid date endpoint does not invent a range", async () => {
+  const result = await loadRows([
+    dbRow({ first_open: localDate(1995, 8, 10), last_open: new Date(NaN) }),
+  ]);
+  const record = result.records?.[0];
+  assert.ok(record);
+  assert.equal(record.firstOpen, "1995-08-10");
+  assert.equal(record.lastOpen, null);
+  assert.equal(record.summary, "2 OSHA inspections · 5 cited items · 3 serious");
+  assert.doesNotMatch(record.summary, /1995|\u2013|\(/);
+});
+
+test("a weak match stays excluded when its dates are Date objects", async () => {
+  const result = await loadRows([
+    dbRow({
+      license_key: "WEAK1",
+      match_tier: "weak",
+      first_open: localDate(2000, 1, 1),
+      last_open: localDate(2001, 1, 1),
+    }),
+  ]);
+  assert.equal(result.queryCount, 1);
+  assert.equal(result.records, null);
+});
+
+test("public SQL projects DATE columns as YYYY-MM-DD text", () => {
+  assert.match(PUBLIC_OSHA_MATCH_SQL, /to_char\(first_open, 'YYYY-MM-DD'\) AS first_open/);
+  assert.match(PUBLIC_OSHA_MATCH_SQL, /to_char\(last_open, 'YYYY-MM-DD'\) AS last_open/);
+  assert.doesNotMatch(PUBLIC_OSHA_MATCH_SQL, /,\s*first_open\s*,/);
+  assert.doesNotMatch(PUBLIC_OSHA_MATCH_SQL, /,\s*last_open\s*,/);
+  assert.doesNotMatch(read("lib/osha/public-record.ts"), /as string \| null/);
+  const migration = read("schema/migrations/018_con_osha_001_osha_safety_record.sql");
+  assert.match(migration, /first_open\s+DATE/);
+  assert.match(migration, /last_open\s+DATE/);
+});
+
+test("profile loader keeps an exact record when dates arrive as Date objects", { timeout: 120_000 }, () => {
+  const dir = mkdtempSync(join(tmpdir(), "osha-date-"));
+  const script = join(dir, "loader.mts");
+  writeFileSync(
+    script,
+    `
+import { mock } from "node:test";
+
+mock.module("@/lib/db", {
+  namedExports: {
+    query: async () => [
+      {
+        license_key: "CGC011008",
+        state: "FL",
+        match_tier: "exact",
+        n_inspections: 2,
+        first_open: new Date(1995, 7, 10),
+        last_open: new Date(2002, 2, 22),
+        n_citation_items: 5,
+        n_serious: 3,
+        current_penalty_amount: 11750,
+        n_with_final_order: 5,
+        n_contested: 5,
+      },
+    ],
+  },
+});
+
+const mod = await import(${JSON.stringify(pathToFileURL(join(root, "lib/osha/load-public-record.ts")).href)});
+const records = await mod.loadPublicOshaSafetyRecord({
+  contractorId: "c-1",
+  homeState: "FL",
+  licenseKeys: ["CGC011008"],
+});
+console.log(JSON.stringify({
+  count: records?.length ?? 0,
+  firstOpen: records?.[0]?.firstOpen ?? null,
+  lastOpen: records?.[0]?.lastOpen ?? null,
+  summary: records?.[0]?.summary ?? null,
+  tier: records?.[0]?.matchTier ?? null,
+}));
+`,
+  );
+  try {
+    const result = spawnSync(
+      "npx --yes tsx --conditions=react-server --experimental-test-module-mocks \"" + script + "\"",
+      {
+        cwd: root,
+        encoding: "utf8",
+        shell: true,
+        env: { ...process.env, CON_OSHA_001_PROFILE: "1" },
+      },
+    );
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    assert.doesNotMatch(result.stderr || "", /public read failed|trim is not a function/);
+    const line = (result.stdout || "").trim().split(/\r?\n/).filter((item) => item.startsWith("{")).at(-1);
+    assert.ok(line, result.stdout);
+    const parsed = JSON.parse(line) as {
+      count: number;
+      firstOpen: string | null;
+      lastOpen: string | null;
+      summary: string | null;
+      tier: string | null;
+    };
+    assert.equal(parsed.count, 1);
+    assert.equal(parsed.tier, "exact");
+    assert.equal(parsed.firstOpen, "1995-08-10");
+    assert.equal(parsed.lastOpen, "2002-03-22");
+    assert.match(parsed.summary ?? "", /1995\u20132002/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
