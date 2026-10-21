@@ -1,0 +1,96 @@
+"""Run the Group 1 matcher and write packages outside the repository."""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+from collections import Counter
+from pathlib import Path
+
+from scripts.osha.crosswalk import load_crosswalk
+from scripts.osha.match import match_state
+from scripts.osha.package import package_bytes, sha256_bytes, spot_bytes, spot_rows
+from scripts.osha.states import STATE_ORDER
+
+
+def _read_csv(path: Path) -> list[dict]:
+    with path.open(encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def _summarize(result: dict) -> dict:
+    counts = Counter(row["match_tier"] for row in result["matches"])
+    inspections = sum(row["n_inspections"] for row in result["matches"] if row["match_tier"] in {"exact", "strong"})
+    in_state = Counter()
+    for row in result["matches"]:
+        if row["mailing_state"] == row["state"]:
+            in_state[row["match_tier"]] += 1
+    return {
+        "state": result["state"],
+        "source_system": result["source_system"],
+        "licenses_considered": result["licenses_considered"],
+        "inspections_in_state": result["inspections_in_state"],
+        "duplicate_inspection_rows": result["duplicate_inspection_rows"],
+        "exact": counts["exact"],
+        "strong": counts["strong"],
+        "weak": counts["weak"],
+        "inspections_exact_strong": inspections,
+        "exact_mailing_state": in_state["exact"],
+        "strong_mailing_state": in_state["strong"],
+        "weak_mailing_state": in_state["weak"],
+    }
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--licenses", type=Path, required=True)
+    parser.add_argument("--inspections", type=Path, required=True)
+    parser.add_argument("--violations", type=Path, required=True)
+    parser.add_argument("--crosswalk", type=Path, required=True)
+    parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument("--spot-dir", type=Path, required=True)
+    args = parser.parse_args()
+    args.out_dir.mkdir(parents=True, exist_ok=True)
+    args.spot_dir.mkdir(parents=True, exist_ok=True)
+    licenses = _read_csv(args.licenses)
+    inspections = _read_csv(args.inspections)
+    violations = _read_csv(args.violations)
+    crosswalk = load_crosswalk(args.crosswalk)
+    print("CROSSWALK_ROWS", crosswalk.rows)
+    summaries = []
+    for state in STATE_ORDER:
+        print("MATCHING", state)
+        result = match_state(state, licenses, inspections, violations, crosswalk)
+        payload = package_bytes(result["matches"])
+        package_path = args.out_dir / f"{state}-osha-match-package.csv"
+        package_path.write_bytes(payload)
+        digest = sha256_bytes(payload)
+        summary = _summarize(result)
+        summary["package_sha256"] = digest
+        summary["package_bytes"] = len(payload)
+        summaries.append(summary)
+        for tier in ("exact", "strong", "weak"):
+            spot_path = args.spot_dir / f"{state}-{tier}.csv"
+            spot_path.write_bytes(spot_bytes(spot_rows(result["matches"], tier)))
+        print(
+            "RESULT",
+            state,
+            summary["exact"],
+            summary["strong"],
+            summary["weak"],
+            summary["inspections_exact_strong"],
+            digest,
+        )
+    receipt = {
+        "states": summaries,
+        "total_exact_strong": sum(item["exact"] + item["strong"] for item in summaries),
+        "total_inspections": sum(item["inspections_exact_strong"] for item in summaries),
+    }
+    receipt_path = args.out_dir / "match-receipt.json"
+    receipt_path.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+    print("WROTE", receipt_path.name)
+
+
+if __name__ == "__main__":
+    main()
