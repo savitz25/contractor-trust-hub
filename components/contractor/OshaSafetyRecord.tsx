@@ -7,10 +7,20 @@ import {
   OSHA_REPORT_ERROR_LABEL,
   type OshaPublicRecord,
 } from "@/lib/osha/public-record";
+import { OshaInspectionDetails } from "@/components/contractor/OshaInspectionDetails";
 
 type Props = {
   records: OshaPublicRecord[];
   correctionHref: string;
+};
+
+type CardRecord = {
+  key: string;
+  state: string;
+  licenseKey?: string;
+  identityLabel: string;
+  summary: string;
+  currentPenalty: number;
 };
 
 function HardHatIcon() {
@@ -31,16 +41,20 @@ function HardHatIcon() {
 function OshaSafetyRecordCard({
   record,
   correctionHref,
+  detailFixtureId,
+  preview,
 }: {
-  record: OshaPublicRecord;
+  record: CardRecord;
   correctionHref: string;
+  detailFixtureId?: string;
+  preview?: boolean;
 }) {
-  const stateName = record.state === "FL" ? "Florida" : "New Jersey";
   return (
     <article
       data-testid="osha-safety-record"
       data-osha-state={record.state}
       data-osha-license={record.licenseKey}
+      data-osha-preview-fixture={preview ? detailFixtureId : undefined}
       className="max-w-full min-w-0 overflow-x-hidden rounded-xl border-2 border-amber-700 bg-amber-50 p-4 text-[#0A2540] sm:p-5"
     >
       <div className="flex min-w-0 items-start gap-3">
@@ -48,7 +62,7 @@ function OshaSafetyRecordCard({
         <div className="min-w-0">
           <h2 className="text-lg font-semibold text-amber-950">OSHA Safety Record</h2>
           <p className="mt-1 break-words text-sm text-amber-950">
-            {stateName} license {record.licenseKey}
+            {record.identityLabel}
           </p>
         </div>
       </div>
@@ -57,9 +71,10 @@ function OshaSafetyRecordCard({
         <span className="font-semibold">{OSHA_PENALTY_LABEL}</span>
         <span className="tabular-nums"> {formatCitedPenalty(record.currentPenalty)}</span>
       </p>
+      {detailFixtureId ? <OshaInspectionDetails fixtureId={detailFixtureId} /> : null}
       <p className="mt-4 break-words text-sm leading-relaxed">{OSHA_LEGAL_DISCLAIMER}</p>
       <p className="mt-3 break-words text-sm leading-relaxed">
-        {OSHA_MATCH_METHOD}{" "}
+        {preview ? "This public example is not matched to a contractor." : OSHA_MATCH_METHOD}{" "}
         <a
           href={correctionHref}
           className="font-semibold text-amber-950 underline decoration-amber-700 underline-offset-2"
@@ -78,10 +93,49 @@ export function OshaSafetyRecord({ records, correctionHref }: Props) {
       {records.map((record) => (
         <OshaSafetyRecordCard
           key={`${record.state}-${record.licenseKey}`}
-          record={record}
+          record={{
+            key: `${record.state}-${record.licenseKey}`,
+            state: record.state,
+            licenseKey: record.licenseKey,
+            identityLabel: `${record.state === "FL" ? "Florida" : "New Jersey"} license ${record.licenseKey}`,
+            summary: record.summary,
+            currentPenalty: record.currentPenalty,
+          }}
           correctionHref={correctionHref}
         />
       ))}
+    </div>
+  );
+}
+
+/** Preview-only card model; it has no contractor/license identity or production data path. */
+export function OshaSafetyRecordPreviewCard({
+  fixtureId,
+  identityLabel,
+  summary,
+  currentPenalty,
+  correctionHref,
+}: {
+  fixtureId: string;
+  identityLabel: string;
+  summary: string;
+  currentPenalty: number;
+  correctionHref: string;
+}) {
+  return (
+    <div className="max-w-full min-w-0">
+      <OshaSafetyRecordCard
+        record={{
+          key: fixtureId,
+          state: "preview",
+          identityLabel,
+          summary,
+          currentPenalty,
+        }}
+        detailFixtureId={fixtureId}
+        preview
+        correctionHref={correctionHref}
+      />
     </div>
   );
 }
