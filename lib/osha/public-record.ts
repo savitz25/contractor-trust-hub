@@ -16,7 +16,7 @@ export const OSHA_PENALTY_LABEL = "Cited penalty (current)";
 export const OSHA_INSPECTION_LIST_STATUS = "blocked" as const;
 
 export const PUBLIC_OSHA_MATCH_SQL = `
-SELECT license_key, state, match_tier, n_inspections,
+SELECT id, license_key, state, match_tier, n_inspections,
        to_char(first_open, 'YYYY-MM-DD') AS first_open,
        to_char(last_open, 'YYYY-MM-DD') AS last_open,
        n_citation_items, n_serious, current_penalty_amount,
@@ -33,6 +33,7 @@ const PUBLIC_TIERS = new Set(["exact", "strong"]);
 const PILOT_STATES = new Set(["FL", "NJ"]);
 
 export type OshaPublicRecord = {
+  publicMatchId?: string;
   licenseKey: string;
   state: "FL" | "NJ";
   matchTier: "exact" | "strong";
@@ -50,6 +51,7 @@ export type OshaPublicRecord = {
 };
 
 export type OshaSourceMatch = {
+  id?: string;
   licenseKey: string;
   state: string;
   matchTier: string;
@@ -157,6 +159,7 @@ export function toPublicOshaRecord(input: OshaSourceMatch): OshaPublicRecord | n
   const firstOpen = isoDate(input.firstOpen);
   const lastOpen = isoDate(input.lastOpen);
   return {
+    publicMatchId: input.id,
     licenseKey,
     state,
     matchTier: tier as "exact" | "strong",
@@ -195,6 +198,7 @@ export async function loadPublicOshaMatches(
   const records = rows
     .map((row) =>
       toPublicOshaRecord({
+        id: String(row.id ?? ""),
         licenseKey: String(row.license_key ?? row.licenseKey ?? ""),
         state: String(row.state ?? ""),
         matchTier: String(row.match_tier ?? row.matchTier ?? ""),

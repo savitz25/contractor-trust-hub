@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 const OSHA_PREVIEW_SOURCE_LIMIT =
-  "Production detail data will remain disconnected until the verified source contract is wired. Interactive examples on this page use separate public-data fixtures.";
+  "Production detail data remains unavailable while the source acquisition receipt and approved detail load are pending. Interactive examples on this page use separate public-data fixtures.";
 
 type Params = Promise<{ sample?: string }>;
 

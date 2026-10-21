@@ -17,6 +17,43 @@ export class OshaDetailUnavailableError extends Error {
   }
 }
 
+export function isPublicOshaDetailParentAllowed(input: {
+  parent: { id: string; contractorId: string; state: string; licenseKey: string; matchTier: string } | null;
+  request: { publicMatchId: string; contractorId: string; state: string; licenseKey: string };
+}): boolean {
+  const parent = input.parent;
+  return Boolean(
+    parent &&
+      parent.id === input.request.publicMatchId &&
+      parent.contractorId === input.request.contractorId &&
+      parent.state === input.request.state &&
+      parent.licenseKey === input.request.licenseKey &&
+      (parent.matchTier === "exact" || parent.matchTier === "strong"),
+  );
+}
+
+export type OshaInspectionCursor = { openDate: string | null; activityNumber: string };
+
+export function encodeOshaInspectionCursor(cursor: OshaInspectionCursor): string {
+  return Buffer.from(JSON.stringify(cursor), "utf8").toString("base64url");
+}
+
+export function decodeOshaInspectionCursor(value: string | null | undefined): OshaInspectionCursor | null {
+  if (!value) return null;
+  try {
+    const parsed: unknown = JSON.parse(Buffer.from(value, "base64url").toString("utf8"));
+    if (!parsed || typeof parsed !== "object") throw new Error("invalid cursor");
+    const cursor = parsed as Partial<OshaInspectionCursor>;
+    if (
+      typeof cursor.activityNumber !== "string" || cursor.activityNumber.trim() === "" ||
+      !(cursor.openDate === null || (typeof cursor.openDate === "string" && /^\d{4}-\d{2}-\d{2}$/.test(cursor.openDate)))
+    ) throw new Error("invalid cursor");
+    return { openDate: cursor.openDate, activityNumber: cursor.activityNumber };
+  } catch {
+    throw new OshaDetailUnavailableError("invalid_cursor");
+  }
+}
+
 /**
  * Production adapters must call this only after loading one eligible license
  * match. It validates the full citation count before returning any page rows.

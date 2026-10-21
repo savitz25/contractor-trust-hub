@@ -1,9 +1,9 @@
 /**
- * Adapter boundary for verified OSHA inspection detail.
+ * Public display adapter boundary for verified OSHA inspection detail.
  *
  * This is a display contract only. It intentionally contains no DB column
- * names or query assumptions; a production adapter must map B2's verified
- * source contract into these fields before this UI can receive production data.
+ * names. The server read adapter maps B2's verified database contract into
+ * these fields and intentionally omits private/provenance-only source columns.
  */
 export type OshaCitationType = "Serious" | "Willful" | "Repeat" | "Other" | "Unclassified";
 
@@ -12,18 +12,18 @@ export type OshaCitationDetail = {
   standard: string;
   citationType: OshaCitationType;
   currentPenalty: number;
-  /** Exact, source-provided text only; do not derive a status from missing facts. */
-  officialStatus?: string;
+  contestDate?: string | null;
+  finalOrderDate?: string | null;
 };
 
 export type OshaInspectionDetail = {
   activityNumber: string;
-  openDate: string;
+  openDate: string | null;
   city?: string;
   state?: string;
   inspectionType: string;
-  /** Exact, source-provided status text only. */
-  officialStatus?: string;
+  closeDate?: string | null;
+  closingConferenceDate?: string | null;
   /** Trusted URL supplied by the source adapter; never construct it from activityNumber. */
   officialUrl?: string;
   /** null means citation detail is unavailable; [] means verified zero citation rows. */
@@ -45,6 +45,17 @@ export type OshaInspectionDetailsPage = {
 
 export const OSHA_INSPECTION_DETAILS_PAGE_SIZE = 10;
 
+export function formatOshaCitationStatus(citation: Pick<OshaCitationDetail, "contestDate" | "finalOrderDate">): string | null {
+  const statuses: string[] = [];
+  if (citation.contestDate) statuses.push("Contested");
+  if (citation.finalOrderDate) statuses.push(`Final order ${citation.finalOrderDate}`);
+  return statuses.length ? statuses.join("; ") : null;
+}
+
+export function formatOshaInspectionStatus(inspection: Pick<OshaInspectionDetail, "closeDate">): string | null {
+  return inspection.closeDate ? `Inspection closed ${inspection.closeDate}` : null;
+}
+
 function stableCompare(a: string, b: string): number {
   return a < b ? -1 : a > b ? 1 : 0;
 }
@@ -61,7 +72,9 @@ export function sortOshaInspectionDetails(
     seen.add(inspection.activityNumber);
   }
   return [...inspections].sort(
-    (a, b) => stableCompare(b.openDate, a.openDate) || stableCompare(b.activityNumber, a.activityNumber),
+    (a, b) =>
+      (a.openDate == null ? (b.openDate == null ? 0 : 1) : b.openDate == null ? -1 : stableCompare(b.openDate, a.openDate)) ||
+      stableCompare(b.activityNumber, a.activityNumber),
   );
 }
 

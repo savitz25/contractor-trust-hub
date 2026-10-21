@@ -10,14 +10,20 @@ import {
   buildUnmatchedPaginationDemoPage,
   buildVerifiedOshaInspectionPage,
   OshaDetailUnavailableError,
+  isPublicOshaDetailParentAllowed,
+  encodeOshaInspectionCursor,
+  decodeOshaInspectionCursor,
 } from "../lib/osha/inspection-detail-adapter";
 import {
   countKnownCitationItems,
   isPublicOshaDetailTier,
   sortOshaInspectionDetails,
   verifiedOshaInspectionUrl,
+  formatOshaCitationStatus,
+  formatOshaInspectionStatus,
 } from "../lib/osha/inspection-details";
 import { OSHA_LEGAL_DISCLAIMER, OSHA_MATCH_METHOD } from "../lib/osha/public-record";
+import { isOshaDetailEnabled } from "../lib/osha/flag";
 
 const citedFixture = getOshaDetailPreviewFixture("public-citations");
 const zeroFixture = getOshaDetailPreviewFixture("public-zero");
@@ -97,8 +103,8 @@ test("verified detail fixtures are newest-first, unique, and reconcile with aggr
   assert.equal(new Set(page.inspections.map((item) => item.activityNumber)).size, 2);
   assert.equal(page.inspections[0].citations?.filter((citation) => citation.citationType === "Repeat").length, 1);
   assert.equal(page.inspections[1].citations?.filter((citation) => citation.citationType === "Serious").length, 2);
-  assert.ok(page.inspections.every((item) => item.officialStatus));
-  assert.ok(page.inspections.flatMap((item) => item.citations ?? []).every((item) => item.officialStatus));
+  assert.ok(page.inspections.every((item) => item.officialUrl === undefined));
+  assert.ok(page.inspections.flatMap((item) => item.citations ?? []).every((item) => item.contestDate === undefined && item.finalOrderDate === undefined));
 });
 
 test("only an official verified zero-citation inspection renders the zero-citation state", () => {
@@ -111,7 +117,7 @@ test("only an official verified zero-citation inspection renders the zero-citati
   });
   assert.deepEqual(page.inspections[0].citations, []);
   assert.deepEqual(zeroFixture.inspections[0].citations, []);
-  assert.equal(zeroFixture.inspections[0].officialStatus, "Case closed: 03/13/2001");
+  assert.equal(zeroFixture.inspections[0].closeDate, undefined);
   assert.equal(manyFixture?.inspections.some((inspection) => inspection.citations === null), true);
 });
 
@@ -161,7 +167,7 @@ test("weak or unmatched tiers and inconsistent detail fail closed", () => {
 test("verified OSHA links are exact trusted source URLs, not guessed from activity numbers", () => {
   assert.ok(citedFixture);
   const known = citedFixture.inspections[0];
-  assert.equal(verifiedOshaInspectionUrl(known), known.officialUrl);
+  assert.equal(verifiedOshaInspectionUrl(known), null);
   assert.equal(
     verifiedOshaInspectionUrl({ ...known, officialUrl: `https://evil.example/ords/imis/establishment.inspection_detail?id=${known.activityNumber}` }),
     null,
@@ -207,19 +213,88 @@ test("source adapter keeps only supported display fields and excludes initial pe
   assert.ok(citedFixture);
   const html = renderPreview("public-citations");
   for (const inspection of citedFixture.inspections) {
-    assert.ok(inspection.officialUrl);
+    assert.equal(inspection.officialUrl, undefined);
     assert.ok(inspection.citations?.length);
     for (const citation of inspection.citations ?? []) {
       assert.ok(citation.standard);
       assert.ok(citation.citationType);
       assert.equal(typeof citation.currentPenalty, "number");
-      assert.ok(citation.officialStatus);
+      assert.equal(citation.contestDate, undefined);
+      assert.equal(citation.finalOrderDate, undefined);
     }
   }
-  assert.ok(citedFixture.inspections.every((inspection) => verifiedOshaInspectionUrl(inspection)));
+  assert.ok(citedFixture.inspections.every((inspection) => verifiedOshaInspectionUrl(inspection) === null));
   assert.match(html, /Citations are allegations by OSHA and may be contested, reduced, or withdrawn\. A citation is not a final finding of violation\./);
   assert.doesNotMatch(html, /initial penalty|\b(violator|unsafe|bad contractor|score|rating|rank|grade)\b/i);
   assert.match(html, /This public example is not matched to a contractor\./);
   assert.doesNotMatch(html, new RegExp(OSHA_MATCH_METHOD.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   assert.match(html, new RegExp(OSHA_LEGAL_DISCLAIMER.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+});
+
+test("detail feature flag defaults off and only enables on an explicit on value", () => {
+  assert.equal(isOshaDetailEnabled({}), false);
+  assert.equal(isOshaDetailEnabled({ CON_OSHA_001B_DETAIL: "" }), false);
+  assert.equal(isOshaDetailEnabled({ CON_OSHA_001B_DETAIL: "true" }), true);
+  assert.equal(isOshaDetailEnabled({ CON_OSHA_001B_DETAIL: "invalid" }), false);
+  const loader = readFileSync("lib/osha/load-inspection-details.ts", "utf8") as string;
+  const route = readFileSync("app/api/contractors/[contractorId]/osha-details/route.ts", "utf8") as string;
+  assert.match(loader, /if \(!isOshaDetailEnabled\(\)\)/);
+  assert.match(route, /if \(!isOshaDetailEnabled\(\)\).*404/s);
+  assert.match(loader, /match_tier IN \('exact', 'strong'\)/);
+  assert.match(loader, /id = \$1::uuid AND contractor_id = \$2::uuid AND state = \$3 AND license_key = \$4/);
+  assert.match(loader, /public_match_id = \$1::uuid AND contractor_id = \$2::uuid/);
+  assert.match(loader, /activity_nr = ANY\(string_to_array/);
+  assert.match(loader, /ORDER BY open_date DESC NULLS LAST, activity_nr DESC/);
+  assert.match(loader, /LIMIT \$9/);
+  assert.doesNotMatch(loader, /OFFSET/);
+  assert.match(loader, /contest_date: string \| null; final_order_date: string \| null/);
+  assert.doesNotMatch(loader, /initial_penalty|delete_flag|weak_match|contractor_osha_identity_review/);
+  assert.doesNotMatch(loader, /informal settlement/i);
+});
+
+test("status wording uses only source dates and does not infer settlement or finality", () => {
+  assert.equal(formatOshaCitationStatus({ contestDate: "2025-01-02", finalOrderDate: null }), "Contested");
+  assert.equal(formatOshaCitationStatus({ contestDate: null, finalOrderDate: "2025-03-04" }), "Final order 2025-03-04");
+  assert.equal(formatOshaCitationStatus({ contestDate: null, finalOrderDate: null }), null);
+  assert.equal(formatOshaInspectionStatus({ closeDate: "2025-04-05" }), "Inspection closed 2025-04-05");
+  assert.equal(formatOshaInspectionStatus({ closeDate: null }), null);
+  const component = readFileSync("components/contractor/OshaInspectionDetails.tsx", "utf8") as string;
+  assert.doesNotMatch(component, /informal settlement|Resolved|Final\s*\?/i);
+});
+
+test("detail parent scope permits exact/strong only and rejects profile or license mismatch", () => {
+  const request = { publicMatchId: "m1", contractorId: "c1", state: "FL", licenseKey: "LIC-1" };
+  const parent = { id: "m1", contractorId: "c1", state: "FL", licenseKey: "LIC-1", matchTier: "exact" };
+  assert.equal(isPublicOshaDetailParentAllowed({ parent, request }), true);
+  assert.equal(isPublicOshaDetailParentAllowed({ parent: { ...parent, matchTier: "strong" }, request }), true);
+  assert.equal(isPublicOshaDetailParentAllowed({ parent: { ...parent, matchTier: "weak" }, request }), false);
+  assert.equal(isPublicOshaDetailParentAllowed({ parent: { ...parent, contractorId: "c2" }, request }), false);
+  assert.equal(isPublicOshaDetailParentAllowed({ parent: { ...parent, licenseKey: "LIC-2" }, request }), false);
+  assert.equal(isPublicOshaDetailParentAllowed({ parent: null, request }), false);
+});
+
+test("inspection cursors encode the stable date and activity-number key", () => {
+  const dated = { openDate: "2025-04-03", activityNumber: "123456789" };
+  assert.deepEqual(decodeOshaInspectionCursor(encodeOshaInspectionCursor(dated)), dated);
+  const nullDated = { openDate: null, activityNumber: "123456788" };
+  assert.deepEqual(decodeOshaInspectionCursor(encodeOshaInspectionCursor(nullDated)), nullDated);
+  assert.equal(decodeOshaInspectionCursor(null), null);
+  assert.throws(() => decodeOshaInspectionCursor("garbage"), OshaDetailUnavailableError);
+});
+
+test("draft detail schema is restricted, scoped, and uses no cascades", () => {
+  const migration = readFileSync("schema/migrations/019_con_osha_001b_inspection_details.sql", "utf8") as string;
+  const rollback = readFileSync("schema/rollback/019_con_osha_001b_inspection_details.rollback.sql", "utf8") as string;
+  for (const table of ["contractor_osha_inspections", "contractor_osha_citations", "osha_detail_load_receipts"]) {
+    assert.match(migration, new RegExp(`CREATE TABLE IF NOT EXISTS ${table}`));
+    assert.match(migration, new RegExp(`ALTER TABLE ${table} ENABLE ROW LEVEL SECURITY`));
+    assert.match(migration, new RegExp(`REVOKE ALL ON ${table} FROM PUBLIC`));
+    assert.match(migration, new RegExp(`REVOKE ALL ON ${table} FROM anon`));
+    assert.match(migration, new RegExp(`REVOKE ALL ON ${table} FROM authenticated`));
+  }
+  assert.doesNotMatch(migration, /ON DELETE CASCADE/i);
+  assert.match(migration, /UNIQUE \(public_match_id, activity_nr\)/);
+  assert.match(migration, /UNIQUE \(inspection_id, citation_id\)/);
+  assert.match(rollback, /DO NOT EXECUTE/);
+  assert.doesNotMatch(rollback, /DROP TABLE[^\n]*CASCADE/i);
 });

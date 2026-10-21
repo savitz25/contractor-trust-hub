@@ -3,6 +3,8 @@
 import React, { useId, useState } from "react";
 import {
   sortOshaInspectionDetails,
+  formatOshaCitationStatus,
+  formatOshaInspectionStatus,
   verifiedOshaInspectionUrl,
   type OshaInspectionDetail,
   type OshaInspectionDetailsPage,
@@ -10,7 +12,8 @@ import {
 import { formatCitedPenalty } from "@/lib/osha/public-record";
 
 type Props = {
-  fixtureId: string;
+  fixtureId?: string;
+  detailUrl?: string;
   paginationDemo?: boolean;
 };
 
@@ -64,6 +67,7 @@ function Inspection({
 }) {
   const officialUrl = verifiedOshaInspectionUrl(inspection);
   const location = inspectionLocation(inspection);
+  const inspectionStatus = formatOshaInspectionStatus(inspection);
   return (
     <li className="min-w-0 rounded-lg border border-amber-200 bg-white p-3 sm:p-4" data-testid="osha-inspection">
       <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
@@ -79,7 +83,7 @@ function Inspection({
           <dl className="mt-2 grid min-w-0 grid-cols-1 gap-x-4 gap-y-1 text-sm sm:grid-cols-2">
             <div>
               <dt className="inline font-medium">Opened: </dt>
-              <dd className="inline tabular-nums">{inspection.openDate}</dd>
+              <dd className="inline tabular-nums">{inspection.openDate ?? "Date unavailable"}</dd>
             </div>
             {location ? (
               <div>
@@ -91,10 +95,16 @@ function Inspection({
               <dt className="inline font-medium">Inspection type: </dt>
               <dd className="inline">{inspection.inspectionType}</dd>
             </div>
-            {inspection.officialStatus ? (
+            {inspectionStatus ? (
               <div>
-                <dt className="inline font-medium">Official status: </dt>
-                <dd className="inline">{inspection.officialStatus}</dd>
+                <dt className="inline font-medium">Inspection status: </dt>
+                <dd className="inline">{inspectionStatus}</dd>
+              </div>
+            ) : null}
+            {inspection.closingConferenceDate ? (
+              <div>
+                <dt className="inline font-medium">Closing conference: </dt>
+                <dd className="inline">{inspection.closingConferenceDate}</dd>
               </div>
             ) : null}
           </dl>
@@ -125,34 +135,37 @@ function Inspection({
           </p>
         ) : (
           <ul className="mt-2 space-y-2">
-            {inspection.citations.map((citation) => (
-              <li
-                className="min-w-0 rounded-md bg-amber-50 p-3 text-sm"
-                key={`${inspection.activityNumber}-${citation.citationId}`}
-                data-testid="osha-citation"
-              >
-                <dl className="grid min-w-0 grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
-                  <div className="min-w-0">
-                    <dt className="inline font-medium">Standard cited: </dt>
-                    <dd className="inline break-words">{citation.standard}</dd>
-                  </div>
-                  <div>
-                    <dt className="inline font-medium">Type: </dt>
-                    <dd className="inline">{citation.citationType}</dd>
-                  </div>
-                  <div>
-                    <dt className="inline font-medium">Cited penalty (current): </dt>
-                    <dd className="inline tabular-nums">{formatCitedPenalty(citation.currentPenalty)}</dd>
-                  </div>
-                  {citation.officialStatus ? (
-                    <div className="sm:col-span-2">
-                      <dt className="inline font-medium">Official status: </dt>
-                      <dd className="inline break-words">{citation.officialStatus}</dd>
+            {inspection.citations.map((citation) => {
+              const status = formatOshaCitationStatus(citation);
+              return (
+                <li
+                  className="min-w-0 rounded-md bg-amber-50 p-3 text-sm"
+                  key={`${inspection.activityNumber}-${citation.citationId}`}
+                  data-testid="osha-citation"
+                >
+                  <dl className="grid min-w-0 grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
+                    <div className="min-w-0">
+                      <dt className="inline font-medium">Standard cited: </dt>
+                      <dd className="inline break-words">{citation.standard}</dd>
                     </div>
-                  ) : null}
-                </dl>
-              </li>
-            ))}
+                    <div>
+                      <dt className="inline font-medium">Type: </dt>
+                      <dd className="inline">{citation.citationType}</dd>
+                    </div>
+                    <div>
+                      <dt className="inline font-medium">Cited penalty (current): </dt>
+                      <dd className="inline tabular-nums">{formatCitedPenalty(citation.currentPenalty)}</dd>
+                    </div>
+                    {status ? (
+                      <div className="sm:col-span-2">
+                        <dt className="inline font-medium">Status: </dt>
+                        <dd className="inline break-words">{status}</dd>
+                      </div>
+                    ) : null}
+                  </dl>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
@@ -160,7 +173,7 @@ function Inspection({
   );
 }
 
-export function OshaInspectionDetails({ fixtureId, paginationDemo = false }: Props) {
+export function OshaInspectionDetails({ fixtureId, detailUrl, paginationDemo = false }: Props) {
   const controlsId = useId();
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -174,7 +187,8 @@ export function OshaInspectionDetails({ fixtureId, paginationDemo = false }: Pro
     setLoading(true);
     setError(false);
     try {
-      const base = `/api/preview/osha-safety-record/${encodeURIComponent(fixtureId)}/details`;
+      const base = detailUrl ?? (fixtureId ? `/api/preview/osha-safety-record/${encodeURIComponent(fixtureId)}/details` : null);
+      if (!base) throw new Error("OSHA detail route is unavailable");
       const url = cursor ? `${base}?cursor=${encodeURIComponent(cursor)}` : base;
       const response = await fetch(url, {
         method: "GET",

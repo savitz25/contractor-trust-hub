@@ -191,7 +191,7 @@ test("aggregate card has no inspection expansion or source-gap copy", () => {
   assert.doesNotMatch(aside, /contest/i);
   assert.doesNotMatch(aside, /final[- ]order/i);
   assert.doesNotMatch(card, /Inspection list blocked|<details|<summary|handoff|nContested|nWithFinalOrder/);
-  assert.match(preview, /Production detail data will remain disconnected until the verified source contract is wired/);
+  assert.match(preview, /Production detail data remains unavailable while the source acquisition receipt and approved detail load are pending/);
   assert.match(preview, /data-testid="osha-preview-source-limit"/);
   assert.doesNotMatch(card, /data-testid="osha-preview-source-limit"/);
   assert.doesNotMatch(card, /matchMedia|useMediaQuery/);

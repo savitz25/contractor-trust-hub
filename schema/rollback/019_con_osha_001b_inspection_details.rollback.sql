@@ -1,0 +1,6 @@
+-- CON-OSHA-001B rollback draft only. DO NOT EXECUTE in this PR.
+-- Apply only after explicit operator approval and after dependent rows are backed up.
+-- No CASCADE is used; dependency errors must stop rollback.
+-- DROP TABLE IF EXISTS contractor_osha_citations;
+-- DROP TABLE IF EXISTS contractor_osha_inspections;
+-- DROP TABLE IF EXISTS osha_detail_load_receipts;

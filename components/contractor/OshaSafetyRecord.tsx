@@ -12,6 +12,8 @@ import { OshaInspectionDetails } from "@/components/contractor/OshaInspectionDet
 type Props = {
   records: OshaPublicRecord[];
   correctionHref: string;
+  contractorId?: string;
+  detailEnabled?: boolean;
 };
 
 type CardRecord = {
@@ -42,11 +44,13 @@ function OshaSafetyRecordCard({
   record,
   correctionHref,
   detailFixtureId,
+  detailUrl,
   preview,
 }: {
   record: CardRecord;
   correctionHref: string;
   detailFixtureId?: string;
+  detailUrl?: string;
   preview?: boolean;
 }) {
   return (
@@ -71,7 +75,11 @@ function OshaSafetyRecordCard({
         <span className="font-semibold">{OSHA_PENALTY_LABEL}</span>
         <span className="tabular-nums"> {formatCitedPenalty(record.currentPenalty)}</span>
       </p>
-      {detailFixtureId ? <OshaInspectionDetails fixtureId={detailFixtureId} /> : null}
+      {detailUrl ? (
+        <OshaInspectionDetails detailUrl={detailUrl} />
+      ) : detailFixtureId ? (
+        <OshaInspectionDetails fixtureId={detailFixtureId} />
+      ) : null}
       <p className="mt-4 break-words text-sm leading-relaxed">{OSHA_LEGAL_DISCLAIMER}</p>
       <p className="mt-3 break-words text-sm leading-relaxed">
         {preview ? "This public example is not matched to a contractor." : OSHA_MATCH_METHOD}{" "}
@@ -86,7 +94,7 @@ function OshaSafetyRecordCard({
   );
 }
 
-export function OshaSafetyRecord({ records, correctionHref }: Props) {
+export function OshaSafetyRecord({ records, correctionHref, contractorId, detailEnabled = false }: Props) {
   if (!records.length) return null;
   return (
     <div className="max-w-full min-w-0 space-y-4">
@@ -102,6 +110,11 @@ export function OshaSafetyRecord({ records, correctionHref }: Props) {
             currentPenalty: record.currentPenalty,
           }}
           correctionHref={correctionHref}
+          detailUrl={
+            detailEnabled && contractorId && record.publicMatchId
+              ? `/api/contractors/${encodeURIComponent(contractorId)}/osha-details?match=${encodeURIComponent(record.publicMatchId)}&state=${encodeURIComponent(record.state)}&license=${encodeURIComponent(record.licenseKey ?? "")}`
+              : undefined
+          }
         />
       ))}
     </div>
