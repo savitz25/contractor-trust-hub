@@ -78,8 +78,11 @@ export async function loadPublicOshaInspectionDetails(input: {
   }
 
   const rows = await query<InspectionRow>(
-    `SELECT id, activity_nr, open_date, site_city, site_state, inspection_type,
-            close_date, closing_conference_date, citations_verified
+    `SELECT id, activity_nr, to_char(open_date, 'YYYY-MM-DD') AS open_date,
+            site_city, site_state, inspection_type,
+            to_char(close_date, 'YYYY-MM-DD') AS close_date,
+            to_char(closing_conference_date, 'YYYY-MM-DD') AS closing_conference_date,
+            citations_verified
        FROM contractor_osha_inspections
       WHERE public_match_id = $1::uuid AND contractor_id = $2::uuid
         AND state = $3 AND license_key = $4
@@ -105,7 +108,8 @@ export async function loadPublicOshaInspectionDetails(input: {
   const ids = pageRows.map((row) => row.id);
   const citationRows = ids.length ? await query<CitationRow>(
     `SELECT c.inspection_id, c.citation_id, c.standard, c.viol_type, c.current_penalty,
-            c.contest_date, c.final_order_date
+            to_char(c.contest_date, 'YYYY-MM-DD') AS contest_date,
+            to_char(c.final_order_date, 'YYYY-MM-DD') AS final_order_date
        FROM contractor_osha_citations c
        JOIN contractor_osha_inspections i ON i.id = c.inspection_id
        JOIN contractor_osha_license_matches m ON m.id = i.public_match_id
@@ -134,7 +138,7 @@ export async function loadPublicOshaInspectionDetails(input: {
     openDate: row.open_date,
     city: row.site_city ?? undefined,
     state: row.site_state ?? undefined,
-    inspectionType: row.inspection_type ?? "Unavailable",
+    inspectionType: row.inspection_type ?? undefined,
     closeDate: row.close_date,
     closingConferenceDate: row.closing_conference_date,
     citations: row.citations_verified ? citationsByInspection.get(row.id) ?? [] : null,

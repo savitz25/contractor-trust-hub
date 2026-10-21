@@ -21,7 +21,7 @@ export type OshaInspectionDetail = {
   openDate: string | null;
   city?: string;
   state?: string;
-  inspectionType: string;
+  inspectionType?: string;
   closeDate?: string | null;
   closingConferenceDate?: string | null;
   /** Trusted URL supplied by the source adapter; never construct it from activityNumber. */

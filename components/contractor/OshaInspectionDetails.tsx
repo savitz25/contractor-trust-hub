@@ -91,10 +91,12 @@ function Inspection({
                 <dd className="inline">{location}</dd>
               </div>
             ) : null}
-            <div>
-              <dt className="inline font-medium">Inspection type: </dt>
-              <dd className="inline">{inspection.inspectionType}</dd>
-            </div>
+            {inspection.inspectionType ? (
+              <div>
+                <dt className="inline font-medium">Inspection type: </dt>
+                <dd className="inline">{inspection.inspectionType}</dd>
+              </div>
+            ) : null}
             {inspectionStatus ? (
               <div>
                 <dt className="inline font-medium">Inspection status: </dt>

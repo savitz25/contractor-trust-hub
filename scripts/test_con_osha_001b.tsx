@@ -248,6 +248,8 @@ test("detail feature flag defaults off and only enables on an explicit on value"
   assert.match(loader, /LIMIT \$9/);
   assert.doesNotMatch(loader, /OFFSET/);
   assert.match(loader, /contest_date: string \| null; final_order_date: string \| null/);
+  assert.match(loader, /to_char\(open_date, 'YYYY-MM-DD'\) AS open_date/);
+  assert.match(loader, /to_char\(c\.final_order_date, 'YYYY-MM-DD'\) AS final_order_date/);
   assert.doesNotMatch(loader, /initial_penalty|delete_flag|weak_match|contractor_osha_identity_review/);
   assert.doesNotMatch(loader, /informal settlement/i);
 });
