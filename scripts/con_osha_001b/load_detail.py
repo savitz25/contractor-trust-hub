@@ -397,13 +397,15 @@ def _same_match_snapshot(left: list[Match], right: list[Match]) -> bool:
 def _db_matches(conn) -> list[Match]:
     with conn.cursor() as cur:
         cur.execute("""
-            SELECT id::text, contractor_id::text, state, license_key, match_tier,
-                   osha_activity_nrs, n_inspections, n_citation_items, n_serious,
-                   n_willful_repeat, current_penalty_amount, n_with_final_order,
-                   n_contested, first_open, last_open
-            FROM contractor_osha_license_matches
-            WHERE state IN ('FL', 'NJ') AND match_tier IN ('exact', 'strong')
-            ORDER BY state, license_key, id
+            SELECT m.id::text, m.contractor_id::text, m.state, m.license_key, m.match_tier,
+                   m.osha_activity_nrs, m.n_inspections, m.n_citation_items, m.n_serious,
+                   m.n_willful_repeat, m.current_penalty_amount, m.n_with_final_order,
+                   m.n_contested, m.first_open, m.last_open
+            FROM contractor_osha_license_matches m
+            JOIN contractors c ON c.id = m.contractor_id
+           WHERE m.state IN ('FL', 'NJ') AND m.match_tier IN ('exact', 'strong')
+             AND c.is_thin_profile = FALSE AND c.slug IS NOT NULL AND c.slug <> ''
+           ORDER BY m.state, m.license_key, m.id
         """)
         records = cur.fetchall()
     return [Match(

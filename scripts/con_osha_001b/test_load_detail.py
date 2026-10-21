@@ -123,7 +123,8 @@ class DetailLoaderContractTests(unittest.TestCase):
 
     def test_live_match_query_is_authoritative_and_local_match_csv_is_not_parsed(self):
         source = Path(load_detail.__file__).read_text(encoding="utf-8")
-        self.assertIn("WHERE state IN ('FL', 'NJ') AND match_tier IN ('exact', 'strong')", source)
+        self.assertIn("JOIN contractors c ON c.id = m.contractor_id", source)
+        self.assertIn("c.is_thin_profile = FALSE AND c.slug IS NOT NULL AND c.slug <> ''", source)
         self.assertIn("live published-match scope is required", source)
         self.assertNotIn('"published_matches.csv", {', source)
 
