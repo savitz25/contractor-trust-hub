@@ -72,6 +72,9 @@ import { BusinessResponses } from "@/components/contractor/BusinessResponses";
 import { BusinessSuppliedProfile } from "@/components/contractor/BusinessSuppliedProfile";
 import { BusinessWebsiteEnrichment } from "@/components/contractor/BusinessWebsiteEnrichment";
 import { loadBusinessWebsiteEnrichment } from "@/lib/contractors/enrichment";
+import { OshaSafetyRecord } from "@/components/contractor/OshaSafetyRecord";
+import { isOshaProfileEnabled } from "@/lib/osha/flag";
+import { loadPublicOshaSafetyRecord } from "@/lib/osha/load-public-record";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -212,6 +215,14 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const businessReplies = publicState?.replies ?? null;
   // MD-ENRICH-001: business-website evidence; a business-managed profile supersedes it.
   const websiteEnrichment = businessProfile ? null : await loadBusinessWebsiteEnrichment(contractor.id);
+  const oshaRecords =
+    (isFlFull || isNj) && isOshaProfileEnabled()
+      ? await loadPublicOshaSafetyRecord({
+          contractorId: contractor.id,
+          homeState: isFlFull ? "FL" : "NJ",
+          licenseKeys: contractor.licenses.map((license) => license.externalKey),
+        })
+      : null;
   const claimCtaRendered = Boolean(claimProfile && (businessProfile || showClaimCta));
 
   // FL only: officer-name lineage from stored Sunbiz officers (no invented links)
@@ -580,6 +591,10 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         <WhatWeChecked contractor={contractor} />
 
         <LicensesSection licenses={contractor.licenses} />
+
+        {oshaRecords && oshaRecords.length > 0 ? (
+          <OshaSafetyRecord records={oshaRecords} correctionHref={correctionHref} />
+        ) : null}
 
         {websiteEnrichment ? (
           <BusinessWebsiteEnrichment

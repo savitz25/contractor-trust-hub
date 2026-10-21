@@ -1,0 +1,25 @@
+-- CON-OSHA-001 rollback. DO NOT EXECUTE in this PR.
+-- This removes OSHA pilot rows for one ingest batch, or the empty OSHA tables.
+-- It does not delete contractors, licenses, or unrelated ingest_batches rows.
+-- There is no ON DELETE CASCADE from these tables back to contractors.
+
+-- Data rollback. Replace the uuid, then run only inside an operator transaction
+-- after an explicit Founder GO.
+-- BEGIN;
+-- DELETE FROM contractor_osha_license_matches
+--  WHERE ingest_batch_id = '00000000-0000-0000-0000-000000000000';
+-- DELETE FROM contractor_osha_identity_review
+--  WHERE ingest_batch_id = '00000000-0000-0000-0000-000000000000';
+-- DELETE FROM osha_load_receipts
+--  WHERE ingest_batch_id = '00000000-0000-0000-0000-000000000000';
+-- DELETE FROM ingest_batches
+--  WHERE id = '00000000-0000-0000-0000-000000000000'
+--    AND source_system = 'us_dol_osha';
+-- COMMIT;
+
+-- Structure rollback, only after the data rollback and only if these tables
+-- were created by schema/migrations/018_con_osha_001_osha_safety_record.sql
+-- and are no longer in use.
+-- DROP TABLE IF EXISTS contractor_osha_identity_review;
+-- DROP TABLE IF EXISTS contractor_osha_license_matches;
+-- DROP TABLE IF EXISTS osha_load_receipts;
