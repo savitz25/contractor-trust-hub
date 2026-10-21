@@ -411,8 +411,14 @@ def _expected_metrics(match: Match, source: SourceSet) -> dict[str, object]:
         "n_serious": sum(row["viol_type"] == "S" for row in citations),
         "n_willful_repeat": sum(row["viol_type"] in {"W", "R"} for row in citations),
         "current_penalty_amount": int(current_penalty.quantize(Decimal("1"), rounding=ROUND_HALF_EVEN)),
-        "n_with_final_order": sum(bool(row["final_order_date"]) for row in citations),
-        "n_contested": sum(bool(row["contest_date"]) for row in citations),
+        "n_with_final_order": sum(
+            _parse_date(row["final_order_date"], "final_order_date") is not None
+            for row in citations
+        ),
+        "n_contested": sum(
+            _parse_date(row["contest_date"], "contest_date") is not None
+            for row in citations
+        ),
         "first_open": min(dates) if dates else None,
         "last_open": max(dates) if dates else None,
     }

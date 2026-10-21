@@ -87,6 +87,42 @@ class DetailLoaderContractTests(unittest.TestCase):
         self.assertEqual(load_detail._expected_metrics(match, source)["current_penalty_amount"], 562)
         self.assertEqual(int(load_detail.Decimal("563.50").quantize(load_detail.Decimal("1"), rounding=load_detail.ROUND_HALF_EVEN)), 564)
 
+    def test_missing_date_sentinels_are_absent_for_contest_and_final_order(self):
+        for field in ("contest_date", "final_order_date"):
+            with self.subTest(field=field):
+                for value in ("", "NaT", "NaN", "NONE", "NULL", "NA"):
+                    with self.subTest(value=value):
+                        self.assertIsNone(load_detail._parse_date(value, field))
+                self.assertEqual(load_detail._parse_date("2026-01-01", field).isoformat(), "2026-01-01")
+
+    def test_expected_metrics_count_only_parsed_contest_and_final_order_dates(self):
+        source = load_detail.SourceSet(
+            inspections=({"activity_nr": "ACT-1", "open_date": "2020-01-01"},),
+            source_citations=(
+                {"activity_nr": "ACT-1", "citation_id": "CIT-NAT", "viol_type": "S",
+                 "current_penalty": "", "final_order_date": "NaT", "contest_date": "NaT"},
+                {"activity_nr": "ACT-1", "citation_id": "CIT-ISO", "viol_type": "S",
+                 "current_penalty": "", "final_order_date": "2026-01-01", "contest_date": "2026-01-01"},
+            ),
+            citations=(
+                {"activity_nr": "ACT-1", "citation_id": "CIT-NAT", "viol_type": "S",
+                 "current_penalty": "", "final_order_date": "NaT", "contest_date": "NaT"},
+                {"activity_nr": "ACT-1", "citation_id": "CIT-ISO", "viol_type": "S",
+                 "current_penalty": "", "final_order_date": "2026-01-01", "contest_date": "2026-01-01"},
+            ),
+            deleted_count=0,
+            unique_activities=frozenset({"ACT-1"}),
+        )
+        match = load_detail.Match(
+            match_id="match", contractor_id="contractor", state="FL", license_key="FRO1",
+            tier="exact", activities=frozenset({"ACT-1"}), n_inspections=1, n_citation_items=2,
+            n_serious=2, n_willful_repeat=0, current_penalty_amount=0, n_with_final_order=1,
+            n_contested=1, first_open=None, last_open=None,
+        )
+        metrics = load_detail._expected_metrics(match, source)
+        self.assertEqual(metrics["n_with_final_order"], 1)
+        self.assertEqual(metrics["n_contested"], 1)
+
     def test_simulated_second_run_adds_zero_natural_keys(self):
         planned = {("m1", "a1"), ("m1", "a2"), ("m2", "a1")}
         self.assertEqual(load_detail.simulate_idempotent_runs(planned), (3, 0))
