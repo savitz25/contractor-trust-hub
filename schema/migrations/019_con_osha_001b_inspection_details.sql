@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS osha_detail_load_receipts (
   citation_rows INTEGER NOT NULL CHECK (citation_rows >= 0),
   held_license_keys TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
   hold_reason TEXT,
+  status TEXT NOT NULL DEFAULT 'received' CHECK (status IN ('received', 'loaded', 'rolled_back')),
+  loaded_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (source_batch_id, source_dataset, source_hash),
   UNIQUE (id, source_batch_id)

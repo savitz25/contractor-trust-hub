@@ -281,6 +281,8 @@ test("migration 019 accepts U and records held-source provenance without cascadi
   assert.match(migration, /viol_type IN \('S', 'W', 'R', 'O', 'U'\)/);
   assert.match(migration, /held_license_keys TEXT\[\]/);
   assert.match(migration, /hold_reason TEXT/);
+  assert.match(migration, /status TEXT NOT NULL DEFAULT 'received'/);
+  assert.match(migration, /loaded_at TIMESTAMPTZ/);
   assert.doesNotMatch(migration, /ON DELETE CASCADE/i);
 });
 

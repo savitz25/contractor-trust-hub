@@ -73,6 +73,8 @@ class DetailLoaderContractTests(unittest.TestCase):
         self.assertNotRegex(source, r"(?i)INSERT\s+INTO\s+licenses\b")
         self.assertIn("ON CONFLICT (public_match_id, activity_nr) DO NOTHING", source)
         self.assertIn("ON CONFLICT (inspection_id, citation_id) DO NOTHING", source)
+        self.assertIn("_verify_loaded_reconciliation(cur, eligible, shape)", source)
+        self.assertIn("SET status = 'loaded', loaded_at = now()", source)
 
     def test_rollback_is_batch_scoped_and_leaves_original_identity_objects_untouched(self):
         rollback = (Path(__file__).resolve().parents[2] / "schema/rollback/019_con_osha_001b_inspection_details.rollback.sql").read_text(encoding="utf-8")

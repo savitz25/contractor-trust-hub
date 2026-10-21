@@ -38,7 +38,6 @@ ACCEPTANCE_PROFILE_EXPECTATIONS = {
 }
 DELETE_MARKER = "X"
 GO_PHRASE = "CON-OSHA-001B-DETAIL-LOAD-GO"
-SUPPORTED_VIOLATION_TYPES = {"S", "W", "R", "O", "U"}
 PUBLIC_TYPE_LABELS = {"S": "Serious", "W": "Willful", "R": "Repeat", "O": "Other", "U": "Unclassified"}
 
 
@@ -277,6 +276,56 @@ def _db_matches(conn) -> list[Match]:
     ) for r in records]
 
 
+def _verify_loaded_reconciliation(cur, eligible: list[Match], expected_shape: dict[str, int]) -> None:
+    match_ids = [match.match_id for match in eligible]
+    cur.execute("""
+        SELECT m.id::text,
+               count(DISTINCT i.id)::int,
+               count(c.id)::int,
+               count(c.id) FILTER (WHERE c.viol_type = 'S')::int,
+               count(c.id) FILTER (WHERE c.viol_type IN ('W', 'R'))::int,
+               round(coalesce(sum(c.current_penalty), 0)),
+               count(c.id) FILTER (WHERE c.final_order_date IS NOT NULL)::int,
+               count(c.id) FILTER (WHERE c.contest_date IS NOT NULL)::int,
+               min(i.open_date), max(i.open_date)
+          FROM contractor_osha_license_matches m
+          LEFT JOIN contractor_osha_inspections i
+            ON i.public_match_id = m.id AND i.contractor_id = m.contractor_id
+           AND i.state = m.state AND i.license_key = m.license_key
+          LEFT JOIN contractor_osha_citations c
+            ON c.inspection_id = i.id AND c.activity_nr = i.activity_nr
+         WHERE m.id = ANY(%s::uuid[])
+         GROUP BY m.id
+    """, (match_ids,))
+    rows = cur.fetchall()
+    if len(rows) != len(eligible):
+        raise LoadError("post-insert reconciliation is missing an eligible public match")
+    expected_by_id = {match.match_id: match for match in eligible}
+    inserted_inspections = inserted_citations = 0
+    for row in rows:
+        match = expected_by_id[row[0]]
+        actual = (row[1], row[2], row[3], row[4], Decimal(row[5]), row[6], row[7], row[8], row[9])
+        expected = (
+            match.n_inspections, match.n_citation_items, match.n_serious, match.n_willful_repeat,
+            Decimal(match.current_penalty_amount), match.n_with_final_order, match.n_contested,
+            match.first_open, match.last_open,
+        )
+        if actual != expected:
+            raise LoadError(f"post-insert detail reconciliation failed for {match.state}/{match.license_key}")
+        inserted_inspections += row[1]
+        inserted_citations += row[2]
+    if inserted_inspections != expected_shape["public_match_inspection_attachments"]:
+        raise LoadError("post-insert inspection attachment count differs from source plan")
+    if inserted_citations != expected_shape["public_match_citation_attachments"]:
+        raise LoadError("post-insert citation attachment count differs from source plan")
+    cur.execute("""
+        SELECT count(*) FROM contractor_osha_inspections
+        WHERE state = 'FL' AND license_key = ANY(%s::text[])
+    """, (sorted(HELD_LICENSES),))
+    if cur.fetchone()[0] != 0:
+        raise LoadError("held matches unexpectedly have public inspection details")
+
+
 def run_loader(args: argparse.Namespace) -> dict[str, object]:
     source = read_sources(args.inspections, args.violations)
     if not args.execute:
@@ -431,6 +480,12 @@ def run_loader(args: argparse.Namespace) -> dict[str, object]:
                                 existing_citation = cur.fetchone()
                                 if not existing_citation or existing_citation[0].strip() != VIOLATION_SHA256:
                                     raise LoadError("existing citation key has different provenance; stopping")
+                _verify_loaded_reconciliation(cur, eligible, shape)
+                cur.execute("""
+                    UPDATE osha_detail_load_receipts
+                       SET status = 'loaded', loaded_at = now()
+                     WHERE id = ANY(%s::uuid[]) AND status = 'received'
+                """, ([receipt_ids["osha_inspections"], receipt_ids["osha_violations"]],))
         return {"mode": "loaded", "database": database_name,
                 "inserted_inspection_attachments": inserted_inspections,
                 "inserted_citation_attachments": inserted_citations, **shape}
