@@ -10,7 +10,7 @@ from collections import Counter
 from pathlib import Path
 
 from scripts.osha.crosswalk import load_crosswalk
-from scripts.osha.match import distinct_public_activities, match_state
+from scripts.osha.match import distinct_public_activities, distinct_published_activities, match_state
 from scripts.osha.package import package_bytes, sha256_bytes, spot_bytes, spot_rows
 from scripts.osha.states import STATE_ORDER
 
@@ -23,7 +23,10 @@ def _read_csv(path: Path) -> list[dict]:
 def _summarize(result: dict) -> dict:
     counts = Counter(row["match_tier"] for row in result["matches"])
     inspections = len(distinct_public_activities(result["matches"]))
+    published = len(distinct_published_activities(result["matches"]))
     person_rows = sum(row["person_name_licensee"] == "yes" for row in result["matches"])
+    eligible_ids = {row["contractor_id"] for row in result["matches"] if row["profile_eligible"] == "yes"}
+    ambiguous_held = sum(row["publication_status"] == "ambiguous_held" for row in result["matches"])
     in_state = Counter()
     for row in result["matches"]:
         if row["mailing_state"] == row["state"]:
@@ -39,7 +42,14 @@ def _summarize(result: dict) -> dict:
         "exact": counts["exact"],
         "strong": counts["strong"],
         "weak": counts["weak"],
+        "matched_license_candidates": counts["exact"] + counts["strong"],
+        "eligible_profiles": len(eligible_ids),
+        "eligible_license_rows": sum(row["profile_eligible"] == "yes" for row in result["matches"]),
+        "ambiguous_activities": len(result["ambiguous_activities"]),
+        "ambiguous_held_licenses": ambiguous_held,
+        "weak_held": counts["weak"],
         "inspections_exact_strong": inspections,
+        "published_activities": published,
         "exact_mailing_state": in_state["exact"],
         "strong_mailing_state": in_state["strong"],
         "weak_mailing_state": in_state["weak"],
@@ -90,6 +100,8 @@ def main() -> None:
             summary["strong"],
             summary["weak"],
             summary["inspections_exact_strong"],
+            summary["eligible_profiles"],
+            summary["ambiguous_activities"],
             summary["person_capped_rows"],
             digest,
         )
@@ -104,7 +116,12 @@ def main() -> None:
         "crosswalk_sha256": crosswalk_sha,
         "states": summaries,
         "total_exact_strong": sum(item["exact"] + item["strong"] for item in summaries),
+        "total_matched_license_candidates": sum(item["matched_license_candidates"] for item in summaries),
+        "total_eligible_profiles": sum(item["eligible_profiles"] for item in summaries),
+        "total_ambiguous_activities": sum(item["ambiguous_activities"] for item in summaries),
+        "total_weak_held": sum(item["weak_held"] for item in summaries),
         "total_distinct_inspections": len(public_activities),
+        "total_published_activities": sum(item["published_activities"] for item in summaries),
     }
     receipt_path = args.out_dir / "match-receipt.json"
     receipt_path.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")

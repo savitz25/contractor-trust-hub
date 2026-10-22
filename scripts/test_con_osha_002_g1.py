@@ -76,7 +76,7 @@ class Group1MatcherTests(unittest.TestCase):
     def test_parameterization_uses_the_board_source_only(self):
         self.assertEqual(
             [STATES[code]["source_system"] for code in STATE_ORDER],
-            ["va_dpor", "az_roc", "nv_nscb", "la_lslbc", "ca_cslb"],
+            ["va_dpor", "az_roc", "nv_nscb", "la_lslbc", "ca_cslb", "tn_blc"],
         )
         result = self._match(
             "VA",
@@ -323,6 +323,98 @@ class Group1MatcherTests(unittest.TestCase):
         self.assertEqual(labeled["matches"], [])
         self.assertEqual(kept["matches"][0]["match_tier"], "exact")
         self.assertEqual(kept["matches"][0]["norm_name"], "ACME BUILDERS")
+
+    def test_tennessee_board_and_profile_eligibility(self):
+        self.assertEqual(STATES["TN"], {"source_system": "tn_blc", "fips": "47"})
+        text = CROSSWALK + "8|37201|ZCTA5 37201|1|0|G6350|B5|S|8|47037|Davidson County|1|0|G4020|H1|A|80|0\n"
+        text += "9|37201|ZCTA5 37201|1|0|G6350|B5|S|9|47165|Sumner County|1|0|G4020|H1|A|20|0\n"
+        crosswalk = parse_crosswalk(text)
+        self.assertEqual(crosswalk.counties_for("TN", "37201"), {"DAVIDSON"})
+        eligible = match_state(
+            "TN",
+            [
+                _license(
+                    source_system="tn_blc",
+                    external_key="TN-1",
+                    state="TN",
+                    postal_code="37201",
+                    county_name="Davidson",
+                    contractor_id="profile-1",
+                )
+            ],
+            [_inspection(activity_nr="801", site_state="TN", site_zip="37201")],
+            [],
+            crosswalk,
+        )
+        self.assertEqual(eligible["matches"][0]["match_tier"], "exact")
+        self.assertEqual(eligible["matches"][0]["profile_eligible"], "yes")
+        mismatch = match_state(
+            "TN",
+            [
+                _license(
+                    source_system="tn_blc",
+                    external_key="TN-2",
+                    state="TN",
+                    postal_code="99999",
+                    county_name="Sumner",
+                    contractor_id="profile-2",
+                )
+            ],
+            [_inspection(activity_nr="802", site_state="TN", site_zip="37201", mail_zip="11111")],
+            [],
+            crosswalk,
+        )
+        self.assertEqual(mismatch["matches"][0]["match_tier"], "weak")
+        self.assertEqual(mismatch["matches"][0]["publication_status"], "weak_held")
+
+    def test_ambiguous_activity_is_held_and_same_profile_is_not(self):
+        shared = self._match(
+            "VA",
+            [
+                _license(external_key="A", contractor_id="profile-1"),
+                _license(external_key="B", contractor_id="profile-2"),
+            ],
+            [_inspection(activity_nr="100")],
+        )
+        self.assertEqual(shared["ambiguous_activities"], {"100"})
+        self.assertEqual({row["publication_status"] for row in shared["matches"]}, {"ambiguous_held"})
+        self.assertTrue(all(row["profile_eligible"] == "no" for row in shared["matches"]))
+        same = self._match(
+            "VA",
+            [
+                _license(external_key="A", contractor_id="profile-1"),
+                _license(external_key="B", contractor_id="profile-1"),
+            ],
+            [_inspection(activity_nr="100")],
+        )
+        self.assertEqual(same["ambiguous_activities"], set())
+        self.assertEqual(sum(row["profile_eligible"] == "yes" for row in same["matches"]), 2)
+
+    def test_one_shared_activity_does_not_drop_the_other(self):
+        result = self._match(
+            "VA",
+            [
+                _license(external_key="A", contractor_id="profile-1", postal_code="23220", county_name=""),
+                _license(external_key="B", contractor_id="profile-2", postal_code="99999", county_name="Richmond city"),
+            ],
+            [
+                _inspection(activity_nr="100", site_zip="23220", mail_zip="11111"),
+                _inspection(activity_nr="101", site_zip="23223", mail_zip="11111"),
+            ],
+        )
+        by_key = {row["license_key"]: row for row in result["matches"]}
+        self.assertEqual(result["ambiguous_activities"], {"100"})
+        self.assertEqual(by_key["A"]["match_tier"], "exact")
+        self.assertEqual(by_key["A"]["publication_status"], "ambiguous_held")
+        self.assertEqual(by_key["B"]["match_tier"], "strong")
+        self.assertEqual(by_key["B"]["profile_eligible"], "yes")
+        self.assertEqual(by_key["B"]["published_activity_nrs"], "101")
+
+    def test_missing_contractor_profile_is_not_eligible(self):
+        result = self._match("VA", [_license(contractor_id="")], [_inspection()])
+        self.assertEqual(result["matches"][0]["match_tier"], "exact")
+        self.assertEqual(result["matches"][0]["profile_eligible"], "no")
+        self.assertEqual(result["matches"][0]["publication_status"], "no_profile")
 
     def test_deleted_citation_is_excluded_and_output_is_deterministic(self):
         licenses = [_license()]

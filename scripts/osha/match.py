@@ -86,6 +86,8 @@ def _prepare_licenses(rows: list[dict], state: str) -> list[dict]:
         prepared.append(
             {
                 "license_key": (row.get("external_key") or "").strip(),
+                "contractor_id": (row.get("contractor_id") or "").strip(),
+                "slug": (row.get("slug") or "").strip(),
                 "source_system": spec["source_system"],
                 "mailing_state": (row.get("state") or "").strip().upper(),
                 "display_name": shown,
@@ -210,6 +212,8 @@ def match_state(
                     "state": state,
                     "source_system": spec["source_system"],
                     "license_key": license_row["license_key"],
+                    "contractor_id": license_row["contractor_id"],
+                    "slug": license_row["slug"],
                     "mailing_state": license_row["mailing_state"],
                     "display_name": license_row["display_name"],
                     "norm_name": license_row["norm_name"],
@@ -231,6 +235,7 @@ def match_state(
                 }
             )
     matches.sort(key=lambda row: (row["license_key"], row["match_tier"]))
+    ambiguous = apply_publication_holds(matches)
     return {
         "state": state,
         "source_system": spec["source_system"],
@@ -239,5 +244,61 @@ def match_state(
         "inspections_in_state": len(prepared_inspections),
         "duplicate_inspection_rows": duplicate_inspections,
         "unparsed_open_dates": unparsed_dates,
+        "ambiguous_activities": ambiguous,
         "matches": matches,
     }
+
+
+def apply_publication_holds(matches: list[dict]) -> set[str]:
+    """Hold an exact or strong activity that attaches to more than one profile.
+
+    Weak rows stay held. A license with no contractor profile is not eligible.
+    Two licenses of the same contractor can share an activity.
+    """
+    owners: dict[str, set[str]] = defaultdict(set)
+    for row in matches:
+        if row.get("match_tier") not in PUBLIC_TIERS:
+            continue
+        contractor_id = (row.get("contractor_id") or "").strip()
+        if not contractor_id:
+            continue
+        for activity in str(row.get("osha_activity_nrs") or "").split(";"):
+            if activity:
+                owners[activity].add(contractor_id)
+    ambiguous = {activity for activity, contractors in owners.items() if len(contractors) > 1}
+    for row in matches:
+        activities = [activity for activity in str(row.get("osha_activity_nrs") or "").split(";") if activity]
+        held = [activity for activity in activities if activity in ambiguous]
+        published = [activity for activity in activities if activity not in ambiguous]
+        contractor_id = (row.get("contractor_id") or "").strip()
+        tier = row.get("match_tier")
+        row["ambiguous_activity_nrs"] = ";".join(held)
+        if tier == "weak":
+            row["published_activity_nrs"] = ""
+            row["publication_status"] = "weak_held"
+            row["profile_eligible"] = "no"
+        elif tier in PUBLIC_TIERS and contractor_id and published:
+            row["published_activity_nrs"] = ";".join(published)
+            row["publication_status"] = "eligible"
+            row["profile_eligible"] = "yes"
+        elif tier in PUBLIC_TIERS and contractor_id:
+            row["published_activity_nrs"] = ""
+            row["publication_status"] = "ambiguous_held"
+            row["profile_eligible"] = "no"
+        else:
+            row["published_activity_nrs"] = ""
+            row["publication_status"] = "no_profile"
+            row["profile_eligible"] = "no"
+    return ambiguous
+
+
+def distinct_published_activities(matches: list[dict]) -> set[str]:
+    """Distinct ACTIVITY_NR values still publishable on eligible rows."""
+    found: set[str] = set()
+    for row in matches:
+        if row.get("profile_eligible") != "yes":
+            continue
+        for activity in str(row.get("published_activity_nrs") or "").split(";"):
+            if activity:
+                found.add(activity)
+    return found
