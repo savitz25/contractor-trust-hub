@@ -178,9 +178,18 @@ test("schema 020 is additive and the certified migrations stay FL and NJ", () =>
   const rollback = read("schema/rollback/020_con_osha_002_state_expansion.rollback.sql");
   assert.match(migration, /DRAFT ONLY: do not execute/);
   assert.match(migration, /state IN \('FL', 'NJ', 'CA', 'VA', 'LA', 'NV', 'AZ', 'TN'\)/);
+  assert.match(migration, /contractor_osha_license_matches_state_check/);
+  assert.match(migration, /RAISE EXCEPTION/);
+  assert.match(migration, /osha_matched_activity_nrs/);
+  assert.match(migration, /incomplete_detail/);
+  assert.doesNotMatch(migration, /FOR rec IN/);
   assert.match(earlier, /state IN \('FL', 'NJ'\)/);
   assert.doesNotMatch(earlier, /'CA'/);
   assert.match(rollback, /refuse to shrink OSHA state checks/);
   assert.match(rollback, /expansion_receipt_id IS NOT NULL/);
+  assert.match(rollback, /DROP COLUMN IF EXISTS osha_matched_activity_nrs/);
   assert.doesNotMatch(rollback, /^DELETE FROM contractors/m);
+  const detailSql = read("lib/osha/load-inspection-details.ts");
+  assert.equal(detailSql.includes("osha_matched_activity_nrs"), false);
+  assert.match(detailSql, /isOshaDetailEnabled\(\)/);
 });

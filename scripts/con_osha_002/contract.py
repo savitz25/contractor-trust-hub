@@ -1,20 +1,22 @@
 """CON-OSHA-002 source contract.
 
-Eligible identities come from B2 package rows. This module pins the column
-contract from PR #167 (commit c07b930) and does not implement name, ZIP, or
-county matching. Tennessee is configured for a later B2 package and is not a
-public identity source until that contract includes tn_blc.
+Eligible identities come from the certified B2 package. This module pins the
+24-column contract from PR #167 at 67127bac and does not implement name, ZIP,
+or county matching.
 """
 
 from __future__ import annotations
 
-B2_CONTRACT_COMMIT = "c07b9301b88050640d9b44312a0f7ee7041bb865"
+B2_CONTRACT_COMMIT = "67127bac9d6b2b39fa02d07ec08e053c990346ed"
 
-# scripts/osha/package.py PACKAGE_FIELDS at the commit above.
+# scripts/osha/package.py PACKAGE_FIELDS at the commit above. Order is significant.
 B2_PACKAGE_FIELDS = (
     "state",
     "source_system",
     "license_key",
+    "contractor_id",
+    "profile_eligible",
+    "publication_status",
     "match_tier",
     "person_name_licensee",
     "norm_name",
@@ -22,6 +24,8 @@ B2_PACKAGE_FIELDS = (
     "county_name",
     "n_inspections",
     "osha_activity_nrs",
+    "published_activity_nrs",
+    "ambiguous_activity_nrs",
     "first_open",
     "last_open",
     "n_citation_items",
@@ -39,12 +43,20 @@ B2_SOURCE_SYSTEMS = {
     "NV": "nv_nscb",
     "LA": "la_lslbc",
     "CA": "ca_cslb",
+    "TN": "tn_blc",
 }
 
 CA_NAME_SOURCE = "licensee_name_raw"
 PUBLIC_TIERS = frozenset({"exact", "strong"})
+PUBLICATION_STATUSES = frozenset({
+    "eligible",
+    "weak_held",
+    "ambiguous_held",
+    "no_profile",
+    "unproven_held",
+})
 EXPANSION_STATES = ("CA", "VA", "LA", "NV", "AZ", "TN")
-EXCLUDED_STATES = frozenset({"MA", "GA", "OH", "NC"})
+EXCLUDED_STATES = frozenset({"MA", "GA", "OH", "NC", "FL", "NJ"})
 MATCH_SOURCE_SYSTEM = "us_dol_osha"
 EXPANSION_BATCH_SOURCE = "us_dol_osha_expansion"
 GO_PHRASE = "CON-OSHA-002-EXPANSION-LOAD-GO"
@@ -63,19 +75,58 @@ SOURCE_ZIP_SHA256 = {
     "VA": ("92a367f2021c0f1ff4c7e4acec9159929bc6535be2c865e335c1c9b54e3d7739",),
 }
 
-# Package bytes observed for the committed matcher. Unit tests use fixtures.
+# Certified package bytes at B2 head 67127bac. These replace the c07b930 pins.
 VERIFIED_B2_PACKAGE_SHA256 = {
-    "VA": "302eb02bf03b40aad7cb5b61efd0edb519533ac873deff5c3d39cb96eb3297f9",
-    "AZ": "748095d7d14b28635c88753ce95da31a8cbfc66bf4d70803f14e6e2320611505",
-    "NV": "7b41ba640655d6b6d92345c3269d359bf79fb4fc0ca5e888975ec8e02f2223c6",
-    "LA": "be39d900b5240378b0b6784cc34f69fb7ab5a0b908f43201e5fbb53a8e5fe5d7",
-    "CA": "72d8470c7f2395bb865f5a36435ea6b2b8b428fcc701179394962e64297c789d",
+    "CA": "6c914c00d643f368c72de339bd4bb34b4cd5e9eaa3010b4a4c5fecef9e573539",
+    "VA": "9c245e2c8ea69af10e2b86d1035a8c68070935439193f4265cdb4bbcb761bded",
+    "LA": "547a2c47ee3588dc5af6916bfcef7dff8654e121c4023a303e4ac85120c12c99",
+    "NV": "09b4b5c375df649b824473147adaf2e115b3c8fc2ac0b0e685bed46e60151ad7",
+    "AZ": "e2a7db8d828fce8394a2dff5f47acc362b71b74e837453fcf3903a077469f143",
+    "TN": "77d7a09eb9a1a83da4307de394b5dc861aea395f04ccd71288d65685b04243c0",
 }
+
+# Adapted official inspection and violation extracts in the private repro bundle.
+OFFICIAL_INSPECTION_SHA256 = "206abcc8b2f54edd017a9bc64d79100d7fb788d07c44f87c475c14652cb085d4"
+OFFICIAL_VIOLATION_SHA256 = "93a12b15332d5e1beaf28ed302059718e7c9c45c37bf62e19a33a95f2d192bbf"
+
+CERTIFIED_ELIGIBLE_PROFILES = {
+    "CA": 1706,
+    "VA": 745,
+    "LA": 392,
+    "NV": 188,
+    "AZ": 139,
+    "TN": 244,
+}
+CERTIFIED_PUBLISHED_ACTIVITIES = {
+    "CA": 2615,
+    "VA": 1155,
+    "LA": 651,
+    "NV": 315,
+    "AZ": 173,
+    "TN": 370,
+}
+CERTIFIED_CITATIONS = {
+    "CA": 6903,
+    "VA": 4847,
+    "LA": 1559,
+    "NV": 1097,
+    "AZ": 704,
+    "TN": 1747,
+}
+CERTIFIED_ELIGIBLE_TOTAL = 3414
+CERTIFIED_ACTIVITY_TOTAL = 5279
+CERTIFIED_CITATION_TOTAL = 16857
 
 OPTIONAL_INSPECTION_FIELDS = ("inspection_type", "close_date", "closing_conference_date")
 CITATION_TYPES = frozenset({"S", "W", "R", "O", "U"})
 DELETE_MARKER = "X"
 MISSING_LINK_STATUSES = frozenset({"missing", "missing_citation_context"})
+STATE_CHECK_NAMES = (
+    "contractor_osha_license_matches_state_check",
+    "contractor_osha_identity_review_state_check",
+    "contractor_osha_inspections_state_check",
+    "contractor_osha_match_inspections_state_check",
+)
 
 
 def matcher_authorized(state: str) -> bool:

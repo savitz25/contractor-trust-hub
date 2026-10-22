@@ -77,6 +77,7 @@
 -- ALTER TABLE contractor_osha_identity_review DROP CONSTRAINT IF EXISTS contractor_osha_identity_review_receipt_owner;
 -- ALTER TABLE contractor_osha_license_matches DROP CONSTRAINT IF EXISTS contractor_osha_license_matches_expansion_receipt_batch;
 -- ALTER TABLE contractor_osha_identity_review DROP CONSTRAINT IF EXISTS contractor_osha_identity_review_expansion_receipt_batch;
+-- ALTER TABLE contractor_osha_license_matches DROP COLUMN IF EXISTS osha_matched_activity_nrs;
 -- ALTER TABLE contractor_osha_license_matches DROP COLUMN IF EXISTS expansion_receipt_id;
 -- ALTER TABLE contractor_osha_identity_review DROP COLUMN IF EXISTS expansion_receipt_id;
 -- ALTER TABLE contractor_osha_license_matches ALTER COLUMN receipt_id SET NOT NULL;
