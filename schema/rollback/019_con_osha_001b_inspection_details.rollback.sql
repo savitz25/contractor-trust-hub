@@ -1,0 +1,32 @@
+-- CON-OSHA-001B data rollback template. DO NOT EXECUTE in this PR.
+-- Requires separate operator authorization. Replace BOTH placeholders only
+-- after verifying the batch receipt and source hashes. No CASCADE is used.
+-- This is scoped to detail objects from one us_dol_osha_detail batch only.
+-- It never deletes contractors, licenses, public match rows, weak review rows,
+-- or original osha_load_receipts.
+--
+-- BEGIN;
+-- DO $$ BEGIN
+--   IF NOT EXISTS (
+--     SELECT 1 FROM ingest_batches
+--      WHERE id = '00000000-0000-0000-0000-000000000000'::uuid
+--        AND source_system = 'us_dol_osha_detail'
+--        AND checksum_sha256 = '7a8a5af3e2abbbda1c7636027de01e44c92c77dc1e8af53eac9d3b8fde8a30e9'
+--   ) THEN RAISE EXCEPTION 'detail batch guard failed'; END IF;
+-- END $$;
+-- DELETE FROM contractor_osha_citations
+--  WHERE source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid;
+-- DELETE FROM contractor_osha_match_inspections
+--  WHERE source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid;
+-- DELETE FROM contractor_osha_inspections
+--  WHERE source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid;
+-- DELETE FROM osha_detail_load_receipts
+--  WHERE source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid;
+-- DELETE FROM ingest_batches
+--  WHERE id = '00000000-0000-0000-0000-000000000000'::uuid
+--    AND source_system = 'us_dol_osha_detail'
+--    AND checksum_sha256 = '7a8a5af3e2abbbda1c7636027de01e44c92c77dc1e8af53eac9d3b8fde8a30e9';
+-- COMMIT;
+
+-- Structure rollback is separate and must wait until detail data has been
+-- rolled back and dependencies have been reviewed. No DROP is enabled here.

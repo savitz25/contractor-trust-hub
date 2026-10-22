@@ -73,7 +73,7 @@ import { BusinessSuppliedProfile } from "@/components/contractor/BusinessSupplie
 import { BusinessWebsiteEnrichment } from "@/components/contractor/BusinessWebsiteEnrichment";
 import { loadBusinessWebsiteEnrichment } from "@/lib/contractors/enrichment";
 import { OshaSafetyRecord } from "@/components/contractor/OshaSafetyRecord";
-import { isOshaProfileEnabled } from "@/lib/osha/flag";
+import { isOshaDetailEnabled, isOshaProfileEnabled } from "@/lib/osha/flag";
 import { loadPublicOshaSafetyRecord } from "@/lib/osha/load-public-record";
 
 type Props = {
@@ -593,7 +593,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         <LicensesSection licenses={contractor.licenses} />
 
         {oshaRecords && oshaRecords.length > 0 ? (
-          <OshaSafetyRecord records={oshaRecords} correctionHref={correctionHref} />
+          <OshaSafetyRecord records={oshaRecords} correctionHref={correctionHref} contractorId={contractor.id} detailEnabled={isOshaDetailEnabled()} />
         ) : null}
 
         {websiteEnrichment ? (
