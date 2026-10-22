@@ -14,9 +14,10 @@ export const OSHA_REPORT_ERROR_LABEL = "Report an error";
 export const OSHA_PENALTY_LABEL = "Cited penalty (current)";
 
 export const OSHA_INSPECTION_LIST_STATUS = "blocked" as const;
+export const OSHA_DETAIL_HELD_LICENSE_KEYS = new Set(["FL:CCC1329816", "FL:CGC1519699"]);
 
 export const PUBLIC_OSHA_MATCH_SQL = `
-SELECT license_key, state, match_tier, n_inspections,
+SELECT id, license_key, state, match_tier, n_inspections,
        to_char(first_open, 'YYYY-MM-DD') AS first_open,
        to_char(last_open, 'YYYY-MM-DD') AS last_open,
        n_citation_items, n_serious, current_penalty_amount,
@@ -33,6 +34,7 @@ const PUBLIC_TIERS = new Set(["exact", "strong"]);
 const PILOT_STATES = new Set(["FL", "NJ"]);
 
 export type OshaPublicRecord = {
+  publicMatchId?: string;
   licenseKey: string;
   state: "FL" | "NJ";
   matchTier: "exact" | "strong";
@@ -47,9 +49,11 @@ export type OshaPublicRecord = {
   summary: string;
   penaltyLabel: typeof OSHA_PENALTY_LABEL;
   inspectionList: typeof OSHA_INSPECTION_LIST_STATUS;
+  detailEligible: boolean;
 };
 
 export type OshaSourceMatch = {
+  id?: string;
   licenseKey: string;
   state: string;
   matchTier: string;
@@ -131,6 +135,10 @@ export function formatCitedPenalty(amount: number): string {
   }).format(amount);
 }
 
+export function formatCurrentCitedPenalty(amount: number | null | undefined): string {
+  return amount == null ? "—" : formatCitedPenalty(amount);
+}
+
 /** Exact and strong only. Drops placeholder tiers, other states, and unsupported inspection fields. */
 export function toPublicOshaRecord(input: OshaSourceMatch): OshaPublicRecord | null {
   const state = input.state.trim().toUpperCase();
@@ -157,6 +165,7 @@ export function toPublicOshaRecord(input: OshaSourceMatch): OshaPublicRecord | n
   const firstOpen = isoDate(input.firstOpen);
   const lastOpen = isoDate(input.lastOpen);
   return {
+    publicMatchId: input.id,
     licenseKey,
     state,
     matchTier: tier as "exact" | "strong",
@@ -171,6 +180,7 @@ export function toPublicOshaRecord(input: OshaSourceMatch): OshaPublicRecord | n
     summary: formatOshaSummary(nInspections, firstOpen, lastOpen, nCitationItems, nSerious),
     penaltyLabel: OSHA_PENALTY_LABEL,
     inspectionList: OSHA_INSPECTION_LIST_STATUS,
+    detailEligible: !OSHA_DETAIL_HELD_LICENSE_KEYS.has(`${state}:${licenseKey}`),
   };
 }
 
@@ -195,6 +205,7 @@ export async function loadPublicOshaMatches(
   const records = rows
     .map((row) =>
       toPublicOshaRecord({
+        id: String(row.id ?? ""),
         licenseKey: String(row.license_key ?? row.licenseKey ?? ""),
         state: String(row.state ?? ""),
         matchTier: String(row.match_tier ?? row.matchTier ?? ""),
