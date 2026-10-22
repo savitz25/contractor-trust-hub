@@ -1,0 +1,93 @@
+-- CON-OSHA-002 rollback. DO NOT EXECUTE in this PR.
+-- Data rollback is scoped to one us_dol_osha_expansion batch and one state.
+-- It never deletes contractors, licenses, osha_load_receipts, or FL/NJ rows
+-- owned by the CON-OSHA-001 receipt. No CASCADE is used.
+-- Structure rollback refuses to shrink the state checks while a non-FL/NJ
+-- OSHA row still exists.
+--
+-- BEGIN;
+-- DO $$ BEGIN
+--   IF NOT EXISTS (
+--     SELECT 1 FROM ingest_batches
+--      WHERE id = '00000000-0000-0000-0000-000000000000'::uuid
+--        AND source_system = 'us_dol_osha_expansion'
+--   ) THEN RAISE EXCEPTION 'expansion batch guard failed'; END IF;
+--   IF 'CA' NOT IN ('CA', 'VA', 'LA', 'NV', 'AZ', 'TN') THEN
+--     RAISE EXCEPTION 'expansion state guard failed';
+--   END IF;
+-- END $$;
+-- DELETE FROM contractor_osha_citations c
+--  USING contractor_osha_inspections i
+--  WHERE c.inspection_id = i.id
+--    AND c.source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid
+--    AND i.source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid
+--    AND i.state = 'CA';
+-- DELETE FROM contractor_osha_match_inspections
+--  WHERE source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid
+--    AND state = 'CA';
+-- DELETE FROM contractor_osha_inspections i
+--  WHERE i.source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid
+--    AND i.state = 'CA'
+--    AND NOT EXISTS (
+--      SELECT 1 FROM contractor_osha_match_inspections b WHERE b.inspection_id = i.id
+--    );
+-- DELETE FROM contractor_osha_license_matches
+--  WHERE ingest_batch_id = '00000000-0000-0000-0000-000000000000'::uuid
+--    AND state = 'CA'
+--    AND expansion_receipt_id IS NOT NULL;
+-- DELETE FROM contractor_osha_identity_review
+--  WHERE ingest_batch_id = '00000000-0000-0000-0000-000000000000'::uuid
+--    AND state = 'CA'
+--    AND expansion_receipt_id IS NOT NULL;
+-- DELETE FROM contractor_osha_expansion_holds
+--  WHERE ingest_batch_id = '00000000-0000-0000-0000-000000000000'::uuid
+--    AND state = 'CA';
+-- DELETE FROM osha_expansion_load_receipts
+--  WHERE ingest_batch_id = '00000000-0000-0000-0000-000000000000'::uuid
+--    AND state = 'CA';
+-- DELETE FROM osha_detail_load_receipts r
+--  WHERE r.source_batch_id = '00000000-0000-0000-0000-000000000000'::uuid
+--    AND NOT EXISTS (SELECT 1 FROM contractor_osha_inspections i WHERE i.receipt_id = r.id OR i.source_batch_id = r.source_batch_id)
+--    AND NOT EXISTS (SELECT 1 FROM contractor_osha_citations c WHERE c.receipt_id = r.id OR c.source_batch_id = r.source_batch_id)
+--    AND NOT EXISTS (SELECT 1 FROM contractor_osha_match_inspections b WHERE b.receipt_id = r.id OR b.source_batch_id = r.source_batch_id);
+-- DELETE FROM ingest_batches b
+--  WHERE b.id = '00000000-0000-0000-0000-000000000000'::uuid
+--    AND b.source_system = 'us_dol_osha_expansion'
+--    AND NOT EXISTS (SELECT 1 FROM contractor_osha_license_matches m WHERE m.ingest_batch_id = b.id)
+--    AND NOT EXISTS (SELECT 1 FROM contractor_osha_identity_review r WHERE r.ingest_batch_id = b.id)
+--    AND NOT EXISTS (SELECT 1 FROM osha_load_receipts o WHERE o.ingest_batch_id = b.id)
+--    AND NOT EXISTS (SELECT 1 FROM contractor_osha_inspections i WHERE i.source_batch_id = b.id)
+--    AND NOT EXISTS (SELECT 1 FROM contractor_osha_citations c WHERE c.source_batch_id = b.id)
+--    AND NOT EXISTS (SELECT 1 FROM contractor_osha_match_inspections br WHERE br.source_batch_id = b.id)
+--    AND NOT EXISTS (SELECT 1 FROM osha_expansion_load_receipts e WHERE e.ingest_batch_id = b.id)
+--    AND NOT EXISTS (SELECT 1 FROM osha_detail_load_receipts d WHERE d.source_batch_id = b.id)
+--    AND NOT EXISTS (SELECT 1 FROM contractor_osha_expansion_holds h WHERE h.ingest_batch_id = b.id);
+-- COMMIT;
+--
+-- Structure rollback after the data rollback above, still not enabled here:
+-- DO $$ BEGIN
+--   IF EXISTS (SELECT 1 FROM contractor_osha_license_matches WHERE state NOT IN ('FL', 'NJ'))
+--      OR EXISTS (SELECT 1 FROM contractor_osha_identity_review WHERE state NOT IN ('FL', 'NJ'))
+--      OR EXISTS (SELECT 1 FROM contractor_osha_inspections WHERE state NOT IN ('FL', 'NJ'))
+--      OR EXISTS (SELECT 1 FROM contractor_osha_match_inspections WHERE state NOT IN ('FL', 'NJ'))
+--   THEN RAISE EXCEPTION 'refuse to shrink OSHA state checks while non-FL/NJ rows exist';
+--   END IF;
+-- END $$;
+-- ALTER TABLE contractor_osha_license_matches DROP CONSTRAINT IF EXISTS contractor_osha_license_matches_receipt_owner;
+-- ALTER TABLE contractor_osha_identity_review DROP CONSTRAINT IF EXISTS contractor_osha_identity_review_receipt_owner;
+-- ALTER TABLE contractor_osha_license_matches DROP CONSTRAINT IF EXISTS contractor_osha_license_matches_expansion_receipt_batch;
+-- ALTER TABLE contractor_osha_identity_review DROP CONSTRAINT IF EXISTS contractor_osha_identity_review_expansion_receipt_batch;
+-- ALTER TABLE contractor_osha_license_matches DROP COLUMN IF EXISTS expansion_receipt_id;
+-- ALTER TABLE contractor_osha_identity_review DROP COLUMN IF EXISTS expansion_receipt_id;
+-- ALTER TABLE contractor_osha_license_matches ALTER COLUMN receipt_id SET NOT NULL;
+-- ALTER TABLE contractor_osha_identity_review ALTER COLUMN receipt_id SET NOT NULL;
+-- ALTER TABLE contractor_osha_license_matches DROP CONSTRAINT IF EXISTS contractor_osha_license_matches_state_check;
+-- ALTER TABLE contractor_osha_license_matches ADD CONSTRAINT contractor_osha_license_matches_state_check CHECK (state IN ('FL', 'NJ'));
+-- ALTER TABLE contractor_osha_identity_review DROP CONSTRAINT IF EXISTS contractor_osha_identity_review_state_check;
+-- ALTER TABLE contractor_osha_identity_review ADD CONSTRAINT contractor_osha_identity_review_state_check CHECK (state IN ('FL', 'NJ'));
+-- ALTER TABLE contractor_osha_inspections DROP CONSTRAINT IF EXISTS contractor_osha_inspections_state_check;
+-- ALTER TABLE contractor_osha_inspections ADD CONSTRAINT contractor_osha_inspections_state_check CHECK (state IN ('FL', 'NJ'));
+-- ALTER TABLE contractor_osha_match_inspections DROP CONSTRAINT IF EXISTS contractor_osha_match_inspections_state_check;
+-- ALTER TABLE contractor_osha_match_inspections ADD CONSTRAINT contractor_osha_match_inspections_state_check CHECK (state IN ('FL', 'NJ'));
+-- DROP TABLE IF EXISTS contractor_osha_expansion_holds;
+-- DROP TABLE IF EXISTS osha_expansion_load_receipts;

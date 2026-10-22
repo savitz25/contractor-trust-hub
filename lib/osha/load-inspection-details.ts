@@ -10,7 +10,7 @@ import {
 } from "./inspection-detail-adapter";
 import type { OshaCitationDetail, OshaInspectionDetail, OshaInspectionDetailsPage } from "./inspection-details";
 import { OSHA_INSPECTION_DETAILS_PAGE_SIZE } from "./inspection-details";
-import { OSHA_DETAIL_HELD_LICENSE_KEYS } from "./public-record";
+import { isOshaPilotState, OSHA_DETAIL_HELD_LICENSE_KEYS } from "./public-record";
 
 type MatchRow = QueryResultRow & {
   id: string; contractor_id: string; state: string; license_key: string; match_tier: string;
@@ -31,9 +31,14 @@ const CITATION_TYPE = { S: "Serious", W: "Willful", R: "Repeat", O: "Other", U: 
 /** Detail reads are entirely separate from the live aggregate gate and query path. */
 export async function loadPublicOshaInspectionDetails(input: {
   contractorId: string; publicMatchId: string; state: string; licenseKey: string; cursor?: string | null;
-}): Promise<OshaInspectionDetailsPage> {
+}, deps: {
+  env?: Record<string, string | undefined>;
+  query?: <T extends QueryResultRow>(text: string, params: unknown[]) => Promise<T[]>;
+} = {}): Promise<OshaInspectionDetailsPage> {
+  const env = deps.env ?? process.env;
+  const run = deps.query ?? query;
   if (!isOshaDetailEnabled()) throw new OshaDetailUnavailableError("weak_or_unmatched");
-  if (!input.contractorId || !["FL", "NJ"].includes(input.state) || !input.licenseKey.trim()) {
+  if (!input.contractorId || !isOshaPilotState(input.state, env) || !input.licenseKey.trim()) {
     throw new OshaDetailUnavailableError("weak_or_unmatched");
   }
   if (OSHA_DETAIL_HELD_LICENSE_KEYS.has(`${input.state}:${input.licenseKey}`)) {
@@ -41,7 +46,7 @@ export async function loadPublicOshaInspectionDetails(input: {
   }
   const cursor = decodeOshaInspectionCursor(input.cursor);
 
-  const matches = await query<MatchRow>(
+  const matches = await run<MatchRow>(
     `SELECT id, contractor_id, state, license_key, match_tier, n_citation_items, osha_activity_nrs
        FROM contractor_osha_license_matches
       WHERE id = $1::uuid AND contractor_id = $2::uuid AND state = $3 AND license_key = $4
@@ -61,7 +66,7 @@ export async function loadPublicOshaInspectionDetails(input: {
     request: input,
   })) throw new OshaDetailUnavailableError("weak_or_unmatched");
 
-  const counts = await query<QueryResultRow & { count: string }>(
+  const counts = await run<QueryResultRow & { count: string }>(
     `SELECT count(*)::text AS count
        FROM contractor_osha_citations c
        JOIN contractor_osha_inspections i ON i.id = c.inspection_id
@@ -82,7 +87,7 @@ export async function loadPublicOshaInspectionDetails(input: {
     throw new OshaDetailUnavailableError("reconciliation_failed");
   }
 
-  const rows = await query<InspectionRow>(
+  const rows = await run<InspectionRow>(
     `SELECT i.id, i.activity_nr, to_char(i.open_date, 'YYYY-MM-DD') AS open_date,
             i.site_city, i.site_state, i.inspection_type,
             to_char(i.close_date, 'YYYY-MM-DD') AS close_date,
@@ -102,7 +107,7 @@ export async function loadPublicOshaInspectionDetails(input: {
       LIMIT $9`,
     [match.id, input.contractorId, input.state, input.licenseKey, matches[0].osha_activity_nrs, cursor !== null, cursor?.openDate ?? null, cursor?.activityNumber ?? null, OSHA_INSPECTION_DETAILS_PAGE_SIZE + 1],
   );
-  const inspectionCounts = await query<QueryResultRow & { count: string }>(
+  const inspectionCounts = await run<QueryResultRow & { count: string }>(
     `SELECT count(*)::text AS count FROM contractor_osha_inspections i
        JOIN contractor_osha_match_inspections b ON b.inspection_id = i.id
       WHERE b.public_match_id = $1::uuid AND b.contractor_id = $2::uuid
@@ -113,7 +118,7 @@ export async function loadPublicOshaInspectionDetails(input: {
   const hasMore = rows.length > OSHA_INSPECTION_DETAILS_PAGE_SIZE;
   const pageRows = rows.slice(0, OSHA_INSPECTION_DETAILS_PAGE_SIZE);
   const ids = pageRows.map((row) => row.id);
-  const citationRows = ids.length ? await query<CitationRow>(
+  const citationRows = ids.length ? await run<CitationRow>(
     `SELECT c.inspection_id, c.citation_id, c.standard, c.viol_type, c.current_penalty,
             to_char(c.contest_date, 'YYYY-MM-DD') AS contest_date,
             to_char(c.final_order_date, 'YYYY-MM-DD') AS final_order_date

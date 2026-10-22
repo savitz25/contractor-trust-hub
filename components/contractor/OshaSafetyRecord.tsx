@@ -5,6 +5,7 @@ import {
   OSHA_MATCH_METHOD,
   OSHA_PENALTY_LABEL,
   OSHA_REPORT_ERROR_LABEL,
+  oshaStateLicenseLabel,
   type OshaPublicRecord,
 } from "@/lib/osha/public-record";
 import { OshaInspectionDetails } from "@/components/contractor/OshaInspectionDetails";
@@ -105,7 +106,7 @@ export function OshaSafetyRecord({ records, correctionHref, contractorId, detail
             key: `${record.state}-${record.licenseKey}`,
             state: record.state,
             licenseKey: record.licenseKey,
-            identityLabel: `${record.state === "FL" ? "Florida" : "New Jersey"} license ${record.licenseKey}`,
+            identityLabel: oshaStateLicenseLabel(record.state, record.licenseKey),
             summary: record.summary,
             currentPenalty: record.currentPenalty,
           }}
