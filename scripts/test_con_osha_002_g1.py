@@ -7,6 +7,7 @@ from scripts.osha.match import (
     FUZZY_MATCHING,
     LICENSE_ZIP_CAN_INFER_COUNTY,
     distinct_public_activities,
+    finalize_public_aggregates,
     match_state,
 )
 from scripts.osha.normalize import CA_NAME_SOURCE, ORIGINAL_SUFFIX, SUFFIX_RE, normalize_name
@@ -216,7 +217,7 @@ class Group1MatcherTests(unittest.TestCase):
     def test_census_osha_zip_matches_stored_license_county(self):
         result = self._match(
             "VA",
-            [_license(postal_code="10001", county_name="Richmond city")],
+            [_license(postal_code="10001", county_name="Richmond city", contractor_id="profile-1")],
             [_inspection(site_zip="11111", mail_zip="23223")],
         )
         self.assertEqual(result["matches"][0]["match_tier"], "strong")
@@ -225,7 +226,7 @@ class Group1MatcherTests(unittest.TestCase):
     def test_exact_beats_strong_and_drops_the_lower_tier(self):
         result = self._match(
             "VA",
-            [_license(postal_code="23220", county_name="Richmond city")],
+            [_license(postal_code="23220", county_name="Richmond city", contractor_id="profile-1")],
             [
                 _inspection(activity_nr="100", site_zip="23220", mail_zip="11111"),
                 _inspection(activity_nr="200", site_zip="23223", mail_zip="11111"),
@@ -241,7 +242,7 @@ class Group1MatcherTests(unittest.TestCase):
     def test_strong_beats_weak_and_drops_the_lower_tier(self):
         result = self._match(
             "VA",
-            [_license(postal_code="10001", county_name="Richmond city")],
+            [_license(postal_code="10001", county_name="Richmond city", contractor_id="profile-1")],
             [
                 _inspection(activity_nr="100", site_zip="23223", mail_zip="11111"),
                 _inspection(activity_nr="200", site_zip="30301", mail_zip="88888"),
@@ -257,8 +258,8 @@ class Group1MatcherTests(unittest.TestCase):
         result = self._match(
             "VA",
             [
-                _license(external_key="VA-1", postal_code="23220"),
-                _license(external_key="VA-2", postal_code="23220"),
+                _license(external_key="VA-1", postal_code="23220", contractor_id="profile-1"),
+                _license(external_key="VA-2", postal_code="23220", contractor_id="profile-1"),
             ],
             [
                 _inspection(activity_nr="100", site_zip="23220"),
@@ -282,6 +283,9 @@ class Group1MatcherTests(unittest.TestCase):
         self.assertEqual(row["match_tier"], "weak")
         self.assertEqual(row["person_name_licensee"], "yes")
         self.assertEqual(row["osha_activity_nrs"], "100;101")
+        self.assertEqual(row["published_activity_nrs"], "")
+        self.assertEqual(row["n_inspections"], 0)
+        self.assertEqual(row["initial_penalty_amount"], 0)
         self.assertEqual(distinct_public_activities(result["matches"]), set())
 
     def test_ca_uses_licensee_name_even_when_dba_is_a_different_company(self):
@@ -379,6 +383,8 @@ class Group1MatcherTests(unittest.TestCase):
         self.assertEqual(shared["ambiguous_activities"], {"100"})
         self.assertEqual({row["publication_status"] for row in shared["matches"]}, {"ambiguous_held"})
         self.assertTrue(all(row["profile_eligible"] == "no" for row in shared["matches"]))
+        self.assertTrue(all(row["n_inspections"] == 0 and row["first_open"] == "" for row in shared["matches"]))
+        self.assertTrue(all(row["osha_activity_nrs"] == "100" for row in shared["matches"]))
         same = self._match(
             "VA",
             [
@@ -409,6 +415,118 @@ class Group1MatcherTests(unittest.TestCase):
         self.assertEqual(by_key["B"]["match_tier"], "strong")
         self.assertEqual(by_key["B"]["profile_eligible"], "yes")
         self.assertEqual(by_key["B"]["published_activity_nrs"], "101")
+        self.assertEqual(by_key["A"]["n_inspections"], 0)
+        self.assertEqual(by_key["A"]["osha_activity_nrs"], "100")
+
+    def test_partial_hold_uses_only_the_retained_activity_totals(self):
+        result = self._match(
+            "VA",
+            [
+                _license(external_key="A", contractor_id="profile-1", postal_code="23220", county_name=""),
+                _license(external_key="B", contractor_id="profile-2", postal_code="99999", county_name="Richmond city"),
+                _license(
+                    external_key="C",
+                    contractor_id="profile-3",
+                    licensee_name_raw="Other Builders LLC",
+                    postal_code="23220",
+                ),
+            ],
+            [
+                _inspection(activity_nr="100", site_zip="23220", mail_zip="11111", open_date="2019-03-01"),
+                _inspection(activity_nr="101", site_zip="23223", mail_zip="11111", open_date="2021-07-04"),
+                _inspection(
+                    activity_nr="102",
+                    estab_name="Other Builders LLC",
+                    site_zip="23220",
+                    mail_zip="11111",
+                    open_date="2022-02-02",
+                ),
+            ],
+            [
+                _violation(
+                    activity_nr="100",
+                    initial_penalty="100",
+                    current_penalty="80",
+                    final_order_date="2020-01-15",
+                    viol_type="S",
+                ),
+                _violation(
+                    activity_nr="101",
+                    initial_penalty="40",
+                    current_penalty="15",
+                    contest_date="2021-08-01",
+                    viol_type="S",
+                ),
+                _violation(
+                    activity_nr="102",
+                    initial_penalty="7",
+                    current_penalty="3",
+                    final_order_date="2022-03-01",
+                    viol_type="W",
+                ),
+            ],
+        )
+        by_key = {row["license_key"]: row for row in result["matches"]}
+        held = by_key["A"]
+        self.assertEqual(held["publication_status"], "ambiguous_held")
+        self.assertEqual(held["profile_eligible"], "no")
+        self.assertEqual(held["osha_activity_nrs"], "100")
+        self.assertEqual(held["published_activity_nrs"], "")
+        self.assertEqual(held["n_inspections"], 0)
+        self.assertEqual(held["n_citation_items"], 0)
+        self.assertEqual(held["initial_penalty_amount"], 0)
+        self.assertEqual(held["n_with_final_order"], 0)
+        self.assertEqual(held["first_open"], "")
+        partial = by_key["B"]
+        self.assertEqual(partial["profile_eligible"], "yes")
+        self.assertEqual(partial["osha_activity_nrs"], "100;101")
+        self.assertEqual(partial["published_activity_nrs"], "101")
+        self.assertEqual(partial["n_inspections"], 1)
+        self.assertEqual(partial["n_citation_items"], 1)
+        self.assertEqual(partial["n_serious"], 1)
+        self.assertEqual(partial["n_willful_repeat"], 0)
+        self.assertEqual(partial["initial_penalty_amount"], 40)
+        self.assertEqual(partial["current_penalty_amount"], 15)
+        self.assertEqual(partial["n_with_final_order"], 0)
+        self.assertEqual(partial["n_contested"], 1)
+        self.assertEqual(partial["first_open"], "2021-07-04")
+        self.assertEqual(partial["last_open"], "2021-07-04")
+        untouched = by_key["C"]
+        self.assertEqual(untouched["profile_eligible"], "yes")
+        self.assertEqual(untouched["osha_activity_nrs"], "102")
+        self.assertEqual(untouched["published_activity_nrs"], "102")
+        self.assertEqual(untouched["n_inspections"], 1)
+        self.assertEqual(untouched["n_citation_items"], 1)
+        self.assertEqual(untouched["n_serious"], 0)
+        self.assertEqual(untouched["n_willful_repeat"], 1)
+        self.assertEqual(untouched["initial_penalty_amount"], 7)
+        self.assertEqual(untouched["current_penalty_amount"], 3)
+        self.assertEqual(untouched["n_with_final_order"], 1)
+        self.assertEqual(untouched["n_contested"], 0)
+        self.assertEqual(untouched["first_open"], "2022-02-02")
+
+    def test_unproven_retained_activity_holds_the_license(self):
+        row = {
+            "match_tier": "exact",
+            "contractor_id": "profile-1",
+            "osha_activity_nrs": "100;101",
+            "published_activity_nrs": "101",
+            "ambiguous_activity_nrs": "100",
+            "publication_status": "eligible",
+            "profile_eligible": "yes",
+            "n_inspections": 2,
+            "first_open": "2019-03-01",
+            "last_open": "2021-07-04",
+            "initial_penalty_amount": 140,
+        }
+        finalize_public_aggregates([row], {}, {})
+        self.assertEqual(row["profile_eligible"], "no")
+        self.assertEqual(row["publication_status"], "unproven_held")
+        self.assertEqual(row["published_activity_nrs"], "")
+        self.assertEqual(row["osha_activity_nrs"], "100;101")
+        self.assertEqual(row["n_inspections"], 0)
+        self.assertEqual(row["first_open"], "")
+        self.assertEqual(row["initial_penalty_amount"], 0)
 
     def test_missing_contractor_profile_is_not_eligible(self):
         result = self._match("VA", [_license(contractor_id="")], [_inspection()])
@@ -417,7 +535,7 @@ class Group1MatcherTests(unittest.TestCase):
         self.assertEqual(result["matches"][0]["publication_status"], "no_profile")
 
     def test_deleted_citation_is_excluded_and_output_is_deterministic(self):
-        licenses = [_license()]
+        licenses = [_license(contractor_id="profile-1")]
         inspections = [
             _inspection(activity_nr="100"),
             _inspection(activity_nr="100", estab_name="Acme Builders LLC"),

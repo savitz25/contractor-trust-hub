@@ -175,7 +175,6 @@ def match_state(
         licenses_by_name[license_row["norm_name"]].append(license_row)
 
     matches = []
-    unparsed_dates = 0
     checked_names = 0
     name_total = len(licenses_by_name)
     for norm_name, group in licenses_by_name.items():
@@ -196,17 +195,6 @@ def match_state(
                 continue
             best = max(hits.values(), key=RANK.get)
             kept_ids = sorted((activity for activity, tier in hits.items() if tier == best), key=int)
-            kept = [by_activity[activity] for activity in kept_ids]
-            citation_rows = [row for activity in kept_ids for row in violations_by_activity.get(activity, ())]
-            dates = []
-            for inspection in kept:
-                if inspection["open_date"]:
-                    dates.append(inspection["open_date"])
-                elif (inspection["raw_open"] or "").strip():
-                    unparsed_dates += 1
-            dates.sort()
-            current = round(sum(_money(row.get("current_penalty") or row.get("CURRENT_PENALTY") or "") for row in citation_rows))
-            initial = round(sum(_money(row.get("initial_penalty") or row.get("INITIAL_PENALTY") or "") for row in citation_rows))
             matches.append(
                 {
                     "state": state,
@@ -221,21 +209,13 @@ def match_state(
                     "county_name": license_row["county_name"],
                     "person_name_licensee": "yes" if license_row["person"] else "no",
                     "match_tier": best,
-                    "n_inspections": len(kept),
                     "osha_activity_nrs": ";".join(kept_ids),
-                    "first_open": dates[0] if dates else "",
-                    "last_open": dates[-1] if dates else "",
-                    "n_citation_items": len(citation_rows),
-                    "n_serious": sum((row.get("viol_type") or row.get("VIOL_TYPE") or "").strip().upper() == "S" for row in citation_rows),
-                    "n_willful_repeat": sum((row.get("viol_type") or row.get("VIOL_TYPE") or "").strip().upper() in {"W", "R"} for row in citation_rows),
-                    "current_penalty_amount": current,
-                    "initial_penalty_amount": initial,
-                    "n_with_final_order": sum(bool(iso_date(row.get("final_order_date") or row.get("FINAL_ORDER_DATE") or "")) for row in citation_rows),
-                    "n_contested": sum(bool(iso_date(row.get("contest_date") or row.get("CONTEST_DATE") or "")) for row in citation_rows),
+                    **_empty_public_aggregate(),
                 }
             )
     matches.sort(key=lambda row: (row["license_key"], row["match_tier"]))
     ambiguous = apply_publication_holds(matches)
+    unparsed_dates = finalize_public_aggregates(matches, by_activity, violations_by_activity)
     return {
         "state": state,
         "source_system": spec["source_system"],
@@ -247,6 +227,91 @@ def match_state(
         "ambiguous_activities": ambiguous,
         "matches": matches,
     }
+
+
+def _empty_public_aggregate() -> dict:
+    """Public totals before any retained activity is proven."""
+    return {
+        "n_inspections": 0,
+        "first_open": "",
+        "last_open": "",
+        "n_citation_items": 0,
+        "n_serious": 0,
+        "n_willful_repeat": 0,
+        "current_penalty_amount": 0,
+        "initial_penalty_amount": 0,
+        "n_with_final_order": 0,
+        "n_contested": 0,
+    }
+
+
+def _aggregate_retained_activities(
+    activity_ids: list[str],
+    by_activity: dict[str, dict],
+    violations_by_activity: dict[str, list[dict]],
+) -> dict | None:
+    """Build public totals from official rows for these activity IDs.
+
+    Returns None when any ID is missing from the inspection source. Deleted
+    citations are already absent from violations_by_activity.
+    """
+    dates = []
+    unparsed = 0
+    citation_rows: list[dict] = []
+    for activity in activity_ids:
+        inspection = by_activity.get(activity)
+        if inspection is None:
+            return None
+        if inspection["open_date"]:
+            dates.append(inspection["open_date"])
+        elif (inspection.get("raw_open") or "").strip():
+            unparsed += 1
+        citation_rows.extend(violations_by_activity.get(activity, ()))
+    dates.sort()
+    current = round(sum(_money(row.get("current_penalty") or row.get("CURRENT_PENALTY") or "") for row in citation_rows))
+    initial = round(sum(_money(row.get("initial_penalty") or row.get("INITIAL_PENALTY") or "") for row in citation_rows))
+    return {
+        "n_inspections": len(activity_ids),
+        "first_open": dates[0] if dates else "",
+        "last_open": dates[-1] if dates else "",
+        "n_citation_items": len(citation_rows),
+        "n_serious": sum((row.get("viol_type") or row.get("VIOL_TYPE") or "").strip().upper() == "S" for row in citation_rows),
+        "n_willful_repeat": sum((row.get("viol_type") or row.get("VIOL_TYPE") or "").strip().upper() in {"W", "R"} for row in citation_rows),
+        "current_penalty_amount": current,
+        "initial_penalty_amount": initial,
+        "n_with_final_order": sum(bool(iso_date(row.get("final_order_date") or row.get("FINAL_ORDER_DATE") or "")) for row in citation_rows),
+        "n_contested": sum(bool(iso_date(row.get("contest_date") or row.get("CONTEST_DATE") or "")) for row in citation_rows),
+        "unparsed_open_dates": unparsed,
+    }
+
+
+def finalize_public_aggregates(
+    matches: list[dict],
+    by_activity: dict[str, dict],
+    violations_by_activity: dict[str, list[dict]],
+) -> int:
+    """Replace public totals with metrics proven from published_activity_nrs.
+
+    osha_activity_nrs stays the pre-hold provenance list. A license whose
+    retained activities cannot all be found in the inspection source is held
+    instead of keeping a stale total.
+    """
+    unparsed = 0
+    for row in matches:
+        published = [activity for activity in str(row.get("published_activity_nrs") or "").split(";") if activity]
+        if row.get("profile_eligible") != "yes" or not published:
+            row.update(_empty_public_aggregate())
+            continue
+        proven = _aggregate_retained_activities(published, by_activity, violations_by_activity)
+        if proven is None:
+            row["published_activity_nrs"] = ""
+            row["profile_eligible"] = "no"
+            row["publication_status"] = "unproven_held"
+            row.update(_empty_public_aggregate())
+            continue
+        unparsed += proven.pop("unparsed_open_dates")
+        row.update(proven)
+    return unparsed
 
 
 def apply_publication_holds(matches: list[dict]) -> set[str]:
