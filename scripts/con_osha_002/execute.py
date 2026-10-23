@@ -2,8 +2,9 @@
 
 A real PostgreSQL write always uses the certified pins. Caller counts, package
 hashes, and the official flag cannot select an unverified write. Fixture tests
-use execute_fixture_load with an injected connector. This file does not read an
-environment connection string and does not open Production on import.
+use execute_fixture_load with MemoryConnector only. That helper never accepts a
+caller-supplied database connector. This file does not read an environment
+connection string and does not open Production on import.
 """
 
 from __future__ import annotations
@@ -110,6 +111,22 @@ class MemoryConn:
         self.detail_receipts = snapshot["detail_receipts"]
         self.batches = snapshot["batches"]
         self.inserted = snapshot["inserted"]
+
+
+class MemoryConnector:
+    """Opens only a MemoryConn. It never imports a database driver."""
+
+    def __init__(self, connection):
+        if type(connection) is not MemoryConn:
+            raise LoadError("fixture loads accept only the in-memory test connection")
+        self._connection = connection
+        self.calls = []
+
+    def __call__(self, database_url):
+        if type(self) is not MemoryConnector or type(self._connection) is not MemoryConn:
+            raise LoadError("fixture loads accept only the in-memory test connection")
+        self.calls.append(database_url)
+        return self._connection
 
 
 class MemoryCursor:
@@ -494,6 +511,16 @@ def execute_load(
     )
 
 
+def _require_fixture_connector(connector) -> None:
+    """Reject every caller-supplied database connector before it can be invoked."""
+    if connector is None:
+        raise LoadError("fixture loads require an injected connector and cannot open a database")
+    if type(connector) is not MemoryConnector:
+        raise LoadError("fixture loads accept only the in-memory test connector")
+    if type(connector._connection) is not MemoryConn:
+        raise LoadError("fixture loads accept only the in-memory test connection")
+
+
 def execute_fixture_load(
     eligibility: Eligibility | None = None,
     detail=None,
@@ -511,9 +538,8 @@ def execute_fixture_load(
     source_observed_on: str = "",
     batch_id: str = "",
 ):
-    """Memory-connector exercises. This function never imports a database driver."""
-    if connector is None:
-        raise LoadError("fixture loads require an injected connector and cannot open a database")
+    """In-memory fixture writer. It never imports a database driver."""
+    _require_fixture_connector(connector)
     normalized_batch = _target_gate(
         eligibility, detail, confirm=confirm, database_url=database_url,
         expected_db_host=expected_db_host, expected_db_name=expected_db_name,

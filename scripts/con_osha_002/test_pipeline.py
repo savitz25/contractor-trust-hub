@@ -46,7 +46,7 @@ from scripts.con_osha_002.contract import (
 )
 from scripts.con_osha_002.detail import PlannedCitation, apply_detail, plan_detail, reconcile_initial_penalties
 from scripts.con_osha_002.eligibility import LoadError, classify_rows, load_identities, read_package, verify_identities
-from scripts.con_osha_002.execute import MemoryConn, execute_fixture_load as fixture_writer
+from scripts.con_osha_002.execute import MemoryConn, MemoryConnector, execute_fixture_load as fixture_writer
 from scripts.con_osha_002.rollback import rollback_sql
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -173,12 +173,7 @@ def _plan(rows, identities, inspections: str, citations: str, links: str | None 
 
 
 def _load(conn, eligibility, detail, **kwargs):
-    calls = []
-
-    def connector(url):
-        calls.append(url)
-        return conn
-
+    connector = MemoryConnector(conn)
     result = execute_fixture_load(
         eligibility,
         detail,
@@ -196,7 +191,7 @@ def _load(conn, eligibility, detail, **kwargs):
         batch_id=kwargs.pop("batch_id", BATCH),
         **kwargs,
     )
-    return result, calls
+    return result, connector.calls
 
 
 def _sha256(path: Path) -> str:
@@ -668,11 +663,7 @@ class PipelineTests(unittest.TestCase):
             "1001,01002,1926.501,S,,10,,",
         )
         detail.citations[0].initial_penalty = Decimal("99.00")
-        calls = []
-
-        def connector(url):
-            calls.append(url)
-            return MemoryConn()
+        connector = MemoryConnector(MemoryConn())
 
         with self.assertRaises(LoadError) as tampered:
             execute_fixture_load(
@@ -684,7 +675,7 @@ class PipelineTests(unittest.TestCase):
                 source_observed_on="2026-10-22", batch_id=BATCH,
             )
         self.assertIn("source evidence", str(tampered.exception))
-        self.assertEqual(calls, [])
+        self.assertEqual(connector.calls, [])
 
     def test_conflicting_detail_receipt_and_citation_association_roll_back(self):
         eligibility, _aggregate, _ledger, detail, _root = _plan(
@@ -876,6 +867,65 @@ class PipelineTests(unittest.TestCase):
         self.assertNotIn("import psycopg", inspect.getsource(fixture_writer))
         with self.assertRaises(LoadError):
             fixture_writer()
+
+    def test_fixture_load_rejects_real_connector_before_invocation(self):
+        eligibility, _aggregate, _ledger, detail, _root = _plan(
+            [row(n_citation_items="1")],
+            {("ca_cslb", "100"): C1},
+            "1001,2020-01-02,Oakland,CA",
+            "1001,01002,1926.501,S,,10,,",
+        )
+        calls = []
+
+        class PostgresConnect:
+            def __call__(self, database_url, **kwargs):
+                calls.append(database_url)
+                raise AssertionError("fixture mode invoked a caller-supplied connector")
+
+            def cursor(self):
+                calls.append("cursor")
+                raise AssertionError("fixture mode opened a cursor")
+
+        def connect(database_url, **kwargs):
+            calls.append(database_url)
+            raise AssertionError("fixture mode invoked a caller-supplied connector")
+
+        class SubclassedConnector(MemoryConnector):
+            def __call__(self, database_url):
+                calls.append(database_url)
+                raise AssertionError("fixture mode invoked a subclass connector")
+
+        payload = dict(
+            confirm=GO_PHRASE,
+            database_url="postgresql://db.internal:5432/postgres",
+            expected_db_host="db.internal",
+            expected_db_name="postgres",
+            identities={(eligibility.source_system, "100"): C1},
+            expected_profiles=1,
+            expected_activities=1,
+            expected_citations=1,
+            expected_package_sha256=PACKAGE_SHA,
+            source_observed_on="2026-10-22",
+            batch_id=BATCH,
+        )
+        for spy in (PostgresConnect(), connect, SubclassedConnector(MemoryConn())):
+            with self.assertRaises(LoadError) as rejected:
+                execute_fixture_load(eligibility, detail, connector=spy, **payload)
+            self.assertIn("in-memory test connector", str(rejected.exception))
+        self.assertEqual(calls, [])
+
+        sealed = MemoryConnector(MemoryConn())
+        swapped = PostgresConnect()
+        sealed._connection = swapped
+        with self.assertRaises(LoadError) as swapped_gate:
+            execute_fixture_load(eligibility, detail, connector=sealed, **payload)
+        self.assertIn("in-memory test connection", str(swapped_gate.exception))
+        self.assertEqual(sealed.calls, [])
+        self.assertEqual(calls, [])
+        with self.assertRaises(LoadError):
+            sealed("postgresql://db.internal:5432/postgres")
+        self.assertEqual(sealed.calls, [])
+        self.assertEqual(calls, [])
 
     def test_per_state_rollback_and_migration_020_are_exact(self):
         for state in EXPANSION_STATES:
