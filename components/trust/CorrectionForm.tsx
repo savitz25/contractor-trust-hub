@@ -3,7 +3,7 @@
 import { useMemo, useState, type FormEvent } from "react";
 
 const DEFAULT_TO =
-  process.env.NEXT_PUBLIC_CORRECTIONS_EMAIL || "corrections@contractortrusthub.com";
+  process.env.NEXT_PUBLIC_CORRECTIONS_EMAIL || "hello@asktrusthub.com";
 
 type Props = {
   /** Prefill from a Trust Report slug when linked with ?slug= */
