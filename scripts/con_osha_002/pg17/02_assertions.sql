@@ -28,9 +28,15 @@ BEGIN
   IF current_setting('server_version_num')::int / 10000 <> 17 THEN
     RAISE EXCEPTION 'expected PostgreSQL 17, got %', current_setting('server_version');
   END IF;
+  -- A unix socket reports no server address. Loopback is a local process.
+  -- GitHub's postgres:17 service container reports its bridge address, which
+  -- is private; the workflow still connects only through localhost.
   IF inet_server_addr() IS NOT NULL
      AND inet_server_addr() <> '127.0.0.1'::inet
-     AND inet_server_addr() <> '::1'::inet THEN
+     AND inet_server_addr() <> '::1'::inet
+     AND NOT (inet_server_addr() << '10.0.0.0/8'::inet)
+     AND NOT (inet_server_addr() << '172.16.0.0/12'::inet)
+     AND NOT (inet_server_addr() << '192.168.0.0/16'::inet) THEN
     RAISE EXCEPTION 'refusing non-local server address %', inet_server_addr();
   END IF;
   IF EXISTS (SELECT 1 FROM pg_foreign_server) OR EXISTS (SELECT 1 FROM pg_subscription) THEN
