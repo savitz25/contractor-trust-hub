@@ -2,6 +2,7 @@
  * Public OSHA view for one existing license. License-level totals only.
  * Inspection rows stay blocked until an official per-activity extract is loaded.
  */
+import { oshaPublishedStates, type OshaKnownState } from "./flag";
 
 export const OSHA_LEGAL_DISCLAIMER =
   "Citations are allegations by OSHA and may be contested, reduced, or withdrawn. A citation is not a final finding of violation.";
@@ -15,6 +16,17 @@ export const OSHA_PENALTY_LABEL = "Cited penalty (current)";
 
 export const OSHA_INSPECTION_LIST_STATUS = "blocked" as const;
 export const OSHA_DETAIL_HELD_LICENSE_KEYS = new Set(["FL:CCC1329816", "FL:CGC1519699"]);
+
+const OSHA_STATE_NAMES = {
+  FL: "Florida",
+  NJ: "New Jersey",
+  CA: "California",
+  VA: "Virginia",
+  LA: "Louisiana",
+  NV: "Nevada",
+  AZ: "Arizona",
+  TN: "Tennessee",
+} as const;
 
 export const PUBLIC_OSHA_MATCH_SQL = `
 SELECT id, license_key, state, match_tier, n_inspections,
@@ -31,12 +43,11 @@ ORDER BY license_key
 `.trim();
 
 const PUBLIC_TIERS = new Set(["exact", "strong"]);
-const PILOT_STATES = new Set(["FL", "NJ"]);
 
 export type OshaPublicRecord = {
   publicMatchId?: string;
   licenseKey: string;
-  state: "FL" | "NJ";
+  state: OshaKnownState;
   matchTier: "exact" | "strong";
   nInspections: number;
   firstOpen: string | null;
@@ -69,8 +80,17 @@ export type OshaSourceMatch = {
   activityNumbers?: string | null;
 };
 
-export function isOshaPilotState(state: string | null | undefined): state is "FL" | "NJ" {
-  return PILOT_STATES.has((state || "").trim().toUpperCase());
+export function isOshaPilotState(
+  state: string | null | undefined,
+  env: Record<string, string | undefined> = process.env,
+): state is OshaKnownState {
+  return (oshaPublishedStates(env) as readonly string[]).includes((state || "").trim().toUpperCase());
+}
+
+export function oshaStateLicenseLabel(state: string, licenseKey: string): string {
+  const name = OSHA_STATE_NAMES[state as keyof typeof OSHA_STATE_NAMES];
+  if (!name) return "";
+  return `${name} license ${licenseKey}`;
 }
 
 function whole(value: number): number | null {
@@ -140,10 +160,13 @@ export function formatCurrentCitedPenalty(amount: number | null | undefined): st
 }
 
 /** Exact and strong only. Drops placeholder tiers, other states, and unsupported inspection fields. */
-export function toPublicOshaRecord(input: OshaSourceMatch): OshaPublicRecord | null {
+export function toPublicOshaRecord(
+  input: OshaSourceMatch,
+  env: Record<string, string | undefined> = process.env,
+): OshaPublicRecord | null {
   const state = input.state.trim().toUpperCase();
   const tier = input.matchTier.trim().toLowerCase();
-  if (!isOshaPilotState(state) || !PUBLIC_TIERS.has(tier)) return null;
+  if (!isOshaPilotState(state, env) || !PUBLIC_TIERS.has(tier)) return null;
   const nInspections = whole(input.nInspections);
   const nCitationItems = whole(input.nCitationItems);
   const nSerious = whole(input.nSerious);
@@ -191,10 +214,11 @@ export type OshaQuery = <T extends Record<string, unknown>>(
 
 export async function loadPublicOshaMatches(
   input: { contractorId: string; homeState: string | null; licenseKeys: string[] },
-  deps: { enabled: boolean; query: OshaQuery },
+  deps: { enabled: boolean; query: OshaQuery; env?: Record<string, string | undefined> },
 ): Promise<{ records: OshaPublicRecord[] | null; queryCount: number }> {
+  const env = deps.env ?? process.env;
   if (!deps.enabled) return { records: null, queryCount: 0 };
-  if (!isOshaPilotState(input.homeState)) return { records: null, queryCount: 0 };
+  if (!isOshaPilotState(input.homeState, env)) return { records: null, queryCount: 0 };
   const licenseKeys = [...new Set(input.licenseKeys.map((key) => key.trim()).filter(Boolean))];
   if (!input.contractorId || licenseKeys.length === 0) return { records: null, queryCount: 0 };
   const rows = await deps.query<OshaSourceMatch & Record<string, unknown>>(PUBLIC_OSHA_MATCH_SQL, [
@@ -217,7 +241,7 @@ export async function loadPublicOshaMatches(
         currentPenalty: Number(row.current_penalty_amount ?? row.currentPenalty),
         nWithFinalOrder: Number(row.n_with_final_order ?? row.nWithFinalOrder),
         nContested: Number(row.n_contested ?? row.nContested),
-      }),
+      }, env),
     )
     .filter((row): row is OshaPublicRecord => row != null);
   return { records: records.length ? records : null, queryCount: 1 };

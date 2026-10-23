@@ -4,6 +4,12 @@
  */
 export const OSHA_PROFILE_FLAG = "CON_OSHA_001_PROFILE";
 export const OSHA_DETAIL_FLAG = "CON_OSHA_001B_DETAIL";
+export const OSHA_PROFILE_STATES_FLAG = "CON_OSHA_PROFILE_STATES";
+
+export const OSHA_KNOWN_STATES = ["FL", "NJ", "CA", "VA", "LA", "NV", "AZ", "TN"] as const;
+export type OshaKnownState = (typeof OSHA_KNOWN_STATES)[number];
+const KNOWN_STATE_SET = new Set<string>(OSHA_KNOWN_STATES);
+const DEFAULT_PUBLISHED_STATES = ["FL", "NJ"] as const;
 
 const ON = new Set(["1", "true", "yes", "on"]);
 const OFF = new Set(["0", "false", "no", "off"]);
@@ -23,6 +29,24 @@ export function isOshaProfileEnabled(
   env: Record<string, string | undefined> = process.env,
 ): boolean {
   return oshaProfileFlag(env) === "on";
+}
+
+/**
+ * States that may render an OSHA profile. Blank stays FL and NJ.
+ * Any unknown token, including MA, GA, OH, and NC, fails closed to FL and NJ.
+ * A valid list always keeps the live FL and NJ pilot.
+ */
+export function oshaPublishedStates(
+  env: Record<string, string | undefined> = process.env,
+): readonly OshaKnownState[] {
+  const raw = env[OSHA_PROFILE_STATES_FLAG];
+  if (raw == null || raw.trim() === "") return DEFAULT_PUBLISHED_STATES;
+  const tokens = raw.split(",").map((token) => token.trim().toUpperCase()).filter(Boolean);
+  if (tokens.length === 0 || tokens.some((token) => !KNOWN_STATE_SET.has(token))) {
+    return DEFAULT_PUBLISHED_STATES;
+  }
+  const allowed = new Set<string>(tokens);
+  return OSHA_KNOWN_STATES.filter((state) => state === "FL" || state === "NJ" || allowed.has(state));
 }
 
 /** Detail data has its own rollout gate and is disabled unless explicitly enabled. */

@@ -1,0 +1,50 @@
+# Disposable PostgreSQL 17 engine check for CON-OSHA-002.
+# Synthetic SQL only. Not a production load. No repo secrets. No Supabase branch.
+# pull_request.branches filters the PR base. PR #169 targets main and its head
+# is con-osha-002, so the job condition limits execution to that head branch.
+# workflow_dispatch is likewise limited to refs/heads/con-osha-002.
+
+name: CON-OSHA-002 PostgreSQL 17 engine
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  postgres-17-engine:
+    name: Disposable PostgreSQL 17 synthetic engine
+    if: >-
+      (github.event_name == 'pull_request' && github.head_ref == 'con-osha-002') ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/con-osha-002')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: cth_pg17_test
+      PGPASSWORD: cth_pg17_test_only
+      PGDATABASE: cth_osha_pg17_synthetic
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: cth_pg17_test
+          POSTGRES_PASSWORD: cth_pg17_test_only
+          POSTGRES_DB: cth_osha_pg17_synthetic
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cth_pg17_test -d cth_osha_pg17_synthetic"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: Synthetic PostgreSQL 17 engine assertions
+        run: bash scripts/con_osha_002/pg17/run_engine.sh
