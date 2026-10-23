@@ -9,6 +9,7 @@ from __future__ import annotations
 import ast
 import csv
 import hashlib
+import inspect
 import tempfile
 import unittest
 from decimal import Decimal
@@ -19,6 +20,7 @@ from scripts.con_osha_002.aggregate import (
     MemoryLedger,
     aggregate_statements,
     apply_aggregate,
+    execute_fixture_load,
     execute_load,
     plan_aggregate,
 )
@@ -42,9 +44,9 @@ from scripts.con_osha_002.contract import (
     STATE_CHECK_NAMES,
     VERIFIED_B2_PACKAGE_SHA256,
 )
-from scripts.con_osha_002.detail import apply_detail, plan_detail
+from scripts.con_osha_002.detail import PlannedCitation, apply_detail, plan_detail, reconcile_initial_penalties
 from scripts.con_osha_002.eligibility import LoadError, classify_rows, load_identities, read_package, verify_identities
-from scripts.con_osha_002.execute import MemoryConn
+from scripts.con_osha_002.execute import MemoryConn, execute_fixture_load as fixture_writer
 from scripts.con_osha_002.rollback import rollback_sql
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -159,7 +161,7 @@ def _plan(rows, identities, inspections: str, citations: str, links: str | None 
     _write_csv(inspection_path, "activity_nr,open_date,site_city,site_state", inspections)
     _write_csv(
         citation_path,
-        "activity_nr,citation_id,standard,viol_type,current_penalty,delete_flag,contest_date,final_order_date",
+        "activity_nr,citation_id,standard,viol_type,current_penalty,initial_penalty,delete_flag,contest_date,final_order_date",
         citations,
     )
     link_path = None
@@ -177,7 +179,7 @@ def _load(conn, eligibility, detail, **kwargs):
         calls.append(url)
         return conn
 
-    result = execute_load(
+    result = execute_fixture_load(
         eligibility,
         detail,
         confirm=kwargs.pop("confirm", GO_PHRASE),
@@ -340,10 +342,11 @@ class PipelineTests(unittest.TestCase):
             [row(n_citation_items="1")],
             {("ca_cslb", "100"): C1},
             "1001,2020-01-02,Oakland,CA",
-            "1001,01002,1926.501,S,0,,NaT,",
+            "1001,01002,1926.501,S,0,10,,NaT,",
             "1001,01002,matched",
         )
         self.assertEqual(detail.citations[0].current_penalty, Decimal("0.00"))
+        self.assertEqual(detail.citations[0].initial_penalty, Decimal("10.00"))
         self.assertIsNone(detail.inspections[0].inspection_type)
         self.assertIsNone(detail.inspections[0].close_date)
         self.assertIsNone(detail.inspections[0].closing_conference_date)
@@ -352,6 +355,11 @@ class PipelineTests(unittest.TestCase):
         joined = "\n".join(statements)
         self.assertIn("osha_matched_activity_nrs", joined)
         self.assertIn("1, 1, 1, 0, 0, 0", joined)
+        citation_sql = next(statement for statement in statements if "insert_citation" in statement)
+        self.assertIn("current_penalty, initial_penalty, contest_date", citation_sql)
+        receipt_sql = next(statement for statement in statements if "insert_expansion_receipt" in statement)
+        self.assertIn("source_zip_sha256", receipt_sql)
+        self.assertLess(receipt_sql.index(SOURCE_ZIP_SHA256["CA"][0]), receipt_sql.index(SOURCE_ZIP_SHA256["CA"][1]))
         self.assertLess(joined.index("insert_match"), joined.index("insert_inspection"))
         self.assertNotIn("DROP TABLE", joined)
         apply_detail(detail, ledger)
@@ -375,11 +383,11 @@ class PipelineTests(unittest.TestCase):
             {("ca_cslb", key): contractor for key, contractor in (("100", C1), ("200", C2), ("300", C3), ("400", C4))},
             "1001,2020-05-01,Oakland,CA\n1002,2020-05-02,Oakland,CA\n1003,2020-05-03,Oakland,CA",
             "\n".join([
-                "1001,01001,1926.501,S,,,",
-                "1001,01002,1926.501,S,0,,",
-                "1001,0100X,1926.501,S,5,X,",
-                "1002,02001,1926.501,S,5,,",
-                "1003,03001,,S,5,,",
+                "1001,01001,1926.501,S,,,,,",
+                "1001,01002,1926.501,S,0,10,,,",
+                "1001,0100X,1926.501,S,5,100,X,,",
+                "1002,02001,1926.501,S,5,1,,,",
+                "1003,03001,,S,5,1,,,",
             ]),
             "\n".join([
                 "1001,01001,matched",
@@ -396,6 +404,10 @@ class PipelineTests(unittest.TestCase):
         self.assertIsNone(penalties["01001"])
         self.assertEqual(penalties["01002"], Decimal("0.00"))
         self.assertNotIn("0100X", penalties)
+        initials = {item.citation_id: item.initial_penalty for item in detail.citations}
+        self.assertIsNone(initials["01001"])
+        self.assertEqual(initials["01002"], Decimal("10.00"))
+        self.assertNotIn("0100X", initials)
         reasons = {hold.reason for hold in detail.holds}
         self.assertIn("deleted_citation", reasons)
         self.assertIn("missing_citation_context", reasons)
@@ -417,7 +429,7 @@ class PipelineTests(unittest.TestCase):
                 [row(n_citation_items="5")],
                 {("ca_cslb", "100"): C1},
                 "1001,2020-01-02,Oakland,CA",
-                "1001,01002,1926.501,S,0,,",
+                "1001,01002,1926.501,S,0,10,,,",
                 "1001,01002,matched",
             )
 
@@ -445,11 +457,12 @@ class PipelineTests(unittest.TestCase):
             )],
             {("ca_cslb", "100"): C1},
             "1002,2020-01-02,Oakland,CA",
-            "1002,01002,1926.501,S,,",
+            "1002,01002,1926.501,S,,10,,",
             None,
         )
         self.assertTrue(detail.ready)
         self.assertIsNone(detail.citations[0].current_penalty)
+        self.assertEqual(detail.citations[0].initial_penalty, Decimal("10.00"))
         conn = MemoryConn()
         first, calls = _load(conn, eligibility, detail)
         self.assertEqual(calls, [TARGET_URL])
@@ -462,7 +475,33 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(stored["provenance"], "1001;1002")
         self.assertLess(conn.steps.index("insert_match"), conn.steps.index("insert_inspection"))
         receipts_after_first = conn.inserted["receipts"]
-        self.assertEqual(receipts_after_first, 2)
+        self.assertEqual(receipts_after_first, 3)
+        by_dataset = {}
+        for batch, dataset, digest in conn.detail_receipts:
+            receipt_row = conn.detail_receipts[(batch, dataset, digest)]
+            self.assertEqual(batch, BATCH)
+            by_dataset[dataset] = (digest, receipt_row)
+        inspection_dataset = f"con-osha-002:{detail.state}:inspections"
+        citation_dataset = f"con-osha-002:{detail.state}:citations"
+        self.assertEqual(set(by_dataset), {inspection_dataset, citation_dataset})
+        inspection_digest, inspection_row = by_dataset[inspection_dataset]
+        citation_digest, citation_row = by_dataset[citation_dataset]
+        self.assertEqual(inspection_digest, detail.inspection_sha256)
+        self.assertEqual(citation_digest, detail.citation_sha256)
+        self.assertNotEqual(inspection_row["id"], citation_row["id"])
+        self.assertEqual(
+            (inspection_row["inspection_rows"], inspection_row["loadable"], inspection_row["citation_rows"]),
+            (1, 0, 0),
+        )
+        self.assertEqual(
+            (citation_row["inspection_rows"], citation_row["loadable"], citation_row["citation_rows"]),
+            (0, 1, 1),
+        )
+        self.assertEqual(conn.inspections["1002"]["receipt_id"], inspection_row["id"])
+        self.assertEqual(conn.citations[("1002", "01002")]["receipt_id"], citation_row["id"])
+        self.assertEqual(conn.citations[("1002", "01002")]["initial_penalty"], Decimal("10.00"))
+        self.assertEqual(next(iter(conn.bridges.values()))["receipt_id"], inspection_row["id"])
+        self.assertEqual(next(iter(conn.receipts.values()))["zips"], SOURCE_ZIP_SHA256["CA"])
         second, _calls = _load(conn, eligibility, detail)
         self.assertEqual(second["matches"], 0)
         self.assertEqual(second["holds"], 0)
@@ -470,7 +509,8 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(second["citations"], 0)
         self.assertEqual(second["bridges"], 0)
         self.assertEqual(conn.inserted["receipts"], receipts_after_first)
-        self.assertEqual(len(conn.detail_receipts), 1)
+        self.assertEqual(len(conn.detail_receipts), 2)
+        self.assertEqual(next(iter(conn.receipts.values()))["zips"], SOURCE_ZIP_SHA256["CA"])
         self.assertEqual(len(conn.inspections), 1)
 
         mismatch = MemoryConn()
@@ -529,6 +569,313 @@ class PipelineTests(unittest.TestCase):
                 expected_package_sha256=PACKAGE_SHA, official=True,
                 source_observed_on="2026-10-22", batch_id=BATCH, connector=fail_if_called,
             )
+
+    def test_initial_penalty_preserves_null_zero_positive_and_excludes_deleted(self):
+        _eligibility, _aggregate, _ledger, detail, _root = _plan(
+            [row(n_citation_items="3", n_serious="3", initial_penalty_amount="15")],
+            {("ca_cslb", "100"): C1},
+            "1001,2020-01-02,Oakland,CA",
+            "\n".join([
+                "1001,01001,1926.501,S,,,,,",
+                "1001,01002,1926.501,O,0,0,,,",
+                "1001,01003,1926.501,S,15.25,15.25,,,",
+                "1001,0100X,1926.501,S,100,100,X,,",
+            ]),
+        )
+        self.assertTrue(detail.ready)
+        stored = {item.citation_id: item.initial_penalty for item in detail.citations}
+        self.assertIsNone(stored["01001"])
+        self.assertEqual(stored["01002"], Decimal("0.00"))
+        self.assertEqual(stored["01003"], Decimal("15.25"))
+        self.assertNotIn("0100X", stored)
+        self.assertIn("deleted_citation", {hold.reason for hold in detail.holds})
+        _shared_eligibility, _shared_aggregate, _shared_ledger, shared, _shared_root = _plan(
+            [
+                row(license_key="100", contractor_id=C1, initial_penalty_amount="10"),
+                row(license_key="300", contractor_id=C1, initial_penalty_amount="10"),
+            ],
+            {("ca_cslb", "100"): C1, ("ca_cslb", "300"): C1},
+            "1001,2020-01-02,Oakland,CA",
+            "1001,01002,1926.501,S,,10,,",
+        )
+        self.assertEqual(len(shared.public_matches), 2)
+        self.assertEqual(len(shared.citations), 1)
+        self.assertEqual(shared.citations[0].initial_penalty, Decimal("10.00"))
+
+    def test_initial_penalty_rounding_matches_b2_half_even(self):
+        class Profile:
+            def __init__(self, amount):
+                self.activities = ("1001",)
+                self.n_citation_items = 1
+                self.initial_penalty_amount = amount
+
+        def citation(text, amount):
+            return PlannedCitation(
+                activity_nr="1001",
+                citation_id="01001",
+                standard="1926.501",
+                viol_type="S",
+                current_penalty=None,
+                initial_penalty=amount,
+                initial_penalty_text=text,
+                contest_date=None,
+                final_order_date=None,
+            )
+
+        reconcile_initial_penalties([Profile(12)], [citation("12.5", Decimal("12.50"))])
+        reconcile_initial_penalties([Profile(2)], [citation("1.5", Decimal("1.50"))])
+        reconcile_initial_penalties([Profile(15)], [citation("15.25", Decimal("15.25"))])
+        with self.assertRaises(LoadError):
+            reconcile_initial_penalties([Profile(13)], [citation("12.5", Decimal("12.50"))])
+        with self.assertRaises(LoadError) as tampered:
+            reconcile_initial_penalties([Profile(12)], [citation("12.5", Decimal("13.00"))])
+        self.assertIn("source evidence", str(tampered.exception))
+
+    def test_missing_initial_penalty_evidence_stops(self):
+        eligibility = classify([row()], {("ca_cslb", "100"): C1})
+        eligibility.package_sha256 = PACKAGE_SHA
+        ledger = MemoryLedger()
+        aggregate = plan_aggregate(eligibility, BATCH)
+        apply_aggregate(aggregate, ledger)
+        root = Path(tempfile.mkdtemp())
+        _write_csv(root / "inspections.csv", "activity_nr,open_date", "1001,2020-01-02")
+        _write_csv(
+            root / "citations.csv",
+            "activity_nr,citation_id,standard,viol_type,current_penalty,delete_flag",
+            "1001,01002,1926.501,S,10,",
+        )
+        with self.assertRaises(LoadError) as missing_column:
+            plan_detail(aggregate, ledger, root / "inspections.csv", root / "citations.csv")
+        self.assertIn("initial_penalty", str(missing_column.exception))
+        self.assertNotIn("certified aggregate", str(missing_column.exception))
+
+        class Bare:
+            activity_nr = "1001"
+
+        class Profile:
+            activities = ("1001",)
+            n_citation_items = 1
+            initial_penalty_amount = 10
+
+        with self.assertRaises(LoadError) as bare:
+            reconcile_initial_penalties([Profile()], [Bare()])
+        self.assertIn("unavailable", str(bare.exception))
+
+        ready, _ready_aggregate, _ready_ledger, detail, _detail_root = _plan(
+            [row(n_citation_items="1")],
+            {("ca_cslb", "100"): C1},
+            "1001,2020-01-02,Oakland,CA",
+            "1001,01002,1926.501,S,,10,,",
+        )
+        detail.citations[0].initial_penalty = Decimal("99.00")
+        calls = []
+
+        def connector(url):
+            calls.append(url)
+            return MemoryConn()
+
+        with self.assertRaises(LoadError) as tampered:
+            execute_fixture_load(
+                ready, detail, confirm=GO_PHRASE, database_url=TARGET_URL,
+                expected_db_host="loader.internal", expected_db_name="osha_002_test",
+                identities={(ready.source_system, "100"): C1},
+                expected_profiles=1, expected_activities=1, expected_citations=1,
+                expected_package_sha256=PACKAGE_SHA, connector=connector,
+                source_observed_on="2026-10-22", batch_id=BATCH,
+            )
+        self.assertIn("source evidence", str(tampered.exception))
+        self.assertEqual(calls, [])
+
+    def test_conflicting_detail_receipt_and_citation_association_roll_back(self):
+        eligibility, _aggregate, _ledger, detail, _root = _plan(
+            [row(n_citation_items="1")],
+            {("ca_cslb", "100"): C1},
+            "1001,2020-01-02,Oakland,CA",
+            "1001,01002,1926.501,S,,10,,",
+        )
+        inspection_dataset = f"con-osha-002:{detail.state}:inspections"
+        citation_dataset = f"con-osha-002:{detail.state}:citations"
+        bad_hash = MemoryConn()
+        bad_hash.detail_receipts[(BATCH, citation_dataset, "ff" * 32)] = {
+            "id": "dddddddd-dddd-4ddd-8ddd-ddddddddddd1",
+            "inspection_rows": 0,
+            "loadable": 1,
+            "citation_rows": 1,
+        }
+        with self.assertRaises(LoadError) as conflict:
+            _load(bad_hash, eligibility, detail)
+        self.assertIn("existing detail receipt provenance", str(conflict.exception))
+        self.assertTrue(bad_hash.rolled_back)
+        self.assertEqual(bad_hash.matches, {})
+        self.assertEqual(bad_hash.citations, {})
+        self.assertIn((BATCH, citation_dataset, "ff" * 32), bad_hash.detail_receipts)
+
+        duplicate = MemoryConn()
+        duplicate.detail_receipts[(BATCH, citation_dataset, detail.citation_sha256)] = {
+            "id": "dddddddd-dddd-4ddd-8ddd-ddddddddddd2",
+            "inspection_rows": 0,
+            "loadable": 1,
+            "citation_rows": 1,
+        }
+        duplicate.detail_receipts[(BATCH, citation_dataset, "ee" * 32)] = {
+            "id": "dddddddd-dddd-4ddd-8ddd-ddddddddddd3",
+            "inspection_rows": 0,
+            "loadable": 1,
+            "citation_rows": 1,
+        }
+        with self.assertRaises(LoadError):
+            _load(duplicate, eligibility, detail)
+        self.assertTrue(duplicate.rolled_back)
+        self.assertEqual(duplicate.matches, {})
+
+        inspection_receipt = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbb1"
+        citation_receipt = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbb2"
+        inspection_id = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbb3"
+        linked = MemoryConn()
+        linked.detail_receipts[(BATCH, inspection_dataset, detail.inspection_sha256)] = {
+            "id": inspection_receipt,
+            "inspection_rows": 1,
+            "loadable": 0,
+            "citation_rows": 0,
+        }
+        linked.detail_receipts[(BATCH, citation_dataset, detail.citation_sha256)] = {
+            "id": citation_receipt,
+            "inspection_rows": 0,
+            "loadable": 1,
+            "citation_rows": 1,
+        }
+        linked.inspections["1001"] = {
+            "id": inspection_id,
+            "state": "CA",
+            "digest": detail.inspection_sha256,
+            "batch_id": BATCH,
+            "verified": True,
+            "receipt_id": inspection_receipt,
+        }
+        linked.inspection_ids[inspection_id] = "1001"
+        linked.citations[("1001", "01002")] = {
+            "batch_id": BATCH,
+            "digest": detail.citation_sha256,
+            "receipt_id": inspection_receipt,
+            "initial_penalty": detail.citations[0].initial_penalty,
+        }
+        with self.assertRaises(LoadError) as association:
+            _load(linked, eligibility, detail)
+        self.assertIn("inspection-source receipt", str(association.exception))
+        self.assertTrue(linked.rolled_back)
+        self.assertEqual(linked.matches, {})
+        self.assertEqual(linked.citations[("1001", "01002")]["receipt_id"], inspection_receipt)
+
+        penalty = MemoryConn()
+        penalty.detail_receipts[(BATCH, inspection_dataset, detail.inspection_sha256)] = {
+            "id": inspection_receipt,
+            "inspection_rows": 1,
+            "loadable": 0,
+            "citation_rows": 0,
+        }
+        penalty.detail_receipts[(BATCH, citation_dataset, detail.citation_sha256)] = {
+            "id": citation_receipt,
+            "inspection_rows": 0,
+            "loadable": 1,
+            "citation_rows": 1,
+        }
+        penalty.inspections["1001"] = {
+            "id": inspection_id,
+            "state": "CA",
+            "digest": detail.inspection_sha256,
+            "batch_id": BATCH,
+            "verified": True,
+            "receipt_id": inspection_receipt,
+        }
+        penalty.inspection_ids[inspection_id] = "1001"
+        penalty.citations[("1001", "01002")] = {
+            "batch_id": BATCH,
+            "digest": detail.citation_sha256,
+            "receipt_id": citation_receipt,
+            "initial_penalty": Decimal("1.00"),
+        }
+        with self.assertRaises(LoadError) as penalty_conflict:
+            _load(penalty, eligibility, detail)
+        self.assertIn("different provenance", str(penalty_conflict.exception))
+        self.assertTrue(penalty.rolled_back)
+        self.assertEqual(penalty.matches, {})
+        self.assertEqual(penalty.citations[("1001", "01002")]["initial_penalty"], Decimal("1.00"))
+
+    def test_altered_zip_hash_rolls_back(self):
+        eligibility, _aggregate, _ledger, detail, _root = _plan(
+            [row(n_citation_items="1")],
+            {("ca_cslb", "100"): C1},
+            "1001,2020-01-02,Oakland,CA",
+            "1001,01002,1926.501,S,,10,,",
+        )
+        conn = MemoryConn()
+        conn.receipts[("CA", BATCH)] = {
+            "id": "cccccccc-cccc-4ccc-8ccc-ccccccccccc1",
+            "profiles": 1,
+            "inspections": 1,
+            "citations": 1,
+            "zips": ("0" * 64,),
+        }
+        with self.assertRaises(LoadError) as caught:
+            _load(conn, eligibility, detail)
+        self.assertIn("ZIP", str(caught.exception))
+        self.assertTrue(conn.rolled_back)
+        self.assertEqual(conn.matches, {})
+        self.assertEqual(conn.inspections, {})
+        self.assertEqual(conn.citations, {})
+        self.assertEqual(conn.receipts[("CA", BATCH)]["zips"], ("0" * 64,))
+
+    def test_official_false_cannot_bypass_certified_pins(self):
+        eligibility, _aggregate, _ledger, detail, _root = _plan(
+            [row(n_citation_items="1")],
+            {("ca_cslb", "100"): C1},
+            "1001,2020-01-02,Oakland,CA",
+            "1001,01002,1926.501,S,,10,,",
+        )
+        calls = []
+
+        def recorder(url):
+            calls.append(url)
+            raise AssertionError("connector must not be called")
+
+        with self.assertRaises(LoadError) as bypass:
+            execute_load(
+                eligibility, detail, confirm=GO_PHRASE, database_url=TARGET_URL,
+                expected_db_host="loader.internal", expected_db_name="osha_002_test",
+                identities={(eligibility.source_system, "100"): C1},
+                expected_profiles=1, expected_activities=1, expected_citations=1,
+                expected_package_sha256=PACKAGE_SHA, official=False,
+                source_observed_on="2026-10-22", batch_id=BATCH, connector=recorder,
+            )
+        self.assertIn("cannot override", str(bypass.exception))
+        self.assertEqual(calls, [])
+        with self.assertRaises(LoadError) as arbitrary:
+            execute_load(
+                eligibility, detail, confirm=GO_PHRASE, database_url=TARGET_URL,
+                expected_db_host="loader.internal", expected_db_name="osha_002_test",
+                identities={(eligibility.source_system, "100"): C1},
+                expected_profiles=1706, expected_activities=2615, expected_citations=6903,
+                expected_package_sha256=VERIFIED_B2_PACKAGE_SHA256["CA"], official=False,
+                source_observed_on="2026-10-22", batch_id=BATCH, connector=recorder,
+            )
+        self.assertIn("official inspection or violation hash", str(arbitrary.exception))
+        self.assertEqual(calls, [])
+        detail.inspection_sha256 = OFFICIAL_INSPECTION_SHA256
+        detail.citation_sha256 = OFFICIAL_VIOLATION_SHA256
+        with self.assertRaises(LoadError) as counts:
+            execute_load(
+                eligibility, detail, confirm=GO_PHRASE, database_url=TARGET_URL,
+                expected_db_host="loader.internal", expected_db_name="osha_002_test",
+                identities={(eligibility.source_system, "100"): C1},
+                expected_profiles=1706, expected_activities=2615, expected_citations=6903,
+                expected_package_sha256=VERIFIED_B2_PACKAGE_SHA256["CA"],
+                source_observed_on="2026-10-22", batch_id=BATCH, connector=recorder,
+            )
+        self.assertIn("preflight", str(counts.exception))
+        self.assertEqual(calls, [])
+        self.assertNotIn("import psycopg", inspect.getsource(fixture_writer))
+        with self.assertRaises(LoadError):
+            fixture_writer()
 
     def test_per_state_rollback_and_migration_020_are_exact(self):
         for state in EXPANSION_STATES:
@@ -654,10 +1001,13 @@ class PipelineTests(unittest.TestCase):
                 inspection_writers[state].writerow(["activity_nr", "open_date", "site_city", "site_state"])
                 citation_writers[state].writerow([
                     "activity_nr", "citation_id", "standard", "viol_type", "current_penalty",
-                    "delete_flag", "contest_date", "final_order_date",
+                    "initial_penalty", "delete_flag", "contest_date", "final_order_date",
                 ])
             blank_penalties = {state: 0 for state in EXPANSION_STATES}
             zero_penalties = {state: 0 for state in EXPANSION_STATES}
+            blank_initial = {state: 0 for state in EXPANSION_STATES}
+            zero_initial = {state: 0 for state in EXPANSION_STATES}
+            positive_initial = {state: 0 for state in EXPANSION_STATES}
             loadable = {state: {} for state in EXPANSION_STATES}
             try:
                 for record in _folded_rows(inspections):
@@ -675,10 +1025,11 @@ class PipelineTests(unittest.TestCase):
                         continue
                     marker = record.get("delete_flag", "").upper()
                     penalty = record.get("current_penalty", "")
+                    initial = record.get("initial_penalty", "")
                     if marker == "X":
                         citation_writers[state].writerow([
                             activity, record.get("citation_id", ""), record.get("standard", ""),
-                            record.get("viol_type", ""), penalty, "X",
+                            record.get("viol_type", ""), penalty, initial, "X",
                             record.get("contest_date", ""), record.get("final_order_date", ""),
                         ])
                         continue
@@ -687,9 +1038,15 @@ class PipelineTests(unittest.TestCase):
                         blank_penalties[state] += 1
                     elif Decimal(penalty) == 0:
                         zero_penalties[state] += 1
+                    if initial == "":
+                        blank_initial[state] += 1
+                    elif Decimal(initial) == 0:
+                        zero_initial[state] += 1
+                    else:
+                        positive_initial[state] += 1
                     citation_writers[state].writerow([
                         activity, record.get("citation_id", ""), record.get("standard", ""),
-                        record.get("viol_type", ""), penalty, "",
+                        record.get("viol_type", ""), penalty, initial, "",
                         record.get("contest_date", ""), record.get("final_order_date", ""),
                     ])
             finally:
@@ -743,6 +1100,19 @@ class PipelineTests(unittest.TestCase):
                 plan_zero = sum(1 for item in detail.citations if item.current_penalty == Decimal("0.00"))
                 self.assertEqual(plan_blank, blank_penalties[state])
                 self.assertEqual(plan_zero, zero_penalties[state])
+                plan_initial_blank = sum(1 for item in detail.citations if item.initial_penalty is None)
+                plan_initial_zero = sum(1 for item in detail.citations if item.initial_penalty == Decimal("0.00"))
+                plan_initial_positive = sum(
+                    1 for item in detail.citations
+                    if item.initial_penalty is not None and item.initial_penalty > 0
+                )
+                self.assertEqual(plan_initial_blank, blank_initial[state])
+                self.assertEqual(plan_initial_zero, zero_initial[state])
+                self.assertEqual(plan_initial_positive, positive_initial[state])
+                self.assertEqual(
+                    plan_initial_blank + plan_initial_zero + plan_initial_positive,
+                    CERTIFIED_CITATIONS[state],
+                )
                 self.assertTrue(all(item.inspection_type is None and item.close_date is None for item in detail.inspections))
             self.assertGreater(sum(blank_penalties.values()), 0)
             self.assertGreater(sum(zero_penalties.values()), 0)

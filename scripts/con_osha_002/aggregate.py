@@ -10,6 +10,7 @@ from scripts.con_osha_002.contract import (
     EXPANSION_BATCH_SOURCE,
     EXPANSION_STATES,
     MATCH_SOURCE_SYSTEM,
+    SOURCE_ZIP_SHA256,
 )
 from scripts.con_osha_002.eligibility import Eligibility, LoadError, PublicMatch
 
@@ -46,6 +47,17 @@ class AggregatePlan:
 
     _ledger_batches: set[str] = field(default_factory=set)
     _ledger_receipts: set[tuple[str, str]] = field(default_factory=set)
+
+
+def _zip_array_sql(state: str) -> str:
+    hashes = SOURCE_ZIP_SHA256.get(state)
+    if not hashes:
+        raise LoadError("expansion state has no certified ZIP hashes")
+    for item in hashes:
+        if len(item) != 64 or any(char not in "0123456789abcdef" for char in item):
+            raise LoadError("certified ZIP hash is not lowercase sha256")
+    rendered = ", ".join(f"'{item}'" for item in hashes)
+    return f"ARRAY[{rendered}]::text[]"
 
 
 def _uuid(value: str) -> str:
@@ -139,6 +151,7 @@ def aggregate_statements(plan: AggregatePlan, detail) -> list[str]:
     if not all(isinstance(count, int) and count >= 0 for count in (profiles, inspections, citations, ambiguous, held)):
         raise LoadError("aggregate SQL counts must be non-negative integers")
     ca_name = "NULL" if state != "CA" else "'licensee_name_raw'"
+    zip_sql = _zip_array_sql(state)
     return [
         (
             "-- con-osha-002-step insert_batch\n"
@@ -151,9 +164,10 @@ def aggregate_statements(plan: AggregatePlan, detail) -> list[str]:
             "INSERT INTO osha_expansion_load_receipts "
             "(state, ingest_batch_id, b2_source_system, b2_package_sha256, ca_name_source, "
             "public_profile_count, inspection_count, citation_count, ambiguous_activity_count, "
-            "missing_citation_context_count, held_row_count) "
+            "missing_citation_context_count, held_row_count, source_zip_sha256) "
             f"VALUES ('{state}', '{batch}'::uuid, '{source}', '{digest}', {ca_name}, "
-            f"{profiles}, {inspections}, {citations}, {ambiguous}, {detail.missing_citation_context}, {held}) "
+            f"{profiles}, {inspections}, {citations}, {ambiguous}, {detail.missing_citation_context}, {held}, "
+            f"{zip_sql}) "
             "ON CONFLICT (state, ingest_batch_id) DO NOTHING"
         ),
         (
@@ -188,8 +202,8 @@ def aggregate_statements(plan: AggregatePlan, detail) -> list[str]:
             "-- con-osha-002-step insert_citation\n"
             "INSERT INTO contractor_osha_citations "
             "(inspection_id, activity_nr, citation_id, standard, viol_type, current_penalty, "
-            "contest_date, final_order_date, delete_flag, source_batch_id, receipt_id, source_hash) "
-            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NULL, '{batch}'::uuid, %s::uuid, %s) "
+            "initial_penalty, contest_date, final_order_date, delete_flag, source_batch_id, receipt_id, source_hash) "
+            f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, NULL, '{batch}'::uuid, %s::uuid, %s) "
             "ON CONFLICT (inspection_id, citation_id) DO NOTHING"
         ),
         (
@@ -205,4 +219,9 @@ def aggregate_statements(plan: AggregatePlan, detail) -> list[str]:
 
 def execute_load(*args, **kwargs):
     from scripts.con_osha_002.execute import execute_load as run
+    return run(*args, **kwargs)
+
+
+def execute_fixture_load(*args, **kwargs):
+    from scripts.con_osha_002.execute import execute_fixture_load as run
     return run(*args, **kwargs)

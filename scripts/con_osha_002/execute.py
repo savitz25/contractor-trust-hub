@@ -1,15 +1,17 @@
 """GO-gated expansion load. Importing this module does not connect or write.
 
-The caller must pass the Founder phrase, the expected database host, and the
-expected database name. A mismatch stops before any insert. This file does not
-read an environment connection string and does not open Production on import.
+A real PostgreSQL write always uses the certified pins. Caller counts, package
+hashes, and the official flag cannot select an unverified write. Fixture tests
+use execute_fixture_load with an injected connector. This file does not read an
+environment connection string and does not open Production on import.
 """
 
 from __future__ import annotations
 
 import copy
+from decimal import Decimal, InvalidOperation
 from urllib.parse import urlparse
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from scripts.con_osha_002.aggregate import AggregatePlan, plan_aggregate
 from scripts.con_osha_002.contract import (
@@ -21,6 +23,7 @@ from scripts.con_osha_002.contract import (
     MATCH_SOURCE_SYSTEM,
     OFFICIAL_INSPECTION_SHA256,
     OFFICIAL_VIOLATION_SHA256,
+    SOURCE_ZIP_SHA256,
     STATE_CHECK_NAMES,
     VERIFIED_B2_PACKAGE_SHA256,
 )
@@ -50,7 +53,7 @@ class MemoryConn:
         self.inspections = {}
         self.inspection_ids = {}
         self.citations = {}
-        self.bridges = set()
+        self.bridges = {}
         self.receipts = {}
         self.detail_receipts = {}
         self.batches = {}
@@ -164,6 +167,7 @@ class MemoryCursor:
             "profiles": params[5],
             "inspections": params[6],
             "citations": params[7],
+            "zips": tuple(params[11]),
         }
         self.conn.inserted["receipts"] += 1
         return (receipt_id,)
@@ -173,7 +177,7 @@ class MemoryCursor:
         found = self.conn.receipts.get((state, batch_id))
         if not found:
             return None
-        return (found["id"], found["profiles"], found["inspections"], found["citations"])
+        return (found["id"], found["profiles"], found["inspections"], found["citations"], found["zips"])
 
     def _step_insert_match(self, params):
         contractor_id, license_key, state = params[0], params[1], params[2]
@@ -214,28 +218,49 @@ class MemoryCursor:
         return (str(uuid4()),)
 
     def _step_insert_detail_receipt(self, params):
-        batch_id, dataset, digest, inspection_rows, _loadable, citation_rows = params
-        key = (batch_id, dataset, digest)
-        if key in self.conn.detail_receipts:
-            return None
+        batch_id, dataset, digest, inspection_rows, loadable, citation_rows = params
+        for batch, existing_dataset, _digest in self.conn.detail_receipts:
+            if batch == batch_id and existing_dataset == dataset:
+                return None
         receipt_id = str(uuid4())
-        self.conn.detail_receipts[key] = {
+        self.conn.detail_receipts[(batch_id, dataset, digest)] = {
             "id": receipt_id,
             "inspection_rows": inspection_rows,
+            "loadable": loadable,
             "citation_rows": citation_rows,
         }
         self.conn.inserted["receipts"] += 1
         return (receipt_id,)
 
     def _step_select_detail_receipt(self, params):
-        batch_id, dataset, digest = params
-        found = self.conn.detail_receipts.get((batch_id, dataset, digest))
-        if not found:
-            return None
-        return (found["id"], found["inspection_rows"], found["citation_rows"])
+        batch_id, dataset = params
+        matches = [
+            (digest, row)
+            for (batch, existing_dataset, digest), row in self.conn.detail_receipts.items()
+            if batch == batch_id and existing_dataset == dataset
+        ]
+        if not matches:
+            return (0, None, None, None, None, None, None, None, None, None)
+        hashes = [digest for digest, _row in matches]
+        inspections = [row["inspection_rows"] for _digest, row in matches]
+        loadable = [row["loadable"] for _digest, row in matches]
+        citations = [row["citation_rows"] for _digest, row in matches]
+        ids = [str(row["id"]) for _digest, row in matches]
+        return (
+            len(matches),
+            min(ids),
+            min(hashes),
+            max(hashes),
+            min(inspections),
+            max(inspections),
+            min(loadable),
+            max(loadable),
+            min(citations),
+            max(citations),
+        )
 
     def _step_insert_inspection(self, params):
-        activity, state, _open, _city, _site, _kind, _close, _closing, verified, batch_id, _receipt, digest = params
+        activity, state, _open, _city, _site, _kind, _close, _closing, verified, batch_id, receipt_id, digest = params
         if activity in self.conn.inspections:
             return None
         inspection_id = str(uuid4())
@@ -245,6 +270,7 @@ class MemoryCursor:
             "digest": digest,
             "batch_id": batch_id,
             "verified": verified,
+            "receipt_id": receipt_id,
         }
         self.conn.inspection_ids[inspection_id] = activity
         self.conn.inserted["inspections"] += 1
@@ -255,18 +281,25 @@ class MemoryCursor:
         found = self.conn.inspections.get(activity)
         if not found or "id" not in found:
             return None
-        return (found["id"], found["state"], found["digest"])
+        return (found["id"], found["state"], found["digest"], found.get("receipt_id"))
 
     def _step_insert_citation(self, params):
         _inspection_id, activity, citation_id = params[0], params[1], params[2]
-        batch_id = params[8]
-        digest = params[10]
+        initial_penalty = params[6]
+        batch_id = params[9]
+        receipt_id = params[10]
+        digest = params[11]
         key = (activity, citation_id)
         if key in self.conn.citations:
             return None
         if activity not in self.conn.inspections or "id" not in self.conn.inspections[activity]:
             raise LoadError("citation requires a normalized inspection")
-        self.conn.citations[key] = {"batch_id": batch_id, "digest": digest}
+        self.conn.citations[key] = {
+            "batch_id": batch_id,
+            "digest": digest,
+            "receipt_id": receipt_id,
+            "initial_penalty": initial_penalty,
+        }
         self.conn.inserted["citations"] += 1
         return (str(uuid4()),)
 
@@ -278,11 +311,12 @@ class MemoryCursor:
         found = self.conn.citations.get((activity, citation_id))
         if not found:
             return None
-        return (found["digest"],)
+        return (found["digest"], found["receipt_id"], found["initial_penalty"])
 
     def _step_insert_bridge(self, params):
-        match_id, _contractor, state, license_key, _inspection, activity, batch_id = params[:7]
-        key = (match_id, activity, batch_id)
+        match_id, _contractor, state, license_key, inspection_id, activity, batch_id = params[:7]
+        receipt_id, digest = params[7], params[8]
+        key = (match_id, inspection_id)
         if key in self.conn.bridges:
             return None
         if activity not in self.conn.inspections:
@@ -290,9 +324,15 @@ class MemoryCursor:
         stored = self.conn.matches.get((state, license_key, batch_id))
         if stored is None or activity not in stored["public_activities"].split(";"):
             raise LoadError("bridge activity is not in the published activity list")
-        self.conn.bridges.add(key)
+        self.conn.bridges[key] = {"receipt_id": receipt_id, "digest": digest}
         self.conn.inserted["bridges"] += 1
         return (match_id,)
+
+    def _step_select_bridge(self, params):
+        found = self.conn.bridges.get((params[0], params[1]))
+        if not found:
+            return None
+        return (found["receipt_id"], found["digest"])
 
     def _step_reconcile(self, params):
         state, batch_id = params[0], params[1]
@@ -330,6 +370,86 @@ def _state_definition_ok(definition: str | None) -> bool:
     )
 
 
+def _target_gate(
+    eligibility,
+    detail,
+    *,
+    confirm: str,
+    database_url: str,
+    expected_db_host: str,
+    expected_db_name: str,
+    identities,
+    source_observed_on: str,
+    batch_id: str,
+) -> str:
+    if confirm != GO_PHRASE:
+        raise LoadError("database writes require the exact Founder GO phrase")
+    if eligibility is None or detail is None:
+        raise LoadError("a database write requires an eligibility plan and a detail plan")
+    if not detail.ready:
+        raise LoadError("detail reconciliation is incomplete; refusing to write")
+    parsed = urlparse(database_url)
+    if parsed.scheme not in {"postgresql", "postgres"} or not parsed.hostname:
+        raise LoadError("target URL must name a PostgreSQL host")
+    if not expected_db_host or parsed.hostname.casefold() != expected_db_host.casefold():
+        raise LoadError("target DB host does not match the expected host")
+    if not expected_db_name:
+        raise LoadError("expected database name is required")
+    if identities is None:
+        raise LoadError("an existing license identity map is required")
+    if not source_observed_on:
+        raise LoadError("source_observed_on is required")
+    verify_identities(eligibility, identities)
+    if not batch_id:
+        raise LoadError("batch id is required")
+    try:
+        normalized_batch = str(UUID(batch_id))
+    except ValueError as exc:
+        raise LoadError("batch id must be a UUID") from exc
+    if detail.batch_id != normalized_batch or detail.state != eligibility.state:
+        raise LoadError("detail plan does not match the aggregate batch")
+    return normalized_batch
+
+
+def _preflight(eligibility, detail, expected_profiles, expected_activities, expected_citations, expected_package_sha256) -> None:
+    if not expected_package_sha256:
+        raise LoadError("expected package sha256 is required")
+    if eligibility.package_sha256 != expected_package_sha256:
+        raise LoadError("package sha256 does not match the preflight pin")
+    if len(detail.public_matches) != expected_profiles:
+        raise LoadError("preflight profile count does not match the expected count")
+    activity_count = len({row.activity_nr for row in detail.inspections})
+    if activity_count != expected_activities or len(detail.citations) != expected_citations:
+        raise LoadError("preflight detail counts do not match the expected counts")
+    if sum(match.n_citation_items for match in detail.public_matches) != expected_citations:
+        raise LoadError("retained citation totals do not match the expected count")
+    if sum(match.n_inspections for match in detail.public_matches) != expected_activities:
+        raise LoadError("retained inspection totals do not match published activities")
+
+
+def _official_pins(state, detail, expected_profiles, expected_activities, expected_citations, expected_package_sha256):
+    try:
+        pins = (
+            CERTIFIED_ELIGIBLE_PROFILES[state],
+            CERTIFIED_PUBLISHED_ACTIVITIES[state],
+            CERTIFIED_CITATIONS[state],
+            VERIFIED_B2_PACKAGE_SHA256[state],
+        )
+    except KeyError as exc:
+        raise LoadError("official load state is not a certified expansion state") from exc
+    supplied = (expected_profiles, expected_activities, expected_citations, expected_package_sha256 or None)
+    if any(given not in (None, "") and given != pin for given, pin in zip(supplied, pins)):
+        raise LoadError("caller-supplied counts or hashes cannot override certified pins")
+    if detail.inspection_sha256 != OFFICIAL_INSPECTION_SHA256 or detail.citation_sha256 != OFFICIAL_VIOLATION_SHA256:
+        raise LoadError("official inspection or violation hash does not match the pin")
+    return pins
+
+
+def _require_penalty_reconciliation(detail) -> None:
+    from scripts.con_osha_002.detail import reconcile_initial_penalties
+    reconcile_initial_penalties(detail.public_matches, detail.citations)
+
+
 def execute_load(
     eligibility: Eligibility | None = None,
     detail=None,
@@ -348,56 +468,75 @@ def execute_load(
     source_observed_on: str = "",
     batch_id: str = "",
 ):
-    if confirm != GO_PHRASE:
-        raise LoadError("database writes require the exact Founder GO phrase")
-    if eligibility is None or detail is None:
-        raise LoadError("execute_load requires an eligibility plan and a detail plan")
-    if not detail.ready:
-        raise LoadError("detail reconciliation is incomplete; refusing to write")
-    parsed = urlparse(database_url)
-    if parsed.scheme not in {"postgresql", "postgres"} or not parsed.hostname:
-        raise LoadError("target URL must name a PostgreSQL host")
-    if not expected_db_host or parsed.hostname.casefold() != expected_db_host.casefold():
-        raise LoadError("target DB host does not match the expected host")
-    if not expected_db_name:
-        raise LoadError("expected database name is required")
-    if identities is None:
-        raise LoadError("an existing license identity map is required")
-    if not source_observed_on:
-        raise LoadError("source_observed_on is required")
-    verify_identities(eligibility, identities)
-    state = eligibility.state
-    if official:
-        expected_profiles = CERTIFIED_ELIGIBLE_PROFILES[state]
-        expected_activities = CERTIFIED_PUBLISHED_ACTIVITIES[state]
-        expected_citations = CERTIFIED_CITATIONS[state]
-        expected_package_sha256 = VERIFIED_B2_PACKAGE_SHA256[state]
-        if detail.inspection_sha256 != OFFICIAL_INSPECTION_SHA256 or detail.citation_sha256 != OFFICIAL_VIOLATION_SHA256:
-            raise LoadError("official inspection or violation hash does not match the pin")
-    if expected_profiles is None or expected_activities is None or expected_citations is None:
-        raise LoadError("exact expected counts are required before writing")
-    if not expected_package_sha256:
-        raise LoadError("expected package sha256 is required")
-    if eligibility.package_sha256 != expected_package_sha256:
-        raise LoadError("package sha256 does not match the preflight pin")
-    if official and expected_package_sha256 != VERIFIED_B2_PACKAGE_SHA256[state]:
-        raise LoadError("official package pin does not match the certified hash")
-    if len(detail.public_matches) != expected_profiles:
-        raise LoadError("preflight profile count does not match the expected count")
-    activity_count = len({row.activity_nr for row in detail.inspections})
-    if activity_count != expected_activities or len(detail.citations) != expected_citations:
-        raise LoadError("preflight detail counts do not match the expected counts")
-    if sum(match.n_citation_items for match in detail.public_matches) != expected_citations:
-        raise LoadError("retained citation totals do not match the expected count")
-    if sum(match.n_inspections for match in detail.public_matches) != expected_activities:
-        raise LoadError("retained inspection totals do not match published activities")
-
+    """Real PostgreSQL writer. ``official`` cannot turn verification off."""
+    if official not in (True, False):
+        raise LoadError("official flag cannot select an unverified write")
+    normalized_batch = _target_gate(
+        eligibility, detail, confirm=confirm, database_url=database_url,
+        expected_db_host=expected_db_host, expected_db_name=expected_db_name,
+        identities=identities, source_observed_on=source_observed_on, batch_id=batch_id,
+    )
+    profiles, activities, citations, package_sha = _official_pins(
+        eligibility.state, detail, expected_profiles, expected_activities, expected_citations, expected_package_sha256,
+    )
+    _preflight(eligibility, detail, profiles, activities, citations, package_sha)
+    _require_penalty_reconciliation(detail)
     if connector is None:
         try:
             import psycopg
         except ImportError as exc:
             raise LoadError("psycopg is required only for an explicitly authorized load") from exc
         connector = psycopg.connect
+    return _run_write(
+        connector, eligibility, detail, database_url=database_url, expected_db_name=expected_db_name,
+        expected_profiles=profiles, expected_activities=activities, expected_citations=citations,
+        expected_package_sha256=package_sha, source_observed_on=source_observed_on, batch_id=normalized_batch,
+    )
+
+
+def execute_fixture_load(
+    eligibility: Eligibility | None = None,
+    detail=None,
+    *,
+    confirm: str = "",
+    database_url: str = "",
+    expected_db_host: str = "",
+    expected_db_name: str = "",
+    identities: dict | None = None,
+    expected_profiles: int | None = None,
+    expected_activities: int | None = None,
+    expected_citations: int | None = None,
+    expected_package_sha256: str = "",
+    connector=None,
+    source_observed_on: str = "",
+    batch_id: str = "",
+):
+    """Memory-connector exercises. This function never imports a database driver."""
+    if connector is None:
+        raise LoadError("fixture loads require an injected connector and cannot open a database")
+    normalized_batch = _target_gate(
+        eligibility, detail, confirm=confirm, database_url=database_url,
+        expected_db_host=expected_db_host, expected_db_name=expected_db_name,
+        identities=identities, source_observed_on=source_observed_on, batch_id=batch_id,
+    )
+    if expected_profiles is None or expected_activities is None or expected_citations is None:
+        raise LoadError("exact expected counts are required before writing")
+    _preflight(
+        eligibility, detail, expected_profiles, expected_activities, expected_citations, expected_package_sha256,
+    )
+    _require_penalty_reconciliation(detail)
+    return _run_write(
+        connector, eligibility, detail, database_url=database_url, expected_db_name=expected_db_name,
+        expected_profiles=expected_profiles, expected_activities=expected_activities, expected_citations=expected_citations,
+        expected_package_sha256=expected_package_sha256, source_observed_on=source_observed_on, batch_id=normalized_batch,
+    )
+
+
+def _run_write(
+    connector, eligibility, detail, *, database_url, expected_db_name, expected_profiles, expected_activities,
+    expected_citations, expected_package_sha256, source_observed_on, batch_id,
+):
+    state = eligibility.state
     conn = connector(database_url)
     inserted = {"matches": 0, "holds": 0, "inspections": 0, "citations": 0, "bridges": 0}
     try:
@@ -454,10 +593,63 @@ def execute_load(
         conn.close()
 
 
+def _same_money(stored, expected) -> bool:
+    if stored is None or expected is None:
+        return stored is None and expected is None
+    try:
+        return Decimal(stored).quantize(Decimal("0.01")) == Decimal(expected).quantize(Decimal("0.01"))
+    except (InvalidOperation, ValueError):
+        return False
+
+
+def _reuse_or_insert_detail_receipt(cur, batch, dataset, digest, inspection_rows, loadable_rows, citation_rows):
+    cur.execute(
+        "-- step select_detail_receipt\n"
+        "SELECT count(*)::int, min(id::text), min(source_hash), max(source_hash), "
+        "min(inspection_rows), max(inspection_rows), "
+        "min(loadable_citation_rows), max(loadable_citation_rows), "
+        "min(citation_rows), max(citation_rows) "
+        "FROM osha_detail_load_receipts "
+        "WHERE source_batch_id = %s::uuid AND source_dataset = %s",
+        (batch, dataset),
+    )
+    found = cur.fetchone()
+    if found is None:
+        raise LoadError("detail receipt lookup failed")
+    (
+        count, receipt_id, min_hash, max_hash, min_inspections, max_inspections,
+        min_loadable, max_loadable, min_citations, max_citations,
+    ) = found
+    expected = (inspection_rows, loadable_rows, citation_rows)
+    if count:
+        hashes_match = (min_hash or "").strip() == digest and (max_hash or "").strip() == digest
+        counts_match = (
+            (min_inspections, min_loadable, min_citations) == expected
+            and (max_inspections, max_loadable, max_citations) == expected
+        )
+        if count != 1 or not hashes_match or not counts_match:
+            raise LoadError("existing detail receipt provenance does not match")
+        return receipt_id
+    cur.execute(
+        "-- step insert_detail_receipt\n"
+        "INSERT INTO osha_detail_load_receipts "
+        "(source_batch_id, source_dataset, source_hash, inspection_rows, loadable_citation_rows, citation_rows) "
+        "VALUES (%s::uuid, %s, %s, %s, %s, %s) "
+        "ON CONFLICT (source_batch_id, source_dataset, source_hash) DO NOTHING RETURNING id",
+        (batch, dataset, digest, inspection_rows, loadable_rows, citation_rows),
+    )
+    created = cur.fetchone()
+    if created is None:
+        raise LoadError("detail receipt was not created")
+    return created[0]
+
+
 def _write_batch(cur, plan: AggregatePlan, detail, observed: str, inserted: dict) -> None:
+    _require_penalty_reconciliation(detail)
     state = plan.state
     batch = plan.batch_id
     digest = plan.eligibility.package_sha256
+    zip_hashes = tuple(SOURCE_ZIP_SHA256[state])
     cur.execute(
         "-- step insert_batch\n"
         "INSERT INTO ingest_batches (id, source_system, source_dataset, checksum_sha256) "
@@ -470,8 +662,8 @@ def _write_batch(cur, plan: AggregatePlan, detail, observed: str, inserted: dict
         "INSERT INTO osha_expansion_load_receipts "
         "(state, ingest_batch_id, b2_source_system, b2_package_sha256, ca_name_source, "
         "public_profile_count, inspection_count, citation_count, ambiguous_activity_count, "
-        "missing_citation_context_count, held_row_count) "
-        "VALUES (%s, %s::uuid, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
+        "missing_citation_context_count, held_row_count, source_zip_sha256) "
+        "VALUES (%s, %s::uuid, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
         "ON CONFLICT (state, ingest_batch_id) DO NOTHING RETURNING id",
         (
             state, batch, plan.eligibility.source_system, digest,
@@ -482,6 +674,7 @@ def _write_batch(cur, plan: AggregatePlan, detail, observed: str, inserted: dict
             len(plan.eligibility.ambiguous_activities),
             detail.missing_citation_context,
             len(plan.eligibility.holds) + len(detail.holds),
+            list(zip_hashes),
         ),
     )
     receipt = cur.fetchone()
@@ -491,7 +684,7 @@ def _write_batch(cur, plan: AggregatePlan, detail, observed: str, inserted: dict
     if receipt is None:
         cur.execute(
             "-- step select_expansion_receipt\n"
-            "SELECT id, public_profile_count, inspection_count, citation_count "
+            "SELECT id, public_profile_count, inspection_count, citation_count, source_zip_sha256 "
             "FROM osha_expansion_load_receipts WHERE state = %s AND ingest_batch_id = %s::uuid",
             (state, batch),
         )
@@ -500,6 +693,8 @@ def _write_batch(cur, plan: AggregatePlan, detail, observed: str, inserted: dict
             raise LoadError("expansion receipt was not created")
         if (receipt[1], receipt[2], receipt[3]) != (profile_count, inspection_count, citation_count):
             raise LoadError("existing expansion receipt counts do not match")
+        if tuple(receipt[4] or ()) != zip_hashes:
+            raise LoadError("existing expansion receipt ZIP hashes do not match")
     receipt_id = receipt[0]
     for match in detail.public_matches:
         if match.public_activity_nrs != ";".join(match.activities):
@@ -551,30 +746,16 @@ def _write_batch(cur, plan: AggregatePlan, detail, observed: str, inserted: dict
         )
         if cur.fetchone() is not None:
             inserted["holds"] += 1
-    detail_dataset = f"con-osha-002:{state}:inspections"
-    cur.execute(
-        "-- step insert_detail_receipt\n"
-        "INSERT INTO osha_detail_load_receipts "
-        "(source_batch_id, source_dataset, source_hash, inspection_rows, loadable_citation_rows, citation_rows) "
-        "VALUES (%s::uuid, %s, %s, %s, %s, %s) "
-        "ON CONFLICT (source_batch_id, source_dataset, source_hash) DO NOTHING RETURNING id",
-        (batch, detail_dataset, detail.inspection_sha256, len(detail.inspections), len(detail.citations), len(detail.citations)),
+    inspection_receipt = _reuse_or_insert_detail_receipt(
+        cur, batch, f"con-osha-002:{state}:inspections", detail.inspection_sha256,
+        len(detail.inspections), 0, 0,
     )
-    detail_row = cur.fetchone()
-    if detail_row is None:
-        cur.execute(
-            "-- step select_detail_receipt\n"
-            "SELECT id, inspection_rows, loadable_citation_rows "
-            "FROM osha_detail_load_receipts "
-            "WHERE source_batch_id = %s::uuid AND source_dataset = %s AND source_hash = %s",
-            (batch, detail_dataset, detail.inspection_sha256),
-        )
-        detail_row = cur.fetchone()
-        if detail_row is None:
-            raise LoadError("detail receipt was not created")
-        if (detail_row[1], detail_row[2]) != (len(detail.inspections), len(detail.citations)):
-            raise LoadError("existing detail receipt counts do not match")
-    detail_receipt = detail_row[0]
+    citation_receipt = _reuse_or_insert_detail_receipt(
+        cur, batch, f"con-osha-002:{state}:citations", detail.citation_sha256,
+        0, len(detail.citations), len(detail.citations),
+    )
+    if str(inspection_receipt) == str(citation_receipt):
+        raise LoadError("citation receipt must be distinct from the inspection receipt")
     inspection_ids = {}
     for inspection in detail.inspections:
         cur.execute(
@@ -587,7 +768,7 @@ def _write_batch(cur, plan: AggregatePlan, detail, observed: str, inserted: dict
             (
                 inspection.activity_nr, state, inspection.open_date, inspection.site_city, inspection.site_state,
                 inspection.inspection_type, inspection.close_date, inspection.closing_conference_date,
-                inspection.citations_verified, batch, detail_receipt, detail.inspection_sha256,
+                inspection.citations_verified, batch, inspection_receipt, detail.inspection_sha256,
             ),
         )
         created = cur.fetchone()
@@ -597,39 +778,48 @@ def _write_batch(cur, plan: AggregatePlan, detail, observed: str, inserted: dict
         else:
             cur.execute(
                 "-- step select_inspection\n"
-                "SELECT id, state, source_hash FROM contractor_osha_inspections WHERE activity_nr = %s",
+                "SELECT id, state, source_hash, receipt_id FROM contractor_osha_inspections WHERE activity_nr = %s",
                 (inspection.activity_nr,),
             )
             existing = cur.fetchone()
             if existing is None:
                 raise LoadError("normalized inspection disappeared")
-            if str(existing[1]).strip() != state or existing[2] != detail.inspection_sha256:
+            if (
+                str(existing[1]).strip() != state
+                or (existing[2] or "").strip() != detail.inspection_sha256
+                or str(existing[3]) != str(inspection_receipt)
+            ):
                 raise LoadError("existing normalized inspection has different provenance")
             inspection_ids[inspection.activity_nr] = existing[0]
     for citation in detail.citations:
         cur.execute(
             "-- step insert_citation\n"
             "INSERT INTO contractor_osha_citations "
-            "(inspection_id, activity_nr, citation_id, standard, viol_type, current_penalty, "
+            "(inspection_id, activity_nr, citation_id, standard, viol_type, current_penalty, initial_penalty, "
             "contest_date, final_order_date, delete_flag, source_batch_id, receipt_id, source_hash) "
-            "VALUES (%s::uuid, %s, %s, %s, %s, %s, %s, %s, NULL, %s::uuid, %s::uuid, %s) "
+            "VALUES (%s::uuid, %s, %s, %s, %s, %s, %s, %s, %s, NULL, %s::uuid, %s::uuid, %s) "
             "ON CONFLICT (inspection_id, citation_id) DO NOTHING RETURNING id",
             (
                 inspection_ids[citation.activity_nr], citation.activity_nr, citation.citation_id, citation.standard,
-                citation.viol_type, citation.current_penalty, citation.contest_date, citation.final_order_date,
-                batch, detail_receipt, detail.citation_sha256,
+                citation.viol_type, citation.current_penalty, citation.initial_penalty,
+                citation.contest_date, citation.final_order_date,
+                batch, citation_receipt, detail.citation_sha256,
             ),
         )
         created_citation = cur.fetchone()
         if created_citation is None:
             cur.execute(
                 "-- step select_citation\n"
-                "SELECT source_hash FROM contractor_osha_citations "
+                "SELECT source_hash, receipt_id, initial_penalty FROM contractor_osha_citations "
                 "WHERE inspection_id = %s::uuid AND citation_id = %s",
                 (inspection_ids[citation.activity_nr], citation.citation_id),
             )
             existing_citation = cur.fetchone()
-            if existing_citation is None or existing_citation[0] != detail.citation_sha256:
+            if existing_citation is None:
+                raise LoadError("existing citation has different provenance")
+            if str(existing_citation[1]) == str(inspection_receipt) or str(existing_citation[1]) != str(citation_receipt):
+                raise LoadError("citation row references an inspection-source receipt")
+            if (existing_citation[0] or "").strip() != detail.citation_sha256 or not _same_money(existing_citation[2], citation.initial_penalty):
                 raise LoadError("existing citation has different provenance")
         else:
             inserted["citations"] += 1
@@ -652,8 +842,22 @@ def _write_batch(cur, plan: AggregatePlan, detail, observed: str, inserted: dict
             "ON CONFLICT (public_match_id, inspection_id) DO NOTHING RETURNING public_match_id",
             (
                 match_row[0], match_row[1], state, license_key, inspection_ids[activity], activity,
-                batch, detail_receipt, detail.inspection_sha256,
+                batch, inspection_receipt, detail.inspection_sha256,
             ),
         )
-        if cur.fetchone() is not None:
+        if cur.fetchone() is None:
+            cur.execute(
+                "-- step select_bridge\n"
+                "SELECT receipt_id, source_hash FROM contractor_osha_match_inspections "
+                "WHERE public_match_id = %s::uuid AND inspection_id = %s::uuid",
+                (match_row[0], inspection_ids[activity]),
+            )
+            existing_bridge = cur.fetchone()
+            if (
+                existing_bridge is None
+                or str(existing_bridge[0]) != str(inspection_receipt)
+                or (existing_bridge[1] or "").strip() != detail.inspection_sha256
+            ):
+                raise LoadError("existing bridge receipt association does not match")
+        else:
             inserted["bridges"] += 1

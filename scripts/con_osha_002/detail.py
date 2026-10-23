@@ -20,7 +20,15 @@ from scripts.con_osha_002.contract import CITATION_TYPES, DELETE_MARKER
 from scripts.con_osha_002.eligibility import Hold, LoadError, PublicMatch
 
 REQUIRED_INSPECTION = ("activity_nr",)
-REQUIRED_CITATION = ("activity_nr", "citation_id", "standard", "viol_type", "current_penalty", "delete_flag")
+REQUIRED_CITATION = (
+    "activity_nr",
+    "citation_id",
+    "standard",
+    "viol_type",
+    "current_penalty",
+    "initial_penalty",
+    "delete_flag",
+)
 
 
 @dataclass
@@ -42,6 +50,8 @@ class PlannedCitation:
     standard: str
     viol_type: str
     current_penalty: Decimal | None
+    initial_penalty: Decimal | None
+    initial_penalty_text: str
     contest_date: object
     final_order_date: object
 
@@ -99,6 +109,61 @@ def _link_status(row: dict[str, str]) -> str:
     return (row.get("derived_link_status") or "").strip().casefold()
 
 
+def _b2_aggregate_money(value: str) -> float:
+    """Certified B2 total at 67127bac. Blank, NAN, NONE, and NULL contribute zero.
+
+    The published integer is Python round of that float sum. This is the
+    aggregate rounding rule only. It does not match names, ZIPs, or counties.
+    """
+    text = (value or "").strip()
+    if not text or text.upper() in {"NAN", "NONE", "NULL"}:
+        return 0.0
+    return float(text)
+
+
+def reconcile_initial_penalties(matches, citations) -> None:
+    """Check stored citation initials against each published profile total.
+
+    A shared activity is summed once for each profile that publishes it.
+    Deleted citations are absent from ``citations`` and do not contribute.
+    Missing source evidence stops the load. The aggregate total is not copied
+    back onto a citation.
+    """
+    by_activity: dict[str, list[PlannedCitation]] = {}
+    for citation in citations:
+        if not hasattr(citation, "initial_penalty") or not hasattr(citation, "initial_penalty_text"):
+            raise LoadError("citation initial_penalty evidence is unavailable")
+        by_activity.setdefault(citation.activity_nr, []).append(citation)
+    for match in matches:
+        seen: set[str] = set()
+        chosen: list[PlannedCitation] = []
+        cited = 0
+        for activity in match.activities:
+            if activity in seen:
+                continue
+            seen.add(activity)
+            rows = by_activity.get(activity, [])
+            cited += len(rows)
+            chosen.extend(rows)
+        if cited != match.n_citation_items:
+            raise LoadError("citation initial_penalty evidence is unavailable")
+        total = 0.0
+        for citation in chosen:
+            text = citation.initial_penalty_text
+            if text is None:
+                raise LoadError("citation initial_penalty evidence is unavailable")
+            parsed = _optional_money(text, "initial_penalty")
+            if parsed != citation.initial_penalty:
+                raise LoadError("stored initial_penalty does not match source evidence")
+            total += _b2_aggregate_money(text)
+        rounded = round(total)
+        if rounded != match.initial_penalty_amount:
+            raise LoadError(
+                "citation initial penalties do not reconcile to the certified aggregate total "
+                f"({rounded} != {match.initial_penalty_amount})"
+            )
+
+
 def _optional_column(header: list[str], row: dict[str, str], name: str):
     if name not in header:
         return None
@@ -145,6 +210,7 @@ def plan_detail(
     verified_empty = 0
     seen_holds: set[tuple] = set()
     seen_citations: set[tuple[str, str]] = set()
+    penalty_evidence: dict[str, list[PlannedCitation]] = {}
 
     def add_hold(hold: Hold) -> None:
         key = (hold.state, hold.license_key, hold.activity_nr or "", hold.citation_id or "", hold.reason, aggregate.batch_id)
@@ -173,6 +239,7 @@ def plan_detail(
             if empty:
                 empty_for_match += 1
             loadable_for_match += len(loadable)
+            penalty_evidence.setdefault(activity, list(loadable))
             if activity in ledger.inspections:
                 continue
             planned_inspections.append(PlannedInspection(
@@ -198,6 +265,10 @@ def plan_detail(
             raise LoadError("loadable citations do not equal the certified citation total")
         verified_empty += empty_for_match
 
+    reconcile_initial_penalties(
+        public_matches,
+        [citation for rows in penalty_evidence.values() for citation in rows],
+    )
     return DetailPlan(
         state=aggregate.state,
         batch_id=aggregate.batch_id,
@@ -268,12 +339,15 @@ def _activity_citations(
         if marker == DELETE_MARKER:
             holds.append(Hold(state, match.license_key, match.contractor_id, activity, row["citation_id"], "deleted_citation"))
             continue
+        initial_text = row["initial_penalty"]
         loadable.append(PlannedCitation(
             activity_nr=activity,
             citation_id=row["citation_id"],
             standard=row["standard"],
             viol_type=row["viol_type"].strip().upper(),
             current_penalty=_optional_money(row["current_penalty"], "current_penalty"),
+            initial_penalty=_optional_money(initial_text, "initial_penalty"),
+            initial_penalty_text=initial_text,
             contest_date=_parse_date(row.get("contest_date", ""), "contest_date"),
             final_order_date=_parse_date(row.get("final_order_date", ""), "final_order_date"),
         ))
