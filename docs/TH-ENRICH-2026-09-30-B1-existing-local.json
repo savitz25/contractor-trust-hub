@@ -1,0 +1,17 @@
+{
+  "existing_source_system": "fl_dbpr",
+  "existing_dataset": "construction_licensees",
+  "existing_file": "CONSTRUCTIONLICENSE_1.csv",
+  "existing_sha256": "34770a49f091d967c063634971243a2d4a197d20f9c744444e93126746cb5d52",
+  "existing_raw_rows": 270560,
+  "existing_board_distribution": {"06": 270560},
+  "existing_staged_license_rows": 143516,
+  "existing_qualifying_business_rows": 126666,
+  "existing_duplicate_keys_skipped": 378,
+  "existing_staging_manifest": "contractor-trust-hub/data/staging/fl_dbpr_full/batch_manifest.json",
+  "live_database_verified": true,
+  "live_database_method": "existing Supabase REST key, HEAD count=exact",
+  "live_database_receipt": "TH-ENRICH-2026-09-30-B1-rest-audit.json",
+  "direct_postgres_failure": "configured database authentication failed",
+  "consequence": "B1 boards 08/07/59/04 have zero live licenses; local board-06 snapshot agrees with the live 143516 count."
+}

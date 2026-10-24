@@ -1,0 +1,21 @@
+{
+  "ticket": "TH-ENRICH-2026-09-30-B1",
+  "phase": "pre-ingest inventory",
+  "rule": "No source is loaded when existing-owned is yes; unknown live database state remains a publication gate.",
+  "contractor_existing": {
+    "fl_dbpr": "CILB board 06 CONSTRUCTIONLICENSE_1.csv; license key prefers alternate_license_number, otherwise occupation_code + license_number; qualifying-business shells staged separately",
+    "nj_dca": "HIC and specialty Standard Files; native credential keyed by source_system and external_key",
+    "nyc_dcwp": "Existing NYC home-improvement source is separate from DOB",
+    "ny_dol_public_works": "Existing public-works source is separate from DOB and DOL mold"
+  },
+  "sources": [
+    {"id":"fl_dbpr_eclb_08","authority":"Florida DBPR ECLB","file":"lic08el.csv","official_url":"https://www2.myfloridalicense.com/sto/file_download/extracts/lic08el.csv","grain":"board 08 credential","identity_key":"board 08 + credential class + license number","target":"Contractor electrical specialty","existing_owned":false},
+    {"id":"fl_dbpr_mold_07","authority":"Florida DBPR","file":"lic07mold.csv","official_url":"https://www2.myfloridalicense.com/sto/file_download/extracts/lic07mold.csv","grain":"board 07 credential","identity_key":"board 07 + credential class + license number","target":"Contractor mold specialty","existing_owned":false},
+    {"id":"fl_dbpr_asbestos_59","authority":"Florida DBPR","file":"lic59asb.csv","official_url":"https://www2.myfloridalicense.com/sto/file_download/extracts/lic59asb.csv","grain":"board 59 credential","identity_key":"board 59 + credential class + license number","target":"Contractor asbestos specialty","existing_owned":false},
+    {"id":"fl_dbpr_home_04","authority":"Florida DBPR","file":"lic04home.csv","official_url":"https://www2.myfloridalicense.com/sto/file_download/extracts/lic04home.csv","grain":"board 04 credential","identity_key":"board 04 + credential class + license number","target":"Home inspector specialty","existing_owned":false},
+    {"id":"nyc_dob_license_info","authority":"NYC Department of Buildings","dataset_id":"t8hj-ruu2","official_url":"https://data.cityofnewyork.us/resource/t8hj-ruu2.csv","grain":"NYC DOB license record","identity_key":"DOB license type + license number","target":"NYC Contractor specialty","existing_owned":false},
+    {"id":"ny_dol_mold","authority":"New York State Department of Labor","dataset_id":"ikqx-ispy","official_url":"https://data.ny.gov/resource/ikqx-ispy.csv","grain":"mold contractor license","identity_key":"DOL license number","target":"NY Contractor mold specialty","existing_owned":false},
+    {"id":"ny_elevator","authority":"New York State elevator regulator","dataset_id":"jrac-r9vc","official_url":"https://data.ny.gov/resource/jrac-r9vc.csv","grain":"elevator license","identity_key":"native license number","target":"NY Contractor elevator specialty","existing_owned":false},
+    {"id":"nj_dfs_fire_business","authority":"NJ DCA Division of Fire Safety","file":"nj_fire_permitted_business_2026.pdf","official_url":"https://www.nj.gov/dca/dfs/pdf/Fire%20Protection%20Equipment%20Contractor%20-%20Permitted%20Business.pdf","grain":"business permit","identity_key":"P##### permit","target":"NJ Fire protection business specialty","existing_owned":false,"as_of":"2026-03-19","discovery_note":"The initial 2022 URL was excluded after finding the current official roster."}
+  ]
+}
