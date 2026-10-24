@@ -1,0 +1,60 @@
+{
+  "task": "Lane B Contractor readiness repair (no activation)",
+  "project_id": "jhjztnisugdsuliriajp",
+  "checked_at_utc": "2026-10-07 19:47:39.995635+00",
+  "checked_at_et": "2026-10-07 15:47:39 EDT",
+  "base": "71c3d9a68a31a7fc08fefbf827cf9f50c15369f4",
+  "method": "Actual getContractorBySlug replay with connector results for its four SQL queries; actual parentSaveReadiness execution",
+  "detail_query": "SELECT (SELECT COALESCE(jsonb_agg(row_to_json(detail_row)), '[]'::jsonb) FROM (SELECT id, slug, display_name, legal_name, dba_name,\r\n           primary_city, primary_county, home_state, is_thin_profile\r\n    FROM contractors\r\n    WHERE slug = 'ccc057187-a-r-roofing-inc'\r\n    LIMIT 1\r\n    ) detail_row) AS profile,\r\n(SELECT COALESCE(jsonb_agg(row_to_json(detail_row)), '[]'::jsonb) FROM (SELECT id, external_key, occupation_code, license_number, status_normalized,\r\n           primary_status, secondary_status, original_licensure_date, effective_date,\r\n           expiration_date, address_line_1, city, state, postal_code, county_name,\r\n           board_number, last_verified_at, source_system\r\n    FROM licenses\r\n    WHERE contractor_id = 'e3f84d9c-8d6d-4d4c-8bba-875e0c90807f'\r\n    ORDER BY\r\n      CASE status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,\r\n      external_key\r\n    ) detail_row) AS licenses,\r\n(SELECT COALESCE(jsonb_agg(row_to_json(detail_row)), '[]'::jsonb) FROM (SELECT e.id, e.external_key, e.legal_name, e.status, e.entity_type,\r\n           e.formation_date, e.principal_address, e.city, e.state, e.postal_code,\r\n           e.registered_agent_name, e.officers, ce.match_method, ce.confidence,\r\n           e.last_verified_at, e.source_system\r\n    FROM contractor_entities ce\r\n    JOIN entities e ON e.id = ce.entity_id\r\n    WHERE ce.contractor_id = 'e3f84d9c-8d6d-4d4c-8bba-875e0c90807f'\r\n      AND ce.role IN ('sunbiz_entity', 'linked', 'entity')\r\n      AND e.source_system = 'fl_sunbiz'\r\n      AND ce.confidence IS NOT NULL\r\n      AND ce.confidence >= 0.9\r\n    ORDER BY ce.confidence DESC NULLS LAST\r\n    ) detail_row) AS entities,\r\n(SELECT COALESCE(jsonb_agg(row_to_json(detail_row)), '[]'::jsonb) FROM (SELECT id, complaint_number, license_type, classification, disposition,\r\n           disposition_date, discipline_description, violation_code, entered_date,\r\n           source_dataset, last_verified_at\r\n    FROM discipline_actions d\r\n    WHERE d.contractor_id = 'e3f84d9c-8d6d-4d4c-8bba-875e0c90807f'\r\n      AND d.source_system NOT IN ('fl_dbpr', 'fl_dfs')\r\n    ORDER BY disposition_date DESC NULLS LAST, entered_date DESC NULLS LAST\r\n    LIMIT 50\r\n    ) detail_row) AS discipline,\r\ncurrent_timestamp AS checked_at;",
+  "result": {
+    "ready": true,
+    "identity": {
+      "hub": "contractor",
+      "profileClass": "contractor_profile",
+      "identifierNamespace": "fl.dbpr.license",
+      "sourceIdentifier": "CCC057187",
+      "jurisdiction": "FL",
+      "canonicalSlug": "ccc057187-a-r-roofing-inc",
+      "returnPath": "/contractors/ccc057187-a-r-roofing-inc"
+    }
+  },
+  "profile_summary": {
+    "slug": "ccc057187-a-r-roofing-inc",
+    "is_thin_profile": false,
+    "home_state": "FL",
+    "licenses": [
+      {
+        "source_system": "fl_dbpr",
+        "external_key": "CCC057187",
+        "status_normalized": "active"
+      }
+    ]
+  },
+  "unique_credential_query": "SELECT DISTINCT c.slug FROM licenses l JOIN contractors c ON c.id = l.contractor_id WHERE l.source_system = 'fl_dbpr' AND l.external_key = 'CCC057187' AND c.slug IS NOT NULL LIMIT 3",
+  "unique_slugs": [
+    "ccc057187-a-r-roofing-inc"
+  ],
+  "ask_project_id": "qvvxvbcdmbjzrgvwjatw",
+  "ask_query": "SELECT b.id AS binding_id, b.network_entity_id, b.hub, b.specialist_entity_type, b.identifier_namespace, b.source_identifier, b.jurisdiction, b.binding_status, b.valid_to, e.status AS network_entity_status, e.canonical_public_profile_ref FROM network.network_entity_bindings b JOIN network.network_entities e ON e.id=b.network_entity_id WHERE b.hub='contractor' AND b.identifier_namespace='fl.dbpr.license' AND b.source_identifier='CCC057187' AND b.valid_to IS NULL",
+  "ask_binding": {
+    "binding_id": "9615d4d8-365c-4b4c-b3f5-faf164a8ad26",
+    "network_entity_id": "58821bb7-6ad5-480e-a542-d19bb6765543",
+    "hub": "contractor",
+    "specialist_entity_type": "contractor_profile",
+    "identifier_namespace": "fl.dbpr.license",
+    "source_identifier": "CCC057187",
+    "jurisdiction": "FL",
+    "binding_status": "accepted",
+    "valid_to": null,
+    "network_entity_status": "active",
+    "canonical_public_profile_ref": "/contractors/ccc057187-a-r-roofing-inc"
+  },
+  "mapping_evidence": "Supabase approved connector get_project identifies jhjztnisugdsuliriajp as contractor-trust-hub, host db.jhjztnisugdsuliriajp.supabase.co. Its schema and canonical profile match the app's detail loader. lib/db.ts chooses DATABASE_URL then POSTGRES_URL. The deployed DATABASE_URL was not decrypted or read; equivalence to that production variable remains the Founder/CoS supplied mapping, corroborated by project identity and data, not independently proven.",
+  "limitations": [
+    "Production REGULATORY_PUBLICATION_GATE_V1 was not read. Detail replay uses the default false public-regulatory predicate. parentSaveReadiness uses slug, isThinProfile, homeState and all licenses; its answer is independent of entities and discipline.",
+    "Readiness is a read-only observation against the designated production project, not an end-to-end live handoff or authorization to activate.",
+    "Ask SQL completion and PR #262 deployment are accepted from the supplied Founder/CoS handoff; no packets rerun."
+  ],
+  "production_writes": false,
+  "raw_tokens_used": false
+}
