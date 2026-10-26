@@ -1,7 +1,8 @@
 """California entry point for the certified CON-OSHA-002 writer.
 
 Default mode is a read-only preflight. A Production write requires --write,
-a dated Founder authorization file, and the writer's technical phrase.
+an independently published Founder authorization, and the writer's technical
+phrase. A local authorization file by itself is not Founder permission.
 This module does not reimplement matching, counts, or migration 020.
 """
 
@@ -12,6 +13,9 @@ import csv
 import hashlib
 import json
 import re
+import shutil
+import socket
+import subprocess
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
@@ -44,9 +48,20 @@ from scripts.con_osha_002.rollback import rollback_sql
 
 STATE = "CA"
 PROJECT_REF = "jhjztnisugdsuliriajp"
+# Approved Contractor session pooler. The direct db host is IPv6-only and is not a fallback.
+SESSION_HOST = "aws-0-ca-central-1.pooler.supabase.com"
+SESSION_PORT = 5432
+SESSION_USER = f"postgres.{PROJECT_REF}"
+SESSION_DB = "postgres"
 DIRECT_HOST = f"db.{PROJECT_REF}.supabase.co"
-DIRECT_PORT = 5432
-DIRECT_DB = "postgres"
+FOUNDER_LOGIN = "savitz25"
+_IPV4 = re.compile(r"^(?:\d{1,3}\.){3}\d{1,3}$")
+_VERIFY_URL = re.compile(
+    r"^Independent-Verification:\s*"
+    r"(https://github\.com/savitz25/contractor-trust-hub/(?:issues|pull)/\d+#issuecomment-(\d+))\s*$",
+    re.MULTILINE,
+)
+_TLS_MODES = {"require", "verify-ca", "verify-full"}
 FROZEN_BATCH_ID = "18e92387-5f97-4921-835b-b5825146a909"
 SOURCE_OBSERVED_ON = "2026-10-21"
 FL_NJ_MATCHES_EXPECTED = 10578
@@ -116,8 +131,8 @@ def explain_connection_failure(message: str) -> str:
     if any(token in message for token in ("getaddrinfo", "11001", "10051")):
         return (
             message
-            + " The direct host was not reachable from this PC."
-            + " Port 6543 and the session pooler are not used as a fallback."
+            + " The approved IPv4 session pooler was not reachable from this PC."
+            + " Port 6543 and the IPv6-only direct host are not used as a fallback."
         )
     return message
 
@@ -132,14 +147,7 @@ def redact(text: str, secret: str = "") -> str:
     return cleaned[:500]
 
 
-def verify_founder_authorization(path: Path | None) -> dict[str, str]:
-    """A dated written authorization. The technical GO phrase does not qualify."""
-    if path is None:
-        raise LoadError("Founder California load authorization file is required")
-    resolved = path.expanduser().resolve()
-    if not resolved.is_file():
-        raise LoadError("Founder California load authorization file is missing")
-    text = resolved.read_text(encoding="utf-8")
+def _authorization_statement_ok(text: str) -> str:
     if text.strip() in {"", GO_PHRASE}:
         raise LoadError("the technical GO phrase is not Founder authorization")
     dates = []
@@ -152,10 +160,69 @@ def verify_founder_authorization(path: Path | None) -> dict[str, str]:
         raise LoadError("Founder authorization must name CON-OSHA-002 and California")
     if _AUTH.search(text) is None or re.search(r"\bload\b", text, re.IGNORECASE) is None:
         raise LoadError("Founder authorization does not authorize the California load")
+    return dates[0]
+
+
+def fetch_github_comment(comment_id: str) -> dict[str, str]:
+    """Read one GitHub comment. This does not create or edit anything."""
+    if not re.fullmatch(r"\d{1,20}", comment_id):
+        raise LoadError("Founder authorization comment id is invalid")
+    gh = shutil.which("gh") or r"C:\Program Files\GitHub CLI\gh.exe"
+    if not Path(gh).is_file():
+        raise LoadError("Founder authorization could not be independently verified")
+    completed = subprocess.run(
+        [gh, "api", f"repos/savitz25/contractor-trust-hub/issues/comments/{comment_id}"],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    if completed.returncode != 0 or not completed.stdout.strip():
+        raise LoadError("Founder authorization could not be independently verified")
+    try:
+        payload = json.loads(completed.stdout)
+    except json.JSONDecodeError as exc:
+        raise LoadError("Founder authorization could not be independently verified") from exc
+    author = str((payload.get("user") or {}).get("login") or "")
+    body = str(payload.get("body") or "")
+    return {"author": author, "body": body}
+
+
+def verify_founder_authorization(path: Path | None, *, comment_fetcher=None) -> dict[str, str]:
+    """Founder permission is a published GitHub comment, not a local file alone.
+
+    The technical GO phrase does not qualify. A file generated on this PC qualifies
+    only when the repository owner has published its exact SHA-256 on GitHub.
+    """
+    if path is None:
+        raise LoadError("Founder California load authorization file is required")
+    resolved = path.expanduser().resolve()
+    if not resolved.is_file():
+        raise LoadError("Founder California load authorization file is missing")
+    text = resolved.read_text(encoding="utf-8")
+    located = _VERIFY_URL.search(text)
+    if located is None:
+        raise LoadError("a locally generated authorization file is not Founder permission")
+    verification_url, comment_id = located.group(1), located.group(2)
+    dated = _authorization_statement_ok(text)
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    fetcher = comment_fetcher or fetch_github_comment
+    comment = fetcher(comment_id)
+    author = str(comment.get("author") or "")
+    body = str(comment.get("body") or "")
+    if author != FOUNDER_LOGIN:
+        raise LoadError("Founder authorization comment is not from the repository owner")
+    if body.strip() in {"", GO_PHRASE} or digest not in body:
+        raise LoadError("Founder authorization comment does not verify this authorization")
+    if "CON-OSHA-002" not in body or "California" not in body:
+        raise LoadError("Founder authorization comment does not name CON-OSHA-002 and California")
+    if _AUTH.search(body) is None or re.search(r"\bload\b", body, re.IGNORECASE) is None:
+        raise LoadError("Founder authorization comment does not authorize the California load")
     return {
-        "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
-        "date": dates[0],
+        "sha256": digest,
+        "date": dated,
         "filename": resolved.name,
+        "verification_url": verification_url,
     }
 
 
@@ -168,8 +235,36 @@ def load_app_database_url(env_file: Path) -> str:
     raise LoadError("DATABASE_URL is not set")
 
 
-def direct_target_from_app_url(app_url: str) -> dict[str, object]:
-    """Build the direct TLS target. The app pooler URL is never returned."""
+def _is_ipv4(value: str) -> bool:
+    if not _IPV4.fullmatch(value) or ":" in value:
+        return False
+    return all(0 <= int(part) <= 255 for part in value.split("."))
+
+
+def _sslmode(parsed) -> str:
+    modes = [item.casefold() for item in (parse_qs(parsed.query).get("sslmode") or [])]
+    if not modes or any(mode not in _TLS_MODES for mode in modes):
+        raise LoadError("session connection must use TLS")
+    return modes[0]
+
+
+def resolve_ipv4(host: str, port: int) -> str:
+    """Return one IPv4 address. Do not fall back to IPv6 or another host."""
+    if host.casefold() != SESSION_HOST or port != SESSION_PORT:
+        raise LoadError("session connection host is not the approved Contractor pooler")
+    try:
+        infos = socket.getaddrinfo(host, port, socket.AF_INET, socket.SOCK_STREAM)
+    except socket.gaierror as exc:
+        raise LoadError("approved session pooler has no IPv4 address") from exc
+    addresses = [item[4][0] for item in infos if item and item[4]]
+    for address in addresses:
+        if _is_ipv4(address):
+            return address
+    raise LoadError("approved session pooler has no IPv4 address")
+
+
+def session_target_from_app_url(app_url: str) -> dict[str, object]:
+    """Accept only the approved Contractor session-pooler URL. Never rewrite it."""
     parsed = urlparse(app_url)
     user = unquote(parsed.username or "")
     password = unquote(parsed.password or "")
@@ -178,50 +273,55 @@ def direct_target_from_app_url(app_url: str) -> dict[str, object]:
         raise LoadError("database password is missing")
     if parsed.port == 6543:
         raise LoadError("transaction pooler port 6543 is not allowed")
-    project = user.split(".", 1)[1] if user.startswith("postgres.") else ""
-    if user == "postgres" and host == DIRECT_HOST:
-        project = PROJECT_REF
-    if project != PROJECT_REF:
-        raise LoadError("database URL is not the Contractor Production project")
-    if host != DIRECT_HOST and "pooler" not in host:
-        raise LoadError("database URL host is not the Contractor direct host or app pooler")
-    dbname = parsed.path.lstrip("/") or DIRECT_DB
-    if dbname != DIRECT_DB:
+    if parsed.port != SESSION_PORT:
+        raise LoadError("session connection must use port 5432")
+    if user != SESSION_USER:
+        raise LoadError("session connection requires the project tenant user")
+    if host != SESSION_HOST:
+        raise LoadError("session connection host is not the approved Contractor pooler")
+    if parsed.path.lstrip("/") != SESSION_DB:
         raise LoadError("database name is not postgres")
     return {
-        "host": DIRECT_HOST,
-        "port": DIRECT_PORT,
-        "dbname": DIRECT_DB,
-        "user": "postgres",
+        "host": SESSION_HOST,
+        "port": SESSION_PORT,
+        "dbname": SESSION_DB,
+        "user": SESSION_USER,
         "password": password,
-        "sslmode": "require",
+        "sslmode": _sslmode(parsed),
     }
 
 
 def database_url_for_writer(target: dict[str, object]) -> str:
+    ipv4 = str(target.get("ipv4") or "")
+    if not _is_ipv4(ipv4):
+        raise LoadError("session connection requires an IPv4 address")
     user = quote(str(target["user"]), safe="")
     password = quote(str(target["password"]), safe="")
     return (
         f"postgresql://{user}:{password}@{target['host']}:{target['port']}"
-        f"/{target['dbname']}?sslmode={target['sslmode']}"
+        f"/{target['dbname']}?sslmode={target['sslmode']}&hostaddr={ipv4}"
     )
 
 
 def assert_writer_url(url: str) -> None:
     parsed = urlparse(url)
     host = (parsed.hostname or "").casefold()
-    port = parsed.port or 5432
-    sslmode = (parse_qs(parsed.query).get("sslmode") or [""])[0].casefold()
-    if host != DIRECT_HOST or "pooler" in host:
-        raise LoadError("writer URL host is not the Contractor Production direct host")
-    if port == 6543:
+    user = unquote(parsed.username or "")
+    query = parse_qs(parsed.query)
+    hostaddr = (query.get("hostaddr") or [""])[0]
+    if host != SESSION_HOST or host == DIRECT_HOST:
+        raise LoadError("session connection host is not the approved Contractor pooler")
+    if parsed.port == 6543:
         raise LoadError("transaction pooler port 6543 is not allowed")
-    if port != DIRECT_PORT:
-        raise LoadError("direct connection must use port 5432")
-    if parsed.path.lstrip("/") != DIRECT_DB:
+    if parsed.port != SESSION_PORT:
+        raise LoadError("session connection must use port 5432")
+    if user != SESSION_USER or PROJECT_REF not in user:
+        raise LoadError("session connection requires the project tenant user")
+    if parsed.path.lstrip("/") != SESSION_DB:
         raise LoadError("writer URL database is not postgres")
-    if sslmode not in {"require", "verify-ca", "verify-full"}:
-        raise LoadError("direct connection must use TLS")
+    _sslmode(parsed)
+    if not _is_ipv4(hostaddr):
+        raise LoadError("session connection requires an IPv4 address")
 
 
 def _folded_rows(path: Path):
@@ -343,46 +443,65 @@ def rollback_plan() -> str:
     return statement
 
 
-def probe_direct(target: dict[str, object]) -> dict[str, object]:
+def probe_session(target: dict[str, object]) -> dict[str, object]:
     secret = str(target["password"])
+    ipv4 = str(target.get("ipv4") or "")
+    stopped = "session_database_connection"
     try:
         import psycopg
     except ImportError as exc:
         return {
-            "direct_database_connection": "STOP",
+            stopped: "STOP",
+            "secure_session_connection": "FAIL",
             "connection_error": redact(f"{type(exc).__name__}: {exc}", secret),
         }
     try:
         connection = psycopg.connect(
             host=str(target["host"]),
+            hostaddr=ipv4,
             port=int(target["port"]),
             dbname=str(target["dbname"]),
             user=str(target["user"]),
             password=secret,
-            sslmode="require",
+            sslmode=str(target["sslmode"]),
             connect_timeout=20,
-            options="-c default_transaction_read_only=on",
         )
     except Exception as exc:
         return {
-            "direct_database_connection": "STOP",
+            stopped: "STOP",
+            "secure_session_connection": "FAIL",
             "connection_error": explain_connection_failure(redact(f"{type(exc).__name__}: {exc}", secret)),
         }
     try:
         info = connection.info
-        if info.host != DIRECT_HOST or info.port != DIRECT_PORT or not info.ssl_in_use:
+        seen_host = (info.host or "").casefold()
+        # Supavisor terminates TLS, so pg_stat_ssl on the database is not the client check.
+        if seen_host not in {SESSION_HOST, ipv4} or info.port != SESSION_PORT or not connection.pgconn.ssl_in_use:
             return {
-                "direct_database_connection": "STOP",
-                "connection_error": "connected session is not the direct TLS host",
+                stopped: "STOP",
+                "secure_session_connection": "FAIL",
+                "connection_error": "connected session is not the approved TLS session pooler",
             }
+        if (info.user or "") != SESSION_USER:
+            return {
+                stopped: "STOP",
+                "secure_session_connection": "FAIL",
+                "connection_error": "connected session is not the project tenant user",
+            }
+        connection.autocommit = True
         with connection.cursor() as cursor:
+            cursor.execute("SET statement_timeout = '20s'")
+            cursor.execute("BEGIN READ ONLY")
             cursor.execute("SHOW transaction_read_only")
             read_only = cursor.fetchone()[0]
             if read_only != "on":
+                cursor.execute("ROLLBACK")
                 return {
-                    "direct_database_connection": "STOP",
+                    stopped: "STOP",
+                    "secure_session_connection": "FAIL",
                     "connection_error": "session is not read only",
                 }
+        with connection.cursor() as cursor:
             cursor.execute("SELECT current_database(), current_setting('server_version_num')::int")
             database_name, version_num = cursor.fetchone()
             cursor.execute(
@@ -406,10 +525,11 @@ def probe_direct(target: dict[str, object]) -> dict[str, object]:
                 """
             )
             row = cursor.fetchone()
-        connection.rollback()
+            cursor.execute("ROLLBACK")
     except Exception as exc:
         return {
-            "direct_database_connection": "STOP",
+            stopped: "STOP",
+            "secure_session_connection": "FAIL",
             "connection_error": redact(f"{type(exc).__name__}: {exc}", secret),
         }
     finally:
@@ -420,7 +540,7 @@ def probe_direct(target: dict[str, object]) -> dict[str, object]:
     fl_nj_unchanged = (matches, bridges) == (FL_NJ_MATCHES_EXPECTED, FL_NJ_BRIDGES_EXPECTED)
     pilot_ok = "FL,NJ" in pilot_text and "CA" not in pilot_text
     ready = (
-        database_name == DIRECT_DB
+        database_name == SESSION_DB
         and version_num >= 170000
         and tables_ready
         and fl_nj_unchanged
@@ -430,10 +550,12 @@ def probe_direct(target: dict[str, object]) -> dict[str, object]:
         and ca_citations == 0
     )
     return {
-        "direct_database_connection": "READY" if ready else "STOP",
+        "session_database_connection": "READY" if ready else "STOP",
+        "secure_session_connection": "PASS" if ready else "FAIL",
         "database": database_name,
         "server_version_num": version_num,
         "ssl": "on",
+        "address_family": "ipv4",
         "fl_nj_matches": matches,
         "fl_nj_bridges": bridges,
         "fl_nj_unchanged": fl_nj_unchanged,
@@ -442,7 +564,7 @@ def probe_direct(target: dict[str, object]) -> dict[str, object]:
         "ca_citation_rows": ca_citations,
         "pilot_states_fl_nj": pilot_ok,
         "migration_020_tables": tables_ready,
-        "connection_error": "" if ready else "direct session failed a read-only readiness check",
+        "connection_error": "" if ready else "session pooler failed a read-only readiness check",
     }
 
 
@@ -458,16 +580,19 @@ def run_preflight(inputs: CaliforniaInputs, env_file: Path, founder: Path | None
         founder_sha = checked["sha256"]
         founder_date = checked["date"]
     connection: dict[str, object] = {
-        "direct_database_connection": "STOP",
+        "session_database_connection": "STOP",
+        "secure_session_connection": "FAIL",
         "connection_error": "database environment was not read",
     }
     try:
-        target = direct_target_from_app_url(load_app_database_url(env_file))
+        target = session_target_from_app_url(load_app_database_url(env_file))
+        target["ipv4"] = resolve_ipv4(SESSION_HOST, SESSION_PORT)
         assert_writer_url(database_url_for_writer(target))
-        connection = probe_direct(target)
+        connection = probe_session(target)
     except LoadError as exc:
         connection = {
-            "direct_database_connection": "STOP",
+            "session_database_connection": "STOP",
+            "secure_session_connection": "FAIL",
             "connection_error": redact(str(exc)),
         }
     ca_rows = (
@@ -494,11 +619,14 @@ def run_preflight(inputs: CaliforniaInputs, env_file: Path, founder: Path | None
         "blank_initial_penalties": plans.blank_initial,
         "zero_initial_penalties": plans.zero_initial,
         "outside_link_gap": plans.outside_link_gap,
-        "direct_host": DIRECT_HOST,
-        "direct_port": DIRECT_PORT,
-        "direct_database_connection": connection["direct_database_connection"],
+        "session_host": SESSION_HOST,
+        "session_port": SESSION_PORT,
+        "session_user": SESSION_USER,
+        "session_database_connection": connection["session_database_connection"],
+        "secure_session_connection": connection.get("secure_session_connection", "FAIL"),
+        "address_family": connection.get("address_family", ""),
         "connection_error": connection.get("connection_error", ""),
-        "database": connection.get("database", DIRECT_DB),
+        "database": connection.get("database", SESSION_DB),
         "server_version_num": connection.get("server_version_num", ""),
         "fl_nj_matches": connection.get("fl_nj_matches"),
         "fl_nj_bridges": connection.get("fl_nj_bridges"),
@@ -518,7 +646,8 @@ def run_write(founder: Path, confirm: str, env_file: Path, inputs: CaliforniaInp
     if confirm != GO_PHRASE:
         raise LoadError("database writes require the exact technical confirmation phrase")
     verify_founder_authorization(founder)
-    target = direct_target_from_app_url(load_app_database_url(env_file))
+    target = session_target_from_app_url(load_app_database_url(env_file))
+    target["ipv4"] = resolve_ipv4(SESSION_HOST, SESSION_PORT)
     database_url = database_url_for_writer(target)
     assert_writer_url(database_url)
     plans = build_plans(inputs)
@@ -527,8 +656,8 @@ def run_write(founder: Path, confirm: str, env_file: Path, inputs: CaliforniaInp
         plans.detail,
         confirm=GO_PHRASE,
         database_url=database_url,
-        expected_db_host=DIRECT_HOST,
-        expected_db_name=DIRECT_DB,
+        expected_db_host=SESSION_HOST,
+        expected_db_name=SESSION_DB,
         identities=plans.identities,
         expected_profiles=CERTIFIED_ELIGIBLE_PROFILES[STATE],
         expected_activities=CERTIFIED_PUBLISHED_ACTIVITIES[STATE],
@@ -584,7 +713,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"mode": "stop", "production_rows_written": 0, "error": redact(str(exc), secret)}))
         return 2
     print(json.dumps(result, indent=2, sort_keys=True))
-    if not args.write and result.get("direct_database_connection") != "READY":
+    if not args.write and result.get("session_database_connection") != "READY":
         return 2
     return 0
 
