@@ -6,6 +6,14 @@ import {
   type SitemapShardPlan,
 } from "@/lib/seo/sitemap-data";
 
+function responseHeaders(plan: SitemapShardPlan): HeadersInit {
+  if (!plan.retry) return SITEMAP_XML_HEADERS;
+  return {
+    "Content-Type": "application/xml; charset=utf-8",
+    "Cache-Control": "no-store",
+  };
+}
+
 export function createSitemapRouteHandlers(loadPlan: () => Promise<SitemapShardPlan>) {
   return {
     async index(): Promise<Response> {
@@ -13,7 +21,7 @@ export function createSitemapRouteHandlers(loadPlan: () => Promise<SitemapShardP
         const plan = await loadPlan();
         return new Response(renderSitemapIndexXml(plan.childIds), {
           status: 200,
-          headers: SITEMAP_XML_HEADERS,
+          headers: responseHeaders(plan),
         });
       } catch (error) {
         console.error("[sitemap.xml index]", error);
@@ -56,7 +64,7 @@ export function createSitemapRouteHandlers(loadPlan: () => Promise<SitemapShardP
 
         return new Response(renderUrlSetXml(entries), {
           status: 200,
-          headers: SITEMAP_XML_HEADERS,
+          headers: responseHeaders(plan),
         });
       } catch (error) {
         console.error("[sitemap shard]", id, error);

@@ -3,6 +3,9 @@ import test from "node:test";
 import {
   chunkSitemapEntries,
   createSitemapShardPlan,
+  isTransientSitemapFailure,
+  nonContractorSitemapEntries,
+  renderUrlSetXml,
   SITEMAP_MAX_URLS_PER_CHILD,
   type SitemapUrlEntry,
 } from "../lib/seo/sitemap-data";
@@ -108,6 +111,7 @@ test("index invokes every listed child; children are valid, nonempty, bounded, a
   const missing = await handlers.child("2");
   assert.equal(missing.status, 404);
   assert.equal(children.some((child) => child.endsWith("/2.xml")), false);
+  assert.match(index.headers.get("cache-control") ?? "", /s-maxage=3600/);
 });
 
 test("identical URL input produces identical child IDs, membership, and ordering", async () => {
@@ -144,6 +148,143 @@ test("stable unique tie-break picks the same primary-location row regardless of 
   const b = { loc: "https://www.contractortrusthub.com/same", stableId: "b", lastmod: "2026-02-01" };
   assert.deepEqual(chunkSitemapEntries([b, a], 10), chunkSitemapEntries([a, b], 10));
   assert.equal(chunkSitemapEntries([b, a], 10)[0]?.[0]?.stableId, "a");
+});
+
+const PROBE_TIMEOUT = new Error("canceling statement due to statement timeout");
+const PROGRAMMING_ERROR = new Error('relation "contractors" does not exist');
+
+async function withSitemapLogs(run: () => Promise<void>): Promise<string[]> {
+  const lines: string[] = [];
+  const original = console.error;
+  console.error = (...args: unknown[]) => {
+    lines.push(args.map((arg) => String(arg)).join(" "));
+  };
+  try {
+    await run();
+  } finally {
+    console.error = original;
+  }
+  return lines;
+}
+
+test("a later-shard timeout does not turn a valid index into 503", async () => {
+  const logs = await withSitemapLogs(async () => {
+    const handlers = createSitemapRouteHandlers(() => createSitemapShardPlan({
+      staticEntries: [{ loc: "https://www.contractortrusthub.com/florida" }],
+      chunkSize: 2,
+      profilePageHasRows: async (id) => {
+        if (id === 2) throw PROBE_TIMEOUT;
+        return id === 1;
+      },
+      profileEntries: async (id) => [
+        {
+          loc: `https://www.contractortrusthub.com/contractors/shard-${id}`,
+          stableId: `shard-${id}`,
+          lastmod: "2026-04-02T12:00:00.000Z",
+        },
+      ],
+    }));
+    const index = await handlers.index();
+    assert.equal(index.status, 200);
+    assert.equal(index.headers.get("cache-control"), "no-store");
+    const indexXml = await index.text();
+    assertWellFormedXml(indexXml, "sitemapindex");
+    assert.deepEqual(xmlLocs(indexXml), [
+      "https://www.contractortrusthub.com/sitemap/0.xml",
+      "https://www.contractortrusthub.com/sitemap/1.xml",
+    ]);
+
+    const child = await handlers.child("0");
+    assert.equal(child.status, 200);
+    const childXml = await child.text();
+    assertWellFormedXml(childXml, "urlset");
+    assert.ok(xmlLocs(childXml).includes("https://www.contractortrusthub.com/florida"));
+    assert.ok(xmlLocs(childXml).includes("https://www.contractortrusthub.com/contractors/shard-0"));
+    assert.match(childXml, /<lastmod>2026-04-02T12:00:00\.000Z<\/lastmod>/);
+    assert.equal((await handlers.child("1")).status, 200);
+    assert.equal((await handlers.child("2")).status, 404);
+  });
+  assert.match(logs.join("\n"), /later shard 2 probe failed/);
+});
+
+test("a later-shard programming error stays a 503", async () => {
+  const handlers = createSitemapRouteHandlers(() => createSitemapShardPlan({
+    staticEntries: [{ loc: "https://www.contractortrusthub.com/florida" }],
+    profilePageHasRows: async () => {
+      throw PROGRAMMING_ERROR;
+    },
+    profileEntries: async () => [],
+  }));
+  const index = await handlers.index();
+  assert.equal(index.status, 503);
+  assert.equal(index.headers.get("cache-control"), "no-store");
+  const child = await handlers.child("0");
+  assert.equal(child.status, 503);
+});
+
+test("shard 0 profile timeout keeps static output and drops unverified profiles", async () => {
+  const logs = await withSitemapLogs(async () => {
+    const handlers = createSitemapRouteHandlers(() => createSitemapShardPlan({
+      staticEntries: [
+        { loc: "https://www.contractortrusthub.com/florida" },
+        { loc: "https://www.contractortrusthub.com/verify?state=or" },
+        { loc: "https://www.contractortrusthub.com/account" },
+      ],
+      profilePageHasRows: async () => false,
+      profileEntries: async () => {
+        throw PROBE_TIMEOUT;
+      },
+    }));
+    const index = await handlers.index();
+    assert.equal(index.status, 200);
+    const child = await handlers.child("0");
+    assert.equal(child.status, 200);
+    assert.equal(child.headers.get("cache-control"), "no-store");
+    const xml = await child.text();
+    assertWellFormedXml(xml, "urlset");
+    assert.deepEqual(xmlLocs(xml), ["https://www.contractortrusthub.com/florida"]);
+  });
+  assert.match(logs.join("\n"), /shard 0 profiles unavailable/);
+});
+
+test("shard 0 programming error is not replaced with a fallback page", async () => {
+  const handlers = createSitemapRouteHandlers(() => createSitemapShardPlan({
+    staticEntries: [{ loc: "https://www.contractortrusthub.com/florida" }],
+    profilePageHasRows: async () => false,
+    profileEntries: async () => {
+      throw PROGRAMMING_ERROR;
+    },
+  }));
+  assert.equal((await handlers.child("0")).status, 503);
+});
+
+test("published sitemap URLs stay canonical and lastmod values stay valid", () => {
+  for (const entry of nonContractorSitemapEntries()) {
+    const url = new URL(entry.loc);
+    assert.equal(url.protocol, "https:");
+    assert.equal(url.host, "www.contractortrusthub.com");
+    assert.equal(url.search, "");
+    assert.equal(url.hash, "");
+    assert.equal(["/account", "/watch", "/compare"].includes(url.pathname), false);
+  }
+  const xml = renderUrlSetXml([
+    { loc: "https://www.contractortrusthub.com/contractors/good", lastmod: "2026-04-02T12:00:00.000Z" },
+    { loc: "https://www.contractortrusthub.com/contractors/undated", lastmod: "not-a-date" },
+    { loc: "https://www.contractortrusthub.com/contractors/broken?x=1", lastmod: "2026-04-02T12:00:00.000Z" },
+    { loc: "https://www.contractortrusthub.com/account" },
+    { loc: "https://evil.example/contractors/off-host" },
+  ]);
+  assert.deepEqual(xmlLocs(xml), [
+    "https://www.contractortrusthub.com/contractors/good",
+    "https://www.contractortrusthub.com/contractors/undated",
+  ]);
+  assert.match(xml, /<lastmod>2026-04-02T12:00:00\.000Z<\/lastmod>/);
+  assert.equal(xml.match(/<lastmod>/g)?.length, 1);
+  assert.equal(isTransientSitemapFailure(PROBE_TIMEOUT), true);
+  assert.equal(isTransientSitemapFailure(new Error("timeout exceeded when trying to connect")), true);
+  assert.equal(isTransientSitemapFailure(new Error("MaxClientsInSessionMode")), true);
+  assert.equal(isTransientSitemapFailure(PROGRAMMING_ERROR), false);
+  assert.equal(isTransientSitemapFailure(new TypeError("timeout is not a function")), false);
 });
 
 test("zero URL manifest has no children and no placeholder shard", async () => {
