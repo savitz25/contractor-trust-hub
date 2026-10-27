@@ -45,6 +45,12 @@ export function createSitemapRouteHandlers(loadPlan: () => Promise<SitemapShardP
       try {
         const plan = await loadPlan();
         if (!plan.childIds.includes(id)) {
+          if (plan.retry) {
+            return new Response("Sitemap temporarily unavailable", {
+              status: 503,
+              headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
+            });
+          }
           return new Response("Sitemap shard not found", {
             status: 404,
             headers: { "Content-Type": "text/plain; charset=utf-8" },

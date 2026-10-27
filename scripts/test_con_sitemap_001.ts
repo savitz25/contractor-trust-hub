@@ -202,9 +202,65 @@ test("a later-shard timeout does not turn a valid index into 503", async () => {
     assert.ok(xmlLocs(childXml).includes("https://www.contractortrusthub.com/contractors/shard-0"));
     assert.match(childXml, /<lastmod>2026-04-02T12:00:00\.000Z<\/lastmod>/);
     assert.equal((await handlers.child("1")).status, 200);
-    assert.equal((await handlers.child("2")).status, 404);
+    const unavailableChild = await handlers.child("2");
+    assert.equal(unavailableChild.status, 503);
+    assert.equal(unavailableChild.headers.get("cache-control"), "no-store");
   });
   assert.match(logs.join("\n"), /later shard 2 probe failed/);
+});
+
+test("a child re-probe timeout for a shard in a cached index returns retryable 503, not ghost-shard 404", async () => {
+  const cachedIndex = await createSitemapShardPlan({
+    staticEntries: [{ loc: "https://www.contractortrusthub.com/florida" }],
+    chunkSize: 2,
+    maxChildren: 4,
+    profilePageHasRows: async (id) => id >= 1 && id <= 3,
+    profileEntries: async (id) => [{
+      loc: `https://www.contractortrusthub.com/contractors/shard-${id}`,
+      stableId: `shard-${id}`,
+    }],
+  });
+  assert.deepEqual(cachedIndex.childIds, [0, 1, 2, 3]);
+
+  const childHandlers = createSitemapRouteHandlers(() => createSitemapShardPlan({
+    staticEntries: [{ loc: "https://www.contractortrusthub.com/florida" }],
+    chunkSize: 2,
+    maxChildren: 4,
+    profilePageHasRows: async (id) => {
+      if (id === 3) throw PROBE_TIMEOUT;
+      return id === 1 || id === 2;
+    },
+    profileEntries: async (id) => [{
+      loc: `https://www.contractortrusthub.com/contractors/shard-${id}`,
+      stableId: `shard-${id}`,
+    }],
+  }));
+  let childResponse: Response | undefined;
+  await withSitemapLogs(async () => {
+    childResponse = await childHandlers.child("3");
+  });
+  assert.equal(childResponse?.status, 503);
+  assert.equal(childResponse?.headers.get("cache-control"), "no-store");
+});
+
+test("a persistently empty shard is omitted from the sitemap index", async () => {
+  const handlers = createSitemapRouteHandlers(() => createSitemapShardPlan({
+    staticEntries: [{ loc: "https://www.contractortrusthub.com/florida" }],
+    chunkSize: 2,
+    maxChildren: 4,
+    profilePageHasRows: async (id) => id === 1 || id === 2,
+    profileEntries: async (id) => [{
+      loc: `https://www.contractortrusthub.com/contractors/shard-${id}`,
+      stableId: `shard-${id}`,
+    }],
+  }));
+  const index = await handlers.index();
+  assert.equal(index.status, 200);
+  assert.deepEqual(xmlLocs(await index.text()), [
+    "https://www.contractortrusthub.com/sitemap/0.xml",
+    "https://www.contractortrusthub.com/sitemap/1.xml",
+    "https://www.contractortrusthub.com/sitemap/2.xml",
+  ]);
 });
 
 test("a later-shard programming error stays a 503", async () => {
