@@ -85,9 +85,17 @@ test("transient profile database errors are not turned into noindex metadata", (
   const timeout = new Error("canceling statement due to statement timeout");
   const connect = new Error("timeout exceeded when trying to connect");
   const capacity = new Error("MaxClientsInSessionMode");
-  const programming = Object.assign(
+  const undefinedTable = Object.assign(
     new Error('relation "contractors" does not exist'),
     { code: "42P01" },
+  );
+  const syntaxError = Object.assign(
+    new Error("syntax error at or near invalid"),
+    { code: "42601" },
+  );
+  const recoverableSocket = Object.assign(
+    new Error("connect ECONNREFUSED"),
+    { code: "ECONNREFUSED" },
   );
   const databaseShutdown = Object.assign(
     new Error("database system is shutting down"),
@@ -98,9 +106,11 @@ test("transient profile database errors are not turned into noindex metadata", (
   assert.equal(isTransientProfileDbError(timeout), true);
   assert.equal(isTransientProfileDbError(connect), true);
   assert.equal(isTransientProfileDbError(capacity), true);
-  assert.equal(isTransientProfileDbError(programming), false);
+  assert.equal(isTransientProfileDbError(undefinedTable), false);
   assert.equal(isTransientProfileDbError(null), false);
-  assert.equal(isSoftProfileLookupError(programming), true);
+  assert.equal(isSoftProfileLookupError(undefinedTable), false);
+  assert.equal(isSoftProfileLookupError(syntaxError), false);
+  assert.equal(isSoftProfileLookupError(recoverableSocket), true);
   assert.equal(isSoftProfileLookupError(databaseShutdown), false);
   assert.equal(isSoftProfileLookupError(unexpected), false);
 
@@ -108,12 +118,20 @@ test("transient profile database errors are not turned into noindex metadata", (
   assert.throws(() => metadataAfterProfileLookupError(connect), (err) => err === connect);
   assert.throws(() => metadataAfterProfileLookupError(capacity), (err) => err === capacity);
   assert.throws(
+    () => metadataAfterProfileLookupError(syntaxError),
+    (err) => err === syntaxError,
+  );
+  assert.throws(
+    () => metadataAfterProfileLookupError(undefinedTable),
+    (err) => err === undefinedTable,
+  );
+  assert.throws(
     () => metadataAfterProfileLookupError(databaseShutdown),
     (err) => err === databaseShutdown,
   );
   assert.throws(() => metadataAfterProfileLookupError(unexpected), (err) => err === unexpected);
 
-  const soft = metadataAfterProfileLookupError(programming);
+  const soft = metadataAfterProfileLookupError(recoverableSocket);
   const robots = soft.robots as { index?: boolean; follow?: boolean };
   assert.equal(robots.index, false);
   assert.equal(robots.follow, true);
@@ -172,12 +190,24 @@ test("unexpected lookup failures propagate instead of becoming missing profiles"
     () => metadataAfterProfileLookupError(unexpected),
     (error: unknown) => error === unexpected,
   );
+
+  for (const error of [
+    Object.assign(new Error("syntax error at or near invalid"), { code: "42601" }),
+    Object.assign(new Error('relation "contractors" does not exist'), { code: "42P01" }),
+  ]) {
+    await assert.rejects(
+      () => assertContractorExistsBeforeStreaming("b1-programming-error", async () => {
+        throw error;
+      }),
+      (caught: unknown) => caught === error,
+    );
+  }
 });
 
 test("recognized database errors retain the route soft-failure renderer", async () => {
   const databaseFailure = Object.assign(
-    new Error('relation "contractors" does not exist'),
-    { code: "42P01" },
+    new Error("connect ECONNREFUSED"),
+    { code: "ECONNREFUSED" },
   );
   await assert.doesNotReject(() =>
     assertContractorExistsBeforeStreaming("b1-database-error", async () => {

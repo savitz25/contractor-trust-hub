@@ -6,15 +6,16 @@ export function isTransientProfileDbError(err: unknown): boolean {
   return isDbQueryTimeout(err) || isDbConnectTimeout(err) || isDbCapacityError(err);
 }
 
-/** Database failures that the profile route can safely present as unavailable. */
+/**
+ * Only explicit setup failures and pg transport errors are safe for the
+ * existing soft-failure UI. PostgreSQL SQLSTATEs are never soft failures:
+ * they may identify query or schema defects (for example, 42601 or 42P01).
+ */
 export function isSoftProfileLookupError(err: unknown): boolean {
   if (isTransientProfileDbError(err) || !(err instanceof Error)) return false;
 
   const code = "code" in err && typeof err.code === "string" ? err.code : "";
-  const sqlStateClass = code.slice(0, 2);
-  const transientSqlStateClasses = ["08", "40", "53", "54", "55", "57", "58", "XX"];
   return (
-    (/^[0-9A-Z]{5}$/.test(code) && !transientSqlStateClasses.includes(sqlStateClass)) ||
     [
       "ECONNREFUSED",
       "ECONNRESET",
