@@ -2,11 +2,14 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import type { PoolClient } from "pg";
+import { assertContractorExistsBeforeStreaming } from "../app/contractors/[slug]/layout";
 import { query, withDbClient } from "../lib/db";
+import type { ContractorDetail } from "../lib/contractors/types";
 import {
   isTransientProfileDbError,
   metadataAfterProfileLookupError,
 } from "../lib/seo/profile-lookup";
+import { trustReportMetadata } from "../lib/seo/trust-report-seo";
 
 process.env.DATABASE_URL = "invalid";
 delete process.env.POSTGRES_URL;
@@ -106,4 +109,44 @@ test("a missing profile still uses notFound and only transient failures rethrow"
   assert.match(page, /return metadataAfterProfileLookupError\(error\)/);
   assert.match(page, /await withDbSession\(async \(\) =>/);
   assert.match(queries, /return withDbSession\(\(\) => getContractorBySlugUncached\(slug, stateSlug\)\)/);
+});
+
+test("missing profile is rejected before the route loading boundary", async () => {
+  const layout = readFileSync("app/contractors/[slug]/layout.tsx", "utf8");
+  assert.match(layout, /await assertContractorExistsBeforeStreaming\(decodeURIComponent\(raw\)\)/);
+  await assert.rejects(
+    () => assertContractorExistsBeforeStreaming("b1-genuinely-missing", async () => null),
+    (error: unknown) =>
+      typeof error === "object" && error !== null &&
+      "digest" in error && error.digest === "NEXT_HTTP_ERROR_FALLBACK;404",
+  );
+});
+
+test("a valid profile passes the early guard and keeps indexable metadata", async () => {
+  const profile = {
+    id: "profile-test-id",
+    slug: "b1-valid-regression-profile",
+    displayName: "Valid Regression Profile",
+    legalName: null,
+    dbaName: null,
+    primaryCity: null,
+    primaryCounty: null,
+    homeState: "FL",
+    isThinProfile: true,
+    licenses: [],
+    entities: [],
+    discipline: [],
+  } satisfies ContractorDetail;
+  const found = await assertContractorExistsBeforeStreaming(
+    profile.slug,
+    async () => profile,
+  );
+
+  assert.equal(found, profile);
+  const metadata = trustReportMetadata(found!);
+  assert.deepEqual(metadata.robots, { index: true, follow: true });
+  assert.match(
+    String((metadata.alternates as { canonical: string }).canonical),
+    /b1-valid-regression-profile/,
+  );
 });
