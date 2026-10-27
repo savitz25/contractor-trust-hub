@@ -48,6 +48,7 @@ import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { getContractorBySlug } from "@/lib/contractors/queries";
 import { withDbSession } from "@/lib/db";
 import {
+  isSoftProfileLookupError,
   isTransientProfileDbError,
   metadataAfterProfileLookupError,
 } from "@/lib/seo/profile-lookup";
@@ -92,7 +93,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   try {
     const c = await getContractorBySlug(slug);
-    if (!c) {
+    if (c === null) {
       return {
         title: "Contractor not found",
         robots: { index: false, follow: true },
@@ -129,7 +130,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   try {
     contractor = await getContractorBySlug(slug);
   } catch (e) {
-    if (isTransientProfileDbError(e)) throw e;
+    if (isTransientProfileDbError(e) || !isSoftProfileLookupError(e)) throw e;
     return (
       <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <h1 className="text-2xl font-semibold text-[var(--text)]">Unable to load Trust Report</h1>
@@ -157,7 +158,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
     );
   }
 
-  if (!contractor) notFound();
+  if (contractor === null) notFound();
 
   const stateSlug = evidenceSlugFromHomeState(contractor.homeState);
   const isTx = stateSlug === "tx";

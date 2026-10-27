@@ -1,7 +1,10 @@
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { getContractorBySlug } from "@/lib/contractors/queries";
-import { isTransientProfileDbError } from "@/lib/seo/profile-lookup";
+import {
+  isSoftProfileLookupError,
+  isTransientProfileDbError,
+} from "@/lib/seo/profile-lookup";
 
 type Props = {
   children: ReactNode;
@@ -15,22 +18,31 @@ type Props = {
 export async function assertContractorExistsBeforeStreaming(
   slug: string,
   lookup: typeof getContractorBySlug = getContractorBySlug,
-): Promise<Awaited<ReturnType<typeof getContractorBySlug>> | null> {
+): Promise<void> {
   let contractor;
   try {
     contractor = await lookup(slug);
   } catch (error) {
-    if (isTransientProfileDbError(error)) throw error;
+    if (isTransientProfileDbError(error) || !isSoftProfileLookupError(error)) {
+      throw error;
+    }
     // Keep the page's existing soft-failure renderer for other database errors.
-    return null;
+    return;
   }
 
-  if (!contractor) notFound();
-  return contractor;
+  if (contractor === null) notFound();
+}
+
+export async function renderContractorChildren<T>(
+  slug: string,
+  children: T,
+  lookup: typeof getContractorBySlug = getContractorBySlug,
+): Promise<T> {
+  await assertContractorExistsBeforeStreaming(slug, lookup);
+  return children;
 }
 
 export default async function ContractorLayout({ children, params }: Props) {
   const { slug: raw } = await params;
-  await assertContractorExistsBeforeStreaming(decodeURIComponent(raw));
-  return children;
+  return renderContractorChildren(decodeURIComponent(raw), children);
 }

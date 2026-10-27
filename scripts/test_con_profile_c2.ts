@@ -2,10 +2,14 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import type { PoolClient } from "pg";
-import { assertContractorExistsBeforeStreaming } from "../app/contractors/[slug]/layout";
+import {
+  assertContractorExistsBeforeStreaming,
+  renderContractorChildren,
+} from "../app/contractors/[slug]/layout";
 import { query, withDbClient } from "../lib/db";
 import type { ContractorDetail } from "../lib/contractors/types";
 import {
+  isSoftProfileLookupError,
   isTransientProfileDbError,
   metadataAfterProfileLookupError,
 } from "../lib/seo/profile-lookup";
@@ -81,17 +85,33 @@ test("transient profile database errors are not turned into noindex metadata", (
   const timeout = new Error("canceling statement due to statement timeout");
   const connect = new Error("timeout exceeded when trying to connect");
   const capacity = new Error("MaxClientsInSessionMode");
-  const programming = new Error('relation "contractors" does not exist');
+  const programming = Object.assign(
+    new Error('relation "contractors" does not exist'),
+    { code: "42P01" },
+  );
+  const databaseShutdown = Object.assign(
+    new Error("database system is shutting down"),
+    { code: "57P01" },
+  );
+  const unexpected = new Error("unexpected profile lookup failure");
 
   assert.equal(isTransientProfileDbError(timeout), true);
   assert.equal(isTransientProfileDbError(connect), true);
   assert.equal(isTransientProfileDbError(capacity), true);
   assert.equal(isTransientProfileDbError(programming), false);
   assert.equal(isTransientProfileDbError(null), false);
+  assert.equal(isSoftProfileLookupError(programming), true);
+  assert.equal(isSoftProfileLookupError(databaseShutdown), false);
+  assert.equal(isSoftProfileLookupError(unexpected), false);
 
   assert.throws(() => metadataAfterProfileLookupError(timeout), (err) => err === timeout);
   assert.throws(() => metadataAfterProfileLookupError(connect), (err) => err === connect);
   assert.throws(() => metadataAfterProfileLookupError(capacity), (err) => err === capacity);
+  assert.throws(
+    () => metadataAfterProfileLookupError(databaseShutdown),
+    (err) => err === databaseShutdown,
+  );
+  assert.throws(() => metadataAfterProfileLookupError(unexpected), (err) => err === unexpected);
 
   const soft = metadataAfterProfileLookupError(programming);
   const robots = soft.robots as { index?: boolean; follow?: boolean };
@@ -99,13 +119,17 @@ test("transient profile database errors are not turned into noindex metadata", (
   assert.equal(robots.follow, true);
 });
 
-test("a missing profile still uses notFound and only transient failures rethrow", () => {
+test("only a confirmed missing profile uses notFound", () => {
   const page = readFileSync("app/contractors/[slug]/page.tsx", "utf8");
   const queries = readFileSync("lib/contractors/queries.ts", "utf8");
 
   assert.match(page, /title: "Contractor not found"/);
-  assert.match(page, /if \(!contractor\) notFound\(\)/);
-  assert.match(page, /if \(isTransientProfileDbError\(e\)\) throw e/);
+  assert.match(page, /if \(c === null\)/);
+  assert.match(page, /if \(contractor === null\) notFound\(\)/);
+  assert.match(
+    page,
+    /if \(isTransientProfileDbError\(e\) \|\| !isSoftProfileLookupError\(e\)\) throw e/,
+  );
   assert.match(page, /return metadataAfterProfileLookupError\(error\)/);
   assert.match(page, /await withDbSession\(async \(\) =>/);
   assert.match(queries, /return withDbSession\(\(\) => getContractorBySlugUncached\(slug, stateSlug\)\)/);
@@ -113,7 +137,9 @@ test("a missing profile still uses notFound and only transient failures rethrow"
 
 test("missing profile is rejected before the route loading boundary", async () => {
   const layout = readFileSync("app/contractors/[slug]/layout.tsx", "utf8");
-  assert.match(layout, /await assertContractorExistsBeforeStreaming\(decodeURIComponent\(raw\)\)/);
+  assert.match(layout, /if \(contractor === null\) notFound\(\)/);
+  assert.match(layout, /return renderContractorChildren\(decodeURIComponent\(raw\), children\)/);
+  assert.doesNotMatch(layout, /return null/);
   await assert.rejects(
     () => assertContractorExistsBeforeStreaming("b1-genuinely-missing", async () => null),
     (error: unknown) =>
@@ -133,6 +159,40 @@ test("the early profile guard still rethrows transient C2 database errors", asyn
   );
 });
 
+test("unexpected lookup failures propagate instead of becoming missing profiles", async () => {
+  const unexpected = new Error("unexpected profile lookup failure");
+  await assert.rejects(
+    () =>
+      assertContractorExistsBeforeStreaming("b1-unexpected-profile", async () => {
+        throw unexpected;
+      }),
+    (error: unknown) => error === unexpected,
+  );
+  assert.throws(
+    () => metadataAfterProfileLookupError(unexpected),
+    (error: unknown) => error === unexpected,
+  );
+});
+
+test("recognized database errors retain the route soft-failure renderer", async () => {
+  const databaseFailure = Object.assign(
+    new Error('relation "contractors" does not exist'),
+    { code: "42P01" },
+  );
+  await assert.doesNotReject(() =>
+    assertContractorExistsBeforeStreaming("b1-database-error", async () => {
+      throw databaseFailure;
+    }),
+  );
+
+  const page = readFileSync("app/contractors/[slug]/page.tsx", "utf8");
+  assert.match(
+    page,
+    /if \(isTransientProfileDbError\(e\) \|\| !isSoftProfileLookupError\(e\)\) throw e/,
+  );
+  assert.match(page, /Unable to load Trust Report/);
+});
+
 test("a valid profile passes the early guard and keeps indexable metadata", async () => {
   const profile = {
     id: "profile-test-id",
@@ -148,13 +208,15 @@ test("a valid profile passes the early guard and keeps indexable metadata", asyn
     entities: [],
     discipline: [],
   } satisfies ContractorDetail;
-  const found = await assertContractorExistsBeforeStreaming(
+  const children = { type: "valid-profile-content" };
+  const rendered = await renderContractorChildren(
     profile.slug,
+    children,
     async () => profile,
   );
 
-  assert.equal(found, profile);
-  const metadata = trustReportMetadata(found!);
+  assert.equal(rendered, children);
+  const metadata = trustReportMetadata(profile);
   assert.deepEqual(metadata.robots, { index: true, follow: true });
   assert.match(
     String((metadata.alternates as { canonical: string }).canonical),
