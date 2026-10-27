@@ -46,6 +46,11 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { displayStatusLabel, formatDateTime, statusLabel } from "@/lib/contractors/format";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { getContractorBySlug } from "@/lib/contractors/queries";
+import { withDbSession } from "@/lib/db";
+import {
+  isTransientProfileDbError,
+  metadataAfterProfileLookupError,
+} from "@/lib/seo/profile-lookup";
 import {
   matchConfidenceLine,
   officialBoardVerifyLabel,
@@ -95,13 +100,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return trustReportMetadata(c);
-  } catch {
-    return {
-      title: "Contractor Trust Report",
-      description:
-        "Contractor license evidence from official public records on Contractor Trust Hub.",
-      robots: { index: false, follow: true },
-    };
+  } catch (error) {
+    return metadataAfterProfileLookupError(error);
   }
 }
 
@@ -129,6 +129,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   try {
     contractor = await getContractorBySlug(slug);
   } catch (e) {
+    if (isTransientProfileDbError(e)) throw e;
     return (
       <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <h1 className="text-2xl font-semibold text-[var(--text)]">Unable to load Trust Report</h1>
@@ -213,23 +214,29 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   const publicState = claimProfile ? await getPublicContractorState(claimProfile.id) : null;
   const businessProfile = publicState?.profile ?? null;
   const businessReplies = publicState?.replies ?? null;
-  // MD-ENRICH-001: business-website evidence; a business-managed profile supersedes it.
-  const websiteEnrichment = businessProfile ? null : await loadBusinessWebsiteEnrichment(contractor.id);
-  const oshaRecords =
-    (isFlFull || isNj) && isOshaProfileEnabled()
-      ? await loadPublicOshaSafetyRecord({
-          contractorId: contractor.id,
-          homeState: isFlFull ? "FL" : "NJ",
-          licenseKeys: contractor.licenses.map((license) => license.externalKey),
-        })
-      : null;
+  // The profile lookup has released its client. The Ask fetch above stays outside
+  // this session so a publication request does not pin the only pool connection.
+  const { websiteEnrichment, oshaRecords, entityLineage } = await withDbSession(async () => {
+    // MD-ENRICH-001: business-website evidence; a business-managed profile supersedes it.
+    const websiteEnrichment = businessProfile
+      ? null
+      : await loadBusinessWebsiteEnrichment(contractor.id);
+    const oshaRecords =
+      (isFlFull || isNj) && isOshaProfileEnabled()
+        ? await loadPublicOshaSafetyRecord({
+            contractorId: contractor.id,
+            homeState: isFlFull ? "FL" : "NJ",
+            licenseKeys: contractor.licenses.map((license) => license.externalKey),
+          })
+        : null;
+    // FL only: officer-name lineage from stored Sunbiz officers (no invented links)
+    const entityLineage =
+      isFlFull && contractor.entities.length > 0
+        ? await loadFloridaEntityLineage(contractor.entities)
+        : null;
+    return { websiteEnrichment, oshaRecords, entityLineage };
+  });
   const claimCtaRendered = Boolean(claimProfile && (businessProfile || showClaimCta));
-
-  // FL only: officer-name lineage from stored Sunbiz officers (no invented links)
-  const entityLineage =
-    isFlFull && contractor.entities.length > 0
-      ? await loadFloridaEntityLineage(contractor.entities)
-      : null;
 
   return (
     <main

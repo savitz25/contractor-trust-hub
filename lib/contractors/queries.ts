@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { query, queryOne } from "@/lib/db";
+import { hasDbSession, query, queryOne, withDbSession } from "@/lib/db";
 import {
   DEFAULT_STATE_SLUG,
   getStateBySlug,
@@ -530,6 +530,11 @@ async function getContractorBySlugUncached(
   slug: string,
   stateSlug = "fl"
 ): Promise<ContractorDetail | null> {
+  // The contractor, license, entity, and discipline reads share one session client.
+  if (!hasDbSession()) {
+    return withDbSession(() => getContractorBySlugUncached(slug, stateSlug));
+  }
+
   const c = await queryOne<{
     id: string;
     slug: string;

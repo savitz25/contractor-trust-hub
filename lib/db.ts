@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "node:async_hooks";
 import { Pool, type PoolClient, type QueryResultRow } from "pg";
 
 /**
@@ -13,6 +14,17 @@ import { Pool, type PoolClient, type QueryResultRow } from "pg";
  */
 
 let pool: Pool | null = null;
+const dbSession = new AsyncLocalStorage<PoolClient>();
+
+export function hasDbSession(): boolean {
+  return dbSession.getStore() != null;
+}
+
+/** Run fn on one caller-owned client. Nested calls keep the outer client. */
+export async function withDbClient<T>(client: PoolClient, fn: () => Promise<T>): Promise<T> {
+  if (dbSession.getStore()) return fn();
+  return dbSession.run(client, fn);
+}
 
 /** Connect wait — keep under typical serverless function patience. */
 const CONNECT_TIMEOUT_MS = 8_000;
@@ -125,15 +137,42 @@ function logDbError(phase: string, err: unknown, sqlPreview: string): void {
   );
 }
 
-async function queryOnce<T extends QueryResultRow>(
+async function connectPoolClient(): Promise<PoolClient> {
+  const poolClient = getPool();
+  try {
+    return await poolClient.connect();
+  } catch (err) {
+    logDbError("connect", err, "CONNECT");
+    if (isDbConnectTimeout(err) || isDbCapacityError(err)) {
+      await new Promise((r) => setTimeout(r, 150));
+      return await poolClient.connect();
+    }
+    throw err;
+  }
+}
+
+/**
+ * One session-pooler client for a batch of reads.
+ * The outermost call connects and releases. Nested calls reuse that client
+ * and must not connect again: the serverless pool allows one client.
+ */
+export async function withDbSession<T>(fn: () => Promise<T>): Promise<T> {
+  if (dbSession.getStore()) return fn();
+  const client = await connectPoolClient();
+  try {
+    return await withDbClient(client, fn);
+  } finally {
+    client.release();
+  }
+}
+
+async function runOnClient<T extends QueryResultRow>(
+  client: PoolClient,
   text: string,
   params: unknown[] | undefined,
   statementTimeoutMs: number
 ): Promise<T[]> {
-  const p = getPool();
-  let client: PoolClient | null = null;
   try {
-    client = await p.connect();
     await client.query("BEGIN");
     // LOCAL so it resets on COMMIT/ROLLBACK — safe on Session pooler.
     await client.query(`SET LOCAL statement_timeout = ${Math.max(1000, statementTimeoutMs)}`);
@@ -141,14 +180,28 @@ async function queryOnce<T extends QueryResultRow>(
     await client.query("COMMIT");
     return res.rows;
   } catch (err) {
-    if (client) {
-      try {
-        await client.query("ROLLBACK");
-      } catch {
-        /* ignore */
-      }
+    try {
+      await client.query("ROLLBACK");
+    } catch {
+      /* ignore */
     }
     throw err;
+  }
+}
+
+async function queryOnce<T extends QueryResultRow>(
+  text: string,
+  params: unknown[] | undefined,
+  statementTimeoutMs: number
+): Promise<T[]> {
+  const bound = dbSession.getStore();
+  if (bound) return runOnClient<T>(bound, text, params, statementTimeoutMs);
+
+  const poolClient = getPool();
+  let client: PoolClient | null = null;
+  try {
+    client = await poolClient.connect();
+    return await runOnClient<T>(client, text, params, statementTimeoutMs);
   } finally {
     client?.release();
   }
@@ -168,7 +221,8 @@ export async function query<T extends QueryResultRow = QueryResultRow>(
     return await queryOnce<T>(text, params, statementTimeoutMs);
   } catch (err) {
     logDbError("query", err, text);
-    if (isDbConnectTimeout(err) || isDbCapacityError(err)) {
+    // A bound session already holds the only pool client. Connecting again would wait forever.
+    if (!dbSession.getStore() && (isDbConnectTimeout(err) || isDbCapacityError(err))) {
       try {
         // Brief backoff then one reconnect attempt.
         await new Promise((r) => setTimeout(r, 150));
