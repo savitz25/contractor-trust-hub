@@ -122,6 +122,17 @@ test("missing profile is rejected before the route loading boundary", async () =
   );
 });
 
+test("the early profile guard still rethrows transient C2 database errors", async () => {
+  const timeout = new Error("canceling statement due to statement timeout");
+  await assert.rejects(
+    () =>
+      assertContractorExistsBeforeStreaming("b1-timeout-profile", async () => {
+        throw timeout;
+      }),
+    (error: unknown) => error === timeout,
+  );
+});
+
 test("a valid profile passes the early guard and keeps indexable metadata", async () => {
   const profile = {
     id: "profile-test-id",
