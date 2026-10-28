@@ -761,15 +761,21 @@ export async function countSearchableContractorSlugs(
   }
 }
 
+/** Publication gate for profile sitemap pages. A state that is not live has no public rows. */
+export function isLiveProfileState(stateSlug = "fl"): boolean {
+  return Boolean(getStateBySlug(stateSlug)?.live);
+}
+
 export async function listSearchableContractorSlugs(options: {
   stateSlug?: string;
   limit: number;
   offset: number;
-  /** Sitemap probes use a short timeout so a slow page is treated as absent. */
+  /** Sitemap probes use a short timeout. A timeout is transient and is not an empty page. */
   statementTimeoutMs?: number;
 }): Promise<{ id: string; slug: string; updatedAt: string | null }[]> {
+  if (!isLiveProfileState(options.stateSlug || "fl")) return [];
   const state = getStateBySlug(options.stateSlug || "fl");
-  if (!state?.live) return [];
+  if (!state) return [];
   const rows = await query<{ id: string | number; slug: string; updated_at: Date | null }>(
     `
     SELECT c.id, c.slug, c.updated_at

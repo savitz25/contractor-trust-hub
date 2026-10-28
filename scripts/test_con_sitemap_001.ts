@@ -1,15 +1,29 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { isLiveProfileState } from "../lib/contractors/queries";
 import {
+  boundedSitemapCount,
   chunkSitemapEntries,
   createSitemapShardPlan,
+  directShardDecision,
+  formatSitemapTiming,
   isTransientSitemapFailure,
+  lookupSitemapChild,
+  monotonePageStates,
   nonContractorSitemapEntries,
+  probeProfileShardPrefix,
   renderUrlSetXml,
   SITEMAP_MAX_URLS_PER_CHILD,
+  type PageProbeState,
+  type SitemapChildLookup,
   type SitemapUrlEntry,
 } from "../lib/seo/sitemap-data";
 import { createSitemapRouteHandlers } from "../lib/seo/sitemap-handlers";
+
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 const xmlLocs = (xml: string) =>
   [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) =>
@@ -352,3 +366,505 @@ test("zero URL manifest has no children and no placeholder shard", async () => {
   assert.deepEqual(plan.childIds, []);
   assert.deepEqual(await plan.entriesForChild(0), []);
 });
+
+const STATIC_FIXTURE: SitemapUrlEntry[] = [
+  { loc: "https://www.contractortrusthub.com/florida" },
+  { loc: "https://www.contractortrusthub.com/verify?state=or" },
+  { loc: "https://www.contractortrusthub.com/account" },
+];
+
+const PROFILE_FIXTURE: SitemapUrlEntry[][] = [
+  [
+    {
+      loc: "https://www.contractortrusthub.com/contractors/alpha",
+      stableId: "c-1",
+      lastmod: "2026-04-02T12:00:00.000Z",
+    },
+    { loc: "https://evil.example/contractors/off-host", stableId: "off" },
+  ],
+  [
+    { loc: "https://www.contractortrusthub.com/contractors/bravo", stableId: "c-2" },
+    { loc: "https://www.contractortrusthub.com/contractors/bravo?x=1", stableId: "query" },
+  ],
+  [
+    { loc: "https://www.contractortrusthub.com/contractors/charlie", stableId: "c-3" },
+    { loc: "https://www.contractortrusthub.com/account", stableId: "account" },
+  ],
+];
+
+function publishableCount(entries: readonly SitemapUrlEntry[]): number {
+  const locs = new Set(
+    entries
+      .map((entry) => entry.loc)
+      .filter((loc) => {
+        try {
+          const url = new URL(loc);
+          return url.protocol === "https:"
+            && url.host === "www.contractortrusthub.com"
+            && url.search === ""
+            && url.hash === ""
+            && !["/account", "/watch", "/compare"].includes(url.pathname);
+        } catch {
+          return false;
+        }
+      }),
+  );
+  return locs.size;
+}
+
+function directHandlers(
+  loadChild: (id: number) => Promise<SitemapChildLookup>,
+  planCalls: { n: number },
+) {
+  return createSitemapRouteHandlers(async () => {
+    planCalls.n += 1;
+    throw new Error("child sitemap rebuilt the shard plan");
+  }, loadChild);
+}
+
+test("before child 2 the index probes shards 1, 2, and 3; the child probes shard 2 once", async () => {
+  const planProbes: number[] = [];
+  const plan = await createSitemapShardPlan({
+    staticEntries: STATIC_FIXTURE,
+    chunkSize: 2,
+    profilePageHasRows: async (id) => {
+      planProbes.push(id);
+      return id === 1 || id === 2;
+    },
+    profileEntries: async (id) => PROFILE_FIXTURE[id] ?? [],
+  });
+  assert.deepEqual(planProbes, [1, 2, 3]);
+  assert.deepEqual(plan.childIds, [0, 1, 2]);
+
+  const childProbes: number[] = [];
+  let fetches = 0;
+  const lookup = await lookupSitemapChild({
+    staticEntries: STATIC_FIXTURE,
+    probePrefix: async (id) => {
+      childProbes.push(id);
+      return monotonePageStates(id, id <= 2 ? "present" : "absent");
+    },
+    profileEntries: async (id) => {
+      fetches += 1;
+      return PROFILE_FIXTURE[id] ?? [];
+    },
+  }, 2);
+  assert.deepEqual(childProbes, [2]);
+  assert.equal(fetches, 1);
+  assert.equal(lookup.status, 200);
+  assert.equal(lookup.retry, false);
+  assert.deepEqual(
+    lookup.entries.map((entry) => entry.loc),
+    ["https://www.contractortrusthub.com/contractors/charlie"],
+  );
+  assert.equal(lookup.entries.length, publishableCount(PROFILE_FIXTURE[2] ?? []));
+});
+
+test("index children stay valid under direct lookup, and an empty shard stays 404", async () => {
+  const plan = await createSitemapShardPlan({
+    staticEntries: STATIC_FIXTURE,
+    chunkSize: 2,
+    profilePageHasRows: async (id) => id === 1 || id === 2,
+    profileEntries: async (id) => PROFILE_FIXTURE[id] ?? [],
+  });
+  assert.deepEqual(plan.childIds, [0, 1, 2]);
+
+  const fetches: number[] = [];
+  const probes: number[] = [];
+  const source = {
+    staticEntries: STATIC_FIXTURE,
+    probePrefix: async (id: number) => {
+      probes.push(id);
+      return monotonePageStates(id, id <= 2 ? "present" : "absent");
+    },
+    profileEntries: async (id: number) => {
+      fetches.push(id);
+      return PROFILE_FIXTURE[id] ?? [];
+    },
+  };
+
+  const shard0 = await lookupSitemapChild(source, 0);
+  assert.equal(shard0.status, 200);
+  assert.equal(shard0.retry, false);
+  assert.deepEqual(probes, []);
+  assert.deepEqual(fetches, [0]);
+  assert.deepEqual(shard0.entries.map((entry) => entry.loc), [
+    "https://www.contractortrusthub.com/contractors/alpha",
+    "https://www.contractortrusthub.com/florida",
+  ]);
+  assert.deepEqual(
+    shard0.entries.map((entry) => entry.loc),
+    (await plan.entriesForChild(0)).map((entry) => entry.loc),
+  );
+
+  for (const id of plan.childIds) {
+    if (id === 0) continue;
+    const beforeFetches = fetches.length;
+    const lookup = await lookupSitemapChild(source, id);
+    assert.equal(lookup.status, 200, `advertised shard ${id}`);
+    assert.equal(lookup.retry, false);
+    assert.equal(fetches.length, beforeFetches + 1);
+    assert.deepEqual(
+      lookup.entries.map((entry) => entry.loc),
+      (await plan.entriesForChild(id)).map((entry) => entry.loc),
+    );
+    assert.ok(lookup.entries.every((entry) => entry.loc.startsWith("https://www.contractortrusthub.com/")));
+    assert.equal(lookup.entries.length, publishableCount(PROFILE_FIXTURE[id] ?? []));
+  }
+
+  const empty = await lookupSitemapChild(source, 3);
+  assert.equal(empty.status, 404);
+  assert.equal(empty.retry, false);
+  assert.deepEqual(empty.entries, []);
+  assert.equal(fetches.includes(3), false);
+  assert.deepEqual(probes, [1, 2, 3]);
+});
+
+test("an observed upstream gap is 404 and does not read the page body", async () => {
+  let fetches = 0;
+  const lookup = await lookupSitemapChild({
+    staticEntries: STATIC_FIXTURE,
+    probePrefix: async () => {
+      const pages: PageProbeState[] = [];
+      pages[1] = "absent";
+      pages[2] = "present";
+      return pages;
+    },
+    profileEntries: async () => {
+      fetches += 1;
+      return PROFILE_FIXTURE[2] ?? [];
+    },
+  }, 2);
+  assert.equal(lookup.status, 404);
+  assert.equal(lookup.retry, false);
+  assert.equal(fetches, 0);
+  assert.equal(directShardDecision(2, lookupPages(1, "absent", 2, "present")), "absent");
+});
+
+test("an observed upstream timeout is 503 and does not read the page body", async () => {
+  let fetches = 0;
+  const pages: PageProbeState[] = [];
+  pages[1] = "transient";
+  pages[2] = "present";
+  const planCalls = { n: 0 };
+  let lookupFetches = 0;
+  const logs = await withSitemapLogs(async () => {
+    const lookup = await lookupSitemapChild({
+      staticEntries: STATIC_FIXTURE,
+      probePrefix: async () => pages,
+      profileEntries: async () => {
+        fetches += 1;
+        return PROFILE_FIXTURE[2] ?? [];
+      },
+    }, 2);
+    assert.equal(lookup.status, 503);
+    assert.equal(lookup.retry, true);
+    assert.equal(fetches, 0);
+    assert.equal(directShardDecision(2, pages), "unverified");
+
+    const handlers = directHandlers((id) => lookupSitemapChild({
+      staticEntries: STATIC_FIXTURE,
+      probePrefix: async () => pages,
+      profileEntries: async () => {
+        lookupFetches += 1;
+        return PROFILE_FIXTURE[id] ?? [];
+      },
+    }, id), planCalls);
+    const response = await handlers.child("2");
+    assert.equal(response.status, 503);
+    assert.equal(response.headers.get("cache-control"), "no-store");
+    assert.equal(response.headers.get("content-type"), "text/plain; charset=utf-8");
+    assert.equal(await response.text(), "Sitemap temporarily unavailable");
+  });
+  assert.equal(lookupFetches, 0);
+  assert.equal(planCalls.n, 0);
+  assert.match(logs.join("\n"), /shard 2 prefix unverified; refusing the page body/);
+});
+
+test("a timed-out requested page stays 503 when earlier pages were present", async () => {
+  let fetches = 0;
+  const pages: PageProbeState[] = [];
+  pages[1] = "present";
+  pages[2] = "transient";
+  const lookup = await lookupSitemapChild({
+    staticEntries: STATIC_FIXTURE,
+    probePrefix: async () => pages,
+    profileEntries: async () => {
+      fetches += 1;
+      return PROFILE_FIXTURE[2] ?? [];
+    },
+  }, 2);
+  assert.equal(lookup.status, 503);
+  assert.equal(lookup.retry, true);
+  assert.equal(fetches, 0);
+  assert.equal(directShardDecision(2, pages), "unverified");
+});
+
+test("a confirmed-empty requested page is 404 even when earlier pages were not probed", async () => {
+  let fetches = 0;
+  const lookup = await lookupSitemapChild({
+    staticEntries: STATIC_FIXTURE,
+    probePrefix: async (id) => monotonePageStates(id, "absent"),
+    profileEntries: async () => {
+      fetches += 1;
+      return PROFILE_FIXTURE[2] ?? [];
+    },
+  }, 2);
+  assert.equal(lookup.status, 404);
+  assert.equal(fetches, 0);
+  assert.equal(directShardDecision(2, monotonePageStates(2, "absent")), "absent");
+  assert.equal(directShardDecision(2, monotonePageStates(2, "transient")), "unverified");
+  assert.equal(directShardDecision(2, monotonePageStates(2, "present")), "serve");
+});
+
+test("a profile read timeout after a present prefix is 503 with no urlset", async () => {
+  const planCalls = { n: 0 };
+  const logs = await withSitemapLogs(async () => {
+    const handlers = directHandlers((id) => lookupSitemapChild({
+      staticEntries: STATIC_FIXTURE,
+      probePrefix: async (requested) => monotonePageStates(requested, "present"),
+      profileEntries: async () => {
+        throw PROBE_TIMEOUT;
+      },
+    }, id), planCalls);
+    const response = await handlers.child("2");
+    assert.equal(response.status, 503);
+    assert.equal(response.headers.get("cache-control"), "no-store");
+    const body = await response.text();
+    assert.equal(body.includes("<urlset"), false);
+    assert.equal(body.includes("contractors/"), false);
+  });
+  assert.equal(planCalls.n, 0);
+  assert.match(logs.join("\n"), /shard 2 profile read failed after a present prefix/);
+});
+
+test("direct shard 0 keeps static URLs when the profile read times out", async () => {
+  const planCalls = { n: 0 };
+  let probes = 0;
+  const logs = await withSitemapLogs(async () => {
+    const handlers = directHandlers((id) => lookupSitemapChild({
+      staticEntries: STATIC_FIXTURE,
+      probePrefix: async () => {
+        probes += 1;
+        return monotonePageStates(1, "present");
+      },
+      profileEntries: async () => {
+        throw PROBE_TIMEOUT;
+      },
+    }, id), planCalls);
+    const response = await handlers.child("0");
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("cache-control"), "no-store");
+    assert.match(response.headers.get("content-type") ?? "", /application\/xml/);
+    const xml = await response.text();
+    assertWellFormedXml(xml, "urlset");
+    assert.deepEqual(xmlLocs(xml), ["https://www.contractortrusthub.com/florida"]);
+  });
+  assert.equal(probes, 0);
+  assert.equal(planCalls.n, 0);
+  assert.match(logs.join("\n"), /shard 0 profiles unavailable/);
+});
+
+test("direct lookup does not replace a programming error with a fallback page", async () => {
+  const planCalls = { n: 0 };
+  const handlers = directHandlers((id) => lookupSitemapChild({
+    staticEntries: id === 0 ? [] : STATIC_FIXTURE,
+    probePrefix: async (requested) => monotonePageStates(requested, "present"),
+    profileEntries: async () => {
+      throw PROGRAMMING_ERROR;
+    },
+  }, id), planCalls);
+  const shard0 = await handlers.child("0");
+  assert.equal(shard0.status, 503);
+  assert.equal(shard0.headers.get("cache-control"), "no-store");
+  assert.equal((await shard0.text()).includes("<urlset"), false);
+  const later = await handlers.child("2");
+  assert.equal(later.status, 503);
+  assert.equal(later.headers.get("cache-control"), "no-store");
+  assert.equal((await later.text()).includes("<urlset"), false);
+  assert.equal(planCalls.n, 0);
+});
+
+test("direct child URLs stay on the canonical host and match the publishable count", async () => {
+  const planCalls = { n: 0 };
+  const handlers = directHandlers((id) => lookupSitemapChild({
+    staticEntries: STATIC_FIXTURE,
+    probePrefix: async (requested) => monotonePageStates(requested, "present"),
+    profileEntries: async () => PROFILE_FIXTURE[1] ?? [],
+  }, id), planCalls);
+  const response = await handlers.child("1.xml");
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("cache-control") ?? "", /s-maxage=3600/);
+  const xml = await response.text();
+  assertWellFormedXml(xml, "urlset");
+  const locs = xmlLocs(xml);
+  assert.deepEqual(locs, ["https://www.contractortrusthub.com/contractors/bravo"]);
+  assert.equal(locs.length, publishableCount(PROFILE_FIXTURE[1] ?? []));
+  for (const loc of locs) {
+    const url = new URL(loc);
+    assert.equal(url.protocol, "https:");
+    assert.equal(url.host, "www.contractortrusthub.com");
+    assert.equal(url.search, "");
+  }
+  assert.equal(planCalls.n, 0);
+});
+
+test("publication gating skips the probe when the profile state is not live", async () => {
+  assert.equal(isLiveProfileState("fl"), true);
+  assert.equal(isLiveProfileState("va"), false);
+  assert.equal(isLiveProfileState("not-a-state"), false);
+
+  let liveProbes = 0;
+  const live = await probeProfileShardPrefix(2, {
+    stateSlug: "fl",
+    probe: async () => {
+      liveProbes += 1;
+      return "present";
+    },
+  });
+  assert.equal(liveProbes, 1);
+  assert.equal(directShardDecision(2, live), "serve");
+
+  let unpublishedProbes = 0;
+  const unpublished = await probeProfileShardPrefix(2, {
+    stateSlug: "not-a-state",
+    probe: async () => {
+      unpublishedProbes += 1;
+      return "present";
+    },
+  });
+  assert.equal(unpublishedProbes, 0);
+  assert.equal(directShardDecision(2, unpublished), "absent");
+
+  let fetches = 0;
+  const hidden = await lookupSitemapChild({
+    staticEntries: STATIC_FIXTURE,
+    probePrefix: async (id) => probeProfileShardPrefix(id, {
+      stateSlug: "va",
+      probe: async () => "present",
+    }),
+    profileEntries: async () => {
+      fetches += 1;
+      return PROFILE_FIXTURE[2] ?? [];
+    },
+  }, 2);
+  assert.equal(hidden.status, 404);
+  assert.equal(fetches, 0);
+
+  const logs = await withSitemapLogs(async () => {
+    const timedOut = await probeProfileShardPrefix(2, {
+      probe: async () => {
+        throw PROBE_TIMEOUT;
+      },
+    });
+    assert.equal(directShardDecision(2, timedOut), "unverified");
+    assert.equal(timedOut[1], undefined);
+    assert.equal(timedOut[2], "transient");
+  });
+  assert.match(logs.join("\n"), /shard 2 direct probe failed; prefix is unverified/);
+  await assert.rejects(
+    () => probeProfileShardPrefix(2, {
+      probe: async () => {
+        throw PROGRAMMING_ERROR;
+      },
+    }),
+    /relation "contractors" does not exist/,
+  );
+});
+
+test("child timing log records status and stage durations without row contents", async () => {
+  const lines: string[] = [];
+  const original = console.info;
+  console.info = (...args: unknown[]) => {
+    lines.push(args.map((arg) => String(arg)).join(" "));
+  };
+  const planCalls = { n: 0 };
+  try {
+    const handlers = directHandlers((id) => lookupSitemapChild({
+      staticEntries: [],
+      probePrefix: async (requested) => monotonePageStates(requested, "present"),
+      profileEntries: async () => [{
+        loc: "https://www.contractortrusthub.com/contractors/secret-slug",
+        stableId: "secret-row",
+      }],
+    }, id), planCalls);
+    const response = await handlers.child("4");
+    assert.equal(response.status, 200);
+    const body = await response.text();
+    const line = lines.find((item) => item.includes("route=child id=4"));
+    assert.ok(line);
+    assert.match(line ?? "", /\[sitemap\] route=child id=4 status=200 bytes=\d+ probe_ms=\d+ fetch_ms=\d+ filter_ms=\d+ xml_ms=\d+/);
+    assert.equal(line?.includes("secret-slug"), false);
+    assert.equal(line?.includes("secret-row"), false);
+    assert.equal(Number(line?.match(/bytes=(\d+)/)?.[1]), new TextEncoder().encode(body).byteLength);
+  } finally {
+    console.info = original;
+  }
+  assert.equal(planCalls.n, 0);
+  assert.match(formatSitemapTiming({
+    route: "index",
+    status: 200,
+    bytes: Number.NaN,
+    probeMs: -4,
+    fetchMs: 10.4,
+    filterMs: 9_999_999,
+    xmlMs: 3,
+  }), /route=index id=- status=200 bytes=0 probe_ms=0 fetch_ms=10 filter_ms=600000 xml_ms=3/);
+  assert.equal(boundedSitemapCount(-1), 0);
+  assert.equal(boundedSitemapCount(9_000_000), 5_000_000);
+});
+
+test("an out of range child id is 404 and does not probe", async () => {
+  let probes = 0;
+  const lookup = await lookupSitemapChild({
+    staticEntries: STATIC_FIXTURE,
+    probePrefix: async () => {
+      probes += 1;
+      return monotonePageStates(1, "present");
+    },
+    profileEntries: async () => PROFILE_FIXTURE[0] ?? [],
+  }, 50);
+  assert.equal(lookup.status, 404);
+  assert.equal(probes, 0);
+  const negative = await lookupSitemapChild({
+    staticEntries: STATIC_FIXTURE,
+    probePrefix: async () => {
+      probes += 1;
+      return [];
+    },
+    profileEntries: async () => [],
+  }, -1);
+  assert.equal(negative.status, 404);
+  assert.equal(probes, 0);
+});
+
+test("child route uses direct lookup and the index route keeps the shard plan", () => {
+  const childRoute = readFileSync(join(repoRoot, "app/sitemap/[id]/route.ts"), "utf8");
+  const indexRoute = readFileSync(join(repoRoot, "app/sitemap.xml/route.ts"), "utf8");
+  const data = readFileSync(join(repoRoot, "lib/seo/sitemap-data.ts"), "utf8");
+  assert.match(childRoute, /getSitemapChild/);
+  assert.match(childRoute, /child sitemap must not rebuild the shard plan/);
+  assert.doesNotMatch(childRoute, /getSitemapShardPlan/);
+  assert.match(indexRoute, /getSitemapShardPlan/);
+  assert.doesNotMatch(indexRoute, /getSitemapChild/);
+
+  const childStart = data.indexOf("export async function getSitemapChild");
+  assert.ok(childStart >= 0);
+  const childFn = data.slice(childStart, data.indexOf("\nfunction ", childStart));
+  assert.match(childFn, /lookupSitemapChild/);
+  assert.match(childFn, /probeProfileShardPrefix/);
+  assert.doesNotMatch(childFn, /createSitemapShardPlan/);
+  assert.doesNotMatch(childFn, /profilePageHasRows/);
+});
+
+function lookupPages(
+  firstId: number,
+  first: PageProbeState,
+  secondId: number,
+  second: PageProbeState,
+): PageProbeState[] {
+  const pages: PageProbeState[] = [];
+  pages[firstId] = first;
+  pages[secondId] = second;
+  return pages;
+}
