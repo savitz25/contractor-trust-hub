@@ -5,7 +5,7 @@ import type { PoolClient } from "pg";
 import {
   assertContractorExistsBeforeStreaming,
   renderContractorChildren,
-} from "../app/contractors/[slug]/layout";
+} from "../lib/contractors/profile-stream-guard";
 import { query, withDbClient } from "../lib/db";
 import type { ContractorDetail } from "../lib/contractors/types";
 import {
@@ -155,8 +155,11 @@ test("only a confirmed missing profile uses notFound", () => {
 
 test("missing profile is rejected before the route loading boundary", async () => {
   const layout = readFileSync("app/contractors/[slug]/layout.tsx", "utf8");
-  assert.match(layout, /if \(contractor === null\) notFound\(\)/);
+  const guard = readFileSync("lib/contractors/profile-stream-guard.ts", "utf8");
+  assert.match(guard, /if \(contractor === null\) notFound\(\)/);
   assert.match(layout, /return renderContractorChildren\(decodeURIComponent\(raw\), children\)/);
+  assert.doesNotMatch(layout, /export async function assertContractorExistsBeforeStreaming/);
+  assert.doesNotMatch(layout, /export async function renderContractorChildren/);
   assert.doesNotMatch(layout, /return null/);
   await assert.rejects(
     () => assertContractorExistsBeforeStreaming("b1-genuinely-missing", async () => null),
