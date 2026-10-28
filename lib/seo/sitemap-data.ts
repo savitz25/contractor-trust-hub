@@ -132,7 +132,14 @@ export function chunkSitemapEntries(
 
 export type SitemapShardPlan = {
   childIds: readonly number[];
-  entriesForChild(id: number): Promise<SitemapUrlEntry[]>;
+  /**
+   * Load one child. Unverified ids (dropped by a timed-out probe) return []
+   * unless includeUnverified is set, which reads that page directly.
+   */
+  entriesForChild(
+    id: number,
+    options?: { includeUnverified?: boolean },
+  ): Promise<SitemapUrlEntry[]>;
   /**
    * A known transient probe failed. The missing shard is omitted from this
    * response only, and the response must not be cached as a complete sitemap.
@@ -166,8 +173,9 @@ export async function createSitemapShardPlan(
   const plan: SitemapShardPlan = {
     childIds,
     retry: false,
-    async entriesForChild(id) {
-      if (!childIds.includes(id)) return [];
+    async entriesForChild(id, options) {
+      if (!childIds.includes(id) && !options?.includeUnverified) return [];
+      if (!Number.isInteger(id) || id < 0 || id >= maxChildren) return [];
       const entries: SitemapUrlEntry[] = id === 0 ? [...staticEntries] : [];
       try {
         entries.push(...(await source.profileEntries(id)));
