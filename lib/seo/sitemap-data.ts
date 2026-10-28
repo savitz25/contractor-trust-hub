@@ -4,6 +4,7 @@
  */
 
 import {
+  isLiveProfileState,
   listSearchableContractorSlugs,
   SITEMAP_PAGE_SIZE,
 } from "@/lib/contractors/queries";
@@ -130,6 +131,12 @@ export function chunkSitemapEntries(
   return chunks;
 }
 
+export type SitemapStageTiming = {
+  probeMs: number;
+  fetchMs: number;
+  filterMs: number;
+};
+
 export type SitemapShardPlan = {
   childIds: readonly number[];
   entriesForChild(id: number): Promise<SitemapUrlEntry[]>;
@@ -138,6 +145,7 @@ export type SitemapShardPlan = {
    * response only, and the response must not be cached as a complete sitemap.
    */
   retry: boolean;
+  timings: Pick<SitemapStageTiming, "probeMs" | "filterMs">;
 };
 
 export type SitemapShardPlanSource = {
@@ -161,11 +169,14 @@ export async function createSitemapShardPlan(
     throw new RangeError("Invalid sitemap profile page size");
   }
 
+  const filterStarted = performance.now();
   const staticEntries = stableUniqueSitemapEntries(source.staticEntries);
+  const filterMs = boundedMs(performance.now() - filterStarted);
   const childIds: number[] = staticEntries.length > 0 ? [0] : [];
   const plan: SitemapShardPlan = {
     childIds,
     retry: false,
+    timings: { probeMs: 0, filterMs },
     async entriesForChild(id) {
       if (!childIds.includes(id)) return [];
       const entries: SitemapUrlEntry[] = id === 0 ? [...staticEntries] : [];
@@ -184,6 +195,7 @@ export async function createSitemapShardPlan(
     },
   };
 
+  const probeStarted = performance.now();
   const probeFrom = childIds.length > 0 ? 1 : 0;
   for (let id = probeFrom; id < maxChildren; id += 1) {
     let hasRows = false;
@@ -203,35 +215,246 @@ export async function createSitemapShardPlan(
     if (!hasRows) break;
     if (!childIds.includes(id)) childIds.push(id);
   }
+  plan.timings.probeMs = boundedMs(performance.now() - probeStarted);
 
   return plan;
 }
 
-/** The sole production manifest factory shared by /sitemap.xml and its children. */
-export async function getSitemapShardPlan(): Promise<SitemapShardPlan> {
-  const staticEntries = stableUniqueSitemapEntries(nonContractorSitemapEntries());
-  const pageSize = SITEMAP_PAGE_SIZE;
-  const profilePage = async (id: number) => {
-    const rows = await listSearchableContractorSlugs({
-      stateSlug: "fl",
-      limit: pageSize,
-      offset: id * pageSize,
-    });
-    return rows.flatMap((row) => {
-      const slug = row.slug.trim();
-      if (!slug || /[/?#\\]/.test(slug)) return [];
-      return [{
-        loc: absoluteUrl(`/contractors/${encodeURIComponent(slug)}`),
-        lastmod: validLastmod(row.updatedAt),
-        changefreq: "weekly" as const,
-        priority: 0.55,
-        stableId: row.id,
-      }];
-    });
-  };
+export type PageProbeState = "present" | "absent" | "transient";
+export type DirectShardDecision = "serve" | "absent" | "unverified";
 
+/**
+ * Child pages are publishable only inside the same leading run the index builds.
+ * An earlier absent page is a confirmed gap. An earlier timeout, or any page
+ * that was not proved present, stays unverified. Rows from the requested page
+ * do not override either result.
+ */
+export function directShardDecision(
+  id: number,
+  pages: readonly PageProbeState[],
+): DirectShardDecision {
+  if (!Number.isInteger(id) || id < 1) return "absent";
+  if (pages[id] === "absent") return "absent";
+  for (let page = 1; page <= id; page += 1) {
+    const state = pages[page];
+    if (state === "absent") return "absent";
+    if (state !== "present") return "unverified";
+  }
+  return "serve";
+}
+
+/**
+ * One OFFSET probe is a prefix-existence proof for `ORDER BY slug, id`:
+ * a row at `OFFSET id * pageSize` means every lower offset is non-empty, so
+ * the child does not issue a statement per preceding shard. A timeout is not
+ * monotone. This helper therefore records a timeout or an empty page only on
+ * the requested shard and leaves earlier shards unset, which the decision
+ * treats as unverified unless the requested page itself is confirmed empty.
+ * Callers that observed an earlier gap or timeout pass that vector instead.
+ * A direct lookup must use the vector it was given and must not read the page
+ * body when the decision is absent or unverified.
+ */
+export function monotonePageStates(
+  id: number,
+  probe: Exclude<PageProbeState, never>,
+): PageProbeState[] {
+  const pages: PageProbeState[] = [];
+  if (!Number.isInteger(id) || id < 1) return pages;
+  if (probe === "present") {
+    for (let page = 1; page <= id; page += 1) pages[page] = "present";
+    return pages;
+  }
+  pages[id] = probe;
+  return pages;
+}
+
+export type SitemapChildLookup = {
+  status: 200 | 404 | 503;
+  entries: SitemapUrlEntry[];
+  retry: boolean;
+  timings: SitemapStageTiming;
+};
+
+export type SitemapChildSource = {
+  staticEntries: readonly SitemapUrlEntry[];
+  /**
+   * Prefix certificate for the requested profile shard. Production performs
+   * one existence probe and expands it with monotonePageStates. It must not
+   * walk every preceding shard.
+   */
+  probePrefix(id: number): Promise<readonly PageProbeState[]>;
+  profileEntries(id: number): Promise<readonly SitemapUrlEntry[]>;
+};
+
+const EMPTY_TIMING: SitemapStageTiming = { probeMs: 0, fetchMs: 0, filterMs: 0 };
+
+function boundedMs(value: number): number {
+  if (!Number.isFinite(value) || value < 0) return 0;
+  return Math.min(Math.round(value), 600_000);
+}
+
+export function boundedSitemapCount(value: number): number {
+  if (!Number.isFinite(value) || value < 0) return 0;
+  return Math.min(Math.round(value), 5_000_000);
+}
+
+export function formatSitemapTiming(timing: {
+  route: "index" | "child";
+  id?: number;
+  status: number;
+  bytes: number;
+  probeMs: number;
+  fetchMs: number;
+  filterMs: number;
+  xmlMs: number;
+}): string {
+  const id = timing.id == null ? "-" : String(boundedSitemapCount(timing.id));
+  return [
+    "[sitemap]",
+    `route=${timing.route}`,
+    `id=${id}`,
+    `status=${boundedSitemapCount(timing.status)}`,
+    `bytes=${boundedSitemapCount(timing.bytes)}`,
+    `probe_ms=${boundedMs(timing.probeMs)}`,
+    `fetch_ms=${boundedMs(timing.fetchMs)}`,
+    `filter_ms=${boundedMs(timing.filterMs)}`,
+    `xml_ms=${boundedMs(timing.xmlMs)}`,
+  ].join(" ");
+}
+
+export function logSitemapTiming(timing: Parameters<typeof formatSitemapTiming>[0]): void {
+  console.info(formatSitemapTiming(timing));
+}
+
+/**
+ * Read one child shard without rebuilding the index probe loop.
+ * Shard 0 does not probe later pages. A later shard is fetched only after
+ * directShardDecision says the prefix is present.
+ */
+export async function lookupSitemapChild(
+  source: SitemapChildSource,
+  id: number,
+): Promise<SitemapChildLookup> {
+  if (!Number.isInteger(id) || id < 0 || id >= MAX_SITEMAP_SHARDS) {
+    return { status: 404, entries: [], retry: false, timings: { ...EMPTY_TIMING } };
+  }
+
+  const staticEntries = stableUniqueSitemapEntries(source.staticEntries);
+  if (id === 0) {
+    const fetchStarted = performance.now();
+    let profiles: readonly SitemapUrlEntry[] = [];
+    let retry = false;
+    try {
+      profiles = await source.profileEntries(0);
+    } catch (error) {
+      if (!isTransientSitemapFailure(error) || staticEntries.length === 0) throw error;
+      retry = true;
+      logSitemapRecovery("shard 0 profiles unavailable; serving static and discovery URLs only", error);
+      profiles = [];
+    }
+    const fetchMs = boundedMs(performance.now() - fetchStarted);
+    const filterStarted = performance.now();
+    const entries = stableUniqueSitemapEntries([...staticEntries, ...profiles]);
+    const filterMs = boundedMs(performance.now() - filterStarted);
+    if (entries.length === 0) {
+      return { status: 404, entries: [], retry, timings: { probeMs: 0, fetchMs, filterMs } };
+    }
+    return { status: 200, entries, retry, timings: { probeMs: 0, fetchMs, filterMs } };
+  }
+
+  const probeStarted = performance.now();
+  const pages = await source.probePrefix(id);
+  const probeMs = boundedMs(performance.now() - probeStarted);
+  const decision = directShardDecision(id, pages);
+  if (decision === "absent") {
+    return { status: 404, entries: [], retry: false, timings: { probeMs, fetchMs: 0, filterMs: 0 } };
+  }
+  if (decision === "unverified") {
+    console.error(`[sitemap] shard ${id} prefix unverified; refusing the page body`);
+    return { status: 503, entries: [], retry: true, timings: { probeMs, fetchMs: 0, filterMs: 0 } };
+  }
+
+  const fetchStarted = performance.now();
+  let raw: readonly SitemapUrlEntry[];
+  try {
+    raw = await source.profileEntries(id);
+  } catch (error) {
+    if (!isTransientSitemapFailure(error)) throw error;
+    logSitemapRecovery(`shard ${id} profile read failed after a present prefix`, error);
+    return {
+      status: 503,
+      entries: [],
+      retry: true,
+      timings: { probeMs, fetchMs: boundedMs(performance.now() - fetchStarted), filterMs: 0 },
+    };
+  }
+  const fetchMs = boundedMs(performance.now() - fetchStarted);
+  const filterStarted = performance.now();
+  const entries = stableUniqueSitemapEntries(raw);
+  const filterMs = boundedMs(performance.now() - filterStarted);
+  if (entries.length === 0) {
+    return { status: 404, entries: [], retry: false, timings: { probeMs, fetchMs, filterMs } };
+  }
+  return { status: 200, entries, retry: false, timings: { probeMs, fetchMs, filterMs } };
+}
+
+type ProfileSlugRow = { id: string; slug: string; updatedAt: string | null };
+
+function profileEntriesFromRows(rows: readonly ProfileSlugRow[]): SitemapUrlEntry[] {
+  return rows.flatMap((row) => {
+    const slug = row.slug.trim();
+    if (!slug || /[/?#\\]/.test(slug)) return [];
+    return [{
+      loc: absoluteUrl(`/contractors/${encodeURIComponent(slug)}`),
+      lastmod: validLastmod(row.updatedAt),
+      changefreq: "weekly" as const,
+      priority: 0.55,
+      stableId: row.id,
+    }];
+  });
+}
+
+async function loadProfileSitemapEntries(id: number, pageSize: number): Promise<SitemapUrlEntry[]> {
+  const rows = await listSearchableContractorSlugs({
+    stateSlug: "fl",
+    limit: pageSize,
+    offset: id * pageSize,
+  });
+  return profileEntriesFromRows(rows);
+}
+
+/**
+ * One existence statement for the requested profile shard.
+ * A live state runs that statement once. A state that is not live is absent
+ * and does not touch the database. A timeout stays on this shard only.
+ * Callers that already observed an earlier gap or timeout must pass that
+ * vector to lookupSitemapChild themselves; this helper never upgrades a
+ * timeout into a present prefix.
+ */
+export async function probeProfileShardPrefix(
+  id: number,
+  options: {
+    stateSlug?: string;
+    probe(): Promise<PageProbeState>;
+  },
+): Promise<PageProbeState[]> {
+  if (!isLiveProfileState(options.stateSlug ?? "fl")) {
+    return monotonePageStates(id, "absent");
+  }
+  try {
+    return monotonePageStates(id, await options.probe());
+  } catch (error) {
+    if (!isTransientSitemapFailure(error)) throw error;
+    logSitemapRecovery(`shard ${id} direct probe failed; prefix is unverified`, error);
+    return monotonePageStates(id, "transient");
+  }
+}
+
+/** Index manifest. Child requests use getSitemapChild and do not run this probe loop. */
+export async function getSitemapShardPlan(): Promise<SitemapShardPlan> {
+  const pageSize = SITEMAP_PAGE_SIZE;
   return createSitemapShardPlan({
-    staticEntries,
+    staticEntries: nonContractorSitemapEntries(),
     chunkSize: pageSize,
     profilePageHasRows: async (id) => {
       const rows = await listSearchableContractorSlugs({
@@ -242,8 +465,33 @@ export async function getSitemapShardPlan(): Promise<SitemapShardPlan> {
       });
       return rows.length > 0;
     },
-    profileEntries: profilePage,
+    profileEntries: (id) => loadProfileSitemapEntries(id, pageSize),
   });
+}
+
+/**
+ * Child shard read. Does not build the index plan and does not probe every
+ * preceding shard. The page body is read only when directShardDecision
+ * returns "serve". An observed upstream gap stays absent. An observed
+ * upstream timeout stays unverified.
+ */
+export async function getSitemapChild(id: number): Promise<SitemapChildLookup> {
+  const pageSize = SITEMAP_PAGE_SIZE;
+  return lookupSitemapChild({
+    staticEntries: nonContractorSitemapEntries(),
+    probePrefix: (requested) => probeProfileShardPrefix(requested, {
+      probe: async () => {
+        const rows = await listSearchableContractorSlugs({
+          stateSlug: "fl",
+          limit: 1,
+          offset: requested * pageSize,
+          statementTimeoutMs: SITEMAP_SHARD_PROBE_TIMEOUT_MS,
+        });
+        return rows.length > 0 ? "present" : "absent";
+      },
+    }),
+    profileEntries: (requested) => loadProfileSitemapEntries(requested, pageSize),
+  }, id);
 }
 
 function discoveryEntries(): SitemapUrlEntry[] {
