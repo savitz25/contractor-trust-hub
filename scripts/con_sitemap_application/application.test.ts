@@ -183,9 +183,13 @@ test("generation sitemap application handlers fail closed and preserve immutable
     "-- publication fixture row inserted after contract installation",
   );
   await admin.query(contract);
+  // The contract only permits pointer UPDATEs after initialization. Seed its
+  // pre-publication NULL pointer as disposable fixture state with guards paused.
+  await admin.query("ALTER TABLE sitemap_private.publication DISABLE TRIGGER ALL");
   await admin.query(
     "INSERT INTO sitemap_private.publication(singleton,pointer_epoch,current_generation_id) VALUES(true,0,NULL)",
   );
+  await admin.query("ALTER TABLE sitemap_private.publication ENABLE TRIGGER ALL");
   await admin.query(`
     CREATE ROLE ${FIXTURE_LOGIN} LOGIN PASSWORD '${FIXTURE_PASSWORD}';
     GRANT cth_sitemap_reader TO ${FIXTURE_LOGIN};
