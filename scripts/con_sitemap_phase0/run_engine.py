@@ -6,6 +6,7 @@ import gzip
 import hashlib
 import json
 import os
+import subprocess
 import sys
 import threading
 import time
@@ -145,8 +146,14 @@ def setup() -> None:
         version = db.execute("SHOW server_version").fetchone()[0]
         check(version.startswith("17."), f"expected PostgreSQL 17, got {version}")
         DETAILS["postgresql_version"] = version
-        contract = Path(__file__).with_name("contract.sql").read_text(encoding="utf-8")
-        db.execute(contract, prepare=False)
+    contract_path=Path(__file__).with_name("contract.sql")
+    applied=subprocess.run(["psql","-X","-v","ON_ERROR_STOP=1","-f",str(contract_path)],
+                          check=False,capture_output=True,text=True)
+    if applied.stdout:
+        print(applied.stdout,end="",flush=True)
+    if applied.returncode:
+        raise RuntimeError(f"contract.sql failed (exit {applied.returncode}): {applied.stderr.strip()}")
+    with connect() as db:
         extension = db.execute("SELECT extversion,n.nspname FROM pg_extension e JOIN pg_namespace n ON n.oid=e.extnamespace WHERE e.extname='pgcrypto'").fetchone()
         check(extension is not None and extension[1] == "extensions", f"pgcrypto not in extensions: {extension}")
         DETAILS["pgcrypto"] = {"version": extension[0], "schema": extension[1]}
