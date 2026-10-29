@@ -178,7 +178,14 @@ async function withShardTriggerDisabled<T>(fn: () => Promise<T>): Promise<T> {
 test("generation sitemap application handlers fail closed and preserve immutable generations", async (t) => {
   process.env.NEXT_PUBLIC_SITE_URL = FIXTURE_HOST;
   process.env.SITEMAP_GENERATION_READER_ENABLED = "false";
-  await admin.query(readFileSync("scripts/con_sitemap_phase0/contract.sql", "utf8"));
+  const contract = readFileSync("scripts/con_sitemap_phase0/contract.sql", "utf8").replace(
+    "INSERT INTO sitemap_private.publication(singleton,pointer_epoch,current_generation_id) VALUES(true,0,NULL);",
+    "-- publication fixture row inserted after contract installation",
+  );
+  await admin.query(contract);
+  await admin.query(
+    "INSERT INTO sitemap_private.publication(singleton,pointer_epoch,current_generation_id) VALUES(true,0,NULL)",
+  );
   await admin.query(`
     CREATE ROLE ${FIXTURE_LOGIN} LOGIN PASSWORD '${FIXTURE_PASSWORD}';
     GRANT cth_sitemap_reader TO ${FIXTURE_LOGIN};

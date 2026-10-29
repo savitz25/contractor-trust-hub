@@ -54,6 +54,7 @@ jobs:
           NEXT_PUBLIC_SITE_URL: https://www.contractortrusthub.com
           SITEMAP_GENERATION_READER_ENABLED: 'false'
         run: |
+          set -o pipefail
           mkdir -p artifacts/con-sitemap-application
           npm run test:con-sitemap-application 2>&1 | tee artifacts/con-sitemap-application/application.log
       - name: Typecheck
