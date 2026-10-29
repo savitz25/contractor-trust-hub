@@ -1,0 +1,65 @@
+# Secret-free PostgreSQL 17 contract tests. Dedicated to this test-package branch.
+# Does not alter or share the CON-OSHA-002 workflow/branch condition.
+name: CON-SITEMAP-PHASE0 PostgreSQL 17
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/con_sitemap_phase0/**'
+      - 'docs/con-sitemap-phase0/**'
+      - '.github/workflows/con-sitemap-phase0-pg17.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  postgres-17-contract:
+    name: Disposable PostgreSQL 17 sitemap contracts
+    if: >-
+      (github.event_name == 'pull_request' && github.head_ref == 'con-sitemap-phase0-ci-repair') ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/con-sitemap-phase0-ci-repair')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PGHOST: localhost
+      PGPORT: '5432'
+      PGUSER: cth_pg17_sitemap_test
+      PGPASSWORD: cth_pg17_test_only
+      PGDATABASE: cth_sitemap_pg17_synthetic
+      PYTHONDONTWRITEBYTECODE: '1'
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: cth_pg17_sitemap_test
+          POSTGRES_PASSWORD: cth_pg17_test_only
+          POSTGRES_DB: cth_sitemap_pg17_synthetic
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cth_pg17_sitemap_test -d cth_sitemap_pg17_synthetic"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PostgreSQL client and pinned test driver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+          python -m pip install 'psycopg[binary]==3.2.3'
+      - name: Run synthetic multi-session PostgreSQL 17 acceptance suite
+        run: python scripts/con_sitemap_phase0/run_engine.py
+      - name: Upload sanitized evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: con-sitemap-phase0-pg17-${{ github.sha }}
+          path: artifacts/con-sitemap-phase0/
+          if-no-files-found: error
+          retention-days: 30
