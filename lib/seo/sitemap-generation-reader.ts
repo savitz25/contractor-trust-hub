@@ -9,7 +9,7 @@ import {
 } from "@/lib/seo/sitemap-data";
 
 export const SITEMAP_GENERATION_MAX_COMPRESSED_BYTES = 16 * 1024 * 1024;
-export const SITEMAP_GENERATION_MAX_XML_BYTES = 64 * 1024 * 1024;
+export const SITEMAP_GENERATION_MAX_XML_BYTES = 52_428_800;
 const MAX_GENERATION_BYTES = 400_000_000;
 const NOT_FOUND_HEADERS = {
   "Content-Type": "text/plain; charset=utf-8",
@@ -22,8 +22,13 @@ const INDEX_HEADERS = {
 };
 const IMMUTABLE_HEADERS = {
   "Content-Type": "application/xml; charset=utf-8",
-  "Content-Encoding": "gzip",
   "Cache-Control": "public, max-age=31536000, s-maxage=31536000, immutable",
+  Vary: "Accept-Encoding",
+};
+const NOT_ACCEPTABLE_HEADERS = {
+  "Content-Type": "text/plain; charset=utf-8",
+  "Cache-Control": "no-store",
+  Vary: "Accept-Encoding",
 };
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
@@ -225,15 +230,55 @@ function validateSitemapXml(xml: string, expectedUrlCount: number): boolean {
   return locations.every((loc) => isPublishableSitemapLoc(loc));
 }
 
-function decompressAndValidate(payload: Buffer, urlCount: number): boolean {
+function decompressAndValidate(payload: Buffer, urlCount: number): Buffer | null {
   try {
-    const xml = gunzipSync(payload, { maxOutputLength: SITEMAP_GENERATION_MAX_XML_BYTES }).toString(
-      "utf8",
-    );
-    return validateSitemapXml(xml, urlCount);
+    const xml = gunzipSync(payload, { maxOutputLength: SITEMAP_GENERATION_MAX_XML_BYTES });
+    const text = new TextDecoder("utf-8", { fatal: true }).decode(xml);
+    return validateSitemapXml(text, urlCount) ? xml : null;
   } catch {
-    return false;
+    return null;
   }
+}
+
+function qualityValue(raw: string): number {
+  if (!/^(?:0(?:\.\d{0,3})?|1(?:\.0{0,3})?)$/.test(raw)) return 0;
+  return Number(raw);
+}
+
+/**
+ * Select a supported representation according to Accept-Encoding. With no
+ * field, either representation is acceptable and gzip wins the tie. An
+ * explicitly empty field means no content coding was requested.
+ */
+function selectRepresentation(request: Request): "gzip" | "identity" | null {
+  const header = request.headers.get("accept-encoding");
+  if (header === null) return "gzip";
+  if (header.trim() === "") return "identity";
+
+  const qualities = new Map<string, number>();
+  for (const part of header.split(",")) {
+    const [rawCoding, ...parameters] = part.trim().split(";");
+    const coding = rawCoding?.trim().toLowerCase();
+    if (!coding) continue;
+    let q = 1;
+    if (parameters.length > 0) {
+      if (parameters.length !== 1 || !/^\s*q\s*=\s*/i.test(parameters[0] ?? "")) {
+        q = 0;
+      } else {
+        q = qualityValue((parameters[0] ?? "").replace(/^\s*q\s*=\s*/i, "").trim());
+      }
+    }
+    // Ambiguous duplicate codings fail closed to the least permissive value.
+    qualities.set(coding, Math.min(qualities.get(coding) ?? 1, q));
+  }
+
+  const wildcard = qualities.get("*");
+  const gzipQ = qualities.get("gzip") ?? wildcard ?? 0;
+  const identityQ = qualities.get("identity") ?? (wildcard === 0 ? 0 : 1);
+  if (gzipQ > 0 && gzipQ >= identityQ) return "gzip";
+  if (identityQ > 0) return "identity";
+  if (gzipQ > 0) return "gzip";
+  return null;
 }
 
 export function sitemapGenerationReaderEnabled(): boolean {
@@ -268,7 +313,14 @@ export function createSitemapGenerationHandlers(
       }
     },
 
-    async child(rawGenerationId: string, rawShardNo: string): Promise<Response> {
+    async child(rawGenerationId: string, rawShardNo: string, request?: Request): Promise<Response> {
+      const representation = selectRepresentation(request ?? new Request("http://localhost/"));
+      if (!representation) {
+        return new Response("No acceptable sitemap representation", {
+          status: 406,
+          headers: NOT_ACCEPTABLE_HEADERS,
+        });
+      }
       if (!UUID.test(rawGenerationId) || !/^(0|[1-9]\d*)$/.test(rawShardNo)) return notFound();
       const shardNo = Number(rawShardNo);
       if (!Number.isSafeInteger(shardNo) || shardNo >= MAX_SITEMAP_SHARDS) return notFound();
@@ -304,12 +356,16 @@ export function createSitemapGenerationHandlers(
           payload.byteLength !== requestedBytes ||
           !snapshot.requested_sha256 ||
           snapshot.requested_sha256 !== shard.payload_sha256 ||
-          createHash("sha256").update(payload).digest("hex") !== shard.payload_sha256 ||
-          !decompressAndValidate(payload, asInteger(shard.url_count))
+          createHash("sha256").update(payload).digest("hex") !== shard.payload_sha256
         ) {
           return unavailable();
         }
-        return new Response(new Uint8Array(payload), { status: 200, headers: IMMUTABLE_HEADERS });
+        const xml = decompressAndValidate(payload, asInteger(shard.url_count));
+        if (!xml) return unavailable();
+        const headers = new Headers(IMMUTABLE_HEADERS);
+        const body = representation === "gzip" ? payload : xml;
+        if (representation === "gzip") headers.set("Content-Encoding", "gzip");
+        return new Response(new Uint8Array(body), { status: 200, headers });
       } catch {
         return unavailable();
       }

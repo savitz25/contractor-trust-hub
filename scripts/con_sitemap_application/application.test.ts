@@ -59,10 +59,26 @@ function assertUrlSet(xml: string, expectedCount: number): void {
   }
 }
 
-async function callGenerationChild(generationId: string, shardNo: string): Promise<Response> {
-  return getGenerationChild(new Request(`${FIXTURE_HOST}/sitemap/g/${generationId}/${shardNo}.xml`), {
+async function callGenerationChild(
+  generationId: string,
+  shardNo: string,
+  acceptEncoding?: string,
+): Promise<Response> {
+  const request = new Request(
+    `${FIXTURE_HOST}/sitemap/g/${generationId}/${shardNo}.xml`,
+    acceptEncoding === undefined ? undefined : { headers: { "Accept-Encoding": acceptEncoding } },
+  );
+  return getGenerationChild(request, {
     params: Promise.resolve({ generationId, shardNo }),
   });
+}
+
+function exactSizeValidXml(byteLength: number): Buffer {
+  const prefix = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${FIXTURE_HOST}/contractors/size-boundary</loc></url>`;
+  const suffix = "</urlset>";
+  const paddingLength = byteLength - Buffer.byteLength(prefix) - Buffer.byteLength(suffix);
+  assert.ok(paddingLength >= 0);
+  return Buffer.from(`${prefix}${" ".repeat(paddingLength)}${suffix}`, "utf8");
 }
 
 function countUrlElements(xml: string): number {
@@ -281,6 +297,7 @@ test("generation sitemap application handlers fail closed and preserve immutable
       assert.equal(response.status, 200);
       assert.equal(response.headers.get("content-type"), "application/xml; charset=utf-8");
       assert.equal(response.headers.get("content-encoding"), "gzip");
+      assert.equal(response.headers.get("vary"), "Accept-Encoding");
       assert.match(response.headers.get("cache-control") ?? "", /max-age=31536000.*immutable/);
       const body = Buffer.from(await response.arrayBuffer());
       assert.deepEqual(body, payload);
@@ -288,6 +305,39 @@ test("generation sitemap application handlers fail closed and preserve immutable
       const count = countUrlElements(xml);
       assertUrlSet(xml, count);
     }
+
+    const gzipResponse = await callGenerationChild(generationA, "0", "gzip");
+    const identityResponse = await callGenerationChild(generationA, "0", "identity");
+    const gzipXml = gunzipSync(Buffer.from(await gzipResponse.arrayBuffer()));
+    const identityXml = Buffer.from(await identityResponse.arrayBuffer());
+    assert.deepEqual(identityXml, gzipXml);
+    assert.equal(identityResponse.headers.get("content-encoding"), null);
+    assert.equal(identityResponse.headers.get("vary"), "Accept-Encoding");
+    assert.match(identityResponse.headers.get("cache-control") ?? "", /max-age=31536000.*immutable/);
+
+    for (const [header, expectedEncoding] of [
+      ["", null],
+      ["gzip;q=0", null],
+      ["gzip;q=0.4, identity;q=0.8", null],
+      ["gzip;q=0.9, identity;q=0.2", "gzip"],
+      ["identity;q=0, gzip;q=0.5", "gzip"],
+      ["br", null],
+    ] as const) {
+      const response = await callGenerationChild(generationA, "0", header);
+      assert.equal(response.status, 200, `Accept-Encoding: ${header}`);
+      assert.equal(response.headers.get("content-encoding"), expectedEncoding);
+      const body = Buffer.from(await response.arrayBuffer());
+      assert.deepEqual(expectedEncoding === "gzip" ? gunzipSync(body) : body, gzipXml);
+    }
+
+    const absentHeader = await callGenerationChild(generationA, "0");
+    assert.equal(absentHeader.headers.get("content-encoding"), "gzip");
+    assert.deepEqual(gunzipSync(Buffer.from(await absentHeader.arrayBuffer())), gzipXml);
+
+    const unacceptable = await callGenerationChild(generationA, "0", "gzip;q=0, identity;q=0");
+    assert.equal(unacceptable.status, 406);
+    assert.equal(unacceptable.headers.get("cache-control"), "no-store");
+    assert.equal(unacceptable.headers.get("vary"), "Accept-Encoding");
   });
 
   await t.test("confirmed unknown generations and out-of-range shards are 404 no-store", async () => {
@@ -405,12 +455,30 @@ test("generation sitemap application handlers fail closed and preserve immutable
   });
 
   await t.test("compressed and decompressed payload limits fail closed", async () => {
-    const hugeXml = Buffer.from("x".repeat(SITEMAP_GENERATION_MAX_XML_BYTES + 1));
+    const hugeXml = exactSizeValidXml(SITEMAP_GENERATION_MAX_XML_BYTES + 1);
     const bomb = gzipSync(hugeXml, { mtime: 0 });
     const bombGeneration = await publishFixtureGeneration([bomb], [1]);
     const bombResponse = await callGenerationChild(bombGeneration, "0");
     assert.equal(bombResponse.status, 503);
     assert.equal(bombResponse.headers.get("cache-control"), "no-store");
+
+    const boundaryXml = exactSizeValidXml(SITEMAP_GENERATION_MAX_XML_BYTES);
+    assert.equal(boundaryXml.byteLength, SITEMAP_GENERATION_MAX_XML_BYTES);
+    const boundaryPayload = gzipSync(boundaryXml, { mtime: 0 });
+    const boundaryGeneration = await publishFixtureGeneration([boundaryPayload], [1]);
+    const boundaryResponse = await callGenerationChild(boundaryGeneration, "0", "identity");
+    assert.equal(boundaryResponse.status, 200);
+    assert.equal(boundaryResponse.headers.get("content-encoding"), null);
+    const boundaryBody = Buffer.from(await boundaryResponse.arrayBuffer());
+    assert.equal(boundaryBody.byteLength, SITEMAP_GENERATION_MAX_XML_BYTES);
+    assert.deepEqual(boundaryBody, boundaryXml);
+    const gzipBoundaryResponse = await callGenerationChild(boundaryGeneration, "0", "gzip");
+    assert.equal(gzipBoundaryResponse.status, 200);
+    assert.equal(gzipBoundaryResponse.headers.get("content-encoding"), "gzip");
+    assert.deepEqual(
+      gunzipSync(Buffer.from(await gzipBoundaryResponse.arrayBuffer())),
+      boundaryXml,
+    );
 
     const largeCompressed = Buffer.alloc(SITEMAP_GENERATION_MAX_COMPRESSED_BYTES + 1, 0xa5);
     const oversizedGeneration = await publishFixtureGeneration([largeCompressed], [1]);
