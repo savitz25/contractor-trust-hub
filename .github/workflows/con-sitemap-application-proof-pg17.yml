@@ -1,0 +1,70 @@
+name: CON-SITEMAP application proof PostgreSQL 17
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app/sitemap.xml/**'
+      - 'app/sitemap/**'
+      - 'lib/seo/sitemap-data.ts'
+      - 'lib/seo/sitemap-generation-reader.ts'
+      - 'lib/contractors/queries.ts'
+      - 'scripts/con_sitemap_phase0/contract.sql'
+      - 'scripts/con_sitemap_application/**'
+      - 'next.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/con-sitemap-application-proof-pg17.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  application-proof:
+    name: Disposable PostgreSQL 17 application HTTP proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: cth_pg17_app_test
+          POSTGRES_PASSWORD: cth_pg17_app_test_only
+          POSTGRES_DB: cth_sitemap_app_synthetic
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cth_pg17_app_test -d cth_sitemap_app_synthetic"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install pinned repository dependencies
+        run: npm ci
+      - name: Run disposable database application proof
+        env:
+          TEST_ADMIN_DATABASE_URL: postgresql://cth_pg17_app_test:cth_pg17_app_test_only@127.0.0.1:5432/cth_sitemap_app_synthetic
+          DATABASE_URL: postgresql://cth_sitemap_reader_test:cth_sitemap_reader_test_only@127.0.0.1:5432/cth_sitemap_app_synthetic
+          NEXT_PUBLIC_SITE_URL: https://www.contractortrusthub.com
+          SITEMAP_GENERATION_READER_ENABLED: 'false'
+        run: |
+          mkdir -p artifacts/con-sitemap-application
+          npm run test:con-sitemap-application 2>&1 | tee artifacts/con-sitemap-application/application.log
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Production build
+        run: npm run build
+      - name: Upload application proof evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: con-sitemap-application-pg17-${{ github.sha }}
+          path: artifacts/con-sitemap-application/
+          if-no-files-found: warn
+          retention-days: 30

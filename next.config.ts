@@ -26,6 +26,11 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return [
+      // Immutable generation children keep the generation id in the cache key.
+      {
+        source: "/sitemap/g/:generationId/:shardNo.xml",
+        destination: "/sitemap/g/:generationId/:shardNo",
+      },
       // Public shards use .xml extension; handlers live at /sitemap/:id
       {
         source: "/sitemap/:id.xml",

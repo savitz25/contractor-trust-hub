@@ -2,6 +2,10 @@ import {
   getSitemapShardPlan,
 } from "@/lib/seo/sitemap-data";
 import { createSitemapRouteHandlers } from "@/lib/seo/sitemap-handlers";
+import {
+  createSitemapGenerationHandlers,
+  sitemapGenerationReaderEnabled,
+} from "@/lib/seo/sitemap-generation-reader";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -15,5 +19,8 @@ export const runtime = "nodejs";
  * This route handler owns /sitemap.xml with correct Content-Type.
  */
 export async function GET() {
+  if (sitemapGenerationReaderEnabled()) {
+    return createSitemapGenerationHandlers().index();
+  }
   return createSitemapRouteHandlers(getSitemapShardPlan).index();
 }

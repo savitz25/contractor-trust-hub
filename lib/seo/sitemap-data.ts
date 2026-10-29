@@ -44,7 +44,7 @@ function validLastmod(value: string | null | undefined): string | undefined {
   return parsed.toISOString();
 }
 
-function isPublishableSitemapLoc(loc: string): boolean {
+export function isPublishableSitemapLoc(loc: string): boolean {
   let url: URL;
   try {
     url = new URL(loc);
@@ -208,11 +208,13 @@ export async function createSitemapShardPlan(
 }
 
 /** The sole production manifest factory shared by /sitemap.xml and its children. */
-export async function getSitemapShardPlan(): Promise<SitemapShardPlan> {
+export async function getSitemapShardPlan(
+  loadProfileRows: typeof listSearchableContractorSlugs = listSearchableContractorSlugs,
+): Promise<SitemapShardPlan> {
   const staticEntries = stableUniqueSitemapEntries(nonContractorSitemapEntries());
   const pageSize = SITEMAP_PAGE_SIZE;
   const profilePage = async (id: number) => {
-    const rows = await listSearchableContractorSlugs({
+    const rows = await loadProfileRows({
       stateSlug: "fl",
       limit: pageSize,
       offset: id * pageSize,
@@ -234,7 +236,7 @@ export async function getSitemapShardPlan(): Promise<SitemapShardPlan> {
     staticEntries,
     chunkSize: pageSize,
     profilePageHasRows: async (id) => {
-      const rows = await listSearchableContractorSlugs({
+      const rows = await loadProfileRows({
         stateSlug: "fl",
         limit: 1,
         offset: id * pageSize,
@@ -442,6 +444,30 @@ export function renderSitemapIndexXml(childIds: readonly number[]): string {
     return `  <sitemap>
     <loc>${escapeXml(loc)}</loc>
   </sitemap>`;
+  }).join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${items}
+</sitemapindex>
+`;
+}
+
+/** Index for immutable, generation-specific child URLs. */
+export function renderVersionedSitemapIndexXml(
+  generationId: string,
+  shardIds: readonly number[],
+): string {
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(generationId)) {
+    throw new RangeError("Invalid sitemap generation id");
+  }
+  const base = getSiteUrl();
+  const items = shardIds.map((id) => {
+    if (!Number.isSafeInteger(id) || id < 0 || id >= MAX_SITEMAP_SHARDS) {
+      throw new RangeError("Invalid sitemap shard id");
+    }
+    const loc = `${base}/sitemap/g/${generationId}/${id}.xml`;
+    return `  <sitemap>\n    <loc>${escapeXml(loc)}</loc>\n  </sitemap>`;
   }).join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>

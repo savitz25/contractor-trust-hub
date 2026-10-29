@@ -767,10 +767,10 @@ export async function listSearchableContractorSlugs(options: {
   offset: number;
   /** Sitemap probes use a short timeout so a slow page is treated as absent. */
   statementTimeoutMs?: number;
-}): Promise<{ id: string; slug: string; updatedAt: string | null }[]> {
+}, db: { query: typeof query } = { query }): Promise<{ id: string; slug: string; updatedAt: string | null }[]> {
   const state = getStateBySlug(options.stateSlug || "fl");
   if (!state?.live) return [];
-  const rows = await query<{ id: string | number; slug: string; updated_at: Date | null }>(
+  const rows = await db.query<{ id: string | number; slug: string; updated_at: Date | null }>(
     `
     SELECT c.id, c.slug, c.updated_at
     FROM contractors c
