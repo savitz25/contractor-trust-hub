@@ -484,7 +484,7 @@ def d13() -> str:
 def d14() -> str:
     current_id=read_pointer()[1]
     with connect() as db:
-        prior=db.execute("SELECT coalesce(sum(compressed_bytes),0) FROM sitemap_private.shard").fetchone()[0]
+        prior=int(db.execute("SELECT coalesce(sum(compressed_bytes),0) FROM sitemap_private.shard").fetchone()[0])
     remaining=CAP-prior
     check(remaining>0,"existing synthetic rows already exceed cap")
     # A single 400 MB logical compressed-payload fixture exercises the exact byte boundary.
