@@ -52,6 +52,7 @@ import {
   isTransientProfileDbError,
   metadataAfterProfileLookupError,
 } from "@/lib/seo/profile-lookup";
+import { notFoundPageMetadata } from "@/lib/seo/not-found-metadata";
 import {
   matchConfidenceLine,
   officialBoardVerifyLabel,
@@ -96,7 +97,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     if (c === null) {
       return {
         title: "Contractor not found",
-        robots: { index: false, follow: true },
+        robots: notFoundPageMetadata.robots,
+        alternates: notFoundPageMetadata.alternates,
       };
     }
 
