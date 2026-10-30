@@ -25,6 +25,11 @@ test("a genuine 404 streams noindex and does not canonicalize to the homepage", 
   assert.equal(robots.googleBot?.index, false);
   assert.equal(robots.googleBot?.follow, true);
   assert.equal(notFoundPageMetadata.alternates?.canonical, null);
+  assert.deepEqual(notFoundPageMetadata.openGraph?.images, []);
+  assert.equal(notFoundPageMetadata.openGraph?.url, undefined);
+  assert.deepEqual(notFoundPageMetadata.twitter?.images, []);
+  assert.equal(notFoundPageMetadata.twitter?.title, "Page not found");
+  assert.equal(notFoundPageMetadata.twitter?.card, "summary");
 
   const html = streamedNotFoundHead();
   assert.match(html, /<meta name="robots" content="noindex"\/>/);
