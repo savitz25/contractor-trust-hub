@@ -1,7 +1,7 @@
 import {
   getSitemapShardPlan,
 } from "@/lib/seo/sitemap-data";
-import { createSitemapRouteHandlers } from "@/lib/seo/sitemap-handlers";
+import { createSitemapRouteHandlers, resolveSitemapPlanLoader } from "@/lib/seo/sitemap-handlers";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -14,5 +14,5 @@ type Props = { params: Promise<{ id: string }> };
  */
 export async function GET(_req: Request, { params }: Props) {
   const { id: raw } = await params;
-  return createSitemapRouteHandlers(getSitemapShardPlan).child(raw);
+  return createSitemapRouteHandlers(resolveSitemapPlanLoader(getSitemapShardPlan)).child(raw);
 }
