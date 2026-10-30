@@ -27,6 +27,11 @@ The D15 follow-up assertions carry the Phase 0 boundary forward:
   successful response.
 - The index is no-store; immutable generation children have a one-year
   immutable cache policy and are addressed by generation UUID.
+- Child responses negotiate gzip versus identity using `Accept-Encoding`,
+  include `Vary: Accept-Encoding`, and enforce a 52,428,800-byte decompressed
+  XML ceiling. One-year caching describes the cache policy for an immutable
+  URL; it does not extend origin retention. After a generation is swept, a
+  cache miss for its child URL returns `404 no-store`.
 - Actual CDN purge acknowledgement and Supabase role/RLS, session-pooler and
   TLS behavior remain outside these disposable application tests.
 
