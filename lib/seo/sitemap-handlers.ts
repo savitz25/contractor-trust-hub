@@ -1,4 +1,5 @@
 import {
+  MAX_SITEMAP_SHARDS,
   renderSitemapIndexXml,
   renderUrlSetXml,
   SITEMAP_MAX_URLS_PER_CHILD,
@@ -41,23 +42,29 @@ export function createSitemapRouteHandlers(loadPlan: () => Promise<SitemapShardP
         });
       }
       const id = Number(idText);
+      if (id >= MAX_SITEMAP_SHARDS) {
+        return new Response("Sitemap shard not found", {
+          status: 404,
+          headers: { "Content-Type": "text/plain; charset=utf-8" },
+        });
+      }
 
       try {
         const plan = await loadPlan();
-        if (!plan.childIds.includes(id)) {
-          if (plan.retry) {
-            return new Response("Sitemap temporarily unavailable", {
-              status: 503,
-              headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
-            });
-          }
+        // A short probe can drop a later shard while a cached index still
+        // lists it. Load that page before answering 503. An empty verified
+        // miss stays 404. Only a failed page read stays retryable.
+        const entries = plan.childIds.includes(id)
+          ? await plan.entriesForChild(id)
+          : plan.retry
+            ? await plan.entriesForChild(id, { includeUnverified: true })
+            : null;
+        if (!entries) {
           return new Response("Sitemap shard not found", {
             status: 404,
             headers: { "Content-Type": "text/plain; charset=utf-8" },
           });
         }
-
-        const entries = await plan.entriesForChild(id);
         if (entries.length === 0) {
           return new Response("Sitemap shard not found", {
             status: 404,
@@ -68,9 +75,12 @@ export function createSitemapRouteHandlers(loadPlan: () => Promise<SitemapShardP
           throw new RangeError(`Sitemap child ${id} exceeds ${SITEMAP_MAX_URLS_PER_CHILD} URLs`);
         }
 
-        return new Response(renderUrlSetXml(entries), {
+        const xml = renderUrlSetXml(entries);
+        // A recovered page is complete even when the manifest probe was not.
+        const headers = plan.childIds.includes(id) ? responseHeaders(plan) : SITEMAP_XML_HEADERS;
+        return new Response(xml, {
           status: 200,
-          headers: responseHeaders(plan),
+          headers,
         });
       } catch (error) {
         console.error("[sitemap shard]", id, error);

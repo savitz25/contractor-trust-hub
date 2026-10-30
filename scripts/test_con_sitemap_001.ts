@@ -202,14 +202,20 @@ test("a later-shard timeout does not turn a valid index into 503", async () => {
     assert.ok(xmlLocs(childXml).includes("https://www.contractortrusthub.com/contractors/shard-0"));
     assert.match(childXml, /<lastmod>2026-04-02T12:00:00\.000Z<\/lastmod>/);
     assert.equal((await handlers.child("1")).status, 200);
-    const unavailableChild = await handlers.child("2");
-    assert.equal(unavailableChild.status, 503);
-    assert.equal(unavailableChild.headers.get("cache-control"), "no-store");
+    // The probe timed out, but the page itself is readable. Serve it.
+    // A cached index may still list this child; 503 is what Search Console
+    // records as "Couldn't fetch".
+    const recoveredChild = await handlers.child("2");
+    assert.equal(recoveredChild.status, 200);
+    assert.match(recoveredChild.headers.get("cache-control") ?? "", /public/);
+    const recoveredXml = await recoveredChild.text();
+    assertWellFormedXml(recoveredXml, "urlset");
+    assert.ok(xmlLocs(recoveredXml).includes("https://www.contractortrusthub.com/contractors/shard-2"));
   });
   assert.match(logs.join("\n"), /later shard 2 probe failed/);
 });
 
-test("a child re-probe timeout for a shard in a cached index returns retryable 503, not ghost-shard 404", async () => {
+test("a child whose probe timed out still returns 200 when its page loads", async () => {
   const cachedIndex = await createSitemapShardPlan({
     staticEntries: [{ loc: "https://www.contractortrusthub.com/florida" }],
     chunkSize: 2,
@@ -239,8 +245,43 @@ test("a child re-probe timeout for a shard in a cached index returns retryable 5
   await withSitemapLogs(async () => {
     childResponse = await childHandlers.child("3");
   });
+  assert.equal(childResponse?.status, 200);
+  assert.match(childResponse?.headers.get("cache-control") ?? "", /public/);
+  const childXml = await childResponse?.text();
+  assert.match(childXml ?? "", /\/contractors\/shard-3</);
+});
+
+test("a child page that itself times out stays a retryable 503", async () => {
+  const handlers = createSitemapRouteHandlers(() => createSitemapShardPlan({
+    staticEntries: [{ loc: "https://www.contractortrusthub.com/florida" }],
+    chunkSize: 2,
+    maxChildren: 4,
+    profilePageHasRows: async (id) => {
+      if (id === 3) throw PROBE_TIMEOUT;
+      return id === 1 || id === 2;
+    },
+    profileEntries: async (id) => {
+      if (id === 3) throw PROBE_TIMEOUT;
+      return [{
+        loc: `https://www.contractortrusthub.com/contractors/shard-${id}`,
+        stableId: `shard-${id}`,
+      }];
+    },
+  }));
+  let childResponse: Response | undefined;
+  await withSitemapLogs(async () => {
+    childResponse = await handlers.child("3");
+  });
   assert.equal(childResponse?.status, 503);
   assert.equal(childResponse?.headers.get("cache-control"), "no-store");
+  const index = await handlers.index();
+  assert.equal(index.status, 200);
+  assert.equal(index.headers.get("cache-control"), "no-store");
+  assert.deepEqual(xmlLocs(await index.text()), [
+    "https://www.contractortrusthub.com/sitemap/0.xml",
+    "https://www.contractortrusthub.com/sitemap/1.xml",
+    "https://www.contractortrusthub.com/sitemap/2.xml",
+  ]);
 });
 
 test("a persistently empty shard is omitted from the sitemap index", async () => {
