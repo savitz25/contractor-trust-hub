@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 
 /**
- * Leaf metadata for a genuine HTTP 404.
- * Next merges this after the root layout and replaces robots and alternates.
+ * Leaf metadata for a genuine HTTP 404. Explicit Open Graph and Twitter values
+ * prevent the root layout and app/opengraph-image from supplying home-card data.
+ * Empty images arrays suppress file-based image inheritance in Next metadata.
  * The error shell still emits a bare noindex tag before these tags stream in.
  * Canonical is null so the homepage canonical is not inherited.
  */
@@ -23,6 +24,14 @@ export const notFoundPageMetadata: Metadata = {
   openGraph: {
     title: "Page not found",
     description: "That URL is not in Contractor Trust Hub.",
+    siteName: "Contractor Trust Hub",
+    images: [],
+  },
+  twitter: {
+    card: "summary",
+    title: "Page not found",
+    description: "That URL is not in Contractor Trust Hub.",
+    images: [],
   },
 };
 

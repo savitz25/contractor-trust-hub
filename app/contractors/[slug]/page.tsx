@@ -97,8 +97,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     if (c === null) {
       return {
         title: "Contractor not found",
+        description: notFoundPageMetadata.description,
         robots: notFoundPageMetadata.robots,
         alternates: notFoundPageMetadata.alternates,
+        openGraph: {
+          ...notFoundPageMetadata.openGraph,
+          title: "Contractor not found",
+        },
+        twitter: {
+          ...notFoundPageMetadata.twitter,
+          title: "Contractor not found",
+        },
       };
     }
 
