@@ -21,7 +21,7 @@ export const SITEMAP_MAX_URLS_PER_CHILD = 50_000;
  */
 const SITEMAP_NOINDEX_PATHS = new Set(["/account", "/watch", "/compare"]);
 
-/** Fail a later-page probe quickly. A timeout omits that shard for this response only. */
+/** Fail a later-page probe quickly. A timeout marks the plan incomplete and stops probing. */
 const SITEMAP_SHARD_PROBE_TIMEOUT_MS = 1_500;
 
 /**
@@ -134,8 +134,8 @@ export type SitemapShardPlan = {
   childIds: readonly number[];
   entriesForChild(id: number): Promise<SitemapUrlEntry[]>;
   /**
-   * A known transient probe failed. The missing shard is omitted from this
-   * response only, and the response must not be cached as a complete sitemap.
+   * A known transient probe failed before the dataset boundary was verified.
+   * childIds is only the verified prefix. The index must not publish it.
    */
   retry: boolean;
 };
@@ -194,8 +194,8 @@ export async function createSitemapShardPlan(
       plan.retry = true;
       logSitemapRecovery(
         id === 0
-          ? "shard 0 probe failed; no verified profile page to publish"
-          : `later shard ${id} probe failed; serving verified shards only`,
+          ? "shard 0 probe failed; index is incomplete"
+          : `later shard ${id} probe failed; index is incomplete`,
         error,
       );
       break;

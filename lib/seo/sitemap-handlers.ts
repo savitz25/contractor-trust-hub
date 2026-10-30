@@ -14,21 +14,47 @@ function responseHeaders(plan: SitemapShardPlan): HeadersInit {
   };
 }
 
+function unavailableSitemap(): Response {
+  return new Response("Sitemap temporarily unavailable", {
+    status: 503,
+    headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
+  });
+}
+
+/**
+ * Test-only plan loader. Production leaves this unset, so both route handlers
+ * keep calling getSitemapShardPlan. A test sets it to inject a probe failure
+ * without opening a database.
+ */
+let testPlanLoader: (() => Promise<SitemapShardPlan>) | null = null;
+
+export function useSitemapPlanLoaderForTests(
+  loader: (() => Promise<SitemapShardPlan>) | null,
+): void {
+  testPlanLoader = loader;
+}
+
+export function resolveSitemapPlanLoader(
+  production: () => Promise<SitemapShardPlan>,
+): () => Promise<SitemapShardPlan> {
+  return () => (testPlanLoader ?? production)();
+}
+
 export function createSitemapRouteHandlers(loadPlan: () => Promise<SitemapShardPlan>) {
   return {
     async index(): Promise<Response> {
       try {
         const plan = await loadPlan();
+        // A transient probe stops the planner early. Publishing childIds then
+        // tells crawlers the sitemap is complete when later shards were not verified.
+        if (plan.retry) return unavailableSitemap();
         return new Response(renderSitemapIndexXml(plan.childIds), {
           status: 200,
-          headers: responseHeaders(plan),
+          headers: SITEMAP_XML_HEADERS,
         });
       } catch (error) {
         console.error("[sitemap.xml index]", error);
-        return new Response("Sitemap temporarily unavailable", {
-          status: 503,
-          headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
-        });
+        return unavailableSitemap();
       }
     },
 
@@ -45,12 +71,7 @@ export function createSitemapRouteHandlers(loadPlan: () => Promise<SitemapShardP
       try {
         const plan = await loadPlan();
         if (!plan.childIds.includes(id)) {
-          if (plan.retry) {
-            return new Response("Sitemap temporarily unavailable", {
-              status: 503,
-              headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
-            });
-          }
+          if (plan.retry) return unavailableSitemap();
           return new Response("Sitemap shard not found", {
             status: 404,
             headers: { "Content-Type": "text/plain; charset=utf-8" },
@@ -74,10 +95,7 @@ export function createSitemapRouteHandlers(loadPlan: () => Promise<SitemapShardP
         });
       } catch (error) {
         console.error("[sitemap shard]", id, error);
-        return new Response("Sitemap temporarily unavailable", {
-          status: 503,
-          headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
-        });
+        return unavailableSitemap();
       }
     },
   };

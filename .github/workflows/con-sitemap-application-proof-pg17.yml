@@ -7,6 +7,7 @@ on:
       - 'app/sitemap.xml/**'
       - 'app/sitemap/**'
       - 'lib/seo/sitemap-data.ts'
+      - 'lib/seo/sitemap-handlers.ts'
       - 'lib/seo/sitemap-generation-reader.ts'
       - 'lib/contractors/queries.ts'
       - 'scripts/con_sitemap_phase0/contract.sql'

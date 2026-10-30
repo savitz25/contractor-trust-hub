@@ -9,7 +9,12 @@ import {
   SITEMAP_MAX_URLS_PER_CHILD,
   type SitemapUrlEntry,
 } from "../lib/seo/sitemap-data";
-import { createSitemapRouteHandlers } from "../lib/seo/sitemap-handlers";
+import { GET as getSitemapChild } from "../app/sitemap/[id]/route";
+import { GET as getSitemapIndex } from "../app/sitemap.xml/route";
+import {
+  createSitemapRouteHandlers,
+  useSitemapPlanLoaderForTests,
+} from "../lib/seo/sitemap-handlers";
 
 const xmlLocs = (xml: string) =>
   [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) =>
@@ -167,7 +172,7 @@ async function withSitemapLogs(run: () => Promise<void>): Promise<string[]> {
   return lines;
 }
 
-test("a later-shard timeout does not turn a valid index into 503", async () => {
+test("a later-shard timeout does not publish a partial index", async () => {
   const logs = await withSitemapLogs(async () => {
     const handlers = createSitemapRouteHandlers(() => createSitemapShardPlan({
       staticEntries: [{ loc: "https://www.contractortrusthub.com/florida" }],
@@ -185,17 +190,15 @@ test("a later-shard timeout does not turn a valid index into 503", async () => {
       ],
     }));
     const index = await handlers.index();
-    assert.equal(index.status, 200);
+    assert.equal(index.status, 503);
     assert.equal(index.headers.get("cache-control"), "no-store");
-    const indexXml = await index.text();
-    assertWellFormedXml(indexXml, "sitemapindex");
-    assert.deepEqual(xmlLocs(indexXml), [
-      "https://www.contractortrusthub.com/sitemap/0.xml",
-      "https://www.contractortrusthub.com/sitemap/1.xml",
-    ]);
+    const indexBody = await index.text();
+    assert.equal(indexBody.includes("<sitemapindex"), false);
+    assert.equal(indexBody.includes("/sitemap/"), false);
 
     const child = await handlers.child("0");
     assert.equal(child.status, 200);
+    assert.equal(child.headers.get("cache-control"), "no-store");
     const childXml = await child.text();
     assertWellFormedXml(childXml, "urlset");
     assert.ok(xmlLocs(childXml).includes("https://www.contractortrusthub.com/florida"));
@@ -205,6 +208,7 @@ test("a later-shard timeout does not turn a valid index into 503", async () => {
     const unavailableChild = await handlers.child("2");
     assert.equal(unavailableChild.status, 503);
     assert.equal(unavailableChild.headers.get("cache-control"), "no-store");
+    assert.equal((await unavailableChild.text()).includes("<urlset"), false);
   });
   assert.match(logs.join("\n"), /later shard 2 probe failed/);
 });
@@ -351,4 +355,128 @@ test("zero URL manifest has no children and no placeholder shard", async () => {
   });
   assert.deepEqual(plan.childIds, []);
   assert.deepEqual(await plan.entriesForChild(0), []);
+});
+
+const CONNECT_TIMEOUT = new Error("timeout exceeded when trying to connect");
+const CAPACITY_ERROR = new Error("MaxClientsInSessionMode");
+const STATIC_ENTRY: SitemapUrlEntry = { loc: "https://www.contractortrusthub.com/florida" };
+
+function publicationPlan(probe: (id: number) => Promise<boolean>) {
+  return createSitemapShardPlan({
+    staticEntries: [STATIC_ENTRY],
+    chunkSize: 40_000,
+    maxChildren: 6,
+    profilePageHasRows: probe,
+    profileEntries: async (id) => [{
+      loc: `https://www.contractortrusthub.com/contractors/page-${id}`,
+      stableId: `page-${id}`,
+    }],
+  });
+}
+
+async function callSitemapRoutes(
+  probe: (id: number) => Promise<boolean>,
+  run: (plan: Awaited<ReturnType<typeof publicationPlan>>) => Promise<void>,
+): Promise<void> {
+  assert.notEqual(process.env.SITEMAP_GENERATION_READER_ENABLED, "true");
+  const previousSite = process.env.NEXT_PUBLIC_SITE_URL;
+  process.env.NEXT_PUBLIC_SITE_URL = "https://www.contractortrusthub.com";
+  useSitemapPlanLoaderForTests(() => publicationPlan(probe));
+  try {
+    await run(await publicationPlan(probe));
+  } finally {
+    useSitemapPlanLoaderForTests(null);
+    if (previousSite === undefined) delete process.env.NEXT_PUBLIC_SITE_URL;
+    else process.env.NEXT_PUBLIC_SITE_URL = previousSite;
+  }
+}
+
+async function routeChild(id: string): Promise<Response> {
+  return getSitemapChild(new Request(`https://www.contractortrusthub.com/sitemap/${id}.xml`), {
+    params: Promise.resolve({ id }),
+  });
+}
+
+function assertUnavailableIndex(response: Response, body: string): void {
+  assert.equal(response.status, 503);
+  assert.equal(response.headers.get("cache-control"), "no-store");
+  assert.equal(response.headers.get("content-type"), "text/plain; charset=utf-8");
+  assert.equal(body.includes("<sitemapindex"), false);
+  assert.equal(body.includes("/sitemap/"), false);
+}
+
+test("route index fails closed when the shard 1 probe is transient", async () => {
+  for (const error of [PROBE_TIMEOUT, CONNECT_TIMEOUT, CAPACITY_ERROR]) {
+    await callSitemapRoutes(async (id) => {
+      if (id === 1) throw error;
+      return false;
+    }, async (plan) => {
+      assert.equal(plan.retry, true);
+      assert.deepEqual(plan.childIds, [0]);
+      const index = await getSitemapIndex();
+      assertUnavailableIndex(index, await index.text());
+      const verified = await routeChild("0");
+      assert.equal(verified.status, 200);
+      assert.equal(verified.headers.get("cache-control"), "no-store");
+      assert.ok((await verified.text()).includes("/florida"));
+      const missed = await routeChild("1");
+      assert.equal(missed.status, 503);
+      assert.equal(missed.headers.get("cache-control"), "no-store");
+      assert.equal((await missed.text()).includes("<urlset"), false);
+    });
+  }
+});
+
+test("route index fails closed when a later shard probe is transient", async () => {
+  await callSitemapRoutes(async (id) => {
+    if (id === 3) throw PROBE_TIMEOUT;
+    return id === 1 || id === 2;
+  }, async (plan) => {
+    assert.equal(plan.retry, true);
+    assert.deepEqual(plan.childIds, [0, 1, 2]);
+    const index = await getSitemapIndex();
+    assertUnavailableIndex(index, await index.text());
+    assert.equal((await routeChild("2")).status, 200);
+    const missed = await routeChild("3");
+    assert.equal(missed.status, 503);
+    assert.equal(missed.headers.get("cache-control"), "no-store");
+  });
+});
+
+test("route index recovers to four shards after a transient probe failure", async () => {
+  let fail = true;
+  await callSitemapRoutes(async (id) => {
+    if (fail && id === 1) throw PROBE_TIMEOUT;
+    return id >= 1 && id <= 3;
+  }, async () => {
+    const failed = await getSitemapIndex();
+    assertUnavailableIndex(failed, await failed.text());
+    fail = false;
+    const index = await getSitemapIndex();
+    assert.equal(index.status, 200);
+    assert.match(index.headers.get("cache-control") ?? "", /s-maxage=3600/);
+    const locs = xmlLocs(await index.text());
+    assert.deepEqual(locs, [
+      "https://www.contractortrusthub.com/sitemap/0.xml",
+      "https://www.contractortrusthub.com/sitemap/1.xml",
+      "https://www.contractortrusthub.com/sitemap/2.xml",
+      "https://www.contractortrusthub.com/sitemap/3.xml",
+    ]);
+    assert.equal((await routeChild("3")).status, 200);
+    assert.equal((await routeChild("4")).status, 404);
+  });
+});
+
+test("a genuinely smaller dataset still publishes its complete index", async () => {
+  await callSitemapRoutes(async () => false, async (plan) => {
+    assert.equal(plan.retry, false);
+    assert.deepEqual(plan.childIds, [0]);
+    const index = await getSitemapIndex();
+    assert.equal(index.status, 200);
+    assert.match(index.headers.get("cache-control") ?? "", /s-maxage=3600/);
+    assert.deepEqual(xmlLocs(await index.text()), [
+      "https://www.contractortrusthub.com/sitemap/0.xml",
+    ]);
+    assert.equal((await routeChild("1")).status, 404);
+  });
 });

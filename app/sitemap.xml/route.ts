@@ -1,7 +1,7 @@
 import {
   getSitemapShardPlan,
 } from "@/lib/seo/sitemap-data";
-import { createSitemapRouteHandlers } from "@/lib/seo/sitemap-handlers";
+import { createSitemapRouteHandlers, resolveSitemapPlanLoader } from "@/lib/seo/sitemap-handlers";
 import {
   createSitemapGenerationHandlers,
   sitemapGenerationReaderEnabled,
@@ -22,5 +22,5 @@ export async function GET() {
   if (sitemapGenerationReaderEnabled()) {
     return createSitemapGenerationHandlers().index();
   }
-  return createSitemapRouteHandlers(getSitemapShardPlan).index();
+  return createSitemapRouteHandlers(resolveSitemapPlanLoader(getSitemapShardPlan)).index();
 }
