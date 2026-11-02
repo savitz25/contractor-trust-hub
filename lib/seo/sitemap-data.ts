@@ -21,7 +21,11 @@ export const SITEMAP_MAX_URLS_PER_CHILD = 50_000;
  */
 const SITEMAP_NOINDEX_PATHS = new Set(["/account", "/watch", "/compare"]);
 
-/** Fail a later-page probe quickly. A timeout marks the plan incomplete and stops probing. */
+/**
+ * One statement budget for a shard existence probe. The probe stops on the
+ * existing home-state index, so this stays 1,500 ms. Do not raise it to
+ * 8,000 ms to hide a slug-ordered offset.
+ */
 const SITEMAP_SHARD_PROBE_TIMEOUT_MS = 1_500;
 
 /**
@@ -241,6 +245,7 @@ export async function getSitemapShardPlan(
         limit: 1,
         offset: id * pageSize,
         statementTimeoutMs: SITEMAP_SHARD_PROBE_TIMEOUT_MS,
+        existenceProbe: true,
       });
       return rows.length > 0;
     },
