@@ -765,13 +765,52 @@ export async function listSearchableContractorSlugs(options: {
   stateSlug?: string;
   limit: number;
   offset: number;
-  /** Sitemap probes use a short timeout so a slow page is treated as absent. */
+  /**
+   * Sitemap probes pass a short timeout. A timeout stays an error so the
+   * plan can fail closed. It does not mean the page is empty.
+   */
   statementTimeoutMs?: number;
+  /**
+   * Shard-boundary probe only. Existence does not depend on slug order, and
+   * ORDER BY slug, id makes Postgres walk contractors_slug_key past non-matching
+   * states. This path stops after offset + limit rows on the existing
+   * home-state index. The ordered page read must leave it unset.
+   */
+  existenceProbe?: boolean;
 }, db: { query: typeof query } = { query }): Promise<{ id: string; slug: string; updatedAt: string | null }[]> {
   const state = getStateBySlug(options.stateSlug || "fl");
   if (!state?.live) return [];
-  const rows = await db.query<{ id: string | number; slug: string; updated_at: Date | null }>(
+  const sql = options.existenceProbe
+    ? `
+    SELECT eligible.id, eligible.slug, eligible.updated_at
+    FROM (
+      (
+        SELECT c.id, c.slug, c.updated_at
+        FROM contractors c
+        WHERE c.is_thin_profile = FALSE
+          AND c.slug IS NOT NULL
+          AND c.slug <> ''
+          AND c.home_state = $1
+        LIMIT $3::bigint + $4::bigint
+      )
+      UNION ALL
+      (
+        SELECT c.id, c.slug, c.updated_at
+        FROM contractors c
+        WHERE c.is_thin_profile = FALSE
+          AND c.slug IS NOT NULL
+          AND c.slug <> ''
+          AND c.home_state IS DISTINCT FROM $1
+          AND EXISTS (
+            SELECT 1 FROM licenses l
+            WHERE l.contractor_id = c.id AND l.source_system = ANY($2::text[])
+          )
+        LIMIT $3::bigint + $4::bigint
+      )
+    ) eligible
+    LIMIT $3 OFFSET $4
     `
+    : `
     SELECT c.id, c.slug, c.updated_at
     FROM contractors c
     WHERE c.is_thin_profile = FALSE
@@ -786,7 +825,9 @@ export async function listSearchableContractorSlugs(options: {
       )
     ORDER BY c.slug, c.id
     LIMIT $3 OFFSET $4
-    `,
+    `;
+  const rows = await db.query<{ id: string | number; slug: string; updated_at: Date | null }>(
+    sql,
     [state.code, licenseSourcesFor(state), options.limit, options.offset],
     options.statementTimeoutMs
       ? { statementTimeoutMs: options.statementTimeoutMs }
