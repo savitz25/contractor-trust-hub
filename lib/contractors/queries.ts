@@ -771,46 +771,75 @@ export async function listSearchableContractorSlugs(options: {
    */
   statementTimeoutMs?: number;
   /**
-   * Shard-boundary probe only. Existence does not depend on slug order, and
-   * ORDER BY slug, id makes Postgres walk contractors_slug_key past non-matching
-   * states. This path stops after offset + limit rows on the existing
-   * home-state index. The ordered page read must leave it unset.
+   * Shard-boundary probe only. Florida is one SELECT 1 at this offset.
+   * The license arm runs only when that statement returns no row. The
+   * ordered page read must leave this unset.
    */
   existenceProbe?: boolean;
 }, db: { query: typeof query } = { query }): Promise<{ id: string; slug: string; updatedAt: string | null }[]> {
   const state = getStateBySlug(options.stateSlug || "fl");
   if (!state?.live) return [];
-  const sql = options.existenceProbe
-    ? `
-    SELECT eligible.id, eligible.slug, eligible.updated_at
-    FROM (
-      (
-        SELECT c.id, c.slug, c.updated_at
+  const timeout = options.statementTimeoutMs
+    ? { statementTimeoutMs: options.statementTimeoutMs }
+    : undefined;
+  if (options.existenceProbe) {
+    const probeHit = [{ id: "0", slug: "", updatedAt: null }];
+    const florida = await db.query<{ present: number }>(
+      `
+      SELECT 1 AS present
+      FROM contractors c
+      WHERE c.is_thin_profile = FALSE
+        AND c.slug IS NOT NULL
+        AND c.slug <> ''
+        AND c.home_state = $1
+      LIMIT 1 OFFSET $2
+      `,
+      [state.code, options.offset],
+      timeout,
+    );
+    if (florida.length > 0) return probeHit;
+
+    const counted = await db.query<{ n: number }>(
+      `
+      SELECT count(*)::int AS n
+      FROM (
+        SELECT 1
         FROM contractors c
         WHERE c.is_thin_profile = FALSE
           AND c.slug IS NOT NULL
           AND c.slug <> ''
           AND c.home_state = $1
-        LIMIT $3::bigint + $4::bigint
-      )
-      UNION ALL
-      (
-        SELECT c.id, c.slug, c.updated_at
-        FROM contractors c
-        WHERE c.is_thin_profile = FALSE
-          AND c.slug IS NOT NULL
-          AND c.slug <> ''
-          AND c.home_state IS DISTINCT FROM $1
-          AND EXISTS (
-            SELECT 1 FROM licenses l
-            WHERE l.contractor_id = c.id AND l.source_system = ANY($2::text[])
-          )
-        LIMIT $3::bigint + $4::bigint
-      )
-    ) eligible
-    LIMIT $3 OFFSET $4
+        LIMIT $2
+      ) florida_matches
+      `,
+      [state.code, options.offset],
+      timeout,
+    );
+    const floridaCount = Number(counted[0]?.n ?? 0);
+    const licenseOffset = options.offset - floridaCount;
+    if (licenseOffset < 0) return probeHit;
+    const license = await db.query<{ present: number }>(
+      `
+      SELECT 1 AS present
+      FROM contractors c
+      WHERE c.is_thin_profile = FALSE
+        AND c.slug IS NOT NULL
+        AND c.slug <> ''
+        AND c.home_state IS DISTINCT FROM $1
+        AND EXISTS (
+          SELECT 1 FROM licenses l
+          WHERE l.contractor_id = c.id AND l.source_system = ANY($2::text[])
+        )
+      LIMIT 1 OFFSET $3
+      `,
+      [state.code, licenseSourcesFor(state), licenseOffset],
+      timeout,
+    );
+    return license.length > 0 ? probeHit : [];
+  }
+
+  const rows = await db.query<{ id: string | number; slug: string; updated_at: Date | null }>(
     `
-    : `
     SELECT c.id, c.slug, c.updated_at
     FROM contractors c
     WHERE c.is_thin_profile = FALSE
@@ -825,13 +854,9 @@ export async function listSearchableContractorSlugs(options: {
       )
     ORDER BY c.slug, c.id
     LIMIT $3 OFFSET $4
-    `;
-  const rows = await db.query<{ id: string | number; slug: string; updated_at: Date | null }>(
-    sql,
+    `,
     [state.code, licenseSourcesFor(state), options.limit, options.offset],
-    options.statementTimeoutMs
-      ? { statementTimeoutMs: options.statementTimeoutMs }
-      : undefined
+    timeout,
   );
   return rows.map((r) => ({
     id: String(r.id),

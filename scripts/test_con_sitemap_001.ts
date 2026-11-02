@@ -15,6 +15,7 @@ import {
   createSitemapRouteHandlers,
   useSitemapPlanLoaderForTests,
 } from "../lib/seo/sitemap-handlers";
+import { listSearchableContractorSlugs } from "../lib/contractors/queries";
 
 const xmlLocs = (xml: string) =>
   [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) =>
@@ -479,4 +480,61 @@ test("a genuinely smaller dataset still publishes its complete index", async () 
     ]);
     assert.equal((await routeChild("1")).status, 404);
   });
+});
+
+test("existence probe reads Florida first and calls the license arm only on a miss", async () => {
+  const calls: { sql: string; params: unknown[] }[] = [];
+  const query = async (sql: string, params: unknown[] = []) => {
+    calls.push({ sql, params });
+    if (calls.length === 1) return [{ present: 1 }];
+    return [];
+  };
+  const hit = await listSearchableContractorSlugs(
+    { stateSlug: "fl", limit: 1, offset: 120_000, statementTimeoutMs: 1_500, existenceProbe: true },
+    { query: query as never },
+  );
+  assert.equal(hit.length, 1);
+  assert.equal(calls.length, 1);
+  assert.match(calls[0].sql, /SELECT 1 AS present/);
+  assert.match(calls[0].sql, /c\.home_state = \$1/);
+  assert.match(calls[0].sql, /LIMIT 1 OFFSET \$2/);
+  assert.equal(calls[0].params[1], 120_000);
+  assert.doesNotMatch(calls[0].sql, /UNION|ORDER BY|updated_at/i);
+  assert.doesNotMatch(calls[0].sql, /SELECT\s+c\.slug|SELECT\s+eligible/i);
+
+  calls.length = 0;
+  const miss = await listSearchableContractorSlugs(
+    { stateSlug: "fl", limit: 1, offset: 2, statementTimeoutMs: 1_500, existenceProbe: true },
+    {
+      query: (async (sql: string, params: unknown[] = []) => {
+        calls.push({ sql, params });
+        if (calls.length === 1) return [];
+        if (calls.length === 2) return [{ n: 1 }];
+        return [{ present: 1 }];
+      }) as never,
+    },
+  );
+  assert.equal(miss.length, 1);
+  assert.equal(calls.length, 3);
+  assert.match(calls[1].sql, /count\(\*\)::int/);
+  assert.match(calls[2].sql, /home_state IS DISTINCT FROM \$1/);
+  assert.match(calls[2].sql, /LIMIT 1 OFFSET \$3/);
+  assert.doesNotMatch(calls[2].sql, /UNION|ORDER BY|updated_at/i);
+  assert.doesNotMatch(calls[2].sql, /SELECT\s+c\.slug|SELECT\s+eligible/i);
+  assert.equal(calls[2].params[2], 1);
+
+  calls.length = 0;
+  const page = await listSearchableContractorSlugs(
+    { stateSlug: "fl", limit: 40_000, offset: 0 },
+    {
+      query: (async (sql: string, params: unknown[] = []) => {
+        calls.push({ sql, params });
+        return [];
+      }) as never,
+    },
+  );
+  assert.deepEqual(page, []);
+  assert.equal(calls.length, 1);
+  assert.match(calls[0].sql, /ORDER BY c\.slug, c\.id/);
+  assert.match(calls[0].sql, /c\.slug, c\.updated_at/);
 });
