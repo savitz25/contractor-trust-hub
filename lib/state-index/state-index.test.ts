@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import GeorgiaContractorPage from "../../app/georgia/page.tsx";
 import { GEORGIA_INTELLIGENCE_GATE } from "../georgia-intelligence/publication.ts";
 import { buildGeorgiaContractorJsonLd, gaJsonLdHasForbiddenRatings } from "../georgia-intelligence/jsonld.ts";
+import { StateIndexContent } from "../../components/state-index/state-index-content.tsx";
 import { getStateIndex, stateIndexSource } from "./model.ts";
 
 const SLUGS = [
@@ -13,6 +14,7 @@ const SLUGS = [
   "georgia",
   "massachusetts",
   "nevada",
+  "north-carolina",
   "ohio",
   "pennsylvania",
   "tennessee",
@@ -34,6 +36,7 @@ test("named state records come from counted sources", () => {
       connecticut: 21046,
       massachusetts: 464,
       nevada: 19213,
+      "north-carolina": 236,
       ohio: 4489,
       pennsylvania: 283,
       tennessee: 29096,
@@ -50,6 +53,15 @@ test("named state records come from counted sources", () => {
       assert.equal(record.href, null);
     }
   }
+});
+
+test("North Carolina server HTML names debarred vendors", () => {
+  const html = renderToStaticMarkup(createElement(StateIndexContent, { slug: "north-carolina" }));
+  const bodyRows = html.match(/<tbody>[\s\S]*<\/tbody>/)?.[0].match(/<tr\b/g) ?? [];
+  assert.ok(bodyRows.length >= 25);
+  assert.match(html, /Named records/);
+  assert.match(html, /About this data/);
+  assert.match(html, /236 NC DOA debarred-vendor rows/);
 });
 
 test("Georgia server HTML names cease-and-desist respondents", () => {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StateIndexContent } from "@/components/state-index/state-index-content";
 import { Trace } from "@/components/new-jersey/trace";
 import {
   NC_DOA_DEBAR,
@@ -47,6 +48,7 @@ export function NorthCarolinaIntelPage({ snapshot }: { snapshot: NorthCarolinaCo
       <h1 className="mt-1 text-2xl font-bold text-[var(--navy)] sm:text-3xl">
         North Carolina Contractor Licensing &amp; Regulatory Intelligence
       </h1>
+      <StateIndexContent slug="north-carolina" />
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
         The North Carolina Licensing Board for General Contractors (NCLBGC) licenses general contractors when total
         project cost is $40,000 or more. That threshold is not a rule that every construction job requires an NCLBGC
