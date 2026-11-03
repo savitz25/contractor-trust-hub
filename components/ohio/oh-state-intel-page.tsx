@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StateIndexContent } from "@/components/state-index/state-index-content";
 import { Trace } from "@/components/new-jersey/trace";
 import {
   OH_BBS_CERTS,
@@ -48,6 +49,7 @@ export function OhioIntelPage({ snapshot }: { snapshot: OhioContractorSnapshot }
       <h1 className="mt-1 text-2xl font-bold text-[var(--navy)] sm:text-3xl">
         Ohio Contractor &amp; Specialty-Trade Licensing Intelligence
       </h1>
+      <StateIndexContent slug="ohio" />
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
         Ohio does not have one universal statewide general-contractor license. The Ohio Construction Industry Licensing
         Board (OCILB) licenses five commercial specialty trades: Electrical, HVAC, Hydronics, Plumbing, and

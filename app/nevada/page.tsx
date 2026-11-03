@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StateIndexContent } from "@/components/state-index/state-index-content";
 import { pageMetadata } from "@/lib/seo/page-meta";
 import {
   NEVADA_INTELLIGENCE_GATE,
@@ -67,6 +68,7 @@ export default async function NevadaContractorPage({ searchParams }: Props) {
     <main className="mx-auto max-w-3xl px-4 py-10">
       <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Nevada · statewide</p>
       <h1 className="mt-2 text-3xl font-bold text-[var(--text)]">Nevada contractor licensing</h1>
+      <StateIndexContent slug="nevada" />
       <p className="mt-4 text-sm leading-relaxed">
         The Nevada State Contractors Board (NSCB) licenses contracting businesses statewide. A license belongs to the
         business, carries one or more classifications, and has a monetary limit set by the Board. Each license is qualified
@@ -207,14 +209,6 @@ export default async function NevadaContractorPage({ searchParams }: Props) {
         above. <a className="underline" href={NV_COMPLAINTS}>File a complaint</a>
       </p>
 
-      <h2 className="mt-10 text-xl font-semibold">What is not claimed</h2>
-      <ul className="mt-3 list-disc pl-5 text-sm leading-relaxed">
-        <li>No count of Nevada contractors. License numbers, classification links, qualified individuals, and discipline rows are different things and are never added.</li>
-        <li>A monetary limit, bond, or financial-responsibility requirement is not revenue, size, or quality.</li>
-        <li>Missing from the active directory is not the same as unlicensed; expired and inactive licenses were not loaded.</li>
-        <li>No record is attached to a contractor by name. No Las Vegas, Reno, or Henderson pages; city and county licensing and permits are not covered.</li>
-        <li>No ranking, recommendation, or Trust Score.</li>
-      </ul>
     </main>
   );
 }
