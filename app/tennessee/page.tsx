@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StateIndexContent } from "@/components/state-index/state-index-content";
 import { pageMetadata } from "@/lib/seo/page-meta";
 import {
   TENNESSEE_INTELLIGENCE_GATE,
@@ -65,6 +66,7 @@ export default async function TennesseeContractorPage({ searchParams }: Props) {
     <main className="mx-auto max-w-3xl px-4 py-10">
       <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Tennessee · statewide</p>
       <h1 className="mt-2 text-3xl font-bold text-[var(--text)]">Tennessee contractor licensing</h1>
+      <StateIndexContent slug="tennessee" />
       <p className="mt-4 text-sm leading-relaxed">
         The Tennessee Board for Licensing Contractors, part of the Department of Commerce &amp; Insurance, issues four
         different credentials: the Contractor license, the Home Improvement license, the Limited Licensed Electrician (LLE)
@@ -202,14 +204,6 @@ export default async function TennesseeContractorPage({ searchParams }: Props) {
         discipline. <a className="underline" href={TN_COMPLAINT}>File a complaint</a>
       </p>
 
-      <h2 className="mt-10 text-xl font-semibold">What is not claimed</h2>
-      <ul className="mt-3 list-disc pl-5 text-sm leading-relaxed">
-        <li>No count of Tennessee contractors. License numbers, qualifying-agent links, and discipline rows are different things and are never added.</li>
-        <li>No Home Improvement, LLE, or LLP list was loaded. Missing here is unknown, not zero.</li>
-        <li>&quot;Under $25,000 needs no license&quot; is not true everywhere: Home Improvement, LLE, LLP, and local rules can apply.</li>
-        <li>No record is attached to a contractor by name. No Nashville, Memphis, Knoxville, or Chattanooga pages.</li>
-        <li>No ranking, recommendation, or Trust Score.</li>
-      </ul>
     </main>
   );
 }

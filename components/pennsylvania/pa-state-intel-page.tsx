@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StateIndexContent } from "@/components/state-index/state-index-content";
 import { Trace } from "@/components/new-jersey/trace";
 import {
   PA_ASBESTOS_CONTRACTORS,
@@ -45,6 +46,7 @@ export function PennsylvaniaIntelPage({ snapshot }: { snapshot: PennsylvaniaCont
       <h1 className="mt-1 text-2xl font-bold text-[var(--navy)] sm:text-3xl">
         Pennsylvania Contractor &amp; Home Improvement Intelligence
       </h1>
+      <StateIndexContent slug="pennsylvania" />
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
         Pennsylvania does not have a universal statewide general-contractor license. The primary statewide
         residential credential is HICPA Home Improvement Contractor registration with the Office of Attorney
@@ -172,17 +174,6 @@ export function PennsylvaniaIntelPage({ snapshot }: { snapshot: PennsylvaniaCont
         </p>
       </section>
 
-      <section className="mt-10" aria-labelledby="limits-title">
-        <h2 id="limits-title" className="text-lg font-semibold text-[var(--navy)]">
-          What these numbers do not mean
-        </h2>
-        <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-relaxed text-[var(--muted)]">
-          <li>HICPA registration != general contractor license != specialty certification.</li>
-          <li>Asbestos contractor firm != asbestos-certified person. Lead contractor != lead-certified person.</li>
-          <li>Debarment row != HICPA registration. Public-work eligibility != residential quality.</li>
-          <li>No Trust Score. No star-rating markup. No best or safest contractor ranking.</li>
-        </ul>
-      </section>
     </main>
   );
 }

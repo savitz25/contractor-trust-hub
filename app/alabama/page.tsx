@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { StateIndexContent } from "@/components/state-index/state-index-content";
 import { lookupAlabamaLicense } from "@/lib/alabama-intelligence/lookup";
 import { ALABAMA_INTELLIGENCE_GATE } from "@/lib/alabama-intelligence/publication";
 import { AL_SNAPSHOT as data } from "@/lib/alabama-intelligence/snapshot";
@@ -22,6 +23,7 @@ export default async function AlabamaPage({ searchParams }: Props) {
   return <main className="th-shell py-10 sm:py-14">
     <p className="cth-intel-eyebrow">Alabama / Licensing Board for General Contractors</p>
     <h1>Alabama Licensing Board for General Contractors</h1>
+    <StateIndexContent slug="alabama" />
     <p className="mt-3 max-w-3xl text-lg">This page publishes the board&apos;s <a className="underline" href={data.source.url}>FullRosterReport</a>, retrieved {data.source.retrievedAt}. The file prints no as-of date. It is one statewide board. It is not a roster of every Alabama contractor.</p>
     <p className="mt-3 max-w-3xl text-[var(--muted)]">Home builders, electrical contractors, HVAC contractors, and plumbers and gas fitters have their own boards. Those rosters were not acquired. Their absence is not a zero.</p>
 

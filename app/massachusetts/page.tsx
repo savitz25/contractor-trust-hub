@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StateIndexContent } from "@/components/state-index/state-index-content";
 import { pageMetadata } from "@/lib/seo/page-meta";
 import {
   MA_AG_FAIR_LABOR,
@@ -76,6 +77,7 @@ export default async function MassachusettsContractorPage({ searchParams }: Prop
     <main className="mx-auto max-w-3xl px-4 py-10">
       <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Massachusetts · statewide</p>
       <h1 className="mt-2 text-3xl font-bold text-[var(--text)]">Massachusetts contractor licensing</h1>
+      <StateIndexContent slug="massachusetts" />
       <p className="mt-4 text-sm leading-relaxed">
         Massachusetts has no single contractor license. Home improvement contractors register with the state, construction
         on most homes and small buildings is supervised by a licensed construction supervisor, and electricians, plumbers,
@@ -219,14 +221,6 @@ export default async function MassachusettsContractorPage({ searchParams }: Prop
         </ul>
       </details>
 
-      <h2 className="mt-10 text-xl font-semibold">What is not claimed</h2>
-      <ul className="mt-3 list-disc pl-5 text-sm leading-relaxed">
-        <li>No count of Massachusetts contractors, registered or licensed. The discipline and debarment counts above are records, not contractors, and are never added together.</li>
-        <li>No HIC, CSL, or trade-license roster was loaded. Missing here is unknown, not zero.</li>
-        <li>No record is attached to a contractor profile by name.</li>
-        <li>No Boston, Worcester, or Springfield pages. City permits, local licenses, courts, liens, and property records are out of scope.</li>
-        <li>No ranking, recommendation, or Trust Score.</li>
-      </ul>
       <p className="mt-6 text-xs text-slate-600">
         Capability summary:{" "}
         {s.capability_matrix.map((c) => `${c.capability}: ${c.state}`).join(" · ")}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { StateIndexContent } from "@/components/state-index/state-index-content";
 import { pageMetadata } from "@/lib/seo/page-meta";
 import snapshot from "@/lib/connecticut-intelligence/snapshot.json";
 
@@ -31,6 +32,7 @@ export default async function ConnecticutPage({ searchParams }: Props) {
   return <main className="th-shell py-10 sm:py-14">
     <p className="cth-intel-eyebrow">Connecticut / DCP regulator evidence</p>
     <h1>Connecticut contractor credentials and decisions</h1>
+    <StateIndexContent slug="connecticut" />
     <p className="mt-3 max-w-3xl text-[var(--muted)]">The Connecticut Department of Consumer Protection (DCP) registers home-improvement and new-home contractors and licenses skilled trades. A registration, a person-level trade license, and an administrative decision are different records; none is a statewide count of contractor companies.</p>
 
     <section className="mt-8 grid gap-4 sm:grid-cols-3" aria-label="Connecticut evidence summary">
