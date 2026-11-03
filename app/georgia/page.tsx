@@ -9,7 +9,12 @@ import {
   GA_SOS_HOME,
   GEORGIA_INTELLIGENCE_GATE,
 } from "@/lib/georgia-intelligence/publication";
-import { GA_CREDENTIAL_CLASSES, GA_GENERATED_AT, GA_RETRIEVED_AT } from "@/lib/georgia-intelligence/snapshot";
+import {
+  GA_CEASE_AND_DESIST,
+  GA_CREDENTIAL_CLASSES,
+  GA_GENERATED_AT,
+  GA_RETRIEVED_AT,
+} from "@/lib/georgia-intelligence/snapshot";
 import { pageMetadata } from "@/lib/seo/page-meta";
 
 export const metadata: Metadata = pageMetadata({
@@ -21,6 +26,9 @@ export const metadata: Metadata = pageMetadata({
 const heading = GEORGIA_INTELLIGENCE_GATE.title.replace(/ \| ContractorTrustHub$/, "");
 const residential = GA_CREDENTIAL_CLASSES.filter((row) => row.board.includes("Residential and Commercial"));
 const trades = GA_CREDENTIAL_CLASSES.filter((row) => row.board.includes("Construction Industry"));
+const ceasePlaces = new Set(GA_CEASE_AND_DESIST.map((row) => row.location)).size;
+const ceaseCategories = [...new Set(GA_CEASE_AND_DESIST.map((row) => row.practiceCategory))];
+const ceaseBusinessNames = GA_CEASE_AND_DESIST.filter((row) => row.dba).length;
 
 export default function GeorgiaContractorPage() {
   return (
@@ -68,6 +76,25 @@ export default function GeorgiaContractorPage() {
             <li key={row.id}>{row.label}</li>
           ))}
         </ul>
+
+        <h2 className="mt-10 text-xl font-semibold">Recorded class notes</h2>
+        <p className="mt-3 text-sm leading-relaxed">
+          The credential table names {GA_CREDENTIAL_CLASSES.length} classes. {residential.length} belong to the
+          Residential and Commercial General Contractors board. {trades.length} belong to the Construction Industry
+          Licensing Board. Each paragraph below is the grain and source note stored with that class.
+        </p>
+        {GA_CREDENTIAL_CLASSES.map((row) => (
+          <p key={row.id} className="mt-3 text-sm leading-relaxed">
+            <strong>{row.label}.</strong> {row.board}. Grain: {row.grain}. {row.note} Coverage recorded for this class:{" "}
+            {row.coverage}.
+          </p>
+        ))}
+        <p className="mt-3 text-sm leading-relaxed">
+          The named-record table draws on {GA_CEASE_AND_DESIST.length} Secretary of State cease-and-desist rows. Those
+          rows name {ceasePlaces} places. Practice categories printed on the list: {ceaseCategories.join("; ")}.{" "}
+          {ceaseBusinessNames} rows also print a business name beside the respondent. Confirm a license in GOALS. The
+          class roster files stay separate from this cease-and-desist list.
+        </p>
 
         <h2 className="mt-10 text-xl font-semibold">Official sources</h2>
         <p className="mt-4 flex flex-wrap gap-3 text-sm">
