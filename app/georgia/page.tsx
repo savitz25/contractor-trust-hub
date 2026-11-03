@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import React from "react";
 import { StateIndexContent } from "@/components/state-index/state-index-content";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildGeorgiaContractorJsonLd } from "@/lib/georgia-intelligence/jsonld";

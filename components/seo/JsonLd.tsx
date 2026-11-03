@@ -1,3 +1,4 @@
+import React from "react";
 import { absoluteUrl, getSiteUrl, PUBLIC_CONTACT_EMAIL } from "@/lib/site";
 
 /** Serialize JSON-LD without breaking out of the script tag. */

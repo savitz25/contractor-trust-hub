@@ -30,6 +30,15 @@ test("named state records come from counted sources", () => {
     assert.ok(source, slug);
     assert.ok(source.rows.length >= 25, `${slug} sample`);
     assert.ok(source.total >= source.rows.length, `${slug} total`);
+    const printed: Partial<Record<(typeof SLUGS)[number], number>> = {
+      connecticut: 21046,
+      massachusetts: 464,
+      nevada: 19213,
+      ohio: 4489,
+      pennsylvania: 283,
+      tennessee: 29096,
+    };
+    if (printed[slug] != null) assert.equal(source.total, printed[slug], slug);
     const model = getStateIndex(slug);
     assert.ok(model, slug);
     assert.ok(model.facts.length >= 2 && model.facts.length <= 4, `${slug} facts ${model.facts.length}`);

@@ -1,3 +1,4 @@
+import React from "react";
 import { getStateIndex, type StateEntityRow } from "@/lib/state-index/model";
 
 const COLUMNS: Array<[string, keyof StateEntityRow]> = [
