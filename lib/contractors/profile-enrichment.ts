@@ -17,7 +17,6 @@
  */
 import { shapeEnrichment, type EnrichmentRow } from "./enrichment-shape";
 import { isOshaProfileEnabled, oshaPublishedStates } from "@/lib/osha/flag";
-import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
 
 export const PROFILE_ENRICHMENT_SIGNALS = [
   "business_contact",
@@ -100,12 +99,25 @@ export function confirmedPermitExistsSql(): string {
   )`;
 }
 
-/** Hold, withheld, and publication-gate filters for discipline alias `d`. */
+/**
+ * Discipline the profile renders. Alias `d`.
+ * A license-linked Florida DBPR row counts when its identity is EXACT or
+ * DETERMINISTIC, even if `contractor_id` is null and `publication_state` is
+ * still INTERNAL. Held, withheld, and DFS rows do not. Search keeps using
+ * `PUBLIC_REGULATORY_SQL`; this predicate does not.
+ */
 export const RENDERED_DISCIPLINE_PREDICATE_SQL = `
 COALESCE(d.correction_hold, FALSE) = FALSE
 AND COALESCE(d.retraction_hold, FALSE) = FALSE
 AND d.publication_state IS DISTINCT FROM 'WITHHELD'
-AND ${PUBLIC_REGULATORY_SQL}
+AND d.source_system IS DISTINCT FROM 'fl_dfs'
+AND (
+  d.source_system IS DISTINCT FROM 'fl_dbpr'
+  OR (
+    d.identity_state IN ('EXACT', 'DETERMINISTIC')
+    AND d.license_id IS NOT NULL
+  )
+)
 `.trim();
 
 /** Public discipline the profile renders. Alias `d`. `contractorIdExpr` is `c.id` or `$1`. */
@@ -468,14 +480,12 @@ export function disciplineRowIsPublic(row: {
   if (row.publicationState === "WITHHELD") return false;
   if (row.sourceSystem === "fl_dfs") return false;
   if (row.sourceSystem === "fl_dbpr") {
-    if (!gateActive) return false;
     return (
-      row.publicationState === "PUBLIC_ELIGIBLE"
-      && (row.identityState === "EXACT" || row.identityState === "DETERMINISTIC")
-      && Boolean(row.contractorId)
+      (row.identityState === "EXACT" || row.identityState === "DETERMINISTIC")
       && Boolean(row.licenseId)
     );
   }
+  void gateActive;
   return true;
 }
 

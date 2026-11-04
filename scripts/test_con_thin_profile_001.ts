@@ -121,12 +121,27 @@ test("suppressed, placeholder, withheld, and unrendered OSHA stay thin", () => {
   }, true), false);
   assert.equal(disciplineRowIsPublic({
     sourceSystem: "fl_dbpr",
-    publicationState: "PUBLIC_ELIGIBLE",
+    publicationState: "INTERNAL",
     identityState: "EXACT",
-    contractorId: "c",
+    contractorId: null,
     licenseId: "l",
     linkedToContractor: true,
+  }, false), true);
+  assert.equal(disciplineRowIsPublic({
+    sourceSystem: "fl_dbpr",
+    publicationState: "INTERNAL",
+    identityState: "REVIEW_REQUIRED",
+    licenseId: "l",
+    linkedToContractor: true,
+    correctionHold: true,
   }, false), false);
+  assert.equal(disciplineRowIsPublic({
+    sourceSystem: "fl_dfs",
+    publicationState: "INTERNAL",
+    identityState: "EXACT",
+    licenseId: "l",
+    linkedToContractor: true,
+  }, true), false);
   assert.equal(disciplineRowIsPublic({
     sourceSystem: "nj_enforcement",
     publicationState: "PUBLIC_ELIGIBLE",
@@ -143,6 +158,9 @@ test("the sitemap predicate matches the rendered signals and ignores contractor 
   assert.match(sql, /discipline_actions/);
   assert.match(sql, /correction_hold/);
   assert.match(sql, /WITHHELD/);
+  assert.match(sql, /identity_state IN \('EXACT', 'DETERMINISTIC'\)/);
+  assert.match(sql, /license_id IS NOT NULL/);
+  assert.doesNotMatch(sql, /PUBLIC_ELIGIBLE/);
   assert.doesNotMatch(sql, /contractor_osha_license_matches/);
   assert.doesNotMatch(sql, /c\.updated_at/);
   assert.match(enrichedProfileSql({ oshaEnabled: true, oshaStates: ["FL", "NJ"] }), /contractor_osha_license_matches/);
