@@ -22,11 +22,15 @@ export const SITEMAP_MAX_URLS_PER_CHILD = 50_000;
 const SITEMAP_NOINDEX_PATHS = new Set(["/account", "/watch", "/compare"]);
 
 /**
- * One statement budget for a shard existence probe. The probe stops on the
- * existing home-state index, so this stays 1,500 ms. Do not raise it to
- * 8,000 ms to hide a slug-ordered offset.
+ * Published /sitemap.xml children. The index reads this list and does not
+ * probe `contractors` with `SELECT 1 ... LIMIT 1 OFFSET 40000`.
+ *
+ * Shard 0 is static pages, discovery, and the first profile page. Shards
+ * 1–3 are the following 40,000-URL pages. A healthy index lists
+ * /sitemap/0.xml through /sitemap/3.xml. Change this list when the eligible
+ * population crosses another page boundary. Do not rediscover it on request.
  */
-const SITEMAP_SHARD_PROBE_TIMEOUT_MS = 1_500;
+export const PUBLISHED_SITEMAP_CHILD_IDS: readonly number[] = [0, 1, 2, 3];
 
 /**
  * Pool, connect, and statement timeouts are the known transient probe failures.
@@ -236,19 +240,12 @@ export async function getSitemapShardPlan(
     });
   };
 
+  const published = new Set(PUBLISHED_SITEMAP_CHILD_IDS);
   return createSitemapShardPlan({
     staticEntries,
     chunkSize: pageSize,
-    profilePageHasRows: async (id) => {
-      const rows = await loadProfileRows({
-        stateSlug: "fl",
-        limit: 1,
-        offset: id * pageSize,
-        statementTimeoutMs: SITEMAP_SHARD_PROBE_TIMEOUT_MS,
-        existenceProbe: true,
-      });
-      return rows.length > 0;
-    },
+    maxChildren: PUBLISHED_SITEMAP_CHILD_IDS.length,
+    profilePageHasRows: async (id) => published.has(id),
     profileEntries: profilePage,
   });
 }

@@ -3,8 +3,10 @@ import test from "node:test";
 import {
   chunkSitemapEntries,
   createSitemapShardPlan,
+  getSitemapShardPlan,
   isTransientSitemapFailure,
   nonContractorSitemapEntries,
+  PUBLISHED_SITEMAP_CHILD_IDS,
   renderUrlSetXml,
   SITEMAP_MAX_URLS_PER_CHILD,
   type SitemapUrlEntry,
@@ -537,4 +539,40 @@ test("existence probe reads Florida first and calls the license arm only on a mi
   assert.equal(calls.length, 1);
   assert.match(calls[0].sql, /ORDER BY c\.slug, c\.id/);
   assert.match(calls[0].sql, /c\.slug, c\.updated_at/);
+});
+
+test("sitemap index is the published child list and does not probe contractors", async () => {
+  assert.notEqual(process.env.SITEMAP_GENERATION_READER_ENABLED, "true");
+  const previousSite = process.env.NEXT_PUBLIC_SITE_URL;
+  process.env.NEXT_PUBLIC_SITE_URL = "https://www.contractortrusthub.com";
+  useSitemapPlanLoaderForTests(null);
+  const expected = PUBLISHED_SITEMAP_CHILD_IDS.map(
+    (id) => `https://www.contractortrusthub.com/sitemap/${id}.xml`,
+  );
+  let profileReads = 0;
+  try {
+    const plan = await getSitemapShardPlan(async () => {
+      profileReads += 1;
+      throw new Error("contractors table must not be scanned while building the sitemap index");
+    });
+    assert.equal(profileReads, 0);
+    assert.equal(plan.retry, false);
+    assert.deepEqual([...plan.childIds], [...PUBLISHED_SITEMAP_CHILD_IDS]);
+
+    for (let attempt = 1; attempt <= 15; attempt += 1) {
+      const started = performance.now();
+      const index = await getSitemapIndex();
+      const elapsed = performance.now() - started;
+      assert.equal(index.status, 200, `cache-bust ${attempt}`);
+      assert.ok(elapsed < 1_000, `cache-bust ${attempt} took ${elapsed}ms`);
+      assert.match(index.headers.get("cache-control") ?? "", /s-maxage=3600/);
+      const body = await index.text();
+      assertWellFormedXml(body, "sitemapindex");
+      assert.deepEqual(xmlLocs(body), expected);
+      assert.equal(body.includes("LIMIT 1 OFFSET"), false);
+    }
+  } finally {
+    if (previousSite === undefined) delete process.env.NEXT_PUBLIC_SITE_URL;
+    else process.env.NEXT_PUBLIC_SITE_URL = previousSite;
+  }
 });
