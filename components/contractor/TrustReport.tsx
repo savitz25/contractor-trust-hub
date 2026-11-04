@@ -21,7 +21,9 @@ import type { EvidenceState } from "@/lib/states/config";
 import {
   disciplineSectionBlurb,
   disciplineSectionTitle,
+  evidenceSlugForContractor,
   evidenceSlugFromHomeState,
+  type EvidenceStateSlug,
 } from "@/lib/states/evidence-copy";
 import {
   getNjCredentialInfo,
@@ -76,7 +78,7 @@ export function EvidenceSummary({ contractor }: { contractor: ContractorDetail }
   const mainPillars = pillars.filter((p) => p.id !== "freshness");
   const entity = contractor.entities[0];
   const conf = matchConfidenceLine(entity);
-  const slug = evidenceSlugFromHomeState(contractor.homeState);
+  const slug = evidenceSlugForContractor(contractor);
   const freshest = freshestVerifiedAt(contractor);
   const intro =
     slug === "tx"
@@ -266,7 +268,7 @@ export function HiringGuidance({ contractor }: { contractor: ContractorDetail })
 export function DiscrepanciesSection({ contractor }: { contractor: ContractorDetail }) {
   const items = findDiscrepancies(contractor);
   if (items.length === 0) return null;
-  const slug = evidenceSlugFromHomeState(contractor.homeState);
+  const slug = evidenceSlugForContractor(contractor);
   const title =
     slug === "fl"
       ? "Notes comparing license and Sunbiz"
@@ -852,12 +854,15 @@ export function EntitySection({
 export function DisciplineSection({
   discipline,
   homeState,
+  evidenceSlug,
 }: {
   discipline: ContractorDetail["discipline"];
   homeState?: string | null;
+  /** License source state. Falls back to the mailing home state. */
+  evidenceSlug?: EvidenceStateSlug;
 }) {
   const hasActions = discipline.length > 0;
-  const slug = evidenceSlugFromHomeState(homeState);
+  const slug = evidenceSlug ?? evidenceSlugFromHomeState(homeState);
   const title = disciplineSectionTitle(slug);
   const blurb = disciplineSectionBlurb(slug);
   const recordWord = slug === "nj" ? "Enforcement" : "Discipline";

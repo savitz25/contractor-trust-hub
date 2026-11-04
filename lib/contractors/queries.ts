@@ -18,6 +18,12 @@ import { looksLikeLicenseKey, normalizeLicenseKey } from "./search-normalize";
 import { buildNameMatchSql, prepareNameTerms } from "./name-search-core";
 import { stateHasEntityLinking } from "./trust-report";
 import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
+import {
+  enrichedSitemapCountSql,
+  enrichedSitemapPageSql,
+  enrichedSitemapProbeSql,
+  renderedDisciplineSql,
+} from "./profile-enrichment";
 import type {
   ContractorDetail,
   DisciplineDetail,
@@ -649,8 +655,7 @@ async function getContractorBySlugUncached(
            disposition_date, discipline_description, violation_code, entered_date,
            source_dataset, last_verified_at
     FROM discipline_actions d
-    WHERE d.contractor_id = $1
-      AND ${PUBLIC_REGULATORY_SQL}
+    WHERE ${renderedDisciplineSql("$1")}
     ORDER BY disposition_date DESC NULLS LAST, entered_date DESC NULLS LAST
     LIMIT 50
     `,
@@ -732,6 +737,15 @@ async function getContractorBySlugUncached(
 /** Cached per-request so generateMetadata + page share one load. */
 export const getContractorBySlug = cache(getContractorBySlugUncached);
 
+function contentChangedAtIso(value: Date | string | null): string | null {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value.toISOString();
+  }
+  if (typeof value !== "string" || value.trim() === "") return null;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString();
+}
+
 export async function countSearchableContractorSlugs(
   stateSlug = "fl"
 ): Promise<number> {
@@ -739,20 +753,7 @@ export async function countSearchableContractorSlugs(
   if (!state?.live) return 0;
   try {
     const row = await queryOne<{ n: string }>(
-      `
-      SELECT COUNT(*)::text AS n
-      FROM contractors c
-      WHERE c.is_thin_profile = FALSE
-        AND c.slug IS NOT NULL
-        AND c.slug <> ''
-        AND (
-          c.home_state = $1
-          OR EXISTS (
-            SELECT 1 FROM licenses l
-            WHERE l.contractor_id = c.id AND l.source_system = ANY($2::text[])
-          )
-        )
-      `,
+      enrichedSitemapCountSql(),
       [state.code, licenseSourcesFor(state)]
     );
     return row ? Number(row.n) : 0;
@@ -776,14 +777,15 @@ export async function listSearchableContractorSlugs(options: {
    * ordered page read must leave this unset.
    */
   existenceProbe?: boolean;
-}, db: { query: typeof query } = { query }): Promise<{ id: string; slug: string; updatedAt: string | null }[]> {
+}, db: { query: typeof query } = { query }): Promise<{ id: string; slug: string; contentChangedAt: string | null }[]> {
   const state = getStateBySlug(options.stateSlug || "fl");
   if (!state?.live) return [];
+  const enriched = enrichedSitemapProbeSql();
   const timeout = options.statementTimeoutMs
     ? { statementTimeoutMs: options.statementTimeoutMs }
     : undefined;
   if (options.existenceProbe) {
-    const probeHit = [{ id: "0", slug: "", updatedAt: null }];
+    const probeHit = [{ id: "0", slug: "", contentChangedAt: null }];
     const florida = await db.query<{ present: number }>(
       `
       SELECT 1 AS present
@@ -792,6 +794,7 @@ export async function listSearchableContractorSlugs(options: {
         AND c.slug IS NOT NULL
         AND c.slug <> ''
         AND c.home_state = $1
+        AND ${enriched}
       LIMIT 1 OFFSET $2
       `,
       [state.code, options.offset],
@@ -809,6 +812,7 @@ export async function listSearchableContractorSlugs(options: {
           AND c.slug IS NOT NULL
           AND c.slug <> ''
           AND c.home_state = $1
+          AND ${enriched}
         LIMIT $2
       ) florida_matches
       `,
@@ -830,6 +834,7 @@ export async function listSearchableContractorSlugs(options: {
           SELECT 1 FROM licenses l
           WHERE l.contractor_id = c.id AND l.source_system = ANY($2::text[])
         )
+        AND ${enriched}
       LIMIT 1 OFFSET $3
       `,
       [state.code, licenseSourcesFor(state), licenseOffset],
@@ -838,29 +843,14 @@ export async function listSearchableContractorSlugs(options: {
     return license.length > 0 ? probeHit : [];
   }
 
-  const rows = await db.query<{ id: string | number; slug: string; updated_at: Date | null }>(
-    `
-    SELECT c.id, c.slug, c.updated_at
-    FROM contractors c
-    WHERE c.is_thin_profile = FALSE
-      AND c.slug IS NOT NULL
-      AND c.slug <> ''
-      AND (
-        c.home_state = $1
-        OR EXISTS (
-          SELECT 1 FROM licenses l
-          WHERE l.contractor_id = c.id AND l.source_system = ANY($2::text[])
-        )
-      )
-    ORDER BY c.slug, c.id
-    LIMIT $3 OFFSET $4
-    `,
+  const rows = await db.query<{ id: string | number; slug: string; content_changed_at: Date | string | null }>(
+    enrichedSitemapPageSql(),
     [state.code, licenseSourcesFor(state), options.limit, options.offset],
     timeout,
   );
   return rows.map((r) => ({
     id: String(r.id),
     slug: r.slug,
-    updatedAt: r.updated_at ? r.updated_at.toISOString() : null,
+    contentChangedAt: contentChangedAtIso(r.content_changed_at),
   }));
 }

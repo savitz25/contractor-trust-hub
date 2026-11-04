@@ -2,14 +2,14 @@ import { formatDateTime } from "@/lib/contractors/format";
 import type { ContractorDetail } from "@/lib/contractors/types";
 import {
   checkedItems,
-  evidenceSlugFromHomeState,
+  evidenceSlugForContractor,
   notCheckedItems,
 } from "@/lib/states/evidence-copy";
 
 export function WhatWeChecked({ contractor }: { contractor: ContractorDetail }) {
   const lic = contractor.licenses[0];
   const ent = contractor.entities[0];
-  const slug = evidenceSlugFromHomeState(contractor.homeState);
+  const slug = evidenceSlugForContractor(contractor);
   const checked = checkedItems(slug);
   const notChecked = notCheckedItems(slug);
   const freshest =

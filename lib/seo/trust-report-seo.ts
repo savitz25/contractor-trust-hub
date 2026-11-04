@@ -5,7 +5,7 @@ import type { ContractorDetail } from "@/lib/contractors/types";
 import { occupationLabel } from "@/lib/states/config";
 import {
   boardShortLabel,
-  evidenceSlugFromHomeState,
+  evidenceSlugForContractor,
   sourceExtractLabel,
   trustReportTitleSuffix,
 } from "@/lib/states/evidence-copy";
@@ -15,7 +15,7 @@ import { absoluteUrl } from "@/lib/site";
 
 /** Unique title + description + OG for an indexable Trust Report. */
 export function trustReportMetadata(c: ContractorDetail): Metadata {
-  const slug = evidenceSlugFromHomeState(c.homeState);
+  const slug = evidenceSlugForContractor(c);
   const lic = c.licenses[0];
   const occ = lic ? occupationLabel(lic.occupationCode) : "construction credential";
   const status = lic ? statusLabel(lic.statusNormalized) : "status unknown";
@@ -51,7 +51,7 @@ export function trustReportMetadata(c: ContractorDetail): Metadata {
  * Never emit AggregateRating, reviews, or “best of.”
  */
 export function trustReportJsonLd(c: ContractorDetail, path: string): Record<string, unknown> {
-  const slug = evidenceSlugFromHomeState(c.homeState);
+  const slug = evidenceSlugForContractor(c);
   const lic = c.licenses[0];
   const cred = lic?.licenseNumber || lic?.externalKey || null;
   const region = (c.homeState || "").toUpperCase() || undefined;

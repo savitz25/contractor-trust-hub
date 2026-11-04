@@ -2,7 +2,7 @@ import { occupationLabel } from "@/lib/states/config";
 import { getOrCcbTypeInfo, orCcbDisplayLabel } from "@/lib/states/or-ccb";
 import { getTxTradeInfo, txTradePlainLabel } from "@/lib/states/tx-trades";
 import {
-  evidenceSlugFromHomeState,
+  evidenceSlugForContractor,
   boardShortLabel,
   type EvidenceStateSlug,
 } from "@/lib/states/evidence-copy";
@@ -63,7 +63,7 @@ function isInactiveish(status: string | null | undefined): boolean {
 }
 
 function homeSlug(contractor: ContractorDetail): EvidenceStateSlug {
-  return evidenceSlugFromHomeState(contractor.homeState);
+  return evidenceSlugForContractor(contractor);
 }
 
 /** States with high-confidence entity auto-linking in product today. */
@@ -722,8 +722,10 @@ export function primaryLicense(contractor: ContractorDetail): LicenseDetail | un
 export function officialBoardVerifyUrl(contractor: ContractorDetail): string {
   const slug = homeSlug(contractor);
   const home = (contractor.homeState || "").toUpperCase();
-  // evidenceSlugFromHomeState defaults unknown to fl — never send non-FL profiles to DBPR
-  const treatAsFl = slug === "fl" && (!home || home === "FL");
+  const licenseSource = (contractor.licenses[0]?.sourceSystem || "").toLowerCase();
+  // Unknown home states still default to fl. A real fl_dbpr license stays on DBPR
+  // even when the mailing home state disagrees. Never send a non-FL profile to DBPR.
+  const treatAsFl = slug === "fl" && (licenseSource === "fl_dbpr" || !home || home === "FL");
   if (!treatAsFl && slug === "fl") {
     if (home === "ID") return "https://dopl.idaho.gov/";
     return "https://www.usa.gov/state-consumer";
@@ -761,7 +763,8 @@ export function officialBoardVerifyUrl(contractor: ContractorDetail): string {
 export function officialBoardVerifyLabel(contractor: ContractorDetail): string {
   const slug = homeSlug(contractor);
   const home = (contractor.homeState || "").toUpperCase();
-  const treatAsFl = slug === "fl" && (!home || home === "FL");
+  const licenseSource = (contractor.licenses[0]?.sourceSystem || "").toLowerCase();
+  const treatAsFl = slug === "fl" && (licenseSource === "fl_dbpr" || !home || home === "FL");
   if (!treatAsFl && slug === "fl") {
     if (home === "ID") return "Open official Idaho DOPL";
     return home

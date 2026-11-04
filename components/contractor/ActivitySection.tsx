@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getActivitySignalsAsync } from "@/lib/contractors/activity-signals";
+import { getActivitySignalsAsync, showUnlinkedPermitHistory } from "@/lib/contractors/activity-signals";
+import { getConfirmedDbprPermitEvidence } from "@/lib/contractors/permit-evidence";
 import type { ContractorDetail } from "@/lib/contractors/types";
 
 export async function ActivitySection({
@@ -7,7 +8,16 @@ export async function ActivitySection({
 }: {
   contractor: ContractorDetail;
 }) {
-  const signals = await getActivitySignalsAsync(contractor);
+  const [signals, permits] = await Promise.all([
+    getActivitySignalsAsync(contractor),
+    getConfirmedDbprPermitEvidence(contractor.id),
+  ]);
+  if (!showUnlinkedPermitHistory({
+    activityStatus: signals.status,
+    confirmedPermits: permits.status === "available",
+  }) && signals.status === "unavailable") {
+    return null;
+  }
 
   const qaBadge =
     signals.status === "available"

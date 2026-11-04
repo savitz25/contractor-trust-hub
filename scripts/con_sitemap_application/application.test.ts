@@ -220,9 +220,59 @@ test("generation sitemap application handlers fail closed and preserve immutable
       id uuid PRIMARY KEY,
       contractor_id uuid NOT NULL,
       source_system text NOT NULL,
-      state char(2)
+      external_key text,
+      state char(2),
+      last_verified_at timestamptz
     );
-    GRANT SELECT ON public.contractors, public.licenses TO cth_sitemap_reader;
+    CREATE TABLE public.contractor_enrichment_observations (
+      contractor_id uuid NOT NULL,
+      field text NOT NULL,
+      value text NOT NULL,
+      is_suppressed boolean NOT NULL DEFAULT false,
+      loaded_at timestamptz
+    );
+    CREATE TABLE public.public_contact_observations (
+      attributed_license_id uuid
+    );
+    CREATE TABLE public.permit_attributions (
+      identity_state text,
+      matched_license_id uuid,
+      matched_contractor_id uuid,
+      updated_at timestamptz
+    );
+    CREATE TABLE public.discipline_actions (
+      contractor_id uuid,
+      license_id uuid,
+      source_system text,
+      publication_state text,
+      identity_state text,
+      correction_hold boolean,
+      retraction_hold boolean,
+      updated_at timestamptz
+    );
+    CREATE TABLE public.contractor_osha_license_matches (
+      contractor_id uuid,
+      license_key text,
+      state char(2),
+      match_tier text,
+      updated_at timestamptz
+    );
+    CREATE TABLE public.contractor_profile_enrichment (
+      contractor_id uuid PRIMARY KEY,
+      enriched boolean NOT NULL,
+      signals text[] NOT NULL,
+      content_changed_at timestamptz,
+      slug text NOT NULL,
+      home_state text,
+      is_thin_profile boolean NOT NULL,
+      license_sources text[] NOT NULL DEFAULT ARRAY[]::text[]
+    );
+    GRANT SELECT ON public.contractors, public.licenses,
+      public.contractor_enrichment_observations, public.public_contact_observations,
+      public.permit_attributions, public.discipline_actions,
+      public.contractor_osha_license_matches,
+      public.contractor_profile_enrichment
+      TO cth_sitemap_reader;
   `);
   await admin.query(
     `INSERT INTO public.contractors(id,slug,updated_at,is_thin_profile,home_state) VALUES
@@ -232,9 +282,22 @@ test("generation sitemap application handlers fail closed and preserve immutable
       ('10000000-0000-4000-8000-000000000004','fixture-tx-only','2026-10-23T12:00:00Z',false,'TX')`
   );
   await admin.query(
-    `INSERT INTO public.licenses(id,contractor_id,source_system,state) VALUES
-      ('20000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000002','fl_dbpr','FL'),
-      ('20000000-0000-4000-8000-000000000002','10000000-0000-4000-8000-000000000004','tx_tdlr','TX')`,
+    `INSERT INTO public.licenses(id,contractor_id,source_system,external_key,state,last_verified_at) VALUES
+      ('20000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000002','fl_dbpr','CBC0000001','FL','2026-08-10T00:00:00Z'),
+      ('20000000-0000-4000-8000-000000000002','10000000-0000-4000-8000-000000000004','tx_tdlr','TX0000001','TX','2026-08-10T00:00:00Z')`,
+  );
+  await admin.query(
+    `INSERT INTO public.contractor_enrichment_observations
+       (contractor_id, field, value, is_suppressed, loaded_at)
+     VALUES
+       ('10000000-0000-4000-8000-000000000001','phone','305-555-0100',false,'2026-09-15T00:00:00Z')`,
+  );
+  await admin.query(
+    `INSERT INTO public.contractor_profile_enrichment
+       (contractor_id, enriched, signals, content_changed_at, slug, home_state, is_thin_profile, license_sources)
+     VALUES
+       ('10000000-0000-4000-8000-000000000001', true, ARRAY['business_contact'],
+        '2026-09-15T00:00:00Z', 'fixture-fl-home', 'FL', false, ARRAY[]::text[])`,
   );
 
   await t.test("legacy routes remain the default and the versioned child stays disabled", async () => {
@@ -257,22 +320,28 @@ test("generation sitemap application handlers fail closed and preserve immutable
       { stateSlug: "fl", limit: 100, offset: 0 },
       { query: sqlQuery },
     );
-    assert.deepEqual(rows.map((row) => row.slug), ["fixture-fl-home", "fixture-fl-license"]);
-    assert.equal(rows.find((row) => row.slug === "fixture-fl-home")?.updatedAt, "2026-10-20T12:00:00.000Z");
+    assert.deepEqual(rows.map((row) => row.slug), ["fixture-fl-home"]);
+    assert.equal(rows.find((row) => row.slug === "fixture-fl-home")?.contentChangedAt, "2026-09-15T00:00:00.000Z");
 
     const entries = await buildRealFloridaEntries();
+    const entriesAgain = await buildRealFloridaEntries();
+    assert.deepEqual(entriesAgain, entries);
     const locations = entries.map((entry) => entry.loc);
     assert.ok(locations.includes(`${FIXTURE_HOST}/contractors/fixture-fl-home`));
-    assert.ok(locations.includes(`${FIXTURE_HOST}/contractors/fixture-fl-license`));
+    assert.ok(!locations.includes(`${FIXTURE_HOST}/contractors/fixture-fl-license`));
     assert.ok(!locations.includes(`${FIXTURE_HOST}/contractors/fixture-fl-thin`));
     assert.ok(!locations.includes(`${FIXTURE_HOST}/contractors/fixture-tx-only`));
     assert.ok(!locations.some((loc) => new URL(loc).pathname === "/account"));
     assert.ok(!locations.some((loc) => new URL(loc).pathname === "/compare"));
-    assert.ok(entries.find((entry) => entry.loc.endsWith("/fixture-fl-home"))?.lastmod);
+    assert.equal(entries.find((entry) => entry.loc.endsWith("/fixture-fl-home"))?.lastmod, "2026-09-15T00:00:00.000Z");
 
     const actualXml = renderUrlSetXml(entries);
+    const actualXmlAgain = renderUrlSetXml(entriesAgain);
+    assert.equal(actualXmlAgain, actualXml);
     assertUrlSet(actualXml, entries.length);
-    assert.ok(actualXml.includes("<lastmod>2026-10-20T12:00:00.000Z</lastmod>"));
+    assert.ok(actualXml.includes("<lastmod>2026-09-15T00:00:00.000Z</lastmod>"));
+    assert.equal(actualXml.includes("2026-10-20T12:00:00.000Z"), false);
+    assert.equal(actualXml.includes("2026-08-10T00:00:00.000Z"), false);
     assert.ok(gzipSync(Buffer.from(actualXml)).byteLength > 0);
   });
 
@@ -352,6 +421,13 @@ test("generation sitemap application handlers fail closed and preserve immutable
   await admin.query(
     `INSERT INTO public.contractors(id,slug,updated_at,is_thin_profile,home_state)
      VALUES('10000000-0000-4000-8000-000000000005','fixture-fl-new','2026-10-25T12:00:00Z',false,'FL')`,
+  );
+  await admin.query(
+    `INSERT INTO public.contractor_profile_enrichment
+       (contractor_id, enriched, signals, content_changed_at, slug, home_state, is_thin_profile, license_sources)
+     VALUES
+       ('10000000-0000-4000-8000-000000000005', true, ARRAY['business_contact'],
+        '2026-10-25T12:00:00Z', 'fixture-fl-new', 'FL', false, ARRAY[]::text[])`,
   );
   const entriesB = await buildRealFloridaEntries();
   const splitB = Math.ceil(entriesB.length / 2);
