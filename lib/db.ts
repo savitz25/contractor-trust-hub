@@ -125,25 +125,6 @@ export function isDbQueryTimeout(err: unknown): boolean {
   );
 }
 
-/** Safe code and message for a preview diagnostic. No connection string. */
-export function safeDbErrorDigest(err: unknown): string {
-  const coded = err && typeof err === "object" ? (err as { code?: unknown }).code : undefined;
-  const code = typeof coded === "string" && coded ? coded : "ERR";
-  const message = err instanceof Error ? err.message : String(err);
-  const safe = message
-    .replace(/postgres(?:ql)?:\/\/\S+/gi, "url")
-    .replace(/[^A-Za-z0-9:._ -]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, 100);
-  return `${code}:${safe}`;
-}
-
-export function stampDbError(err: unknown): void {
-  if (!err || typeof err !== "object" || (err as { digest?: unknown }).digest) return;
-  Object.assign(err, { digest: safeDbErrorDigest(err) });
-}
-
 /** Stable product-facing error; technical detail stays in logs. */
 export function dbUserFacingError(err: unknown): string {
   if (isDbConnectTimeout(err) || isDbCapacityError(err)) {

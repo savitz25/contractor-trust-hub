@@ -46,7 +46,7 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 import { displayStatusLabel, formatDateTime, statusLabel } from "@/lib/contractors/format";
 import { getOccupationInfo } from "@/lib/contractors/occupations";
 import { getContractorBySlug } from "@/lib/contractors/queries";
-import { stampDbError, withDbSession } from "@/lib/db";
+import { withDbSession } from "@/lib/db";
 import {
   isSoftProfileLookupError,
   isTransientProfileDbError,
@@ -145,10 +145,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
   try {
     contractor = await getContractorBySlug(slug);
   } catch (e) {
-    if (isTransientProfileDbError(e) || !isSoftProfileLookupError(e)) {
-      stampDbError(e);
-      throw e;
-    }
+    if (isTransientProfileDbError(e) || !isSoftProfileLookupError(e)) throw e;
     return (
       <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <h1 className="text-2xl font-semibold text-[var(--text)]">Unable to load Trust Report</h1>

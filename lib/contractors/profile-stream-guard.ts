@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { stampDbError } from "@/lib/db";
 import { getContractorBySlug } from "@/lib/contractors/queries";
 import {
   isSoftProfileLookupError,
@@ -20,7 +19,6 @@ export async function assertContractorExistsBeforeStreaming(
     contractor = await lookup(slug);
   } catch (error) {
     if (isTransientProfileDbError(error) || !isSoftProfileLookupError(error)) {
-      stampDbError(error);
       throw error;
     }
     // Keep the page's existing soft-failure renderer for other database errors.
