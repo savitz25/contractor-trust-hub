@@ -422,6 +422,13 @@ test("generation sitemap application handlers fail closed and preserve immutable
     `INSERT INTO public.contractors(id,slug,updated_at,is_thin_profile,home_state)
      VALUES('10000000-0000-4000-8000-000000000005','fixture-fl-new','2026-10-25T12:00:00Z',false,'FL')`,
   );
+  await admin.query(
+    `INSERT INTO public.contractor_profile_enrichment
+       (contractor_id, enriched, signals, content_changed_at, slug, home_state, is_thin_profile, license_sources)
+     VALUES
+       ('10000000-0000-4000-8000-000000000005', true, ARRAY['business_contact'],
+        '2026-10-25T12:00:00Z', 'fixture-fl-new', 'FL', false, ARRAY[]::text[])`,
+  );
   const entriesB = await buildRealFloridaEntries();
   const splitB = Math.ceil(entriesB.length / 2);
   const payloadsB = [entriesB.slice(0, splitB), entriesB.slice(splitB)]
