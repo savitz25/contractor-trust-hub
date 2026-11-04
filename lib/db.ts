@@ -31,10 +31,23 @@ const CONNECT_TIMEOUT_MS = 8_000;
 /** Cap runaway Verify/list SQL so one search cannot pin the only pool client. */
 const DEFAULT_STATEMENT_TIMEOUT_MS = 8_000;
 
+/**
+ * pg 8.23 parses sslmode=require as verify-full, then Object.assign replaces
+ * the Pool ssl option. Supabase's chain is self-signed, so that throws
+ * SELF_SIGNED_CERT_IN_CHAIN before any query. Drop the verify-style flag and
+ * keep the explicit rejectUnauthorized: false below. Leave sslmode=disable.
+ */
+function connectionStringForPool(connectionString: string): string {
+  return connectionString
+    .replace(/([?&])sslmode=(?:prefer|require|verify-ca|verify-full|no-verify)(?=&|$)/gi, "$1")
+    .replace(/\?&/g, "?")
+    .replace(/[?&]$/, "");
+}
+
 function getPool(): Pool {
   if (pool) return pool;
-  const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
-  if (!connectionString) {
+  const rawConnectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  if (!rawConnectionString) {
     throw new Error(
       "DATABASE_URL is not set. Add Supabase Session pooler URI (*.pooler.supabase.com:5432) to Vercel Production."
     );
@@ -42,9 +55,9 @@ function getPool(): Pool {
 
   // Guard against placeholder/redacted env (agent sandboxes) so we fail clearly.
   if (
-    connectionString.includes("[SENSITIVE]") ||
-    connectionString.length < 20 ||
-    !connectionString.includes("postgres")
+    rawConnectionString.includes("[SENSITIVE]") ||
+    rawConnectionString.length < 20 ||
+    !rawConnectionString.includes("postgres")
   ) {
     throw new Error(
       "DATABASE_URL is missing or invalid. Use Supabase Session pooler (port 5432), not a placeholder."
@@ -52,11 +65,11 @@ function getPool(): Pool {
   }
 
   const isSupabase =
-    connectionString.includes("supabase") ||
-    connectionString.includes("pooler.supabase");
+    rawConnectionString.includes("supabase") ||
+    rawConnectionString.includes("pooler.supabase");
   const needsSsl =
     isSupabase ||
-    connectionString.includes("sslmode=require") ||
+    /sslmode=(?:prefer|require|verify-ca|verify-full|no-verify)/i.test(rawConnectionString) ||
     process.env.PGSSLMODE === "require" ||
     process.env.VERCEL === "1";
 
@@ -67,7 +80,7 @@ function getPool(): Pool {
   const max = process.env.VERCEL || isBuild || process.env.CI ? 1 : 5;
 
   pool = new Pool({
-    connectionString,
+    connectionString: connectionStringForPool(rawConnectionString),
     max,
     idleTimeoutMillis: isBuild ? 1_000 : 10_000,
     connectionTimeoutMillis: CONNECT_TIMEOUT_MS,
