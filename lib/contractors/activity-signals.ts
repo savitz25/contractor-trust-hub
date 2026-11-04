@@ -130,6 +130,17 @@ export function getActivitySignals(
   };
 }
 
+/**
+ * The "not yet linked" empty state contradicts a page that already shows
+ * confirmed permit records. Hide that copy when those records exist.
+ */
+export function showUnlinkedPermitHistory(input: {
+  activityStatus: "unavailable" | "partial" | "available";
+  confirmedPermits: boolean;
+}): boolean {
+  return input.activityStatus === "unavailable" && !input.confirmedPermits;
+}
+
 /** Async path: try DB rollups first (migration 006), then file extracts. */
 export async function getActivitySignalsAsync(
   contractor: ContractorDetail

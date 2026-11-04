@@ -6,9 +6,9 @@ import {
 } from "@/lib/seo/profile-lookup";
 
 /**
- * Check existence outside the contractor segment's loading.tsx boundary.
- * Once that fallback streams, Next.js can no longer change the response to 404.
- * This module is not a route file, so the layout can keep a single default export.
+ * Check existence before the profile segment renders. The segment does not
+ * ship a loading.tsx fallback, so a lookup timeout stays a 5xx. This module
+ * is not a route file, so the layout can keep a single default export.
  */
 export async function assertContractorExistsBeforeStreaming(
   slug: string,

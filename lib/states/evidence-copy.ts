@@ -4,7 +4,7 @@
  */
 
 import type { EvidenceState } from "./config";
-import { getStateBySlug } from "./config";
+import { EVIDENCE_STATES, getStateBySlug } from "./config";
 
 export type EvidenceStateSlug = "fl" | "tx" | "nj" | "or" | "wa" | "ca" | "az" | "la" | "ms" | "ky" | "wi";
 
@@ -48,6 +48,34 @@ export function evidenceSlugFromHomeState(
   )
     return p;
   return "fl";
+}
+
+const EVIDENCE_SLUGS = new Set<EvidenceStateSlug>([
+  "fl", "tx", "nj", "or", "wa", "ca", "az", "la", "ms", "ky", "wi",
+]);
+
+/** License source_system wins over a mismatched mailing home state. */
+export function evidenceSlugFromLicenseSource(
+  sourceSystem: string | null | undefined,
+): EvidenceStateSlug | null {
+  const src = (sourceSystem || "").trim().toLowerCase();
+  if (!src) return null;
+  for (const state of Object.values(EVIDENCE_STATES)) {
+    const sources = (state.licenseSources?.length ? state.licenseSources : [state.licenseSource])
+      .map((item) => item.toLowerCase());
+    if (!sources.includes(src)) continue;
+    return EVIDENCE_SLUGS.has(state.slug as EvidenceStateSlug) ? (state.slug as EvidenceStateSlug) : null;
+  }
+  return null;
+}
+
+export function evidenceSlugForContractor(contractor: {
+  homeState?: string | null;
+  licenses?: ReadonlyArray<{ sourceSystem?: string | null }>;
+}): EvidenceStateSlug {
+  const fromLicense = evidenceSlugFromLicenseSource(contractor.licenses?.[0]?.sourceSystem);
+  if (fromLicense) return fromLicense;
+  return evidenceSlugFromHomeState(contractor.homeState);
 }
 
 export function credentialNoun(slug: EvidenceStateSlug): string {

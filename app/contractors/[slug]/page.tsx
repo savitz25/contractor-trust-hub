@@ -61,7 +61,7 @@ import {
 import { BreadcrumbJsonLd, JsonLd } from "@/components/seo/JsonLd";
 import { trustReportJsonLd, trustReportMetadata } from "@/lib/seo/trust-report-seo";
 import { getStateBySlug } from "@/lib/states/config";
-import { evidenceSlugFromHomeState } from "@/lib/states/evidence-copy";
+import { evidenceSlugForContractor } from "@/lib/states/evidence-copy";
 import { azClassPlainLabel } from "@/lib/states/az-roc";
 import { caClassPlainLabel } from "@/lib/states/ca-classifications";
 import { njCredentialPlainLabel } from "@/lib/states/nj-credentials";
@@ -80,6 +80,8 @@ import { BusinessSuppliedProfile } from "@/components/contractor/BusinessSupplie
 import { BusinessWebsiteEnrichment } from "@/components/contractor/BusinessWebsiteEnrichment";
 import { loadBusinessWebsiteEnrichment } from "@/lib/contractors/enrichment";
 import { OshaSafetyRecord } from "@/components/contractor/OshaSafetyRecord";
+import { getProfileEnrichment } from "@/lib/contractors/profile-enrichment-load";
+import { profileIndexRobots } from "@/lib/contractors/profile-enrichment";
 import { isOshaDetailEnabled, isOshaProfileEnabled } from "@/lib/osha/flag";
 import { loadPublicOshaSafetyRecord } from "@/lib/osha/load-public-record";
 
@@ -111,7 +113,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       };
     }
 
-    return trustReportMetadata(c);
+    const enrichment = await getProfileEnrichment(c.id);
+    const metadata = trustReportMetadata(c);
+    return { ...metadata, robots: profileIndexRobots(enrichment.enriched) };
   } catch (error) {
     return metadataAfterProfileLookupError(error);
   }
@@ -171,7 +175,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
 
   if (contractor === null) notFound();
 
-  const stateSlug = evidenceSlugFromHomeState(contractor.homeState);
+  const stateSlug = evidenceSlugForContractor(contractor);
   const isTx = stateSlug === "tx";
   const isNj = stateSlug === "nj";
   const isOr = stateSlug === "or";
@@ -627,6 +631,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
           <DisciplineSection
             discipline={contractor.discipline}
             homeState={contractor.homeState}
+            evidenceSlug={stateSlug}
           />
         ) : null}
         {businessReplies?.replies.length ? <BusinessResponses data={businessReplies} /> : null}

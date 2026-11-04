@@ -7,8 +7,8 @@ type Props = {
 };
 
 /**
- * Check existence outside this segment's loading.tsx boundary. Once its
- * fallback streams, Next.js can no longer change the response status to 404.
+ * Check existence before the page renders. This segment has no loading.tsx,
+ * so a data timeout rejects the response instead of streaming a 200 shell.
  */
 export default async function ContractorLayout({ children, params }: Props) {
   const { slug: raw } = await params;

@@ -9,6 +9,7 @@ import { caClassPlainLabel } from "@/lib/states/ca-classifications";
 import {
   boardShortLabel,
   evidenceSlugFromHomeState,
+  evidenceSlugFromLicenseSource,
   sourceExtractLabel,
   type EvidenceStateSlug,
 } from "@/lib/states/evidence-copy";
@@ -87,8 +88,20 @@ function resolveShareBoard(contractor: ContractorDetail): {
   isNj: boolean;
 } {
   const home = (contractor.homeState || "").toUpperCase();
-  const raw = evidenceSlugFromHomeState(contractor.homeState);
   const src = (contractor.licenses[0]?.sourceSystem || "").toLowerCase();
+  const fromLicense = evidenceSlugFromLicenseSource(src);
+  if (fromLicense) {
+    return {
+      slug: fromLicense,
+      home: home || fromLicense.toUpperCase(),
+      boardSource: boardShortLabel(fromLicense),
+      extractLabel: sourceExtractLabel(fromLicense),
+      stateContextLine: stateContextLine(fromLicense),
+      isFl: fromLicense === "fl",
+      isNj: fromLicense === "nj",
+    };
+  }
+  const raw = evidenceSlugFromHomeState(contractor.homeState);
 
   // Known product states only when home matches (or empty home with FL sources)
   let slug: EvidenceStateSlug | null = KNOWN.includes(raw) ? raw : null;

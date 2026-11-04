@@ -537,8 +537,11 @@ test("existence probe reads Florida first and calls the license arm only on a mi
   );
   assert.deepEqual(page, []);
   assert.equal(calls.length, 1);
-  assert.match(calls[0].sql, /ORDER BY c\.slug, c\.id/);
-  assert.match(calls[0].sql, /c\.slug, c\.updated_at/);
+  assert.match(calls[0].sql, /ORDER BY c\.slug, c\.contractor_id/);
+  assert.match(calls[0].sql, /content_changed_at/);
+  assert.match(calls[0].sql, /contractor_profile_enrichment/);
+  assert.doesNotMatch(calls[0].sql, /c\.updated_at/);
+  assert.doesNotMatch(calls[0].sql, /contractor_enrichment_observations/);
 });
 
 test("sitemap index is the published child list and does not probe contractors", async () => {

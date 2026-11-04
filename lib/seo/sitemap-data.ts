@@ -17,7 +17,8 @@ export const SITEMAP_MAX_URLS_PER_CHILD = 50_000;
 
 /**
  * Product routes that set noIndex. They must not appear in the sitemap.
- * Profile pages are a separate decision and are unchanged here.
+ * Thin license-only profiles are excluded by the enriched-profile predicate
+ * before a URL is built. They stay on the site with noindex, follow.
  */
 const SITEMAP_NOINDEX_PATHS = new Set(["/account", "/watch", "/compare"]);
 
@@ -25,12 +26,15 @@ const SITEMAP_NOINDEX_PATHS = new Set(["/account", "/watch", "/compare"]);
  * Published /sitemap.xml children. The index reads this list and does not
  * probe `contractors` with `SELECT 1 ... LIMIT 1 OFFSET 40000`.
  *
- * Shard 0 is static pages, discovery, and the first profile page. Shards
- * 1–3 are the following 40,000-URL pages. A healthy index lists
- * /sitemap/0.xml through /sitemap/3.xml. Change this list when the eligible
- * population crosses another page boundary. Do not rediscover it on request.
+ * Shard 0 is static pages, discovery, and the enriched profile page.
+ * A read-only count on 2026-11-04 found 25,308 sitemap-eligible enriched
+ * profiles with the OSHA profile flag on, and 19,482 with it off. Either
+ * count fits this one 40,000-profile page and stays under the 50,000 URL
+ * cap together with the static and discovery URLs. Shards 1–3 would be
+ * empty, so they are not published. Change this list when the refreshed
+ * cache crosses another page boundary. Do not rediscover it on request.
  */
-export const PUBLISHED_SITEMAP_CHILD_IDS: readonly number[] = [0, 1, 2, 3];
+export const PUBLISHED_SITEMAP_CHILD_IDS: readonly number[] = [0];
 
 /**
  * Pool, connect, and statement timeouts are the known transient probe failures.
@@ -232,7 +236,7 @@ export async function getSitemapShardPlan(
       if (!slug || /[/?#\\]/.test(slug)) return [];
       return [{
         loc: absoluteUrl(`/contractors/${encodeURIComponent(slug)}`),
-        lastmod: validLastmod(row.updatedAt),
+        lastmod: validLastmod(row.contentChangedAt),
         changefreq: "weekly" as const,
         priority: 0.55,
         stableId: row.id,
