@@ -1,3 +1,4 @@
+import { safeDbErrorDigest } from "@/lib/db";
 import {
   renderSitemapIndexXml,
   renderUrlSetXml,
@@ -95,7 +96,9 @@ export function createSitemapRouteHandlers(loadPlan: () => Promise<SitemapShardP
         });
       } catch (error) {
         console.error("[sitemap shard]", id, error);
-        return unavailableSitemap();
+        const response = unavailableSitemap();
+        response.headers.set("x-query-error", safeDbErrorDigest(error));
+        return response;
       }
     },
   };

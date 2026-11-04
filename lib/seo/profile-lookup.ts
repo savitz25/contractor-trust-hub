@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { isDbCapacityError, isDbConnectTimeout, isDbQueryTimeout } from "@/lib/db";
+import { isDbCapacityError, isDbConnectTimeout, isDbQueryTimeout, stampDbError } from "@/lib/db";
 
 /** Timeouts and pool-capacity failures are transient. A missing row is not an error. */
 export function isTransientProfileDbError(err: unknown): boolean {
@@ -35,7 +35,10 @@ export function isSoftProfileLookupError(err: unknown): boolean {
  * never presented as missing or as an ordinary noindex report.
  */
 export function metadataAfterProfileLookupError(err: unknown): Metadata {
-  if (!isSoftProfileLookupError(err)) throw err;
+  if (!isSoftProfileLookupError(err)) {
+    stampDbError(err);
+    throw err;
+  }
   return {
     title: "Contractor Trust Report",
     description:
