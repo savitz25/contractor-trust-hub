@@ -5,7 +5,9 @@ import { showUnlinkedPermitHistory } from "../lib/contractors/activity-signals";
 import {
   businessManagedSignal,
   contentChangedAtSql,
+  disciplineRowEnriches,
   disciplineRowIsPublic,
+  renderedDisciplineSql,
   ENRICHED_PROFILE_SQL,
   enrichedProfileSql,
   enrichedSitemapPageSql,
@@ -119,14 +121,18 @@ test("suppressed, placeholder, withheld, and unrendered OSHA stay thin", () => {
     linkedToContractor: true,
     correctionHold: true,
   }, true), false);
-  assert.equal(disciplineRowIsPublic({
+  const internalDbpr = {
     sourceSystem: "fl_dbpr",
     publicationState: "INTERNAL",
     identityState: "EXACT",
     contractorId: null,
     licenseId: "l",
     linkedToContractor: true,
-  }, false), true);
+  };
+  assert.equal(disciplineRowEnriches(internalDbpr), true);
+  assert.equal(disciplineRowEnriches({ ...internalDbpr, identityState: "REVIEW_REQUIRED" }), false);
+  assert.equal(disciplineRowIsPublic(internalDbpr, false), false);
+  assert.equal(disciplineRowIsPublic({ ...internalDbpr, publicationState: "PUBLIC_ELIGIBLE", contractorId: "c" }, true), true);
   assert.equal(disciplineRowIsPublic({
     sourceSystem: "fl_dbpr",
     publicationState: "INTERNAL",
@@ -161,6 +167,10 @@ test("the sitemap predicate matches the rendered signals and ignores contractor 
   assert.match(sql, /identity_state IN \('EXACT', 'DETERMINISTIC'\)/);
   assert.match(sql, /license_id IS NOT NULL/);
   assert.doesNotMatch(sql, /PUBLIC_ELIGIBLE/);
+  assert.doesNotMatch(sql, /NOT IN \('fl_dbpr', 'fl_dfs'\)/);
+  const display = renderedDisciplineSql("c.id");
+  assert.match(display, /NOT IN \('fl_dbpr', 'fl_dfs'\)/);
+  assert.doesNotMatch(display, /identity_state IN \('EXACT', 'DETERMINISTIC'\)/);
   assert.doesNotMatch(sql, /contractor_osha_license_matches/);
   assert.doesNotMatch(sql, /c\.updated_at/);
   assert.match(enrichedProfileSql({ oshaEnabled: true, oshaStates: ["FL", "NJ"] }), /contractor_osha_license_matches/);
@@ -169,6 +179,8 @@ test("the sitemap predicate matches the rendered signals and ignores contractor 
   assert.match(changed, /a\.updated_at/);
   assert.match(changed, /d\.updated_at/);
   assert.match(changed, /last_verified_at/);
+  assert.match(changed, /identity_state IN \('EXACT', 'DETERMINISTIC'\)/);
+  assert.doesNotMatch(changed, /NOT IN \('fl_dbpr', 'fl_dfs'\)/);
   assert.doesNotMatch(changed, /c\.updated_at/);
   assert.doesNotMatch(changed, /contractor_osha_license_matches/);
   assert.match(ENRICHED_PROFILE_SQL, /EXISTS/);
@@ -177,6 +189,8 @@ test("the sitemap predicate matches the rendered signals and ignores contractor 
   assert.match(refresh, /public_contact_observations/);
   assert.match(refresh, /permit_attributions/);
   assert.match(refresh, /discipline_actions/);
+  assert.match(refresh, /identity_state IN \('EXACT', 'DETERMINISTIC'\)/);
+  assert.doesNotMatch(refresh, /NOT IN \('fl_dbpr', 'fl_dfs'\)/);
   assert.match(refresh, /last_verified_at/);
   assert.doesNotMatch(refresh, /contractor_osha_license_matches/);
   assert.doesNotMatch(refresh, /c\.updated_at/);

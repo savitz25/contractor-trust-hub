@@ -17,6 +17,7 @@
  */
 import { shapeEnrichment, type EnrichmentRow } from "./enrichment-shape";
 import { isOshaProfileEnabled, oshaPublishedStates } from "@/lib/osha/flag";
+import { PUBLIC_REGULATORY_SQL } from "@/lib/regulatory/publication";
 
 export const PROFILE_ENRICHMENT_SIGNALS = [
   "business_contact",
@@ -100,13 +101,12 @@ export function confirmedPermitExistsSql(): string {
 }
 
 /**
- * Discipline the profile renders. Alias `d`.
+ * Discipline that counts as enrichment. Alias `d`.
  * A license-linked Florida DBPR row counts when its identity is EXACT or
- * DETERMINISTIC, even if `contractor_id` is null and `publication_state` is
- * still INTERNAL. Held, withheld, and DFS rows do not. Search keeps using
- * `PUBLIC_REGULATORY_SQL`; this predicate does not.
+ * DETERMINISTIC, including INTERNAL rows whose `contractor_id` is null.
+ * Held, withheld, and DFS rows do not. Profile display does not use this.
  */
-export const RENDERED_DISCIPLINE_PREDICATE_SQL = `
+export const ENRICHMENT_DISCIPLINE_PREDICATE_SQL = `
 COALESCE(d.correction_hold, FALSE) = FALSE
 AND COALESCE(d.retraction_hold, FALSE) = FALSE
 AND d.publication_state IS DISTINCT FROM 'WITHHELD'
@@ -120,8 +120,20 @@ AND (
 )
 `.trim();
 
-/** Public discipline the profile renders. Alias `d`. `contractorIdExpr` is `c.id` or `$1`. */
-export function renderedDisciplineSql(contractorIdExpr: string): string {
+/**
+ * Discipline the public profile renders. Alias `d`.
+ * Florida DBPR and DFS stay on `PUBLIC_REGULATORY_SQL`, which is
+ * `PUBLIC_ELIGIBLE` only while `REGULATORY_PUBLICATION_GATE_V1` is on.
+ * While the gate is off, INTERNAL DBPR rows are not published.
+ */
+export const RENDERED_DISCIPLINE_PREDICATE_SQL = `
+COALESCE(d.correction_hold, FALSE) = FALSE
+AND COALESCE(d.retraction_hold, FALSE) = FALSE
+AND d.publication_state IS DISTINCT FROM 'WITHHELD'
+AND ${PUBLIC_REGULATORY_SQL}
+`.trim();
+
+function disciplineMatchSql(contractorIdExpr: string, predicateSql: string): string {
   return `(
     (
       d.contractor_id = ${contractorIdExpr}
@@ -131,14 +143,24 @@ export function renderedDisciplineSql(contractorIdExpr: string): string {
           AND l_disc.contractor_id = ${contractorIdExpr}
       )
     )
-    AND ${RENDERED_DISCIPLINE_PREDICATE_SQL}
+    AND ${predicateSql}
   )`;
+}
+
+/** Public discipline the profile renders. `contractorIdExpr` is `c.id` or `$1`. */
+export function renderedDisciplineSql(contractorIdExpr: string): string {
+  return disciplineMatchSql(contractorIdExpr, RENDERED_DISCIPLINE_PREDICATE_SQL);
+}
+
+/** Discipline that makes a profile enriched. `contractorIdExpr` is `c.id`. */
+export function enrichmentDisciplineSql(contractorIdExpr: string): string {
+  return disciplineMatchSql(contractorIdExpr, ENRICHMENT_DISCIPLINE_PREDICATE_SQL);
 }
 
 export function disciplineExistsSql(): string {
   return `EXISTS (
     SELECT 1 FROM discipline_actions d
-    WHERE ${renderedDisciplineSql("c.id")}
+    WHERE ${enrichmentDisciplineSql("c.id")}
   )`;
 }
 
@@ -200,7 +222,7 @@ function contentTimestampBranches(options: EnrichmentSqlOptions = {}): string[] 
        )`,
     `SELECT d.updated_at
      FROM discipline_actions d
-     WHERE ${renderedDisciplineSql("c.id")}`,
+     WHERE ${enrichmentDisciplineSql("c.id")}`,
     `SELECT l_license_ts.last_verified_at
      FROM licenses l_license_ts
      WHERE l_license_ts.contractor_id = c.id`,
@@ -329,11 +351,11 @@ function enrichmentSignalRowsSql(options: EnrichmentSqlOptions = {}): string {
     `SELECT d.contractor_id, 'discipline', d.updated_at
      FROM discipline_actions d
      WHERE d.contractor_id IS NOT NULL
-       AND ${RENDERED_DISCIPLINE_PREDICATE_SQL}`,
+       AND ${ENRICHMENT_DISCIPLINE_PREDICATE_SQL}`,
     `SELECT l.contractor_id, 'discipline', d.updated_at
      FROM discipline_actions d
      JOIN licenses l ON l.id = d.license_id
-     WHERE ${RENDERED_DISCIPLINE_PREDICATE_SQL}`,
+     WHERE ${ENRICHMENT_DISCIPLINE_PREDICATE_SQL}`,
   ];
   if (oshaEnabled) {
     rows.push(
@@ -466,7 +488,7 @@ export function resolveProfileEnrichment(fixture: ProfileEnrichmentFixture): Pro
   return { ...flags, contentChangedAt: null };
 }
 
-export function disciplineRowIsPublic(row: {
+type DisciplinePredicateRow = {
   sourceSystem: string;
   publicationState?: string | null;
   identityState?: string | null;
@@ -475,17 +497,40 @@ export function disciplineRowIsPublic(row: {
   linkedToContractor: boolean;
   correctionHold?: boolean;
   retractionHold?: boolean;
-}, gateActive: boolean): boolean {
-  if (!row.linkedToContractor || row.correctionHold || row.retractionHold) return false;
-  if (row.publicationState === "WITHHELD") return false;
-  if (row.sourceSystem === "fl_dfs") return false;
+};
+
+function disciplineRowPassesCommonGates(row: DisciplinePredicateRow): boolean {
+  return Boolean(row.linkedToContractor)
+    && !row.correctionHold
+    && !row.retractionHold
+    && row.publicationState !== "WITHHELD"
+    && row.sourceSystem !== "fl_dfs";
+}
+
+/** Twin of `ENRICHMENT_DISCIPLINE_PREDICATE_SQL`. The publication gate is not applied. */
+export function disciplineRowEnriches(row: DisciplinePredicateRow): boolean {
+  if (!disciplineRowPassesCommonGates(row)) return false;
   if (row.sourceSystem === "fl_dbpr") {
     return (
       (row.identityState === "EXACT" || row.identityState === "DETERMINISTIC")
       && Boolean(row.licenseId)
     );
   }
-  void gateActive;
+  return true;
+}
+
+/** Twin of `RENDERED_DISCIPLINE_PREDICATE_SQL`. INTERNAL DBPR stays hidden while the gate is off. */
+export function disciplineRowIsPublic(row: DisciplinePredicateRow, gateActive: boolean): boolean {
+  if (!disciplineRowPassesCommonGates(row)) return false;
+  if (row.sourceSystem === "fl_dbpr") {
+    if (!gateActive) return false;
+    return (
+      row.publicationState === "PUBLIC_ELIGIBLE"
+      && (row.identityState === "EXACT" || row.identityState === "DETERMINISTIC")
+      && Boolean(row.contractorId)
+      && Boolean(row.licenseId)
+    );
+  }
   return true;
 }
 
