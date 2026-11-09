@@ -4,9 +4,9 @@ import { Pool, type PoolClient, type QueryResultRow } from "pg";
 /**
  * Server-only Postgres pool.
  *
- * Production (Vercel): use Supabase **Session pooler** URI:
+ * Production (Vercel): use Supabase **Transaction pooler** URI:
  *   host:  *.pooler.supabase.com
- *   port:  5432  (Session — not Transaction :6543)
+ *   port:  6543  (Transaction; session :5432 remains supported during migration)
  *   user:  postgres.<project-ref>
  * Do not use the direct db.*.supabase.co host if the runtime lacks IPv6.
  *
@@ -31,6 +31,16 @@ const CONNECT_TIMEOUT_MS = 8_000;
 /** Cap runaway Verify/list SQL so one search cannot pin the only pool client. */
 const DEFAULT_STATEMENT_TIMEOUT_MS = 8_000;
 
+/** Keep session-mode connection use flat; transaction mode can multiplex SSR reads. */
+export function poolMaxForRuntime(
+  connectionString: string,
+  flags: { vercel: boolean; build: boolean; ci: boolean },
+): number {
+  if (flags.build || flags.ci) return 1;
+  if (!flags.vercel) return 5;
+  return /\.pooler\.supabase\.com:6543(?:\/|\?|$)/i.test(connectionString) ? 2 : 1;
+}
+
 /**
  * pg 8.23 parses sslmode=require as verify-full, then Object.assign replaces
  * the Pool ssl option. Supabase's chain is self-signed, so that throws
@@ -49,7 +59,7 @@ function getPool(): Pool {
   const rawConnectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
   if (!rawConnectionString) {
     throw new Error(
-      "DATABASE_URL is not set. Add Supabase Session pooler URI (*.pooler.supabase.com:5432) to Vercel Production."
+      "DATABASE_URL is not set. Add Supabase Transaction pooler URI (*.pooler.supabase.com:6543) to Vercel Production."
     );
   }
 
@@ -60,7 +70,7 @@ function getPool(): Pool {
     !rawConnectionString.includes("postgres")
   ) {
     throw new Error(
-      "DATABASE_URL is missing or invalid. Use Supabase Session pooler (port 5432), not a placeholder."
+      "DATABASE_URL is missing or invalid. Use Supabase pooler (transaction port 6543 preferred), not a placeholder."
     );
   }
 
@@ -73,11 +83,18 @@ function getPool(): Pool {
     process.env.PGSSLMODE === "require" ||
     process.env.VERCEL === "1";
 
-  // Session pooler caps clients per mode. Serverless: one client per isolate.
+  // Fluid Compute can run concurrent requests in one isolate. A single client
+  // makes unrelated profile reads queue until the 8s checkout timeout. Only
+  // transaction pooling can safely multiplex a second Vercel client; retain
+  // the old one-client limit for session pooling and builds.
   const isBuild =
     process.env.NEXT_PHASE === "phase-production-build" ||
     process.env.npm_lifecycle_event === "build";
-  const max = process.env.VERCEL || isBuild || process.env.CI ? 1 : 5;
+  const max = poolMaxForRuntime(rawConnectionString, {
+    vercel: Boolean(process.env.VERCEL),
+    build: isBuild,
+    ci: Boolean(process.env.CI),
+  });
 
   pool = new Pool({
     connectionString: connectionStringForPool(rawConnectionString),
@@ -187,7 +204,7 @@ async function runOnClient<T extends QueryResultRow>(
 ): Promise<T[]> {
   try {
     await client.query("BEGIN");
-    // LOCAL so it resets on COMMIT/ROLLBACK — safe on Session pooler.
+    // LOCAL resets on COMMIT/ROLLBACK, including in transaction-pooler mode.
     await client.query(`SET LOCAL statement_timeout = ${Math.max(1000, statementTimeoutMs)}`);
     const res = await client.query<T>(text, params);
     await client.query("COMMIT");
