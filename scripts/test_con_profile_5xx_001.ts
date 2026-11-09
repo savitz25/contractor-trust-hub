@@ -35,6 +35,7 @@ test("session, direct, unknown, and malformed endpoints fail closed", () => {
   const flags = { vercel: true, build: false, ci: false };
   assert.equal(poolMaxForRuntime(session, flags), 1);
   assert.equal(poolMaxForRuntime(direct, flags), 1);
+  assert.equal(poolMaxForRuntime("postgresql://postgres.ref:secret@aws-0-ca-central-1.pooler.supabase.com/postgres", flags), 1);
   assert.equal(poolMaxForRuntime("postgresql://postgres.ref:secret@foo.pooler.supabase.com:6543/postgres", flags), 1);
   assert.equal(poolMaxForRuntime("not a postgres URL", flags), 1);
   assert.equal(poolMaxForRuntime("https://aws-0-ca-central-1.pooler.supabase.com:6543/postgres", flags), 1);
