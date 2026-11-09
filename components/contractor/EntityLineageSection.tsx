@@ -212,7 +212,11 @@ export function EntityLineageSection({ lineage }: { lineage: EntityLineage }) {
             <p className="mt-1">{lineage.evidenceNote}</p>
             <ul className="mt-2 list-inside list-disc space-y-1">
               <li>Not a fraud score, risk rating, or advice to hire or avoid anyone</li>
-              <li>We do not invent relationships — only exact principal names already in extracts</li>
+              <li>
+                {hasCrossEntityMatches
+                  ? "We do not invent relationships — cross-entity associations shown use exact normalized officer/principal names from the retained extract, not proof of shared ownership or misconduct."
+                  : "We do not invent relationships — additional entities shown are already high-confidence linked to this same contractor. Cross-entity officer-name expansion is not included in this Trust Report."}
+              </li>
               <li>Always confirm entity status and officers on official Florida Sunbiz</li>
             </ul>
           </div>

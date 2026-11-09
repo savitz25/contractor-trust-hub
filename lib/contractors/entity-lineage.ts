@@ -180,7 +180,7 @@ export async function loadFloridaEntityLineage(
         sunbizSearchHref: sunbizDocumentSearchHref(e.externalKey),
       })),
       evidenceNote:
-        "Officers shown as published on the high-confidence Sunbiz link for this contractor. No additional entities shared those principal names in our extract under exact-name association.",
+        "Any published officer information shown comes from the high-confidence Sunbiz link for this contractor. Additional entities shown are already high-confidence linked to this same contractor. Cross-entity officer-name expansion is not included in this Trust Report.",
     };
   }
 
