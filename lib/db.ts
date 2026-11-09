@@ -38,7 +38,19 @@ export function poolMaxForRuntime(
 ): number {
   if (flags.build || flags.ci) return 1;
   if (!flags.vercel) return 5;
-  return /\.pooler\.supabase\.com:6543(?:\/|\?|$)/i.test(connectionString) ? 2 : 1;
+  try {
+    const url = new URL(connectionString);
+    if (
+      (url.protocol === "postgres:" || url.protocol === "postgresql:") &&
+      /^aws-\d+-[a-z0-9-]+\.pooler\.supabase\.com$/i.test(url.hostname) &&
+      url.port === "6543"
+    ) {
+      return 2;
+    }
+  } catch {
+    // Malformed and unknown connection strings retain the one-client limit.
+  }
+  return 1;
 }
 
 /**
