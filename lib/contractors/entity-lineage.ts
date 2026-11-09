@@ -140,7 +140,8 @@ type RelatedRow = {
  * Returns null when there is nothing reliable to show.
  */
 export async function loadFloridaEntityLineage(
-  entities: EntityDetail[]
+  entities: EntityDetail[],
+  { includeGlobalRelated = false }: { includeGlobalRelated?: boolean } = {}
 ): Promise<EntityLineage | null> {
   if (!entities.length) return null;
 
@@ -188,49 +189,51 @@ export async function loadFloridaEntityLineage(
   const keyToName = new Map(principals.map((p) => [p.key, p.name]));
 
   let rows: RelatedRow[] = [];
-  try {
-    // Exact officer name key match on fl_sunbiz entities that already have a
-    // high-confidence contractor link (indexed via contractor_entities).
-    // Avoids full-table JSONB scan of all Sunbiz rows on Trust Report SSR.
-    // Normalization mirrors normalizeOfficerKey (upper, strip punct, collapse space).
-    rows = await query<RelatedRow>(
-      `
-      SELECT DISTINCT ON (e.id, matched_key)
-        e.id,
-        e.external_key,
-        e.legal_name,
-        e.status,
-        e.entity_type,
-        e.formation_date,
-        e.officers,
-        e.last_verified_at,
-        matched_key
-      FROM contractor_entities ce
-      JOIN entities e ON e.id = ce.entity_id
-      CROSS JOIN LATERAL (
-        SELECT upper(trim(regexp_replace(
-          regexp_replace(COALESCE(o->>'name', ''), '[.,''"/\\\\-]+', ' ', 'g'),
-          '\\s+', ' ', 'g'
-        ))) AS matched_key
-        FROM jsonb_array_elements(COALESCE(e.officers, '[]'::jsonb)) AS o
-      ) keys
-      WHERE e.source_system = 'fl_sunbiz'
-        AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
-        AND ce.confidence IS NOT NULL
-        AND ce.confidence >= 0.90
-        AND NOT (e.id = ANY($1::uuid[]))
-        AND keys.matched_key = ANY($2::text[])
-      ORDER BY e.id, matched_key
-      LIMIT 40
-      `,
-      [excludeIds, keys]
-    );
-  } catch (err) {
-    console.error(
-      "[entity-lineage] related query failed:",
-      err instanceof Error ? err.message : err
-    );
-    rows = [];
+  if (includeGlobalRelated) {
+    try {
+      // Exact officer name key match on fl_sunbiz entities that already have a
+      // high-confidence contractor link (indexed via contractor_entities).
+      // Avoids full-table JSONB scan of all Sunbiz rows on Trust Report SSR.
+      // Normalization mirrors normalizeOfficerKey (upper, strip punct, collapse space).
+      rows = await query<RelatedRow>(
+        `
+        SELECT DISTINCT ON (e.id, matched_key)
+          e.id,
+          e.external_key,
+          e.legal_name,
+          e.status,
+          e.entity_type,
+          e.formation_date,
+          e.officers,
+          e.last_verified_at,
+          matched_key
+        FROM contractor_entities ce
+        JOIN entities e ON e.id = ce.entity_id
+        CROSS JOIN LATERAL (
+          SELECT upper(trim(regexp_replace(
+            regexp_replace(COALESCE(o->>'name', ''), '[.,''"/\\\\-]+', ' ', 'g'),
+            '\\s+', ' ', 'g'
+          ))) AS matched_key
+          FROM jsonb_array_elements(COALESCE(e.officers, '[]'::jsonb)) AS o
+        ) keys
+        WHERE e.source_system = 'fl_sunbiz'
+          AND ce.role IN ('sunbiz_entity', 'linked', 'entity')
+          AND ce.confidence IS NOT NULL
+          AND ce.confidence >= 0.90
+          AND NOT (e.id = ANY($1::uuid[]))
+          AND keys.matched_key = ANY($2::text[])
+        ORDER BY e.id, matched_key
+        LIMIT 40
+        `,
+        [excludeIds, keys]
+      );
+    } catch (err) {
+      console.error(
+        "[entity-lineage] related query failed:",
+        err instanceof Error ? err.message : err
+      );
+      rows = [];
+    }
   }
 
   // Group by entity; collect matched officer keys
@@ -315,7 +318,11 @@ export async function loadFloridaEntityLineage(
     related: relatedCapped,
     evidenceNote:
       relatedCapped.length > 0
-        ? "Related entities appear because they publish the same officer/principal name(s) in our Florida Sunbiz extract (exact name key after normalization) and are already high-confidence linked to a contractor profile in our product. This is not an accusation of misconduct, and it is not a complete officer graph of every Sunbiz filing."
-        : "Principals shown as published on the high-confidence Sunbiz link. No other high-confidence-linked entities in our product shared those exact principal names under our association rules.",
+        ? includeGlobalRelated
+          ? "Related entities appear because they publish the same officer/principal name(s) in our Florida Sunbiz extract (exact name key after normalization) and are already high-confidence linked to a contractor profile in our product. This is not an accusation of misconduct, and it is not a complete officer graph of every Sunbiz filing."
+          : "Other entities shown are already high-confidence linked to this same contractor. Cross-entity officer-name expansion is not included in this Trust Report."
+        : includeGlobalRelated
+          ? "Principals shown as published on the high-confidence Sunbiz link. No other high-confidence-linked entities in our product shared those exact principal names under our association rules."
+          : "Principals shown as published on the high-confidence Sunbiz link. Cross-entity officer-name expansion is not included in this Trust Report.",
   };
 }

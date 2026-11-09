@@ -12,6 +12,7 @@ import { StatusBadge } from "@/components/ui/StatusBadge";
 export function EntityLineageSection({ lineage }: { lineage: EntityLineage }) {
   const dense = lineage.related.length > 2 || lineage.primary.officers.length > 4;
   const relatedCount = lineage.related.length;
+  const hasCrossEntityMatches = lineage.related.some((rel) => rel.matchedOfficerNames.length > 0);
 
   return (
     <section
@@ -144,11 +145,15 @@ export function EntityLineageSection({ lineage }: { lineage: EntityLineage }) {
           {lineage.related.length > 0 ? (
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-                Other entities sharing principal names in our extract
+                {hasCrossEntityMatches
+                  ? "Other entities sharing principal names in our extract"
+                  : "Other entities linked to this contractor"}
               </h3>
               <p className="mt-1 text-xs leading-relaxed text-[var(--muted)]">
-                Associated by <strong className="font-medium text-[var(--text)]">exact</strong>{" "}
-                officer/principal name key after normalization. Inactive or dissolved status is
+                {hasCrossEntityMatches
+                  ? "Associated by exact officer/principal name key after normalization. "
+                  : "Already high-confidence linked to this contractor. "}
+                Inactive or dissolved status is
                 shown when published — absence of a related entity here is not a clean history.
               </p>
               <ul className="mt-3 space-y-2.5">

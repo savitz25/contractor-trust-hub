@@ -245,10 +245,10 @@ export default async function ContractorPage({ params, searchParams }: Props) {
             licenseKeys: contractor.licenses.map((license) => license.externalKey),
           })
         : null;
-    // FL only: officer-name lineage from stored Sunbiz officers (no invented links)
+    // FL only: retain linked Sunbiz entities/officers without the optional global officer scan on SSR.
     const entityLineage =
       isFlFull && contractor.entities.length > 0
-        ? await loadFloridaEntityLineage(contractor.entities)
+        ? await loadFloridaEntityLineage(contractor.entities, { includeGlobalRelated: false })
         : null;
     return { websiteEnrichment, oshaRecords, entityLineage };
   });
