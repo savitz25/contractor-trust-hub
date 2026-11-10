@@ -34,7 +34,7 @@ export function GeographyNotice({
           ? "Confirm the county"
           : "Your requested place"}
       </h2>
-      <p className="mt-2">
+      <p className="mt-2" data-ph-mask>
         <strong>You asked for:</strong> {r.normalizedPlace}
       </p>
       <p className="mt-2">

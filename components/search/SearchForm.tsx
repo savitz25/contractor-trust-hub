@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useId, useState, useTransition } from "react";
+import { captureSearchSubmitted } from "@/lib/analytics/trusthub";
 import { getLiveStates } from "@/lib/states/config";
 
 type SearchFormProps = {
@@ -145,6 +146,7 @@ export function SearchForm({
         const q = String(fd.get("q") || "").trim();
         const work = String(fd.get("work") || workIntent || "").trim();
         if (q.length < 2 && !work) return;
+        captureSearchSubmitted("verify", activeState);
         const params = new URLSearchParams();
         if (q) params.set("q", q);
         if (intent) params.set("intent", intent);

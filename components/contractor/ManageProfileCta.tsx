@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { captureClaimStarted } from "@/lib/analytics/trusthub";
 
 type Props = { profileId: string; managed?: boolean; state?: string; sourceSystem?: string };
 
@@ -51,6 +52,7 @@ export function ManageProfileCta({ profileId, managed = false, state = "FL", sou
             form.dataset.submitted = "1";
             setPending(true);
             track("claim_cta_activated", state, sourceSystem);
+            captureClaimStarted(state);
           }}
         >
           {/* ATH-CLAIM-V2-001R2 (Q2): no source field. The server never reads a browser-supplied source; every

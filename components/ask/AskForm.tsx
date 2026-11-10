@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { captureSearchSubmitted } from "@/lib/analytics/trusthub";
 import { ASK_CHIPS, ASK_EXAMPLES } from "@/lib/ask/interpret";
 import { askHref, type AskUrlOverrides } from "@/lib/ask/url";
 import { suggestAskCompletions } from "@/lib/ask/suggest";
@@ -48,6 +49,7 @@ export function AskForm({
     if (!query) return;
     saveRecent(query);
     setRecent(loadRecent());
+    captureSearchSubmitted("ask");
     window.dispatchEvent(new CustomEvent("specialist-search", { detail: { event: "specialist_search_submit", hub: "contractor", hasIdentifier: /[A-Z]{2,4}\d{5,10}/i.test(query) } }));
     router.push(askHref(query, Object.fromEntries(Object.entries(overrides).filter(([key])=>key!=="page"&&(query===initialQuery||!["geoAction","geoChoice","geoCorrection","geo"].includes(key))))));
   }
@@ -62,6 +64,7 @@ export function AskForm({
         const query = q.trim();
         if (!query) { e.preventDefault(); return; }
         saveRecent(query);
+        captureSearchSubmitted("ask");
         window.dispatchEvent(new CustomEvent("specialist-search", { detail: { event: "specialist_search_submit", hub: "contractor", hasIdentifier: /[A-Z]{2,4}\d{5,10}/i.test(query) } }));
       }}
     >

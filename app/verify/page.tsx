@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { credentialsPublished } from "@/lib/credentials/certified";
+import { SearchResultsReturned } from "@/components/analytics/search-results-returned";
 import { EmptyResults } from "@/components/search/EmptyResults";
 import { NjCoverageBanner } from "@/components/search/NjCoverageBanner";
 import { ResultCard } from "@/components/search/ResultCard";
@@ -541,6 +542,17 @@ export default async function VerifyPage({ searchParams }: Props) {
         <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950 sm:mt-8">
           Enter at least 2 characters to search.
         </div>
+      ) : null}
+
+      {(q.length >= 2 || work) && !discoveryHandoff ? (
+        <SearchResultsReturned
+          occurrence={crypto.randomUUID()}
+          surface="verify"
+          resultCount={results.length}
+          success={!error}
+          state={state.code}
+          capabilityState={error ? "unavailable" : mode}
+        />
       ) : null}
 
       {(q.length >= 2 || work) && !error && !discoveryHandoff ? (

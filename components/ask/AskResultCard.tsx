@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { TrackedProfileLink } from "@/components/analytics/tracked-profile-link";
 import type { AskEntityCard } from "@/lib/ask/execute";
 import {
   matchSummary,
@@ -108,9 +109,11 @@ export function AskResultCard({ card }: { card: AskEntityCard }) {
   return (
     <AskResultCardSurface hasProfile={Boolean(profile)}>
       {profile ? (
-        <Link
+        <TrackedProfileLink
           href={profile}
           prefetch={false}
+          surface="ask"
+          state={card.state}
           data-search-action="profile"
           data-testid="ask-profile-link"
           className="cth-profile-link group"
@@ -122,7 +125,7 @@ export function AskResultCard({ card }: { card: AskEntityCard }) {
               View profile →
             </span>
           </span>
-        </Link>
+        </TrackedProfileLink>
       ) : (
         <div className="cth-profile-link cth-profile-link--static">
           <h3 className="min-w-0 break-words text-xl font-semibold leading-snug text-[var(--text)]">{card.displayName}</h3>

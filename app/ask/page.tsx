@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SearchResultsReturned } from "@/components/analytics/search-results-returned";
 import { AskForm } from "@/components/ask/AskForm";
 import { AskResults } from "@/components/ask/AskResults";
 import { interpretAskQuery } from "@/lib/ask/interpret";
@@ -70,6 +71,14 @@ export default async function AskPage({ searchParams }: Props) {
       </div>
       {q ? (
         <div className="mt-10">
+          <SearchResultsReturned
+            occurrence={crypto.randomUUID()}
+            surface="ask"
+            resultCount={execution.results.length}
+            success={execution.ok}
+            state={plan.geography.state}
+            capabilityState={plan.recovery?.capabilityState ?? (execution.blocked ? "blocked" : execution.results.length ? "results" : "no_results")}
+          />
           {!plan.recovery && <SearchAnalytics dimensions={{ hub: "contractor", intent: interpreted.mode, state: plan.geography.state || undefined, classification: plan.trade.familyId || undefined, hasIdentifier: Boolean(plan.identity.identifier), hasEvidenceFilter: Boolean(plan.evidenceFamily), resultCountBucket: searchResultCountBucket(execution.contractorCount || 0), coverageState: execution.blocked ? "PARTIAL" : "KNOWN" }} hasResults={execution.results.length > 0} />}
           <AskResults interpreted={interpreted} plan={plan} execution={execution} addressQueries={addressed.queries} addressTimingMs={addressed.timingMs} requestOverrides={overrides} />
         </div>

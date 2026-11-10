@@ -1,5 +1,6 @@
 "use client";
 
+import { captureSpecialistHandoff } from "@/lib/analytics/trusthub";
 import type { JourneyCta, JourneyModule } from "@/lib/network/journey-handoff";
 import { trackJourneyHandoff } from "@/lib/network/journey-analytics";
 
@@ -12,6 +13,7 @@ export function JourneyNextStep({ module }: { module: JourneyModule | null }) {
       journey_id: cta.journey_id,
       context_type: cta.context_type,
     });
+    captureSpecialistHandoff(cta.destination_hub, module.surface);
   };
   return (
     <aside
