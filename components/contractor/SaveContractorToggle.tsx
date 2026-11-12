@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
+import { captureProfileSaveFailed, captureProfileSaved, captureProfileUnsaved } from "@/lib/analytics/trusthub";
 import { SAVED_CHANGE_EVENT, isContractorSaved, saveContractor, unsaveContractor } from "@/lib/saved/store";
 import { browserDirectPorts, parentSync, resumeDirect, startDirect, type DirectIntent } from "@/lib/my-trusthub/direct-save-client";
 
@@ -112,6 +113,7 @@ export function SaveContractorToggle({ slug, name, profileId, syncEligible = fal
       const reachParent = direct && parentSync(localStorage, slug) !== null;
       // The device removal is immediate and never depends on the parent.
       unsaveContractor(slug);
+      captureProfileUnsaved(slug);
       setSaved(false);
       if (!reachParent) { setNote("Removed from saved contractors on this device"); return; }
       setParentHeld(true);
@@ -122,7 +124,8 @@ export function SaveContractorToggle({ slug, name, profileId, syncEligible = fal
     // The device Save is complete before anything else is attempted.
     const row = saveContractor({ slug, name, profileId });
     setSaved(Boolean(row));
-    if (!row) { setNote("Could not save on this device"); return; }
+    if (!row) { captureProfileSaveFailed(slug); setNote("Could not save on this device"); return; }
+    captureProfileSaved(slug);
     if (!direct) { setNote("Saved on this device"); return; }
     const result = await handOff("save");
     if (result === "navigating") return;

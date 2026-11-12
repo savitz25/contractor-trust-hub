@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ProfileViewed } from "@/components/analytics/profile-viewed";
 import { CompareToggle } from "@/components/compare/CompareToggle";
 import { ActivitySection } from "@/components/contractor/ActivitySection";
 import { CautionSummary } from "@/components/contractor/CautionSummary";
@@ -528,6 +529,7 @@ export default async function ContractorPage({ params, searchParams }: Props) {
         <p className="mt-2 text-xs text-[var(--muted)]">
           Extract freshness (latest field): {formatDateTime(freshest)}
         </p>
+        <ProfileViewed slug={contractor.slug} state={contractor.homeState} />
         <div className="mt-4 flex flex-wrap gap-2">
           <CompareToggle slug={contractor.slug} />
           {/* Device Save: real, non-thin Trust Reports with an exact profile id only. Not a Watch. */}

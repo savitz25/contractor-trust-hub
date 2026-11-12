@@ -44,7 +44,7 @@ function WashingtonEmptyResults({ query, mode }: { query: string; mode: "license
   return (
     <div className="rounded-2xl border border-dashed border-teal-200 bg-teal-50/40 px-4 py-8 sm:px-8 sm:py-9">
       <p className="text-base font-medium text-[var(--text)]">
-        No Washington L&amp;I licenses matched &ldquo;{query}&rdquo;
+        No Washington L&amp;I licenses matched &ldquo;<span data-ph-mask>{query}</span>&rdquo;
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"
@@ -88,7 +88,7 @@ function ArizonaEmptyResults({ query, mode }: { query: string; mode: "license" |
   return (
     <div className="rounded-2xl border border-dashed border-sky-200 bg-sky-50/40 px-4 py-8 sm:px-8 sm:py-9">
       <p className="text-base font-medium text-[var(--text)]">
-        No Arizona ROC licenses matched &ldquo;{query}&rdquo;
+        No Arizona ROC licenses matched &ldquo;<span data-ph-mask>{query}</span>&rdquo;
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"
@@ -136,7 +136,7 @@ function CaliforniaEmptyResults({ query, mode }: { query: string; mode: "license
   return (
     <div className="rounded-2xl border border-dashed border-amber-200 bg-amber-50/40 px-4 py-8 sm:px-8 sm:py-9">
       <p className="text-base font-medium text-[var(--text)]">
-        No California CSLB licenses matched &ldquo;{query}&rdquo;
+        No California CSLB licenses matched &ldquo;<span data-ph-mask>{query}</span>&rdquo;
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"
@@ -184,7 +184,7 @@ function NjEmptyResults({ query, mode }: { query: string; mode: "license" | "nam
   return (
     <div className="rounded-2xl border border-dashed border-violet-200 bg-violet-50/40 px-4 py-8 sm:px-8 sm:py-9">
       <p className="text-base font-medium text-[var(--text)]">
-        No New Jersey registrations matched &ldquo;{query}&rdquo;
+        No New Jersey registrations matched &ldquo;<span data-ph-mask>{query}</span>&rdquo;
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"
@@ -226,7 +226,7 @@ function FloridaEmptyResults({ query, mode }: { query: string; mode: "license" |
   return (
     <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-8 sm:px-8 sm:py-9">
       <p className="text-base font-medium text-[var(--text)]">
-        No licensed Florida contractors matched &ldquo;{query}&rdquo;
+        No licensed Florida contractors matched &ldquo;<span data-ph-mask>{query}</span>&rdquo;
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"
@@ -337,7 +337,7 @@ function TexasEmptyResults({ query, mode }: { query: string; mode: "license" | "
   return (
     <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-6 sm:px-8 sm:py-9">
       <p className="text-base font-medium leading-snug text-[var(--text)]">
-        No Texas specialty or plumbing licenses matched &ldquo;{query}&rdquo;
+        No Texas specialty or plumbing licenses matched &ldquo;<span data-ph-mask>{query}</span>&rdquo;
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"
@@ -459,7 +459,7 @@ function OregonEmptyResults({ query, mode }: { query: string; mode: "license" | 
   return (
     <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-6 sm:px-8 sm:py-9">
       <p className="text-base font-medium leading-snug text-[var(--text)]">
-        No Oregon CCB active licenses matched &ldquo;{query}&rdquo;
+        No Oregon CCB active licenses matched &ldquo;<span data-ph-mask>{query}</span>&rdquo;
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"
@@ -511,7 +511,7 @@ function LouisianaEmptyResults({ query, mode }: { query: string; mode: "license"
   return (
     <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-6 sm:px-8 sm:py-9">
       <p className="text-base font-medium leading-snug text-[var(--text)]">
-        No Louisiana LSLBC licenses matched &ldquo;{query}&rdquo;
+        No Louisiana LSLBC licenses matched &ldquo;<span data-ph-mask>{query}</span>&rdquo;
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"
@@ -545,7 +545,7 @@ function KentuckyEmptyResults({ query, mode }: { query: string; mode: "license" 
   return (
     <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-6 sm:px-8 sm:py-9">
       <p className="text-base font-medium leading-snug text-[var(--text)]">
-        No Kentucky DHBC specialty credentials matched &ldquo;{query}&rdquo;
+        No Kentucky DHBC specialty credentials matched &ldquo;<span data-ph-mask>{query}</span>&rdquo;
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"
@@ -596,7 +596,7 @@ function MississippiEmptyResults({ query, mode }: { query: string; mode: "licens
   return (
     <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--panel)]/50 px-4 py-6 sm:px-8 sm:py-9">
       <p className="text-base font-medium leading-snug text-[var(--text)]">
-        No Mississippi MSBOC licenses matched &ldquo;{query}&rdquo;
+        No Mississippi MSBOC licenses matched &ldquo;<span data-ph-mask>{query}</span>&rdquo;
       </p>
       <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {mode === "license"

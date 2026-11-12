@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { SearchResultsReturned } from "@/components/analytics/search-results-returned";
+import { TrackedProfileLink } from "@/components/analytics/tracked-profile-link";
 import { DiscoverySearchForm } from "@/components/search/DiscoverySearchForm";
 import { GeographyNotice } from "@/components/ask/GeographyNotice";
 import { readAskRequest,researchRoute } from "@/lib/ask/request";
@@ -59,6 +61,7 @@ export default async function ContractorSearchPage({ searchParams }: Props) {
   const total = response && "total" in response ? response.total : 0;
   const pagination = response && "pagination" in response ? response.pagination : null;
   const choices = response && "capabilityChoices" in response ? response.capabilityChoices : [];
+  const searchSuccess = response != null && response.resultState !== "BACKEND_UNAVAILABLE";
 
   return (
     <main className="th-shell py-10 sm:py-14">
@@ -67,6 +70,7 @@ export default async function ContractorSearchPage({ searchParams }: Props) {
         <h1>Contractor discovery research</h1>
         <p className="mt-2 text-[var(--muted)]">Search source-backed credential records by trade and supported recorded geography. Results are neutral research—not rankings or proof that a contractor serves an area.</p>
       </header>
+      {query ? <SearchResultsReturned occurrence={crypto.randomUUID()} surface="search" resultCount={response && "total" in response ? total : rows.length} success={searchSuccess} state={plan.mode === "discovery" ? plan.request.state : undefined} capabilityState={response?.resultState ?? plan.mode} /> : null}
       <div className="mt-6 max-w-5xl"><DiscoverySearchForm key={query} initialQuery={query} overrides={overrides} compact /></div>
       <div className="mt-6"><GeographyNotice requirement={geography} query={query} overrides={overrides} route="/search" /></div>
       {plan.mode==='discovery'&&!response?<p role="status" className="mt-4">Trade: {plan.interpretation.trade??'Not specified'}. {unsupportedCondition?'The requested count, ordering, year or evidence condition is not supported by this credential-list path. It has not been removed; edit that condition to continue.':'No broader credential list has been executed. Edit the place or select an available choice above.'}</p>:null}
@@ -106,7 +110,7 @@ export default async function ContractorSearchPage({ searchParams }: Props) {
               </dl>
               <p className="mt-4 text-sm text-[var(--muted)]">{row.whyShown}</p>
               <details className="mt-4"><summary className="cursor-pointer font-semibold text-[var(--navy)]">Trace this result</summary><dl className="mt-2 grid gap-2 text-sm"><div><dt className="text-[var(--muted)]">Why matched</dt><dd>{row.whyShown}</dd></div><div><dt className="text-[var(--muted)]">Source</dt><dd>{row.source.label}</dd></div><div><dt className="text-[var(--muted)]">Coverage limit</dt><dd>Recorded regulator geography is not service territory. Missing evidence is not zero.</dd></div></dl></details>
-              <div className="mt-4 flex flex-wrap gap-3"><Link prefetch={false} href={row.destination} className="font-semibold text-[var(--navy)]">Research this contractor</Link>{row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY") ? <Link prefetch={false} href={row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY")!.url} className="font-medium">Verify credential</Link> : null}</div>
+              <div className="mt-4 flex flex-wrap gap-3"><TrackedProfileLink prefetch={false} href={row.destination} surface="search" state={row.recordedGeography.state} className="font-semibold text-[var(--navy)]">Research this contractor</TrackedProfileLink>{row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY") ? <Link prefetch={false} href={row.destinations.find((item) => item.type === "CONTRACTORTRUSTHUB_VERIFY")!.url} className="font-medium">Verify credential</Link> : null}</div>
             </article>
           ))}</div> : null}
 

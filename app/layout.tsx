@@ -6,7 +6,9 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SaveWorkPrompt } from "@/components/account/SaveWorkPrompt";
 import { JourneyContextChip } from "@/components/funnel/JourneyContextChip";
 import { PropertyContextChip } from "@/components/property/PropertyContextChip";
+import { PosthogRoot } from "@/components/analytics/posthog-root";
 import { SitewideJsonLd } from "@/components/seo/JsonLd";
+import { analyticsEnvironment } from "@/lib/analytics/environment";
 import { TH_CHASSIS_VERSION } from "@/lib/design/trusthub-visual-standard";
 import { ASK_NETWORK_STANDARD_VERSION } from "@/lib/network/standard-version";
 import {
@@ -100,6 +102,7 @@ export default function RootLayout({
         data-network-standard={ASK_NETWORK_STANDARD_VERSION}
         data-th-chassis={TH_CHASSIS_VERSION}
       >
+        <PosthogRoot environment={analyticsEnvironment()} />
         <SitewideJsonLd />
         <div className="print:hidden">
           <SiteHeader />

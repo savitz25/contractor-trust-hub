@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackedProfileLink } from "@/components/analytics/tracked-profile-link";
 import { CompareToggle } from "@/components/compare/CompareToggle";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { displayStatusLabel, statusLabel, statusTone } from "@/lib/contractors/format";
@@ -265,12 +266,14 @@ export function ResultCard({
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
           <div className="min-w-0">
             <h2 className="text-[15px] font-semibold leading-snug text-[var(--text)] sm:text-lg">
-              <Link
+              <TrackedProfileLink
                 href={profileHref}
+                surface="verify"
+                state={result.state}
                 className="text-[var(--text)] no-underline hover:text-[var(--navy)]"
               >
                 {result.displayName}
-              </Link>
+              </TrackedProfileLink>
             </h2>
             {shortKey ? (
               <p className="mt-1 font-mono text-sm tracking-wide text-[var(--accent)]">
@@ -383,9 +386,11 @@ export function ResultCard({
             <ul className="mt-1.5 flex flex-wrap gap-1.5">
               {result.relatedProfiles.slice(0, 6).map((rel) => (
                 <li key={`${rel.slug}-${rel.licenseKey || ""}`}>
-                  <Link
+                  <TrackedProfileLink
                     prefetch={false}
                     href={`/contractors/${encodeURIComponent(rel.slug)}`}
+                    surface="verify"
+                    state={result.state}
                     className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--bg)] px-2.5 py-1 text-[11px] font-medium text-[var(--navy)] no-underline hover:border-[var(--navy)]/30"
                   >
                     {occupationLabel(rel.occupationCode)}
@@ -394,7 +399,7 @@ export function ResultCard({
                         {rel.licenseKey.replace(/^FL-DBPR:/i, "")}
                       </span>
                     ) : null}
-                  </Link>
+                  </TrackedProfileLink>
                 </li>
               ))}
             </ul>
@@ -402,12 +407,14 @@ export function ResultCard({
         ) : null}
 
         <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <Link
+          <TrackedProfileLink
             href={profileHref}
+            surface="verify"
+            state={result.state}
             className="inline-flex min-h-10 items-center rounded-xl bg-[var(--navy)] px-3.5 text-xs font-semibold text-white no-underline sm:min-h-0 sm:bg-transparent sm:px-0 sm:font-medium sm:text-[var(--accent)] sm:hover:underline"
           >
             Open Trust Report
-          </Link>
+          </TrackedProfileLink>
           <CompareToggle slug={result.slug} compact />
         </div>
       </div>
