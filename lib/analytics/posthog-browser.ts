@@ -3,10 +3,13 @@
 import type { CaptureResult, PostHog } from "posthog-js";
 import { analyticsEnvironment, posthogHost, posthogKey, shouldEnablePosthog } from "./environment";
 import { createPosthogClientGate } from "./posthog-gate";
-import { sanitizeCapturedNetworkRequest, sanitizeCaptureResult } from "./privacy";
+import { isReplayEvent, sanitizeCapturedNetworkRequest, sanitizeCaptureResult } from "./privacy";
 import { CONTRACTOR_HUB } from "./events";
 
 function sanitizeEvent(event: CaptureResult | null): CaptureResult | null {
+  // Session replay is disabled for this hub. Drop any replay payload outright as
+  // defense in depth (e.g. if a project-level setting tries to turn it back on).
+  if (event && isReplayEvent(event.event)) return null;
   return sanitizeCaptureResult(event);
 }
 
@@ -21,6 +24,16 @@ async function loadPosthog(): Promise<PostHog | null> {
     capture_pageleave: true,
     capture_exceptions: false,
     persistence: "localStorage+cookie",
+    // Privacy: replay DOM snapshots can carry search text echoed into result pages,
+    // recent-research buttons and query-bearing links, so session replay is off for
+    // this hub regardless of the shared project setting. Heatmaps and dead-click
+    // capture are off for the same reason (they key data by page URL / element).
+    disable_session_recording: true,
+    enable_heatmaps: false,
+    capture_heatmaps: false,
+    capture_dead_clicks: false,
+    // Autocapture never collects element text (button/link labels can echo a query).
+    mask_all_text: true,
     autocapture: {
       capture_copied_text: false,
       capture_value_css_selector_allowlist: [],
@@ -40,7 +53,8 @@ async function loadPosthog(): Promise<PostHog | null> {
         select: true,
         number: true,
       },
-      maskTextSelector: "input, textarea, select, [contenteditable], [data-ph-mask]",
+      // Only relevant if replay is ever re-enabled in code: mask every text node.
+      maskTextSelector: "*",
       maskCapturedNetworkRequestFn: (request) => sanitizeCapturedNetworkRequest(request),
     },
     loaded: (instance) => {

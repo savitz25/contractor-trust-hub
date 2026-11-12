@@ -203,6 +203,44 @@ function sanitizeAutocaptureUrls(properties: Record<string, unknown>): void {
   }
 }
 
+/** Autocapture element fields that can echo user-entered text (labels, values, tooltips). */
+const AUTOCAPTURE_TEXT_KEYS = [
+  "$el_text",
+  "text",
+  "attr__aria-label",
+  "attr__title",
+  "attr__value",
+  "attr__placeholder",
+  "attr__alt",
+] as const;
+
+const ELEMENTS_CHAIN_TEXT_PATTERN = /(?:^|(?<=[:"]))(?:text|attr__aria-label|attr__title|attr__value|attr__placeholder|attr__alt)="(?:[^"\\]|\\.)*"/g;
+
+/** Session replay events. Replay is disabled for this hub; before_send drops these. */
+export const REPLAY_EVENT_NAMES = ["$snapshot", "$snapshot_items", "$heatmap", "$$heatmap"] as const;
+
+export function isReplayEvent(event: string | undefined | null): boolean {
+  return typeof event === "string" && (REPLAY_EVENT_NAMES as readonly string[]).includes(event);
+}
+
+export function stripElementsChainText(chain: string): string {
+  return chain.replace(ELEMENTS_CHAIN_TEXT_PATTERN, "");
+}
+
+function stripAutocaptureText(properties: Record<string, unknown>): void {
+  delete properties.$el_text;
+  if (typeof properties.$elements_chain === "string") {
+    properties.$elements_chain = stripElementsChainText(properties.$elements_chain);
+  }
+  if (Array.isArray(properties.$elements)) {
+    for (const element of properties.$elements) {
+      if (!element || typeof element !== "object") continue;
+      const record = element as Record<string, unknown>;
+      for (const key of AUTOCAPTURE_TEXT_KEYS) delete record[key];
+    }
+  }
+}
+
 function sanitizeReplaySnapshotHrefs(node: unknown, depth = 0): void {
   if (depth > 8 || node == null || typeof node === "string") return;
   if (Array.isArray(node)) {
@@ -239,6 +277,7 @@ export function sanitizePageviewProperties(properties: Record<string, unknown>):
   delete properties.$input_value;
   delete properties.input_value;
   sanitizeReplaySnapshotHrefs(properties.$snapshot_data);
+  stripAutocaptureText(properties);
   sanitizeAutocaptureUrls(properties);
   replaceSearchSurfaceTitle(properties);
   for (const key of Object.keys(properties)) {
