@@ -145,6 +145,40 @@ test("beforeSend removes headers, cookies, and query strings", () => {
   assert.equal(encoded.includes("person@example.com"), false);
 });
 
+test("beforeSend strips query strings from relative URLs in exceptions, messages, and breadcrumbs", () => {
+  const event = {
+    type: undefined,
+    message: "request failed /api/search?token=secret",
+    request: { url: "/api/search?token=secret" },
+    breadcrumbs: [
+      {
+        message: "GET /api/search?token=secret",
+        data: { url: "/api/search?token=secret" },
+      },
+    ],
+    extra: { note: "see /api/search?token=secret" },
+    contexts: { app: { app_start_time: "ctx /api/search?token=secret" } },
+    exception: {
+      values: [
+        { value: "/api/search?token=secret" },
+        { value: "Error: /api/search?token=secret" },
+      ],
+    },
+  } as ErrorEvent;
+
+  const scrubbed = scrubSentryEvent(event);
+  assert.equal(scrubbed.exception?.values?.[0]?.value, "/api/search");
+  assert.equal(scrubbed.exception?.values?.[1]?.value, "Error: /api/search");
+  assert.equal(scrubbed.message, "request failed /api/search");
+  assert.equal(scrubbed.breadcrumbs?.[0]?.message, "GET /api/search");
+  assert.equal(scrubbed.breadcrumbs?.[0]?.data?.url, "/api/search");
+  assert.equal(scrubbed.request?.url, "/api/search");
+  assert.equal(scrubbed.extra?.note, "see /api/search");
+  const encoded = JSON.stringify(scrubbed);
+  assert.equal(encoded.includes("?token="), false);
+  assert.equal(encoded.includes("token=secret"), false);
+});
+
 test("server capture no-ops without a DSN, tags 57014, and leaves the response unchanged", async () => {
   const previous = process.env.SENTRY_DSN;
   const events: ErrorEvent[] = [];

@@ -66,6 +66,18 @@ function stripQuery(value: string): string {
   return withoutHash.split("?", 1)[0] ?? withoutHash;
 }
 
+/**
+ * Remove query strings and fragments from absolute URLs (https://host/path?q)
+ * and relative URLs (/api/search?token=secret, app/api/route.ts?token=secret)
+ * without cutting off text that follows the URL.
+ */
+function scrubUrlText(text: string): string {
+  return text.replace(
+    /(?:https?:\/\/[^\s?#]*|[^\s?#]*\/[^\s?#]*)(?:\?[^\s#]*)?(?:#[^\s]*)?/gi,
+    (match) => (match.includes("?") || match.includes("#") ? stripQuery(match) : match),
+  );
+}
+
 const SENSITIVE_KEY =
   /^(cookie|cookies|set-cookie|header|headers|authorization|proxy-authorization|query|query_string|querystring|password|passwd|secret|token|dsn|database_url|postgres_url|connection_string)$/i;
 
@@ -76,21 +88,19 @@ function scrubRecord(record: Record<string, unknown>, depth: number): void {
       delete record[key];
       continue;
     }
-    const value = record[key];
-    if (typeof value === "string") {
-      if (/^https?:\/\//i.test(value) || (value.includes("?") && value.includes("/"))) {
-        record[key] = stripQuery(value);
-      }
-      continue;
-    }
-    if (Array.isArray(value)) {
-      for (const item of value) {
-        if (item && typeof item === "object") scrubRecord(item as Record<string, unknown>, depth + 1);
-      }
-      continue;
-    }
-    if (value && typeof value === "object") scrubRecord(value as Record<string, unknown>, depth + 1);
+    record[key] = scrubValue(record[key], depth + 1);
   }
+}
+
+function scrubValue(value: unknown, depth: number): unknown {
+  if (depth > 6 || value == null) return value;
+  if (typeof value === "string") return scrubUrlText(value);
+  if (Array.isArray(value)) return value.map((item) => scrubValue(item, depth + 1));
+  if (typeof value === "object") {
+    scrubRecord(value as Record<string, unknown>, depth);
+    return value;
+  }
+  return value;
 }
 
 /** Drops headers, cookies, and query strings before an event can leave the process. */
@@ -101,23 +111,21 @@ export function scrubSentryEvent(event: ErrorEvent): ErrorEvent {
     delete event.request.data;
     delete event.request.env;
     delete event.request.query_string;
-    if (typeof event.request.url === "string") event.request.url = stripQuery(event.request.url);
+    if (typeof event.request.url === "string") event.request.url = scrubUrlText(event.request.url);
   }
   delete event.user;
-  if (typeof event.transaction === "string") event.transaction = stripQuery(event.transaction);
+  if (typeof event.message === "string") event.message = scrubUrlText(event.message);
+  if (typeof event.logentry?.message === "string") event.logentry.message = scrubUrlText(event.logentry.message);
+  if (typeof event.transaction === "string") event.transaction = scrubUrlText(event.transaction);
   if (event.tags) {
     for (const [key, value] of Object.entries(event.tags)) {
-      if (typeof value === "string" && (value.includes("?") || value.includes("#"))) {
-        event.tags[key] = stripQuery(value);
-      }
+      if (typeof value === "string") event.tags[key] = scrubUrlText(value);
     }
   }
   if (event.breadcrumbs) {
     for (const crumb of event.breadcrumbs) {
       if (crumb.data && typeof crumb.data === "object") scrubRecord(crumb.data as Record<string, unknown>, 0);
-      if (typeof crumb.message === "string" && /^https?:\/\//i.test(crumb.message)) {
-        crumb.message = stripQuery(crumb.message);
-      }
+      if (typeof crumb.message === "string") crumb.message = scrubUrlText(crumb.message);
     }
   }
   if (event.extra && typeof event.extra === "object") scrubRecord(event.extra as Record<string, unknown>, 0);
@@ -132,19 +140,17 @@ export function scrubSentryEvent(event: ErrorEvent): ErrorEvent {
     delete metadata.normalizedRequest.cookies;
     delete metadata.normalizedRequest.query_string;
     if (typeof metadata.normalizedRequest.url === "string") {
-      metadata.normalizedRequest.url = stripQuery(metadata.normalizedRequest.url);
+      metadata.normalizedRequest.url = scrubUrlText(metadata.normalizedRequest.url);
     }
   }
   if (event.exception?.values) {
     for (const value of event.exception.values) {
-      if (typeof value.value === "string") {
-        value.value = value.value.replace(/https?:\/\/\S+/g, (url) => stripQuery(url));
-      }
+      if (typeof value.value === "string") value.value = scrubUrlText(value.value);
       const frames = value.stacktrace?.frames;
       if (!frames) continue;
       for (const frame of frames) {
-        if (typeof frame.filename === "string") frame.filename = stripQuery(frame.filename);
-        if (typeof frame.abs_path === "string") frame.abs_path = stripQuery(frame.abs_path);
+        if (typeof frame.filename === "string") frame.filename = scrubUrlText(frame.filename);
+        if (typeof frame.abs_path === "string") frame.abs_path = scrubUrlText(frame.abs_path);
         delete frame.vars;
       }
     }
