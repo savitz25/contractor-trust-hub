@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { Pool, type PoolClient, type QueryResultRow } from "pg";
+import { reportDatabaseError } from "./observability/sentry";
 
 /**
  * Server-only Postgres pool.
@@ -234,6 +235,7 @@ export async function query<T extends QueryResultRow = QueryResultRow>(
     return await queryOnce<T>(text, params, statementTimeoutMs);
   } catch (err) {
     logDbError("query", err, text);
+    reportDatabaseError(err);
     // A bound session already holds the only pool client. Connecting again would wait forever.
     if (!dbSession.getStore() && (isDbConnectTimeout(err) || isDbCapacityError(err))) {
       try {
@@ -242,6 +244,7 @@ export async function query<T extends QueryResultRow = QueryResultRow>(
         return await queryOnce<T>(text, params, statementTimeoutMs);
       } catch (err2) {
         logDbError("query_retry", err2, text);
+        reportDatabaseError(err2);
         throw err2;
       }
     }
