@@ -62,10 +62,13 @@ export default async function FloridaCountyTradePage({ params, searchParams }: P
   const trade = getTrade(state, tradeSlug);
   if (!county || !trade) notFound();
 
-  const [{ results, total, stats }, cities] = await Promise.all([
-    listFloridaBrowse({ county, trade, browse }),
-    listFloridaCities(county, trade),
-  ]);
+  // FL-DIR-PERF-002: no loading.tsx above this page any more, so a failed
+  // directory read (FloridaDirectoryUnavailableError) fails the render before
+  // any HTML is sent: HTTP 500 + noindex, never a 200 "index, follow" shell.
+  // The city facet query runs after the directory read so it never waits on
+  // the max:1 pool behind it.
+  const { results, total, stats } = await listFloridaBrowse({ county, trade, browse });
+  const cities = await listFloridaCities(county, trade);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">

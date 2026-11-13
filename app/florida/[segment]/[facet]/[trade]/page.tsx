@@ -20,7 +20,7 @@ import {
 } from "@/lib/discovery/config";
 import {
   isFloridaDirectoryUnavailableError,
-  listFloridaBrowse,
+  listFloridaBrowseOnce,
   listFloridaCities,
 } from "@/lib/discovery/florida-list";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
@@ -51,7 +51,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const cityLabel = cityLabelFromSlug(citySlug);
   let thin: boolean;
   try {
-    const { stats } = await listFloridaBrowse({
+    const { stats } = await listFloridaBrowseOnce({
       county,
       trade,
       browse: { ...browse, citySlug, page: 1 },
@@ -89,12 +89,20 @@ export default async function FloridaCityTradePage({ params, searchParams }: Pro
   const trade = getTrade(state, tradeSlug);
   if (!county || !trade) notFound();
 
-  const [{ results, total, stats }, cities] = await Promise.all([
-    listFloridaBrowse({ county, trade, browse, pathCitySlug: citySlug }),
-    listFloridaCities(county, trade),
-  ]);
+  // FL-DIR-PERF-002: same request key as generateMetadata on page 1, so the
+  // directory SQL runs once per render. The city facet query runs after it
+  // (not in parallel) so it never queues on the max:1 pool behind the
+  // directory read and times out into a silently missing facet list.
+  const { results, total, stats } = await listFloridaBrowseOnce({
+    county,
+    trade,
+    browse,
+    pathCitySlug: citySlug,
+  });
 
   if (total === 0) notFound();
+
+  const cities = await listFloridaCities(county, trade);
 
   const cityLabel = cityLabelFromSlug(citySlug);
 

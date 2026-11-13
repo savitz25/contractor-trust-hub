@@ -3,7 +3,8 @@
  * AZ/OR/WA keep listDiscoveryContractors unchanged.
  */
 
-import { query, queryOne } from "@/lib/db";
+import { cache } from "react";
+import { query } from "@/lib/db";
 import { displayCounty } from "@/lib/contractors/county-display";
 import { asLicenseStatus } from "@/lib/contractors/format";
 import type { SearchResult } from "@/lib/contractors/types";
@@ -50,6 +51,42 @@ export function isFloridaDirectoryUnavailableError(
 ): err is FloridaDirectoryUnavailableError {
   return err instanceof FloridaDirectoryUnavailableError;
 }
+
+type FloridaBrowseRow = {
+  firms: string;
+  active_firms: string;
+  linked: string;
+  disc: string;
+  /** NULL on the single stats-only row (zero results or a page past the end). */
+  page_pos: string | null;
+  id: string | null;
+  slug: string | null;
+  display_name: string;
+  legal_name: string | null;
+  dba_name: string | null;
+  primary_city: string | null;
+  primary_county: string | null;
+  home_state: string | null;
+  external_key: string | null;
+  occupation_code: string | null;
+  status_normalized: string | null;
+  primary_status: string | null;
+  last_verified_at: Date | null;
+  source_system: string | null;
+  secondary_status: string | null;
+  entity_id: string | null;
+  entity_name: string | null;
+  entity_status: string | null;
+  has_discipline: boolean;
+  firm_key: string | null;
+  siblings: Array<{
+    slug: string;
+    display_name: string;
+    occupation_code: string | null;
+    external_key: string | null;
+    status_normalized: string | null;
+  }> | null;
+};
 
 export type FloridaBrowseStats = {
   firms: number;
@@ -212,7 +249,7 @@ export async function listFloridaBrowse(opts: {
         ) ent ON TRUE
         WHERE ${where}
       ),
-      keyed AS (
+      keyed AS MATERIALIZED (
         SELECT
           m.*,
           COALESCE(m.entity_id::text, 'solo:' || m.id::text) AS firm_key
@@ -220,65 +257,32 @@ export async function listFloridaBrowse(opts: {
       )
     `;
 
-    const statsRow = await queryOne<{
-      firms: string;
-      active_firms: string;
-      linked: string;
-      disc: string;
-    }>(
-      `
-      WITH ${matchedCte}
-      SELECT
-        COUNT(DISTINCT firm_key)::text AS firms,
-        COUNT(DISTINCT firm_key) FILTER (
-          WHERE status_normalized IN ('active', 'current')
-        )::text AS active_firms,
-        COUNT(DISTINCT firm_key) FILTER (WHERE entity_id IS NOT NULL)::text AS linked,
-        COUNT(DISTINCT firm_key) FILTER (WHERE has_discipline)::text AS disc
-      FROM keyed
-      `,
-      filterParams
-    );
-
-    const stats: FloridaBrowseStats = {
-      firms: Number(statsRow?.firms || 0),
-      activeFirms: Number(statsRow?.active_firms || 0),
-      entityLinked: Number(statsRow?.linked || 0),
-      withDiscipline: Number(statsRow?.disc || 0),
-    };
-    const total = stats.firms;
-    if (total === 0) return { results: [], total: 0, stats };
-
+    // FL-DIR-PERF-002: one statement instead of three. The stats, the page
+    // and the sibling roll-up used to re-run the whole `matched` CTE in three
+    // separate queries (three full evaluations per render, each with its own
+    // statement budget, queued on a max:1 pool). Here `keyed` is MATERIALIZED
+    // once and every part reads it. Same filters, same firm roll-up, same
+    // sort keys; `p.firm_key` is only a tie-break so ROW_NUMBER() and the
+    // final ORDER BY agree and pages never overlap or skip a firm.
     const limit = DISCOVERY_PAGE_SIZE;
     const offset = (browse.page - 1) * limit;
-    const limitIdx = filterParams.length + 1;
-    const offsetIdx = filterParams.length + 2;
-    const listParams = [...filterParams, limit, offset];
+    const offsetIdx = filterParams.length + 1;
+    const limitIdx = filterParams.length + 2;
+    const listParams = [...filterParams, offset, limit];
 
-    const firmRows = await query<{
-      id: string;
-      slug: string;
-      display_name: string;
-      legal_name: string | null;
-      dba_name: string | null;
-      primary_city: string | null;
-      primary_county: string | null;
-      home_state: string | null;
-      external_key: string | null;
-      occupation_code: string | null;
-      status_normalized: string | null;
-      primary_status: string | null;
-      last_verified_at: Date | null;
-      source_system: string | null;
-      secondary_status: string | null;
-      entity_id: string | null;
-      entity_name: string | null;
-      entity_status: string | null;
-      has_discipline: boolean;
-      firm_key: string;
-    }>(
+    const rows = await query<FloridaBrowseRow>(
       `
       WITH ${matchedCte},
+      stats AS (
+        SELECT
+          COUNT(DISTINCT firm_key)::text AS firms,
+          COUNT(DISTINCT firm_key) FILTER (
+            WHERE status_normalized IN ('active', 'current')
+          )::text AS active_firms,
+          COUNT(DISTINCT firm_key) FILTER (WHERE entity_id IS NOT NULL)::text AS linked,
+          COUNT(DISTINCT firm_key) FILTER (WHERE has_discipline)::text AS disc
+        FROM keyed
+      ),
       firm_agg AS (
         SELECT
           firm_key,
@@ -293,41 +297,75 @@ export async function listFloridaBrowse(opts: {
         FROM keyed k
         ORDER BY k.firm_key,
           CASE k.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
-          k.display_name
+          k.display_name,
+          -- tie-break only: one contractor with two same-status licenses
+          -- used to show an arbitrary license as the card's primary key.
+          k.external_key
+      ),
+      ranked AS (
+        SELECT p.*,
+          ROW_NUMBER() OVER (ORDER BY ${sortSql(browse.sort)}, p.firm_key) AS page_pos
+        FROM picked p
+        JOIN firm_agg a ON a.firm_key = p.firm_key
+      ),
+      page AS (
+        SELECT * FROM ranked
+        WHERE page_pos > $${offsetIdx}::int
+          AND page_pos <= $${offsetIdx}::int + $${limitIdx}::int
+      ),
+      sibs AS (
+        SELECT k.firm_key,
+          json_agg(json_build_object(
+            'slug', k.slug,
+            'display_name', k.display_name,
+            'occupation_code', k.occupation_code,
+            'external_key', k.external_key,
+            'status_normalized', k.status_normalized
+          )) AS siblings
+        FROM keyed k
+        WHERE k.firm_key IN (SELECT firm_key FROM page)
+        GROUP BY k.firm_key
       )
-      SELECT p.*
-      FROM picked p
-      JOIN firm_agg a ON a.firm_key = p.firm_key
-      ORDER BY ${sortSql(browse.sort)}
-      LIMIT $${limitIdx}::int OFFSET $${offsetIdx}::int
+      SELECT
+        s.firms, s.active_firms, s.linked, s.disc,
+        pg.page_pos, pg.id, pg.slug, pg.display_name, pg.legal_name, pg.dba_name,
+        pg.primary_city, pg.primary_county, pg.home_state, pg.external_key,
+        pg.occupation_code, pg.status_normalized, pg.primary_status,
+        pg.last_verified_at, pg.source_system, pg.secondary_status,
+        pg.entity_id, pg.entity_name, pg.entity_status, pg.has_discipline,
+        pg.firm_key, sb.siblings
+      FROM stats s
+      LEFT JOIN page pg ON TRUE
+      LEFT JOIN sibs sb ON sb.firm_key = pg.firm_key
+      ORDER BY pg.page_pos
       `,
       listParams
     );
 
-    const firmKeys = firmRows.map((r) => r.firm_key).filter(Boolean);
+    // The stats CTE always yields exactly one row, so a successful read
+    // returns >= 1 row. Zero rows means the read did not complete.
+    const statsRow = rows[0];
+    if (!statsRow) {
+      throw new Error("listFloridaBrowse: stats row missing (incomplete read)");
+    }
+    const stats: FloridaBrowseStats = {
+      firms: Number(statsRow.firms || 0),
+      activeFirms: Number(statsRow.active_firms || 0),
+      entityLinked: Number(statsRow.linked || 0),
+      withDiscipline: Number(statsRow.disc || 0),
+    };
+    const total = stats.firms;
+    if (total === 0) return { results: [], total: 0, stats };
+
+    const firmRows = rows.filter(
+      (r): r is FloridaBrowseRow & { id: string; slug: string; firm_key: string } =>
+        r.page_pos !== null && Boolean(r.id) && Boolean(r.firm_key)
+    );
+
     const relatedByFirm = new Map<string, RelatedProfile[]>();
-    if (firmKeys.length) {
-      const sibParams = [...filterParams, firmKeys];
-      const sibIdx = filterParams.length + 1;
-      const siblings = await query<{
-        firm_key: string;
-        id: string;
-        slug: string;
-        display_name: string;
-        occupation_code: string | null;
-        external_key: string | null;
-        status_normalized: string | null;
-      }>(
-        `
-        WITH ${matchedCte}
-        SELECT firm_key, id, slug, display_name, occupation_code, external_key, status_normalized
-        FROM keyed
-        WHERE firm_key = ANY($${sibIdx}::text[])
-        `,
-        sibParams
-      );
-      for (const s of siblings) {
-        const list = relatedByFirm.get(s.firm_key) || [];
+    for (const r of firmRows) {
+      for (const s of r.siblings || []) {
+        const list = relatedByFirm.get(r.firm_key) || [];
         if (!list.some((x) => x.slug === s.slug && x.licenseKey === s.external_key)) {
           list.push({
             slug: s.slug,
@@ -337,7 +375,7 @@ export async function listFloridaBrowse(opts: {
             licenseStatus: asLicenseStatus(s.status_normalized),
           });
         }
-        relatedByFirm.set(s.firm_key, list);
+        relatedByFirm.set(r.firm_key, list);
       }
     }
 
@@ -382,6 +420,54 @@ export async function listFloridaBrowse(opts: {
     // zero-result query returns above with total 0; a failure throws.
     throw new FloridaDirectoryUnavailableError("listFloridaBrowse", err);
   }
+}
+
+type FloridaBrowseOpts = Parameters<typeof listFloridaBrowse>[0];
+
+/**
+ * Request-scoped identity of a listFloridaBrowse read. Two calls with the same
+ * key run the same SQL with the same parameters (county/trade come from the
+ * curated config by slug; the path city wins over ?city= exactly as inside
+ * listFloridaBrowse).
+ */
+export function floridaBrowseRequestKey(opts: FloridaBrowseOpts): string {
+  const b = opts.browse;
+  return JSON.stringify([
+    opts.county?.slug ?? null,
+    opts.trade?.slug ?? null,
+    opts.pathCitySlug || b.citySlug || null,
+    b.status,
+    b.entity,
+    b.discipline,
+    b.tenure,
+    b.sort,
+    b.page,
+  ]);
+}
+
+/** One Map per server request (React cache); a fresh Map outside a request. */
+const floridaBrowseRequestStore = cache(
+  () => new Map<string, ReturnType<typeof listFloridaBrowse>>()
+);
+
+/**
+ * FL-DIR-PERF-002: listFloridaBrowse, de-duplicated within one request.
+ * /florida/{county}/{city}/{trade} reads the same directory in
+ * generateMetadata (thin check) and in the page body. Sharing the promise
+ * halves that route's directory SQL. A failed read is shared too, so the
+ * metadata (noindex) and the page (error, not "No matches") stay consistent.
+ */
+export function listFloridaBrowseOnce(
+  opts: FloridaBrowseOpts
+): ReturnType<typeof listFloridaBrowse> {
+  const store = floridaBrowseRequestStore();
+  const key = floridaBrowseRequestKey(opts);
+  let pending = store.get(key);
+  if (!pending) {
+    pending = listFloridaBrowse(opts);
+    store.set(key, pending);
+  }
+  return pending;
 }
 
 export async function listFloridaCities(
