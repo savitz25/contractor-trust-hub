@@ -67,6 +67,9 @@ export const DISCOVERY_STATES: Record<string, DiscoveryStateConfig> = {
     geoNote: OREGON_GEO_NOTE,
     activeOnlyDefault: true,
     requireInStateAddress: false,
+    // One CCB licensee = one license_number; the loader keys profiles by
+    // OR-CCB:<number>:<endorsement>, so collapse to the license number.
+    dedupeByLicenseNumber: true,
   },
   washington: {
     publicSlug: "washington",

@@ -48,6 +48,28 @@ function inStateSql(requireInState: boolean | undefined): string {
   return requireInState === false ? STATE_PARAM_TYPED_SQL : "AND (c.home_state = $2 OR l.state = $2)";
 }
 
+/**
+ * SEO-PATTERN-002 Oregon dedupe. The Oregon loader writes one contractor
+ * profile per (CCB license number, endorsement) (external_key
+ * OR-CCB:<number>:<code>), so one licensee can have 2-4 profiles and county
+ * views listed and counted the same business 2-4 times.
+ *
+ * For states with dedupeByLicenseNumber the directory identity is the
+ * authoritative license number within the state's single license source
+ * (every query here is already pinned to l.source_system = $1). It is never a
+ * name: two license numbers with the same name stay two entries. A row with
+ * no license number falls back to its own profile id, so it can never be
+ * merged with anything. Other states keep c.id (byte-identical SQL).
+ */
+export const LICENSE_IDENTITY_SQL =
+  "COALESCE(NULLIF(TRIM(l.license_number), ''), 'profile:' || c.id::text)";
+
+export function directoryIdentitySql(
+  disc: { dedupeByLicenseNumber?: boolean } | null | undefined
+): string {
+  return disc?.dedupeByLicenseNumber ? LICENSE_IDENTITY_SQL : "c.id";
+}
+
 function mapRow(r: {
   id: string;
   slug: string;
@@ -212,7 +234,7 @@ async function countDistinctForTrade(
   });
   const row = await queryOne<{ n: string }>(
     `
-    SELECT COUNT(DISTINCT c.id)::text AS n
+    SELECT COUNT(DISTINCT ${directoryIdentitySql(disc)})::text AS n
     FROM contractors c
     JOIN licenses l ON l.contractor_id = c.id
     WHERE ${where}
@@ -259,6 +281,147 @@ type ListFilters = {
   strict?: boolean;
 };
 
+type LicenseCardRow = Parameters<typeof mapRow>[0] & {
+  license_identity: string;
+  license_number: string | null;
+  related: {
+    slug: string;
+    display_name: string;
+    occupation_code: string | null;
+    external_key: string | null;
+    status_normalized: string | null;
+  }[] | null;
+};
+
+/**
+ * SEO-PATTERN-002 Oregon dedupe: one card per authoritative license number
+ * (see LICENSE_IDENTITY_SQL). Same filter (`where`, $1 = license source) as the
+ * per-profile listing, so a license appears in a view iff at least one of its
+ * profiles matches it. The representative profile is chosen deterministically
+ * (active first, then external_key, then id). Every other published profile of
+ * the same license number in the same source (all endorsements) is kept on
+ * the card as relatedProfiles, and discipline is checked across all of them,
+ * so no endorsement evidence is dropped. Pagination is over license numbers
+ * with a unique final tie-breaker, so pages never repeat or skip a licensee.
+ */
+async function listByLicenseNumber(opts: {
+  where: string;
+  filterParams: unknown[];
+  entitySource: string;
+  activeOnly: boolean;
+  limit: number;
+  offset: number;
+}): Promise<SearchResult[]> {
+  const { where, filterParams } = opts;
+  const entitySourceIdx = filterParams.length + 1;
+  const confIdx = filterParams.length + 2;
+  const limitIdx = filterParams.length + 3;
+  const offsetIdx = filterParams.length + 4;
+  const params = [...filterParams, opts.entitySource, MIN_SUNBIZ_CONFIDENCE, opts.limit, opts.offset];
+  const statusRank = (alias: string) =>
+    `CASE ${alias}.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END`;
+
+  const rows = await query<LicenseCardRow>(
+    `
+    WITH picked AS (
+      SELECT DISTINCT ON (license_identity)
+        ${LICENSE_IDENTITY_SQL} AS license_identity,
+        l.license_number,
+        c.id,
+        c.slug,
+        c.display_name,
+        c.legal_name,
+        c.dba_name,
+        c.primary_city,
+        c.primary_county,
+        c.home_state,
+        l.external_key,
+        l.occupation_code,
+        l.status_normalized,
+        l.last_verified_at,
+        l.source_system,
+        l.secondary_status
+      FROM contractors c
+      JOIN licenses l ON l.contractor_id = c.id
+      WHERE ${where}
+      ORDER BY license_identity, ${statusRank("l")}, l.external_key, c.id
+    ),
+    page AS (
+      SELECT * FROM picked
+      ORDER BY ${statusRank("picked")}, picked.display_name, picked.license_identity
+      LIMIT $${limitIdx}::int OFFSET $${offsetIdx}::int
+    )
+    SELECT
+      p.*,
+      e.status AS entity_status,
+      e.legal_name AS entity_name,
+      (
+        EXISTS (
+          SELECT 1 FROM discipline_actions d
+          WHERE d.contractor_id = p.id AND ${PUBLIC_REGULATORY_SQL}
+        )
+        OR EXISTS (
+          SELECT 1
+          FROM licenses l3
+          JOIN discipline_actions d ON d.contractor_id = l3.contractor_id
+          WHERE l3.source_system = $1
+            AND p.license_number IS NOT NULL
+            AND l3.license_number = p.license_number
+            AND ${PUBLIC_REGULATORY_SQL}
+        )
+      ) AS has_discipline,
+      rel.related
+    FROM page p
+    LEFT JOIN LATERAL (
+      SELECT ent.status, ent.legal_name
+      FROM contractor_entities ce
+      JOIN entities ent ON ent.id = ce.entity_id
+      WHERE ce.contractor_id = p.id
+        AND ce.role = 'sunbiz_entity'
+        AND ent.source_system = $${entitySourceIdx}::text
+        AND ce.confidence IS NOT NULL
+        AND ce.confidence >= $${confIdx}::numeric
+      ORDER BY ce.confidence DESC NULLS LAST
+      LIMIT 1
+    ) e ON TRUE
+    LEFT JOIN LATERAL (
+      SELECT json_agg(
+        json_build_object(
+          'slug', c2.slug,
+          'display_name', c2.display_name,
+          'occupation_code', l2.occupation_code,
+          'external_key', l2.external_key,
+          'status_normalized', l2.status_normalized
+        )
+        ORDER BY l2.occupation_code, l2.external_key, c2.id
+      ) AS related
+      FROM licenses l2
+      JOIN contractors c2 ON c2.id = l2.contractor_id
+      WHERE l2.source_system = $1
+        AND p.license_number IS NOT NULL
+        AND l2.license_number = p.license_number
+        AND c2.id <> p.id
+        AND c2.is_thin_profile = FALSE
+        ${opts.activeOnly ? "AND l2.status_normalized IN ('active', 'current')" : ""}
+    ) rel ON TRUE
+    ORDER BY ${statusRank("p")}, p.display_name, p.license_identity
+    `,
+    params
+  );
+
+  return rows.map((r) => {
+    const card = mapRow(r);
+    const related = (r.related || []).map((x) => ({
+      slug: x.slug,
+      displayName: x.display_name,
+      occupationCode: x.occupation_code,
+      licenseKey: x.external_key,
+      licenseStatus: asLicenseStatus(x.status_normalized),
+    }));
+    return related.length ? { ...card, relatedProfiles: related } : card;
+  });
+}
+
 export async function listDiscoveryContractors(filters: ListFilters): Promise<{
   results: SearchResult[];
   total: number;
@@ -285,7 +448,7 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
 
   const countRow = await queryOne<{ n: string }>(
     `
-    SELECT COUNT(DISTINCT c.id)::text AS n
+    SELECT COUNT(DISTINCT ${directoryIdentitySql(disc)})::text AS n
     FROM contractors c
     JOIN licenses l ON l.contractor_id = c.id
     WHERE ${where}
@@ -294,6 +457,18 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
   );
   const total = countRow ? Number(countRow.n) : 0;
   if (total === 0) return { results: [], total: 0 };
+
+  if (disc.dedupeByLicenseNumber) {
+    const results = await listByLicenseNumber({
+      where,
+      filterParams,
+      entitySource: state.entitySource,
+      activeOnly: Boolean(disc.activeOnlyDefault),
+      limit,
+      offset,
+    });
+    return { results, total };
+  }
 
   // Entity lateral uses two extra params after filters
   const entitySourceIdx = filterParams.length + 1;
@@ -465,6 +640,47 @@ export async function countByTrade(
       activeOnly: Boolean(disc.activeOnlyDefault),
       requireInStateAddress: disc.requireInStateAddress,
     });
+
+    if (disc.dedupeByLicenseNumber) {
+      // One count per trade over distinct license numbers, so a licensee with
+      // several endorsements in one trade family is counted once and the facet
+      // equals the deduplicated [county]/[trade] listing total.
+      const codeTrades = disc.trades.filter((t) => !tradeHasExtraFilters(t));
+      const codes: string[] = [];
+      const slugs: string[] = [];
+      for (const t of codeTrades) {
+        for (const code of t.occupationCodes) {
+          codes.push(code.toUpperCase());
+          slugs.push(t.slug);
+        }
+      }
+      const codesIdx = params.length + 1;
+      const slugsIdx = params.length + 2;
+      const tradeRows = codes.length
+        ? await query<{ slug: string; n: string }>(
+            `
+      SELECT tc.slug, COUNT(DISTINCT ${LICENSE_IDENTITY_SQL})::text AS n
+      FROM contractors c
+      JOIN licenses l ON l.contractor_id = c.id
+      JOIN unnest($${codesIdx}::text[], $${slugsIdx}::text[]) AS tc(code, slug)
+        ON tc.code = l.occupation_code
+      WHERE ${where}
+      GROUP BY tc.slug
+      `,
+            [...params, codes, slugs]
+          )
+        : [];
+      const bySlug = new Map(tradeRows.map((r) => [r.slug, Number(r.n)]));
+      return disc.trades
+        .map((t) => ({
+          slug: t.slug,
+          label: t.label,
+          count: tradeHasExtraFilters(t) ? extraCounts.get(t.slug) || 0 : bySlug.get(t.slug) || 0,
+        }))
+        .filter((f) => f.count > 0)
+        .sort((a, b) => b.count - a.count);
+    }
+
     const rows = await query<{ occupation_code: string; n: string }>(
       `
       SELECT l.occupation_code, COUNT(DISTINCT c.id)::text AS n
@@ -538,7 +754,7 @@ export async function countCountiesForTrade(
     const rows = await query<{ county: string; n: string }>(
       `
       SELECT ${FACET_COUNTY_SQL} AS county,
-             COUNT(DISTINCT c.id)::text AS n
+             COUNT(DISTINCT ${directoryIdentitySql(disc)})::text AS n
       FROM contractors c
       JOIN licenses l ON l.contractor_id = c.id
       WHERE l.source_system = $1

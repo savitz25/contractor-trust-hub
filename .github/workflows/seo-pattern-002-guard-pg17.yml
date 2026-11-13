@@ -1,0 +1,74 @@
+name: SEO-PATTERN-002 AZ/OR/WA directory guard PostgreSQL 17
+
+# AZ/OR/WA segment directories (SEO-PATTERN-002): a failed, slow or partial read
+# must never render as an empty directory; real zero rows stay a real empty
+# state; Oregon lists and counts one entry per CCB license number.
+# Disposable service database with synthetic rows only. No secrets, no Production.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app/arizona/**'
+      - 'app/oregon/**'
+      - 'app/washington/**'
+      - 'lib/discovery/**'
+      - 'lib/db.ts'
+      - 'scripts/test_seo_pattern_002_*.ts'
+      - 'scripts/seo_pattern_002_guard/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/seo-pattern-002-guard-pg17.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: AZ/OR/WA false-empty guard and Oregon license dedupe
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: seo002_test
+          POSTGRES_PASSWORD: seo002_test_only
+          POSTGRES_DB: seo002_admin
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U seo002_test -d seo002_admin"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      PGHOST: 127.0.0.1
+      PGUSER: seo002_test
+      PGPASSWORD: seo002_test_only
+      CI: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install pinned repository dependencies
+        run: npm ci
+      - name: Connection failure + source guards (no database)
+        run: |
+          npm run test:seo-pattern-002-db-guard
+          npm run test:seo-pattern-002-oregon-dedupe
+      - name: Seed disposable fixture database (synthetic rows only)
+        run: |
+          psql -d seo002_admin -v ON_ERROR_STOP=1 -c "CREATE DATABASE fx"
+          psql -d fx -v ON_ERROR_STOP=1 -f scripts/seo_pattern_002_guard/synthetic_schema.sql -f scripts/seo_pattern_002_guard/oregon_dedupe_fixture.sql
+      - name: Fixture modes (ok, true zero, timeout, partial reads, Oregon dedupe)
+        env:
+          SEO002_GUARD_DB: fixture
+          DATABASE_URL: postgresql://seo002_test:seo002_test_only@127.0.0.1:5432/fx
+        run: |
+          npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_seo_pattern_002_db_guard.ts
+          npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_seo_pattern_002_oregon_dedupe.ts
+      - name: Typecheck
+        run: npm run typecheck
