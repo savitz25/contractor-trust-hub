@@ -1,0 +1,81 @@
+name: FL-DIR-PERF directory guard PostgreSQL 17
+
+# Florida directory regressions (FL-DIR-PERF-001/002): a failed, slow or partial
+# read must never render as an empty directory; real zero rows stay a real empty
+# state; one statement per render; no loading.tsx shell under app/florida.
+# Disposable service database with synthetic rows only. No secrets, no Production.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app/florida/**'
+      - 'lib/discovery/**'
+      - 'lib/db.ts'
+      - 'scripts/test_fl_dir_perf_00*.ts'
+      - 'scripts/fl_dir_perf_00*/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/fl-dir-perf-guard-pg17.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: Florida directory false-empty and query-shape guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: fl_dir_perf_test
+          POSTGRES_PASSWORD: fl_dir_perf_test_only
+          POSTGRES_DB: fl_dir_perf_admin
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fl_dir_perf_test -d fl_dir_perf_admin"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      PGHOST: 127.0.0.1
+      PGUSER: fl_dir_perf_test
+      PGPASSWORD: fl_dir_perf_test_only
+      CI: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install pinned repository dependencies
+        run: npm ci
+      - name: Connection failure + source guards (no database)
+        run: |
+          npm run test:fl-dir-perf-001
+          npm run test:fl-dir-perf-002
+      - name: Seed disposable fixture databases (synthetic rows only)
+        run: |
+          set -e
+          for db in fx_ok fx_empty fx_slow fx_slowok fx_sqlerr; do psql -d fl_dir_perf_admin -v ON_ERROR_STOP=1 -c "CREATE DATABASE $db"; done
+          psql -d fx_ok -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_001/synthetic_schema.sql
+          psql -d fx_empty -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_001/synthetic_schema.sql -c "DELETE FROM licenses_t; DELETE FROM contractors"
+          psql -d fx_slow -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_001/synthetic_schema.sql -f scripts/fl_dir_perf_001/slow_override.sql
+          psql -d fx_slowok -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_001/synthetic_schema.sql -f scripts/fl_dir_perf_002/slow_ok_override.sql
+      - name: Success, real zero rows, pagination (ok)
+        run: FL_DIR_PERF_DB=ok DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_ok npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_002.ts
+      - name: Real empty directory (empty)
+        run: FL_DIR_PERF_DB=empty DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_empty npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_002.ts
+      - name: Slow read inside the 8 s budget succeeds (slowok)
+        run: FL_DIR_PERF_DB=slowok DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_slowok npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_002.ts
+      - name: Statement timeout rejects (slow)
+        run: |
+          FL_DIR_PERF_DB=slow DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_slow npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_001.ts
+          FL_DIR_PERF_DB=slow DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_slow npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_002.ts
+      - name: SQL error rejects (sqlerr)
+        run: FL_DIR_PERF_DB=sqlerr DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_sqlerr npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_002.ts
+      - name: Typecheck
+        run: npm run typecheck
