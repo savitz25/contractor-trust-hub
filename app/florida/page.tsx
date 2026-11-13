@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { FloridaStateIntelligence } from "@/components/intelligence/FloridaStateIntelligence";
 import { getDiscoveryState } from "@/lib/discovery/config";
 import { getFloridaIntelligenceSnapshot } from "@/lib/intelligence/florida-snapshot";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
-import { Breadcrumbs } from "@/components/discovery/Breadcrumbs";
 
 const PUBLIC = "florida";
 
@@ -25,31 +23,13 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-async function FloridaIntelligenceBody() {
+/**
+ * FL-SEO-SERVER-RENDER-001: no Suspense / loading.tsx boundary on /florida.
+ * The snapshot is cached (unstable_cache, 30 min) and bounded by a 6s
+ * timeout that falls back to the static source catalog, so the full research
+ * body is in the initial server HTML instead of a "Loading…" placeholder.
+ */
+export default async function FloridaLandingPage() {
   const payload = await getFloridaIntelligenceSnapshot();
   return <FloridaStateIntelligence payload={payload} />;
-}
-
-export default function FloridaLandingPage() {
-  return (
-    <Suspense
-      fallback={
-        <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-          <Breadcrumbs
-            items={[
-              { label: "Home", href: "/" },
-              { label: "Florida" },
-            ]}
-          />
-          <div className="mt-4">
-            <p className="mt-8 text-sm text-[var(--muted)]" role="status">
-              Loading Florida research snapshot…
-            </p>
-          </div>
-        </main>
-      }
-    >
-      <FloridaIntelligenceBody />
-    </Suspense>
-  );
 }
