@@ -30,6 +30,27 @@ export type RelatedProfile = {
   licenseStatus: SearchResult["licenseStatus"];
 };
 
+/**
+ * A Florida directory read failed (statement timeout, pool/connect timeout,
+ * SQL error). It is NOT an empty directory: callers must never render it as
+ * "No matches". Pages let it propagate so the response is a non-200 error
+ * instead of an indexable empty listing (FL-DIR-PERF-001).
+ */
+export class FloridaDirectoryUnavailableError extends Error {
+  readonly op: string;
+  constructor(op: string, cause: unknown) {
+    super(`${op} failed: directory data unavailable`, { cause });
+    this.name = "FloridaDirectoryUnavailableError";
+    this.op = op;
+  }
+}
+
+export function isFloridaDirectoryUnavailableError(
+  err: unknown
+): err is FloridaDirectoryUnavailableError {
+  return err instanceof FloridaDirectoryUnavailableError;
+}
+
 export type FloridaBrowseStats = {
   firms: number;
   activeFirms: number;
@@ -357,7 +378,9 @@ export async function listFloridaBrowse(opts: {
       "[discovery] listFloridaBrowse failed:",
       err instanceof Error ? err.message : err
     );
-    return empty;
+    // Never turn a failed or partial read into an empty directory. A real
+    // zero-result query returns above with total 0; a failure throws.
+    throw new FloridaDirectoryUnavailableError("listFloridaBrowse", err);
   }
 }
 
