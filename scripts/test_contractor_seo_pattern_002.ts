@@ -7,8 +7,14 @@
  * page into a hidden chunk that needs browser JavaScript. These checks fail
  * if that boundary comes back.
  *
- * Florida stays on the FL-SEO-SERVER-RENDER-001 fix. Nested directory
- * loading.tsx files (county, trade, project) are outside this change.
+ * The AZ/OR/WA county, city and trade segment pages (/arizona/phoenix,
+ * /oregon/multnomah, /washington/king, ...) are in the sitemap and had the
+ * same problem through app/{state}/[segment]/loading.tsx. Those boundaries
+ * are removed too; unknown segments must keep calling notFound() so they
+ * return a real 404 instead of a 200 soft-404 shell.
+ *
+ * Florida stays on the FL-SEO-SERVER-RENDER-001 fix. Facet and project
+ * loading.tsx files are outside this change.
  */
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
@@ -38,14 +44,13 @@ const STATE_PAGES = [
   "app/washington/page.tsx",
 ];
 
+const SEGMENT_STATES = ["arizona", "oregon", "washington"] as const;
+
 const NESTED_LOADING_KEPT = [
-  "app/arizona/[segment]/loading.tsx",
   "app/arizona/[segment]/[facet]/loading.tsx",
   "app/arizona/projects/[project]/loading.tsx",
-  "app/oregon/[segment]/loading.tsx",
   "app/oregon/[segment]/[facet]/loading.tsx",
   "app/oregon/projects/[project]/loading.tsx",
-  "app/washington/[segment]/loading.tsx",
   "app/washington/[segment]/[facet]/loading.tsx",
   "app/washington/projects/[project]/loading.tsx",
   "app/florida/[segment]/[facet]/loading.tsx",
@@ -72,6 +77,36 @@ test("state research pages stay server components without a client-only boundary
   assert.match(read("app/oregon/page.tsx"), /loadOregonContractorView\(\)/);
   assert.match(read("app/virginia/page.tsx"), /loadVirginiaContractorView\(\)/);
   assert.match(read("app/washington/page.tsx"), /loadWashingtonContractorView\(\)/);
+});
+
+test("no loading.tsx wraps the AZ/OR/WA county, city and trade segment pages", () => {
+  for (const s of SEGMENT_STATES) {
+    const file = `app/${s}/[segment]/loading.tsx`;
+    assert.equal(existsSync(file), false, `${file} must not exist (it streams a loading placeholder)`);
+  }
+});
+
+test("AZ/OR/WA segment pages render on the server and keep real 404s for unknown segments", () => {
+  for (const s of SEGMENT_STATES) {
+    const file = `app/${s}/[segment]/page.tsx`;
+    const src = stripComments(read(file));
+    assert.ok(!/\bSuspense\b/.test(src), `${file}: no <Suspense> around the listing`);
+    assert.ok(!/Loading [A-Z][\w ]* (list|results)/.test(src), `${file}: no loading placeholder copy`);
+    assert.ok(!/ssr\s*:\s*false/.test(src), `${file}: no dynamic(..., { ssr: false })`);
+    assert.ok(!/^\s*["']use client["']/m.test(src), `${file}: route must stay a server component`);
+    assert.match(src, /<h1[\s>]/, `${file}: renders its own H1`);
+    // Unknown segments resolve to notFound() before any listing query. With no
+    // loading.tsx above it, nothing has streamed yet, so this is a real 404.
+    assert.match(src, /import \{[^}]*\bnotFound\b[^}]*\} from "next\/navigation"/, `${file}: imports notFound`);
+    assert.match(
+      src,
+      /const resolved = resolveDiscoverySegment\(state, segment\);\s*if \(!resolved\) notFound\(\);/,
+      `${file}: unknown segments must call notFound()`,
+    );
+    const notFoundAt = src.indexOf("if (!resolved) notFound()");
+    const firstQuery = src.search(/await\s+(Promise\.all|(load|fetch|get|query|search)[A-Z]\w*)\(/);
+    assert.ok(firstQuery > 0 && notFoundAt < firstQuery, `${file}: notFound() must run before the first data query`);
+  }
 });
 
 test("nested directory loading files and the Florida research fix stay in place", () => {
