@@ -53,7 +53,9 @@ const NESTED_LOADING_KEPT = [
   "app/oregon/projects/[project]/loading.tsx",
   "app/washington/[segment]/[facet]/loading.tsx",
   "app/washington/projects/[project]/loading.tsx",
-  "app/florida/[segment]/[facet]/loading.tsx",
+  // app/florida/[segment]/[facet]/loading.tsx is not asserted here: FL-DIR-PERF-002
+  // (#200) owns that boundary and removes it, so this guard must pass with or
+  // without it.
 ];
 
 test("no route-level loading.tsx wraps the seven state research pages", () => {
