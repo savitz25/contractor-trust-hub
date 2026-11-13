@@ -76,8 +76,10 @@ for (const page of PAGES) {
   });
 }
 // AZ/OR/WA county, city and trade segment pages listed in the sitemap. Word
-// floors are low on purpose: without a database the listing is empty and only
-// the page frame (H1, method notes, facets) renders.
+// floors are low on purpose: with few rows only the page frame (H1, method
+// notes, facets) renders. These pages need a reachable database (for example
+// scripts/seo_pattern_002_guard/synthetic_schema.sql): since the SEO-PATTERN-002
+// B1 guard a failed read is a non-200 noindex error, never an empty listing.
 const SEGMENT_PAGES = [
   { path: "/arizona/phoenix", h1: "Phoenix", minWords: 100 },
   { path: "/arizona/roofing", h1: "Roofing", minWords: 100 },

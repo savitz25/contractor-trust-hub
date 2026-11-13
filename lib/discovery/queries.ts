@@ -211,12 +211,41 @@ async function countDistinctForTrade(
   return Number(row?.n || 0);
 }
 
+/**
+ * SEO-PATTERN-002 B1 guard: a discovery directory read failed (statement
+ * timeout, pool/connect timeout, SQL error). It is NOT an empty directory.
+ * Only callers that opt in with `strict` receive it; they let it propagate so
+ * the response is a non-200 error (noindex) instead of an indexable
+ * "No active licenses found" page. Non-strict callers keep the old
+ * empty-on-failure behavior unchanged. Mirrors FloridaDirectoryUnavailableError
+ * (FL-DIR-PERF-001, lib/discovery/florida-list.ts).
+ */
+export class DiscoveryDirectoryUnavailableError extends Error {
+  readonly op: string;
+  constructor(op: string, cause: unknown) {
+    super(`${op} failed: directory data unavailable`, { cause });
+    this.name = "DiscoveryDirectoryUnavailableError";
+    this.op = op;
+  }
+}
+
+export function isDiscoveryDirectoryUnavailableError(
+  err: unknown
+): err is DiscoveryDirectoryUnavailableError {
+  return err instanceof DiscoveryDirectoryUnavailableError;
+}
+
+/** Opt-in: throw DiscoveryDirectoryUnavailableError instead of returning empty on a failed read. */
+export type DiscoveryReadOptions = { strict?: boolean };
+
 type ListFilters = {
   publicStateSlug: string;
   county?: CountyDef | null;
   trade?: TradeDef | null;
   limit?: number;
   offset?: number;
+  /** See DiscoveryReadOptions. A real zero-row result still returns total 0. */
+  strict?: boolean;
 };
 
 export async function listDiscoveryContractors(filters: ListFilters): Promise<{
@@ -343,6 +372,7 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
   return { results: rows.map(mapRow), total };
   } catch (err) {
     console.error("[discovery] listDiscoveryContractors failed:", err instanceof Error ? err.message : err);
+    if (filters.strict) throw new DiscoveryDirectoryUnavailableError("listDiscoveryContractors", err);
     return { results: [], total: 0 };
   }
 }
@@ -394,7 +424,8 @@ export async function getStateDiscoveryStats(publicStateSlug: string): Promise<{
  */
 export async function countByTrade(
   publicStateSlug: string,
-  county?: CountyDef | null
+  county?: CountyDef | null,
+  opts?: DiscoveryReadOptions
 ): Promise<DiscoveryFacet[]> {
   const disc = getDiscoveryState(publicStateSlug);
   if (!disc) return [];
@@ -449,7 +480,8 @@ export async function countByTrade(
       }))
       .filter((f) => f.count > 0)
       .sort((a, b) => b.count - a.count);
-  } catch {
+  } catch (err) {
+    if (opts?.strict) throw new DiscoveryDirectoryUnavailableError("countByTrade", err);
     return [];
   }
 }
@@ -457,7 +489,8 @@ export async function countByTrade(
 /** County facets for a single trade — one SQL pass + map to curated slugs. */
 export async function countCountiesForTrade(
   publicStateSlug: string,
-  trade: TradeDef
+  trade: TradeDef,
+  opts?: DiscoveryReadOptions
 ): Promise<DiscoveryFacet[]> {
   const disc = getDiscoveryState(publicStateSlug);
   if (!disc) return [];
@@ -469,8 +502,12 @@ export async function countCountiesForTrade(
     try {
       const byZip = await countByPostalPrefix(publicStateSlug, trade);
       const facets = rollupGeosFromZips(disc.counties, byZip);
-      return await appendOutOfStateFacet(publicStateSlug, facets, trade);
-    } catch {
+      return await appendOutOfStateFacet(publicStateSlug, facets, trade, opts);
+    } catch (err) {
+      if (opts?.strict) {
+        if (isDiscoveryDirectoryUnavailableError(err)) throw err;
+        throw new DiscoveryDirectoryUnavailableError("countCountiesForTrade", err);
+      }
       return [];
     }
   }
@@ -480,7 +517,8 @@ export async function countCountiesForTrade(
     try {
       const byCity = await countByCity(publicStateSlug, trade);
       return rollupGeosFromCities(disc.counties, byCity);
-    } catch {
+    } catch (err) {
+      if (opts?.strict) throw new DiscoveryDirectoryUnavailableError("countCountiesForTrade", err);
       return [];
     }
   }
@@ -516,7 +554,8 @@ export async function countCountiesForTrade(
       .map((county) => ({ slug: county.slug, label: county.name, count: countyFacetCount(county, byKey) }))
       .filter((f) => f.count > 0)
       .sort((a, b) => b.count - a.count);
-  } catch {
+  } catch (err) {
+    if (opts?.strict) throw new DiscoveryDirectoryUnavailableError("countCountiesForTrade", err);
     return [];
   }
 }
@@ -669,7 +708,8 @@ function rollupGeosFromZips(
 async function appendOutOfStateFacet(
   publicStateSlug: string,
   facets: DiscoveryFacet[],
-  trade?: TradeDef | null
+  trade?: TradeDef | null,
+  opts?: DiscoveryReadOptions
 ): Promise<DiscoveryFacet[]> {
   const disc = getDiscoveryState(publicStateSlug);
   const state = disc ? getStateBySlug(disc.evidenceSlug) : null;
@@ -688,7 +728,9 @@ async function appendOutOfStateFacet(
     return [...facets, { slug: oos.slug, label: oos.name, count: n }].sort(
       (a, b) => b.count - a.count
     );
-  } catch {
+  } catch (err) {
+    // Strict callers: a missing out-of-state facet is a partial read, not zero.
+    if (opts?.strict) throw new DiscoveryDirectoryUnavailableError("appendOutOfStateFacet", err);
     return facets;
   }
 }
