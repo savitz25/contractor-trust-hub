@@ -18,7 +18,11 @@ import {
   getDiscoveryState,
   getTrade,
 } from "@/lib/discovery/config";
-import { listFloridaBrowse, listFloridaCities } from "@/lib/discovery/florida-list";
+import {
+  isFloridaDirectoryUnavailableError,
+  listFloridaBrowse,
+  listFloridaCities,
+} from "@/lib/discovery/florida-list";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
 
 const PUBLIC = "florida";
@@ -44,14 +48,22 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const trade = getTrade(state, tradeSlug);
   if (!county || !trade) return { title: "Not found", robots: { index: false } };
 
-  const { stats } = await listFloridaBrowse({
-    county,
-    trade,
-    browse: { ...browse, citySlug, page: 1 },
-    pathCitySlug: citySlug,
-  });
   const cityLabel = cityLabelFromSlug(citySlug);
-  const thin = stats.firms < CITY_INDEX_MIN;
+  let thin: boolean;
+  try {
+    const { stats } = await listFloridaBrowse({
+      county,
+      trade,
+      browse: { ...browse, citySlug, page: 1 },
+      pathCitySlug: citySlug,
+    });
+    thin = stats.firms < CITY_INDEX_MIN;
+  } catch (err) {
+    if (!isFloridaDirectoryUnavailableError(err)) throw err;
+    // FL-DIR-PERF-001: the read failed, so the count is unknown. Keep the
+    // failed render out of the index; the page body then raises the error.
+    thin = true;
+  }
 
   return discoveryMetadata({
     state,
