@@ -144,8 +144,16 @@ export function buildFilterClause(opts: {
   }
 
   if (opts.occupationCodes?.length) {
+    // FL-DIR-PERF-002: compare the column directly so the planner can use
+    // licenses_occupation_source_idx (source_system, occupation_code) as an
+    // Index Cond with real row estimates. Wrapping the column in UPPER() was
+    // non-sargable (every source row read, ~435-row default estimate).
+    // Equivalent: every loader writes occupation_code.upper(), and Production
+    // has 0 non-uppercase / untrimmed / NULL codes for fl_dbpr, az_roc, or_ccb
+    // and wa_lni (the only sources reaching this clause). The bind values stay
+    // uppercased here, matching countCountiesForTrade.
     params.push(opts.occupationCodes.map((c) => c.toUpperCase()));
-    where += ` AND UPPER(l.occupation_code) = ANY($${params.length}::text[])`;
+    where += ` AND l.occupation_code = ANY($${params.length}::text[])`;
   }
 
   const classCodes = (opts.classCodes || []).map((c) => c.toUpperCase().trim()).filter(Boolean);
