@@ -30,6 +30,7 @@ import { readFileSync, existsSync } from "node:fs";
 import test from "node:test";
 
 import {
+  buildFilterClause,
   countByTrade,
   countCountiesForTrade,
   DiscoveryDirectoryUnavailableError,
@@ -37,6 +38,7 @@ import {
   listDiscoveryContractors,
 } from "../lib/discovery/queries";
 import { getCounty, getDiscoveryState, getTrade } from "../lib/discovery/config";
+import { getStateBySlug } from "../lib/states/config";
 
 const mode = process.env.SEO002_GUARD_DB || "unreachable";
 if (mode === "unreachable") {
@@ -113,6 +115,33 @@ test("source: strict catches in lib/discovery/queries.ts throw, never return emp
   // FL-DIR-PERF-001 stays intact (merged in via main).
   const fl = readFileSync("lib/discovery/florida-list.ts", "utf8");
   assert.match(fl, /throw new FloridaDirectoryUnavailableError\("listFloridaBrowse", err\)/);
+});
+
+test("Oregon (requireInStateAddress: false) still references the bound $2 with a type", () => {
+  // Without this every Oregon directory read failed in Postgres with
+  // "could not determine data type of parameter $2" (Production logs), and the
+  // old empty fallback rendered it as "No active CCB licenses found".
+  const d = disc("oregon");
+  assert.equal(d.requireInStateAddress, false);
+  const st = getStateBySlug(d.evidenceSlug);
+  assert.ok(st);
+  for (const extra of [{ county: geo("oregon", "multnomah") }, { occupationCodes: ["RGC"] }, {}]) {
+    const { where, params } = buildFilterClause({
+      licenseSource: st.licenseSource,
+      stateCode: st.code,
+      activeOnly: true,
+      requireInStateAddress: false,
+      ...extra,
+    });
+    assert.equal(params[1], "OR");
+    assert.match(where, /\$2::text IS NOT NULL/);
+  }
+  const src = readFileSync("lib/discovery/queries.ts", "utf8");
+  assert.match(src, /requireInState === false \? STATE_PARAM_TYPED_SQL :/);
+  // States that require an in-state address keep the original predicate.
+  const az = buildFilterClause({ licenseSource: "az_roc", stateCode: "AZ" });
+  assert.match(az.where, /\(c\.home_state = \$2 OR l\.state = \$2\)/);
+  assert.doesNotMatch(az.where, /\$2::text IS NOT NULL/);
 });
 
 // ------------------------------------------------------------ unreachable DB

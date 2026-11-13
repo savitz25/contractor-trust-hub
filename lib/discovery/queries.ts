@@ -35,8 +35,17 @@ function countyFacetCount(county: CountyDef, byKey: Map<string, number>): number
 const MIN_SUNBIZ_CONFIDENCE = 0.9;
 export const DISCOVERY_PAGE_SIZE = 24;
 
+/**
+ * States with requireInStateAddress === false (Oregon) never referenced $2, but
+ * $2 (state code) is always bound. Postgres then rejects the statement with
+ * "could not determine data type of parameter $2", so every such read failed
+ * and the empty fallback hid it (SEO-PATTERN-002 B1 guard). Reference $2 with an
+ * explicit type in a predicate that is always true for a bound state code.
+ */
+const STATE_PARAM_TYPED_SQL = "AND $2::text IS NOT NULL";
+
 function inStateSql(requireInState: boolean | undefined): string {
-  return requireInState === false ? "" : "AND (c.home_state = $2 OR l.state = $2)";
+  return requireInState === false ? STATE_PARAM_TYPED_SQL : "AND (c.home_state = $2 OR l.state = $2)";
 }
 
 function mapRow(r: {
@@ -104,6 +113,8 @@ export function buildFilterClause(opts: {
   `;
   if (opts.requireInStateAddress !== false) {
     where += ` AND (c.home_state = $2 OR l.state = $2)`;
+  } else {
+    where += ` ${STATE_PARAM_TYPED_SQL}`;
   }
 
   if (opts.activeOnly) {
