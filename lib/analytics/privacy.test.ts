@@ -172,6 +172,9 @@ test("no $exception events are sent", () => {
   assert.match(source, /capture_exceptions:\s*false/);
   assert.match(source, /suppressExceptionCapture\(event\)/);
   assert.match(source, /respect_dnt:\s*true/);
+  assert.match(source, /capture_copied_text:\s*false/);
+  assert.match(source, /capture_value_css_selector_allowlist:\s*\[\]/);
+  assert.match(source, /disable_session_recording:\s*true/);
 });
 
 test("Do Not Track or blocked cookies opt out of analytics", () => {
@@ -192,7 +195,80 @@ test("Do Not Track or blocked cookies opt out of analytics", () => {
       value: { doNotTrack: "0", cookieEnabled: true },
     });
     assert.equal(analyticsBrowserOptOut(), false);
+    Object.defineProperty(globalThis, "navigator", {
+      configurable: true,
+      value: { doNotTrack: "0", cookieEnabled: true, globalPrivacyControl: true },
+    });
+    assert.equal(analyticsBrowserOptOut(), true);
   } finally {
     Object.defineProperty(globalThis, "navigator", { configurable: true, value: previous });
   }
+});
+
+test("identify, pageview, and custom event payloads drop email, search, and auth fields", () => {
+  const secret = "roofers in broward";
+  const email = "person@example.com";
+  const identify = sanitizeCaptureResult({
+    event: "$identify",
+    properties: {
+      distinct_id: email,
+      email,
+      $email: email,
+      password: "hunter2-secret",
+      access_token: "auth-secret-value",
+      otp: "998877",
+      q: secret,
+      search: secret,
+      $ip: "203.0.113.10",
+      $current_url: `https://www.contractortrusthub.com/search?q=${encodeURIComponent(secret)}&access_token=abc&email=${encodeURIComponent(email)}&state=FL`,
+      $set: { email, name: "Pat Example", search: secret },
+    },
+    $set: { email, password: "hunter2-secret", search: secret },
+  });
+  const identifyJson = JSON.stringify(identify);
+  assert.equal(identifyJson.includes(email), false);
+  assert.equal(identifyJson.includes(secret), false);
+  assert.equal(identifyJson.includes("hunter2-secret"), false);
+  assert.equal(identifyJson.includes("auth-secret-value"), false);
+  assert.equal(identifyJson.includes("998877"), false);
+  assert.equal(identifyJson.includes("203.0.113.10"), false);
+  assert.equal(identify?.properties?.$geoip_disable, true);
+  assert.equal(identify?.properties?.$ip, undefined);
+  assert.match(String(identify?.properties?.$current_url), /state=FL/);
+  assert.equal(String(identify?.properties?.$current_url).includes("q="), false);
+
+  const pageview = sanitizeCaptureResult(
+    suppressExceptionCapture({
+      event: "$pageview",
+      properties: {
+        $current_url: `https://www.contractortrusthub.com/search?q=${encodeURIComponent(secret)}&email=${encodeURIComponent(email)}&state=FL`,
+        $exception_message: secret,
+        $exception_list: [{ type: "Error", value: secret }],
+      },
+    }),
+  );
+  const pageJson = JSON.stringify(pageview);
+  assert.equal(pageview?.event, "$pageview");
+  assert.equal(pageJson.includes(secret), false);
+  assert.equal(pageJson.includes(email), false);
+  assert.equal(pageview?.properties?.$geoip_disable, true);
+
+  const custom = sanitizeCaptureResult({
+    event: "search_submitted",
+    properties: {
+      surface: "ask_form",
+      success: true,
+      stateCode: "FL",
+      query: secret,
+      email,
+      password: "hunter2-secret",
+    },
+  });
+  assert.equal(custom?.properties?.surface, "ask_form");
+  assert.equal(custom?.properties?.success, true);
+  assert.equal(custom?.properties?.stateCode, "FL");
+  const customJson = JSON.stringify(custom);
+  assert.equal(customJson.includes(secret), false);
+  assert.equal(customJson.includes(email), false);
+  assert.equal(customJson.includes("hunter2-secret"), false);
 });

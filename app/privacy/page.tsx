@@ -24,9 +24,15 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-lg font-semibold text-[var(--text)]">Analytics and cookies</h2>
           <p className="mt-2">
-            We use PostHog for product analytics. It collects pages viewed, clicks, and device and
-            browser info. No email addresses and no search text are sent. You can opt out with the
-            browser Do Not Track setting, or by blocking cookies.
+            We use PostHog for product analytics when a project key is present. Events can include
+            pages viewed, clicks on links, buttons, and forms, device and browser info, and an
+            anonymous id stored in local storage and a cookie. Email addresses, search text, sign-in
+            fields, and sensitive URL parameters are removed before an event is sent. The event asks
+            PostHog not to add a location from the network address. PostHog can still receive that
+            address with the request, and whether it is stored is a PostHog project setting that this
+            site does not change. This site does not set how long events are kept. Retention follows
+            the PostHog project settings. Do Not Track, Global Privacy Control, or blocking cookies
+            turns analytics off in this browser. A cookie banner is not shown.
           </p>
         </section>
       </div>

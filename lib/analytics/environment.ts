@@ -30,12 +30,14 @@ export function posthogDebugEnabled(): boolean {
   return flag === "1" || flag === "true" || flag === "yes";
 }
 
-/** Browser Do Not Track, or cookies turned off, opts out of product analytics. */
+/** Do Not Track, Global Privacy Control, or cookies turned off opts out of product analytics. */
 export function analyticsBrowserOptOut(): boolean {
   try {
     if (typeof navigator === "undefined") return false;
     const dnt = navigator.doNotTrack;
     if (dnt === "1" || dnt === "yes") return true;
+    const gpc = (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl;
+    if (gpc === true) return true;
     return navigator.cookieEnabled === false;
   } catch {
     return false;

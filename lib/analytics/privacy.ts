@@ -287,25 +287,98 @@ export function sanitizePageviewProperties(properties: Record<string, unknown>):
   return properties;
 }
 
-/** `$exception` autocapture is never sent. Any `$exception_list` is removed. */
+const EXTRA_IDENTITY_KEYS = [
+  "otp",
+  "secret",
+  "access_token",
+  "refresh_token",
+  "id_token",
+  "session",
+  "credential",
+  "credentials",
+] as const;
+
+function nestedPropertyBag(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  return value as Record<string, unknown>;
+}
+
+/** Drops emails, search text, sign-in fields, and auth-shaped keys from one property bag. */
+function scrubIdentityProperties(bag: Record<string, unknown>): void {
+  sanitizeUrlProperties(bag);
+  for (const key of Object.keys(bag)) {
+    if (isPosthogReservedKey(key)) continue;
+    const lower = key.toLowerCase();
+    if ((FORBIDDEN_EVENT_KEYS as readonly string[]).includes(lower)) {
+      delete bag[key];
+      continue;
+    }
+    if ((EXTRA_IDENTITY_KEYS as readonly string[]).includes(lower)) {
+      delete bag[key];
+      continue;
+    }
+    if (/email|password|token|ssn|phone|secret|otp|authorization|cookie/.test(lower)) {
+      delete bag[key];
+      continue;
+    }
+    const value = bag[key];
+    if (typeof value === "string" && value.includes("@")) delete bag[key];
+  }
+  for (const key of ["distinct_id", "email", "$email"]) {
+    const value = bag[key];
+    if (typeof value === "string" && value.includes("@")) delete bag[key];
+  }
+}
+
+/**
+ * Last pass for identify, capture, pageview, and custom events.
+ * Clears a client-supplied network address and asks PostHog not to add a location.
+ * PostHog can still see the request address. Storage of that address is a project setting.
+ */
+function finishPrivacyPayload(event: {
+  properties?: Record<string, unknown>;
+  $set?: Record<string, unknown>;
+  $set_once?: Record<string, unknown>;
+}): void {
+  if (event.properties) {
+    scrubIdentityProperties(event.properties);
+    const set = nestedPropertyBag(event.properties.$set);
+    const once = nestedPropertyBag(event.properties.$set_once);
+    if (set) scrubIdentityProperties(set);
+    if (once) scrubIdentityProperties(once);
+    for (const key of Object.keys(event.properties)) {
+      if (key === "$ip" || key.startsWith("$exception")) delete event.properties[key];
+    }
+    event.properties.$geoip_disable = true;
+  }
+  if (event.$set) scrubIdentityProperties(event.$set);
+  if (event.$set_once) scrubIdentityProperties(event.$set_once);
+}
+
+/** `$exception` autocapture is never sent. Exception properties are removed from every event. */
 export function suppressExceptionCapture<
   T extends { event?: string; properties?: Record<string, unknown> } | null,
 >(event: T): T | null {
   if (!event) return event;
-  if (event.properties && "$exception_list" in event.properties) {
-    delete event.properties.$exception_list;
+  if (event.properties) {
+    for (const key of Object.keys(event.properties)) {
+      if (key.startsWith("$exception")) delete event.properties[key];
+    }
   }
   if (event.event === "$exception") return null;
   return event;
 }
 
-export function sanitizeCaptureResult<T extends { properties?: Record<string, unknown>; $set?: Record<string, unknown>; $set_once?: Record<string, unknown> } | null>(
-  event: T,
-): T {
+export function sanitizeCaptureResult<
+  T extends {
+    properties?: Record<string, unknown>;
+    $set?: Record<string, unknown>;
+    $set_once?: Record<string, unknown>;
+  } | null,
+>(event: T): T {
   if (!event) return event;
   if (event.properties) sanitizePageviewProperties(event.properties);
-  if (event.$set) sanitizeUrlProperties(event.$set);
-  if (event.$set_once) sanitizeUrlProperties(event.$set_once);
+  finishPrivacyPayload(event);
   return event;
 }
 
