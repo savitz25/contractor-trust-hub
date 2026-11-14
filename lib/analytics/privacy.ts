@@ -287,6 +287,18 @@ export function sanitizePageviewProperties(properties: Record<string, unknown>):
   return properties;
 }
 
+/** `$exception` autocapture is never sent. Any `$exception_list` is removed. */
+export function suppressExceptionCapture<
+  T extends { event?: string; properties?: Record<string, unknown> } | null,
+>(event: T): T | null {
+  if (!event) return event;
+  if (event.properties && "$exception_list" in event.properties) {
+    delete event.properties.$exception_list;
+  }
+  if (event.event === "$exception") return null;
+  return event;
+}
+
 export function sanitizeCaptureResult<T extends { properties?: Record<string, unknown>; $set?: Record<string, unknown>; $set_once?: Record<string, unknown> } | null>(
   event: T,
 ): T {
