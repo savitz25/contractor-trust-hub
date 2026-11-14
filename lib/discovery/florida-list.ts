@@ -451,11 +451,57 @@ const floridaBrowseRequestStore = cache(
 );
 
 /**
+ * FL-DIR-PERF-003: per-instance memo of FAILED directory reads only.
+ * Next re-renders a page that threw (the error pass gets a fresh React cache
+ * store), and crawler bursts repeat the same URL within seconds. Without this
+ * memo each repeat re-ran an 8 s statement on the single pooled client.
+ * Successes are never memoised (no stale data); a failure is reused for at
+ * most FAILURE_MEMO_TTL_MS for the exact same request key in this instance.
+ */
+export const FLORIDA_FAILURE_MEMO_TTL_MS = 15_000;
+const FAILURE_MEMO_MAX = 256;
+const floridaBrowseFailureMemo = new Map<string, { cause: unknown; until: number }>();
+
+function memoFailure(key: string, cause: unknown, now = Date.now()): void {
+  if (floridaBrowseFailureMemo.size >= FAILURE_MEMO_MAX) {
+    for (const [k, v] of floridaBrowseFailureMemo) {
+      if (v.until <= now) floridaBrowseFailureMemo.delete(k);
+    }
+    while (floridaBrowseFailureMemo.size >= FAILURE_MEMO_MAX) {
+      const oldest = floridaBrowseFailureMemo.keys().next().value;
+      if (oldest === undefined) break;
+      floridaBrowseFailureMemo.delete(oldest);
+    }
+  }
+  floridaBrowseFailureMemo.set(key, { cause, until: now + FLORIDA_FAILURE_MEMO_TTL_MS });
+}
+
+function recentFailure(key: string, now = Date.now()): { cause: unknown } | null {
+  const hit = floridaBrowseFailureMemo.get(key);
+  if (!hit) return null;
+  if (hit.until <= now) {
+    floridaBrowseFailureMemo.delete(key);
+    return null;
+  }
+  return hit;
+}
+
+/** Test hooks (never needed at runtime). */
+export function resetFloridaFailureMemoForTests(): void {
+  floridaBrowseFailureMemo.clear();
+}
+export function floridaFailureMemoSizeForTests(): number {
+  return floridaBrowseFailureMemo.size;
+}
+
+/**
  * FL-DIR-PERF-002: listFloridaBrowse, de-duplicated within one request.
  * /florida/{county}/{city}/{trade} reads the same directory in
  * generateMetadata (thin check) and in the page body. Sharing the promise
  * halves that route's directory SQL. A failed read is shared too, so the
  * metadata (noindex) and the page (error, not "No matches") stay consistent.
+ * FL-DIR-PERF-003: every Florida directory route uses this, and a failure is
+ * remembered per instance for FLORIDA_FAILURE_MEMO_TTL_MS (no SQL on repeat).
  */
 export function listFloridaBrowseOnce(
   opts: FloridaBrowseOpts
@@ -464,20 +510,51 @@ export function listFloridaBrowseOnce(
   const key = floridaBrowseRequestKey(opts);
   let pending = store.get(key);
   if (!pending) {
-    pending = listFloridaBrowse(opts);
+    const recent = recentFailure(key);
+    if (recent) {
+      console.warn("[discovery] listFloridaBrowse skipped: same read failed in this instance <15 s ago");
+      pending = Promise.reject(
+        new FloridaDirectoryUnavailableError("listFloridaBrowse (recent failure)", recent.cause)
+      );
+    } else {
+      pending = listFloridaBrowse(opts).catch((err: unknown) => {
+        if (isFloridaDirectoryUnavailableError(err)) memoFailure(key, err.cause);
+        throw err;
+      });
+    }
     store.set(key, pending);
   }
   return pending;
 }
 
+/**
+ * A facet (side list) read. ok:false means the read FAILED: callers must not
+ * render it as a real "no cities / no trades" list on an indexable page.
+ */
+export type FloridaFacetResult =
+  | { ok: true; facets: DiscoveryFacet[] }
+  | { ok: false; facets: DiscoveryFacet[] };
+
+/** Legacy shape (failure collapses to []); Florida routes use listFloridaCitiesChecked. */
 export async function listFloridaCities(
   county: CountyDef,
   trade?: TradeDef | null
 ): Promise<DiscoveryFacet[]> {
+  return (await listFloridaCitiesChecked(county, trade)).facets;
+}
+
+/**
+ * FL-DIR-PERF-003: city facet read that reports failure explicitly instead of
+ * returning an empty list that looks like "no cities".
+ */
+export async function listFloridaCitiesChecked(
+  county: CountyDef,
+  trade?: TradeDef | null
+): Promise<FloridaFacetResult> {
   const disc = getDiscoveryState(PUBLIC);
-  if (!disc) return [];
+  if (!disc) return { ok: true, facets: [] };
   const state = getStateBySlug(disc.evidenceSlug);
-  if (!state?.live) return [];
+  if (!state?.live) return { ok: true, facets: [] };
 
   try {
     const { where, params } = buildFilterClause({
@@ -509,18 +586,19 @@ export async function listFloridaCities(
       `,
       params
     );
-    return rows
+    const facets = rows
       .map((r) => {
         const slug = cityToSlug(r.city);
         if (!slug) return null;
         return { slug, label: cityLabelFromSlug(slug), count: Number(r.n) };
       })
       .filter((x): x is DiscoveryFacet => Boolean(x));
+    return { ok: true, facets };
   } catch (err) {
     console.error(
       "[discovery] listFloridaCities failed:",
       err instanceof Error ? err.message : err
     );
-    return [];
+    return { ok: false, facets: [] };
   }
 }

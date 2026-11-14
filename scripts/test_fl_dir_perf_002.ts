@@ -133,15 +133,26 @@ test("loading boundary: no loading.tsx anywhere under app/florida (county/trade 
 });
 
 test("source: county/trade and city+trade run the facet query after the directory read", () => {
+  // FL-DIR-PERF-003 moved the reads into request-scoped loaders shared by
+  // generateMetadata and the page; the ordering guard follows them there.
   for (const p of [
     "app/florida/[segment]/[facet]/page.tsx",
     "app/florida/[segment]/[facet]/[trade]/page.tsx",
   ]) {
     const page = src(p).slice(src(p).indexOf("export default"));
     assert.doesNotMatch(page, /Promise\.all\(/, p);
+    assert.match(page, /loadFloridaC(ounty|ity)TradePage\(/, p);
+  }
+  const loader = src("lib/discovery/florida-directory-page.ts");
+  assert.doesNotMatch(loader, /Promise\.all\(/);
+  for (const fn of ["loadFloridaCountyTradePage", "loadFloridaCityTradePage"]) {
+    const body = loader.slice(loader.indexOf(`export function ${fn}(`));
+    const end = body.indexOf("\n}\n");
+    const b = body.slice(0, end);
+    assert.ok(b.indexOf("listFloridaBrowseOnce(") > 0, `${fn}: directory read`);
     assert.ok(
-      page.indexOf("listFloridaBrowse") < page.indexOf("listFloridaCities("),
-      `${p}: directory before facets`
+      b.indexOf("listFloridaBrowseOnce(") < b.indexOf("listFloridaCitiesChecked("),
+      `${fn}: directory before facets`
     );
   }
 });
@@ -150,8 +161,8 @@ test("source: city+trade metadata and page share one request-scoped read; failur
   const s = src("app/florida/[segment]/[facet]/[trade]/page.tsx");
   const meta = s.slice(s.indexOf("export async function generateMetadata"), s.indexOf("export default"));
   const page = s.slice(s.indexOf("export default"));
-  assert.match(meta, /listFloridaBrowseOnce\(/);
-  assert.match(page, /listFloridaBrowseOnce\(/);
+  assert.match(meta, /loadFloridaCityTradePage\(/);
+  assert.match(page, /loadFloridaCityTradePage\(/);
   assert.match(meta, /catch \(err\) \{\s*if \(!isFloridaDirectoryUnavailableError\(err\)\) throw err;/);
   assert.match(meta, /thin = true;/);
   assert.match(meta, /noIndex: thin \|\|/);

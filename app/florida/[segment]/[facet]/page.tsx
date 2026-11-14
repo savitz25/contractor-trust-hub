@@ -15,7 +15,8 @@ import {
   getDiscoveryState,
   getTrade,
 } from "@/lib/discovery/config";
-import { listFloridaBrowse, listFloridaCities } from "@/lib/discovery/florida-list";
+import { loadFloridaCountyTradePage } from "@/lib/discovery/florida-directory-page";
+import { isFloridaDirectoryUnavailableError } from "@/lib/discovery/florida-list";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
 
 const PUBLIC = "florida";
@@ -40,13 +41,25 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const trade = getTrade(state, tradeSlug);
   if (!county || !trade) return { title: "Not found", robots: { index: false } };
 
+  // FL-DIR-PERF-003: same request-scoped reads as the body. A failed directory
+  // read is noindex here (the body then answers 500), and a failed city list
+  // keeps the 200 page out of the index, so robots never say "index, follow"
+  // on a failed or partial render.
+  let degraded = false;
+  try {
+    degraded = !(await loadFloridaCountyTradePage(county, trade, browse)).complete;
+  } catch (err) {
+    if (!isFloridaDirectoryUnavailableError(err)) throw err;
+    degraded = true;
+  }
+
   return discoveryMetadata({
     state,
     county,
     trade,
     title: `${trade.title} in ${county.name} County FL — License Evidence`,
     description: `Florida ${trade.title.toLowerCase()} with DBPR licenses linked to ${county.name} County. Filter by city, status, Sunbiz link, and discipline — independent research, not a marketplace.`,
-    noIndex: browseIsVariant(browse) || view === "cities",
+    noIndex: degraded || browseIsVariant(browse) || view === "cities",
   });
 }
 
@@ -66,9 +79,12 @@ export default async function FloridaCountyTradePage({ params, searchParams }: P
   // directory read (FloridaDirectoryUnavailableError) fails the render before
   // any HTML is sent: HTTP 500 + noindex, never a 200 "index, follow" shell.
   // The city facet query runs after the directory read so it never waits on
-  // the max:1 pool behind it.
-  const { results, total, stats } = await listFloridaBrowse({ county, trade, browse });
-  const cities = await listFloridaCities(county, trade);
+  // the max:1 pool behind it (FL-DIR-PERF-003: shared with generateMetadata;
+  // a failed city list is flagged, never rendered as "no cities").
+  const data = await loadFloridaCountyTradePage(county, trade, browse);
+  const { results, total, stats } = data.directory;
+  const cities = data.cities?.facets ?? [];
+  const citiesUnavailable = data.cities?.ok === false;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
@@ -118,6 +134,7 @@ export default async function FloridaCountyTradePage({ params, searchParams }: P
         total={total}
         stats={stats}
         cities={cities}
+        citiesUnavailable={citiesUnavailable}
         view={view}
       />
 
