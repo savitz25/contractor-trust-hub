@@ -35,8 +35,78 @@ function countyFacetCount(county: CountyDef, byKey: Map<string, number>): number
 const MIN_SUNBIZ_CONFIDENCE = 0.9;
 export const DISCOVERY_PAGE_SIZE = 24;
 
+/**
+ * States with requireInStateAddress === false (Oregon) never referenced $2, but
+ * $2 (state code) is always bound. Postgres then rejects the statement with
+ * "could not determine data type of parameter $2", so every such read failed
+ * and the empty fallback hid it (SEO-PATTERN-002 B1 guard). Reference $2 with an
+ * explicit type in a predicate that is always true for a bound state code.
+ */
+const STATE_PARAM_TYPED_SQL = "AND $2::text IS NOT NULL";
+
 function inStateSql(requireInState: boolean | undefined): string {
-  return requireInState === false ? "" : "AND (c.home_state = $2 OR l.state = $2)";
+  return requireInState === false ? STATE_PARAM_TYPED_SQL : "AND (c.home_state = $2 OR l.state = $2)";
+}
+
+/**
+ * SEO-PATTERN-002 Oregon dedupe. The Oregon loader writes one contractor
+ * profile per (CCB license number, endorsement) (external_key
+ * OR-CCB:<number>:<code>), so one licensee can have 2-4 profiles.
+ *
+ * Directory identity, for states with dedupeByLicenseNumber:
+ * - A blank or whitespace-only license number is missing identity. The
+ *   profile stays alone (`profile:<id>`). It is never a shared key, so
+ *   unrelated blank rows cannot merge or cross-link.
+ * - The number is qualified by its credential series. or_ccb carries more
+ *   than one number space: CCB contractor licenses (all CCB endorsement
+ *   codes), Oregon Certified Home Inspector certificates (OCHI, 1-4 digits)
+ *   and Oregon Certified Locksmith certificates (OCLS, 8 digits). An OCHI
+ *   certificate that equals a CCB license number is a different credential
+ *   holder (C3 FAIL at c84ff65: 9 such numbers on Production).
+ * - The number is the stored value, compared exactly (the loader strips it).
+ *   A whitespace-variant number is never merged with the stripped one, and
+ *   the related/discipline lookups use the same exact value, so identity and
+ *   evidence lookups can never disagree (no lost chips) and stay on
+ *   licenses_license_number_idx.
+ * - A present series+number plus the normalized legal name is one business.
+ *   Endorsements of that same legal name stay one card. The same number on
+ *   a different legal name stays a different card. A present number with no
+ *   legal name stays on its own profile id, so it cannot attach to a named
+ *   business that happens to reuse the number. The name only ever splits;
+ *   two different license numbers stay two entries even when the legal name
+ *   matches. Other states keep c.id (byte-identical SQL).
+ */
+function normalizedLegalNameSql(contractorAlias: string): string {
+  return `NULLIF(lower(regexp_replace(TRIM(COALESCE(${contractorAlias}.legal_name, '')), '[[:space:]]+', ' ', 'g')), '')`;
+}
+
+/** Credential series inside or_ccb. Every non-certificate code is a CCB license endorsement. */
+export const OREGON_CERTIFICATE_SERIES = ["OCHI", "OCLS"] as const;
+
+function licenseSeriesSql(licenseAlias: string): string {
+  const code = `UPPER(TRIM(COALESCE(${licenseAlias}.occupation_code, '')))`;
+  const list = OREGON_CERTIFICATE_SERIES.map((c) => `'${c}'`).join(", ");
+  return `CASE WHEN ${code} IN (${list}) THEN ${code} ELSE 'CCB' END`;
+}
+
+/** The stored license number when it is present, else NULL (blank = no identity). */
+export function licenseNumberKeySql(licenseAlias = "l"): string {
+  return `CASE WHEN NULLIF(TRIM(${licenseAlias}.license_number), '') IS NULL THEN NULL ELSE ${licenseAlias}.license_number END`;
+}
+
+export function licenseIdentitySql(licenseAlias = "l", contractorAlias = "c"): string {
+  const blank = `NULLIF(TRIM(${licenseAlias}.license_number), '')`;
+  const profile = `'profile:' || ${contractorAlias}.id::text`;
+  const entity = `COALESCE(${normalizedLegalNameSql(contractorAlias)}, ${profile})`;
+  return `CASE WHEN ${blank} IS NULL THEN ${profile} ELSE ${licenseSeriesSql(licenseAlias)} || ':' || ${licenseAlias}.license_number || chr(31) || ${entity} END`;
+}
+
+export const LICENSE_IDENTITY_SQL = licenseIdentitySql();
+
+export function directoryIdentitySql(
+  disc: { dedupeByLicenseNumber?: boolean } | null | undefined
+): string {
+  return disc?.dedupeByLicenseNumber ? LICENSE_IDENTITY_SQL : "c.id";
 }
 
 function mapRow(r: {
@@ -104,6 +174,8 @@ export function buildFilterClause(opts: {
   `;
   if (opts.requireInStateAddress !== false) {
     where += ` AND (c.home_state = $2 OR l.state = $2)`;
+  } else {
+    where += ` ${STATE_PARAM_TYPED_SQL}`;
   }
 
   if (opts.activeOnly) {
@@ -209,7 +281,7 @@ async function countDistinctForTrade(
   });
   const row = await queryOne<{ n: string }>(
     `
-    SELECT COUNT(DISTINCT c.id)::text AS n
+    SELECT COUNT(DISTINCT ${directoryIdentitySql(disc)})::text AS n
     FROM contractors c
     JOIN licenses l ON l.contractor_id = c.id
     WHERE ${where}
@@ -219,13 +291,188 @@ async function countDistinctForTrade(
   return Number(row?.n || 0);
 }
 
+/**
+ * SEO-PATTERN-002 B1 guard: a discovery directory read failed (statement
+ * timeout, pool/connect timeout, SQL error). It is NOT an empty directory.
+ * Only callers that opt in with `strict` receive it; they let it propagate so
+ * the response is a non-200 error (noindex) instead of an indexable
+ * "No active licenses found" page. Non-strict callers keep the old
+ * empty-on-failure behavior unchanged. Mirrors FloridaDirectoryUnavailableError
+ * (FL-DIR-PERF-001, lib/discovery/florida-list.ts).
+ */
+export class DiscoveryDirectoryUnavailableError extends Error {
+  readonly op: string;
+  constructor(op: string, cause: unknown) {
+    super(`${op} failed: directory data unavailable`, { cause });
+    this.name = "DiscoveryDirectoryUnavailableError";
+    this.op = op;
+  }
+}
+
+export function isDiscoveryDirectoryUnavailableError(
+  err: unknown
+): err is DiscoveryDirectoryUnavailableError {
+  return err instanceof DiscoveryDirectoryUnavailableError;
+}
+
+/** Opt-in: throw DiscoveryDirectoryUnavailableError instead of returning empty on a failed read. */
+export type DiscoveryReadOptions = { strict?: boolean };
+
 type ListFilters = {
   publicStateSlug: string;
   county?: CountyDef | null;
   trade?: TradeDef | null;
   limit?: number;
   offset?: number;
+  /** See DiscoveryReadOptions. A real zero-row result still returns total 0. */
+  strict?: boolean;
 };
+
+type LicenseCardRow = Parameters<typeof mapRow>[0] & {
+  license_identity: string;
+  license_number_key: string | null;
+  license_number: string | null;
+  related: {
+    slug: string;
+    display_name: string;
+    occupation_code: string | null;
+    external_key: string | null;
+    status_normalized: string | null;
+  }[] | null;
+};
+
+/**
+ * SEO-PATTERN-002 Oregon dedupe: one card per directory identity
+ * (see LICENSE_IDENTITY_SQL). Same filter (`where`, $1 = license source) as the
+ * per-profile listing. The representative profile is chosen deterministically
+ * (active first, then external_key, then id). Every other published profile
+ * of that same identity stays on the card as relatedProfiles, and discipline
+ * is checked across those profiles only. Blank numbers and a reused number
+ * on a different legal name are not that identity. Pagination uses the
+ * identity as the unique final tie-breaker.
+ */
+async function listByLicenseNumber(opts: {
+  where: string;
+  filterParams: unknown[];
+  entitySource: string;
+  activeOnly: boolean;
+  limit: number;
+  offset: number;
+}): Promise<SearchResult[]> {
+  const { where, filterParams } = opts;
+  const entitySourceIdx = filterParams.length + 1;
+  const confIdx = filterParams.length + 2;
+  const limitIdx = filterParams.length + 3;
+  const offsetIdx = filterParams.length + 4;
+  const params = [...filterParams, opts.entitySource, MIN_SUNBIZ_CONFIDENCE, opts.limit, opts.offset];
+  const statusRank = (alias: string) =>
+    `CASE ${alias}.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END`;
+
+  const rows = await query<LicenseCardRow>(
+    `
+    WITH picked AS (
+      SELECT DISTINCT ON (license_identity)
+        ${LICENSE_IDENTITY_SQL} AS license_identity,
+        ${licenseNumberKeySql("l")} AS license_number_key,
+        l.license_number,
+        c.id,
+        c.slug,
+        c.display_name,
+        c.legal_name,
+        c.dba_name,
+        c.primary_city,
+        c.primary_county,
+        c.home_state,
+        l.external_key,
+        l.occupation_code,
+        l.status_normalized,
+        l.last_verified_at,
+        l.source_system,
+        l.secondary_status
+      FROM contractors c
+      JOIN licenses l ON l.contractor_id = c.id
+      WHERE ${where}
+      ORDER BY license_identity, ${statusRank("l")}, l.external_key, c.id
+    ),
+    page AS (
+      SELECT * FROM picked
+      ORDER BY ${statusRank("picked")}, picked.display_name, picked.license_identity
+      LIMIT $${limitIdx}::int OFFSET $${offsetIdx}::int
+    )
+    SELECT
+      p.*,
+      e.status AS entity_status,
+      e.legal_name AS entity_name,
+      (
+        EXISTS (
+          SELECT 1 FROM discipline_actions d
+          WHERE d.contractor_id = p.id AND ${PUBLIC_REGULATORY_SQL}
+        )
+        OR EXISTS (
+          SELECT 1
+          FROM licenses l3
+          JOIN contractors c3 ON c3.id = l3.contractor_id
+          JOIN discipline_actions d ON d.contractor_id = l3.contractor_id
+          WHERE p.license_number_key IS NOT NULL
+            AND l3.license_number = p.license_number_key
+            AND l3.source_system = $1
+            AND c3.id <> p.id
+            AND ${licenseIdentitySql("l3", "c3")} = p.license_identity
+            AND ${PUBLIC_REGULATORY_SQL}
+        )
+      ) AS has_discipline,
+      rel.related
+    FROM page p
+    LEFT JOIN LATERAL (
+      SELECT ent.status, ent.legal_name
+      FROM contractor_entities ce
+      JOIN entities ent ON ent.id = ce.entity_id
+      WHERE ce.contractor_id = p.id
+        AND ce.role = 'sunbiz_entity'
+        AND ent.source_system = $${entitySourceIdx}::text
+        AND ce.confidence IS NOT NULL
+        AND ce.confidence >= $${confIdx}::numeric
+      ORDER BY ce.confidence DESC NULLS LAST
+      LIMIT 1
+    ) e ON TRUE
+    LEFT JOIN LATERAL (
+      SELECT json_agg(
+        json_build_object(
+          'slug', c2.slug,
+          'display_name', c2.display_name,
+          'occupation_code', l2.occupation_code,
+          'external_key', l2.external_key,
+          'status_normalized', l2.status_normalized
+        )
+        ORDER BY l2.occupation_code, l2.external_key, c2.id
+      ) AS related
+      FROM licenses l2
+      JOIN contractors c2 ON c2.id = l2.contractor_id
+      WHERE p.license_number_key IS NOT NULL
+        AND l2.license_number = p.license_number_key
+        AND l2.source_system = $1
+        AND ${licenseIdentitySql("l2", "c2")} = p.license_identity
+        AND c2.id <> p.id
+        AND c2.is_thin_profile = FALSE
+        ${opts.activeOnly ? "AND l2.status_normalized IN ('active', 'current')" : ""}
+    ) rel ON TRUE
+    ORDER BY ${statusRank("p")}, p.display_name, p.license_identity
+    `,
+    params
+  );
+
+  return rows.map((r) => {
+    const card = mapRow(r);
+    const related = (r.related || []).map((x) => ({
+      slug: x.slug,
+      displayName: x.display_name,
+      occupationCode: x.occupation_code,
+      licenseKey: x.external_key,
+      licenseStatus: asLicenseStatus(x.status_normalized),
+    }));
+    return related.length ? { ...card, relatedProfiles: related } : card;
+  });
+}
 
 export async function listDiscoveryContractors(filters: ListFilters): Promise<{
   results: SearchResult[];
@@ -253,7 +500,7 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
 
   const countRow = await queryOne<{ n: string }>(
     `
-    SELECT COUNT(DISTINCT c.id)::text AS n
+    SELECT COUNT(DISTINCT ${directoryIdentitySql(disc)})::text AS n
     FROM contractors c
     JOIN licenses l ON l.contractor_id = c.id
     WHERE ${where}
@@ -262,6 +509,18 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
   );
   const total = countRow ? Number(countRow.n) : 0;
   if (total === 0) return { results: [], total: 0 };
+
+  if (disc.dedupeByLicenseNumber) {
+    const results = await listByLicenseNumber({
+      where,
+      filterParams,
+      entitySource: state.entitySource,
+      activeOnly: Boolean(disc.activeOnlyDefault),
+      limit,
+      offset,
+    });
+    return { results, total };
+  }
 
   // Entity lateral uses two extra params after filters
   const entitySourceIdx = filterParams.length + 1;
@@ -351,6 +610,7 @@ export async function listDiscoveryContractors(filters: ListFilters): Promise<{
   return { results: rows.map(mapRow), total };
   } catch (err) {
     console.error("[discovery] listDiscoveryContractors failed:", err instanceof Error ? err.message : err);
+    if (filters.strict) throw new DiscoveryDirectoryUnavailableError("listDiscoveryContractors", err);
     return { results: [], total: 0 };
   }
 }
@@ -402,7 +662,8 @@ export async function getStateDiscoveryStats(publicStateSlug: string): Promise<{
  */
 export async function countByTrade(
   publicStateSlug: string,
-  county?: CountyDef | null
+  county?: CountyDef | null,
+  opts?: DiscoveryReadOptions
 ): Promise<DiscoveryFacet[]> {
   const disc = getDiscoveryState(publicStateSlug);
   if (!disc) return [];
@@ -431,6 +692,47 @@ export async function countByTrade(
       activeOnly: Boolean(disc.activeOnlyDefault),
       requireInStateAddress: disc.requireInStateAddress,
     });
+
+    if (disc.dedupeByLicenseNumber) {
+      // One count per trade over directory identity, so endorsements of one
+      // legal entity in one trade family are counted once and the facet
+      // equals the deduplicated [county]/[trade] listing total.
+      const codeTrades = disc.trades.filter((t) => !tradeHasExtraFilters(t));
+      const codes: string[] = [];
+      const slugs: string[] = [];
+      for (const t of codeTrades) {
+        for (const code of t.occupationCodes) {
+          codes.push(code.toUpperCase());
+          slugs.push(t.slug);
+        }
+      }
+      const codesIdx = params.length + 1;
+      const slugsIdx = params.length + 2;
+      const tradeRows = codes.length
+        ? await query<{ slug: string; n: string }>(
+            `
+      SELECT tc.slug, COUNT(DISTINCT ${LICENSE_IDENTITY_SQL})::text AS n
+      FROM contractors c
+      JOIN licenses l ON l.contractor_id = c.id
+      JOIN unnest($${codesIdx}::text[], $${slugsIdx}::text[]) AS tc(code, slug)
+        ON tc.code = l.occupation_code
+      WHERE ${where}
+      GROUP BY tc.slug
+      `,
+            [...params, codes, slugs]
+          )
+        : [];
+      const bySlug = new Map(tradeRows.map((r) => [r.slug, Number(r.n)]));
+      return disc.trades
+        .map((t) => ({
+          slug: t.slug,
+          label: t.label,
+          count: tradeHasExtraFilters(t) ? extraCounts.get(t.slug) || 0 : bySlug.get(t.slug) || 0,
+        }))
+        .filter((f) => f.count > 0)
+        .sort((a, b) => b.count - a.count);
+    }
+
     const rows = await query<{ occupation_code: string; n: string }>(
       `
       SELECT l.occupation_code, COUNT(DISTINCT c.id)::text AS n
@@ -457,28 +759,128 @@ export async function countByTrade(
       }))
       .filter((f) => f.count > 0)
       .sort((a, b) => b.count - a.count);
-  } catch {
+  } catch (err) {
+    if (opts?.strict) throw new DiscoveryDirectoryUnavailableError("countByTrade", err);
     return [];
   }
+}
+
+/**
+ * Oregon county facets. One statement, same predicate as the active listing
+ * (buildFilterClause county match, activeOnly, occupation codes, directory
+ * identity). CCB county codes are not translated through the Florida DBPR
+ * code table: code 12 is Grant, not Baker.
+ */
+async function countDedupeCountiesForTrade(
+  disc: NonNullable<ReturnType<typeof getDiscoveryState>>,
+  state: NonNullable<ReturnType<typeof getStateBySlug>>,
+  trade: TradeDef
+): Promise<DiscoveryFacet[]> {
+  const codes = (trade.occupationCodes || []).map((code) => code.toUpperCase()).filter(Boolean);
+  if (!codes.length) return [];
+  const nameSlugs: string[] = [];
+  const nameTokens: string[] = [];
+  const codeSlugs: string[] = [];
+  const codeTokens: string[] = [];
+  for (const county of disc.counties) {
+    for (const name of county.matchNames) {
+      const token = name.toLowerCase().trim();
+      if (!token) continue;
+      nameSlugs.push(county.slug);
+      nameTokens.push(token);
+    }
+    for (const code of county.matchCodes || []) {
+      const token = code.trim();
+      if (!token) continue;
+      codeSlugs.push(county.slug);
+      codeTokens.push(token);
+    }
+  }
+  if (!nameTokens.length && !codeTokens.length) return [];
+  // Each license row emits its normalized county keys once and is hash-joined
+  // to the curated tokens by equality. Same matches as buildFilterClause:
+  // a name token matches LOWER(TRIM(county_name|primary_county)) with spaces
+  // and dashes equivalent; a code token matches TRIM or zero-stripped
+  // county_code|primary_county. (The per-row OR across every county token was
+  // the slowest statement on /oregon/<trade> pages.)
+  const rows = await query<{ slug: string; n: string }>(
+    `
+    WITH r AS (
+      SELECT
+        ${LICENSE_IDENTITY_SQL} AS ident,
+        REPLACE(LOWER(TRIM(COALESCE(l.county_name, ''))), ' ', '-') AS n1,
+        REPLACE(LOWER(TRIM(COALESCE(c.primary_county, ''))), ' ', '-') AS n2,
+        TRIM(COALESCE(l.county_code, '')) AS k1,
+        TRIM(COALESCE(c.primary_county, '')) AS k2
+      FROM contractors c
+      JOIN licenses l ON l.contractor_id = c.id
+      WHERE l.source_system = $1
+        AND c.is_thin_profile = FALSE
+        ${inStateSql(disc.requireInStateAddress)}
+        ${disc.activeOnlyDefault ? "AND l.status_normalized IN ('active', 'current')" : ""}
+        AND l.occupation_code = ANY($7::text[])
+    ),
+    keys AS (
+      SELECT DISTINCT r.ident, k.kind, k.val
+      FROM r
+      CROSS JOIN LATERAL (
+        VALUES ('name', r.n1), ('name', r.n2),
+               ('code', r.k1), ('code', r.k2),
+               ('code', LTRIM(r.k1, '0')), ('code', LTRIM(r.k2, '0'))
+      ) AS k(kind, val)
+    ),
+    m AS (
+      SELECT slug, REPLACE(token, ' ', '-') AS val, 'name'::text AS kind
+      FROM unnest($3::text[], $4::text[]) AS u(slug, token)
+      UNION
+      SELECT slug, token, 'code'::text
+      FROM unnest($5::text[], $6::text[]) AS u(slug, token)
+    )
+    SELECT m.slug, COUNT(DISTINCT keys.ident)::text AS n
+    FROM keys
+    JOIN m ON m.kind = keys.kind AND m.val = keys.val
+    GROUP BY m.slug
+    `,
+    [state.licenseSource, state.code, nameSlugs, nameTokens, codeSlugs, codeTokens, codes]
+  );
+  const bySlug = new Map(rows.map((row) => [row.slug, Number(row.n)]));
+  return disc.counties
+    .map((county) => ({ slug: county.slug, label: county.name, count: bySlug.get(county.slug) || 0 }))
+    .filter((facet) => facet.count > 0)
+    .sort((a, b) => b.count - a.count);
 }
 
 /** County facets for a single trade — one SQL pass + map to curated slugs. */
 export async function countCountiesForTrade(
   publicStateSlug: string,
-  trade: TradeDef
+  trade: TradeDef,
+  opts?: DiscoveryReadOptions
 ): Promise<DiscoveryFacet[]> {
   const disc = getDiscoveryState(publicStateSlug);
   if (!disc) return [];
   const state = getStateBySlug(disc.evidenceSlug);
   if (!state?.live) return [];
 
+  if (disc.dedupeByLicenseNumber) {
+    try {
+      return await countDedupeCountiesForTrade(disc, state, trade);
+    } catch (err) {
+      if (opts?.strict) throw new DiscoveryDirectoryUnavailableError("countCountiesForTrade", err);
+      return [];
+    }
+  }
+
   const usesPostalGeo = disc.counties.some((c) => (c.matchPostalPrefixes || []).length > 0);
   if (usesPostalGeo) {
     try {
       const byZip = await countByPostalPrefix(publicStateSlug, trade);
       const facets = rollupGeosFromZips(disc.counties, byZip);
-      return await appendOutOfStateFacet(publicStateSlug, facets, trade);
-    } catch {
+      return await appendOutOfStateFacet(publicStateSlug, facets, trade, opts);
+    } catch (err) {
+      if (opts?.strict) {
+        if (isDiscoveryDirectoryUnavailableError(err)) throw err;
+        throw new DiscoveryDirectoryUnavailableError("countCountiesForTrade", err);
+      }
       return [];
     }
   }
@@ -488,7 +890,8 @@ export async function countCountiesForTrade(
     try {
       const byCity = await countByCity(publicStateSlug, trade);
       return rollupGeosFromCities(disc.counties, byCity);
-    } catch {
+    } catch (err) {
+      if (opts?.strict) throw new DiscoveryDirectoryUnavailableError("countCountiesForTrade", err);
       return [];
     }
   }
@@ -497,7 +900,7 @@ export async function countCountiesForTrade(
     const rows = await query<{ county: string; n: string }>(
       `
       SELECT ${FACET_COUNTY_SQL} AS county,
-             COUNT(DISTINCT c.id)::text AS n
+             COUNT(DISTINCT ${directoryIdentitySql(disc)})::text AS n
       FROM contractors c
       JOIN licenses l ON l.contractor_id = c.id
       WHERE l.source_system = $1
@@ -524,7 +927,8 @@ export async function countCountiesForTrade(
       .map((county) => ({ slug: county.slug, label: county.name, count: countyFacetCount(county, byKey) }))
       .filter((f) => f.count > 0)
       .sort((a, b) => b.count - a.count);
-  } catch {
+  } catch (err) {
+    if (opts?.strict) throw new DiscoveryDirectoryUnavailableError("countCountiesForTrade", err);
     return [];
   }
 }
@@ -677,7 +1081,8 @@ function rollupGeosFromZips(
 async function appendOutOfStateFacet(
   publicStateSlug: string,
   facets: DiscoveryFacet[],
-  trade?: TradeDef | null
+  trade?: TradeDef | null,
+  opts?: DiscoveryReadOptions
 ): Promise<DiscoveryFacet[]> {
   const disc = getDiscoveryState(publicStateSlug);
   const state = disc ? getStateBySlug(disc.evidenceSlug) : null;
@@ -696,7 +1101,9 @@ async function appendOutOfStateFacet(
     return [...facets, { slug: oos.slug, label: oos.name, count: n }].sort(
       (a, b) => b.count - a.count
     );
-  } catch {
+  } catch (err) {
+    // Strict callers: a missing out-of-state facet is a partial read, not zero.
+    if (opts?.strict) throw new DiscoveryDirectoryUnavailableError("appendOutOfStateFacet", err);
     return facets;
   }
 }

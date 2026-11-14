@@ -85,8 +85,9 @@ export default async function OregonSegmentPage({ params, searchParams }: Props)
         county,
         limit: DISCOVERY_PAGE_SIZE,
         offset,
+        strict: true,
       }),
-      countByTrade(PUBLIC, county),
+      countByTrade(PUBLIC, county, { strict: true }),
     ]);
     const path = discoveryPath(state, { countySlug: county.slug });
 
@@ -180,8 +181,9 @@ export default async function OregonSegmentPage({ params, searchParams }: Props)
       trade,
       limit: DISCOVERY_PAGE_SIZE,
       offset,
+      strict: true,
     }),
-    countCountiesForTrade(PUBLIC, trade),
+    countCountiesForTrade(PUBLIC, trade, { strict: true }),
   ]);
   const path = discoveryPath(state, { tradeSlug: trade.slug });
 

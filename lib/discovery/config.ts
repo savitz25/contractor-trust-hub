@@ -67,6 +67,9 @@ export const DISCOVERY_STATES: Record<string, DiscoveryStateConfig> = {
     geoNote: OREGON_GEO_NOTE,
     activeOnlyDefault: true,
     requireInStateAddress: false,
+    // One card per CCB license number and legal name. Blank numbers are not a
+    // key. The loader keys profiles by OR-CCB:<number>:<endorsement>.
+    dedupeByLicenseNumber: true,
   },
   washington: {
     publicSlug: "washington",

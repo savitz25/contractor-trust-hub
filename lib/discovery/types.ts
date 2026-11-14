@@ -84,6 +84,15 @@ export type DiscoveryStateConfig = {
    * out-of-state CCB mailing addresses). Default true.
    */
   requireInStateAddress?: boolean;
+  /**
+   * SEO-PATTERN-002 Oregon dedupe: the source loader writes one contractor
+   * profile per (license number, endorsement). When true, directory listings,
+   * totals and facet counts are one entry per license number plus normalized
+   * legal name. A blank license number is that profile alone. The same number
+   * on a different legal name stays a separate business. Other endorsements
+   * of the same legal name stay on the card as relatedProfiles. Default false.
+   */
+  dedupeByLicenseNumber?: boolean;
 };
 
 export type DiscoveryFacet = {

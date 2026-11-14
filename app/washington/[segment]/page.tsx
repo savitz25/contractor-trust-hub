@@ -88,8 +88,9 @@ export default async function WashingtonSegmentPage({ params, searchParams }: Pr
         county: geo,
         limit: DISCOVERY_PAGE_SIZE,
         offset,
+        strict: true,
       }),
-      countByTrade(PUBLIC, geo),
+      countByTrade(PUBLIC, geo, { strict: true }),
     ]);
     const path = discoveryPath(state, { countySlug: geo.slug });
 
@@ -177,8 +178,9 @@ export default async function WashingtonSegmentPage({ params, searchParams }: Pr
       trade,
       limit: DISCOVERY_PAGE_SIZE,
       offset,
+      strict: true,
     }),
-    countCountiesForTrade(PUBLIC, trade),
+    countCountiesForTrade(PUBLIC, trade, { strict: true }),
   ]);
   const path = discoveryPath(state, { tradeSlug: trade.slug });
   const officialBits = [
