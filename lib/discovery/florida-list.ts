@@ -17,8 +17,15 @@ import {
   type DiscoveryBrowse,
 } from "./browse";
 import { getDiscoveryState } from "./config";
+import {
+  FLORIDA_DIRECTORY_FROM_LEGACY,
+  FLORIDA_DIRECTORY_FROM_PREFETCH,
+  floridaCountyLicensePrefetch,
+} from "./florida-county-prefetch";
 import { buildFilterClause, DISCOVERY_PAGE_SIZE } from "./queries";
 import type { CountyDef, DiscoveryFacet, TradeDef } from "./types";
+
+export type FloridaReadMode = "auto" | "legacy";
 
 const MIN_SUNBIZ_CONFIDENCE = 0.9;
 const PUBLIC = "florida";
@@ -161,30 +168,27 @@ function sortSql(sort: DiscoveryBrowse["sort"]): string {
   return `p.display_name`;
 }
 
-export async function listFloridaBrowse(opts: {
-  county?: CountyDef | null;
-  trade?: TradeDef | null;
-  browse: DiscoveryBrowse;
-  /** City already in the path — same filter as browse.citySlug */
-  pathCitySlug?: string | null;
-}): Promise<{ results: SearchResult[]; total: number; stats: FloridaBrowseStats }> {
-  const empty = {
-    results: [] as SearchResult[],
-    total: 0,
-    stats: { firms: 0, activeFirms: 0, entityLinked: 0, withDiscipline: 0 },
-  };
+export function floridaBrowseStatement(
+  opts: {
+    county?: CountyDef | null;
+    trade?: TradeDef | null;
+    browse: DiscoveryBrowse;
+    /** City already in the path — same filter as browse.citySlug */
+    pathCitySlug?: string | null;
+  },
+  mode: FloridaReadMode = "auto",
+): { sql: string; params: unknown[]; prefetch: boolean } | null {
   const disc = getDiscoveryState(PUBLIC);
-  if (!disc) return empty;
+  if (!disc) return null;
   const state = getStateBySlug(disc.evidenceSlug);
-  if (!state?.live) return empty;
+  if (!state?.live) return null;
 
   const browse: DiscoveryBrowse = {
     ...opts.browse,
     citySlug: opts.pathCitySlug || opts.browse.citySlug,
   };
 
-  try {
-    const { where: baseWhere, params: filterParams } = buildFilterClause({
+  const { where: baseWhere, params: filterParams } = buildFilterClause({
       licenseSource: state.licenseSource,
       stateCode: state.code,
       occupationCodes: opts.trade?.occupationCodes ?? null,
@@ -206,6 +210,9 @@ export async function listFloridaBrowse(opts: {
       entitySourceIdx,
       confIdx
     );
+    const prefetch =
+      mode === "legacy" ? { apply: false as const } : floridaCountyLicensePrefetch(opts.county ?? null, filterParams);
+    const fromSql = prefetch.apply ? FLORIDA_DIRECTORY_FROM_PREFETCH : FLORIDA_DIRECTORY_FROM_LEGACY;
 
     const matchedCte = `
       matched AS (
@@ -233,8 +240,7 @@ export async function listFloridaBrowse(opts: {
             SELECT 1 FROM discipline_actions d
             WHERE d.contractor_id = c.id AND ${PUBLIC_REGULATORY_SQL}
           ) AS has_discipline
-        FROM contractors c
-        JOIN licenses l ON l.contractor_id = c.id
+        ${fromSql}
         LEFT JOIN LATERAL (
           SELECT e.id, e.legal_name, e.status
           FROM contractor_entities ce
@@ -270,9 +276,9 @@ export async function listFloridaBrowse(opts: {
     const limitIdx = filterParams.length + 2;
     const listParams = [...filterParams, offset, limit];
 
-    const rows = await query<FloridaBrowseRow>(
-      `
-      WITH ${matchedCte},
+    const withPrefix = prefetch.apply ? `${prefetch.cte},` : "";
+    const sql = `
+      WITH ${withPrefix} ${matchedCte},
       stats AS (
         SELECT
           COUNT(DISTINCT firm_key)::text AS firms,
@@ -338,9 +344,30 @@ export async function listFloridaBrowse(opts: {
       LEFT JOIN page pg ON TRUE
       LEFT JOIN sibs sb ON sb.firm_key = pg.firm_key
       ORDER BY pg.page_pos
-      `,
-      listParams
-    );
+      `;
+    return { sql, params: listParams, prefetch: prefetch.apply };
+  }
+
+export async function listFloridaBrowse(
+  opts: {
+    county?: CountyDef | null;
+    trade?: TradeDef | null;
+    browse: DiscoveryBrowse;
+    /** City already in the path — same filter as browse.citySlug */
+    pathCitySlug?: string | null;
+  },
+  mode: FloridaReadMode = "auto",
+): Promise<{ results: SearchResult[]; total: number; stats: FloridaBrowseStats }> {
+  const empty = {
+    results: [] as SearchResult[],
+    total: 0,
+    stats: { firms: 0, activeFirms: 0, entityLinked: 0, withDiscipline: 0 },
+  };
+  const built = floridaBrowseStatement(opts, mode);
+  if (!built) return empty;
+
+  try {
+    const rows = await query<FloridaBrowseRow>(built.sql, built.params);
 
     // The stats CTE always yields exactly one row, so a successful read
     // returns >= 1 row. Zero rows means the read did not complete.
@@ -547,45 +574,61 @@ export async function listFloridaCities(
  * FL-DIR-PERF-003: city facet read that reports failure explicitly instead of
  * returning an empty list that looks like "no cities".
  */
-export async function listFloridaCitiesChecked(
+export function floridaCitiesStatement(
   county: CountyDef,
-  trade?: TradeDef | null
-): Promise<FloridaFacetResult> {
+  trade?: TradeDef | null,
+  mode: FloridaReadMode = "auto",
+): { sql: string; params: unknown[]; prefetch: boolean } | null {
   const disc = getDiscoveryState(PUBLIC);
-  if (!disc) return { ok: true, facets: [] };
+  if (!disc) return null;
   const state = getStateBySlug(disc.evidenceSlug);
-  if (!state?.live) return { ok: true, facets: [] };
-
-  try {
-    const { where, params } = buildFilterClause({
-      licenseSource: state.licenseSource,
-      stateCode: state.code,
-      occupationCodes: trade?.occupationCodes ?? null,
-      classCodes: trade?.classCodes ?? null,
-      descriptionIncludes: trade?.descriptionIncludes ?? null,
-      county,
-      activeOnly: false,
-      requireInStateAddress: disc.requireInStateAddress,
-    });
-    const rows = await query<{ city: string; n: string }>(
-      `
+  if (!state?.live) return null;
+  const { where, params } = buildFilterClause({
+    licenseSource: state.licenseSource,
+    stateCode: state.code,
+    occupationCodes: trade?.occupationCodes ?? null,
+    classCodes: trade?.classCodes ?? null,
+    descriptionIncludes: trade?.descriptionIncludes ?? null,
+    county,
+    activeOnly: false,
+    requireInStateAddress: disc.requireInStateAddress,
+  });
+  const prefetch = mode === "legacy" ? { apply: false as const } : floridaCountyLicensePrefetch(county, params);
+  const fromSql = prefetch.apply ? FLORIDA_DIRECTORY_FROM_PREFETCH : FLORIDA_DIRECTORY_FROM_LEGACY;
+  const withPrefix = prefetch.apply ? `WITH ${prefetch.cte}` : "";
+  const sql = `
+      ${withPrefix}
       SELECT
         TRIM(BOTH '-' FROM REGEXP_REPLACE(
           LOWER(TRIM(COALESCE(NULLIF(l.city, ''), c.primary_city, ''))),
           '[^a-z0-9]+', '-', 'g'
         )) AS city,
         COUNT(DISTINCT c.id)::text AS n
-      FROM contractors c
-      JOIN licenses l ON l.contractor_id = c.id
+      ${fromSql}
       WHERE ${where}
         AND TRIM(COALESCE(NULLIF(l.city, ''), c.primary_city, '')) <> ''
       GROUP BY 1
       HAVING COUNT(DISTINCT c.id) >= ${CITY_INDEX_MIN}
       ORDER BY COUNT(DISTINCT c.id) DESC, 1
       LIMIT 24
-      `,
-      params
-    );
+      `;
+  return { sql, params, prefetch: prefetch.apply };
+}
+
+export async function listFloridaCitiesChecked(
+  county: CountyDef,
+  trade?: TradeDef | null,
+  mode: FloridaReadMode = "auto",
+): Promise<FloridaFacetResult> {
+  const disc = getDiscoveryState(PUBLIC);
+  if (!disc) return { ok: true, facets: [] };
+  const state = getStateBySlug(disc.evidenceSlug);
+  if (!state?.live) return { ok: true, facets: [] };
+  const built = floridaCitiesStatement(county, trade, mode);
+  if (!built) return { ok: true, facets: [] };
+
+  try {
+    const rows = await query<{ city: string; n: string }>(built.sql, built.params);
     const facets = rows
       .map((r) => {
         const slug = cityToSlug(r.city);
