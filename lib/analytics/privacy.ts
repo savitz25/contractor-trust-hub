@@ -203,6 +203,44 @@ function sanitizeAutocaptureUrls(properties: Record<string, unknown>): void {
   }
 }
 
+/** Autocapture element fields that can echo user-entered text (labels, values, tooltips). */
+const AUTOCAPTURE_TEXT_KEYS = [
+  "$el_text",
+  "text",
+  "attr__aria-label",
+  "attr__title",
+  "attr__value",
+  "attr__placeholder",
+  "attr__alt",
+] as const;
+
+const ELEMENTS_CHAIN_TEXT_PATTERN = /(?:^|(?<=[:"]))(?:text|attr__aria-label|attr__title|attr__value|attr__placeholder|attr__alt)="(?:[^"\\]|\\.)*"/g;
+
+/** Session replay events. Replay is disabled for this hub; before_send drops these. */
+export const REPLAY_EVENT_NAMES = ["$snapshot", "$snapshot_items", "$heatmap", "$$heatmap"] as const;
+
+export function isReplayEvent(event: string | undefined | null): boolean {
+  return typeof event === "string" && (REPLAY_EVENT_NAMES as readonly string[]).includes(event);
+}
+
+export function stripElementsChainText(chain: string): string {
+  return chain.replace(ELEMENTS_CHAIN_TEXT_PATTERN, "");
+}
+
+function stripAutocaptureText(properties: Record<string, unknown>): void {
+  delete properties.$el_text;
+  if (typeof properties.$elements_chain === "string") {
+    properties.$elements_chain = stripElementsChainText(properties.$elements_chain);
+  }
+  if (Array.isArray(properties.$elements)) {
+    for (const element of properties.$elements) {
+      if (!element || typeof element !== "object") continue;
+      const record = element as Record<string, unknown>;
+      for (const key of AUTOCAPTURE_TEXT_KEYS) delete record[key];
+    }
+  }
+}
+
 function sanitizeReplaySnapshotHrefs(node: unknown, depth = 0): void {
   if (depth > 8 || node == null || typeof node === "string") return;
   if (Array.isArray(node)) {
@@ -239,6 +277,7 @@ export function sanitizePageviewProperties(properties: Record<string, unknown>):
   delete properties.$input_value;
   delete properties.input_value;
   sanitizeReplaySnapshotHrefs(properties.$snapshot_data);
+  stripAutocaptureText(properties);
   sanitizeAutocaptureUrls(properties);
   replaceSearchSurfaceTitle(properties);
   for (const key of Object.keys(properties)) {
@@ -248,13 +287,98 @@ export function sanitizePageviewProperties(properties: Record<string, unknown>):
   return properties;
 }
 
-export function sanitizeCaptureResult<T extends { properties?: Record<string, unknown>; $set?: Record<string, unknown>; $set_once?: Record<string, unknown> } | null>(
-  event: T,
-): T {
+const EXTRA_IDENTITY_KEYS = [
+  "otp",
+  "secret",
+  "access_token",
+  "refresh_token",
+  "id_token",
+  "session",
+  "credential",
+  "credentials",
+] as const;
+
+function nestedPropertyBag(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  return value as Record<string, unknown>;
+}
+
+/** Drops emails, search text, sign-in fields, and auth-shaped keys from one property bag. */
+function scrubIdentityProperties(bag: Record<string, unknown>): void {
+  sanitizeUrlProperties(bag);
+  for (const key of Object.keys(bag)) {
+    if (isPosthogReservedKey(key)) continue;
+    const lower = key.toLowerCase();
+    if ((FORBIDDEN_EVENT_KEYS as readonly string[]).includes(lower)) {
+      delete bag[key];
+      continue;
+    }
+    if ((EXTRA_IDENTITY_KEYS as readonly string[]).includes(lower)) {
+      delete bag[key];
+      continue;
+    }
+    if (/email|password|token|ssn|phone|secret|otp|authorization|cookie/.test(lower)) {
+      delete bag[key];
+      continue;
+    }
+    const value = bag[key];
+    if (typeof value === "string" && value.includes("@")) delete bag[key];
+  }
+  for (const key of ["distinct_id", "email", "$email"]) {
+    const value = bag[key];
+    if (typeof value === "string" && value.includes("@")) delete bag[key];
+  }
+}
+
+/**
+ * Last pass for identify, capture, pageview, and custom events.
+ * Clears a client-supplied network address and asks PostHog not to add a location.
+ * PostHog can still see the request address. Storage of that address is a project setting.
+ */
+function finishPrivacyPayload(event: {
+  properties?: Record<string, unknown>;
+  $set?: Record<string, unknown>;
+  $set_once?: Record<string, unknown>;
+}): void {
+  if (event.properties) {
+    scrubIdentityProperties(event.properties);
+    const set = nestedPropertyBag(event.properties.$set);
+    const once = nestedPropertyBag(event.properties.$set_once);
+    if (set) scrubIdentityProperties(set);
+    if (once) scrubIdentityProperties(once);
+    for (const key of Object.keys(event.properties)) {
+      if (key === "$ip" || key.startsWith("$exception")) delete event.properties[key];
+    }
+    event.properties.$geoip_disable = true;
+  }
+  if (event.$set) scrubIdentityProperties(event.$set);
+  if (event.$set_once) scrubIdentityProperties(event.$set_once);
+}
+
+/** `$exception` autocapture is never sent. Exception properties are removed from every event. */
+export function suppressExceptionCapture<
+  T extends { event?: string; properties?: Record<string, unknown> } | null,
+>(event: T): T | null {
+  if (!event) return event;
+  if (event.properties) {
+    for (const key of Object.keys(event.properties)) {
+      if (key.startsWith("$exception")) delete event.properties[key];
+    }
+  }
+  if (event.event === "$exception") return null;
+  return event;
+}
+
+export function sanitizeCaptureResult<
+  T extends {
+    properties?: Record<string, unknown>;
+    $set?: Record<string, unknown>;
+    $set_once?: Record<string, unknown>;
+  } | null,
+>(event: T): T {
   if (!event) return event;
   if (event.properties) sanitizePageviewProperties(event.properties);
-  if (event.$set) sanitizeUrlProperties(event.$set);
-  if (event.$set_once) sanitizeUrlProperties(event.$set_once);
+  finishPrivacyPayload(event);
   return event;
 }
 

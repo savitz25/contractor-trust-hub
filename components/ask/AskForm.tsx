@@ -137,7 +137,8 @@ export function AskForm({
         </div>
       </details>
       {recent.length > 0 ? (
-        <div>
+        // Recent research buttons echo past questions verbatim: never autocapture or record them.
+        <div className="ph-no-capture" data-ph-mask>
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">Recent research</p>
           <ul className="mt-2 flex flex-wrap gap-2">
             {recent.map((item) => (
