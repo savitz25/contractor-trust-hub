@@ -76,3 +76,31 @@ INSERT INTO licenses_t (id, contractor_id, source_system, external_key, occupati
 -- SYNOR1000 card must still carry it whichever endorsement profile represents it.
 INSERT INTO discipline_actions (id, contractor_id, license_id, source_system, source_dataset, external_key) VALUES
  ('20000000-0000-4000-8000-00000000d003','00000000-0000-4000-8000-00000000d003','10000000-0000-4000-8000-00000000d003','or_ccb','synthetic','SYN-OR-DISC-1');
+
+-- SEO-PATTERN-002 Oregon series fix (Lane County, synthetic only):
+-- Number 777 is a CCB contractor license (RGC + RSC endorsements, one business)
+-- and also an Oregon Certified Home Inspector certificate (OCHI) held under the
+-- SAME legal name. Only the credential series separates them: two cards, the
+-- OCHI discipline stays on the OCHI card, and no "Same firm" chip crosses series.
+-- 88888888 is an OCLS (locksmith) certificate: its own series.
+-- SYNOR7100 is stored once stripped (RGC) and once padded (RSC): whitespace
+-- variants are never merged and never cross-linked.
+INSERT INTO contractors (id, slug, display_name, legal_name, home_state, primary_city, primary_county, is_thin_profile) VALUES
+ ('00000000-0000-4000-8000-00000000e001','or-ccb-777-rgc-synthetic-series','Synthetic Series Same Name LLC','Synthetic Series Same Name LLC','OR','Eugene','Lane',false),
+ ('00000000-0000-4000-8000-00000000e002','or-ccb-777-rsc-synthetic-series','Synthetic Series Same Name LLC','Synthetic  series same name llc ','OR','Eugene','Lane',false),
+ ('00000000-0000-4000-8000-00000000e003','or-ccb-777-ochi-synthetic-series','Synthetic Series Same Name LLC','Synthetic Series Same Name LLC','OR','Eugene','Lane',false),
+ ('00000000-0000-4000-8000-00000000e004','or-ccb-88888888-ocls-synthetic','Synthetic Locksmith LLC','Synthetic Locksmith LLC','OR','Eugene','Lane',false),
+ ('00000000-0000-4000-8000-00000000e005','or-ccb-synor7100-rgc-synthetic-padded','Synthetic Padded Number LLC','Synthetic Padded Number LLC','OR','Eugene','Lane',false),
+ ('00000000-0000-4000-8000-00000000e006','or-ccb-synor7100-rsc-synthetic-padded','Synthetic Padded Number LLC','Synthetic Padded Number LLC','OR','Eugene','Lane',false);
+
+INSERT INTO licenses_t (id, contractor_id, source_system, external_key, occupation_code, license_number, status_normalized, primary_status, original_licensure_date, city, state, postal_code, county_name, county_code, last_verified_at) VALUES
+ ('10000000-0000-4000-8000-00000000e001','00000000-0000-4000-8000-00000000e001','or_ccb','OR-CCB:777:RGC','RGC','777','active','Active','2015-01-01','Eugene','OR','97401','Lane','20',now()),
+ ('10000000-0000-4000-8000-00000000e002','00000000-0000-4000-8000-00000000e002','or_ccb','OR-CCB:777:RSC','RSC','777','active','Active','2015-01-01','Eugene','OR','97401','Lane','20',now()),
+ ('10000000-0000-4000-8000-00000000e003','00000000-0000-4000-8000-00000000e003','or_ccb','OR-CCB:777:OCHI','OCHI','777','active','Active','2016-01-01','Eugene','OR','97401','Lane','20',now()),
+ ('10000000-0000-4000-8000-00000000e004','00000000-0000-4000-8000-00000000e004','or_ccb','OR-CCB:88888888:OCLS','OCLS','88888888','active','Active','2017-01-01','Eugene','OR','97401','Lane','20',now()),
+ ('10000000-0000-4000-8000-00000000e005','00000000-0000-4000-8000-00000000e005','or_ccb','OR-CCB:SYNOR7100:RGC','RGC','SYNOR7100','active','Active','2018-01-01','Eugene','OR','97401','Lane','20',now()),
+ ('10000000-0000-4000-8000-00000000e006','00000000-0000-4000-8000-00000000e006','or_ccb','OR-CCB:SYNOR7100:RSC','RSC',' SYNOR7100 ','active','Active','2018-01-01','Eugene','OR','97401','Lane','20',now());
+
+-- Public discipline on the OCHI certificate only: it must not reach the CCB 777 card.
+INSERT INTO discipline_actions (id, contractor_id, license_id, source_system, source_dataset, external_key) VALUES
+ ('20000000-0000-4000-8000-00000000e003','00000000-0000-4000-8000-00000000e003','10000000-0000-4000-8000-00000000e003','or_ccb','synthetic','SYN-OR-DISC-OCHI');

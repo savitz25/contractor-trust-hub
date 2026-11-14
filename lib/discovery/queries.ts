@@ -57,23 +57,48 @@ function inStateSql(requireInState: boolean | undefined): string {
  * - A blank or whitespace-only license number is missing identity. The
  *   profile stays alone (`profile:<id>`). It is never a shared key, so
  *   unrelated blank rows cannot merge or cross-link.
- * - A present license number plus the normalized legal name is one business.
+ * - The number is qualified by its credential series. or_ccb carries more
+ *   than one number space: CCB contractor licenses (all CCB endorsement
+ *   codes), Oregon Certified Home Inspector certificates (OCHI, 1-4 digits)
+ *   and Oregon Certified Locksmith certificates (OCLS, 8 digits). An OCHI
+ *   certificate that equals a CCB license number is a different credential
+ *   holder (C3 FAIL at c84ff65: 9 such numbers on Production).
+ * - The number is the stored value, compared exactly (the loader strips it).
+ *   A whitespace-variant number is never merged with the stripped one, and
+ *   the related/discipline lookups use the same exact value, so identity and
+ *   evidence lookups can never disagree (no lost chips) and stay on
+ *   licenses_license_number_idx.
+ * - A present series+number plus the normalized legal name is one business.
  *   Endorsements of that same legal name stay one card. The same number on
  *   a different legal name stays a different card. A present number with no
  *   legal name stays on its own profile id, so it cannot attach to a named
- *   business that happens to reuse the number.
- * - Two different license numbers stay two entries even when the legal name
+ *   business that happens to reuse the number. The name only ever splits;
+ *   two different license numbers stay two entries even when the legal name
  *   matches. Other states keep c.id (byte-identical SQL).
  */
 function normalizedLegalNameSql(contractorAlias: string): string {
   return `NULLIF(lower(regexp_replace(TRIM(COALESCE(${contractorAlias}.legal_name, '')), '[[:space:]]+', ' ', 'g')), '')`;
 }
 
+/** Credential series inside or_ccb. Every non-certificate code is a CCB license endorsement. */
+export const OREGON_CERTIFICATE_SERIES = ["OCHI", "OCLS"] as const;
+
+function licenseSeriesSql(licenseAlias: string): string {
+  const code = `UPPER(TRIM(COALESCE(${licenseAlias}.occupation_code, '')))`;
+  const list = OREGON_CERTIFICATE_SERIES.map((c) => `'${c}'`).join(", ");
+  return `CASE WHEN ${code} IN (${list}) THEN ${code} ELSE 'CCB' END`;
+}
+
+/** The stored license number when it is present, else NULL (blank = no identity). */
+export function licenseNumberKeySql(licenseAlias = "l"): string {
+  return `CASE WHEN NULLIF(TRIM(${licenseAlias}.license_number), '') IS NULL THEN NULL ELSE ${licenseAlias}.license_number END`;
+}
+
 export function licenseIdentitySql(licenseAlias = "l", contractorAlias = "c"): string {
   const blank = `NULLIF(TRIM(${licenseAlias}.license_number), '')`;
   const profile = `'profile:' || ${contractorAlias}.id::text`;
   const entity = `COALESCE(${normalizedLegalNameSql(contractorAlias)}, ${profile})`;
-  return `CASE WHEN ${blank} IS NULL THEN ${profile} ELSE TRIM(${licenseAlias}.license_number) || chr(31) || ${entity} END`;
+  return `CASE WHEN ${blank} IS NULL THEN ${profile} ELSE ${licenseSeriesSql(licenseAlias)} || ':' || ${licenseAlias}.license_number || chr(31) || ${entity} END`;
 }
 
 export const LICENSE_IDENTITY_SQL = licenseIdentitySql();
@@ -305,6 +330,7 @@ type ListFilters = {
 
 type LicenseCardRow = Parameters<typeof mapRow>[0] & {
   license_identity: string;
+  license_number_key: string | null;
   license_number: string | null;
   related: {
     slug: string;
@@ -347,6 +373,7 @@ async function listByLicenseNumber(opts: {
     WITH picked AS (
       SELECT DISTINCT ON (license_identity)
         ${LICENSE_IDENTITY_SQL} AS license_identity,
+        ${licenseNumberKeySql("l")} AS license_number_key,
         l.license_number,
         c.id,
         c.slug,
@@ -386,7 +413,9 @@ async function listByLicenseNumber(opts: {
           FROM licenses l3
           JOIN contractors c3 ON c3.id = l3.contractor_id
           JOIN discipline_actions d ON d.contractor_id = l3.contractor_id
-          WHERE l3.source_system = $1
+          WHERE p.license_number_key IS NOT NULL
+            AND l3.license_number = p.license_number_key
+            AND l3.source_system = $1
             AND c3.id <> p.id
             AND ${licenseIdentitySql("l3", "c3")} = p.license_identity
             AND ${PUBLIC_REGULATORY_SQL}
@@ -419,7 +448,9 @@ async function listByLicenseNumber(opts: {
       ) AS related
       FROM licenses l2
       JOIN contractors c2 ON c2.id = l2.contractor_id
-      WHERE l2.source_system = $1
+      WHERE p.license_number_key IS NOT NULL
+        AND l2.license_number = p.license_number_key
+        AND l2.source_system = $1
         AND ${licenseIdentitySql("l2", "c2")} = p.license_identity
         AND c2.id <> p.id
         AND c2.is_thin_profile = FALSE

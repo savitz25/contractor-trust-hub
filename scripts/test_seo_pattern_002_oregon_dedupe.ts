@@ -78,6 +78,11 @@ test("blank license numbers are not a shared key; a reused number is split by le
   assert.match(LICENSE_IDENTITY_SQL, /CASE WHEN NULLIF\(TRIM\(l\.license_number\), ''\) IS NULL THEN 'profile:' \|\| c\.id::text/);
   assert.match(LICENSE_IDENTITY_SQL, /l\.license_number/);
   assert.match(LICENSE_IDENTITY_SQL, /legal_name/);
+  // Credential series qualifies the number: OCHI/OCLS certificates never share a CCB key.
+  assert.match(LICENSE_IDENTITY_SQL, /CASE WHEN UPPER\(TRIM\(COALESCE\(l\.occupation_code, ''\)\)\) IN \('OCHI', 'OCLS'\) THEN UPPER\(TRIM\(COALESCE\(l\.occupation_code, ''\)\)\) ELSE 'CCB' END \|\| ':' \|\| l\.license_number/);
+  // The number is compared exactly (no TRIM in the key), so the key and the
+  // index-driven evidence lookups agree.
+  assert.doesNotMatch(LICENSE_IDENTITY_SQL, /ELSE TRIM\(l\.license_number\)/);
   assert.doesNotMatch(LICENSE_IDENTITY_SQL, /display_name|dba_name|_name_raw/);
   const src = readFileSync("lib/discovery/queries.ts", "utf8");
   const start = src.indexOf("async function listByLicenseNumber(");
@@ -87,8 +92,12 @@ test("blank license numbers are not a shared key; a reused number is split by le
   assert.doesNotMatch(body, /DISTINCT ON \([^)]*name/i);
   assert.match(body, /l2\.source_system = \$1/);
   assert.match(body, /licenseIdentitySql\("l2", "c2"\)\} = p\.license_identity/);
-  assert.doesNotMatch(body, /l2\.license_number = p\.license_number/);
   assert.match(body, /licenseIdentitySql\("l3", "c3"\)\} = p\.license_identity/);
+  // Evidence lookups stay index-driven (licenses_license_number_idx) on the
+  // exact stored number, and never run for a blank number.
+  assert.match(body, /p\.license_number_key IS NOT NULL\n\s+AND l2\.license_number = p\.license_number_key\n/);
+  assert.match(body, /p\.license_number_key IS NOT NULL\n\s+AND l3\.license_number = p\.license_number_key\n/);
+  assert.doesNotMatch(body, /l[23]\.license_number = p\.license_number\b(?!_key)/);
   assert.match(body, /c2\.is_thin_profile = FALSE/);
   assert.match(body, /ORDER BY \$\{statusRank\("p"\)\}, p\.display_name, p\.license_identity/);
   const facet = src.slice(src.indexOf("async function countDedupeCountiesForTrade("), src.indexOf("export async function countCountiesForTrade("));
@@ -282,7 +291,7 @@ if (mode === "fixture") {
   test("trade pages: one entry per license; county facets deduplicated", async () => {
     await setMode("ok");
     const rgc = await all({ trade: "residential-general" });
-    assert.equal(rgc.total, 10);
+    assert.equal(rgc.total, 12, "+ Lane CCB 777 RGC and SYNOR7100 RGC");
     const cg = await all({ trade: "commercial-general" });
     assert.equal(cg.total, 3, "SYNOR1001 holds CGC1+CGC2: counted once");
     const nums = cg.rows.map(numberOf);
@@ -320,6 +329,38 @@ if (mode === "fixture") {
     });
     assert.equal(grant.total, 1);
     assert.equal(numberOf(grant.results[0]), "SYNOR5000");
+  });
+
+  test("credential series: an OCHI certificate never merges with the same CCB number, even under the same legal name", async () => {
+    await setMode("ok");
+    const { rows, total } = await all({ county: "lane" });
+    assert.equal(total, 5, "CCB 777, OCHI 777, OCLS 88888888, SYNOR7100 stripped, SYNOR7100 padded");
+    const ccb = rows.filter((r) => numberOf(r) === "777" && r.primaryLicenseKey !== "OR-CCB:777:OCHI");
+    const ochi = rows.filter((r) => r.primaryLicenseKey === "OR-CCB:777:OCHI");
+    assert.equal(ccb.length, 1, "RGC + RSC of one business stay one card");
+    assert.equal(ochi.length, 1, "the OCHI certificate is its own card");
+    assert.deepEqual((ccb[0].relatedProfiles || []).map((x) => x.occupationCode), ["RSC"], "only the CCB endorsement is a Same firm chip");
+    assert.equal(ccb[0].hasDiscipline, false, "OCHI discipline does not reach the CCB card");
+    assert.equal(ochi[0].relatedProfiles, undefined, "no Same firm chip crosses series");
+    assert.equal(ochi[0].hasDiscipline, true, "the OCHI card keeps its own discipline");
+    const ocls = rows.filter((r) => r.primaryLicenseKey === "OR-CCB:88888888:OCLS");
+    assert.equal(ocls.length, 1);
+    assert.equal(ocls[0].relatedProfiles, undefined);
+  });
+
+  test("whitespace-variant numbers are never merged and never cross-linked", async () => {
+    await setMode("ok");
+    const { rows } = await all({ county: "lane" });
+    const padded = rows.filter((r) => (r.primaryLicenseKey || "").startsWith("OR-CCB:SYNOR7100:"));
+    assert.equal(padded.length, 2);
+    for (const card of padded) assert.equal(card.relatedProfiles, undefined, "no partial chip set");
+    const facets = Object.fromEntries((await countByTrade(OR, geo("lane"), { strict: true })).map((f) => [f.slug, f.count]));
+    assert.equal(facets["residential-general"], 2, "CCB 777 RGC + SYNOR7100 RGC");
+    assert.equal(facets["residential-specialty"], 2, "CCB 777 RSC + padded SYNOR7100 RSC");
+    for (const [slug, count] of Object.entries(facets)) {
+      const listed = await listDiscoveryContractors({ publicStateSlug: OR, county: geo("lane"), trade: trade(slug), limit: 100, strict: true });
+      assert.equal(listed.total, count, `lane/${slug} facet equals the listing`);
+    }
   });
 
   test("true zero stays a real empty result", async () => {
