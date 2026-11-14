@@ -101,7 +101,9 @@ test("blank license numbers are not a shared key; a reused number is split by le
   assert.match(body, /c2\.is_thin_profile = FALSE/);
   assert.match(body, /ORDER BY \$\{statusRank\("p"\)\}, p\.display_name, p\.license_identity/);
   const facet = src.slice(src.indexOf("async function countDedupeCountiesForTrade("), src.indexOf("export async function countCountiesForTrade("));
-  assert.match(facet, /COUNT\(DISTINCT \$\{LICENSE_IDENTITY_SQL\}\)/);
+  assert.match(facet, /\$\{LICENSE_IDENTITY_SQL\} AS ident/);
+  assert.match(facet, /COUNT\(DISTINCT keys\.ident\)/);
+  assert.match(facet, /JOIN m ON m\.kind = keys\.kind AND m\.val = keys\.val/);
   assert.match(facet, /l\.county_code/);
   assert.match(facet, /status_normalized IN \('active', 'current'\)/);
   assert.match(facet, /inStateSql\(disc\.requireInStateAddress\)/);

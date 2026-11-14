@@ -797,36 +797,48 @@ async function countDedupeCountiesForTrade(
     }
   }
   if (!nameTokens.length && !codeTokens.length) return [];
+  // Each license row emits its normalized county keys once and is hash-joined
+  // to the curated tokens by equality. Same matches as buildFilterClause:
+  // a name token matches LOWER(TRIM(county_name|primary_county)) with spaces
+  // and dashes equivalent; a code token matches TRIM or zero-stripped
+  // county_code|primary_county. (The per-row OR across every county token was
+  // the slowest statement on /oregon/<trade> pages.)
   const rows = await query<{ slug: string; n: string }>(
     `
-    SELECT m.slug, COUNT(DISTINCT ${LICENSE_IDENTITY_SQL})::text AS n
-    FROM contractors c
-    JOIN licenses l ON l.contractor_id = c.id
-    JOIN (
-      SELECT slug, token, 'name'::text AS kind
+    WITH r AS (
+      SELECT
+        ${LICENSE_IDENTITY_SQL} AS ident,
+        REPLACE(LOWER(TRIM(COALESCE(l.county_name, ''))), ' ', '-') AS n1,
+        REPLACE(LOWER(TRIM(COALESCE(c.primary_county, ''))), ' ', '-') AS n2,
+        TRIM(COALESCE(l.county_code, '')) AS k1,
+        TRIM(COALESCE(c.primary_county, '')) AS k2
+      FROM contractors c
+      JOIN licenses l ON l.contractor_id = c.id
+      WHERE l.source_system = $1
+        AND c.is_thin_profile = FALSE
+        ${inStateSql(disc.requireInStateAddress)}
+        ${disc.activeOnlyDefault ? "AND l.status_normalized IN ('active', 'current')" : ""}
+        AND l.occupation_code = ANY($7::text[])
+    ),
+    keys AS (
+      SELECT DISTINCT r.ident, k.kind, k.val
+      FROM r
+      CROSS JOIN LATERAL (
+        VALUES ('name', r.n1), ('name', r.n2),
+               ('code', r.k1), ('code', r.k2),
+               ('code', LTRIM(r.k1, '0')), ('code', LTRIM(r.k2, '0'))
+      ) AS k(kind, val)
+    ),
+    m AS (
+      SELECT slug, REPLACE(token, ' ', '-') AS val, 'name'::text AS kind
       FROM unnest($3::text[], $4::text[]) AS u(slug, token)
-      UNION ALL
+      UNION
       SELECT slug, token, 'code'::text
       FROM unnest($5::text[], $6::text[]) AS u(slug, token)
-    ) m ON (
-      (m.kind = 'name' AND (
-        LOWER(TRIM(COALESCE(l.county_name, ''))) = m.token
-        OR LOWER(TRIM(COALESCE(c.primary_county, ''))) = m.token
-        OR LOWER(REPLACE(TRIM(COALESCE(l.county_name, '')), ' ', '-')) = REPLACE(m.token, ' ', '-')
-        OR LOWER(REPLACE(TRIM(COALESCE(c.primary_county, '')), ' ', '-')) = REPLACE(m.token, ' ', '-')
-      ))
-      OR (m.kind = 'code' AND (
-        TRIM(COALESCE(l.county_code, '')) = m.token
-        OR TRIM(COALESCE(c.primary_county, '')) = m.token
-        OR LTRIM(TRIM(COALESCE(l.county_code, '')), '0') = m.token
-        OR LTRIM(TRIM(COALESCE(c.primary_county, '')), '0') = m.token
-      ))
     )
-    WHERE l.source_system = $1
-      AND c.is_thin_profile = FALSE
-      ${inStateSql(disc.requireInStateAddress)}
-      ${disc.activeOnlyDefault ? "AND l.status_normalized IN ('active', 'current')" : ""}
-      AND l.occupation_code = ANY($7::text[])
+    SELECT m.slug, COUNT(DISTINCT keys.ident)::text AS n
+    FROM keys
+    JOIN m ON m.kind = keys.kind AND m.val = keys.val
     GROUP BY m.slug
     `,
     [state.licenseSource, state.code, nameSlugs, nameTokens, codeSlugs, codeTokens, codes]
