@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * FL-DIR-PERF-003 HTML check (read-only GETs; for a LOCAL `next start` only).
- * Usage: node scripts/check_fl_dir_perf_003.mjs <baseUrl> <ok|empty|fail|facetfail>
- *   ok        = FL-DIR-PERF-001 fixture: directory pages 200 and indexable; every
+ * Usage: node scripts/check_fl_dir_perf_003.mjs <baseUrl> <ok|empty|fail|facetfail|research|memo>
+ *   ok        = FL-DIR-PERF-001 fixture (+ research_fixture.sql once research pages are guarded): directory pages 200 and indexable; every
  *               robots/googlebot meta agrees (no noindex next to index).
  *   empty     = zero rows: real empty states stay 200, indexable, no "unavailable" notice.
  *   fail      = DB unreachable / SQL error / statement timeout: directory URLs are 5xx;
@@ -13,6 +13,10 @@
  *   memo      = slow fixture (9 s > 8 s statement_timeout): the same failing URL twice in a row;
  *               the first waits for the timeout, the repeat inside 15 s answers 5xx without a
  *               new statement (fast), then a different URL still runs its own read.
+ *   research  = fixture + scripts/fl_dir_perf_003/research_fixture.sql: every county research page
+ *               is complete: 200 + indexable with the statewide comparison and "What stands out".
+ *   Research pages in empty/fail modes (rank 3): the snapshot is incomplete, so 200 + noindex
+ *   with the "temporarily unavailable" notice (never an indexable "— — — —" page).
  * Googlebot and browser UAs. One JSON line per request; exit 1 on any failure.
  */
 const base = (process.argv[2] || "http://localhost:3000").replace(/\/$/, "");
@@ -37,6 +41,12 @@ const DIRECTORY = [
 ];
 const NOT_FOUND = ["/florida/broward/not-a-trade", "/florida/not-a-real-segment", "/florida/broward/fort-lauderdale/not-a-trade"];
 
+const RESEARCH = ["/florida/broward", "/florida/miami-dade", "/florida/pinellas", "/florida/palm-beach"];
+const RESEARCH_OK = RESEARCH.map((path) => ({ path, status: 200, index: true,
+  must: ["Florida (statewide credentials)", "What stands out"], no: ["Live county research counts are temporarily unavailable"] }));
+const RESEARCH_DEGRADED = RESEARCH.map((path) => ({ path, status: 200, index: false,
+  must: ["Live county research counts are temporarily unavailable"] }));
+
 const CASES = {
   ok: [
     { path: "/florida/roofers", status: 200, index: true, must: ["Synthetic Roofing"], no: [NOTICE] },
@@ -46,14 +56,17 @@ const CASES = {
     { path: "/florida/broward/roofers?page=2", status: 200, index: false },
     ...NOT_FOUND.map((path) => ({ path, status: 404, index: false })),
   ],
+  research: RESEARCH_OK,
   empty: [
     { path: "/florida/roofers", status: 200, index: true, must: ["No matches"], no: [NOTICE] },
     { path: "/florida/broward/roofers", status: 200, index: true, must: ["No matches"], no: [NOTICE] },
     { path: "/florida/manatee", status: 200, index: true, must: ["No matches"], no: [NOTICE] },
+    ...RESEARCH_DEGRADED,
   ],
   fail: [
     ...DIRECTORY.map((path) => ({ path, failed: true })),
     ...NOT_FOUND.map((path) => ({ path, status: 404, index: false })),
+    ...RESEARCH_DEGRADED,
   ],
   facetfail: [
     { path: "/florida/roofers", status: 200, index: false, must: ["Synthetic Roofing", "county list could not be loaded"] },

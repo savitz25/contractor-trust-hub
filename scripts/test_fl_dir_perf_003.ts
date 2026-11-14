@@ -75,7 +75,7 @@ test("rank 1: /florida/{trade} and /florida/{county} bodies run no parallel DB r
   assert.match(body, /loadFloridaCountyPage\(/);
   assert.doesNotMatch(body, /countByTrade\(|countCountiesForTrade\(|listFloridaCities\(/);
   // The research snapshot is read after the directory, not alongside it.
-  assert.ok(body.indexOf("loadFloridaCountyPage(") < body.indexOf("getFloridaCountyIntelligenceSnapshot("));
+  assert.ok(body.indexOf("loadFloridaCountyPage(") < body.search(/getFloridaCountyIntelligenceSnapshot(Once)?\(/));
 });
 
 test("rank 1: loaders read the directory first and side lists strictly after it", () => {

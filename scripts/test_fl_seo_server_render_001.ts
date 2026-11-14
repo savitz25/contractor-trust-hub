@@ -47,7 +47,8 @@ test("Florida route files render research without a client-only boundary", () =>
   assert.match(state, /await getFloridaIntelligenceSnapshot\(\)/, "/florida awaits the snapshot on the server");
   assert.match(state, /<FloridaStateIntelligence payload=\{payload\} \/>/);
   const county = read("app/florida/[segment]/page.tsx");
-  assert.match(county, /getFloridaCountyIntelligenceSnapshot\(county\.slug\)/);
+  // FL-DIR-PERF-003: the request-scoped wrapper (shared with generateMetadata).
+  assert.match(county, /getFloridaCountyIntelligenceSnapshot(Once)?\(county\.slug\)/);
   assert.match(county, /<CountyIntelligence payload=\{intelPayload\} \/>/);
 });
 
