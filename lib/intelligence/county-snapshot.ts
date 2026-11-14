@@ -4,11 +4,13 @@
  */
 import "server-only";
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 import { query, queryOne } from "@/lib/db";
 import { FLORIDA_COUNTY_INTEL_CATALOG } from "./county-catalog";
 import {
   buildCountyIntelligencePayload,
   CTH_FL_COUNTY_INTEL_VERSION,
+  isCountyIntelComplete,
   type CountyLiveCounts,
   type CountyMoveLikePayload,
 } from "./county-payload";
@@ -16,7 +18,11 @@ import { isFloridaCountyIntelSlug, type FloridaCountyIntelSlug } from "./coverag
 import { getFloridaIntelligenceSnapshot, metricById } from "./florida-snapshot";
 
 export type { CountyMoveLikePayload } from "./county-payload";
-export { CTH_FL_COUNTY_INTEL_VERSION, publicCountyMetrics } from "./county-payload";
+export {
+  CTH_FL_COUNTY_INTEL_VERSION,
+  isCountyIntelComplete,
+  publicCountyMetrics,
+} from "./county-payload";
 
 const REVALIDATE_SEC = 1_800;
 const TIMEOUT_MS = 8_000;
@@ -174,12 +180,22 @@ async function loadLive(slug: FloridaCountyIntelSlug): Promise<CountyMoveLikePay
     permitEvidence,
   };
 
-  return buildCountyIntelligencePayload({
+  const payload = buildCountyIntelligencePayload({
     countySlug: slug,
     generatedAt,
     timedOut: false,
     counts,
   });
+  // FL-DIR-PERF-003: a missing statewide baseline (getFloridaIntelligenceSnapshot
+  // timed out and returned its empty payload) or missing county counts used to
+  // be cached here for 30 minutes and rendered as "— — — —" with no "What
+  // stands out", on an indexable 200. Throwing keeps it out of the data cache;
+  // the request gets the explicit "temporarily unavailable" payload (noindex)
+  // and the next request retries (the statewide snapshot keeps warming).
+  if (!isCountyIntelComplete(payload)) {
+    throw new Error("county-intel-incomplete");
+  }
+  return payload;
 }
 
 function emptyTimedOut(slug: FloridaCountyIntelSlug): CountyMoveLikePayload {
@@ -199,7 +215,8 @@ export async function getFloridaCountyIntelligenceSnapshot(
   }
   const cached = unstable_cache(
     () => loadLive(countySlug),
-    ["contractor-county-intel-v1", countySlug],
+    // v2 (FL-DIR-PERF-003): drop any incomplete v1 entries cached before the fix.
+    ["contractor-county-intel-v2", countySlug],
     {
       revalidate: REVALIDATE_SEC,
       tags: ["florida-county-intelligence", `florida-county-intelligence-${countySlug}`],
@@ -217,3 +234,13 @@ export async function getFloridaCountyIntelligenceSnapshot(
     if (timer) clearTimeout(timer);
   }
 }
+
+/**
+ * FL-DIR-PERF-003: one snapshot per request, shared by generateMetadata
+ * (robots) and the page body (render), so they always agree and a failed
+ * snapshot is not loaded twice.
+ */
+export const getFloridaCountyIntelligenceSnapshotOnce = cache(
+  (countySlug: string): Promise<CountyMoveLikePayload> =>
+    getFloridaCountyIntelligenceSnapshot(countySlug)
+);

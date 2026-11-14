@@ -624,3 +624,24 @@ export function publicCountyMetrics(payload: CountyMoveLikePayload): CountyIntel
       }) && m.value != null
   );
 }
+
+/**
+ * FL-DIR-PERF-003: true only when the county research page can render its
+ * full comparison: live county counts AND the statewide Florida baseline
+ * (the "Florida (statewide credentials)" row and "What stands out" need all
+ * of them). A timed-out or partial snapshot is incomplete: it must not be
+ * cached as the county's research and must not be served as indexable.
+ */
+export function isCountyIntelComplete(payload: CountyMoveLikePayload): boolean {
+  if (payload.timedOut) return false;
+  const num = (v: number | null | undefined) => typeof v === "number" && Number.isFinite(v);
+  const fl = payload.floridaBaseline;
+  if (!fl || !num(fl.tracked) || !num(fl.active) || !num(fl.roofing) || !num(fl.general)) return false;
+  if ((fl.tracked as number) <= 0) return false;
+  const metric = (id: string) => payload.metrics.find((m) => m.id === id)?.value;
+  const countyTracked = metric("county_credentials");
+  if (!num(countyTracked) || !num(metric("county_active_credentials"))) return false;
+  if ((countyTracked as number) <= 0) return false;
+  const cat = (slug: string) => payload.categories.find((c) => c.slug === slug)?.tracked;
+  return num(cat("roofers")) && num(cat("general-contractors"));
+}

@@ -23,7 +23,10 @@ import { isFloridaDirectoryUnavailableError } from "@/lib/discovery/florida-list
 import { discoveryMetadata } from "@/lib/discovery/metadata";
 import { CountyIntelligence } from "@/components/intelligence/CountyIntelligence";
 import { isFloridaCountyIntelSlug } from "@/lib/intelligence/coverage";
-import { getFloridaCountyIntelligenceSnapshot } from "@/lib/intelligence/county-snapshot";
+import {
+  getFloridaCountyIntelligenceSnapshotOnce,
+  isCountyIntelComplete,
+} from "@/lib/intelligence/county-snapshot";
 
 const PUBLIC = "florida";
 
@@ -58,6 +61,12 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
         if (!isFloridaDirectoryUnavailableError(err)) throw err;
         degraded = true;
       }
+    }
+    // FL-DIR-PERF-003 (research completeness): a timed-out or partial county
+    // research snapshot (missing statewide comparison) is never indexable.
+    if (isFloridaCountyIntelSlug(county.slug)) {
+      const intel = await getFloridaCountyIntelligenceSnapshotOnce(county.slug);
+      if (!isCountyIntelComplete(intel)) degraded = true;
     }
     return discoveryMetadata({
       state,
@@ -127,7 +136,7 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
     // trades, then cities, then the cached research snapshot.
     const data = showDirectory ? await loadFloridaCountyPage(county, browse) : null;
     const intelPayload = countyIntel
-      ? await getFloridaCountyIntelligenceSnapshot(county.slug)
+      ? await getFloridaCountyIntelligenceSnapshotOnce(county.slug)
       : null;
     const results = data?.directory.results ?? [];
     const total = data?.directory.total ?? 0;
