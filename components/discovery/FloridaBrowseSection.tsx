@@ -28,6 +28,7 @@ export function FloridaBrowseSection({
   total,
   stats,
   cities,
+  citiesUnavailable = false,
   view = "list",
 }: {
   state: DiscoveryStateConfig;
@@ -39,6 +40,8 @@ export function FloridaBrowseSection({
   total: number;
   stats: FloridaBrowseStats;
   cities: DiscoveryFacet[];
+  /** FL-DIR-PERF-003: the city list read failed (not "no cities"). */
+  citiesUnavailable?: boolean;
   view?: BrowseView;
 }) {
   const cityLabel = pathCitySlug ? cityLabelFromSlug(pathCitySlug) : null;
@@ -158,6 +161,13 @@ export function FloridaBrowseSection({
             No map — city from the license extract only
           </span>
         </div>
+      ) : null}
+
+      {county && citiesUnavailable ? (
+        <p className="mt-5 rounded-xl border border-dashed border-[var(--border)] px-4 py-3 text-sm text-[var(--muted)]">
+          The city list could not be loaded on this request. The directory below is complete; reload
+          to see cities.
+        </p>
       ) : null}
 
       {showCityNav && (view === "cities" || !showViewToggle) ? (

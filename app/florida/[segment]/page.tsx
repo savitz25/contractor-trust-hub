@@ -15,9 +15,12 @@ import {
   getDiscoveryState,
   resolveDiscoverySegment,
 } from "@/lib/discovery/config";
-import { listFloridaBrowse, listFloridaCities } from "@/lib/discovery/florida-list";
+import {
+  loadFloridaCountyPage,
+  loadFloridaTradePage,
+} from "@/lib/discovery/florida-directory-page";
+import { isFloridaDirectoryUnavailableError } from "@/lib/discovery/florida-list";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
-import { countByTrade, countCountiesForTrade } from "@/lib/discovery/queries";
 import { CountyIntelligence } from "@/components/intelligence/CountyIntelligence";
 import { isFloridaCountyIntelSlug } from "@/lib/intelligence/coverage";
 import { getFloridaCountyIntelligenceSnapshot } from "@/lib/intelligence/county-snapshot";
@@ -44,6 +47,18 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 
   if (resolved.kind === "county") {
     const { county } = resolved;
+    // FL-DIR-PERF-003: robots come from the same request-scoped reads as the
+    // body. A failed directory read is noindex here and 500 in the body; a
+    // failed side list keeps the 200 page out of the index.
+    let degraded = false;
+    if (countyShowsDirectory(county.slug, browse, sp)) {
+      try {
+        degraded = !(await loadFloridaCountyPage(county, browse)).complete;
+      } catch (err) {
+        if (!isFloridaDirectoryUnavailableError(err)) throw err;
+        degraded = true;
+      }
+    }
     return discoveryMetadata({
       state,
       county,
@@ -53,18 +68,43 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       description: isFloridaCountyIntelSlug(county.slug)
         ? `How ${county.name} County contractor credentials compare with Florida. HQ/base mailing county is not a service area. Independent research, not a ranking.`
         : `Browse Florida DBPR construction license profiles whose HQ/base mailing county is ${county.name}. Not a list of who operates only in this county, and not a marketplace.`,
-      noIndex: browseIsVariant(browse),
+      noIndex: degraded || browseIsVariant(browse),
     });
   }
 
   const { trade } = resolved;
+  let degraded = false;
+  try {
+    degraded = !(await loadFloridaTradePage(trade, browse)).complete;
+  } catch (err) {
+    if (!isFloridaDirectoryUnavailableError(err)) throw err;
+    degraded = true;
+  }
   return discoveryMetadata({
     state,
     trade,
     title: `Florida ${trade.title} — License Verification`,
     description: `Browse Florida ${trade.title.toLowerCase()} with official DBPR license evidence. ${trade.description} Independent research, not a lead board.`,
-    noIndex: browseIsVariant(browse),
+    noIndex: degraded || browseIsVariant(browse),
   });
+}
+
+/** Research counties show the directory only on ?list=1 or a filtered/paged URL. */
+function countyShowsDirectory(
+  countySlug: string,
+  browse: ReturnType<typeof parseBrowseParams>,
+  sp: Record<string, string | string[] | undefined>
+): boolean {
+  const listParam = Array.isArray(sp.list) ? sp.list[0] : sp.list;
+  return !isFloridaCountyIntelSlug(countySlug) || browseIsVariant(browse) || listParam === "1";
+}
+
+function SideListUnavailable({ what }: { what: string }) {
+  return (
+    <p className="mt-3 rounded-xl border border-dashed border-[var(--border)] px-4 py-3 text-sm text-[var(--muted)]">
+      {`The ${what} list could not be loaded on this request. The directory below is complete; reload to see the ${what} list.`}
+    </p>
+  );
 }
 
 export default async function FloridaSegmentPage({ params, searchParams }: Props) {
@@ -81,24 +121,21 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
     const { county } = resolved;
     const view = parseBrowseView(sp);
     const countyIntel = isFloridaCountyIntelSlug(county.slug);
-    const listParam = Array.isArray(sp.list) ? sp.list[0] : sp.list;
-    const showDirectory = !countyIntel || browseIsVariant(browse) || listParam === "1";
-    const intelP = countyIntel
-      ? getFloridaCountyIntelligenceSnapshot(county.slug)
-      : Promise.resolve(null);
-    const browseP = showDirectory
-      ? Promise.all([
-          listFloridaBrowse({ county, browse }),
-          countByTrade(PUBLIC, county),
-          listFloridaCities(county),
-        ])
-      : Promise.resolve(null);
-    const [intelPayload, browseBundle] = await Promise.all([intelP, browseP]);
-    const results = browseBundle?.[0].results ?? [];
-    const total = browseBundle?.[0].total ?? 0;
-    const stats = browseBundle?.[0].stats;
-    const trades = browseBundle?.[1] ?? [];
-    const cities = browseBundle?.[2] ?? [];
+    const showDirectory = countyShowsDirectory(county.slug, browse, sp);
+    // FL-DIR-PERF-003: one read at a time on the max:1 pool. Directory first
+    // (a failure throws: HTTP 500 + noindex, side lists never start), then
+    // trades, then cities, then the cached research snapshot.
+    const data = showDirectory ? await loadFloridaCountyPage(county, browse) : null;
+    const intelPayload = countyIntel
+      ? await getFloridaCountyIntelligenceSnapshot(county.slug)
+      : null;
+    const results = data?.directory.results ?? [];
+    const total = data?.directory.total ?? 0;
+    const stats = data?.directory.stats;
+    const trades = data?.facets?.facets ?? [];
+    const tradesUnavailable = data?.facets?.ok === false;
+    const cities = data?.cities?.facets ?? [];
+    const citiesUnavailable = data?.cities?.ok === false;
 
     return (
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
@@ -139,6 +176,7 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
                   hrefFor={(slug) =>
                     discoveryPath(state, { countySlug: county.slug, tradeSlug: slug })
                   }
+                  emptyFallback={tradesUnavailable ? <SideListUnavailable what="trade" /> : undefined}
                 />
               </div>
               <FloridaBrowseSection
@@ -149,6 +187,7 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
                 total={total}
                 stats={stats}
                 cities={cities}
+                citiesUnavailable={citiesUnavailable}
                 view={view}
               />
             </>
@@ -173,10 +212,12 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
 
   const { trade } = resolved;
   const view = parseBrowseView(sp);
-  const [{ results, total, stats }, countyFacets] = await Promise.all([
-    listFloridaBrowse({ trade, browse }),
-    countCountiesForTrade(PUBLIC, trade),
-  ]);
+  // FL-DIR-PERF-003: directory first, then the county side list (never in
+  // parallel on the max:1 pool; never after a failed directory read).
+  const data = await loadFloridaTradePage(trade, browse);
+  const { results, total, stats } = data.directory;
+  const countyFacets = data.facets?.facets ?? [];
+  const countiesUnavailable = data.facets?.ok === false;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
@@ -208,6 +249,7 @@ export default async function FloridaSegmentPage({ params, searchParams }: Props
           hrefFor={(slug) =>
             discoveryPath(state, { countySlug: slug, tradeSlug: trade.slug })
           }
+          emptyFallback={countiesUnavailable ? <SideListUnavailable what="county" /> : undefined}
         />
       </div>
 

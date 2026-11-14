@@ -18,11 +18,8 @@ import {
   getDiscoveryState,
   getTrade,
 } from "@/lib/discovery/config";
-import {
-  isFloridaDirectoryUnavailableError,
-  listFloridaBrowseOnce,
-  listFloridaCities,
-} from "@/lib/discovery/florida-list";
+import { loadFloridaCityTradePage } from "@/lib/discovery/florida-directory-page";
+import { isFloridaDirectoryUnavailableError } from "@/lib/discovery/florida-list";
 import { discoveryMetadata } from "@/lib/discovery/metadata";
 
 const PUBLIC = "florida";
@@ -51,13 +48,12 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const cityLabel = cityLabelFromSlug(citySlug);
   let thin: boolean;
   try {
-    const { stats } = await listFloridaBrowseOnce({
-      county,
-      trade,
-      browse: { ...browse, citySlug, page: 1 },
-      pathCitySlug: citySlug,
-    });
-    thin = stats.firms < CITY_INDEX_MIN;
+    // FL-DIR-PERF-003: the exact read the body makes (same page), so a
+    // paginated/filtered URL runs ONE directory statement, not two. Stats are
+    // page-independent, so the thin check is unchanged. A failed city list
+    // also keeps the render out of the index.
+    const data = await loadFloridaCityTradePage(county, trade, citySlug, browse);
+    thin = data.directory.stats.firms < CITY_INDEX_MIN || !data.complete;
   } catch (err) {
     if (!isFloridaDirectoryUnavailableError(err)) throw err;
     // FL-DIR-PERF-001: the read failed, so the count is unknown. Keep the
@@ -89,20 +85,18 @@ export default async function FloridaCityTradePage({ params, searchParams }: Pro
   const trade = getTrade(state, tradeSlug);
   if (!county || !trade) notFound();
 
-  // FL-DIR-PERF-002: same request key as generateMetadata on page 1, so the
-  // directory SQL runs once per render. The city facet query runs after it
-  // (not in parallel) so it never queues on the max:1 pool behind the
-  // directory read and times out into a silently missing facet list.
-  const { results, total, stats } = await listFloridaBrowseOnce({
-    county,
-    trade,
-    browse,
-    pathCitySlug: citySlug,
-  });
+  // FL-DIR-PERF-002/003: same request-scoped loader as generateMetadata, so
+  // the directory SQL runs once per render on every page. The city facet
+  // query runs after it (not in parallel) so it never queues on the max:1
+  // pool behind the directory read; a failed city list is flagged, never
+  // rendered as "no cities". Zero firms is a 404 (city list not read).
+  const data = await loadFloridaCityTradePage(county, trade, citySlug, browse);
+  const { results, total, stats } = data.directory;
 
   if (total === 0) notFound();
 
-  const cities = await listFloridaCities(county, trade);
+  const cities = data.cities?.facets ?? [];
+  const citiesUnavailable = data.cities?.ok === false;
 
   const cityLabel = cityLabelFromSlug(citySlug);
 
@@ -152,6 +146,7 @@ export default async function FloridaCityTradePage({ params, searchParams }: Pro
         total={total}
         stats={stats}
         cities={cities}
+        citiesUnavailable={citiesUnavailable}
         view={view}
       />
 

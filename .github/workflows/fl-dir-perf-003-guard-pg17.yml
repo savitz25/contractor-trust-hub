@@ -1,0 +1,74 @@
+name: FL-DIR-PERF-003 Florida side-list and robots guard PostgreSQL 17
+
+# FL-DIR-PERF-003: Florida directory reads never run in parallel on the single
+# pooled client; a failed side list is reported (noindex + notice), never an
+# empty list on an indexable page; robots on failed renders say noindex only;
+# a failed directory read is memoised per instance for 15 s; successes never are.
+# Disposable service database with synthetic rows only. No secrets, no Production.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app/florida/**'
+      - 'components/discovery/FloridaBrowseSection.tsx'
+      - 'lib/discovery/**'
+      - 'lib/intelligence/county-snapshot.ts'
+      - 'scripts/test_fl_dir_perf_00*.ts'
+      - 'scripts/fl_dir_perf_00*/**'
+      - '.github/workflows/fl-dir-perf-003-guard-pg17.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: Florida side-list, robots and failure-memo guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: fl_dir_perf_test
+          POSTGRES_PASSWORD: fl_dir_perf_test_only
+          POSTGRES_DB: fl_dir_perf_admin
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fl_dir_perf_test -d fl_dir_perf_admin"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      PGHOST: 127.0.0.1
+      PGUSER: fl_dir_perf_test
+      PGPASSWORD: fl_dir_perf_test_only
+      CI: '1'
+      T: npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test
+      DB: postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install pinned repository dependencies
+        run: npm ci
+      - name: Source guards + connection failure + failure memo (no database)
+        run: $T scripts/test_fl_dir_perf_003.ts
+      - name: Seed disposable fixture databases (synthetic rows only)
+        run: |
+          set -e
+          for db in fx_ok fx_empty fx_facetfail; do psql -d fl_dir_perf_admin -v ON_ERROR_STOP=1 -c "CREATE DATABASE $db"; done
+          psql -d fx_ok -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_001/synthetic_schema.sql
+          psql -d fx_empty -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_001/synthetic_schema.sql -c "DELETE FROM licenses_t; DELETE FROM contractors"
+          psql -d fx_facetfail -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_001/synthetic_schema.sql -f scripts/fl_dir_perf_003/side_list_fault_override.sql
+      - name: Success (ok)
+        run: FL_DIR_PERF_DB=ok DATABASE_URL=$DB/fx_ok $T scripts/test_fl_dir_perf_003.ts
+      - name: Real empty directory keeps real empty side lists (empty)
+        run: FL_DIR_PERF_DB=empty DATABASE_URL=$DB/fx_empty $T scripts/test_fl_dir_perf_003.ts
+      - name: Directory OK + failed side list is flagged, never empty (facetfail)
+        run: FL_DIR_PERF_DB=facetfail DATABASE_URL=$DB/fx_facetfail $T scripts/test_fl_dir_perf_003.ts
+      - name: Typecheck
+        run: npm run typecheck
