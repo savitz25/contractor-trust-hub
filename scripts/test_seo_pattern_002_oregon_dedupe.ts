@@ -7,9 +7,10 @@
  * contractors" for 5,050 licensees and listed one business as several cards.
  *
  * With dedupeByLicenseNumber (Oregon only) every directory listing, total and
- * facet count is one entry per authoritative license number in the state's
- * license source. Never by name. The other endorsement profiles stay on the
- * card (relatedProfiles) and discipline is checked across all of them.
+ * facet count is one entry per CCB license number plus normalized legal name.
+ * A blank number is not a key. Endorsements of the same legal name stay on
+ * one card (relatedProfiles) and discipline stays inside that identity.
+ * A different legal name that reuses the number stays a separate card.
  * AZ/WA keep per-profile identity and byte-identical SQL.
  *
  * Default mode (CI, no DB): source and SQL-shape guards, plus strict failure
@@ -73,23 +74,29 @@ test("config: only Oregon dedupes by license number", () => {
   assert.equal(directoryIdentitySql(disc(OR)), LICENSE_IDENTITY_SQL);
 });
 
-test("identity is the license number (never a name); blank numbers fall back to the profile id", () => {
+test("blank license numbers are not a shared key; a reused number is split by legal name", () => {
+  assert.match(LICENSE_IDENTITY_SQL, /CASE WHEN NULLIF\(TRIM\(l\.license_number\), ''\) IS NULL THEN 'profile:' \|\| c\.id::text/);
   assert.match(LICENSE_IDENTITY_SQL, /l\.license_number/);
-  assert.match(LICENSE_IDENTITY_SQL, /'profile:' \|\| c\.id::text/);
-  assert.doesNotMatch(LICENSE_IDENTITY_SQL, /display_name|legal_name|_name_raw|dba_name/);
+  assert.match(LICENSE_IDENTITY_SQL, /legal_name/);
+  assert.doesNotMatch(LICENSE_IDENTITY_SQL, /display_name|dba_name|_name_raw/);
   const src = readFileSync("lib/discovery/queries.ts", "utf8");
   const start = src.indexOf("async function listByLicenseNumber(");
   const body = src.slice(start, src.indexOf("\nexport async function listDiscoveryContractors(", start));
   assert.ok(start > 0 && body.length > 0);
-  // DISTINCT ON the license identity, never on a name column.
   assert.match(body, /SELECT DISTINCT ON \(license_identity\)/);
   assert.doesNotMatch(body, /DISTINCT ON \([^)]*name/i);
-  // Related evidence is joined by license number within the same source.
   assert.match(body, /l2\.source_system = \$1/);
-  assert.match(body, /l2\.license_number = p\.license_number/);
+  assert.match(body, /licenseIdentitySql\("l2", "c2"\)\} = p\.license_identity/);
+  assert.doesNotMatch(body, /l2\.license_number = p\.license_number/);
+  assert.match(body, /licenseIdentitySql\("l3", "c3"\)\} = p\.license_identity/);
   assert.match(body, /c2\.is_thin_profile = FALSE/);
-  // Unique final tie-breaker for stable pagination.
   assert.match(body, /ORDER BY \$\{statusRank\("p"\)\}, p\.display_name, p\.license_identity/);
+  const facet = src.slice(src.indexOf("async function countDedupeCountiesForTrade("), src.indexOf("export async function countCountiesForTrade("));
+  assert.match(facet, /COUNT\(DISTINCT \$\{LICENSE_IDENTITY_SQL\}\)/);
+  assert.match(facet, /l\.county_code/);
+  assert.match(facet, /status_normalized IN \('active', 'current'\)/);
+  assert.match(facet, /inStateSql\(disc\.requireInStateAddress\)/);
+  assert.doesNotMatch(facet, /FACET_COUNTY_SQL|FLORIDA_DBPR/);
 });
 
 test("AZ/WA listing SQL is unchanged (per-profile DISTINCT ON (c.id) path still present)", () => {
@@ -145,14 +152,15 @@ if (mode === "fixture") {
     assert.equal(Number(row?.n), 4, "load scripts/seo_pattern_002_guard/oregon_dedupe_fixture.sql");
   });
 
-  test("Multnomah: one card per license number; total = distinct licensees, not profiles", async () => {
+  test("Multnomah: one card per business identity, not per endorsement profile", async () => {
     await setMode("ok");
     const { rows, total } = await all({ county: "multnomah" });
-    assert.equal(total, 10, "10 licensees (13 published profiles)");
-    assert.equal(rows.length, 10);
-    const numbered = rows.map(numberOf).filter(Boolean);
-    assert.equal(new Set(numbered).size, numbered.length, "no license number twice");
+    assert.equal(total, 14, "14 businesses (SYNOR4000 is three legal entities; blanks stay separate)");
+    assert.equal(rows.length, 14);
     assert.equal(new Set(rows.map((r) => r.id)).size, rows.length, "no profile twice");
+    assert.equal(rows.filter((r) => numberOf(r) === "SYNOR1000").length, 1);
+    assert.equal(rows.filter((r) => numberOf(r) === "SYNOR4000").length, 3);
+    assert.equal(rows.some((r) => numberOf(r) === "SYNOR6000"), false, "expired license is not an active listing");
   });
 
   test("negative control: per-profile identity (pre-fix) shows the duplicates", async () => {
@@ -161,7 +169,7 @@ if (mode === "fixture") {
     d.dedupeByLicenseNumber = false;
     try {
       const r = await listDiscoveryContractors({ publicStateSlug: OR, county: geo("multnomah"), limit: 100, strict: true });
-      assert.equal(r.total, 13);
+      assert.equal(r.total, 17);
       const n = r.results.map(numberOf).filter((x) => x === "SYNOR1000");
       assert.equal(n.length, 3, "SYNOR1000 listed 3 times before the fix");
       assert.equal((await countByTrade(OR, geo("multnomah"), { strict: true })).find((f) => f.slug === "commercial-general")?.count, 3);
@@ -195,17 +203,39 @@ if (mode === "fixture") {
       assert.equal(r.relatedProfiles, undefined, "no cross-license evidence");
     }
     const blank = rows.filter((r) => r.displayName === "Synthetic No Number LLC");
-    assert.equal(blank.length, 2, "rows without a license number are never merged");
+    assert.equal(blank.length, 3, "blank numbers stay separate even when the legal name matches");
+    for (const card of blank) {
+      assert.equal(card.relatedProfiles, undefined, "a blank number never cross-links another profile");
+    }
+  });
+
+  test("reused license number: different legal entities stay separate; same entity keeps endorsements", async () => {
+    await setMode("ok");
+    const { rows } = await all({ county: "multnomah" });
+    const reused = rows.filter((r) => numberOf(r) === "SYNOR4000");
+    assert.deepEqual(reused.map((r) => r.legalName).sort(), [
+      "Synthetic Reused License Alpha LLC",
+      "Synthetic Reused License Beta LLC",
+      null,
+    ]);
+    for (const card of reused) {
+      assert.equal(card.relatedProfiles, undefined, "a different legal entity is not an endorsement");
+      assert.equal(card.hasDiscipline, false, "discipline does not cross a different legal entity");
+    }
+    const same = rows.find((r) => numberOf(r) === "SYNOR1000");
+    assert.ok(same);
+    assert.equal(same.relatedProfiles?.length, 2);
+    assert.equal(same.hasDiscipline, true);
   });
 
   test("pagination: pages of 3 cover every licensee exactly once in a stable order", async () => {
     await setMode("ok");
     const big = await all({ county: "multnomah" }, 100);
     const paged = await all({ county: "multnomah" }, 3);
-    assert.equal(paged.total, 10);
+    assert.equal(paged.total, 14);
     assert.deepEqual(paged.rows.map((r) => r.id), big.rows.map((r) => r.id));
     const beyond = await listDiscoveryContractors({ publicStateSlug: OR, county: geo("multnomah"), limit: 24, offset: 48, strict: true });
-    assert.equal(beyond.total, 10, "out-of-range page keeps the real total");
+    assert.equal(beyond.total, 14, "out-of-range page keeps the real total");
     assert.deepEqual(beyond.results, []);
   });
 
@@ -236,10 +266,10 @@ if (mode === "fixture") {
     const facets = await countByTrade(OR, geo("multnomah"), { strict: true });
     const by = Object.fromEntries(facets.map((f) => [f.slug, f.count]));
     assert.deepEqual(by, {
-      "residential-general": 5, // SYNOR0001, 1000, 1002, 1003, 3000
+      "residential-general": 8, // 0001, 1000, 1002, 1003, 3000, and three SYNOR4000 entities
       "commercial-general": 2, // SYNOR1000 (CGC2) + SYNOR1001 (CGC1+CGC2 once)
       "residential-specialty": 2, // SYNOR1004, 1005 (SYNOR1000's RSC profile is thin)
-      "residential-limited": 2, // the two no-number profiles
+      "residential-limited": 3, // three no-number profiles, including two empty strings
       "lead-renovation": 1, // SYNOR1000
     });
     for (const f of facets) {
@@ -252,7 +282,7 @@ if (mode === "fixture") {
   test("trade pages: one entry per license; county facets deduplicated", async () => {
     await setMode("ok");
     const rgc = await all({ trade: "residential-general" });
-    assert.equal(rgc.total, 6);
+    assert.equal(rgc.total, 10);
     const cg = await all({ trade: "commercial-general" });
     assert.equal(cg.total, 3, "SYNOR1001 holds CGC1+CGC2: counted once");
     const nums = cg.rows.map(numberOf);
@@ -260,6 +290,36 @@ if (mode === "fixture") {
     const counties = Object.fromEntries((await countCountiesForTrade(OR, trade("commercial-general"), { strict: true })).map((f) => [f.slug, f.count]));
     assert.equal(counties["multnomah"], 2);
     assert.equal(counties["out-of-state"], 1);
+    const rgcCounties = await countCountiesForTrade(OR, trade("residential-general"), { strict: true });
+    assert.equal(rgcCounties.find((f) => f.slug === "baker"), undefined, "CCB code 12 is not Florida Baker");
+    assert.equal(rgcCounties.find((f) => f.slug === "grant")?.count, 1);
+    for (const facet of rgcCounties) {
+      const listed = await listDiscoveryContractors({
+        publicStateSlug: OR,
+        county: geo(facet.slug),
+        trade: trade("residential-general"),
+        limit: 100,
+        strict: true,
+      });
+      assert.equal(listed.total, facet.count, `${facet.slug} county facet equals the active listing`);
+    }
+    const baker = await listDiscoveryContractors({
+      publicStateSlug: OR,
+      county: geo("baker"),
+      trade: trade("residential-general"),
+      limit: 100,
+      strict: true,
+    });
+    assert.equal(baker.total, 0);
+    const grant = await listDiscoveryContractors({
+      publicStateSlug: OR,
+      county: geo("grant"),
+      trade: trade("residential-general"),
+      limit: 100,
+      strict: true,
+    });
+    assert.equal(grant.total, 1);
+    assert.equal(numberOf(grant.results[0]), "SYNOR5000");
   });
 
   test("true zero stays a real empty result", async () => {

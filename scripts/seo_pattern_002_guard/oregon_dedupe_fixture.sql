@@ -14,7 +14,16 @@
 -- License SYNOR1005  Multnomah RSC  } two CCB numbers -> two entries
 -- License SYNOR2000  Out of State (WA mailing), RGC + RSC
 -- License SYNOR3000  RGC profile in Multnomah, CSC2 profile in Washington County (county attribution per profile)
--- (blank)            two Multnomah RLC profiles with no license number -> never merged
+-- (blank)            Multnomah RLC profiles with no license number -> never merged
+--                    and never cross-linked, including two empty strings that
+--                    share a legal name
+-- License SYNOR4000  same number, three Multnomah RGC businesses (two legal
+--                    names, plus one profile with no legal name)
+-- License SYNOR5000  RGC with only CCB county code 12 (Grant). Florida DBPR
+--                    code 12 is Baker; the Grant facet must count it and Baker
+--                    must not.
+-- License SYNOR6000  expired Multnomah RGC: absent from the active listing and
+--                    from the active county facet
 INSERT INTO contractors (id, slug, display_name, legal_name, home_state, primary_city, primary_county, is_thin_profile) VALUES
  ('00000000-0000-4000-8000-00000000d001','or-ccb-synor1000-rgc-synthetic-multi','Synthetic Multi Endorsement LLC','Synthetic Multi Endorsement LLC','OR','Portland','Multnomah',false),
  ('00000000-0000-4000-8000-00000000d002','or-ccb-synor1000-cgc2-synthetic-multi','Synthetic Multi Endorsement LLC','Synthetic Multi Endorsement LLC','OR','Portland','Multnomah',false),
@@ -31,7 +40,13 @@ INSERT INTO contractors (id, slug, display_name, legal_name, home_state, primary
  ('00000000-0000-4000-8000-00000000d051','or-ccb-synor3000-rgc-synthetic-two-county','Synthetic Two County LLC','Synthetic Two County LLC','OR','Portland','Multnomah',false),
  ('00000000-0000-4000-8000-00000000d052','or-ccb-synor3000-csc2-synthetic-two-county','Synthetic Two County LLC','Synthetic Two County LLC','OR','Hillsboro','Washington',false),
  ('00000000-0000-4000-8000-00000000d061','or-ccb-blank-a-synthetic-no-number','Synthetic No Number LLC','Synthetic No Number LLC','OR','Portland','Multnomah',false),
- ('00000000-0000-4000-8000-00000000d062','or-ccb-blank-b-synthetic-no-number','Synthetic No Number LLC','Synthetic No Number LLC','OR','Portland','Multnomah',false);
+ ('00000000-0000-4000-8000-00000000d062','or-ccb-blank-b-synthetic-no-number','Synthetic No Number LLC','Synthetic No Number LLC','OR','Portland','Multnomah',false),
+ ('00000000-0000-4000-8000-00000000d063','or-ccb-blank-c-synthetic-no-number','Synthetic No Number LLC','Synthetic No Number LLC','OR','Portland','Multnomah',false),
+ ('00000000-0000-4000-8000-00000000d071','or-ccb-synor4000-rgc-alpha','Synthetic Reused License Alpha LLC','Synthetic Reused License Alpha LLC','OR','Portland','Multnomah',false),
+ ('00000000-0000-4000-8000-00000000d072','or-ccb-synor4000-rgc-beta','Synthetic Reused License Beta LLC','Synthetic Reused License Beta LLC','OR','Portland','Multnomah',false),
+ ('00000000-0000-4000-8000-00000000d073','or-ccb-synor4000-rgc-unnamed','Synthetic Unnamed Reuse LLC',NULL,'OR','Portland','Multnomah',false),
+ ('00000000-0000-4000-8000-00000000d081','or-ccb-synor6000-rgc-expired','Synthetic Expired Multnomah LLC','Synthetic Expired Multnomah LLC','OR','Portland','Multnomah',false),
+ ('00000000-0000-4000-8000-00000000d091','or-ccb-synor5000-rgc-grant-code','Synthetic Grant Code Only LLC','Synthetic Grant Code Only LLC','OR','Canyon City',NULL,false);
 
 INSERT INTO licenses_t (id, contractor_id, source_system, external_key, occupation_code, license_number, status_normalized, primary_status, original_licensure_date, city, state, postal_code, county_name, county_code, last_verified_at) VALUES
  ('10000000-0000-4000-8000-00000000d001','00000000-0000-4000-8000-00000000d001','or_ccb','OR-CCB:SYNOR1000:RGC','RGC','SYNOR1000','active','Active','2010-01-01','Portland','OR','97201','Multnomah','26',now()),
@@ -49,7 +64,13 @@ INSERT INTO licenses_t (id, contractor_id, source_system, external_key, occupati
  ('10000000-0000-4000-8000-00000000d051','00000000-0000-4000-8000-00000000d051','or_ccb','OR-CCB:SYNOR3000:RGC','RGC','SYNOR3000','active','Active','2014-01-01','Portland','OR','97204','Multnomah','26',now()),
  ('10000000-0000-4000-8000-00000000d052','00000000-0000-4000-8000-00000000d052','or_ccb','OR-CCB:SYNOR3000:CSC2','CSC2','SYNOR3000','active','Active','2014-01-01','Hillsboro','OR','97123','Washington','34',now()),
  ('10000000-0000-4000-8000-00000000d061','00000000-0000-4000-8000-00000000d061','or_ccb','OR-CCB::RLC:a','RLC',NULL,'active','Active','2020-01-01','Portland','OR','97205','Multnomah','26',now()),
- ('10000000-0000-4000-8000-00000000d062','00000000-0000-4000-8000-00000000d062','or_ccb','OR-CCB::RLC:b','RLC','','active','Active','2020-01-01','Portland','OR','97205','Multnomah','26',now());
+ ('10000000-0000-4000-8000-00000000d062','00000000-0000-4000-8000-00000000d062','or_ccb','OR-CCB::RLC:b','RLC','','active','Active','2020-01-01','Portland','OR','97205','Multnomah','26',now()),
+ ('10000000-0000-4000-8000-00000000d063','00000000-0000-4000-8000-00000000d063','or_ccb','OR-CCB::RLC:c','RLC','','active','Active','2020-01-01','Portland','OR','97205','Multnomah','26',now()),
+ ('10000000-0000-4000-8000-00000000d071','00000000-0000-4000-8000-00000000d071','or_ccb','OR-CCB:SYNOR4000:RGC:alpha','RGC','SYNOR4000','active','Active','2021-01-01','Portland','OR','97206','Multnomah','26',now()),
+ ('10000000-0000-4000-8000-00000000d072','00000000-0000-4000-8000-00000000d072','or_ccb','OR-CCB:SYNOR4000:RGC:beta','RGC','SYNOR4000','active','Active','2021-01-01','Portland','OR','97206','Multnomah','26',now()),
+ ('10000000-0000-4000-8000-00000000d073','00000000-0000-4000-8000-00000000d073','or_ccb','OR-CCB:SYNOR4000:RGC:unnamed','RGC','SYNOR4000','active','Active','2021-01-01','Portland','OR','97206','Multnomah','26',now()),
+ ('10000000-0000-4000-8000-00000000d081','00000000-0000-4000-8000-00000000d081','or_ccb','OR-CCB:SYNOR6000:RGC','RGC','SYNOR6000','expired','Expired','2010-01-01','Portland','OR','97201','Multnomah','26',now()),
+ ('10000000-0000-4000-8000-00000000d091','00000000-0000-4000-8000-00000000d091','or_ccb','OR-CCB:SYNOR5000:RGC','RGC','SYNOR5000','active','Active','2014-01-01','Canyon City','OR','97820','','12',now());
 
 -- Public (non-Florida source) discipline on the LBPR profile only: the deduplicated
 -- SYNOR1000 card must still carry it whichever endorsement profile represents it.

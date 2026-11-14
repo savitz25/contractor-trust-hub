@@ -51,18 +51,32 @@ function inStateSql(requireInState: boolean | undefined): string {
 /**
  * SEO-PATTERN-002 Oregon dedupe. The Oregon loader writes one contractor
  * profile per (CCB license number, endorsement) (external_key
- * OR-CCB:<number>:<code>), so one licensee can have 2-4 profiles and county
- * views listed and counted the same business 2-4 times.
+ * OR-CCB:<number>:<code>), so one licensee can have 2-4 profiles.
  *
- * For states with dedupeByLicenseNumber the directory identity is the
- * authoritative license number within the state's single license source
- * (every query here is already pinned to l.source_system = $1). It is never a
- * name: two license numbers with the same name stay two entries. A row with
- * no license number falls back to its own profile id, so it can never be
- * merged with anything. Other states keep c.id (byte-identical SQL).
+ * Directory identity, for states with dedupeByLicenseNumber:
+ * - A blank or whitespace-only license number is missing identity. The
+ *   profile stays alone (`profile:<id>`). It is never a shared key, so
+ *   unrelated blank rows cannot merge or cross-link.
+ * - A present license number plus the normalized legal name is one business.
+ *   Endorsements of that same legal name stay one card. The same number on
+ *   a different legal name stays a different card. A present number with no
+ *   legal name stays on its own profile id, so it cannot attach to a named
+ *   business that happens to reuse the number.
+ * - Two different license numbers stay two entries even when the legal name
+ *   matches. Other states keep c.id (byte-identical SQL).
  */
-export const LICENSE_IDENTITY_SQL =
-  "COALESCE(NULLIF(TRIM(l.license_number), ''), 'profile:' || c.id::text)";
+function normalizedLegalNameSql(contractorAlias: string): string {
+  return `NULLIF(lower(regexp_replace(TRIM(COALESCE(${contractorAlias}.legal_name, '')), '[[:space:]]+', ' ', 'g')), '')`;
+}
+
+export function licenseIdentitySql(licenseAlias = "l", contractorAlias = "c"): string {
+  const blank = `NULLIF(TRIM(${licenseAlias}.license_number), '')`;
+  const profile = `'profile:' || ${contractorAlias}.id::text`;
+  const entity = `COALESCE(${normalizedLegalNameSql(contractorAlias)}, ${profile})`;
+  return `CASE WHEN ${blank} IS NULL THEN ${profile} ELSE TRIM(${licenseAlias}.license_number) || chr(31) || ${entity} END`;
+}
+
+export const LICENSE_IDENTITY_SQL = licenseIdentitySql();
 
 export function directoryIdentitySql(
   disc: { dedupeByLicenseNumber?: boolean } | null | undefined
@@ -302,15 +316,14 @@ type LicenseCardRow = Parameters<typeof mapRow>[0] & {
 };
 
 /**
- * SEO-PATTERN-002 Oregon dedupe: one card per authoritative license number
+ * SEO-PATTERN-002 Oregon dedupe: one card per directory identity
  * (see LICENSE_IDENTITY_SQL). Same filter (`where`, $1 = license source) as the
- * per-profile listing, so a license appears in a view iff at least one of its
- * profiles matches it. The representative profile is chosen deterministically
- * (active first, then external_key, then id). Every other published profile of
- * the same license number in the same source (all endorsements) is kept on
- * the card as relatedProfiles, and discipline is checked across all of them,
- * so no endorsement evidence is dropped. Pagination is over license numbers
- * with a unique final tie-breaker, so pages never repeat or skip a licensee.
+ * per-profile listing. The representative profile is chosen deterministically
+ * (active first, then external_key, then id). Every other published profile
+ * of that same identity stays on the card as relatedProfiles, and discipline
+ * is checked across those profiles only. Blank numbers and a reused number
+ * on a different legal name are not that identity. Pagination uses the
+ * identity as the unique final tie-breaker.
  */
 async function listByLicenseNumber(opts: {
   where: string;
@@ -371,10 +384,11 @@ async function listByLicenseNumber(opts: {
         OR EXISTS (
           SELECT 1
           FROM licenses l3
+          JOIN contractors c3 ON c3.id = l3.contractor_id
           JOIN discipline_actions d ON d.contractor_id = l3.contractor_id
           WHERE l3.source_system = $1
-            AND p.license_number IS NOT NULL
-            AND l3.license_number = p.license_number
+            AND c3.id <> p.id
+            AND ${licenseIdentitySql("l3", "c3")} = p.license_identity
             AND ${PUBLIC_REGULATORY_SQL}
         )
       ) AS has_discipline,
@@ -406,8 +420,7 @@ async function listByLicenseNumber(opts: {
       FROM licenses l2
       JOIN contractors c2 ON c2.id = l2.contractor_id
       WHERE l2.source_system = $1
-        AND p.license_number IS NOT NULL
-        AND l2.license_number = p.license_number
+        AND ${licenseIdentitySql("l2", "c2")} = p.license_identity
         AND c2.id <> p.id
         AND c2.is_thin_profile = FALSE
         ${opts.activeOnly ? "AND l2.status_normalized IN ('active', 'current')" : ""}
@@ -650,8 +663,8 @@ export async function countByTrade(
     });
 
     if (disc.dedupeByLicenseNumber) {
-      // One count per trade over distinct license numbers, so a licensee with
-      // several endorsements in one trade family is counted once and the facet
+      // One count per trade over directory identity, so endorsements of one
+      // legal entity in one trade family are counted once and the facet
       // equals the deduplicated [county]/[trade] listing total.
       const codeTrades = disc.trades.filter((t) => !tradeHasExtraFilters(t));
       const codes: string[] = [];
@@ -721,6 +734,79 @@ export async function countByTrade(
   }
 }
 
+/**
+ * Oregon county facets. One statement, same predicate as the active listing
+ * (buildFilterClause county match, activeOnly, occupation codes, directory
+ * identity). CCB county codes are not translated through the Florida DBPR
+ * code table: code 12 is Grant, not Baker.
+ */
+async function countDedupeCountiesForTrade(
+  disc: NonNullable<ReturnType<typeof getDiscoveryState>>,
+  state: NonNullable<ReturnType<typeof getStateBySlug>>,
+  trade: TradeDef
+): Promise<DiscoveryFacet[]> {
+  const codes = (trade.occupationCodes || []).map((code) => code.toUpperCase()).filter(Boolean);
+  if (!codes.length) return [];
+  const nameSlugs: string[] = [];
+  const nameTokens: string[] = [];
+  const codeSlugs: string[] = [];
+  const codeTokens: string[] = [];
+  for (const county of disc.counties) {
+    for (const name of county.matchNames) {
+      const token = name.toLowerCase().trim();
+      if (!token) continue;
+      nameSlugs.push(county.slug);
+      nameTokens.push(token);
+    }
+    for (const code of county.matchCodes || []) {
+      const token = code.trim();
+      if (!token) continue;
+      codeSlugs.push(county.slug);
+      codeTokens.push(token);
+    }
+  }
+  if (!nameTokens.length && !codeTokens.length) return [];
+  const rows = await query<{ slug: string; n: string }>(
+    `
+    SELECT m.slug, COUNT(DISTINCT ${LICENSE_IDENTITY_SQL})::text AS n
+    FROM contractors c
+    JOIN licenses l ON l.contractor_id = c.id
+    JOIN (
+      SELECT slug, token, 'name'::text AS kind
+      FROM unnest($3::text[], $4::text[]) AS u(slug, token)
+      UNION ALL
+      SELECT slug, token, 'code'::text
+      FROM unnest($5::text[], $6::text[]) AS u(slug, token)
+    ) m ON (
+      (m.kind = 'name' AND (
+        LOWER(TRIM(COALESCE(l.county_name, ''))) = m.token
+        OR LOWER(TRIM(COALESCE(c.primary_county, ''))) = m.token
+        OR LOWER(REPLACE(TRIM(COALESCE(l.county_name, '')), ' ', '-')) = REPLACE(m.token, ' ', '-')
+        OR LOWER(REPLACE(TRIM(COALESCE(c.primary_county, '')), ' ', '-')) = REPLACE(m.token, ' ', '-')
+      ))
+      OR (m.kind = 'code' AND (
+        TRIM(COALESCE(l.county_code, '')) = m.token
+        OR TRIM(COALESCE(c.primary_county, '')) = m.token
+        OR LTRIM(TRIM(COALESCE(l.county_code, '')), '0') = m.token
+        OR LTRIM(TRIM(COALESCE(c.primary_county, '')), '0') = m.token
+      ))
+    )
+    WHERE l.source_system = $1
+      AND c.is_thin_profile = FALSE
+      ${inStateSql(disc.requireInStateAddress)}
+      ${disc.activeOnlyDefault ? "AND l.status_normalized IN ('active', 'current')" : ""}
+      AND l.occupation_code = ANY($7::text[])
+    GROUP BY m.slug
+    `,
+    [state.licenseSource, state.code, nameSlugs, nameTokens, codeSlugs, codeTokens, codes]
+  );
+  const bySlug = new Map(rows.map((row) => [row.slug, Number(row.n)]));
+  return disc.counties
+    .map((county) => ({ slug: county.slug, label: county.name, count: bySlug.get(county.slug) || 0 }))
+    .filter((facet) => facet.count > 0)
+    .sort((a, b) => b.count - a.count);
+}
+
 /** County facets for a single trade — one SQL pass + map to curated slugs. */
 export async function countCountiesForTrade(
   publicStateSlug: string,
@@ -731,6 +817,15 @@ export async function countCountiesForTrade(
   if (!disc) return [];
   const state = getStateBySlug(disc.evidenceSlug);
   if (!state?.live) return [];
+
+  if (disc.dedupeByLicenseNumber) {
+    try {
+      return await countDedupeCountiesForTrade(disc, state, trade);
+    } catch (err) {
+      if (opts?.strict) throw new DiscoveryDirectoryUnavailableError("countCountiesForTrade", err);
+      return [];
+    }
+  }
 
   const usesPostalGeo = disc.counties.some((c) => (c.matchPostalPrefixes || []).length > 0);
   if (usesPostalGeo) {
