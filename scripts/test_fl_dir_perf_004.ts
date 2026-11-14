@@ -8,19 +8,17 @@
  * Never a shared or production database.
  */
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
 import { parseBrowseParams } from "../lib/discovery/browse";
 import { getCounty, getDiscoveryState } from "../lib/discovery/config";
 import {
-  floridaCountyCodeKeys,
-  floridaCountyCodesArePlainNumeric,
-  floridaCountyNameKeys,
-} from "../lib/discovery/florida-county-prefetch";
-import {
   floridaBrowseStatement,
   floridaCitiesStatement,
+  floridaCountyCodeEqualityKeys,
+  floridaCountyCodesArePlainNumeric,
+  floridaCountyNameKeys,
   listFloridaBrowse,
   listFloridaCitiesChecked,
 } from "../lib/discovery/florida-list";
@@ -56,6 +54,13 @@ const ccc: TradeDef = {
   description: "synthetic",
   occupationCodes: ["CCC"],
 };
+const roofers: TradeDef = {
+  slug: "roofers",
+  label: "Roofers",
+  title: "Roofers",
+  description: "synthetic",
+  occupationCodes: ["CCC", "RC"],
+};
 
 test("county name keys cover space and hyphen forms, including aliases", () => {
   const miami = floridaCountyNameKeys(["Miami-Dade", "Miami Dade", "Dade"]);
@@ -68,20 +73,41 @@ test("plain numeric county codes are required for the indexed lookup", () => {
   assert.equal(floridaCountyCodesArePlainNumeric(["58", "058"]), true);
   assert.equal(floridaCountyCodesArePlainNumeric([]), true);
   assert.equal(floridaCountyCodesArePlainNumeric(["58", "5A"]), false);
-  assert.deepEqual(floridaCountyCodeKeys(["58"]).sort(), ["058", "58"]);
+  const keys = floridaCountyCodeEqualityKeys(["58"]);
+  for (const key of ["58", "058", "0058", "00058"]) assert.ok(keys.includes(key), key);
+  assert.equal(keys.includes(" 58 "), false);
+  assert.equal(keys.includes("58 "), false);
 });
 
 test("source: queries.ts is unchanged and a non-numeric code keeps the old join", () => {
   const queries = readFileSync("lib/discovery/queries.ts", "utf8");
   assert.doesNotMatch(queries, /county_license_ids/);
+  assert.equal(existsSync("lib/discovery/florida-county-prefetch.ts"), false);
   const orange = floridaBrowseStatement({ county: county("orange"), browse: browse() }, "auto");
   assert.ok(orange);
   assert.equal(orange.prefetch, true);
   assert.match(orange.sql, /county_license_ids AS MATERIALIZED/);
   assert.match(orange.sql, /LOWER\(TRIM\(l\.county_name\)\) = ANY/);
   assert.match(orange.sql, /l\.county_code = ANY/);
+  assert.match(orange.sql, /county_code LIKE ' %'/);
+  assert.match(orange.sql, /LTRIM\(TRIM\(l\.county_code\), '0'\)/);
+  assert.match(orange.sql, /000000000%/);
   assert.match(orange.sql, /LOWER\(TRIM\(c\.primary_county\)\) = ANY/);
   assert.match(orange.sql, /LOWER\(TRIM\(COALESCE\(l\.county_name, ''\)\)\)/);
+  assert.equal((orange.sql.match(/\bFROM licenses\b/g) || []).length, 3);
+  const roofers = floridaBrowseStatement(
+    {
+      county: county("orange"),
+      trade: { slug: "roofers", label: "Roofers", title: "Roofers", description: "synthetic", occupationCodes: ["CCC", "RC"] },
+      browse: browse(),
+    },
+    "auto",
+  );
+  assert.ok(roofers);
+  const cte = roofers.sql.slice(0, roofers.sql.indexOf("matched AS"));
+  assert.match(cte, /l\.occupation_code = ANY/);
+  assert.match(cte, /l\.source_system = \$1/);
+  assert.equal((roofers.sql.match(/\bFROM licenses\b/g) || []).length, 3);
   const legacy = floridaBrowseStatement({ county: county("orange"), browse: browse() }, "legacy");
   assert.ok(legacy);
   assert.equal(legacy.prefetch, false);
@@ -133,6 +159,8 @@ if (mode === "parity") {
     { label: "palm beach page 2", countySlug: "palm-beach", sp: { page: "2" } },
     { label: "ccc trade", countySlug: "orange", trade: ccc },
     { label: "ccc trade page 2", countySlug: "orange", trade: ccc, sp: { page: "2" } },
+    { label: "roofers page 1", countySlug: "orange", trade: roofers },
+    { label: "roofers page 2", countySlug: "orange", trade: roofers, sp: { page: "2" } },
     { label: "class or description", countySlug: "orange", trade: specialty },
     { label: "status active", countySlug: "orange", sp: { status: "active" } },
     { label: "status inactive", countySlug: "orange", sp: { status: "inactive" } },
@@ -170,16 +198,28 @@ if (mode === "parity") {
     for (const slug of [
       "orange-code-only",
       "orange-code-pad",
+      "orange-code-widepad",
+      "orange-code-spaced",
+      "orange-code-trail",
+      "orange-code-spaced-pad",
+      "orange-code-longpad",
       "orange-primary-name",
       "orange-primary-code",
+      "orange-primary-widepad",
+      "orange-primary-spaced",
+      "orange-primary-longpad",
       "orange-lower-name",
       "orange-two-licenses",
     ]) {
       assert.ok(all.includes(slug), slug);
     }
     assert.equal(all.includes("orange-thin"), false);
+    assert.equal(all.includes("not-orange-580"), false);
+    assert.equal(all.includes("miami-code-spaced"), false);
     const miami = (await signature("browse", "auto", { countySlug: "miami-dade" })) as { slugs: string[] };
-    for (const slug of ["miami-hyphen", "miami-space", "miami-alias"]) assert.ok(miami.slugs.includes(slug), slug);
+    for (const slug of ["miami-hyphen", "miami-space", "miami-alias", "miami-code-spaced"]) {
+      assert.ok(miami.slugs.includes(slug), slug);
+    }
     const palm = (await signature("browse", "auto", { countySlug: "palm-beach" })) as { slugs: string[] };
     for (const slug of ["palm-space", "palm-alias"]) assert.ok(palm.slugs.includes(slug), slug);
   });
@@ -213,5 +253,23 @@ if (mode === "parity") {
       /licenses_county_name_lower_idx|licenses_county_code_idx|contractors_primary_county_lower_idx/,
     );
     console.log(`FL_DIR_PERF_004_EXPLAIN\n${currentPlan}`);
+  });
+
+  test("plain EXPLAIN of orange roofers does not scan every license", async () => {
+    const current = floridaBrowseStatement(
+      { county: county("orange"), trade: roofers, browse: browse() },
+      "auto",
+    );
+    assert.ok(current);
+    const plan = (await query<{ "QUERY PLAN": string }>(`EXPLAIN ${current.sql}`, current.params))
+      .map((row) => row["QUERY PLAN"])
+      .join("\n");
+    assert.doesNotMatch(plan, /Seq Scan on contractors/);
+    assert.doesNotMatch(plan, /Seq Scan on licenses/);
+    assert.match(
+      plan,
+      /licenses_county_name_lower_idx|licenses_county_code_idx|licenses_occupation_source_idx|contractors_primary_county_lower_idx/,
+    );
+    console.log(`FL_DIR_PERF_004_ROOFERS_EXPLAIN\n${plan}`);
   });
 }

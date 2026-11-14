@@ -35,6 +35,7 @@ CREATE INDEX licenses_county_name_lower_idx
   ON licenses (LOWER(TRIM(county_name)))
   WHERE county_name IS NOT NULL AND TRIM(county_name) <> '';
 CREATE INDEX licenses_contractor_idx ON licenses (contractor_id);
+CREATE INDEX licenses_occupation_source_idx ON licenses (source_system, occupation_code);
 CREATE INDEX contractors_primary_county_lower_idx
   ON contractors (LOWER(TRIM(primary_county)))
   WHERE primary_county IS NOT NULL AND TRIM(primary_county) <> '' AND is_thin_profile = FALSE;
@@ -146,7 +147,17 @@ INSERT INTO contractors (id, slug, display_name, legal_name, home_state, primary
   ('20000000-0000-4000-8000-000000000202', 'miami-space', 'Miami Space Firm', 'Miami Space Firm', 'FL', 'Miami', NULL, false),
   ('20000000-0000-4000-8000-000000000203', 'miami-alias', 'Miami Alias Firm', 'Miami Alias Firm', 'FL', 'Miami', NULL, false),
   ('20000000-0000-4000-8000-000000000204', 'palm-space', 'Palm Space Firm', 'Palm Space Firm', 'FL', 'West Palm Beach', NULL, false),
-  ('20000000-0000-4000-8000-000000000205', 'palm-alias', 'Palm Alias Firm', 'Palm Alias Firm', 'FL', 'West Palm Beach', NULL, false);
+  ('20000000-0000-4000-8000-000000000205', 'palm-alias', 'Palm Alias Firm', 'Palm Alias Firm', 'FL', 'West Palm Beach', NULL, false),
+  ('20000000-0000-4000-8000-000000000118', 'orange-code-widepad', 'Orange Code Widepad', 'Orange Code Widepad', 'FL', 'Orlando', 'Leon', false),
+  ('20000000-0000-4000-8000-000000000119', 'orange-code-spaced', 'Orange Code Spaced', 'Orange Code Spaced', 'FL', 'Orlando', 'Leon', false),
+  ('20000000-0000-4000-8000-000000000120', 'orange-code-trail', 'Orange Code Trail', 'Orange Code Trail', 'FL', 'Orlando', 'Leon', false),
+  ('20000000-0000-4000-8000-000000000121', 'orange-code-spaced-pad', 'Orange Code Spaced Pad', 'Orange Code Spaced Pad', 'FL', 'Orlando', 'Leon', false),
+  ('20000000-0000-4000-8000-000000000122', 'orange-code-longpad', 'Orange Code Longpad', 'Orange Code Longpad', 'FL', 'Orlando', 'Leon', false),
+  ('20000000-0000-4000-8000-000000000123', 'orange-primary-widepad', 'Orange Primary Widepad', 'Orange Primary Widepad', 'FL', 'Orlando', '0058', false),
+  ('20000000-0000-4000-8000-000000000124', 'orange-primary-spaced', 'Orange Primary Spaced', 'Orange Primary Spaced', 'FL', 'Orlando', ' 58 ', false),
+  ('20000000-0000-4000-8000-000000000125', 'orange-primary-longpad', 'Orange Primary Longpad', 'Orange Primary Longpad', 'FL', 'Orlando', '00000000058', false),
+  ('20000000-0000-4000-8000-000000000126', 'not-orange-580', 'Not Orange 580', 'Not Orange 580', 'FL', 'Tampa', 'Polk', false),
+  ('20000000-0000-4000-8000-000000000127', 'miami-code-spaced', 'Miami Code Spaced', 'Miami Code Spaced', 'FL', 'Miami', 'Leon', false);
 
 INSERT INTO licenses (
   id, contractor_id, source_system, external_key, occupation_code, occupation_description, class_code,
@@ -174,7 +185,17 @@ INSERT INTO licenses (
   ('21000000-0000-4000-8000-000000000202', '20000000-0000-4000-8000-000000000202', 'fl_dbpr', 'MIAMI-SPACE', 'CCC', NULL, NULL, 'Space', 'active', DATE '2010-06-01', 'Miami', 'FL', NULL, 'Miami Dade', TIMESTAMPTZ '2026-01-01'),
   ('21000000-0000-4000-8000-000000000203', '20000000-0000-4000-8000-000000000203', 'fl_dbpr', 'MIAMI-ALIAS', 'CCC', NULL, NULL, 'Alias', 'active', DATE '2010-06-01', 'Miami', 'FL', NULL, 'Dade', TIMESTAMPTZ '2026-01-01'),
   ('21000000-0000-4000-8000-000000000204', '20000000-0000-4000-8000-000000000204', 'fl_dbpr', 'PALM-SPACE', 'CCC', NULL, NULL, 'Palm', 'active', DATE '2010-06-01', 'West Palm Beach', 'FL', NULL, 'Palm Beach', TIMESTAMPTZ '2026-01-01'),
-  ('21000000-0000-4000-8000-000000000205', '20000000-0000-4000-8000-000000000205', 'fl_dbpr', 'PALM-ALIAS', 'CCC', NULL, NULL, 'Palm Alias', 'active', DATE '2010-06-01', 'West Palm Beach', 'FL', NULL, 'PalmBeach', TIMESTAMPTZ '2026-01-01');
+  ('21000000-0000-4000-8000-000000000205', '20000000-0000-4000-8000-000000000205', 'fl_dbpr', 'PALM-ALIAS', 'CCC', NULL, NULL, 'Palm Alias', 'active', DATE '2010-06-01', 'West Palm Beach', 'FL', NULL, 'PalmBeach', TIMESTAMPTZ '2026-01-01'),
+  ('21000000-0000-4000-8000-000000000119', '20000000-0000-4000-8000-000000000118', 'fl_dbpr', 'ORANGE-WIDEPAD', 'CCC', NULL, NULL, 'Widepad', 'active', DATE '2010-06-01', 'Orlando', 'FL', '0058', NULL, TIMESTAMPTZ '2026-01-01'),
+  ('21000000-0000-4000-8000-000000000120', '20000000-0000-4000-8000-000000000119', 'fl_dbpr', 'ORANGE-SPACED', 'CCC', NULL, NULL, 'Spaced', 'active', DATE '2010-06-01', 'Orlando', 'FL', ' 58 ', NULL, TIMESTAMPTZ '2026-01-01'),
+  ('21000000-0000-4000-8000-000000000121', '20000000-0000-4000-8000-000000000120', 'fl_dbpr', 'ORANGE-TRAIL', 'CCC', NULL, NULL, 'Trail', 'active', DATE '2010-06-01', 'Orlando', 'FL', '58 ', NULL, TIMESTAMPTZ '2026-01-01'),
+  ('21000000-0000-4000-8000-000000000122', '20000000-0000-4000-8000-000000000121', 'fl_dbpr', 'ORANGE-SPACED-PAD', 'CCC', NULL, NULL, 'Spaced Pad', 'active', DATE '2010-06-01', 'Orlando', 'FL', ' 0058 ', NULL, TIMESTAMPTZ '2026-01-01'),
+  ('21000000-0000-4000-8000-000000000123', '20000000-0000-4000-8000-000000000122', 'fl_dbpr', 'ORANGE-LONGPAD', 'CCC', NULL, NULL, 'Longpad', 'active', DATE '2010-06-01', 'Orlando', 'FL', '00000000058', NULL, TIMESTAMPTZ '2026-01-01'),
+  ('21000000-0000-4000-8000-000000000124', '20000000-0000-4000-8000-000000000123', 'fl_dbpr', 'ORANGE-PRIMARY-WIDEPAD', 'CCC', NULL, NULL, 'Primary Widepad', 'active', DATE '2010-06-01', 'Orlando', 'FL', NULL, NULL, TIMESTAMPTZ '2026-01-01'),
+  ('21000000-0000-4000-8000-000000000125', '20000000-0000-4000-8000-000000000124', 'fl_dbpr', 'ORANGE-PRIMARY-SPACED', 'CCC', NULL, NULL, 'Primary Spaced', 'active', DATE '2010-06-01', 'Orlando', 'FL', NULL, NULL, TIMESTAMPTZ '2026-01-01'),
+  ('21000000-0000-4000-8000-000000000126', '20000000-0000-4000-8000-000000000125', 'fl_dbpr', 'ORANGE-PRIMARY-LONGPAD', 'CCC', NULL, NULL, 'Primary Longpad', 'active', DATE '2010-06-01', 'Orlando', 'FL', NULL, NULL, TIMESTAMPTZ '2026-01-01'),
+  ('21000000-0000-4000-8000-000000000127', '20000000-0000-4000-8000-000000000126', 'fl_dbpr', 'NOT-ORANGE-580', 'CCC', NULL, NULL, 'Five Eighty', 'active', DATE '2010-06-01', 'Tampa', 'FL', '580', 'Polk', TIMESTAMPTZ '2026-01-01'),
+  ('21000000-0000-4000-8000-000000000128', '20000000-0000-4000-8000-000000000127', 'fl_dbpr', 'MIAMI-SPACED-CODE', 'CCC', NULL, NULL, 'Miami Spaced Code', 'active', DATE '2010-06-01', 'Miami', 'FL', ' 23 ', NULL, TIMESTAMPTZ '2026-01-01');
 
 INSERT INTO entities (id, source_system, external_key, legal_name, status) VALUES
   ('30000000-0000-4000-8000-000000000001', 'fl_sunbiz', 'SYN-SUNBIZ-ORANGE', 'Orange Entity LLC', 'ACTIVE');

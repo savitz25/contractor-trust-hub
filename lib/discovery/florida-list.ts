@@ -17,15 +17,216 @@ import {
   type DiscoveryBrowse,
 } from "./browse";
 import { getDiscoveryState } from "./config";
-import {
-  FLORIDA_DIRECTORY_FROM_LEGACY,
-  FLORIDA_DIRECTORY_FROM_PREFETCH,
-  floridaCountyLicensePrefetch,
-} from "./florida-county-prefetch";
 import { buildFilterClause, DISCOVERY_PAGE_SIZE } from "./queries";
 import type { CountyDef, DiscoveryFacet, TradeDef } from "./types";
 
 export type FloridaReadMode = "auto" | "legacy";
+
+const FLORIDA_DIRECTORY_FROM_LEGACY = `FROM contractors c
+        JOIN licenses l ON l.contractor_id = c.id`;
+
+// The id set is materialized above this join, so the statement does not look
+// licenses up again per id. That per-id lookup is the Orange roofers
+// statement-timeout shape (SQLSTATE 57014). The slow-read fixture sleeps 2s
+// on every scan of the licenses view, so the id set is three scans (county
+// indexes, spaced codes, then primary-county license ids), not one scan per row. LIMIT 1
+// keeps the contractor side on the primary key when the id-set estimate is high.
+const FLORIDA_DIRECTORY_FROM_PREFETCH = `FROM county_license_ids l
+        JOIN LATERAL (
+          SELECT * FROM contractors WHERE id = l.contractor_id LIMIT 1
+        ) c ON TRUE`;
+
+/** Equality covers this many leading zeros. A longer pad uses one left-anchored LIKE. */
+const FLORIDA_COUNTY_CODE_EQ_PADS = 8;
+const FLORIDA_COUNTY_CODE_LONG_LIKE = `${"0".repeat(FLORIDA_COUNTY_CODE_EQ_PADS + 1)}%`;
+
+export function floridaCountyCodesArePlainNumeric(codes: readonly string[] | undefined): boolean {
+  return (codes ?? []).every((code) => /^[0-9]+$/.test(code));
+}
+
+/** Stored forms the existing space-to-hyphen predicate accepts for one name. */
+export function floridaCountyNameKeys(names: readonly string[]): string[] {
+  const keys = new Set<string>();
+  for (const raw of names) {
+    const lower = raw.toLowerCase().trim();
+    if (!lower) continue;
+    const canonical = lower.replace(/ /g, "-");
+    const parts = canonical.split("-");
+    const slots = parts.length - 1;
+    if (slots > 8) return [];
+    const variants = 1 << slots;
+    for (let mask = 0; mask < variants; mask++) {
+      let value = parts[0] ?? "";
+      for (let i = 0; i < slots; i++) {
+        value += (mask & (1 << i)) !== 0 ? " " : "-";
+        value += parts[i + 1];
+      }
+      if (value) keys.add(value);
+    }
+  }
+  return [...keys];
+}
+
+/**
+ * Unspaced county_code values the raw county_code index can match directly:
+ * the published code, the zero-stripped form, and up to eight leading zeros
+ * ("58", "058", "0058", …). TRIM/LTRIM forms that are not exact equality are
+ * separate left-anchored LIKE arms.
+ */
+export function floridaCountyCodeEqualityKeys(codes: readonly string[]): string[] {
+  const keys = new Set<string>();
+  for (const code of codes) {
+    keys.add(code);
+    const stripped = code.replace(/^0+/, "") || "0";
+    keys.add(stripped);
+    for (let pad = 1; pad <= FLORIDA_COUNTY_CODE_EQ_PADS; pad++) {
+      keys.add(`${"0".repeat(pad)}${stripped}`);
+    }
+  }
+  return [...keys];
+}
+
+function floridaCountyStrippedCodes(codes: readonly string[]): string[] {
+  return [...new Set(codes.map((code) => code.replace(/^0+/, "") || "0"))];
+}
+
+type FloridaCountyPrefetch = { apply: false } | { apply: true; cte: string };
+
+/**
+ * Three licenses scans for a county. The original WHERE stays in the query as a
+ * recheck, so a wider id set cannot add a row the old filter would reject.
+ * Falls back to the old join when a code is not plain numeric, or when the
+ * county is matched by city or ZIP rather than name and code.
+ *
+ * licenses.county_code is indexed raw, so the recheck's TRIM/LTRIM cannot be
+ * the index condition. Equality covers unspaced pads. LIKE ' %' covers a
+ * leading space (" 58 ", " 0058 "). LIKE of each equality key plus ' %'
+ * covers a trailing space ("58 "). LIKE of nine zeros covers a longer pad. Each of
+ * those is left-anchored, so a non-sargable arm cannot pull the scan off the
+ * county_code index. contractors.primary_county is indexed LOWER(TRIM()), so
+ * spaces are already inside that index.
+ *
+ * $1 is the license source bind from buildFilterClause. Occupation is pushed
+ * only when the outer filter has the same codes, which keeps a trade page
+ * (Orange roofers) from materializing every license in the county.
+ */
+function floridaCountyLicensePrefetch(
+  county: CountyDef | null | undefined,
+  params: unknown[],
+  occupationCodes: readonly string[] | null | undefined,
+): FloridaCountyPrefetch {
+  if (!county) return { apply: false };
+  if (county.matchOutOfStateMailing) return { apply: false };
+  if ((county.matchCities?.length ?? 0) > 0) return { apply: false };
+  if ((county.matchPostalPrefixes?.length ?? 0) > 0) return { apply: false };
+  if (!floridaCountyCodesArePlainNumeric(county.matchCodes)) return { apply: false };
+
+  const nameKeys = floridaCountyNameKeys(county.matchNames);
+  if (nameKeys.length === 0 && county.matchNames.some((name) => name.trim())) {
+    return { apply: false };
+  }
+  const codes = [...(county.matchCodes ?? [])];
+  const equalityKeys = floridaCountyCodeEqualityKeys(codes);
+  const stripped = floridaCountyStrippedCodes(codes);
+  if (nameKeys.length === 0 && equalityKeys.length === 0) return { apply: false };
+
+  // Three index scans, each planned on its own. One OR of every arm makes the
+  // planner seq-scan licenses: a contractor id list and a wide LIKE both look
+  // unselective next to the county indexes. The slow-read view sleeps 2s per
+  // scan, so this stays at three scans (under the 8s statement timeout).
+  const directArms: string[] = [];
+  const spacedArms: string[] = [];
+  if (nameKeys.length) {
+    params.push(nameKeys);
+    const nameIdx = params.length;
+    directArms.push(`(
+        l.county_name IS NOT NULL
+        AND TRIM(l.county_name) <> ''
+        AND LOWER(TRIM(l.county_name)) = ANY($${nameIdx}::text[])
+      )`);
+  }
+  if (equalityKeys.length && stripped.length) {
+    params.push(equalityKeys);
+    const eqIdx = params.length;
+    params.push(stripped);
+    const strippedIdx = params.length;
+    // A space is required in the pattern. LIKE '58%' matches too much of the
+    // index and the planner abandons it; '58 %' stays a tiny range and still
+    // covers a trailing space ('58 '). Separate OR arms, not LIKE ANY: one
+    // array of patterns is planned as a seq scan.
+    directArms.push(`l.county_code = ANY($${eqIdx}::text[])`);
+    spacedArms.push(`(
+        l.county_code LIKE ' %'
+        AND LTRIM(TRIM(l.county_code), '0') = ANY($${strippedIdx}::text[])
+      )`);
+    for (const key of equalityKeys) {
+      spacedArms.push(`(
+        l.county_code LIKE '${key} %'
+        AND LTRIM(TRIM(l.county_code), '0') = ANY($${strippedIdx}::text[])
+      )`);
+    }
+    spacedArms.push(`(
+        l.county_code LIKE '${FLORIDA_COUNTY_CODE_LONG_LIKE}'
+        AND LTRIM(TRIM(l.county_code), '0') = ANY($${strippedIdx}::text[])
+      )`);
+  }
+
+  const primaryExact = [...new Set([...nameKeys, ...equalityKeys])];
+  let primarySql = "";
+  if (primaryExact.length) {
+    params.push(primaryExact);
+    const primaryIdx = params.length;
+    let primaryPred = `LOWER(TRIM(c.primary_county)) = ANY($${primaryIdx}::text[])`;
+    if (stripped.length) {
+      params.push(stripped);
+      const primaryStrippedIdx = params.length;
+      primaryPred = `(
+          ${primaryPred}
+          OR (
+            LOWER(TRIM(c.primary_county)) LIKE '${FLORIDA_COUNTY_CODE_LONG_LIKE}'
+            AND LTRIM(TRIM(c.primary_county), '0') = ANY($${primaryStrippedIdx}::text[])
+          )
+        )`;
+    }
+    primarySql = `l.contractor_id = ANY (ARRAY(
+        SELECT c.id
+        FROM contractors c
+        WHERE c.is_thin_profile = FALSE
+          AND c.primary_county IS NOT NULL
+          AND TRIM(c.primary_county) <> ''
+          AND ${primaryPred}
+      ))`;
+  }
+
+  let occupationSql = "";
+  if (occupationCodes?.length) {
+    params.push(occupationCodes.map((code) => code.toUpperCase()));
+    occupationSql = `
+        AND l.occupation_code = ANY($${params.length}::text[])`;
+  }
+
+  const selects: string[] = [];
+  for (const group of [directArms, spacedArms]) {
+    if (!group.length) continue;
+    selects.push(`SELECT l.*
+      FROM licenses l
+      WHERE l.source_system = $1${occupationSql}
+        AND (${group.join("\n        OR ")})`);
+  }
+  if (primarySql) {
+    selects.push(`SELECT l.*
+      FROM licenses l
+      WHERE l.source_system = $1${occupationSql}
+        AND ${primarySql}`);
+  }
+
+  return {
+    apply: true,
+    cte: `county_license_ids AS MATERIALIZED (
+      ${selects.join("\n      UNION\n      ")}
+    )`,
+  };
+}
 
 const MIN_SUNBIZ_CONFIDENCE = 0.9;
 const PUBLIC = "florida";
@@ -211,7 +412,9 @@ export function floridaBrowseStatement(
       confIdx
     );
     const prefetch =
-      mode === "legacy" ? { apply: false as const } : floridaCountyLicensePrefetch(opts.county ?? null, filterParams);
+      mode === "legacy"
+        ? { apply: false as const }
+        : floridaCountyLicensePrefetch(opts.county ?? null, filterParams, opts.trade?.occupationCodes);
     const fromSql = prefetch.apply ? FLORIDA_DIRECTORY_FROM_PREFETCH : FLORIDA_DIRECTORY_FROM_LEGACY;
 
     const matchedCte = `
@@ -593,7 +796,10 @@ export function floridaCitiesStatement(
     activeOnly: false,
     requireInStateAddress: disc.requireInStateAddress,
   });
-  const prefetch = mode === "legacy" ? { apply: false as const } : floridaCountyLicensePrefetch(county, params);
+  const prefetch =
+    mode === "legacy"
+      ? { apply: false as const }
+      : floridaCountyLicensePrefetch(county, params, trade?.occupationCodes);
   const fromSql = prefetch.apply ? FLORIDA_DIRECTORY_FROM_PREFETCH : FLORIDA_DIRECTORY_FROM_LEGACY;
   const withPrefix = prefetch.apply ? `WITH ${prefetch.cte}` : "";
   const sql = `
