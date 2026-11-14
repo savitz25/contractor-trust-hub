@@ -22,6 +22,11 @@ const nextConfig: NextConfig = {
         destination: "https://www.contractortrusthub.com/:path*",
         permanent: true,
       },
+      // Unsuffixed county aliases were soft 404s. Only the four published pages exist.
+      { source: "/new-jersey/monmouth", destination: "/new-jersey/monmouth-county", statusCode: 301 },
+      { source: "/new-jersey/middlesex", destination: "/new-jersey/middlesex-county", statusCode: 301 },
+      { source: "/new-jersey/union", destination: "/new-jersey/union-county", statusCode: 301 },
+      { source: "/new-jersey/somerset", destination: "/new-jersey/somerset-county", statusCode: 301 },
     ];
   },
   async rewrites() {

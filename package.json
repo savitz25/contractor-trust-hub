@@ -85,6 +85,7 @@
     "test:nj-con-003": "python -m unittest scripts.test_nj_con_003",
     "test:nj-con-004": "python -m unittest scripts.test_nj_con_004 && python -X utf8 scripts/assert_nj_con_004.py",
     "test:nj-con-county-001": "python -m unittest scripts.test_nj_con_county_001 && python -X utf8 scripts/assert_nj_con_county_001.py",
+    "test:nj-content-001": "npx --yes tsx --test scripts/test_nj_content_001.ts",
     "test:ca-con-001": "python -m unittest scripts.test_ca_con_001",
     "test:ca-con-002": "python -m unittest scripts.test_ca_con_002 && python -X utf8 scripts/assert_ca_con_002.py",
     "test:ca-con-county-001a": "python -m unittest scripts.test_ca_con_county_001a && python -X utf8 scripts/assert_ca_con_county_001a.py",

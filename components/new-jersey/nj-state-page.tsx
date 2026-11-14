@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { Trace } from "@/components/new-jersey/trace";
 import {
+  displayCountyName,
+  fourCountyCommodityLeaders,
+  NJ_HIC_LOOKUP_URL,
+  statewideCountyRows,
+} from "@/lib/new-jersey-intelligence/content/nj-content";
+import {
   fmtHero,
   fmtInt,
   type NewJerseyContractorSnapshot,
@@ -39,6 +45,8 @@ export function NewJerseyContractorPage({ snapshot }: { snapshot: NewJerseyContr
   const R = s.regulatory;
   const counties = s.counties.filter((c) => !c.is_state_category);
   const stateCat = s.counties.find((c) => c.is_state_category);
+  const countyRows = statewideCountyRows();
+  const commodityLeaders = fourCountyCommodityLeaders();
 
   return (
     <main className="mx-auto w-full max-w-[880px] overflow-x-clip px-4 py-8 sm:px-6 sm:py-10">
@@ -89,13 +97,35 @@ export function NewJerseyContractorPage({ snapshot }: { snapshot: NewJerseyContr
         </ul>
       </section>
 
-      <section className="mt-10">
-        <h2 className="text-lg font-semibold text-[var(--navy)]">Four-county research</h2>
+      <section className="mt-10" id="hic">
+        <h2 className="text-lg font-semibold text-[var(--navy)]">Home Improvement Contractor registration</h2>
+        <div className="mt-3 space-y-3 text-sm leading-relaxed">
+          <p>
+            New Jersey home-improvement businesses are registered by the Division of Consumer Affairs, not by this research page. The official lookup is a real-time business search. A registration number is not a quality score, and this snapshot does not copy the roster.
+          </p>
+          <p>
+            Check the legal business name, the registration status, and the expiration on the state page before hiring. Electrical contractor businesses, plumbers, and HVAC work can sit under different state credentials. This file does not turn a missing roster into a zero count for roofing, home improvement, HVAC, plumbing, or electrical.
+          </p>
+          <p>
+            <Official href={NJ_HIC_LOOKUP_URL} label="Division of Consumer Affairs license verification" />
+            {" · "}
+            <Link href="/verify?state=nj" className="underline underline-offset-2">
+              Open New Jersey Verify
+            </Link>
+            {" · "}
+            <Link href="/ask?q=New%20Jersey%20home%20improvement%20contractor%20registration" className="underline underline-offset-2">
+              Ask about New Jersey registration
+            </Link>
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-10" id="counties">
+        <h2 className="text-lg font-semibold text-[var(--navy)]">All 21 New Jersey counties</h2>
         <p className="mt-2 text-sm text-[var(--muted)]">
-          County pages project statewide construction source records onto four New Jersey counties.
-          They are not municipality directories and not service-area maps.
+          Permit-issued and certificate-issued figures are DCA construction source records from the acquired extract. They are not licensed-contractor counts. Monmouth, Middlesex, Union, and Somerset have research pages and are listed first. The other counties stay on this page because no separate research URL exists for them.
         </p>
-        <ul className="mt-3 list-disc pl-5 text-sm">
+        <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm">
           <li>
             <Link href="/new-jersey/monmouth-county" className="underline underline-offset-2">
               Monmouth County
@@ -107,15 +137,69 @@ export function NewJerseyContractorPage({ snapshot }: { snapshot: NewJerseyContr
             </Link>
           </li>
           <li>
-            <Link href="/new-jersey/somerset-county" className="underline underline-offset-2">
-              Somerset County
-            </Link>
-          </li>
-          <li>
             <Link href="/new-jersey/union-county" className="underline underline-offset-2">
               Union County
             </Link>
           </li>
+          <li>
+            <Link href="/new-jersey/somerset-county" className="underline underline-offset-2">
+              Somerset County
+            </Link>
+          </li>
+        </ul>
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full min-w-[36rem] text-left text-sm">
+            <thead>
+              <tr className="border-b">
+                <th className="py-2 pr-3 font-medium">County</th>
+                <th className="py-2 pr-3 font-medium">Permit-issued records</th>
+                <th className="py-2 pr-3 font-medium">Certificate-issued records</th>
+                <th className="py-2 font-medium">Observed municipality codes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {countyRows.map((row) => {
+                const label = `${displayCountyName(row.name)} County`;
+                const anchor = `county-${row.name.toLowerCase().replace(/\s+/g, "-")}`;
+                return (
+                  <tr key={row.name} id={row.slug ?? anchor} className="border-b border-[var(--border)]">
+                    <td className="py-2 pr-3">
+                      {row.slug ? (
+                        <Link href={`/new-jersey/${row.slug}`} className="underline underline-offset-2">
+                          {label}
+                        </Link>
+                      ) : (
+                        <a href={`#${anchor}`} className="underline underline-offset-2">
+                          {label}
+                        </a>
+                      )}
+                    </td>
+                    <td className="py-2 pr-3 tabular-nums">{fmtInt(row.permitRecords)}</td>
+                    <td className="py-2 pr-3 tabular-nums">{fmtInt(row.certificateRecords)}</td>
+                    <td className="py-2 tabular-nums">{fmtInt(row.reporters)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-sm">
+          {fmtInt(counties.length)} county rows are in the extract
+          {stateCat ? `, plus the STATE category (${fmtInt(stateCat.permit_issued_records)} permit-issued records), which is not a 22nd county.` : "."}
+        </p>
+      </section>
+
+      <section className="mt-10" id="four-county-codes">
+        <h2 className="text-lg font-semibold text-[var(--navy)]">Commodity codes in the four acquired county files</h2>
+        <p className="mt-2 text-sm">
+          These are NJSAVI commodity codes on certified-vendor rows whose city matched Monmouth, Middlesex, Union, or Somerset. They are not statewide license classes and not a roofing, HVAC, plumbing, or electrical census.
+        </p>
+        <ul className="mt-3 list-disc pl-5 text-sm">
+          {commodityLeaders.map((row) => (
+            <li key={row.code}>
+              {row.code}: {fmtInt(row.count)} vendor rows across the four county files
+            </li>
+          ))}
         </ul>
       </section>
 

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { SearchForm } from "@/components/search/SearchForm";
 import { Trace } from "@/components/new-jersey/trace";
+import type { NjCountyContent } from "@/lib/new-jersey-intelligence/content/nj-content";
+import { NJ_HIC_LOOKUP_URL } from "@/lib/new-jersey-intelligence/content/nj-content";
 import type { NjCountySnapshot, NjsaviVendorRow } from "@/lib/new-jersey-intelligence/counties/load";
 import { fmtInt } from "@/lib/new-jersey-intelligence/snapshot";
 
@@ -33,9 +35,11 @@ function Official({ href, label }: { href: string; label: string }) {
 export function NewJerseyCountyPage({
   snapshot,
   vendors,
+  content,
 }: {
   snapshot: NjCountySnapshot;
   vendors: NjsaviVendorRow[];
+  content: NjCountyContent;
 }) {
   const s = snapshot;
   const C = s.construction;
@@ -75,6 +79,73 @@ export function NewJerseyCountyPage({
           Snapshot {s.version} · FIPS {s.county_fips} · as of {s.as_of}
         </p>
       </header>
+
+      <section className="mt-8" id="county-file" aria-labelledby="county-file-title">
+        <h2 id="county-file-title" className="text-lg font-semibold text-[var(--navy)]">
+          What the {countyLabel} file holds
+        </h2>
+        <div className="mt-3 space-y-3 text-sm leading-relaxed">
+          {content.paragraphs.map((paragraph) => (
+            <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+          ))}
+        </div>
+        <p className="mt-3 text-sm">
+          <Official href={NJ_HIC_LOOKUP_URL} label="New Jersey license verification (Division of Consumer Affairs)" />
+        </p>
+      </section>
+
+      <section className="mt-10" id="towns">
+        <h2 className="text-lg font-semibold text-[var(--navy)]">Municipalities with the most permit-issued records</h2>
+        <p className="mt-2 text-sm">
+          Counts are DCA source records in the {countyLabel} extract, ordered by permit-issued rows. They are not license counts.
+        </p>
+        <ul className="mt-3 list-disc space-y-1 pl-5 text-sm">
+          {content.topTowns.map((town) => (
+            <li key={town.name}>
+              {town.name}: {fmtInt(town.permitRecords)} permit-issued, {fmtInt(town.certificateRecords)} certificate-issued
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-10" id="named-businesses">
+        <h2 className="text-lg font-semibold text-[var(--navy)]">Named businesses in the {countyLabel} vendor file</h2>
+        <p className="mt-2 text-sm">
+          Alphabetical sample of {fmtInt(content.featuredVendors.length)} NJSAVI rows. Not a ranking, not a ContractorTrustHub profile, and not a Home Improvement Contractor registration. Public profiles with a deterministic {countyLabel} address in this snapshot: {fmtInt(content.profileCount)}.
+        </p>
+        <ul className="mt-3 list-disc space-y-1 pl-5 text-sm">
+          {content.featuredVendors.map((vendor) => (
+            <li key={`${vendor.name}-${vendor.city}`}>
+              {vendor.name} · {vendor.city} · commodity {vendor.category}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-10" id="neighbors">
+        <h2 className="text-lg font-semibold text-[var(--navy)]">Neighboring researched counties</h2>
+        <ul className="mt-3 list-disc pl-5 text-sm">
+          {content.neighbors.map((neighbor) => (
+            <li key={neighbor.slug}>
+              <Link href={`/new-jersey/${neighbor.slug}`} className="underline underline-offset-2">
+                {neighbor.name} County contractors
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-10" id="faq">
+        <h2 className="text-lg font-semibold text-[var(--navy)]">{countyLabel} questions</h2>
+        <div className="mt-3 space-y-4">
+          {content.faqs.map((faq) => (
+            <details key={faq.question} open>
+              <summary className="cursor-pointer text-sm font-semibold">{faq.question}</summary>
+              <p className="mt-2 text-sm leading-relaxed">{faq.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
 
       <section className="mt-8" aria-labelledby="hero-metrics">
         <h2 id="hero-metrics" className="sr-only">
@@ -218,9 +289,9 @@ export function NewJerseyCountyPage({
         ) : null}
         {s.regulatory.consumer_affairs.bulk_rows === 0 ? (
           <p className="mt-4 text-sm">
-            County consumer-affairs complaint history is lookup or request coverage only. This page
-            does not show zero complaints and does not call the absence a clean record. A complaint
-            is not a violation.
+            {countyLabel} consumer-affairs coverage is {s.regulatory.consumer_affairs.coverage}, and this
+            snapshot holds {fmtInt(s.regulatory.consumer_affairs.bulk_rows)} bulk complaint rows. This page
+            does not show that gap as zero complaints or as a clean record. A complaint is not a violation.
           </p>
         ) : null}
       </section>
@@ -229,11 +300,12 @@ export function NewJerseyCountyPage({
         <h2 className="text-lg font-semibold text-[var(--navy)]">Public works / regulatory evidence</h2>
         <p className="mt-2 text-sm">{s.regulatory.note}</p>
         <p className="mt-2 text-sm">
-          Research statewide WALL, Wage Watchlist, and Treasury lists from the{" "}
+          {countyLabel} does not assign statewide WALL, Wage Watchlist, or Treasury rows to a local
+          business by name. Read those families on the{" "}
           <Link href="/new-jersey" className="underline underline-offset-2">
             New Jersey construction page
           </Link>
-          . Absence from a snapshot is not a clean record.
+          . Absence from the {countyLabel} snapshot is not a clean record.
         </p>
       </section>
 

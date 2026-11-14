@@ -236,10 +236,28 @@ export function ContractorHomeIntelligence({
             ["Washington", "Exact registration → bond → insurance relationships plus UBI and public business contacts", wa.as_of, "/washington"],
             ["Texas · Austin", "Local permit/work-history evidence kept separate from state specialty credentials", txLocal.as_of, "/texas/austin"],
             ["California · SF + LA", "Published city permit/work-history intelligence alongside CSLB identity evidence", caLocal.as_of, "/california"],
-            ["New Jersey", "State construction-source, public-works enforcement, specialty, and four-county research", nj.as_of, "/new-jersey"],
+            ["New Jersey", "State construction-source, public-works enforcement, specialty, and four-county research", nj.as_of, "/new-jersey", "nj-counties"],
             ["Pennsylvania", "HICPA, DLI asbestos/lead certifications, and prevailing-wage debarments as separate official datasets", pa.snapshotAsOf, "/pennsylvania"],
             ["Ohio", "OCILB five-trade commercial specialty licensing, person-to-company roster associations, and SFM fire-protection certifications", oh.snapshotAsOf, "/ohio"],
-          ].map(([place, change, date, href]) => <article key={place}>{date ? <Freshness date={date} /> : <span className="cth-intel-freshness"><span aria-hidden="true" />New state page</span>}<h3>{place}</h3><p>{change}</p><Link href={href}>Open the intelligence →</Link></article>)}
+          ].map(([place, change, date, href, extra]) => (
+            <article key={place}>
+              {date ? <Freshness date={date} /> : <span className="cth-intel-freshness"><span aria-hidden="true" />New state page</span>}
+              <h3>{place}</h3>
+              <p>{change}</p>
+              <Link href={href}>Open the intelligence →</Link>
+              {extra === "nj-counties" ? (
+                <p>
+                  <Link href="/new-jersey/monmouth-county">Monmouth County</Link>
+                  {" · "}
+                  <Link href="/new-jersey/middlesex-county">Middlesex County</Link>
+                  {" · "}
+                  <Link href="/new-jersey/union-county">Union County</Link>
+                  {" · "}
+                  <Link href="/new-jersey/somerset-county">Somerset County</Link>
+                </p>
+              ) : null}
+            </article>
+          ))}
         </div>
       </section>
 
