@@ -17,6 +17,7 @@ import {
   floridaBrowseStatement,
   floridaCitiesStatement,
   floridaCountyCodeEqualityKeys,
+  floridaCountyCodeStoredKeys,
   floridaCountyCodesArePlainNumeric,
   floridaCountyNameKeys,
   listFloridaBrowse,
@@ -74,9 +75,15 @@ test("plain numeric county codes are required for the indexed lookup", () => {
   assert.equal(floridaCountyCodesArePlainNumeric([]), true);
   assert.equal(floridaCountyCodesArePlainNumeric(["58", "5A"]), false);
   const keys = floridaCountyCodeEqualityKeys(["58"]);
-  for (const key of ["58", "058", "0058", "00058"]) assert.ok(keys.includes(key), key);
+  for (const key of ["58", "058", "0058", "00058", "00000000058"]) assert.ok(keys.includes(key), key);
   assert.equal(keys.includes(" 58 "), false);
   assert.equal(keys.includes("58 "), false);
+  const stored = floridaCountyCodeStoredKeys(["58"]);
+  for (const key of ["58", "0058", " 58 ", "58 ", " 0058 ", "  58", "00000000058", " 00000000058 "]) {
+    assert.ok(stored.includes(key), key);
+  }
+  assert.equal(stored.includes("580"), false);
+  assert.equal(stored.includes("   58"), false);
 });
 
 test("source: queries.ts is unchanged and a non-numeric code keeps the old join", () => {
@@ -89,12 +96,16 @@ test("source: queries.ts is unchanged and a non-numeric code keeps the old join"
   assert.match(orange.sql, /county_license_ids AS MATERIALIZED/);
   assert.match(orange.sql, /LOWER\(TRIM\(l\.county_name\)\) = ANY/);
   assert.match(orange.sql, /l\.county_code = ANY/);
-  assert.match(orange.sql, /county_code LIKE ' %'/);
-  assert.match(orange.sql, /LTRIM\(TRIM\(l\.county_code\), '0'\)/);
-  assert.match(orange.sql, /000000000%/);
+  assert.doesNotMatch(orange.sql, /LIKE/);
   assert.match(orange.sql, /LOWER\(TRIM\(c\.primary_county\)\) = ANY/);
   assert.match(orange.sql, /LOWER\(TRIM\(COALESCE\(l\.county_name, ''\)\)\)/);
-  assert.equal((orange.sql.match(/\bFROM licenses\b/g) || []).length, 3);
+  assert.equal((orange.sql.match(/\bFROM licenses\b/g) || []).length, 2);
+  const bound = JSON.stringify(orange.params);
+  for (const key of ["0058", " 58 ", "58 ", " 0058 ", "00000000058"]) {
+    assert.ok(bound.includes(JSON.stringify(key)), key);
+  }
+  assert.equal(bound.includes(JSON.stringify("580")), false);
+  assert.equal(bound.includes(JSON.stringify(" 23 ")), false);
   const roofers = floridaBrowseStatement(
     {
       county: county("orange"),
@@ -107,7 +118,7 @@ test("source: queries.ts is unchanged and a non-numeric code keeps the old join"
   const cte = roofers.sql.slice(0, roofers.sql.indexOf("matched AS"));
   assert.match(cte, /l\.occupation_code = ANY/);
   assert.match(cte, /l\.source_system = \$1/);
-  assert.equal((roofers.sql.match(/\bFROM licenses\b/g) || []).length, 3);
+  assert.equal((roofers.sql.match(/\bFROM licenses\b/g) || []).length, 2);
   const legacy = floridaBrowseStatement({ county: county("orange"), browse: browse() }, "legacy");
   assert.ok(legacy);
   assert.equal(legacy.prefetch, false);
