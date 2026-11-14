@@ -60,11 +60,12 @@ jobs:
       - name: Seed disposable fixture databases (synthetic rows only)
         run: |
           set -e
-          for db in fx_ok fx_empty fx_slow fx_slowok fx_sqlerr; do psql -d fl_dir_perf_admin -v ON_ERROR_STOP=1 -c "CREATE DATABASE $db"; done
+          for db in fx_ok fx_empty fx_slow fx_slowok fx_sqlerr fx_parity; do psql -d fl_dir_perf_admin -v ON_ERROR_STOP=1 -c "CREATE DATABASE $db"; done
           psql -d fx_ok -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_001/synthetic_schema.sql
           psql -d fx_empty -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_001/synthetic_schema.sql -c "DELETE FROM licenses_t; DELETE FROM contractors"
           psql -d fx_slow -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_001/synthetic_schema.sql -f scripts/fl_dir_perf_001/slow_override.sql
           psql -d fx_slowok -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_001/synthetic_schema.sql -f scripts/fl_dir_perf_002/slow_ok_override.sql
+          psql -d fx_parity -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_004/fixture.sql
       - name: Success, real zero rows, pagination (ok)
         run: FL_DIR_PERF_DB=ok DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_ok npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_002.ts
       - name: Real empty directory (empty)
@@ -77,5 +78,7 @@ jobs:
           FL_DIR_PERF_DB=slow DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_slow npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_002.ts
       - name: SQL error rejects (sqlerr)
         run: FL_DIR_PERF_DB=sqlerr DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_sqlerr npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_002.ts
+      - name: County prefetch parity and plain EXPLAIN (parity)
+        run: FL_DIR_PERF_DB=parity DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_parity npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_004.ts
       - name: Typecheck
         run: npm run typecheck

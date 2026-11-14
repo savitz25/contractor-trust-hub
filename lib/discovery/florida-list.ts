@@ -20,6 +20,195 @@ import { getDiscoveryState } from "./config";
 import { buildFilterClause, DISCOVERY_PAGE_SIZE } from "./queries";
 import type { CountyDef, DiscoveryFacet, TradeDef } from "./types";
 
+export type FloridaReadMode = "auto" | "legacy";
+
+const FLORIDA_DIRECTORY_FROM_LEGACY = `FROM contractors c
+        JOIN licenses l ON l.contractor_id = c.id`;
+
+// The id set is materialized above this join, so the statement does not look
+// licenses up again per id. That per-id lookup is the Orange roofers
+// statement-timeout shape (SQLSTATE 57014). The slow-read fixture sleeps 2s
+// on every scan of the licenses view, so the id set is two scans (county
+// indexes, then primary-county license ids), not one scan per row. LIMIT 1
+// keeps the contractor side on the primary key when the id-set estimate is high.
+const FLORIDA_DIRECTORY_FROM_PREFETCH = `FROM county_license_ids l
+        JOIN LATERAL (
+          SELECT * FROM contractors WHERE id = l.contractor_id LIMIT 1
+        ) c ON TRUE`;
+
+/**
+ * Unspaced equality covers this many leading zeros ("58" through twelve zeros).
+ * A left-anchored LIKE is not used: on a non-C collation the plain county_code
+ * btree cannot serve LIKE, and PostgreSQL 17 then seq-scans licenses.
+ */
+const FLORIDA_COUNTY_CODE_EQ_PADS = 12;
+/** Leading and trailing spaces kept as exact county_code values, per side. */
+const FLORIDA_COUNTY_CODE_SIDE_SPACES = 2;
+
+export function floridaCountyCodesArePlainNumeric(codes: readonly string[] | undefined): boolean {
+  return (codes ?? []).every((code) => /^[0-9]+$/.test(code));
+}
+
+/** Stored forms the existing space-to-hyphen predicate accepts for one name. */
+export function floridaCountyNameKeys(names: readonly string[]): string[] {
+  const keys = new Set<string>();
+  for (const raw of names) {
+    const lower = raw.toLowerCase().trim();
+    if (!lower) continue;
+    const canonical = lower.replace(/ /g, "-");
+    const parts = canonical.split("-");
+    const slots = parts.length - 1;
+    if (slots > 8) return [];
+    const variants = 1 << slots;
+    for (let mask = 0; mask < variants; mask++) {
+      let value = parts[0] ?? "";
+      for (let i = 0; i < slots; i++) {
+        value += (mask & (1 << i)) !== 0 ? " " : "-";
+        value += parts[i + 1];
+      }
+      if (value) keys.add(value);
+    }
+  }
+  return [...keys];
+}
+
+/**
+ * Unspaced county_code values the raw county_code index can match directly:
+ * the published code, the zero-stripped form, and up to twelve leading zeros
+ * ("58", "058", "0058", …, "00000000058").
+ */
+export function floridaCountyCodeEqualityKeys(codes: readonly string[]): string[] {
+  const keys = new Set<string>();
+  for (const code of codes) {
+    keys.add(code);
+    const stripped = code.replace(/^0+/, "") || "0";
+    keys.add(stripped);
+    for (let pad = 1; pad <= FLORIDA_COUNTY_CODE_EQ_PADS; pad++) {
+      keys.add(`${"0".repeat(pad)}${stripped}`);
+    }
+  }
+  return [...keys];
+}
+
+/**
+ * Exact stored county_code strings for the raw btree. Spaces are part of the
+ * value (" 58 ", "58 ", " 0058 "), because TRIM/LTRIM in the recheck is not
+ * sargable and LIKE is not sargable on this index. At most two spaces on each
+ * side. A wider pad or a third space is outside this id set.
+ */
+export function floridaCountyCodeStoredKeys(codes: readonly string[]): string[] {
+  const keys = new Set<string>();
+  for (const base of floridaCountyCodeEqualityKeys(codes)) {
+    for (let lead = 0; lead <= FLORIDA_COUNTY_CODE_SIDE_SPACES; lead++) {
+      for (let trail = 0; trail <= FLORIDA_COUNTY_CODE_SIDE_SPACES; trail++) {
+        keys.add(`${" ".repeat(lead)}${base}${" ".repeat(trail)}`);
+      }
+    }
+  }
+  return [...keys];
+}
+
+type FloridaCountyPrefetch = { apply: false } | { apply: true; cte: string };
+
+/**
+ * Two licenses scans for a county. The original WHERE stays in the query as a
+ * recheck, so a wider id set cannot add a row the old filter would reject.
+ * Falls back to the old join when a code is not plain numeric, or when the
+ * county is matched by city or ZIP rather than name and code.
+ *
+ * licenses.county_code is indexed raw, so the recheck's TRIM/LTRIM cannot be
+ * the index condition. Stored codes are exact equality, including the space
+ * and zero-pad forms above. contractors.primary_county is indexed
+ * LOWER(TRIM()), so spaces are already inside that index and only the
+ * unspaced keys are bound there.
+ *
+ * $1 is the license source bind from buildFilterClause. Occupation is pushed
+ * only when the outer filter has the same codes, which keeps a trade page
+ * (Orange roofers) from materializing every license in the county.
+ */
+function floridaCountyLicensePrefetch(
+  county: CountyDef | null | undefined,
+  params: unknown[],
+  occupationCodes: readonly string[] | null | undefined,
+): FloridaCountyPrefetch {
+  if (!county) return { apply: false };
+  if (county.matchOutOfStateMailing) return { apply: false };
+  if ((county.matchCities?.length ?? 0) > 0) return { apply: false };
+  if ((county.matchPostalPrefixes?.length ?? 0) > 0) return { apply: false };
+  if (!floridaCountyCodesArePlainNumeric(county.matchCodes)) return { apply: false };
+
+  const nameKeys = floridaCountyNameKeys(county.matchNames);
+  if (nameKeys.length === 0 && county.matchNames.some((name) => name.trim())) {
+    return { apply: false };
+  }
+  const codes = [...(county.matchCodes ?? [])];
+  const equalityKeys = floridaCountyCodeEqualityKeys(codes);
+  const storedKeys = floridaCountyCodeStoredKeys(codes);
+  if (nameKeys.length === 0 && storedKeys.length === 0) return { apply: false };
+
+  // Two index scans, each planned on its own. One OR of a contractor id list
+  // with the county predicates makes the planner seq-scan licenses. LIKE is
+  // not used: PostgreSQL 17 seq-scans it on the plain county_code btree.
+  // The slow-read view sleeps 2s per scan, so this stays at two scans.
+  const directArms: string[] = [];
+  if (nameKeys.length) {
+    params.push(nameKeys);
+    const nameIdx = params.length;
+    directArms.push(`(
+        l.county_name IS NOT NULL
+        AND TRIM(l.county_name) <> ''
+        AND LOWER(TRIM(l.county_name)) = ANY($${nameIdx}::text[])
+      )`);
+  }
+  if (storedKeys.length) {
+    params.push(storedKeys);
+    directArms.push(`l.county_code = ANY($${params.length}::text[])`);
+  }
+
+  const primaryExact = [...new Set([...nameKeys, ...equalityKeys])];
+  let primarySql = "";
+  if (primaryExact.length) {
+    params.push(primaryExact);
+    const primaryIdx = params.length;
+    primarySql = `l.contractor_id = ANY (ARRAY(
+        SELECT c.id
+        FROM contractors c
+        WHERE c.is_thin_profile = FALSE
+          AND c.primary_county IS NOT NULL
+          AND TRIM(c.primary_county) <> ''
+          AND LOWER(TRIM(c.primary_county)) = ANY($${primaryIdx}::text[])
+      ))`;
+  }
+
+  let occupationSql = "";
+  if (occupationCodes?.length) {
+    params.push(occupationCodes.map((code) => code.toUpperCase()));
+    occupationSql = `
+        AND l.occupation_code = ANY($${params.length}::text[])`;
+  }
+
+  const selects: string[] = [];
+  if (directArms.length) {
+    selects.push(`SELECT l.*
+      FROM licenses l
+      WHERE l.source_system = $1${occupationSql}
+        AND (${directArms.join("\n        OR ")})`);
+  }
+  if (primarySql) {
+    selects.push(`SELECT l.*
+      FROM licenses l
+      WHERE l.source_system = $1${occupationSql}
+        AND ${primarySql}`);
+  }
+
+  return {
+    apply: true,
+    cte: `county_license_ids AS MATERIALIZED (
+      ${selects.join("\n      UNION\n      ")}
+    )`,
+  };
+}
+
 const MIN_SUNBIZ_CONFIDENCE = 0.9;
 const PUBLIC = "florida";
 
@@ -161,30 +350,27 @@ function sortSql(sort: DiscoveryBrowse["sort"]): string {
   return `p.display_name`;
 }
 
-export async function listFloridaBrowse(opts: {
-  county?: CountyDef | null;
-  trade?: TradeDef | null;
-  browse: DiscoveryBrowse;
-  /** City already in the path — same filter as browse.citySlug */
-  pathCitySlug?: string | null;
-}): Promise<{ results: SearchResult[]; total: number; stats: FloridaBrowseStats }> {
-  const empty = {
-    results: [] as SearchResult[],
-    total: 0,
-    stats: { firms: 0, activeFirms: 0, entityLinked: 0, withDiscipline: 0 },
-  };
+export function floridaBrowseStatement(
+  opts: {
+    county?: CountyDef | null;
+    trade?: TradeDef | null;
+    browse: DiscoveryBrowse;
+    /** City already in the path — same filter as browse.citySlug */
+    pathCitySlug?: string | null;
+  },
+  mode: FloridaReadMode = "auto",
+): { sql: string; params: unknown[]; prefetch: boolean } | null {
   const disc = getDiscoveryState(PUBLIC);
-  if (!disc) return empty;
+  if (!disc) return null;
   const state = getStateBySlug(disc.evidenceSlug);
-  if (!state?.live) return empty;
+  if (!state?.live) return null;
 
   const browse: DiscoveryBrowse = {
     ...opts.browse,
     citySlug: opts.pathCitySlug || opts.browse.citySlug,
   };
 
-  try {
-    const { where: baseWhere, params: filterParams } = buildFilterClause({
+  const { where: baseWhere, params: filterParams } = buildFilterClause({
       licenseSource: state.licenseSource,
       stateCode: state.code,
       occupationCodes: opts.trade?.occupationCodes ?? null,
@@ -206,6 +392,11 @@ export async function listFloridaBrowse(opts: {
       entitySourceIdx,
       confIdx
     );
+    const prefetch =
+      mode === "legacy"
+        ? { apply: false as const }
+        : floridaCountyLicensePrefetch(opts.county ?? null, filterParams, opts.trade?.occupationCodes);
+    const fromSql = prefetch.apply ? FLORIDA_DIRECTORY_FROM_PREFETCH : FLORIDA_DIRECTORY_FROM_LEGACY;
 
     const matchedCte = `
       matched AS (
@@ -233,8 +424,7 @@ export async function listFloridaBrowse(opts: {
             SELECT 1 FROM discipline_actions d
             WHERE d.contractor_id = c.id AND ${PUBLIC_REGULATORY_SQL}
           ) AS has_discipline
-        FROM contractors c
-        JOIN licenses l ON l.contractor_id = c.id
+        ${fromSql}
         LEFT JOIN LATERAL (
           SELECT e.id, e.legal_name, e.status
           FROM contractor_entities ce
@@ -270,9 +460,9 @@ export async function listFloridaBrowse(opts: {
     const limitIdx = filterParams.length + 2;
     const listParams = [...filterParams, offset, limit];
 
-    const rows = await query<FloridaBrowseRow>(
-      `
-      WITH ${matchedCte},
+    const withPrefix = prefetch.apply ? `${prefetch.cte},` : "";
+    const sql = `
+      WITH ${withPrefix} ${matchedCte},
       stats AS (
         SELECT
           COUNT(DISTINCT firm_key)::text AS firms,
@@ -338,9 +528,30 @@ export async function listFloridaBrowse(opts: {
       LEFT JOIN page pg ON TRUE
       LEFT JOIN sibs sb ON sb.firm_key = pg.firm_key
       ORDER BY pg.page_pos
-      `,
-      listParams
-    );
+      `;
+    return { sql, params: listParams, prefetch: prefetch.apply };
+  }
+
+export async function listFloridaBrowse(
+  opts: {
+    county?: CountyDef | null;
+    trade?: TradeDef | null;
+    browse: DiscoveryBrowse;
+    /** City already in the path — same filter as browse.citySlug */
+    pathCitySlug?: string | null;
+  },
+  mode: FloridaReadMode = "auto",
+): Promise<{ results: SearchResult[]; total: number; stats: FloridaBrowseStats }> {
+  const empty = {
+    results: [] as SearchResult[],
+    total: 0,
+    stats: { firms: 0, activeFirms: 0, entityLinked: 0, withDiscipline: 0 },
+  };
+  const built = floridaBrowseStatement(opts, mode);
+  if (!built) return empty;
+
+  try {
+    const rows = await query<FloridaBrowseRow>(built.sql, built.params);
 
     // The stats CTE always yields exactly one row, so a successful read
     // returns >= 1 row. Zero rows means the read did not complete.
@@ -547,45 +758,64 @@ export async function listFloridaCities(
  * FL-DIR-PERF-003: city facet read that reports failure explicitly instead of
  * returning an empty list that looks like "no cities".
  */
-export async function listFloridaCitiesChecked(
+export function floridaCitiesStatement(
   county: CountyDef,
-  trade?: TradeDef | null
-): Promise<FloridaFacetResult> {
+  trade?: TradeDef | null,
+  mode: FloridaReadMode = "auto",
+): { sql: string; params: unknown[]; prefetch: boolean } | null {
   const disc = getDiscoveryState(PUBLIC);
-  if (!disc) return { ok: true, facets: [] };
+  if (!disc) return null;
   const state = getStateBySlug(disc.evidenceSlug);
-  if (!state?.live) return { ok: true, facets: [] };
-
-  try {
-    const { where, params } = buildFilterClause({
-      licenseSource: state.licenseSource,
-      stateCode: state.code,
-      occupationCodes: trade?.occupationCodes ?? null,
-      classCodes: trade?.classCodes ?? null,
-      descriptionIncludes: trade?.descriptionIncludes ?? null,
-      county,
-      activeOnly: false,
-      requireInStateAddress: disc.requireInStateAddress,
-    });
-    const rows = await query<{ city: string; n: string }>(
-      `
+  if (!state?.live) return null;
+  const { where, params } = buildFilterClause({
+    licenseSource: state.licenseSource,
+    stateCode: state.code,
+    occupationCodes: trade?.occupationCodes ?? null,
+    classCodes: trade?.classCodes ?? null,
+    descriptionIncludes: trade?.descriptionIncludes ?? null,
+    county,
+    activeOnly: false,
+    requireInStateAddress: disc.requireInStateAddress,
+  });
+  const prefetch =
+    mode === "legacy"
+      ? { apply: false as const }
+      : floridaCountyLicensePrefetch(county, params, trade?.occupationCodes);
+  const fromSql = prefetch.apply ? FLORIDA_DIRECTORY_FROM_PREFETCH : FLORIDA_DIRECTORY_FROM_LEGACY;
+  const withPrefix = prefetch.apply ? `WITH ${prefetch.cte}` : "";
+  const sql = `
+      ${withPrefix}
       SELECT
         TRIM(BOTH '-' FROM REGEXP_REPLACE(
           LOWER(TRIM(COALESCE(NULLIF(l.city, ''), c.primary_city, ''))),
           '[^a-z0-9]+', '-', 'g'
         )) AS city,
         COUNT(DISTINCT c.id)::text AS n
-      FROM contractors c
-      JOIN licenses l ON l.contractor_id = c.id
+      ${fromSql}
       WHERE ${where}
         AND TRIM(COALESCE(NULLIF(l.city, ''), c.primary_city, '')) <> ''
       GROUP BY 1
       HAVING COUNT(DISTINCT c.id) >= ${CITY_INDEX_MIN}
       ORDER BY COUNT(DISTINCT c.id) DESC, 1
       LIMIT 24
-      `,
-      params
-    );
+      `;
+  return { sql, params, prefetch: prefetch.apply };
+}
+
+export async function listFloridaCitiesChecked(
+  county: CountyDef,
+  trade?: TradeDef | null,
+  mode: FloridaReadMode = "auto",
+): Promise<FloridaFacetResult> {
+  const disc = getDiscoveryState(PUBLIC);
+  if (!disc) return { ok: true, facets: [] };
+  const state = getStateBySlug(disc.evidenceSlug);
+  if (!state?.live) return { ok: true, facets: [] };
+  const built = floridaCitiesStatement(county, trade, mode);
+  if (!built) return { ok: true, facets: [] };
+
+  try {
+    const rows = await query<{ city: string; n: string }>(built.sql, built.params);
     const facets = rows
       .map((r) => {
         const slug = cityToSlug(r.city);
