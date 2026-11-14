@@ -91,6 +91,10 @@ export function SiteFooter() {
                 </a>
               </li>
               <li>
+                <Link href="/privacy" className="hover:underline">
+                  Privacy
+                </Link>
+                {" · "}
                 <Link href="/disclaimer" className="hover:underline">
                   Disclaimer
                 </Link>

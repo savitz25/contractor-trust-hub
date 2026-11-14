@@ -395,6 +395,7 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/methodology", priority: 0.75, changefreq: "weekly" },
     { path: "/independence", priority: 0.7, changefreq: "monthly" },
     { path: "/corrections", priority: 0.65, changefreq: "monthly" },
+    { path: "/privacy", priority: 0.6, changefreq: "monthly" },
     { path: "/disclaimer", priority: 0.6, changefreq: "monthly" },
     { path: "/compare", priority: 0.5, changefreq: "weekly" },
   ];
