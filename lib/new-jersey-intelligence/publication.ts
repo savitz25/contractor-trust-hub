@@ -2,9 +2,9 @@ export const NEW_JERSEY_INTELLIGENCE_GATE = {
   path: "/new-jersey",
   robotsIndex: true,
   sitemap: true,
-  title: "New Jersey Contractor & Construction Intelligence | ContractorTrustHub",
+  title: "New Jersey contractors | 2,678,341 DCA construction source records",
   description:
-    "Research New Jersey construction source records, municipality coverage, public-works lists, specialty credentials, and Safe House notices. Independent research. Not a ranking, recommendation, or Trust Score.",
+    "New Jersey research for 2,678,341 DCA construction source records, all 21 counties, and the Home Improvement Contractor lookup. The four acquired county files are linked first. Not a ranking or a copied license roster.",
 } as const;
 
 export const NJ_STATE_INTEL_VERSION = "contractor-nj-state-intel-v1" as const;

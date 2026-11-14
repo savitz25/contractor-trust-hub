@@ -293,7 +293,7 @@ function discoveryEntries(): SitemapUrlEntry[] {
 }
 
 function staticProductEntries(): SitemapUrlEntry[] {
-  const items: { path: string; priority: number; changefreq: string }[] = [
+  const items: { path: string; priority: number; changefreq: string; lastmod?: string }[] = [
     { path: "/", priority: 1, changefreq: "weekly" },
     { path: "/verify", priority: 0.95, changefreq: "daily" },
     { path: "/oregon", priority: 0.9, changefreq: "weekly" },
@@ -336,11 +336,11 @@ function staticProductEntries(): SitemapUrlEntry[] {
     { path: "/california/san-francisco", priority: 0.84, changefreq: "weekly" },
     { path: "/california/los-angeles", priority: 0.84, changefreq: "weekly" },
     { path: "/florida", priority: 0.9, changefreq: "weekly" },
-    { path: "/new-jersey", priority: 0.9, changefreq: "weekly" },
-    { path: "/new-jersey/monmouth-county", priority: 0.82, changefreq: "weekly" },
-    { path: "/new-jersey/middlesex-county", priority: 0.82, changefreq: "weekly" },
-    { path: "/new-jersey/somerset-county", priority: 0.82, changefreq: "weekly" },
-    { path: "/new-jersey/union-county", priority: 0.82, changefreq: "weekly" },
+    { path: "/new-jersey", priority: 0.9, changefreq: "weekly", lastmod: "2026-11-14" },
+    { path: "/new-jersey/monmouth-county", priority: 0.82, changefreq: "weekly", lastmod: "2026-11-14" },
+    { path: "/new-jersey/middlesex-county", priority: 0.82, changefreq: "weekly", lastmod: "2026-11-14" },
+    { path: "/new-jersey/somerset-county", priority: 0.82, changefreq: "weekly", lastmod: "2026-11-14" },
+    { path: "/new-jersey/union-county", priority: 0.82, changefreq: "weekly", lastmod: "2026-11-14" },
     { path: "/arizona", priority: 0.9, changefreq: "weekly" },
     { path: "/arizona/phoenix", priority: 0.8, changefreq: "weekly" },
     { path: "/arizona/tucson", priority: 0.8, changefreq: "weekly" },
@@ -404,6 +404,7 @@ function staticProductEntries(): SitemapUrlEntry[] {
       loc: absoluteUrl(item.path),
       changefreq: item.changefreq,
       priority: item.priority,
+      ...(item.lastmod ? { lastmod: item.lastmod } : {}),
     }));
 }
 

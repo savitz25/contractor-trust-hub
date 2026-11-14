@@ -27,20 +27,24 @@ export function buildNewJerseyContractorJsonLd(
   ];
 }
 
-export function buildNewJerseyCountyJsonLd(snapshot: {
-  county: string;
-  path: string;
-  publication_gate: { indexable: boolean };
-}): Record<string, unknown>[] {
+export function buildNewJerseyCountyJsonLd(
+  snapshot: {
+    county: string;
+    path: string;
+    publication_gate: { indexable: boolean };
+  },
+  faqs: readonly { question: string; answer: string }[] = [],
+  description: string = NEW_JERSEY_INTELLIGENCE_GATE.description,
+): Record<string, unknown>[] {
   const origin = PRODUCTION_SITE_URL.replace(/\/$/, "");
   const url = `${origin}${snapshot.path}`;
   const stateUrl = `${origin}${NEW_JERSEY_INTELLIGENCE_GATE.path}`;
-  return [
+  const blocks: Record<string, unknown>[] = [
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
       name: `${snapshot.county} County NJ contractor and construction research`,
-      description: NEW_JERSEY_INTELLIGENCE_GATE.description,
+      description,
       url,
       about: `${snapshot.county} County construction source records and contractor research`,
       isPartOf: stateUrl,
@@ -55,6 +59,18 @@ export function buildNewJerseyCountyJsonLd(snapshot: {
       ],
     },
   ];
+  if (faqs.length) {
+    blocks.push({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
+    });
+  }
+  return blocks;
 }
 
 export function njJsonLdHasForbiddenRatings(data: unknown): boolean {
