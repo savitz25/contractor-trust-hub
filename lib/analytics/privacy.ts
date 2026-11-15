@@ -130,6 +130,7 @@ export function sanitizeAnalyticsUrl(raw: string | undefined | null): string | u
     for (const key of [...url.searchParams.keys()]) {
       if (isSensitiveQueryKey(key)) url.searchParams.delete(key);
     }
+    if (url.searchParams.get("compression") === "base64") url.searchParams.delete("compression");
     url.hash = "";
     url.username = "";
     url.password = "";
@@ -452,7 +453,8 @@ export function isSensitiveAnalyticsPropertyKey(key: string): boolean {
   if (lower === "statecode" || lower === "zipcode" || lower === "countrycode" || lower === "areacode") {
     return false;
   }
-  if (lower === "code" || lower === "authcode" || /(^|_)code$/.test(lower)) return true;
+    if (lower === "code" || lower === "authcode" || /(^|_)code$/.test(lower)) return true;
+  if (lower === "q" || lower === "query" || lower === "question" || lower === "search" || lower === "searchterm") return true;
   return /email|password|token|ssn|phone|secret|otp|authorization|cookie|credential|^notes?$/.test(lower);
 }
 
@@ -460,7 +462,7 @@ function queryValueIsUnsafe(value: string): boolean {
   const decoded = decodeAnalyticsPart(value);
   if (decoded == null) return true;
   if (ANALYTICS_EMAIL.test(decoded) || /PRIVATE_/i.test(decoded)) return true;
-  return /[?&#](?:code|auth_code|otp|password|access_token|refresh_token|email|q|query|search)=/i.test(decoded);
+  return /[?&#](?:authcode|auth_code|code|otp|password|access_token|refresh_token|email|q|query|question|search|searchterm)=/i.test(decoded);
 }
 
 /** Second pass: email-shaped values, nested secrets, path emails, and undecodable text fail closed. */
@@ -550,33 +552,51 @@ function scrubPrivateElementAttributes(properties: Record<string, unknown>): voi
   }
 }
 
-function analyticsEndpoint(url: string): boolean {
-  return /\/(?:flags|decide|e|capture|batch|engage|s)(?:\/|$|\?)|\/i\/v|\/array\//i.test(url);
+function isProtocolField(key: string): boolean {
+  return key === "token" || key === "api_key" || key === "distinct_id" || key === "$device_id";
 }
 
-function sanitizeOutboundValue(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map((item) => sanitizeOutboundValue(item));
+function isPersonBag(key: string): boolean {
+  return (
+    key === "person_properties" ||
+    key === "$set" ||
+    key === "$set_once" ||
+    key === "$groups" ||
+    key === "user_properties" ||
+    key === "$user_properties"
+  );
+}
+
+/** Protocol ids stay on the request envelope. Nested search, auth, and token fields do not. */
+function sanitizeOutboundValue(
+  value: unknown,
+  where: "root" | "event" | "props" | "person" | "other" = "root",
+): unknown {
+  if (Array.isArray(value)) {
+    const itemWhere = where === "root" ? "event" : "other";
+    return value.map((item) => sanitizeOutboundValue(item, itemWhere));
+  }
   if (value && typeof value === "object") {
     const out: Record<string, unknown> = {};
     for (const [childKey, child] of Object.entries(value as Record<string, unknown>)) {
-      if (
-        childKey === "token" ||
-        childKey === "api_key" ||
-        childKey === "distinct_id" ||
-        childKey === "$device_id"
-      ) {
-        out[childKey] = child;
+      const envelope = where === "root" || where === "event";
+      if (isProtocolField(childKey)) {
+        if (envelope) out[childKey] = child;
         continue;
       }
-      if (!childKey.startsWith("$") && isSensitiveAnalyticsPropertyKey(childKey)) continue;
-      const next = sanitizeOutboundValue(child);
+      if ((where === "person" || !childKey.startsWith("$")) && isSensitiveAnalyticsPropertyKey(childKey)) continue;
+      let nextWhere: "root" | "event" | "props" | "person" | "other" = where === "person" ? "person" : "other";
+      if (childKey === "batch" || childKey === "events") nextWhere = "root";
+      else if (childKey === "properties") nextWhere = "props";
+      else if (isPersonBag(childKey)) nextWhere = "person";
+      const next = sanitizeOutboundValue(child, nextWhere);
       if (next !== undefined) out[childKey] = next;
     }
     return out;
   }
   if (typeof value === "string") {
     if (value.includes("://") || value.includes("?") || value.startsWith("/")) {
-      return hardenAnalyticsUrl(sanitizeAnalyticsUrl(value) || value) || "";
+      return hardenAnalyticsUrl(sanitizeAnalyticsUrl(value)) || "";
     }
     if (ANALYTICS_EMAIL.test(value) || /PRIVATE_/i.test(value)) return "";
   }
@@ -602,8 +622,63 @@ export function sanitizeAnalyticsRequestBody(body: string): string | null {
   } catch {
     return null;
   }
-  if (/PRIVATE_|qa@example|qa%40example|[?&](?:code|auth_code)=\d+/i.test(decoded)) return null;
+  if (/PRIVATE_|qa@example|qa%40example|[?&](?:authcode|auth_code|code)=/i.test(decoded)) return null;
   return encoded;
+}
+
+function analyticsEndpoint(pathname: string): boolean {
+  return /\/(?:flags|decide|e|capture|batch|engage|s|config)(?:\/|$)|\/i\/v|\/array\//i.test(pathname);
+}
+
+function configuredAnalyticsHost(): string | null {
+  try {
+    const raw = process.env.NEXT_PUBLIC_POSTHOG_HOST;
+    if (typeof raw !== "string" || raw.length === 0) return null;
+    return new URL(raw).host;
+  } catch {
+    return null;
+  }
+}
+
+function isVerifiedPosthogDestination(raw: string): boolean {
+  if (!raw) return false;
+  try {
+    const base = typeof window !== "undefined" ? window.location.href : "https://collector.invalid";
+    const url = new URL(raw, base);
+    const host = configuredAnalyticsHost();
+    if (!host || url.host !== host) return false;
+    return analyticsEndpoint(url.pathname);
+  } catch {
+    return false;
+  }
+}
+
+function sanitizeDestinationUrl(raw: string): string | null {
+  try {
+    const url = new URL(raw);
+    for (const key of [...url.searchParams.keys()]) {
+      const decodedKey = decodeAnalyticsPart(key);
+      const values = url.searchParams.getAll(key);
+      if (
+        decodedKey == null ||
+        isSensitiveAnalyticsPropertyKey(decodedKey) ||
+        values.some((value) => queryValueIsUnsafe(value))
+      ) {
+        url.searchParams.delete(key);
+      }
+    }
+    url.hash = "";
+    url.username = "";
+    url.password = "";
+    if (url.searchParams.get("compression") === "base64") url.searchParams.delete("compression");
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+function emptyAnalyticsResponse(): Response {
+  return new Response("{}", { status: 200, headers: { "content-type": "application/json" } });
 }
 
 function finishBlockedRequest(xhr: XMLHttpRequest): void {
@@ -622,39 +697,207 @@ function finishBlockedRequest(xhr: XMLHttpRequest): void {
   });
 }
 
+function concatBytes(chunks: Uint8Array[]): Uint8Array {
+  let length = 0;
+  for (const chunk of chunks) length += chunk.byteLength;
+  const out = new Uint8Array(length);
+  let offset = 0;
+  for (const chunk of chunks) {
+    out.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return out;
+}
+
+function isGzipBytes(bytes: Uint8Array): boolean {
+  const first = bytes[0];
+  const second = bytes[1];
+  return bytes.byteLength >= 2 && first === 0x1f && second === 0x8b;
+}
+
+function bytesToArrayBuffer(bytes: Uint8Array): ArrayBuffer {
+  const copy = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(copy).set(bytes);
+  return copy;
+}
+
+async function gzipCodec(name: "CompressionStream" | "DecompressionStream", bytes: Uint8Array): Promise<Uint8Array | null> {
+  const ctor = (globalThis as unknown as Record<string, unknown>)[name];
+  if (typeof ctor !== "function") return null;
+  try {
+    const codec = new (ctor as new (format: string) => TransformStream<Uint8Array, Uint8Array>)("gzip");
+    return new Uint8Array(await new Response(new Blob([bytesToArrayBuffer(bytes)]).stream().pipeThrough(codec)).arrayBuffer());
+  } catch {
+    return null;
+  }
+}
+
+function decodeBase64Form(text: string): string | null {
+  if (!text.startsWith("data=")) return null;
+  try {
+    const binary = atob(decodeURIComponent(text.slice(5)));
+    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  } catch {
+    return null;
+  }
+}
+
+async function plaintextFromBytes(bytes: Uint8Array): Promise<{ text: string; kind: "json" | "form" | "gzip" } | null> {
+  let raw = bytes;
+  let kind: "json" | "form" | "gzip" = "json";
+  if (isGzipBytes(bytes)) {
+    const inflated = await gzipCodec("DecompressionStream", bytes);
+    if (!inflated) return null;
+    raw = inflated;
+    kind = "gzip";
+  }
+  let text = "";
+  try {
+    text = new TextDecoder().decode(raw);
+  } catch {
+    return null;
+  }
+  if (text.startsWith("data=")) {
+    const decoded = decodeBase64Form(text);
+    if (decoded == null) return null;
+    return { text: decoded, kind: "form" };
+  }
+  return { text, kind };
+}
+
+async function encodePlaintext(
+  text: string,
+  kind: "json" | "form" | "gzip",
+): Promise<{ body: BodyInit; contentType: string; gzip: boolean } | null> {
+  if (kind === "form") return { body: text, contentType: "application/json", gzip: false };
+  if (kind === "gzip") {
+    const packed = await gzipCodec("CompressionStream", new TextEncoder().encode(text));
+    if (packed) return { body: bytesToArrayBuffer(packed), contentType: "text/plain", gzip: true };
+  }
+  return { body: text, contentType: "application/json", gzip: false };
+}
+
+function bytesFromParts(parts: BlobPart[], blobParts: WeakMap<Blob, BlobPart[]>): Uint8Array | null {
+  const chunks: Uint8Array[] = [];
+  for (const part of parts) {
+    if (typeof part === "string") {
+      chunks.push(new TextEncoder().encode(part));
+      continue;
+    }
+    if (part instanceof ArrayBuffer) {
+      chunks.push(new Uint8Array(part));
+      continue;
+    }
+    if (ArrayBuffer.isView(part)) {
+      chunks.push(new Uint8Array(part.buffer, part.byteOffset, part.byteLength));
+      continue;
+    }
+    if (part instanceof Blob) {
+      const nested = blobParts.get(part);
+      if (!nested) return null;
+      const inner = bytesFromParts(nested, blobParts);
+      if (!inner) return null;
+      chunks.push(inner);
+      continue;
+    }
+    return null;
+  }
+  return concatBytes(chunks);
+}
+
+async function readBodyBytes(input: RequestInfo | URL, init: RequestInit | undefined): Promise<Uint8Array | null | "unsupported"> {
+  const direct = init && "body" in init ? init.body : undefined;
+  if (direct == null) {
+    if (typeof Request !== "undefined" && input instanceof Request) {
+      const buf = await input.clone().arrayBuffer();
+      if (buf.byteLength === 0) return null;
+      return new Uint8Array(buf);
+    }
+    return null;
+  }
+  if (typeof direct === "string") return new TextEncoder().encode(direct);
+  if (typeof URLSearchParams !== "undefined" && direct instanceof URLSearchParams) {
+    return new TextEncoder().encode(direct.toString());
+  }
+  if (typeof Blob !== "undefined" && direct instanceof Blob) return new Uint8Array(await direct.arrayBuffer());
+  if (direct instanceof ArrayBuffer) return new Uint8Array(direct);
+  if (ArrayBuffer.isView(direct)) return new Uint8Array(direct.buffer, direct.byteOffset, direct.byteLength);
+  return "unsupported";
+}
+
 let analyticsTransportGuarded = false;
 
-/** Sanitize or drop PostHog flags, config, and capture bodies before they leave the browser. */
+/** Sanitize verified PostHog destinations. Other origins, including lookalike paths, pass through. */
 export function installAnalyticsTransportGuard(): void {
   if (analyticsTransportGuarded || typeof window === "undefined") return;
   analyticsTransportGuarded = true;
   const originalFetch = window.fetch.bind(window);
-  const patchedFetch: typeof window.fetch = (input, init) => {
-    try {
-      const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
-      const body = init && "body" in init ? init.body : undefined;
-      if (analyticsEndpoint(url)) {
-        if (typeof body === "string") {
-          const next = sanitizeAnalyticsRequestBody(body);
-          if (next == null) {
-            return Promise.resolve(
-              new Response("{}", { status: 200, headers: { "content-type": "application/json" } }),
-            );
-          }
-          return originalFetch(input, { ...init, body: next });
-        }
-        if (body != null) {
-          return Promise.resolve(
-            new Response("{}", { status: 200, headers: { "content-type": "application/json" } }),
-          );
-        }
-      }
-    } catch {
-      return Promise.resolve(new Response("{}", { status: 200, headers: { "content-type": "application/json" } }));
-    }
-    return originalFetch(input, init);
+  const nativeBlob = window.Blob;
+  const blobParts = new WeakMap<Blob, BlobPart[]>();
+  const RecordingBlob = function RecordingBlob(parts?: BlobPart[], options?: BlobPropertyBag): Blob {
+    const blob = new nativeBlob(parts || [], options);
+    if (parts && parts.length > 0) blobParts.set(blob, parts.slice());
+    return blob;
+  } as unknown as typeof Blob;
+  RecordingBlob.prototype = nativeBlob.prototype;
+  window.Blob = RecordingBlob;
+
+  const requestUrl = (input: RequestInfo | URL): string => {
+    if (typeof input === "string") return input;
+    if (input instanceof URL) return input.href;
+    return input.url;
   };
-  window.fetch = patchedFetch;
+
+  const forwardFetch = (
+    input: RequestInfo | URL,
+    init: RequestInit | undefined,
+    safeUrl: string,
+    encoded: { body: BodyInit; contentType: string; gzip: boolean } | null,
+  ): Promise<Response> => {
+    const request = typeof Request !== "undefined" && input instanceof Request ? input : null;
+    const headers = new Headers(init?.headers || request?.headers);
+    const method = init?.method || request?.method || "GET";
+    if (encoded) {
+      headers.set("content-type", encoded.contentType);
+      if (encoded.gzip) headers.set("content-encoding", "gzip");
+      else headers.delete("content-encoding");
+    }
+    headers.delete("content-length");
+    const nextInit: RequestInit = {
+      method,
+      headers,
+      credentials: init?.credentials || request?.credentials,
+      keepalive: init?.keepalive ?? request?.keepalive,
+      cache: init?.cache || request?.cache,
+      redirect: init?.redirect || request?.redirect,
+      referrer: init?.referrer || request?.referrer,
+      integrity: init?.integrity || request?.integrity,
+      mode: init?.mode || request?.mode,
+    };
+    if (encoded && method !== "GET" && method !== "HEAD") nextInit.body = encoded.body;
+    return originalFetch(safeUrl, nextInit);
+  };
+
+  window.fetch = (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    const target = requestUrl(input);
+    if (!isVerifiedPosthogDestination(target)) return originalFetch(input, init);
+    const safeUrl = sanitizeDestinationUrl(target);
+    if (!safeUrl) return Promise.resolve(emptyAnalyticsResponse());
+    return (async () => {
+      const bytes = await readBodyBytes(input, init);
+      if (bytes === "unsupported") return emptyAnalyticsResponse();
+      if (bytes == null) return forwardFetch(input, init, safeUrl, null);
+      const decoded = await plaintextFromBytes(bytes);
+      if (!decoded) return emptyAnalyticsResponse();
+      const next = sanitizeAnalyticsRequestBody(decoded.text);
+      if (next == null) return emptyAnalyticsResponse();
+      const encoded = await encodePlaintext(next, decoded.kind);
+      if (!encoded) return emptyAnalyticsResponse();
+      return forwardFetch(input, init, safeUrl, encoded);
+    })().catch(() => emptyAnalyticsResponse());
+  };
+
   const xhrProto = XMLHttpRequest.prototype;
   const originalOpen = xhrProto.open;
   const originalSend = xhrProto.send;
@@ -666,16 +909,34 @@ export function installAnalyticsTransportGuard(): void {
     username?: string | null,
     password?: string | null,
   ): void {
-    (this as XMLHttpRequest & { __trusthubUrl?: string }).__trusthubUrl = String(url ?? "");
-    originalOpen.call(this, method, url, async ?? true, username ?? null, password ?? null);
+    const raw = String(url ?? "");
+    const record = this as XMLHttpRequest & { __trusthubUrl?: string; __trusthubBlock?: boolean };
+    record.__trusthubBlock = false;
+    record.__trusthubUrl = raw;
+    if (isVerifiedPosthogDestination(raw)) {
+      const safe = sanitizeDestinationUrl(raw);
+      if (!safe) record.__trusthubBlock = true;
+      else record.__trusthubUrl = safe;
+    }
+    originalOpen.call(this, method, record.__trusthubUrl || raw, async ?? true, username ?? null, password ?? null);
   } as typeof xhrProto.open;
   xhrProto.send = function send(this: XMLHttpRequest, body?: Document | XMLHttpRequestBodyInit | null): void {
-    const url = (this as XMLHttpRequest & { __trusthubUrl?: string }).__trusthubUrl || "";
-    if (analyticsEndpoint(url)) {
-      if (typeof body !== "string") {
-        finishBlockedRequest(this);
-        return;
-      }
+    const record = this as XMLHttpRequest & { __trusthubUrl?: string; __trusthubBlock?: boolean };
+    const url = record.__trusthubUrl || "";
+    if (record.__trusthubBlock) {
+      finishBlockedRequest(this);
+      return;
+    }
+    if (!isVerifiedPosthogDestination(url)) {
+      originalSend.call(this, body ?? null);
+      return;
+    }
+    const safeUrl = sanitizeDestinationUrl(url);
+    if (!safeUrl) {
+      finishBlockedRequest(this);
+      return;
+    }
+    if (typeof body === "string") {
       const next = sanitizeAnalyticsRequestBody(body);
       if (next == null) {
         finishBlockedRequest(this);
@@ -684,17 +945,82 @@ export function installAnalyticsTransportGuard(): void {
       originalSend.call(this, next);
       return;
     }
-    originalSend.call(this, body ?? null);
+    const bytes =
+      body instanceof ArrayBuffer
+        ? new Uint8Array(body)
+        : ArrayBuffer.isView(body)
+          ? new Uint8Array(body.buffer, body.byteOffset, body.byteLength)
+          : body instanceof Blob
+            ? bytesFromParts(blobParts.get(body) || [], blobParts)
+            : null;
+    finishBlockedRequest(this);
+    if (!bytes) return;
+    void (async () => {
+      const decoded = await plaintextFromBytes(bytes);
+      if (!decoded) return;
+      const next = sanitizeAnalyticsRequestBody(decoded.text);
+      if (next == null) return;
+      const encoded = await encodePlaintext(next, decoded.kind);
+      if (!encoded) return;
+      await originalFetch(safeUrl, {
+        method: "POST",
+        body: encoded.body,
+        headers: { "content-type": encoded.contentType },
+        keepalive: true,
+      });
+    })();
   } as typeof xhrProto.send;
+
   if (typeof navigator.sendBeacon === "function") {
     const originalBeacon = navigator.sendBeacon.bind(navigator);
-    navigator.sendBeacon = (url: string | URL, data?: BodyInit | null) => {
+    const deliver = async (safeUrl: string, bytes: Uint8Array): Promise<void> => {
+      const decoded = await plaintextFromBytes(bytes);
+      if (!decoded) return;
+      const next = sanitizeAnalyticsRequestBody(decoded.text);
+      if (next == null) return;
+      const encoded = await encodePlaintext(next, decoded.kind);
+      if (!encoded) return;
+      const payload =
+        typeof encoded.body === "string" ? encoded.body : new nativeBlob([encoded.body as BlobPart], { type: encoded.contentType });
+      if (!originalBeacon(safeUrl, payload)) {
+        await originalFetch(safeUrl, {
+          method: "POST",
+          body: encoded.body,
+          headers: { "content-type": encoded.contentType },
+          keepalive: true,
+        });
+      }
+    };
+    navigator.sendBeacon = (url: string | URL, data?: BodyInit | null): boolean => {
       const target = String(url);
-      if (!analyticsEndpoint(target)) return originalBeacon(url, data);
-      if (typeof data !== "string") return true;
-      const next = sanitizeAnalyticsRequestBody(data);
-      if (next == null) return true;
-      return originalBeacon(url, next);
+      if (!isVerifiedPosthogDestination(target)) return originalBeacon(url, data);
+      const safeUrl = sanitizeDestinationUrl(target);
+      if (!safeUrl) return true;
+      if (data == null) return originalBeacon(safeUrl);
+      if (typeof data === "string") {
+        void deliver(safeUrl, new TextEncoder().encode(data));
+        return true;
+      }
+      if (data instanceof URLSearchParams) {
+        void deliver(safeUrl, new TextEncoder().encode(data.toString()));
+        return true;
+      }
+      if (data instanceof ArrayBuffer || ArrayBuffer.isView(data)) {
+        const bytes = data instanceof ArrayBuffer ? new Uint8Array(data) : new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+        void deliver(safeUrl, bytes);
+        return true;
+      }
+      if (data instanceof Blob) {
+        const recorded = blobParts.get(data);
+        const bytes = recorded ? bytesFromParts(recorded, blobParts) : null;
+        if (bytes) {
+          void deliver(safeUrl, bytes);
+          return true;
+        }
+        void data.arrayBuffer().then((buf) => deliver(safeUrl, new Uint8Array(buf)));
+        return true;
+      }
+      return true;
     };
   }
 }
