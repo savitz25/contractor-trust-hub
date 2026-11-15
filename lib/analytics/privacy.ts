@@ -522,8 +522,11 @@ function scrubPrivateElementAttributes(properties: Record<string, unknown>): voi
       (match) => {
         const parsed = /^attr__?([A-Za-z0-9_-]*)="((?:[^"\\]|\\.)*)"$/.exec(match);
         if (!parsed) return "";
-        const name = parsed[1].toLowerCase();
-        if (name.startsWith("data-") || name === "note" || name === "notes" || attributeValueIsPrivate(parsed[2])) {
+        const name = parsed[1];
+        const attrValue = parsed[2];
+        if (name == null || attrValue == null) return "";
+        const lower = name.toLowerCase();
+        if (lower.startsWith("data-") || lower === "note" || lower === "notes" || attributeValueIsPrivate(attrValue)) {
           return "";
         }
         return match;
