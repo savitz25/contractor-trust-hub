@@ -50,6 +50,7 @@ export function shouldEnablePosthog(): boolean {
     if (analyticsEnvironment() === "development" && !posthogDebugEnabled()) return false;
     if (typeof window !== "undefined" && window.navigator?.webdriver) return false;
     if (analyticsBrowserOptOut()) return false;
+    if ((process.env.NEXT_PUBLIC_POSTHOG_ACTIVATION || "").trim() !== "enabled") return false;
     return true;
   } catch {
     return false;

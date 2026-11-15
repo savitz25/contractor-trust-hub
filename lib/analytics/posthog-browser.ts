@@ -7,6 +7,7 @@ import {
   isReplayEvent,
   sanitizeCapturedNetworkRequest,
   sanitizeCaptureResult,
+  installAnalyticsTransportGuard,
   suppressExceptionCapture,
 } from "./privacy";
 import { CONTRACTOR_HUB } from "./events";
@@ -23,6 +24,7 @@ function sanitizeEvent(event: CaptureResult | null): CaptureResult | null {
 async function loadPosthog(): Promise<PostHog | null> {
   const key = posthogKey();
   if (!key) return null;
+  installAnalyticsTransportGuard();
   const posthog = (await import("posthog-js")).default;
   posthog.init(key, {
     api_host: posthogHost(),

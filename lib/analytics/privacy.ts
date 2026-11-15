@@ -133,7 +133,7 @@ export function sanitizeAnalyticsUrl(raw: string | undefined | null): string | u
     url.hash = "";
     url.username = "";
     url.password = "";
-    return `${url.origin}${url.pathname}${url.search}`;
+    return hardenAnalyticsUrl(`${url.origin}${url.pathname}${url.search}`);
   } catch {
     return undefined;
   }
@@ -228,6 +228,7 @@ export function stripElementsChainText(chain: string): string {
 }
 
 function stripAutocaptureText(properties: Record<string, unknown>): void {
+  scrubPrivateElementAttributes(properties);
   delete properties.$el_text;
   if (typeof properties.$elements_chain === "string") {
     properties.$elements_chain = stripElementsChainText(properties.$elements_chain);
@@ -308,6 +309,10 @@ function scrubIdentityProperties(bag: Record<string, unknown>): void {
   sanitizeUrlProperties(bag);
   for (const key of Object.keys(bag)) {
     if (isPosthogReservedKey(key)) continue;
+    if (isSensitiveAnalyticsPropertyKey(key)) {
+      delete bag[key];
+      continue;
+    }
     const lower = key.toLowerCase();
     if ((FORBIDDEN_EVENT_KEYS as readonly string[]).includes(lower)) {
       delete bag[key];
@@ -422,4 +427,271 @@ export function stripForbiddenProperties(
     if (SAFE_TOKEN.test(value)) cleaned[key] = value;
   }
   return cleaned;
+}
+
+
+const ANALYTICS_EMAIL = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
+
+function decodeAnalyticsPart(value: string): string | null {
+  let current = value;
+  try {
+    for (let i = 0; i < 3; i++) {
+      const next = decodeURIComponent(current.replace(/\+/g, " "));
+      if (next === current) return current;
+      current = next;
+    }
+    return current;
+  } catch {
+    return null;
+  }
+}
+
+/** Auth-shaped property names. stateCode, zipCode, countryCode, and areaCode stay. */
+export function isSensitiveAnalyticsPropertyKey(key: string): boolean {
+  const lower = key.toLowerCase();
+  if (lower === "statecode" || lower === "zipcode" || lower === "countrycode" || lower === "areacode") {
+    return false;
+  }
+  if (lower === "code" || lower === "authcode" || /(^|_)code$/.test(lower)) return true;
+  return /email|password|token|ssn|phone|secret|otp|authorization|cookie|credential|^notes?$/.test(lower);
+}
+
+function queryValueIsUnsafe(value: string): boolean {
+  const decoded = decodeAnalyticsPart(value);
+  if (decoded == null) return true;
+  if (ANALYTICS_EMAIL.test(decoded) || /PRIVATE_/i.test(decoded)) return true;
+  return /[?&#](?:code|auth_code|otp|password|access_token|refresh_token|email|q|query|search)=/i.test(decoded);
+}
+
+/** Second pass: email-shaped values, nested secrets, path emails, and undecodable text fail closed. */
+export function hardenAnalyticsUrl(sanitized: string | undefined): string | undefined {
+  if (!sanitized) return undefined;
+  let url: URL;
+  try {
+    url = new URL(sanitized);
+  } catch {
+    return undefined;
+  }
+  const kept: string[] = [];
+  for (const segment of url.pathname.split("/")) {
+    if (segment === "") {
+      kept.push("");
+      continue;
+    }
+    const decoded = decodeAnalyticsPart(segment);
+    if (decoded == null || ANALYTICS_EMAIL.test(decoded) || /PRIVATE_/i.test(decoded)) continue;
+    kept.push(segment);
+  }
+  const path = kept.join("/") || "/";
+  url.pathname = path.startsWith("/") ? path : `/${path}`;
+  for (const key of [...url.searchParams.keys()]) {
+    const decodedKey = decodeAnalyticsPart(key);
+    const values = url.searchParams.getAll(key);
+    if (
+      decodedKey == null ||
+      isSensitiveAnalyticsPropertyKey(decodedKey) ||
+      values.some((value) => queryValueIsUnsafe(value))
+    ) {
+      url.searchParams.delete(key);
+    }
+  }
+  url.hash = "";
+  url.username = "";
+  url.password = "";
+  const href = `${url.origin}${url.pathname}${url.search}`;
+  const decodedHref = decodeAnalyticsPart(href);
+  if (
+    decodedHref == null ||
+    ANALYTICS_EMAIL.test(decodedHref) ||
+    /PRIVATE_/i.test(decodedHref) ||
+    /[?&](?:code|auth_code)=/i.test(decodedHref)
+  ) {
+    return `${url.origin}${url.pathname}`;
+  }
+  return href;
+}
+
+function attributeValueIsPrivate(value: string): boolean {
+  return /private_|@/i.test(value) || ANALYTICS_EMAIL.test(value);
+}
+
+function scrubPrivateElementAttributes(properties: Record<string, unknown>): void {
+  if (typeof properties.$elements_chain === "string") {
+    properties.$elements_chain = properties.$elements_chain.replace(
+      /attr__?[A-Za-z0-9_-]*="(?:[^"\\]|\\.)*"/g,
+      (match) => {
+        const parsed = /^attr__?([A-Za-z0-9_-]*)="((?:[^"\\]|\\.)*)"$/.exec(match);
+        if (!parsed) return "";
+        const name = parsed[1].toLowerCase();
+        if (name.startsWith("data-") || name === "note" || name === "notes" || attributeValueIsPrivate(parsed[2])) {
+          return "";
+        }
+        return match;
+      },
+    );
+  }
+  if (!Array.isArray(properties.$elements)) return;
+  for (const element of properties.$elements) {
+    if (!element || typeof element !== "object") continue;
+    const record = element as Record<string, unknown>;
+    for (const key of Object.keys(record)) {
+      if (!key.startsWith("attr")) continue;
+      const name = key.replace(/^attr__?/, "").toLowerCase();
+      const value = record[key];
+      if (name.startsWith("data-") || name === "note" || name === "notes") {
+        delete record[key];
+        continue;
+      }
+      if (typeof value === "string" && attributeValueIsPrivate(value)) delete record[key];
+    }
+  }
+}
+
+function analyticsEndpoint(url: string): boolean {
+  return /\/(?:flags|decide|e|capture|batch|engage|s)(?:\/|$|\?)|\/i\/v|\/array\//i.test(url);
+}
+
+function sanitizeOutboundValue(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map((item) => sanitizeOutboundValue(item));
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [childKey, child] of Object.entries(value as Record<string, unknown>)) {
+      if (
+        childKey === "token" ||
+        childKey === "api_key" ||
+        childKey === "distinct_id" ||
+        childKey === "$device_id"
+      ) {
+        out[childKey] = child;
+        continue;
+      }
+      if (!childKey.startsWith("$") && isSensitiveAnalyticsPropertyKey(childKey)) continue;
+      const next = sanitizeOutboundValue(child);
+      if (next !== undefined) out[childKey] = next;
+    }
+    return out;
+  }
+  if (typeof value === "string") {
+    if (value.includes("://") || value.includes("?") || value.startsWith("/")) {
+      return hardenAnalyticsUrl(sanitizeAnalyticsUrl(value) || value) || "";
+    }
+    if (ANALYTICS_EMAIL.test(value) || /PRIVATE_/i.test(value)) return "";
+  }
+  return value;
+}
+
+export function sanitizeAnalyticsRequestBody(body: string): string | null {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(body);
+  } catch {
+    return null;
+  }
+  let encoded: string;
+  try {
+    encoded = JSON.stringify(sanitizeOutboundValue(parsed));
+  } catch {
+    return null;
+  }
+  let decoded = encoded;
+  try {
+    decoded = decodeURIComponent(encoded);
+  } catch {
+    return null;
+  }
+  if (/PRIVATE_|qa@example|qa%40example|[?&](?:code|auth_code)=\d+/i.test(decoded)) return null;
+  return encoded;
+}
+
+function finishBlockedRequest(xhr: XMLHttpRequest): void {
+  queueMicrotask(() => {
+    try {
+      Object.defineProperty(xhr, "readyState", { configurable: true, get: () => 4 });
+      Object.defineProperty(xhr, "status", { configurable: true, get: () => 200 });
+      Object.defineProperty(xhr, "responseText", { configurable: true, get: () => "{}" });
+      Object.defineProperty(xhr, "response", { configurable: true, get: () => "{}" });
+      xhr.dispatchEvent(new Event("readystatechange"));
+      xhr.dispatchEvent(new Event("load"));
+      xhr.dispatchEvent(new Event("loadend"));
+    } catch {
+      /* The SDK already stopped this request. */
+    }
+  });
+}
+
+let analyticsTransportGuarded = false;
+
+/** Sanitize or drop PostHog flags, config, and capture bodies before they leave the browser. */
+export function installAnalyticsTransportGuard(): void {
+  if (analyticsTransportGuarded || typeof window === "undefined") return;
+  analyticsTransportGuarded = true;
+  const originalFetch = window.fetch.bind(window);
+  const patchedFetch: typeof window.fetch = (input, init) => {
+    try {
+      const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      const body = init && "body" in init ? init.body : undefined;
+      if (analyticsEndpoint(url)) {
+        if (typeof body === "string") {
+          const next = sanitizeAnalyticsRequestBody(body);
+          if (next == null) {
+            return Promise.resolve(
+              new Response("{}", { status: 200, headers: { "content-type": "application/json" } }),
+            );
+          }
+          return originalFetch(input, { ...init, body: next });
+        }
+        if (body != null) {
+          return Promise.resolve(
+            new Response("{}", { status: 200, headers: { "content-type": "application/json" } }),
+          );
+        }
+      }
+    } catch {
+      return Promise.resolve(new Response("{}", { status: 200, headers: { "content-type": "application/json" } }));
+    }
+    return originalFetch(input, init);
+  };
+  window.fetch = patchedFetch;
+  const xhrProto = XMLHttpRequest.prototype;
+  const originalOpen = xhrProto.open;
+  const originalSend = xhrProto.send;
+  xhrProto.open = function open(
+    this: XMLHttpRequest,
+    method: string,
+    url: string | URL,
+    async?: boolean,
+    username?: string | null,
+    password?: string | null,
+  ): void {
+    (this as XMLHttpRequest & { __trusthubUrl?: string }).__trusthubUrl = String(url ?? "");
+    originalOpen.call(this, method, url, async ?? true, username ?? null, password ?? null);
+  } as typeof xhrProto.open;
+  xhrProto.send = function send(this: XMLHttpRequest, body?: Document | XMLHttpRequestBodyInit | null): void {
+    const url = (this as XMLHttpRequest & { __trusthubUrl?: string }).__trusthubUrl || "";
+    if (analyticsEndpoint(url)) {
+      if (typeof body !== "string") {
+        finishBlockedRequest(this);
+        return;
+      }
+      const next = sanitizeAnalyticsRequestBody(body);
+      if (next == null) {
+        finishBlockedRequest(this);
+        return;
+      }
+      originalSend.call(this, next);
+      return;
+    }
+    originalSend.call(this, body ?? null);
+  } as typeof xhrProto.send;
+  if (typeof navigator.sendBeacon === "function") {
+    const originalBeacon = navigator.sendBeacon.bind(navigator);
+    navigator.sendBeacon = (url: string | URL, data?: BodyInit | null) => {
+      const target = String(url);
+      if (!analyticsEndpoint(target)) return originalBeacon(url, data);
+      if (typeof data !== "string") return true;
+      const next = sanitizeAnalyticsRequestBody(data);
+      if (next == null) return true;
+      return originalBeacon(url, next);
+    };
+  }
 }
