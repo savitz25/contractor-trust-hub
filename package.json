@@ -70,6 +70,7 @@
     "test:fl-seo-server-render-001": "npx --yes tsx --test scripts/test_fl_seo_server_render_001.ts",
     "test:fl-dir-perf-001": "npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_001.ts",
     "test:fl-dir-perf-002": "npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_002.ts",
+    "test:fl-dir-perf-004": "npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_004.ts",
     "check:fl-seo-server-render-001:html": "node scripts/check_fl_seo_server_render_001.mjs",
     "test:contractor-seo-pattern-002": "npx --yes tsx --test scripts/test_contractor_seo_pattern_002.ts",
     "test:seo-pattern-002-db-guard": "npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_seo_pattern_002_db_guard.ts",

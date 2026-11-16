@@ -68,7 +68,7 @@ const rejectsUnavailable = async (p: () => Promise<unknown>, cause?: RegExp) =>
 const src = (p: string) => readFileSync(p, "utf8");
 const browseBody = () => {
   const s = src("lib/discovery/florida-list.ts");
-  return s.slice(s.indexOf("export async function listFloridaBrowse("), s.indexOf("type FloridaBrowseOpts"));
+  return s.slice(s.indexOf("function floridaBrowseStatement("), s.indexOf("type FloridaBrowseOpts"));
 };
 
 // ---------------------------------------------------------------- always run
