@@ -161,53 +161,96 @@ function sortSql(sort: DiscoveryBrowse["sort"]): string {
   return `p.display_name`;
 }
 
-export async function listFloridaBrowse(opts: {
+export type FloridaReadMode = "auto" | "legacy";
+
+const FLORIDA_DIRECTORY_FROM_LEGACY = `FROM contractors c
+        JOIN licenses l ON l.contractor_id = c.id`;
+
+// Statewide trade pages only. The id set is the occupation index, then one
+// primary-key lookup per id. County pages stay on the legacy join; draft
+// PR #204 owns that shape and this patch does not replace it.
+const FLORIDA_DIRECTORY_FROM_OCCUPATION = `FROM occupation_license_ids l
+        JOIN LATERAL (
+          SELECT * FROM contractors WHERE id = l.contractor_id LIMIT 1
+        ) c ON TRUE`;
+
+export type FloridaBrowseOpts = {
   county?: CountyDef | null;
   trade?: TradeDef | null;
   browse: DiscoveryBrowse;
   /** City already in the path — same filter as browse.citySlug */
   pathCitySlug?: string | null;
-}): Promise<{ results: SearchResult[]; total: number; stats: FloridaBrowseStats }> {
-  const empty = {
-    results: [] as SearchResult[],
-    total: 0,
-    stats: { firms: 0, activeFirms: 0, entityLinked: 0, withDiscipline: 0 },
-  };
+};
+
+/** Bind already placed by buildFilterClause. No second copy of the array. */
+export function floridaOccupationBindIndex(where: string): number | null {
+  const match = where.match(/l\.occupation_code = ANY\(\$(\d+)::text\[\]\)/);
+  if (!match) return null;
+  const index = Number(match[1]);
+  return Number.isInteger(index) && index > 0 ? index : null;
+}
+
+/**
+ * Prefetch only a statewide trade (no county). A county predicate, a missing
+ * occupation bind, or an explicit legacy read keeps the current join.
+ */
+export function floridaStatewideOccupationPrefetch(
+  county: CountyDef | null | undefined,
+  where: string,
+  mode: FloridaReadMode = "auto"
+): { apply: false } | { apply: true; bind: number } {
+  if (mode === "legacy" || county) return { apply: false };
+  const bind = floridaOccupationBindIndex(where);
+  if (bind == null) return { apply: false };
+  return { apply: true, bind };
+}
+
+export function floridaBrowseStatement(
+  opts: FloridaBrowseOpts,
+  mode: FloridaReadMode = "auto"
+): { sql: string; params: unknown[]; prefetch: boolean } | null {
   const disc = getDiscoveryState(PUBLIC);
-  if (!disc) return empty;
+  if (!disc) return null;
   const state = getStateBySlug(disc.evidenceSlug);
-  if (!state?.live) return empty;
+  if (!state?.live) return null;
 
   const browse: DiscoveryBrowse = {
     ...opts.browse,
     citySlug: opts.pathCitySlug || opts.browse.citySlug,
   };
-
-  try {
-    const { where: baseWhere, params: filterParams } = buildFilterClause({
-      licenseSource: state.licenseSource,
-      stateCode: state.code,
-      occupationCodes: opts.trade?.occupationCodes ?? null,
-      classCodes: opts.trade?.classCodes ?? null,
-      descriptionIncludes: opts.trade?.descriptionIncludes ?? null,
-      county: opts.county ?? null,
-      activeOnly: false,
-      requireInStateAddress: disc.requireInStateAddress,
-    });
-
-    const entitySourceIdx = filterParams.length + 1;
-    const confIdx = filterParams.length + 2;
-    filterParams.push(state.entitySource, MIN_SUNBIZ_CONFIDENCE);
-
-    const where = appendBrowseFilters(
-      baseWhere,
-      filterParams,
-      browse,
-      entitySourceIdx,
-      confIdx
-    );
-
-    const matchedCte = `
+  const { where: baseWhere, params: filterParams } = buildFilterClause({
+    licenseSource: state.licenseSource,
+    stateCode: state.code,
+    occupationCodes: opts.trade?.occupationCodes ?? null,
+    classCodes: opts.trade?.classCodes ?? null,
+    descriptionIncludes: opts.trade?.descriptionIncludes ?? null,
+    county: opts.county ?? null,
+    activeOnly: false,
+    requireInStateAddress: disc.requireInStateAddress,
+  });
+  const entitySourceIdx = filterParams.length + 1;
+  const confIdx = filterParams.length + 2;
+  filterParams.push(state.entitySource, MIN_SUNBIZ_CONFIDENCE);
+  const where = appendBrowseFilters(baseWhere, filterParams, browse, entitySourceIdx, confIdx);
+  const prefetch = floridaStatewideOccupationPrefetch(opts.county ?? null, baseWhere, mode);
+  const fromSql = prefetch.apply ? FLORIDA_DIRECTORY_FROM_OCCUPATION : FLORIDA_DIRECTORY_FROM_LEGACY;
+  const withPrefix = prefetch.apply
+    ? `occupation_license_ids AS MATERIALIZED (
+        SELECT l.*
+        FROM licenses l
+        WHERE l.source_system = $1
+          AND l.occupation_code = ANY($${prefetch.bind}::text[])
+      ),`
+    : "";
+  const limit = DISCOVERY_PAGE_SIZE;
+  const offset = (browse.page - 1) * limit;
+  const offsetIdx = filterParams.length + 1;
+  const limitIdx = filterParams.length + 2;
+  const params = [...filterParams, offset, limit];
+  // One statement. `keyed` is MATERIALIZED once and stats, the page, and the
+  // sibling roll-up all read it. `p.firm_key` is only the ROW_NUMBER tie-break.
+  const sql = `
+      WITH ${withPrefix}
       matched AS (
         SELECT
           c.id,
@@ -233,8 +276,7 @@ export async function listFloridaBrowse(opts: {
             SELECT 1 FROM discipline_actions d
             WHERE d.contractor_id = c.id AND ${PUBLIC_REGULATORY_SQL}
           ) AS has_discipline
-        FROM contractors c
-        JOIN licenses l ON l.contractor_id = c.id
+        ${fromSql}
         LEFT JOIN LATERAL (
           SELECT e.id, e.legal_name, e.status
           FROM contractor_entities ce
@@ -254,25 +296,7 @@ export async function listFloridaBrowse(opts: {
           m.*,
           COALESCE(m.entity_id::text, 'solo:' || m.id::text) AS firm_key
         FROM matched m
-      )
-    `;
-
-    // FL-DIR-PERF-002: one statement instead of three. The stats, the page
-    // and the sibling roll-up used to re-run the whole `matched` CTE in three
-    // separate queries (three full evaluations per render, each with its own
-    // statement budget, queued on a max:1 pool). Here `keyed` is MATERIALIZED
-    // once and every part reads it. Same filters, same firm roll-up, same
-    // sort keys; `p.firm_key` is only a tie-break so ROW_NUMBER() and the
-    // final ORDER BY agree and pages never overlap or skip a firm.
-    const limit = DISCOVERY_PAGE_SIZE;
-    const offset = (browse.page - 1) * limit;
-    const offsetIdx = filterParams.length + 1;
-    const limitIdx = filterParams.length + 2;
-    const listParams = [...filterParams, offset, limit];
-
-    const rows = await query<FloridaBrowseRow>(
-      `
-      WITH ${matchedCte},
+      ),
       stats AS (
         SELECT
           COUNT(DISTINCT firm_key)::text AS firms,
@@ -298,8 +322,6 @@ export async function listFloridaBrowse(opts: {
         ORDER BY k.firm_key,
           CASE k.status_normalized WHEN 'active' THEN 0 WHEN 'current' THEN 1 ELSE 2 END,
           k.display_name,
-          -- tie-break only: one contractor with two same-status licenses
-          -- used to show an arbitrary license as the card's primary key.
           k.external_key
       ),
       ranked AS (
@@ -338,9 +360,30 @@ export async function listFloridaBrowse(opts: {
       LEFT JOIN page pg ON TRUE
       LEFT JOIN sibs sb ON sb.firm_key = pg.firm_key
       ORDER BY pg.page_pos
-      `,
-      listParams
-    );
+      `;
+  return { sql, params, prefetch: prefetch.apply };
+}
+
+export async function listFloridaBrowse(
+  opts: FloridaBrowseOpts,
+  mode: FloridaReadMode = "auto"
+): Promise<{ results: SearchResult[]; total: number; stats: FloridaBrowseStats }> {
+  const empty = {
+    results: [] as SearchResult[],
+    total: 0,
+    stats: { firms: 0, activeFirms: 0, entityLinked: 0, withDiscipline: 0 },
+  };
+  const disc = getDiscoveryState(PUBLIC);
+  if (!disc) return empty;
+  const state = getStateBySlug(disc.evidenceSlug);
+  if (!state?.live) return empty;
+
+  try {
+    // SQL shape lives in floridaBrowseStatement. This function still issues
+    // exactly one read. A failed read throws below; it does not return empty.
+    const built = floridaBrowseStatement(opts, mode);
+    if (!built) return empty;
+    const rows = await query<FloridaBrowseRow>(built.sql, built.params);
 
     // The stats CTE always yields exactly one row, so a successful read
     // returns >= 1 row. Zero rows means the read did not complete.
@@ -421,8 +464,6 @@ export async function listFloridaBrowse(opts: {
     throw new FloridaDirectoryUnavailableError("listFloridaBrowse", err);
   }
 }
-
-type FloridaBrowseOpts = Parameters<typeof listFloridaBrowse>[0];
 
 /**
  * Request-scoped identity of a listFloridaBrowse read. Two calls with the same

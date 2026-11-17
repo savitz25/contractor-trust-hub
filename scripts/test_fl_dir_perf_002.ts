@@ -68,7 +68,12 @@ const rejectsUnavailable = async (p: () => Promise<unknown>, cause?: RegExp) =>
 const src = (p: string) => readFileSync(p, "utf8");
 const browseBody = () => {
   const s = src("lib/discovery/florida-list.ts");
-  return s.slice(s.indexOf("export async function listFloridaBrowse("), s.indexOf("type FloridaBrowseOpts"));
+  // FL-DIR-PERF-005 moved the statement into floridaBrowseStatement, ahead of
+  // listFloridaBrowse. The slice still covers the one query, the materialized
+  // keyed CTE, the incomplete-read throw, and the failure catch.
+  const start = s.indexOf("export function floridaBrowseStatement(");
+  const end = s.indexOf("export function floridaBrowseRequestKey(");
+  return s.slice(start, end);
 };
 
 // ---------------------------------------------------------------- always run
