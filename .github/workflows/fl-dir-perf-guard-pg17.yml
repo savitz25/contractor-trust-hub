@@ -57,6 +57,7 @@ jobs:
         run: |
           npm run test:fl-dir-perf-001
           npm run test:fl-dir-perf-002
+          npm run test:fl-dir-perf-005
       - name: Seed disposable fixture databases (synthetic rows only)
         run: |
           set -e
@@ -77,5 +78,18 @@ jobs:
           FL_DIR_PERF_DB=slow DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_slow npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_002.ts
       - name: SQL error rejects (sqlerr)
         run: FL_DIR_PERF_DB=sqlerr DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_sqlerr npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_002.ts
+      - name: Seed FL-DIR-PERF-005 disposable databases (synthetic rows only)
+        run: |
+          set -e
+          psql -d fl_dir_perf_admin -v ON_ERROR_STOP=1 -c "CREATE DATABASE fx_005"
+          psql -d fl_dir_perf_admin -v ON_ERROR_STOP=1 -c "CREATE DATABASE fx_005_scan"
+          psql -d fx_005 -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_005/fixture.sql
+          psql -d fx_005_scan -v ON_ERROR_STOP=1 -f scripts/fl_dir_perf_005/fixture.sql -f scripts/fl_dir_perf_005/slow_scan.sql
+          psql -d fx_005_scan -v ON_ERROR_STOP=1 -c "ALTER DATABASE fx_005_scan SET enable_nestloop = off"
+          psql -d fx_005_scan -v ON_ERROR_STOP=1 -c "ALTER DATABASE fx_005_scan SET enable_mergejoin = off"
+      - name: Statewide occupation prefetch equivalence and plan (005)
+        run: FL_DIR_PERF_DB=plan DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_005 npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_005.ts
+      - name: Contractor seq-scan timeout vs occupation prefetch (005 scan)
+        run: FL_DIR_PERF_DB=scan DATABASE_URL=postgresql://fl_dir_perf_test:fl_dir_perf_test_only@127.0.0.1:5432/fx_005_scan npx --yes tsx --tsconfig scripts/tsconfig.fl-county-code.json --test scripts/test_fl_dir_perf_005.ts
       - name: Typecheck
         run: npm run typecheck
