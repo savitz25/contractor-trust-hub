@@ -16,7 +16,7 @@ business-site value with provenance).
   --apply                  write (one transaction, ON CONFLICT DO NOTHING)
   --production             required in addition to --apply for a non-local host
   --rollback               delete this batch (source_system + batch_id) and exit
-  --county hb|le|or        dispatch to that county loader.
+  --county hb|le|or|fl15   dispatch to that county loader.
                            Omitting --county keeps this Miami-Dade loader unchanged.
 
 The receipt (--receipt) holds counts, license keys and business names only —
@@ -320,6 +320,9 @@ def main() -> int:
     if county == "or":
         from scripts.or_enrich_001.load import main as orange_main
         return orange_main()
+    if county == "fl15":
+        from scripts.fl15_enrich_001.load import main as fl15_main
+        return fl15_main()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--input-dir", required=True, type=Path)
     ap.add_argument("--batch-id", default=DEFAULT_BATCH_ID)
